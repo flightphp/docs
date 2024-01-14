@@ -1,0 +1,30 @@
+{
+	"name": "flightphp/docs",
+    "description": "The documentation for the Flight PHP micro framework.",
+    "homepage": "https://flightphp.com",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "n0nag0n",
+            "email": "n0nag0n@sky-9.com"
+        }
+    ],
+    "require": {
+        "php": "^7.4 || ^8.0",
+        "ext-json": "*",
+        "erusev/parsedown": "^1.7",
+        "flightphp/core": "^3.0",
+        "latte/latte": "^2.11",
+        "wruczek/php-file-cache": "^0.0.5"
+    },
+    "config": {
+        "process-timeout": 0,
+        "sort-packages": true
+    },
+    "scripts": {
+        "start": "php -S localhost:8000 -t public"
+    },
+    "require-dev": {
+        "tracy/tracy": "^2.9"
+    }
+}
