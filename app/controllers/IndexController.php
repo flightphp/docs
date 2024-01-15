@@ -41,7 +41,7 @@ class IndexController {
 
 	public function installGet() {
 		$app = $this->app;
-		$markdown_html = $app->cache()->refreshIfExpired('about_html', function() use ($app)  {
+		$markdown_html = $app->cache()->refreshIfExpired('install_html', function() use ($app)  {
 			return $app->parsedown()->text(file_get_contents(self::CONTENT_DIR . $this->language . '/install.md'));
 		}, 900); // 15 minutes
 		$this->app->latte()->render('single_page.latte', [
@@ -53,7 +53,7 @@ class IndexController {
 	public function learnGet() {
 		$app = $this->app;
 		$heading_data = [];
-		$markdown_html = $app->cache()->refreshIfExpired('about_html', function() use ($app, &$heading_data)  {
+		$markdown_html = $app->cache()->refreshIfExpired('learn_html', function() use ($app, &$heading_data)  {
 			$learn_files_order = [
 				'routing.md',
 				'extending.md',
