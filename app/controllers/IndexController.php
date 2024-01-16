@@ -28,11 +28,22 @@ class IndexController {
 		$this->app = $app;
 	}
 
+	public function licenseGet() {
+		$app = $this->app;
+		$markdown_html = $app->cache()->refreshIfExpired('license_html', function() use ($app)  {
+			return $app->parsedown()->text(file_get_contents(self::CONTENT_DIR . $this->language . '/license.md'));
+		}, 86400); // 1 day
+		$this->app->latte()->render('single_page.latte', [
+			'page_title' => 'License',
+			'markdown' => $markdown_html,
+		]);
+	}
+
 	public function aboutGet() {
 		$app = $this->app;
 		$markdown_html = $app->cache()->refreshIfExpired('about_html', function() use ($app)  {
 			return $app->parsedown()->text(file_get_contents(self::CONTENT_DIR . $this->language . '/about.md'));
-		}, 900); // 15 minutes
+		}, 86400); // 1 day
 		$this->app->latte()->render('single_page.latte', [
 			'page_title' => 'About',
 			'markdown' => $markdown_html,
@@ -43,7 +54,7 @@ class IndexController {
 		$app = $this->app;
 		$markdown_html = $app->cache()->refreshIfExpired('install_html', function() use ($app)  {
 			return $app->parsedown()->text(file_get_contents(self::CONTENT_DIR . $this->language . '/install.md'));
-		}, 900); // 15 minutes
+		}, 86400); // 1 day
 		$this->app->latte()->render('single_page.latte', [
 			'page_title' => 'Installation',
 			'markdown' => $markdown_html,
@@ -109,7 +120,7 @@ class IndexController {
 				return $matches[0];
 			}, $parsed_text );
 			return $parsed_text;
-		}, 900); // 15 minutes
+		}, 86400); // 1 day
 		$this->app->latte()->render('single_page_scrollspy.latte', [
 			'page_title' => 'Learn',
 			'markdown' => $markdown_html,
