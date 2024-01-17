@@ -63,7 +63,7 @@ class IndexController {
 
 	public function learnGet() {
 		$app = $this->app;
-		$heading_data = [];
+		$heading_data = $app->cache()->retrieve('learn_heading_data');
 		$markdown_html = $app->cache()->refreshIfExpired('learn_html', function() use ($app, &$heading_data)  {
 			$learn_files_order = [
 				'routing.md',
@@ -109,7 +109,6 @@ class IndexController {
 			};
 
 			// Find all the heading tags and add an id attribute to them
-			$last_h1 = '';
 			$parsed_text = preg_replace_callback( '/(\<h[1](.*?))\>(.*)(<\/h[1]>)/i', function( $matches ) use ($slugify, &$heading_data, &$last_h1) {
 				if ( ! stripos( $matches[0], 'id=' ) ) {
 					$title = strip_tags( $matches[3] );
@@ -119,6 +118,7 @@ class IndexController {
 				}
 				return $matches[0];
 			}, $parsed_text );
+			$app->cache()->store('learn_heading_data', $heading_data, 86400); // 1 day
 			return $parsed_text;
 		}, 86400); // 1 day
 		$this->app->latte()->render('single_page_scrollspy.latte', [
