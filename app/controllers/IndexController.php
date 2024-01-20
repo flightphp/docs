@@ -50,6 +50,16 @@ class IndexController {
 		]);
 	}
 
+	public function examplesGet() {
+		$app = $this->app;
+		$markdown_html = $app->cache()->refreshIfExpired('examples_html', function() use ($app)  {
+			return $app->parsedown()->text(file_get_contents(self::CONTENT_DIR . $this->language . '/examples.md'));
+		}, 86400); // 1 day
+		$this->app->latte()->render('single_page.latte', [
+			'page_title' => 'Examples and inspiration',
+			'markdown' => $markdown_html,
+		]);
+	}
 	public function installGet() {
 		$app = $this->app;
 		$markdown_html = $app->cache()->refreshIfExpired('install_html', function() use ($app)  {
