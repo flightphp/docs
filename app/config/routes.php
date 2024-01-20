@@ -14,3 +14,4 @@ $router->get('/', [ $IndexController, 'aboutGet' ], false, 'about');
 $router->get('/install', [ $IndexController, 'installGet' ], false, 'install');
 $router->get('/license', [ $IndexController, 'licenseGet' ], false, 'license');
 $router->get('/learn', [ $IndexController, 'learnGet' ], false, 'learn');
+$router->get('/examples', [ $IndexController, 'examplesGet' ], false, 'examples');
