@@ -1,4 +1,4 @@
-# <a name="errorhandling"></a> Error Handling
+# Error Handling
 
 ## Errors and Exceptions
 
@@ -9,9 +9,9 @@ response with some error information.
 You can override this behavior for your own needs:
 
 ```php
-Flight::map('error', function(Exception $ex){
-    // Handle error
-    echo $ex->getTraceAsString();
+Flight::map('error', function (Throwable $error) {
+  // Handle error
+  echo $error->getTraceAsString();
 });
 ```
 
@@ -30,7 +30,7 @@ behavior is to send an `HTTP 404 Not Found` response with a simple message.
 You can override this behavior for your own needs:
 
 ```php
-Flight::map('notFound', function(){
-    // Handle not found
+Flight::map('notFound', function () {
+  // Handle not found
 });
 ```

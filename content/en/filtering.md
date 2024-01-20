@@ -1,4 +1,4 @@
-# <a name="filtering"></a> Filtering
+# Filtering
 
 Flight allows you to filter methods before and after they are called. There are no
 predefined hooks you need to memorize. You can filter any of the default framework
@@ -7,8 +7,8 @@ methods as well as any custom methods that you've mapped.
 A filter function looks like this:
 
 ```php
-function(&$params, &$output) {
-    // Filter code
+function (array &$params, string &$output): bool {
+  // Filter code
 }
 ```
 
@@ -17,16 +17,16 @@ Using the passed in variables you can manipulate the input parameters and/or the
 You can have a filter run before a method by doing:
 
 ```php
-Flight::before('start', function(&$params, &$output){
-    // Do something
+Flight::before('start', function (array &$params, string &$output): bool {
+  // Do something
 });
 ```
 
 You can have a filter run after a method by doing:
 
 ```php
-Flight::after('start', function(&$params, &$output){
-    // Do something
+Flight::after('start', function (array &$params, string &$output): bool {
+  // Do something
 });
 ```
 
@@ -37,20 +37,22 @@ Here's an example of the filtering process:
 
 ```php
 // Map a custom method
-Flight::map('hello', function($name){
-    return "Hello, $name!";
+Flight::map('hello', function (string $name) {
+  return "Hello, $name!";
 });
 
 // Add a before filter
-Flight::before('hello', function(&$params, &$output){
-    // Manipulate the parameter
-    $params[0] = 'Fred';
+Flight::before('hello', function (array &$params, string &$output): bool {
+  // Manipulate the parameter
+  $params[0] = 'Fred';
+  return true;
 });
 
 // Add an after filter
-Flight::after('hello', function(&$params, &$output){
-    // Manipulate the output
-    $output .= " Have a nice day!";
+Flight::after('hello', function (array &$params, string &$output): bool {
+  // Manipulate the output
+  $output .= " Have a nice day!";
+  return true;
 });
 
 // Invoke the custom method
@@ -59,7 +61,7 @@ echo Flight::hello('Bob');
 
 This should display:
 
-``` html
+```
 Hello Fred! Have a nice day!
 ```
 
@@ -67,20 +69,22 @@ If you have defined multiple filters, you can break the chain by returning `fals
 in any of your filter functions:
 
 ```php
-Flight::before('start', function(&$params, &$output){
-    echo 'one';
+Flight::before('start', function (array &$params, string &$output): bool {
+  echo 'one';
+  return true;
 });
 
-Flight::before('start', function(&$params, &$output){
-    echo 'two';
+Flight::before('start', function (array &$params, string &$output): bool {
+  echo 'two';
 
-    // This will end the chain
-    return false;
+  // This will end the chain
+  return false;
 });
 
 // This will not get called
-Flight::before('start', function(&$params, &$output){
-    echo 'three';
+Flight::before('start', function (array &$params, string &$output): bool {
+  echo 'three';
+  return true;
 });
 ```
 

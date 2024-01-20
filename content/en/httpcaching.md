@@ -1,4 +1,4 @@
-# <a name="httpcaching"></a> HTTP Caching
+# HTTP Caching
 
 Flight provides built-in support for HTTP level caching. If the caching condition
 is met, Flight will return an HTTP `304 Not Modified` response. The next time the
@@ -12,9 +12,9 @@ and time a page was last modified. The client will continue to use their cache u
 the last modified value is changed.
 
 ```php
-Flight::route('/news', function(){
-    Flight::lastModified(1234567890);
-    echo 'This content will be cached.';
+Flight::route('/news', function () {
+  Flight::lastModified(1234567890);
+  echo 'This content will be cached.';
 });
 ```
 
@@ -24,9 +24,9 @@ Flight::route('/news', function(){
 want for the resource:
 
 ```php
-Flight::route('/news', function(){
-    Flight::etag('my-unique-id');
-    echo 'This content will be cached.';
+Flight::route('/news', function () {
+  Flight::etag('my-unique-id');
+  echo 'This content will be cached.';
 });
 ```
 

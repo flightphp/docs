@@ -1,4 +1,4 @@
-# <a name="variables"></a> Variables
+# Variables
 
 Flight allows you to save variables so that they can be used anywhere in your application.
 
@@ -13,7 +13,7 @@ To see if a variable has been set you can do:
 
 ```php
 if (Flight::has('id')) {
-     // Do something
+  // Do something
 }
 ```
 

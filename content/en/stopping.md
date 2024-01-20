@@ -1,4 +1,4 @@
-# <a name="stopping"></a> Stopping
+# Stopping
 
 You can stop the framework at any point by calling the `halt` method:
 

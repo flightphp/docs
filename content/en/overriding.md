@@ -1,4 +1,4 @@
-# <a name="overriding"></a> Overriding
+# Overriding
 
 Flight allows you to override its default functionality to suit your own needs,
 without having to modify any code.
@@ -8,9 +8,9 @@ method which sends a generic `HTTP 404` response. You can override this behavior
 by using the `map` method:
 
 ```php
-Flight::map('notFound', function(){
-    // Display custom 404 page
-    include 'errors/404.html';
+Flight::map('notFound', function() {
+  // Display custom 404 page
+  include 'errors/404.html';
 });
 ```
 
@@ -19,7 +19,7 @@ For example you can replace the default Router class with your own custom class:
 
 ```php
 // Register your custom class
-Flight::register('router', 'MyRouter');
+Flight::register('router', MyRouter::class);
 
 // When Flight loads the Router instance, it will load your class
 $myrouter = Flight::router();

@@ -1,4 +1,4 @@
-# <a name="redirects"></a> Redirects
+# Redirects
 
 You can redirect the current request by using the `redirect` method and passing
 in a new URL:

@@ -1,4 +1,4 @@
-# <a name="frameworkinstance"></a> Framework Instance
+# Framework Instance
 
 Instead of running Flight as a global static class, you can optionally run it
 as an object instance.
@@ -6,12 +6,10 @@ as an object instance.
 ```php
 require 'flight/autoload.php';
 
-use flight\Engine;
+$app = Flight::app();
 
-$app = new Engine();
-
-$app->route('/', function(){
-    echo 'hello world!';
+$app->route('/', function () {
+  echo 'hello world!';
 });
 
 $app->start();
