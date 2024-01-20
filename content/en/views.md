@@ -1,11 +1,11 @@
-# <a name="views"></a> Views
+# Views
 
 Flight provides some basic templating functionality by default. To display a view
 template call the `render` method with the name of the template file and optional
 template data:
 
 ```php
-Flight::render('hello.php', array('name' => 'Bob'));
+Flight::render('hello.php', ['name' => 'Bob']);
 ```
 
 The template data you pass in is automatically injected into the template and can
@@ -13,12 +13,12 @@ be reference like a local variable. Template files are simply PHP files. If the
 content of the `hello.php` template file is:
 
 ```php
-Hello, '<?php echo $name; ?>'!
+Hello, <?= $name ?>!
 ```
 
 The output would be:
 
-``` html
+```
 Hello, Bob!
 ```
 
@@ -51,15 +51,15 @@ content. To render content to be used in a layout, you can pass in an optional
 parameter to the `render` method.
 
 ```php
-Flight::render('header', array('heading' => 'Hello'), 'header_content');
-Flight::render('body', array('body' => 'World'), 'body_content');
+Flight::render('header', ['heading' => 'Hello'], 'headerContent');
+Flight::render('body', ['body' => 'World'], 'bodyContent');
 ```
 
-Your view will then have saved variables called `header_content` and `body_content`.
+Your view will then have saved variables called `headerContent` and `bodyContent`.
 You can then render your layout by doing:
 
 ```php
-Flight::render('layout', array('title' => 'Home Page'));
+Flight::render('layout', ['title' => 'Home Page']);
 ```
 
 If the template files looks like this:
@@ -67,40 +67,39 @@ If the template files looks like this:
 `header.php`:
 
 ```php
-<h1><?php echo $heading; ?></h1>
+<h1><?= $heading ?></h1>
 ```
 
 `body.php`:
 
 ```php
-<div><?php echo $body; ?></div>
+<div><?= $body ?></div>
 ```
 
 `layout.php`:
 
 ```php
 <html>
-<head>
-<title><?php echo $title; ?></title>
-</head>
-<body>
-<?php echo $header_content; ?>
-<?php echo $body_content; ?>
-</body>
+  <head>
+    <title><?= $title ?></title>
+  </head>
+  <body>
+    <?= $headerContent ?>
+    <?= $bodyContent ?>
+  </body>
 </html>
 ```
 
 The output would be:
-
-``` html
+```html
 <html>
-<head>
-<title>Home Page</title>
-</head>
-<body>
-<h1>Hello</h1>
-<div>World</div>
-</body>
+  <head>
+    <title>Home Page</title>
+  </head>
+  <body>
+    <h1>Hello</h1>
+    <div>World</div>
+  </body>
 </html>
 ```
 
@@ -116,11 +115,11 @@ require './Smarty/libs/Smarty.class.php';
 
 // Register Smarty as the view class
 // Also pass a callback function to configure Smarty on load
-Flight::register('view', 'Smarty', array(), function($smarty){
-    $smarty->template_dir = './templates/';
-    $smarty->compile_dir = './templates_c/';
-    $smarty->config_dir = './config/';
-    $smarty->cache_dir = './cache/';
+Flight::register('view', Smarty::class, [], function (Smarty $smarty) {
+  $smarty->setTemplateDir('./templates/');
+  $smarty->setCompileDir('./templates_c/');
+  $smarty->setConfigDir('./config/');
+  $smarty->setCacheDir('./cache/');
 });
 
 // Assign template data
@@ -133,8 +132,8 @@ Flight::view()->display('hello.tpl');
 For completeness, you should also override Flight's default render method:
 
 ```php
-Flight::map('render', function($template, $data){
-    Flight::view()->assign($data);
-    Flight::view()->display($template);
+Flight::map('render', function(string $template, array $data): void {
+  Flight::view()->assign($data);
+  Flight::view()->display($template);
 });
 ```
