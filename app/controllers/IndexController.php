@@ -2,10 +2,9 @@
 
 namespace app\controllers;
 
-use app\utils\CustomEngine;
+use app\utils\CustomFlight;
+use app\utils\Text;
 use flight\Engine;
-use Michelf\Markdown;
-use Michelf\MarkdownExtra;
 
 class IndexController {
 
@@ -20,11 +19,11 @@ class IndexController {
 	protected string $language = 'en';
 
 	/**
-	 * @var CustomEngine
+	 * @var Engine
 	 */
-	protected CustomEngine $app;
+	protected Engine $app;
 
-	public function __construct(CustomEngine $app) {
+	public function __construct(Engine $app) {
 		$this->app = $app;
 	}
 
@@ -94,40 +93,13 @@ class IndexController {
 			];
 			$text = '';
 			foreach($learn_files_order as $file) {
-				$text .= file_get_contents(self::CONTENT_DIR . $this->language . '/' . $file) . "\n\n";
+				$text .= file_get_contents(self::CONTENT_DIR . $this->language . '/learn/' . $file) . "\n\n";
 			}
 			$parsed_text = $app->parsedown()->text($text);
 
-			// This function expects the input to be UTF-8 encoded.
-			$slugify = function($text) {
-				// Swap out Non "Letters" with a -
-				$text = preg_replace('/[^\\pL\d]+/u', '-', $text); 
-			
-				// Trim out extra -'s
-				$text = trim($text, '-');
-			
-				// Convert letters that we have left to the closest ASCII representation
-				$text = iconv('utf-8', 'us-ascii//TRANSLIT', $text);
-			
-				// Make text lowercase
-				$text = strtolower($text);
-			
-				// Strip out anything we haven't been able to convert
-				$text = preg_replace('/[^-\w]+/', '', $text);
-			
-				return $text;
-			};
-
 			// Find all the heading tags and add an id attribute to them
-			$parsed_text = preg_replace_callback( '/(\<h[1](.*?))\>(.*)(<\/h[1]>)/i', function( $matches ) use ($slugify, &$heading_data, &$last_h1) {
-				if ( ! stripos( $matches[0], 'id=' ) ) {
-					$title = strip_tags( $matches[3] );
-					$slugged_title = $slugify( $title );
-					$heading_data[$slugged_title] = [ 'title' => $title, 'id' => $slugged_title, 'type' => $matches[2] ];
-					$matches[0] = $matches[1] . $matches[2] . ' id="' . $slugged_title . '">' . $title . $matches[4];
-				}
-				return $matches[0];
-			}, $parsed_text );
+			$heading_data = [];
+			$parsed_text = Text::generateAndConvertHeaderListFromHtml($parsed_text, $heading_data);
 			$app->cache()->store('learn_heading_data', $heading_data, 86400); // 1 day
 			return $parsed_text;
 		}, 86400); // 1 day
@@ -135,6 +107,44 @@ class IndexController {
 			'page_title' => 'Learn',
 			'markdown' => $markdown_html,
 			'heading_data' => $heading_data,
+		]);
+	}
+
+	public function pluginsGet() {
+		$app = $this->app;
+		$markdown_html = $app->cache()->refreshIfExpired('plugins_html', function() use ($app)  {
+			return $app->parsedown()->text(file_get_contents(self::CONTENT_DIR . $this->language . '/plugins/plugins.md'));
+		}, 86400); // 1 day
+		$this->app->latte()->render('single_page.latte', [
+			'page_title' => 'Plugins',
+			'markdown' => $markdown_html,
+		]);
+	}
+
+	public function pluginGet(string $plugin_name) {
+		$app = $this->app;
+		$plugin_name_underscored = str_replace('-', '_', $plugin_name);
+		$heading_data = $app->cache()->retrieve($plugin_name_underscored.'_heading_data');
+		$markdown_html = $app->cache()->refreshIfExpired($plugin_name_underscored.'_html', function() use ($app, $plugin_name_underscored, &$heading_data)  {
+			$parsed_text = $app->parsedown()->text(file_get_contents(self::CONTENT_DIR . $this->language . '/plugins/' . $plugin_name_underscored . '.md'));
+
+			$heading_data = [];
+			$parsed_text = Text::generateAndConvertHeaderListFromHtml($parsed_text, $heading_data, 'h2');
+			$app->cache()->store($plugin_name_underscored.'_heading_data', $heading_data, 86400); // 1 day
+
+			return $parsed_text;
+		}, 86400); // 1 day
+
+		// pull the title out of the first h1 tag
+		$plugin_title = '';
+		preg_match('/\<h1\>(.*)\<\/h1\>/i', $markdown_html, $matches);
+		if (isset($matches[1])) {
+			$plugin_title = $matches[1];
+		}
+		$this->app->latte()->render('single_page_scrollspy.latte', [
+			'page_title' => $plugin_title.' - Plugins',
+			'markdown' => $markdown_html,
+			'heading_data' => $app->cache()->retrieve($plugin_name_underscored.'_heading_data'),
 		]);
 	}
 }

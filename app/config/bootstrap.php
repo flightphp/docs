@@ -6,7 +6,7 @@
  * for every request made to the application.
  */
 
-use app\utils\CustomEngine;
+use app\utils\CustomFlight;
 
 $ds = DIRECTORY_SEPARATOR;
 require(__DIR__ . $ds . '..' . $ds . '..' . $ds . 'vendor' . $ds . 'autoload.php');
@@ -15,11 +15,11 @@ if(file_exists(__DIR__. $ds . 'config.php') === false) {
 }
 
 // this has to be hard code required because autoload hasn't been registered yet.
-require(__DIR__ . $ds . '..' . $ds . 'utils' . $ds . 'CustomEngine.php');
+require(__DIR__ . $ds . '..' . $ds . 'utils' . $ds . 'CustomFlight.php');
 
 // It is better practice to not use static methods for everything. It makes your
 // app much more difficult to unit test easily.
-$app = new CustomEngine();
+$app = CustomFlight::app();
 
 /*
  * Load the config file
