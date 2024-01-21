@@ -1,7 +1,7 @@
 {
 	"name": "flightphp/docs",
     "description": "The documentation for the Flight PHP micro framework.",
-    "homepage": "https://flightphp.com",
+    "homepage": "https://docs.flightphp.com",
     "license": "MIT",
     "authors": [
         {
@@ -24,5 +24,8 @@
     },
     "scripts": {
         "start": "php -S localhost:8000 -t public"
-    }
+    },
+	"require-dev": {
+		"flightphp/tracy-extensions": "^0.1.0"
+	}
 }
