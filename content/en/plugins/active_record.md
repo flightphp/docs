@@ -22,6 +22,7 @@ Now you can setup a new class to represent this table:
  * 
  * It's highly recommended to add the properties of the table as comments here
  * 
+ * @property int    $id
  * @property string $name
  * @property string $password
  */ 
@@ -50,6 +51,7 @@ echo $user->id; // 1
 $user->name = 'Joseph Mamma';
 $user->password = password_hash('some cool password again!!!');
 $user->insert();
+// can't use $user->save() here or it will think it's an update!
 
 echo $user->id; // 2
 ```
