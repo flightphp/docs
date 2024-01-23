@@ -29,7 +29,10 @@ Now you can setup a new class to represent this table:
 class User extends flight\ActiveRecord {
 	public function __construct($database_connection)
 	{
-		parent::__construct($database_connection, [ 'table' => 'users']);
+		// you can set it this way
+		parent::__construct($database_connection, 'users');
+		// or this way
+		parent::__construct($database_connection, null, [ 'table' => 'users']);
 	}
 }
 ```
@@ -369,21 +372,26 @@ public $relations = [
 
 ```php
 class User extends ActiveRecord{
-	public $table = 'user';
-	public $primaryKey = 'id';
-	public $relations = [
+	protected array $relations = [
 		'contacts' => [ self::HAS_MANY, Contact::class, 'user_id' ],
 		'contact' => [ self::HAS_ONE, Contact::class, 'user_id' ],
 	];
+
+	public function __construct($database_connection)
+	{
+		parent::__construct($database_connection, 'users');
+	}
 }
 
 class Contact extends ActiveRecord{
-	public $table = 'contact';
-	public $primaryKey = 'id';
-	public $relations = [
+	protected array $relations = [
 		'user' => [ self::BELONGS_TO, User::class, 'user_id' ],
 		'user_with_backref' => [ self::BELONGS_TO, User::class, 'user_id', [], 'contact' ],
 	];
+	public function __construct($database_connection)
+	{
+		parent::__construct($database_connection, 'contacts');
+	}
 }
 ```
 
@@ -445,12 +453,15 @@ Flight::register('db', 'PDO', [ 'sqlite:test.db' ]);
 
 // User.php
 class User extends flight\ActiveRecord {
-	protected string $table = 'users';
 
 	protected function onConstruct(self $self, array &$config) { // don't forget the & reference
-		$this->pdo = Flight::db();
-		// also could do
-		$config['pdo'] = Flight::db();
+		// you could do this to automatically set the connection
+		$config['connection'] = Flight::db();
+		// or this
+		$self->transformAndPersistConnection(Flight::db());
+		
+		// You can also set the table name this way.
+		$config['table'] = 'users';
 	} 
 }
 ```
@@ -461,7 +472,11 @@ This is likely only useful if you need a query manipulation each time.
 
 ```php
 class User extends flight\ActiveRecord {
-	protected string $table = 'users';
+	
+	public function __construct($database_connection)
+	{
+		parent::__construct($database_connection, 'users');
+	}
 
 	protected function beforeFind(self $self) {
 		// always run id >= 0 if that's your jam
@@ -476,7 +491,11 @@ This one is likely more useful if you always need to run some logic every time t
 
 ```php
 class User extends flight\ActiveRecord {
-	protected string $table = 'users';
+	
+	public function __construct($database_connection)
+	{
+		parent::__construct($database_connection, 'users');
+	}
 
 	protected function afterFind(self $self) {
 		// decrypting something
@@ -494,7 +513,11 @@ This is likely only useful if you need a query manipulation each time.
 
 ```php
 class User extends flight\ActiveRecord {
-	protected string $table = 'users';
+	
+	public function __construct($database_connection)
+	{
+		parent::__construct($database_connection, 'users');
+	}
 
 	protected function beforeFindAll(self $self) {
 		// always run id >= 0 if that's your jam
@@ -509,7 +532,11 @@ Similar to `afterFind()` but you get to do it to all the records instead!
 
 ```php
 class User extends flight\ActiveRecord {
-	protected string $table = 'users';
+	
+	public function __construct($database_connection)
+	{
+		parent::__construct($database_connection, 'users');
+	}
 
 	protected function afterFindAll(array $results) {
 
@@ -526,7 +553,11 @@ Really helpful if you need some default values set each time.
 
 ```php
 class User extends flight\ActiveRecord {
-	protected string $table = 'users';
+	
+	public function __construct($database_connection)
+	{
+		parent::__construct($database_connection, 'users');
+	}
 
 	protected function beforeInsert(self $self) {
 		// set some sound defaults
@@ -547,7 +578,11 @@ Maybe you have a user case for changing data after it's inserted?
 
 ```php
 class User extends flight\ActiveRecord {
-	protected string $table = 'users';
+	
+	public function __construct($database_connection)
+	{
+		parent::__construct($database_connection, 'users');
+	}
 
 	protected function afterInsert(self $self) {
 		// you do you
@@ -563,7 +598,11 @@ Really helpful if you need some default values set each time on an update.
 
 ```php
 class User extends flight\ActiveRecord {
-	protected string $table = 'users';
+	
+	public function __construct($database_connection)
+	{
+		parent::__construct($database_connection, 'users');
+	}
 
 	protected function beforeInsert(self $self) {
 		// set some sound defaults
@@ -580,7 +619,11 @@ Maybe you have a user case for changing data after it's updated?
 
 ```php
 class User extends flight\ActiveRecord {
-	protected string $table = 'users';
+	
+	public function __construct($database_connection)
+	{
+		parent::__construct($database_connection, 'users');
+	}
 
 	protected function afterInsert(self $self) {
 		// you do you
@@ -596,7 +639,11 @@ This is useful if you want events to happen both when inserts or updates happen.
 
 ```php
 class User extends flight\ActiveRecord {
-	protected string $table = 'users';
+	
+	public function __construct($database_connection)
+	{
+		parent::__construct($database_connection, 'users');
+	}
 
 	protected function beforeSave(self $self) {
 		$self->last_updated = gmdate('Y-m-d H:i:s');
@@ -610,7 +657,11 @@ Not sure what you'd want to do here, but no judgments here! Go for it!
 
 ```php
 class User extends flight\ActiveRecord {
-	protected string $table = 'users';
+	
+	public function __construct($database_connection)
+	{
+		parent::__construct($database_connection, 'users');
+	}
 
 	protected function beforeDelete(self $self) {
 		echo 'He was a brave soldier... :cry-face:';
