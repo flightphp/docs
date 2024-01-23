@@ -27,7 +27,10 @@ Now you can setup a new class to represent this table:
  * @property string $password
  */ 
 class User extends flight\ActiveRecord {
-	protected $table = 'users';
+	public function __construct($database_connection)
+	{
+		parent::__construct($database_connection, [ 'table' => 'users']);
+	}
 }
 ```
 
@@ -35,12 +38,17 @@ Now watch the magic happen!
 
 ```php
 // for sqlite
-$pdo_connection = new PDO('sqlite:test.db'); // this is just for example, you'd probably use a real database connection
+$database_connection = new PDO('sqlite:test.db'); // this is just for example, you'd probably use a real database connection
 
 // for mysql
-$pdo_connection = new PDO('mysql:host=localhost;dbname=test_db&charset=utf8bm4', 'username', 'password');
+$database_connection = new PDO('mysql:host=localhost;dbname=test_db&charset=utf8bm4', 'username', 'password');
 
-$user = new User($pdo_connection);
+// or mysqli
+$database_connection = new mysqli('localhost', 'username', 'password', 'test_db');
+// or mysqli with non-object based creation
+$database_connection = mysqli_connect('localhost', 'username', 'password', 'test_db');
+
+$user = new User($database_connection);
 $user->name = 'Bobby Tables';
 $user->password = password_hash('some cool password');
 $user->insert();
