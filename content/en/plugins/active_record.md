@@ -348,7 +348,7 @@ You can set several kinds of relationships using this library. You can set one->
 Setting the `$relations` array is not hard, but guessing the correct syntax can be confusing.
 
 ```php
-public $relations = [
+protected array $relations = [
 	// you can name the key anything you'd like. The name of the ActiveRecord is probably good. Ex: user, contact, client
 	'whatever_active_record' => [
 		// required
