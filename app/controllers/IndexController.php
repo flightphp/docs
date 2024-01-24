@@ -75,6 +75,7 @@ class IndexController {
 		$heading_data = $app->cache()->retrieve('learn_heading_data');
 		$markdown_html = $app->cache()->refreshIfExpired('learn_html', function() use ($app, &$heading_data)  {
 			$learn_files_order = [
+				'server_config.md',
 				'routing.md',
 				'extending.md',
 				'overriding.md',
