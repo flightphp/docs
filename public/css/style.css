@@ -38,11 +38,6 @@ pre {
   border-radius: 5px;
 }
 
-ul {
-  margin: 0;
-  padding: 0;
-}
-
 #container {
   margin: 30px auto 60px;
   background-color: #fff;
@@ -75,6 +70,11 @@ ul {
   font-size: 16px;
   display: block;
   list-style: none;
+  padding: 0 10px;
+}
+
+#nav li + li {
+  border-left: 1px solid #ddd;
 }
 
 #footer {
