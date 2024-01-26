@@ -47,6 +47,40 @@ pre {
   box-shadow: 3px 3px 3px rgba(150,150,150,0.2);
 }
 
+nav.navbar {
+	background-color: rgb(248,249,250);
+}
+
+[data-bs-theme="dark"]  {
+	background-color: #3c434b;
+}
+
+[data-bs-theme="dark"] #container {
+  background-color: #212529;
+  color: #fff;
+  border-color: #444;
+}
+
+[data-bs-theme="dark"] body {
+	background-color: #3c434b;
+}
+
+[data-bs-theme="dark"] nav.navbar {
+	background-color: #33363a;
+}
+
+[data-bs-theme="dark"] a, [data-bs-theme="dark"] a:active, [data-bs-theme="dark"] a:visited {
+  color: #17aceb;
+}
+
+[data-bs-theme="dark"] pre[class*=language-] {
+  background-color: #212529;
+}
+
+[data-bs-theme="dark"] .token.operator {
+  background-color: rgba(16, 16, 16, 0.5);
+}
+
 #header {
   text-align: center;
 }

@@ -4,16 +4,16 @@ Head over to the [flightphp/skeleton](https://github.com/flightphp/skeleton) rep
 
 ## Need some inspiration?
 
-While these are not officially sponsored by the FlightPHP Team, these could give you ideas on how to structure your own projects that are built with Flight!<br />
-List of projects built with FlightPHP:<br />
-[Basic Skeleton App](https://github.com/markhughes/flight-skeleton)<br />
-[Example Wiki](https://github.com/Skayo/FlightWiki)<br />
-[The IT-Innovator PHP Framework Application](https://github.com/itinnovator/myphp-app)<br />
-[LittleEducationalCMS (Spanish)](https://github.com/casgin/LittleEducationalCMS)<br />
-[Italian Yellow Pages API](https://github.com/chiccomagnus/PGAPI)<br />
-[Generic Content Management System (with....very little documentation)](https://github.com/recepuncu/cms)<br />
-[A tiny php framework based on Flight and medoo.](https://github.com/ycrao/tinyme)<br />
-[Example MVC Application](https://github.com/paddypei/Flight-MVC)<br />
+While these are not officially sponsored by the FlightPHP Team, these could give you ideas on how to structure your own projects that are built with Flight!
+
+- [Basic Skeleton App](https://github.com/markhughes/flight-skeleton)
+- [Example Wiki](https://github.com/Skayo/FlightWiki)
+- [he IT-Innovator PHP Framework Application](https://github.com/itinnovator/myphp-app)
+- [LittleEducationalCMS (Spanish)](https://github.com/casgin/LittleEducationalCMS)
+- [Italian Yellow Pages API](https://github.com/chiccomagnus/PGAPI)
+- [Generic Content Management System (with....very little documentation)](https://github.com/recepuncu/cms)
+- [A tiny php framework based on Flight and medoo.](https://github.com/ycrao/tinyme)
+- [Example MVC Application](https://github.com/paddypei/Flight-MVC)
 
 ## Do you have a project you want to share?
 

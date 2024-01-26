@@ -6,7 +6,8 @@
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mr+Dafoe">
 		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 		<script async="" defer="" src="https://buttons.github.io/buttons.js"></script>
-		<link rel="stylesheet" href="https://unpkg.com/prismjs@1.29.0/themes/prism.min.css" />
+		<link rel="stylesheet" href="https://unpkg.com/prismjs@1.29.0/themes/prism.min.css" id="prism_link" />
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 		<link rel="stylesheet" href="/css/style.css">
 		<title>{$page_title ? $page_title.' - '}FlightPHP Documentation</title>
 	</head>
@@ -15,7 +16,7 @@
 			<header id="header" class="row justify-content-center">
 				<div class="title col-12">Flight</div>
 				<div class="subtitle col-12">An extensible micro-framework for PHP</div>
-				<nav class="navbar navbar-expand-lg navbar-light bg-light">
+				<nav class="navbar navbar-expand-lg navbar-light">
   					<div class="container-fluid">
 					<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main_navBarFlight" aria-controls="main_navBarFlight" aria-expanded="false" aria-label="Toggle navigation">
 						<span class="navbar-toggler-icon"></span>Toggle navigation
@@ -28,6 +29,17 @@
 							<li class="nav-item"><a class="nav-link" href="/examples">Examples</a></li>
 							<li class="nav-item"><a class="nav-link" href="/plugins">Plugins</a></li>
 							<li class="nav-item"><a class="nav-link" href="https://github.com/flightphp/core">Code</a></li>
+							<li class="nav-item dropdown">
+								<button class="btn btn-link dropdown-toggle" id="bd-theme" type="button" aria-expanded="false" data-bs-toggle="dropdown" data-bs-display="static" aria-label="Toggle theme (dark)"><i class="bi bi-brightness-high"></i></button>
+								<div class="dropdown-menu dropdown-menu-end" aria-labelledby="bd-theme-text">
+									<a href="#" class="dropdown-item" data-bs-theme-value="light">
+										<i class="bi bi-brightness-high-fill"></i> Light
+									</a>
+									<a href="#" class="dropdown-item" data-bs-theme-value="dark">
+										<i class="bi bi-moon-fill"></i> Dark
+									</a>
+								</div>
+							</li>
 						</ul>
 					</div>
 				</nav>
@@ -47,5 +59,55 @@
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 		<script src="https://unpkg.com/prismjs@1.29.0/components/prism-core.min.js"></script>
 		<script src="https://unpkg.com/prismjs@1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+		<script type="text/javascript" n:syntax="off">
+			/*!
+			 * Color mode toggler for Bootstrap's docs (https://getbootstrap.com/)
+			 * Copyright 2011-2023 The Bootstrap Authors
+			 * Licensed under the Creative Commons Attribution 3.0 Unported License.
+			 */
+
+			(() => {
+				'use strict'
+
+				const getStoredTheme = () => localStorage.getItem('theme')
+				const setStoredTheme = theme => localStorage.setItem('theme', theme)
+
+				const getPreferredTheme = () => {
+					const storedTheme = getStoredTheme()
+					if (storedTheme) {
+						return storedTheme
+					}
+
+					return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+				}
+
+				const setTheme = theme => {
+					document.documentElement.setAttribute('data-bs-theme', theme)
+					const prismLink = document.getElementById('prism_link');
+					let prismHref = 'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/';
+					if(theme === 'light') {
+						prismLink.setAttribute('href', prismHref + 'prism.min.css')
+					} else {
+						prismLink.setAttribute('href', prismHref + 'prism-twilight.min.css')
+					}
+				}
+
+				setTheme(getPreferredTheme())
+
+				// when you click on a data-bs-theme-value set the theme and store it
+				window.addEventListener('DOMContentLoaded', () => {
+					document.querySelectorAll('[data-bs-theme-value]')
+					.forEach(toggle => {
+						toggle.addEventListener('click', () => {
+						const theme = toggle.getAttribute('data-bs-theme-value')
+							setStoredTheme(theme)
+							setTheme(theme);
+						})
+					})
+				})
+ 
+				
+			})();
+		</script>
 	</body>
 </html>
