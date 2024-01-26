@@ -81,6 +81,10 @@ nav.navbar {
   background-color: rgba(16, 16, 16, 0.5);
 }
 
+[data-bs-theme="dark"] #nav li + li {
+  border-left: 1px solid #777;
+}
+
 #header {
   text-align: center;
 }
