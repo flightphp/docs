@@ -149,7 +149,7 @@ class IndexController {
 	}
 
 	public function updateStuffPost() {
-		$secret = $this->app->config['github_webhook_secret'];
+		$secret = $this->app->get('config')['github_webhook_secret'];
 		$request = $this->app->request();
 		$signature_header = $request->getVar('X-Hub-Signature');
 		$signature_parts = explode('=', $signature_header);
