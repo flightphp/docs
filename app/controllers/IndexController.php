@@ -2,8 +2,8 @@
 
 namespace app\controllers;
 
-use app\utils\CustomFlight;
 use app\utils\Text;
+use Exception;
 use flight\Engine;
 
 class IndexController {
@@ -146,5 +146,24 @@ class IndexController {
 			'markdown' => $markdown_html,
 			'heading_data' => $app->cache()->retrieve($plugin_name_underscored.'_heading_data'),
 		]);
+	}
+
+	public function updateStuffPost() {
+		$secret = $this->app->config['github_webhook_secret'];
+		$request = $this->app->request();
+		$signature_header = $request->getVar('X-Hub-Signature');
+		$signature_parts = explode('=', $signature_header);
+		file_put_contents('/tmp/flightphp-docs.log', $signature_header . "\n" . $request->getBody() . "\n\n");
+        if (count($signature_parts) != 2) {
+            throw new Exception('signature has invalid format');
+        }
+        $known_signature = hash_hmac('sha1', $request->getBody(), $secret);
+
+        if (! hash_equals($known_signature, $signature_parts[1])) {
+            throw new Exception('Could not verify request signature ' . $signature_parts[1]);
+        }
+
+		// it was successful. Do the stuff
+		exec('cd /var/www/flightphp-docs/ && git pull && composer install --no-progress -o --no-dev && rm -rf app/cache/*');
 	}
 }

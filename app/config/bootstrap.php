@@ -27,6 +27,7 @@ $app = CustomFlight::app();
  * will be returned by the require statement where you can assign it to a var.
  */
 $config = require('config.php');
+$app->set('config', $config);
 
 // Whip out the ol' router and we'll pass that to the routes file
 $router = $app->router();
