@@ -18,3 +18,6 @@ $router->group('/plugins', function(Router $router) use ($IndexController) {
 	$router->get('/', [ $IndexController, 'pluginsGet' ], false, 'plugins');
 	$router->get('/@plugin_name', [ $IndexController, 'pluginGet' ], false, 'plugin');
 });
+
+// Clever name for the github webhook
+$router->post('/update-stuff', [ $IndexController, 'updateStuffPost' ], false, 'update_stuff');
