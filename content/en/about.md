@@ -18,7 +18,7 @@ Flight::route('/', function() {
 Flight::start();
 ```
 
-[Learn more](learn)
+Simple enough right? [Learn more about Flight!](learn)
 
 ## Skeleton App
 You can also install a skeleton app. Go to [flightphp/skeleton](https://github.com/flightphp/skeleton) for instructions on how to get started!
