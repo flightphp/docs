@@ -21,7 +21,7 @@ Flight::start();
 Simple enough right? [Learn more about Flight!](learn)
 
 ## Skeleton App
-You can also install a skeleton app. Go to [flightphp/skeleton](https://github.com/flightphp/skeleton) for instructions on how to get started!
+There is an example app that can help you get started with the Flight Framework. Go to [flightphp/skeleton](https://github.com/flightphp/skeleton) for instructions on how to get started!
 
 # Community
 
