@@ -8,7 +8,7 @@ While these are not officially sponsored by the FlightPHP Team, these could give
 
 - [Basic Skeleton App](https://github.com/markhughes/flight-skeleton)
 - [Example Wiki](https://github.com/Skayo/FlightWiki)
-- [he IT-Innovator PHP Framework Application](https://github.com/itinnovator/myphp-app)
+- [The IT-Innovator PHP Framework Application](https://github.com/itinnovator/myphp-app)
 - [LittleEducationalCMS (Spanish)](https://github.com/casgin/LittleEducationalCMS)
 - [Italian Yellow Pages API](https://github.com/chiccomagnus/PGAPI)
 - [Generic Content Management System (with....very little documentation)](https://github.com/recepuncu/cms)
