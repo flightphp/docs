@@ -12,8 +12,8 @@ Caching is a great way to speed up your application. There are a number of cachi
 
 Debugging is crucial when you are developing in your local environment. There are a few plugins that can elevate your debugging experience.
 
-- [Tracy](/awesome-plugins/tracy) - This is a full featured error handler that can be used with Flight. It has a number of panels that can help you debug your application. It's also very easy to extend and add your own panels.
-- [flightphp/tracy-extensions](/awesome-plugins/tracy-extensions) - Used with the [Tracy](https://tracy.nette.org/) error handler, this plugin adds a few extra panels to help with debugging specifically for Flight projects.
+- [tracy/tracy](/awesome-plugins/tracy) - This is a full featured error handler that can be used with Flight. It has a number of panels that can help you debug your application. It's also very easy to extend and add your own panels.
+- [flightphp/tracy-extensions](/awesome-plugins/tracy-extensions) - Used with the [Tracy](/awesome-plugins/tracy) error handler, this plugin adds a few extra panels to help with debugging specifically for Flight projects.
 
 ## Databases
 
