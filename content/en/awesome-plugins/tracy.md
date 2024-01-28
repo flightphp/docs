@@ -37,3 +37,10 @@ if (Debugger::$showBar) {
 	new TracyExtensionLoader($app);
 }
 ```
+
+## Helpful Tips
+
+When you are debugging your code, there are some very helpful functions to output data for you.
+
+- `bdump($var)` - This will dump the variable to the Tracy Bar in a separate panel.
+- `dumpe($var)` - This will dump the variable and then die immediately.

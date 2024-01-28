@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\utils\Text;
 use Exception;
+use Flight;
 use flight\Engine;
 
 class IndexController {
