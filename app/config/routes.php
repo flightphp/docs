@@ -14,8 +14,8 @@ $router->get('/install', [ $IndexController, 'installGet' ], false, 'install');
 $router->get('/license', [ $IndexController, 'licenseGet' ], false, 'license');
 $router->get('/learn', [ $IndexController, 'learnGet' ], false, 'learn');
 $router->get('/examples', [ $IndexController, 'examplesGet' ], false, 'examples');
-$router->group('/plugins', function(Router $router) use ($IndexController) {
-	$router->get('/', [ $IndexController, 'pluginsGet' ], false, 'plugins');
+$router->group('/awesome-plugins', function(Router $router) use ($IndexController) {
+	$router->get('/', [ $IndexController, 'awesomePluginsGet' ], false, 'awesome_plugins');
 	$router->get('/@plugin_name', [ $IndexController, 'pluginGet' ], false, 'plugin');
 });
 

@@ -78,7 +78,7 @@ nav.navbar {
 }
 
 [data-bs-theme="dark"] .token.operator {
-  background-color: rgba(16, 16, 16, 0.5);
+  background-color: rgba(33, 37, 41, 1);
 }
 
 [data-bs-theme="dark"] #nav li + li {

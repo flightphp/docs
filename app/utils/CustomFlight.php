@@ -2,7 +2,7 @@
 
 namespace app\utils;
 
-use Flight;
+use flight\Engine;
 use Wruczek\PhpFileCache\PhpFileCache;
 use Latte\Engine as LatteEngine;
 use Parsedown;
@@ -14,4 +14,4 @@ use Parsedown;
  * @method LatteEngine latte()
  * @method Parsedown parsedown()
  */
-class CustomFlight extends Flight {}
+class CustomEngine extends Engine {}

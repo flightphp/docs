@@ -110,14 +110,21 @@ class IndexController {
 		]);
 	}
 
-	public function pluginsGet() {
+	public function awesomePluginsGet() {
 		$app = $this->app;
-		$markdown_html = $app->cache()->refreshIfExpired('plugins_html', function() use ($app)  {
-			return $app->parsedown()->text(file_get_contents(self::CONTENT_DIR . $this->language . '/plugins/plugins.md'));
+		$heading_data = $app->cache()->retrieve('plugins_heading_data');
+		$markdown_html = $app->cache()->refreshIfExpired('plugins_html', function() use ($app, &$heading_data)  {
+			$parsed_text = $app->parsedown()->text(file_get_contents(self::CONTENT_DIR . $this->language . '/awesome-plugins/index.md'));
+			$heading_data = [];
+			$parsed_text = Text::generateAndConvertHeaderListFromHtml($parsed_text, $heading_data, 'h2');
+			$app->cache()->store('plugins_heading_data', $heading_data, 86400); // 1 day
+			return $parsed_text;
 		}, 86400); // 1 day
-		$this->app->latte()->render('single_page.latte', [
-			'page_title' => 'Plugins',
+
+		$this->app->latte()->render('single_page_scrollspy.latte', [
+			'page_title' => 'Awesome Plugins',
 			'markdown' => $markdown_html,
+			'heading_data' => $heading_data,
 		]);
 	}
 
@@ -126,7 +133,7 @@ class IndexController {
 		$plugin_name_underscored = str_replace('-', '_', $plugin_name);
 		$heading_data = $app->cache()->retrieve($plugin_name_underscored.'_heading_data');
 		$markdown_html = $app->cache()->refreshIfExpired($plugin_name_underscored.'_html', function() use ($app, $plugin_name_underscored, &$heading_data)  {
-			$parsed_text = $app->parsedown()->text(file_get_contents(self::CONTENT_DIR . $this->language . '/plugins/' . $plugin_name_underscored . '.md'));
+			$parsed_text = $app->parsedown()->text(file_get_contents(self::CONTENT_DIR . $this->language . '/awesome-plugins/' . $plugin_name_underscored . '.md'));
 
 			$heading_data = [];
 			$parsed_text = Text::generateAndConvertHeaderListFromHtml($parsed_text, $heading_data, 'h2');
@@ -144,7 +151,7 @@ class IndexController {
 		$this->app->latte()->render('single_page_scrollspy.latte', [
 			'page_title' => $plugin_title.' - Plugins',
 			'markdown' => $markdown_html,
-			'heading_data' => $app->cache()->retrieve($plugin_name_underscored.'_heading_data'),
+			'heading_data' => $heading_data,
 		]);
 	}
 
