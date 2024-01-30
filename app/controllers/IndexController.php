@@ -100,7 +100,7 @@ class IndexController {
 
 			// Find all the heading tags and add an id attribute to them
 			$heading_data = [];
-			$parsed_text = Text::generateAndConvertHeaderListFromHtml($parsed_text, $heading_data);
+			$parsed_text = Text::generateAndConvertHeaderListFromHtml($parsed_text, $heading_data, 'h[12]');
 			$app->cache()->store('learn_heading_data', $heading_data, 86400); // 1 day
 			return $parsed_text;
 		}, 86400); // 1 day

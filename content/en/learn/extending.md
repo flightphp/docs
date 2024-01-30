@@ -76,9 +76,3 @@ $new = Flight::db(false);
 
 Keep in mind that mapped methods have precedence over registered classes. If you
 declare both using the same name, only the mapped method will be invoked.
-
-## PDO Helper Class
-
-Flight comes with a helper class for PDO. It allows you to easily query your database
-with all the prepared/execute/fetchAll() wackiness. It greatly simplifies how you can 
-query your database. See [PdoWrapper](/awesome-plugins/pdo-wrapper) for more information.
