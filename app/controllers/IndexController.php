@@ -161,7 +161,7 @@ class IndexController {
 		$request = $this->app->request();
 		$signature_header = $request->getVar('HTTP_X_HUB_SIGNATURE');
 		$signature_parts = explode('=', $signature_header);
-		file_put_contents('/tmp/flightphp-docs.log', $signature_header . "\n" . $request->getBody() . "\n\n");
+		
         if (count($signature_parts) != 2) {
             throw new Exception('signature has invalid format');
         }

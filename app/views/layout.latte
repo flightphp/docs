@@ -8,6 +8,7 @@
 		<script async="" defer="" src="https://buttons.github.io/buttons.js"></script>
 		<link rel="stylesheet" href="https://unpkg.com/prismjs@1.29.0/themes/prism.min.css" id="prism_link" />
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@algolia/autocomplete-theme-classic" />
 		<link rel="stylesheet" href="/css/style.css">
 		<title>{$page_title ? $page_title.' - '}FlightPHP Documentation</title>
 	</head>
@@ -16,6 +17,7 @@
 			<header id="header" class="row justify-content-center">
 				<div class="title col-12">Flight</div>
 				<div class="subtitle col-12">An extensible micro-framework for PHP</div>
+				<div class="m-2 col-xs-4 col-md-6" id="autocomplete"></div>
 				<nav class="navbar navbar-expand-lg navbar-light">
   					<div class="container-fluid">
 					<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main_navBarFlight" aria-controls="main_navBarFlight" aria-expanded="false" aria-label="Toggle navigation">
@@ -108,6 +110,55 @@
  
 				
 			})();
+		</script>
+		<script src="https://cdn.jsdelivr.net/npm/@algolia/autocomplete-js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/algoliasearch@4.22.1/dist/algoliasearch-lite.umd.js"></script>
+		<script n:syntax="off">
+			const algoliasearch = window['algoliasearch'];
+			const { autocomplete, getAlgoliaResults } = window['@algolia/autocomplete-js'];
+
+			const searchClient = algoliasearch(
+				'ILLJNWA0XY',
+				'fdf4f7d49a18e4e00fcc0aab1ce59040'
+			);
+
+			autocomplete({
+				container: '#autocomplete',
+				placeholder: 'Search the docs...',
+				insights: true,
+				getSources({ query }) {
+					return [
+						{
+							sourceId: 'searchResults',
+							getItems() {
+								return getAlgoliaResults({
+									searchClient,
+									queries: [
+										{
+											indexName: 'flightphp',
+											query,
+											params: {
+												hitsPerPage: 8,
+											},
+										},
+									],
+								});
+							},
+							templates: {
+								item({ item, html }) {
+									var value = [];
+									for(var lv in item.hierarchy) {
+										if(item.hierarchy[lv] && item.hierarchy[lv] !== 'Documentation') {
+											value.push(item.hierarchy[lv]);
+										}
+									}
+									return html`<div><a href="${item.url}">${value.join(' - ')}</a></div>`;
+								},
+							},
+						},
+					];
+				}
+			});
 		</script>
 	</body>
 </html>
