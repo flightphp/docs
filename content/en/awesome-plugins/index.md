@@ -22,6 +22,12 @@ Databases are the core to most applications. This is how you store and retrieve 
 - [flightphp/core PdoWrapper](/awesome-plugins/pdo-wrapper) - Official Flight PDO Wrapper that's part of the core. This is a simple wrapper to help simplify the process of writing queries and executing them. It is not an ORM.
 - [flightphp/active-record](/awesome-plugins/active-record) - Official Flight ActiveRecord ORM/Mapper. Great little library for easily retrieving and storing data in your database.
 
+## Session
+
+Sessions aren't really useful for API's but for building out a web application, sessions can be crucial for maintaining state and login information.
+
+- [Ghostff/Session](/awesome-plugins/session) - PHP Session Manager (non-blocking, flash, segment, session encryption). Uses PHP open_ssl for optional encrypt/decryption of session data.
+
 ## Templating
 
 Templating is core to any web application with a UI. There are a number of templating engines that can be used with Flight.
