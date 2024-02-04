@@ -1,7 +1,6 @@
 vendor/
 .vscode/
 app/config/config.php
-composer.lock
 .vagrant/
 app/log/
 app/cache/

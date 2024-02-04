@@ -10,11 +10,11 @@
         }
     ],
     "require": {
-		"php": "^7.4 || ^8.0",
+		"php": "^8.0",
 		"ext-json": "*",
 		"erusev/parsedown": "^1.7",
 		"flightphp/core": "^3.0",
-		"latte/latte": "^2.11",
+		"latte/latte": "^3.0",
 		"tracy/tracy": "^2.9",
 		"wruczek/php-file-cache": "^0.0.5"
 	},
@@ -26,6 +26,6 @@
         "start": "php -S localhost:8000 -t public"
     },
 	"require-dev": {
-		"flightphp/tracy-extensions": "^0.1.0"
+		"flightphp/tracy-extensions": "^0.2"
 	}
 }
