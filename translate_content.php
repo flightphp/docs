@@ -17,12 +17,8 @@ $top_level_files = glob(__DIR__ . '/content/en/*.md');
 
 $files = array_merge($top_level_files, glob(__DIR__ . '/content/en/**/*.md'));
 
-print_r($files);
-exit;
-
-
 // pull all markdown files our of the content/en/ folder and each subdirectory
-foreach(glob(__DIR__ . '/content/en/*.md') as $file) {
+foreach($files as $file) {
 	echo $file . PHP_EOL;
 	
 	foreach($languages as $languageAbbreviation) {
