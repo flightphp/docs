@@ -41,8 +41,12 @@ class IndexController {
 	protected function renderPage(string $latte_file, array $params = []) {
 		$request = $this->app->request();
 
+		$uri = $request->url;
+		if(strpos($uri, '?') !== false) {
+			$uri = substr($uri, 0, strpos($uri, '?'));
+		}
 		// Here we can set variables that will be available on any page
-		$params['url'] = $request->getScheme() . '://' . $request->getHeader('Host') . $request->url;
+		$params['url'] = $request->getScheme() . '://' . $request->getHeader('Host') . $uri;
 		$this->app->latte()->render($latte_file, $params);
 	}
 
