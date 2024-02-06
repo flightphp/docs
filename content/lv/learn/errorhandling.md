@@ -2,21 +2,19 @@
 
 ## Kļūdas un izņēmumi
 
-Visas kļūdas un izņēmumi tiek uztverti un padoti Flight un nodoti `error` metodei.
-Noklusētā rīcība ir nosūtīt vispārēju `HTTP 500 Iekšējā servera kļūda`
-atbildi ar dažādu kļūdu informāciju.
+Visas kļūdas un izņēmumi tiek noķerti ar Flight un padoti `error` metodei.
+Pēc noklusējuma uzvedība ir nosūtīt vispārēju `HTTP 500 Iekšēja servera kļūda` atbildi ar kādu kļūdas informāciju.
 
-Jūs varat pārkāpt šo rīcību savām vajadzībām:
+Jūs varat pārrakstīt šo uzvedību savām vajadzībām:
 
 ```php
 Flight::map('error', function (Throwable $error) {
-  // Handle error
+  // Apstrādāt kļūdu
   echo $error->getTraceAsString();
 });
 ```
 
-Pēc noklusējuma kļūdas netiek reģistrētas tīmekļa serverī. Jūs varat to aktivizēt
-mainot konfigurāciju:
+Pēc noklusējuma kļūdas netiek reģistrētas tīmekļa serverī. Jūs varat to iespējot, mainot konfigurāciju:
 
 ```php
 Flight::set('flight.log_errors', true);
@@ -24,13 +22,12 @@ Flight::set('flight.log_errors', true);
 
 ## Nav Atrasts
 
-Ja URL nav atrasts, Flight izsauc `notFound` metodi. Noklusētā
-rīcība ir nosūtīt `HTTP 404 Nav atrasts` atbildi ar vienkāršu ziņu.
+Kad URL nav atrodams, Flight izsauc `notFound` metodi. Noklusējuma uzvedība ir nosūtīt `HTTP 404 Nav atrasts` atbildi ar vienkāršu ziņojumu.
 
-Jūs varat pārkāpt šo rīcību savām vajadzībām:
+Jūs varat pārrakstīt šo uzvedību savām vajadzībām:
 
 ```php
 Flight::map('notFound', function () {
-  // Handle not found
+  // Apstrādāt nav atrasts
 });
 ```

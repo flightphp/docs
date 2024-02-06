@@ -1,16 +1,16 @@
 # Skati
 
-Flight no nodrošina pamata veidnes funkcionalitāti. Lai parādītu skata
-veidni, izsauciet `render` metodi ar veidnes faila nosaukumu un opciju
-veidnes datiem:
+Flight nodrošina pamata templēšanas funkcionalitāti pēc noklusējuma. Lai parādītu skata
+templātu, izsauciet `render` metodi ar templāta faila nosaukumu un opcijas
+templātu datiem:
 
 ```php
 Flight::render('hello.php', ['name' => 'Bob']);
 ```
 
-Veidnes dati, ko nododat, tiek automātiski ievietoti veidnē un var tikt
-atsauce kā vietējā mainīgā. Veidnes faili ir vienkārši PHP faili. Ja
-`hello.php` veidnes faila saturs ir:
+Datubāzi, ko jūs nododat iekšā, automātiski ievada templātā un var
+būt atsauce kā lokāls mainīgais. Templāta faili ir vienkārši PHP faili. Ja
+`hello.php` templāta faila saturs ir:
 
 ```php
 Sveiki, <?= $name ?>!
@@ -22,47 +22,47 @@ Izvade būtu:
 Sveiki, Bob!
 ```
 
-Jūs arī varat manuāli iestatīt skata mainīgos, izmantojot iestatīšanas metodi:
+Jūs arī varat manuāli iestatīt skata mainīgos, izmantojot set metodi:
 
 ```php
 Flight::view()->set('name', 'Bob');
 ```
 
-Tagad mainīgais `name` ir pieejams visos jūsu skatos. Tāpēc vienkārši varat:
+Mainīgais `name` tagad ir pieejams visos jūsu skatos. Tātad vienkārši varat darīt:
 
 ```php
 Flight::render('hello');
 ```
 
-Piezīmējiet, ka, norādot veidnes nosaukumu render metodei, varat
+Ņemiet vērā, ka norādot templāta nosaukumu render metodē, jūs varat
 izlaist `.php` paplašinājumu.
 
-Pēc noklusējuma Flight meklē `views` direktoriju veidņu failiem. Jūs varat
-iestatīt alternatīvu ceļu savām veidnēm, iestatot šādu konfigurāciju:
+Pēc noklusējuma Flight meklēs `views` direktoriju templātu failiem. Jūs varat
+iestatīt alternatīvu ceļu saviem templātiem, iestatot šādu konfigurāciju:
 
 ```php
-Flight::set('flight.views.path', '/ceļš/līdz/veidnēm');
+Flight::set('flight.views.path', '/ceļš/līdz/views');
 ```
 
 ## Izkārtojumi
 
-Ir parasts, ka tīmekļa vietnēm ir viens izkārtojuma veidnes fails ar izmaināmiem
-saturs. Lai atveidotu saturu, ko izmantot izkārtojumā, varat nodot opcijas
+Ir parasts, ka tīmekļa vietnēm ir viens izkārtojuma templāta fails, kurā mainās
+saturs. Lai attēlotu saturu, kas jāizmanto izkārtojumā, jūs varat nodot opcijas
 parametru `render` metodē.
 
 ```php
 Flight::render('header', ['heading' => 'Sveiki'], 'headerContent');
-Flight::render('body', ['body' => 'Pasaule'], 'bodyContent');
+Flight::render('body', ['body' => 'Pasaulē'], 'bodyContent');
 ```
 
-Jūsu skatā tiks saglabāti mainīgie ar nosaukumiem `headerContent` un `bodyContent`.
-Tad varat atveidot savu izkārtojumu:
+Jūsu skatam tad būs saglabāti mainīgie ar nosaukumiem `headerContent` un `bodyContent`.
+Tad jūs varat attēlot savu izkārtojumu, darot:
 
 ```php
-Flight::render('layout', ['title' => 'Sākumlapa']);
+Flight::render('layout', ['title' => 'Mājas lapā']);
 ```
 
-Ja veidņu faili izskatās šādi:
+Ja templātu faili izskatās šādi:
 
 `header.php`:
 
@@ -94,27 +94,27 @@ Izvade būtu:
 ```html
 <html>
   <head>
-    <title>Sākumlapa</title>
+    <title>Mājas lapā</title>
   </head>
   <body>
     <h1>Sveiki</h1>
-    <div>Pasaule</div>
+    <div>Pasaulē</div>
   </body>
 </html>
 ```
 
-## Pielāgoti Skati
+## Pielāgoti skati
 
 Flight ļauj nomainīt noklusējuma skata dzinēju, vienkārši reģistrējot savu
-skata klasi. Šeit ir, kā jūs varētu izmantot [Smarty](http://www.smarty.net/)
-veidnes dzini savos skatos:
+skata klasi. Šeit ir, kā jūs izmantotu [Smarty](http://www.smarty.net/)
+templāta dzinēju savām skatam:
 
 ```php
 // Ielādēt Smarty bibliotēku
 require './Smarty/libs/Smarty.class.php';
 
-// Reģistrēt Smarty kā skata klasi
-// Arī nododiet atsauces funkciju, lai konfigurētu Smarty ielādes laikā
+// Reģistrējiet Smarty kā skata klasi
+// Iepriekš padodot atsauces funkciju, lai konfigurētu Smarty, ielādējot
 Flight::register('view', Smarty::class, [], function (Smarty $smarty) {
   $smarty->setTemplateDir('./templates/');
   $smarty->setCompileDir('./templates_c/');
@@ -122,14 +122,14 @@ Flight::register('view', Smarty::class, [], function (Smarty $smarty) {
   $smarty->setCacheDir('./cache/');
 });
 
-// Piešķirt veidnes datus
+// Piešķiriet templāta datus
 Flight::view()->assign('name', 'Bob');
 
-// Attēlot veidni
+// Rādīt templātu
 Flight::view()->display('hello.tpl');
 ```
 
-Lai būtu pilnīgs, jums vajadzētu arī pārkārtot Flight noklusējuma render metodi:
+Lai būtu pilnīgs, jums vajadzētu arī pārrakstīt Flight noklusējuma render metodi:
 
 ```php
 Flight::map('render', function(string $template, array $data): void {

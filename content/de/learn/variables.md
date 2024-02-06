@@ -1,6 +1,6 @@
 # Variablen
 
-Flight erlaubt es Ihnen, Variablen zu speichern, sodass sie überall in Ihrer Anwendung verwendet werden können.
+Flight ermöglicht es Ihnen, Variablen zu speichern, damit sie überall in Ihrer Anwendung verwendet werden können.
 
 ```php
 // Speichern Sie Ihre Variable
@@ -9,11 +9,12 @@ Flight::set('id', 123);
 // Anderswo in Ihrer Anwendung
 $id = Flight::get('id');
 ```
-Um zu sehen, ob eine Variable festgelegt wurde, können Sie Folgendes tun:
+
+Um zu überprüfen, ob eine Variable festgelegt wurde, können Sie Folgendes tun:
 
 ```php
 if (Flight::has('id')) {
-  // Etwas tun
+  // Mach etwas
 }
 ```
 
@@ -31,4 +32,4 @@ Flight verwendet auch Variablen für Konfigurationszwecke.
 
 ```php
 Flight::set('flight.log_errors', true);
-```
+```  

@@ -1,20 +1,21 @@
 # Instalação
 
-## **1\. Baixe os arquivos.**
+## Baixe os arquivos.
 
-Se estiver usando [Composer](https://getcomposer.org), você pode executar o seguinte
+Se estiver a utilizar [Composer](https://getcomposer.org), pode executar o seguinte
 comando:
 
 ```bash
 composer require flightphp/core
 ```
 
-OU você pode [baixar](https://github.com/flightphp/core/archive/master.zip)
-diretamente e extrai-los para o diretório da web.
+OU pode [baixar os arquivos](https://github.com/flightphp/core/archive/master.zip)
+ diretamente e extrai-los para o seu diretório web.
 
-## **2\. Configure seu servidor web.**
+## Configure o seu Servidor Web.
 
-Para *Apache*, edite seu arquivo `.htaccess` com o seguinte:
+### Apache
+Para o Apache, edite o arquivo `.htaccess` com o seguinte:
 
 ```apacheconf
 RewriteEngine On
@@ -23,17 +24,20 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ index.php [QSA,L]
 ```
 
-> **Nota**: Se precisar usar o Flight em um subdiretório, adicione a linha
-> `RewriteBase /subdir/` logo após `RewriteEngine On`.
-> **Nota**: Se quiser proteger todos os arquivos do servidor, como um arquivo db ou env.
-> Coloque isso em seu arquivo `.htaccess`:
+> **Nota**: Se precisar de utilizar o flight num subdiretório, adicione a linha
+> `RewriteBase /subdir/` imediatamente após `RewriteEngine On`.
+
+> **Nota**: Se quiser proteger todos os ficheiros do servidor, como um ficheiro db ou env.
+> Coloque isto no seu ficheiro `.htaccess`:
 
 ```apacheconf
 RewriteEngine On
 RewriteRule ^(.*)$ index.php
 ```
 
-Para *Nginx*, adicione o seguinte à declaração do seu servidor:
+### Nginx
+
+Para o Nginx, adicione o seguinte à declaração do seu servidor:
 
 ```nginx
 server {
@@ -42,21 +46,22 @@ server {
   }
 }
 ```
-## **3\. Crie seu arquivo `index.php`.**
+
+## Crie o seu ficheiro `index.php`.
 
 ```php
 <?php
 
-// Se estiver usando o Composer, requer o autoloader.
+// Se estiver a utilizar o Composer, requer o autoloader.
 require 'vendor/autoload.php';
-// se não estiver usando o Composer, carregue o framework diretamente
+// se não estiver a utilizar o Composer, carregue o framework diretamente
 // require 'flight/Flight.php';
 
-// Em seguida, defina uma rota e atribua uma função para lidar com a solicitação.
+// Em seguida, defina uma rota e atribua uma função para lidar com o pedido.
 Flight::route('/', function () {
   echo 'olá mundo!';
 });
 
-// Por fim, inicie o framework.
+// Por último, inicie o framework.
 Flight::start();
 ```

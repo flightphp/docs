@@ -1,10 +1,10 @@
 # Pārrakstīšana
 
-Lidojums ļauj jums pārrakstīt noklusējuma funkcionalitāti, lai pielāgotu to saviem vajadzībām,
-neizmainot nevienu kodu.
+Flight ļauj jums pārrakstīt tās noklusējuma funkcionalitāti, lai pielāgotu to saviem vajadzībām,
+nevieramies mainīt nekādu kodu.
 
-Piemēram, kad Lidojums nevar atrast atbilstību URL pievienojumam, tas izsauc `notFound`
-metodi, kas nosūta vispārīgu `HTTP 404` atbildi. Jūs varat pārrakstīt šo uzvedību
+Piemēram, kad Flight nevar atrast URL, kas atbilst maršrutam, tas izsauc metodi `notFound`,
+kura nosūta vispārēju `HTTP 404` atbildi. Jūs varat pārrakstīt šo uzvedību,
 izmantojot `map` metodi:
 
 ```php
@@ -14,16 +14,16 @@ Flight::map('notFound', function() {
 });
 ```
 
-Lidojums arī ļauj jums aizstāt pamata sastāvdaļas no ietvariem.
-Piemēram, jūs varat aizstāt noklusējuma Maršruta klasi ar savu pielāgoto klasi:
+Flight arī ļauj jums aizstāt pamatkomponentes ietvaru.
+Piemēram, jūs varat aizstāt noklusējuma maršrutētāja klasi ar savu pielāgoto klasi:
 
 ```php
 // Reģistrējiet savu pielāgoto klasi
 Flight::register('router', MyRouter::class);
 
-// Kad Lidojums ielādē Maršruta instanci, tas ielādēs jūsu klasi
+// Kad Flight ielādē Maršrutētāja instanci, tas ielādēs jūsu klasi
 $myrouter = Flight::router();
 ```
 
 Ietvara metodes, piemēram, `map` un `register`, tomēr nevar tikt pārrakstītas. Jums
-radīsies kļūda, ja mēģināsiet to darīt.
+būs kļūda, ja mēģināsit to darīt.

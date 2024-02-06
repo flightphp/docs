@@ -1,20 +1,21 @@
 # Uzstādīšana
 
-## **1. Lejupielādējiet failus.**
+## Lejupielādēt failus
 
-Ja izmantojat [Composer](https://getcomposer.org), varat izpildīt sekojošo
-komandu:
+Ja izmantojat [Composer](https://getcomposer.org), jūs varat izpildīt sekojošo komandu:
 
 ```bash
 composer require flightphp/core
 ```
 
-VAI arī varat [lejupielādēt](https://github.com/flightphp/core/archive/master.zip)
-failus tieši un izpakot tos savā tīmekļa direktorijā.
+VAI varat [lejupielādēt failus](https://github.com/flightphp/core/archive/master.zip)
+ tieši un izvilkt tos savā tīmekļa katalogā.
 
-## **2. Konfigurējiet savu tīmekļa serveri.**
+## Konfigurēt savu tīmekļa serveri
 
-*Apache* gadījumā rediģējiet savu `.htaccess` failu ar šādu saturu:
+### Apache
+
+Lai Apache, rediģējiet savu `.htaccess` failu ar sekojošo:
 
 ```apacheconf
 RewriteEngine On
@@ -23,17 +24,20 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ index.php [QSA,L]
 ```
 
-> **Piezīme**: Ja vēlaties izmantot "flight" apakšmapē, pievienojiet rindiņu
-> `RewriteBase /apaksmape/` tieši pēc `RewriteEngine On`.
+> **Piezīme**: Ja jums jāizmanto lidojums apakškatalogā, pievienojiet līniju
+> `RewriteBase /subdir/` tieši pēc `RewriteEngine On`.
+
 > **Piezīme**: Ja vēlaties aizsargāt visus servera failus, piemēram, db vai env failu.
-> Ielieciet šo savā `.htaccess` failā:
+> Ievietojiet to savā `.htaccess` failā:
 
 ```apacheconf
 RewriteEngine On
 RewriteRule ^(.*)$ index.php
 ```
 
-*Nginx* gadījumā pievienojiet sekojošo savā servera deklarācijā:
+### Nginx
+
+Nginx gadījumā, pievienojiet sekojošo savai servera deklarācijai:
 
 ```nginx
 server {
@@ -43,21 +47,21 @@ server {
 }
 ```
 
-## **3. Izveidojiet savu `index.php` failu.**
+## Izveidojiet savu `index.php` failu
 
 ```php
 <?php
 
-// Ja izmantojat Composer, pievienojiet autoloader.
+// Ja izmantojat Composer, pieprasiet autoloāderi.
 require 'vendor/autoload.php';
-// ja neizmantojat Composer, ielādējiet ietvaru tieši
+// ja neizmantojat Composer, ielādējiet frameworku tieši
 // require 'flight/Flight.php';
 
-// Tad definējiet maršrutu un piešķiriet funkciju, lai apstrādātu pieprasījumu.
+// Pēc tam definējiet maršrutu un piešķiriet funkciju, lai apstrādātu pieprasījumu.
 Flight::route('/', function () {
   echo 'sveika pasaule!';
 });
 
-// Beigās startējiet ietvaru.
+// Beigās, startējiet ietvaru.
 Flight::start();
 ```

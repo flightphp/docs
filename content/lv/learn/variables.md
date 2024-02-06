@@ -1,23 +1,24 @@
+```lv
 # Mainīgie
 
-Lidojums ļauj jums saglabāt mainīgos, lai tos varētu izmantot jebkur jūsu lietotnē.
+Flight ļauj saglabāt mainīgos, lai tos varētu izmantot jebkur aplikācijā.
 
 ```php
 // Saglabā savu mainīgo
 Flight::set('id', 123);
 
-// citur jūsu lietotnē
+// Citur aplikācijā
 $id = Flight::get('id');
 ```
-Lai pārbaudītu, vai mainīgais ir iestatīts, jūs varat izdarīt:
+Lai pārbaudītu, vai mainīgais ir iestatīts, varat izdarīt:
 
 ```php
 if (Flight::has('id')) {
-  // Dari kas
+  // Izdarīt kaut ko
 }
 ```
 
-Jūs varat notīrīt mainīgo šādi:
+Mainīgo var notīrīt:
 
 ```php
 // Notīra id mainīgo
@@ -27,8 +28,8 @@ Flight::clear('id');
 Flight::clear();
 ```
 
-Lidojums arī izmanto mainīgos konfigurācijas nolūkos.
+Flight izmanto mainīgos arī konfigurācijas nolūkos.
 
 ```php
-Flight::set('lidojums.log_errors', true);
+Flight::set('flight.log_errors', true);
 ```

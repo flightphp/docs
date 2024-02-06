@@ -1,10 +1,10 @@
-# Kafija
+# Latte
 
-Kafija ir pilnīgi aprīkots sagatavošanas dzinējs, kas ir ļoti viegli izmantojams un jūtās tuvāk PHP sintaksei nekā Twig vai Smarty. Tas ir arī ļoti viegli paplašināms un pievieno saviem filtriem un funkcijām.
+Latte ir pilnīgi aprīkots veidnes dzinējs, kas ir ļoti viegli lietojams un izjūtami tuvāks PHP sintaksei nekā Twig vai Smarty. Tāpat ir ļoti viegli paplašināms un pievienot savus filtrus un funkcijas.
 
-## Instalācija
+## Uzstādīšana
 
-Instalējiet ar komponistu.
+Uzstādiet ar komponistu.
 
 ```bash
 composer require latte/latte
@@ -12,9 +12,10 @@ composer require latte/latte
 
 ## Pamata konfigurācija
 
-Ir dažas pamata konfigurācijas iespējas, ar kurām sākt. Par tām var izlasīt vairāk [Latte dokumentācijā](https://latte.nette.org/en/guide).
+Ir dažas pamata konfigurācijas iespējas, ar kurām sākt darbu. Jūs varat lasīt vairāk par tām [Latte dokumentācijā](https://latte.nette.org/en/guide).
 
 ```php
+
 use Latte\Engine as LatteEngine;
 
 require 'vendor/autoload.php';
@@ -23,26 +24,26 @@ $app = Flight::app();
 
 $app->register('latte', LatteEngine::class, [], function(LatteEngine $latte) use ($app) {
 
-	// Šeit Latte saglabās jūsu sagataves kešatmiņā, lai paātrinātu lietas
-	// Viena jauka lieta par Latte ir tā, ka tas automātiski atsvaidzina jūsu
-	// kešatmiņu, kad veicat izmaiņas savās sagatavēs!
+	// Šeit Latte glabās jūsu veidnes, lai paātrinātu lietas
+	// Viena ļoti liela lieta par Latte ir tā, ka tas automātiski atsvaidzinās jūsu
+	// veidņu kešatmiņu, ja veicat izmaiņas veidnēs!
 	$latte->setTempDirectory(__DIR__ . '/../cache/');
 
-	// Paziņojiet Latte, kur būs jūsu skatu sakņu katalogs.
+	// Paziņojiet Latte, kur būs jūsu skatu saknes direktorijs.
 	$latte->setLoader(new \Latte\Loaders\FileLoader(__DIR__ . '/../views/'));
 });
 ```
 
 ## Vienkāršs izkārtojuma piemērs
 
-Šeit ir vienkāršs izkārtojuma faila piemērs. Šis fails tiks izmantots, lai ietinu visas jūsu citas skatus.
+Šeit ir vienkāršs izkārtojuma faila piemērs. Šis fails tiks izmantots, lai ietinu visus pārējos skatus.
 
 ```html
 <!-- app/views/layout.latte -->
 <!doctype html>
 <html lang="en">
 	<head>
-		<title>{$title ? $title . ' - '}My App</title>
+		<title>{$title ? $title . ' - '}Manis App</title>
 		<link rel="stylesheet" href="style.css">
 	</head>
 	<body>
@@ -52,7 +53,7 @@ $app->register('latte', LatteEngine::class, [], function(LatteEngine $latte) use
 			</nav>
 		</header>
 		<div id="content">
-			<!-- Šeit ir burvju notikums -->
+			<!-- Šeit ir burvība -->
 			{block content}{/block}
 		</div>
 		<div id="footer">
@@ -62,31 +63,31 @@ $app->register('latte', LatteEngine::class, [], function(LatteEngine $latte) use
 </html>
 ```
 
-Un tagad mums ir jūsu fails, kas tiks atveidots iekšā šajā saturu blokā:
+Un tagad mums ir jūsu fails, kas tiks atveidots iekšējās satura blokā:
 
 ```html
 <!-- app/views/home.latte -->
-<!-- Tas pastāsta Latte, ka šis fails ir "iekšā" layout.latte failā -->
+<!-- Tas paziņo Latte, ka šis fails ir "iekšā" layout.latte failā -->
 {extends layout.latte}
 
-<!-- Tas ir saturs, kas tiks atveidots izkārtojumā iekšā saturu blokā -->
+<!-- Šis ir saturs, kas tiks atveidots izkārtojumā iekšā satura blokā -->
 {block content}
-	<h1>Sākuma lapa</h1>
-	<p>Laipni lūdzam manā lietotnē!</p>
+	<h1>Sākumlapa</h1>
+	<p>Laipni lūgti manā lietotnē!</p>
 {/block}
 ```
 
-Tad, kad jūs atveidojat to iekšā savā funkcijā vai kontrolētājā, jūs varētu darīt kaut ko tādu:
+Tad, kad jūs dodies atveidot šo funkcijā vai kontrolierī, jūs darītu kaut ko līdzīgu:
 
 ```php
-// vienkārša maršruta
+// vienkārša maršrutēšana
 Flight::route('/', function () {
 	Flight::latte()->render('home.latte', [
-		'title' => 'Sākuma lapa'
+		'title' => 'Sākumlapa'
 	]);
 });
 
-// vai, ja izmantojat kontrolētāju
+// vai, ja izmantojat kontrolieri
 Flight::route('/', [HomeController::class, 'index']);
 
 // HomeController.php
@@ -95,10 +96,10 @@ class HomeController
 	public function index()
 	{
 		Flight::latte()->render('home.latte', [
-			'title' => 'Sākuma lapa'
+			'title' => 'Sākumlapa'
 		]);
 	}
 }
 ```
 
-Skatiet [Latte dokumentāciju](https://latte.nette.org/en/guide), lai iegūtu vairāk informācijas par Latte izmantošanu tā pilnīgā potenciālā!
+Skatiet [Latte dokumentāciju](https://latte.nette.org/en/guide) papildinformācijai par Latte pilnvērtīgas izmantošanas veidiem!

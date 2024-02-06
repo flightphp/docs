@@ -1,27 +1,27 @@
 # Substitution
 
-Le vol vous permet de remplacer sa fonctionnalité par défaut pour répondre à vos propres besoins,
+Flight vous permet de substituer sa fonctionnalité par défaut pour répondre à vos besoins,
 sans avoir à modifier aucun code.
 
-Par exemple, lorsque le vol ne peut pas faire correspondre une URL à une route, il invoque la méthode `notFound`
-qui envoie une réponse générique `HTTP 404`. Vous pouvez remplacer ce comportement
-en utilisant la méthode `map` :
+Par exemple, lorsque Flight ne peut pas faire correspondre une URL à une route, il invoque la méthode `notFound`
+qui envoie une réponse `HTTP 404` générique. Vous pouvez substituer ce comportement
+en utilisant la méthode `map`:
 
 ```php
 Flight::map('notFound', function() {
-  // Afficher la page d'erreur 404 personnalisée
+  // Afficher une page d'erreur 404 personnalisée
   include 'errors/404.html';
 });
 ```
 
-Le vol vous permet également de remplacer les composants principaux du framework.
-Par exemple, vous pouvez remplacer la classe de routeur par défaut par votre propre classe personnalisée :
+Flight vous permet également de remplacer les composants principaux du framework.
+Par exemple, vous pouvez remplacer la classe de routeur par défaut par votre propre classe personnalisée:
 
 ```php
 // Enregistrer votre classe personnalisée
 Flight::register('router', MyRouter::class);
 
-// Lorsque le vol charge l'instance du routeur, il chargera votre classe
+// Lorsque Flight charge l'instance de routeur, il chargera votre classe
 $myrouter = Flight::router();
 ```
 

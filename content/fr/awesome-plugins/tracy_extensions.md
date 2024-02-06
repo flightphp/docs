@@ -1,29 +1,30 @@
-```fr
 Tracy Flight Panel Extensions
 =====
 
-Ce sont des extensions pour enrichir un peu le travail avec Flight.
+This is a set of extensions to make working with Flight a little richer.
 
-- Vol - Analyser toutes les variables de vol.
-- Base de données - Analyser toutes les requêtes qui ont été exécutées sur la page (si vous initialisez correctement la connexion à la base de données)
-- Requête - Analyser toutes les variables `$_SERVER` et examiner tous les envois globaux (`$_GET`, `$_POST`, `$_FILES`)
-- Session - Analyser toutes les variables `$_SESSION` si les sessions sont actives.
+- Flight - Analyze all Flight variables.
+- Database - Analyze all queries that have run on the page (if you correctly initiate the database connection)
+- Request - Analyze all `$_SERVER` variables and examine all global payloads (`$_GET`, `$_POST`, `$_FILES`)
+- Session - Analyze all `$_SESSION` variables if sessions are active.
 
-C'est le panneau
-![Barre de vol](https://raw.githubusercontent.com/flightphp/tracy-extensions/master/flight-tracy-bar.png)
+This is the Panel
 
-Et chaque panneau affiche des informations très utiles sur votre application!
-![Données de vol](https://raw.githubusercontent.com/flightphp/tracy-extensions/master/flight-var-data.png)
-![Base de données de vol](https://raw.githubusercontent.com/flightphp/tracy-extensions/master/flight-db.png)
-![Requête de vol](https://raw.githubusercontent.com/flightphp/tracy-extensions/master/flight-request.png)
+![Flight Bar](https://raw.githubusercontent.com/flightphp/tracy-extensions/master/flight-tracy-bar.png)
+
+And each panel displays very helpful information about your application!
+
+![Flight Data](https://raw.githubusercontent.com/flightphp/tracy-extensions/master/flight-var-data.png)
+![Flight Database](https://raw.githubusercontent.com/flightphp/tracy-extensions/master/flight-db.png)
+![Flight Request](https://raw.githubusercontent.com/flightphp/tracy-extensions/master/flight-request.png)
 
 Installation
 -------
-Exécutez `composer require flightphp/tracy-extensions --dev` et vous êtes prêt!
+Run `composer require flightphp/tracy-extensions --dev` and you're on your way!
 
 Configuration
 -------
-Il y a très peu de configuration à faire pour commencer. Vous devrez initialiser le débogueur Tracy avant d'utiliser ceci [https://tracy.nette.org/en/guide](https://tracy.nette.org/en/guide):
+There is very little configuration you need to do to get this started. You will need to initiate the Tracy debugger prior to using this [https://tracy.nette.org/fr/guide](https://tracy.nette.org/fr/guide):
 
 ```php
 <?php
@@ -31,26 +32,26 @@ Il y a très peu de configuration à faire pour commencer. Vous devrez initialis
 use Tracy\Debugger;
 use flight\debug\tracy\TracyExtensionLoader;
 
-// code d'amorçage
+// bootstrap code
 require __DIR__ . '/vendor/autoload.php';
 
 Debugger::enable();
-// Vous devrez peut-être spécifier votre environnement avec Debugger::enable(Debugger::DEVELOPMENT)
+// You may need to specify your environment with Debugger::enable(Debugger::DEVELOPMENT)
 
-// Si vous utilisez des connexions à la base de données dans votre application, il y a un
-// wrapper PDO requis à utiliser UNIQUEMENT EN DÉVELOPPEMENT (pas en production s'il vous plaît!)
-// Il a les mêmes paramètres qu'une connexion PDO régulière
+// if you use database connections in your app, there is a 
+// required PDO wrapper to use ONLY IN DEVELOPMENT (not production please!)
+// It has the same parameters as a regular PDO connection
 $pdo = new PdoQueryCapture('sqlite:test.db', 'user', 'pass');
-// ou si vous attachez ceci au cadre Flight
+// or if you attach this to the Flight framework
 Flight::register('db', PdoQueryCapture::class, ['sqlite:test.db', 'user', 'pass']);
-// maintenant chaque fois que vous effectuez une requête, il capturera le temps, la requête et les paramètres
+// now whenever you make a query it will capture the time, query, and parameters
 
-// Cela connecte les points
+// This connects the dots
 if(Debugger::$showBar === true) {
 	new TracyExtensionLoader(Flight::app());
 }
 
-// plus de code
+// more code
 
 Flight::start();
 ```

@@ -1,12 +1,12 @@
-## Vistas
+# Vistas
 
-Vuelo proporciona alguna funcionalidad básica de plantillas de forma predeterminada. Para mostrar una vista de plantilla, llame al método `render` con el nombre del archivo de plantilla y datos de plantilla opcionales:
+Flight proporciona algunas funcionalidades básicas de plantillas de forma predeterminada. Para mostrar una vista de plantilla llame al método `render` con el nombre del archivo de plantilla y datos de plantilla opcionales:
 
 ```php
 Flight::render('hello.php', ['name' => 'Bob']);
 ```
 
-Los datos de plantilla que pasa se inyectan automáticamente en la plantilla y se pueden hacer referencia como una variable local. Los archivos de plantilla son simplemente archivos PHP. Si el contenido del archivo de plantilla `hello.php` es:
+Los datos de plantilla que pase se inyectan automáticamente en la plantilla y se pueden hacer referencia como una variable local. Los archivos de plantilla son simplemente archivos PHP. Si el contenido del archivo de plantilla `hello.php` es:
 
 ```php
 ¡Hola, <?= $name ?>!
@@ -18,7 +18,7 @@ La salida sería:
 ¡Hola, Bob!
 ```
 
-También puede configurar manualmente variables de vista usando el método set:
+También puede configurar manualmente variables de vista utilizando el método `set`:
 
 ```php
 Flight::view()->set('name', 'Bob');
@@ -30,9 +30,9 @@ La variable `name` ahora está disponible en todas sus vistas. Entonces simpleme
 Flight::render('hello');
 ```
 
-Tenga en cuenta que al especificar el nombre de la plantilla en el método de renderizado, puede omitir la extensión `.php`.
+Tenga en cuenta que al especificar el nombre de la plantilla en el método render, puede omitir la extensión `.php`.
 
-De forma predeterminada, Flight buscará un directorio `views` para archivos de plantilla. Puede establecer una ruta alternativa para sus plantillas configurando lo siguiente:
+Por defecto, Flight buscará un directorio `views` para los archivos de plantilla. Puede establecer una ruta alternativa para sus plantillas configurando lo siguiente:
 
 ```php
 Flight::set('flight.views.path', '/ruta/a/vistas');
@@ -40,15 +40,14 @@ Flight::set('flight.views.path', '/ruta/a/vistas');
 
 ## Diseños
 
-Es común que los sitios web tengan un único archivo de plantilla de diseño con contenido intercambiable. Para renderizar contenido que se utilizará en un diseño, puede pasar un parámetro opcional al método de `render`.
+Es común que los sitios web tengan un solo archivo de plantilla de diseño con contenido intercambiable. Para renderizar contenido que se utilizará en un diseño, puede pasar un parámetro opcional al método `render`.
 
 ```php
 Flight::render('header', ['heading' => 'Hola'], 'headerContent');
 Flight::render('body', ['body' => 'Mundo'], 'bodyContent');
 ```
 
-Entonces, su vista tendrá variables guardadas llamadas `headerContent` y `bodyContent`.
-Luego puede renderizar su diseño haciendo:
+Su vista tendrá variables guardadas llamadas `headerContent` y `bodyContent`. Luego puede renderizar su diseño haciendo:
 
 ```php
 Flight::render('layout', ['title' => 'Página de inicio']);
@@ -97,7 +96,7 @@ La salida sería:
 
 ## Vistas Personalizadas
 
-Flight le permite cambiar el motor de vista predeterminado simplemente registrando su propia clase de vista. Así es como usaría el motor de plantillas [Smarty](http://www.smarty.net/) para sus vistas:
+Flight le permite cambiar el motor de vista predeterminado simplemente registrando su propia clase de vista. Así es como utilizaría el [Smarty](http://www.smarty.net/) motor de plantillas para sus vistas:
 
 ```php
 // Cargar biblioteca Smarty
@@ -112,14 +111,14 @@ Flight::register('view', Smarty::class, [], function (Smarty $smarty) {
   $smarty->setCacheDir('./cache/');
 });
 
-// Asignar datos de plantilla
+// Asignar datos de la plantilla
 Flight::view()->assign('name', 'Bob');
 
 // Mostrar la plantilla
 Flight::view()->display('hello.tpl');
 ```
 
-Para completar, también debería anular el método de renderizado predeterminado de Flight:
+Por completitud, también debería anular el método de renderizado predeterminado de Flight:
 
 ```php
 Flight::map('render', function(string $template, array $data): void {

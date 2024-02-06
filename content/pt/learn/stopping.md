@@ -1,19 +1,19 @@
-# Parar
+# Parando
 
-É possível parar o framework a qualquer momento ao chamar o método `halt`:
+Você pode parar o framework a qualquer momento chamando o método `halt`:
 
 ```php
 Flight::halt();
 ```
 
-Também é possível especificar um código de status `HTTP` e uma mensagem opcional:
+Você também pode especificar um código de status `HTTP` opcional e uma mensagem:
 
 ```php
-Flight::halt(200, 'Volto já...');
+Flight::halt(200, 'Volto em breve...');
 ```
 
-Chamar `halt` descartará qualquer conteúdo de resposta até esse ponto. Se desejar parar
-o framework e exibir a resposta atual, utilize o método `stop`:
+Chamar `halt` irá descartar qualquer conteúdo de resposta até esse ponto. Se você quiser parar
+o framework e exibir a resposta atual, use o método `stop`:
 
 ```php
 Flight::stop();

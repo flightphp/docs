@@ -1,13 +1,11 @@
-# Classe de Auxílio PDO PdoWrapper
+# Classe de Ajuda PdoWrapper PDO
 
-O Flight vem com uma classe de auxílio para PDO. Isso permite que você consulte facilmente o banco de dados
-com toda a loucura de preparar/executar/fetchAll(). Simplifica bastante como você pode
-consultar seu banco de dados.
+Flight vem com uma classe de ajuda para PDO. Permite que você consulte facilmente seu banco de dados com toda a preparação/execute/fetchAll() estranheza. Simplifica muito como você pode consultar seu banco de dados.
 
-## Registrando a Classe de Auxílio PDO
+## Registrando a Classe de Ajuda PDO
 
 ```php
-// Registrar a classe de auxílio PDO
+// Registrar a classe de ajuda PDO
 Flight::register('db', \flight\database\PdoWrapper::class, ['mysql:host=localhost;dbname=cool_db_name', 'user', 'pass', [
 		PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES \'utf8mb4\'',
 		PDO::ATTR_EMULATE_PREPARES => false,
@@ -17,8 +15,8 @@ Flight::register('db', \flight\database\PdoWrapper::class, ['mysql:host=localhos
 ]);
 ```
 
-## Uso
-Este objeto estende o PDO, então todos os métodos normais do PDO estão disponíveis. Os métodos a seguir são adicionados para facilitar a consulta ao banco de dados:
+## Uso 
+Este objeto estende PDO, então todos os métodos normais do PDO estão disponíveis. Os seguintes métodos são adicionados para facilitar a consulta ao banco de dados:
 
 ### `runQuery(string $sql, array $params = []): PDOStatement`
 Use isso para INSERTS, UPDATES, ou se planeja usar um SELECT em um loop while
@@ -30,13 +28,13 @@ while($row = $statement->fetch()) {
 	// ...
 }
 
-// Ou escrevendo no banco de dados
+// Ou escrever no banco de dados
 $db->runQuery("INSERT INTO table (name) VALUES (?)", [ $name ]);
 $db->runQuery("UPDATE table SET name = ? WHERE id = ?", [ $name, $id ]);
 ```
 
 ### `fetchField(string $sql, array $params = []): mixed`
-Puxa o primeiro campo da consulta
+Obtém o primeiro campo da consulta
 
 ```php
 $db = Flight::db();
@@ -44,7 +42,7 @@ $count = $db->fetchField("SELECT COUNT(*) FROM table WHERE something = ?", [ $so
 ```
 
 ### `fetchRow(string $sql, array $params = []): array`
-Puxa uma linha da consulta
+Obtém uma linha da consulta
 
 ```php
 $db = Flight::db();
@@ -52,18 +50,18 @@ $row = $db->fetchRow("SELECT * FROM table WHERE id = ?", [ $id ]);
 ```
 
 ### `fetchAll(string $sql, array $params = []): array`
-Puxa todas as linhas da consulta
+Obtém todas as linhas da consulta
 
 ```php
 $db = Flight::db();
 $rows = $db->fetchAll("SELECT * FROM table WHERE something = ?", [ $something ]);
 foreach($rows as $row) {
-	// faça algo
+	// fazer algo
 }
 ```
 
-## Nota com a sintaxe `IN()`
-Isso também tem um wrapper útil para declarações `IN()`. Você pode simplesmente passar um ponto de interrogação como um espaço reservado para `IN()` e então um array de valores. Aqui está um exemplo de como isso poderia ser:
+## Observação com a sintaxe `IN()`
+Também possui uma função útil para instruções `IN()`. Você pode simplesmente passar um ponto de interrogação como espaço reservado para `IN()` e depois um array de valores. Aqui está um exemplo de como isso pode parecer:
 
 ```php
 $db = Flight::db();
@@ -75,7 +73,7 @@ $rows = $db->fetchAll("SELECT * FROM table WHERE name = ? AND company_id IN (?)"
 ## Exemplo Completo
 
 ```php
-// Rota de exemplo e como usar este wrapper
+// Rota de exemplo e como você usaria este wrapper
 Flight::route('/users', function () {
 	// Obter todos os usuários
 	$users = Flight::db()->fetchAll('SELECT * FROM users');
@@ -92,9 +90,9 @@ Flight::route('/users', function () {
 	// Obter um único valor
 	$count = Flight::db()->fetchField('SELECT COUNT(*) FROM users');
 
-	// Sintaxe especial IN() para ajudar (certifique-se de que o IN está em maiúsculas)
+	// Sintaxe especial IN() para ajudar (certifique-se de que IN está em maiúsculas)
 	$users = Flight::db()->fetchAll('SELECT * FROM users WHERE id IN (?)', [[1,2,3,4,5]]);
-	// você também poderia fazer isto
+	// você também poderia fazer isso
 	$users = Flight::db()->fetchAll('SELECT * FROM users WHERE id IN (?)', [ '1,2,3,4,5']);
 
 	// Inserir um novo usuário

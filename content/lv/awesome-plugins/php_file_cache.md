@@ -2,18 +2,18 @@
 
 Viegla, vienkārša un neatkarīga PHP failu kešošanas klase
 
-**Priekšrocības** 
+**Pamatpriekšrocības**
 - Viegla, neatkarīga un vienkārša
-- Visas koda daļas vienā failā - nav lieku draiveru.
-- Drosīga - katram veidotam kešo failam ir php galvene ar die, padarot tiešu piekļuvi neiespējamu pat ja kādam ir zināms ceļš un jūsu serveris nav konfigurēts pareizi
+- Visa kods vienā failā - bezjēdzīgi draiveri.
+- Drosīga - katram ģenerētajam keša failam ir php galvene ar die, padarot tiešu piekļuvi neiespējamu pat tad, ja kāds zina ceļu un jūsu serveris nav pareizi konfigurēts
 - Labi dokumentēta un pārbaudīta
-- Pareizi apstrādā konkurenci, izmantojot flock
+- Pareizi apstrādā vienlaicību, izmantojot flock
 - Atbalsta PHP 5.4.0 - 7.1+
-- Bezmaksas saskaņā ar MIT licenci
+- Bez maksas saskaņā ar MIT licenci
 
-## Instalēšana
+## Instalācija
 
-Instalēt izmantojot composer:
+Instalēt, izmantojot komponistu:
 
 ```bash
 composer require wruczek/php-file-cache
@@ -28,26 +28,26 @@ use Wruczek\PhpFileCache\PhpFileCache;
 
 $app = Flight::app();
 
-// Jūs nododat katalogu, kurā kešatmiņa tiks saglabāta, konstruktora funkcijai
+// Jūs padodat direktoriju, kurā tiks saglabāts kešs, konstruktorā
 $app->register('cache', PhpFileCache::class, [ __DIR__ . '/../cache/' ], function(PhpFileCache $cache) {
 
-	// Tas pārliecinās, ka kešatmiņa tiek izmantota tikai tad, ja ir produkcionālā režīmā
-	// ENVIRONMENT ir konstante, kas ir iestatīta jūsu ielādes failā vai citur jūsu lietotnē
+	// Tas nodrošina, ka kešs tiek izmantots tikai tad, ja ir produkciona režīms
+	// ENVIRONMENT ir konstante, kas tiek iestatīta jūsu bootstarp failā vai citur jūsu lietotnē
 	$cache->setDevMode(ENVIRONMENT === 'development');
 });
 ```
 
-Tad jūs varat to izmantot savā kodā šādi:
+Pēc tam jūs to varat izmantot savā kodā šādi:
 
 ```php
 
-// Saņemt kešatmiņas instanci
+// Saņemt keša instanci
 $cache = Flight::cache();
 $data = $cache->refreshIfExpired('simple-cache-test', function () {
-    return date("H:i:s"); // atgriezt datus, kas tiks kešoti
+    return date("H:i:s"); // atgriezt dati, kas jākešo
 }, 10); // 10 sekundes
 
-// vai
+// vai arī
 $data = $cache->retrieve('simple-cache-test');
 if(empty($data)) {
 	$data = date("H:i:s");
@@ -57,4 +57,4 @@ if(empty($data)) {
 
 ## Dokumentācija
 
-Apmeklējiet [https://github.com/Wruczek/PHP-File-Cache](https://github.com/Wruczek/PHP-File-Cache) pilnai dokumentācijai un pārliecinieties, ka apskatāt [piemērus](https://github.com/Wruczek/PHP-File-Cache/tree/master/examples) mapē.
+Apmeklējiet [https://github.com/Wruczek/PHP-File-Cache](https://github.com/Wruczek/PHP-File-Cache), lai iegūtu pilnu dokumentāciju un pārliecinieties, ka skatāties [piemērus](https://github.com/Wruczek/PHP-File-Cache/tree/master/examples) mapē.

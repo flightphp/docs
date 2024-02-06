@@ -1,6 +1,6 @@
 # Filterung
 
-Flight ermöglicht es Ihnen, Methoden vor und nach ihrem Aufruf zu filtern. Es gibt keine vordefinierten Hooks, die Sie auswendig lernen müssen. Sie können jede der Standard-Framework-Methoden sowie benutzerdefinierte Methoden filtern, die Sie zugeordnet haben.
+Flight ermöglicht es Ihnen, Methoden vor und nach deren Aufruf zu filtern. Es sind keine vordefinierten Hooks erforderlich, die Sie auswendig lernen müssen. Sie können alle standardmäßigen Framework-Methoden sowie benutzerdefinierte Methoden filtern, die Sie zugeordnet haben.
 
 Eine Filterfunktion sieht so aus:
 
@@ -12,7 +12,7 @@ function (array &$params, string &$output): bool {
 
 Unter Verwendung der übergebenen Variablen können Sie die Eingabeparameter und/oder die Ausgabe manipulieren.
 
-Sie können einen Filter vor einer Methode ausführen, indem Sie dies tun:
+Sie können einen Filter vor einer Methode ausführen, indem Sie Folgendes tun:
 
 ```php
 Flight::before('start', function (array &$params, string &$output): bool {
@@ -20,7 +20,7 @@ Flight::before('start', function (array &$params, string &$output): bool {
 });
 ```
 
-Sie können einen Filter nach einer Methode ausführen, indem Sie dies tun:
+Sie können einen Filter nach einer Methode ausführen, indem Sie Folgendes tun:
 
 ```php
 Flight::after('start', function (array &$params, string &$output): bool {
@@ -30,39 +30,39 @@ Flight::after('start', function (array &$params, string &$output): bool {
 
 Sie können beliebig viele Filter zu einer Methode hinzufügen. Sie werden in der Reihenfolge aufgerufen, in der sie deklariert sind.
 
-Hier ist ein Beispiel des Filtervorgangs:
+Hier ist ein Beispiel des Filterungsprozesses:
 
 ```php
-// Eine benutzerdefinierte Methode zuordnen
+// Weise eine benutzerdefinierte Methode zu
 Flight::map('hello', function (string $name) {
   return "Hallo, $name!";
 });
 
-// Einen vorherigen Filter hinzufügen
+// Fügen Sie einen vorherigen Filter hinzu
 Flight::before('hello', function (array &$params, string &$output): bool {
   // Parameter manipulieren
   $params[0] = 'Fred';
   return true;
 });
 
-// Einen nachherigen Filter hinzufügen
+// Fügen Sie einen nachfolgenden Filter hinzu
 Flight::after('hello', function (array &$params, string &$output): bool {
   // Ausgabe manipulieren
   $output .= " Einen schönen Tag!";
   return true;
 });
 
-// Die benutzerdefinierte Methode aufrufen
+// Rufen Sie die benutzerdefinierte Methode auf
 echo Flight::hello('Bob');
 ```
 
-Dies sollte anzeigen:
+Dies sollte angezeigt werden:
 
 ```
 Hallo Fred! Einen schönen Tag!
 ```
 
-Wenn Sie mehrere Filter definiert haben, können Sie die Kette durch die Rückgabe von `false` in einer Ihrer Filterfunktionen unterbrechen:
+Wenn Sie mehrere Filter definiert haben, können Sie die Kette unterbrechen, indem Sie in einer Ihrer Filterfunktionen `false` zurückgeben:
 
 ```php
 Flight::before('start', function (array &$params, string &$output): bool {
@@ -77,11 +77,11 @@ Flight::before('start', function (array &$params, string &$output): bool {
   return false;
 });
 
-// Dies wird nicht aufgerufen werden
+// Dies wird nicht aufgerufen
 Flight::before('start', function (array &$params, string &$output): bool {
   echo 'three';
   return true;
 });
 ```
 
-Hinweis: Kernmethoden wie `map` und `registrieren` können nicht gefiltert werden, da sie direkt aufgerufen und nicht dynamisch aufgerufen werden.
+Hinweis: Kernmethoden wie `map` und `register` können nicht gefiltert werden, da sie direkt aufgerufen und nicht dynamisch aufgerufen werden.

@@ -5,7 +5,7 @@ Anstatt Flight als globale statische Klasse auszuführen, können Sie es optiona
 ```php
 require 'flight/autoload.php';
 
-$app = Flight::app(); // Erstellt eine Instanz
+$app = Flight::app();
 
 $app->route('/', function () {
   echo 'hello world!';

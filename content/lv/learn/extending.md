@@ -1,78 +1,69 @@
 # Paplašināšana / Konteineri
 
-Flight ir izstrādāts, lai būtu paplašināms ietvars. Ietvars nāk ar kopu
-noklusējuma metodēm un komponentēm, bet ļauj jums atkartot savas metodes,
-reģistrēt savas klases vai pat pārrakstīt esošās klases un metodes.
+Flight ir izstrādāts kā paplašināmais ietvars. Ietvars nāk ar iebūvētu metožu un komponentu kopumu, bet tas ļauj jums norādīt savas metodes, reģistrēt savas klases vai pat pārrakstīt esošās klases un metodes.
 
-## Kartēšanas Metodes
+## Metožu norādīšana
 
-Savas pielāgotās metodes atkārtot kartējot, izmantojiet funkciju `map`:
+Lai norādītu savu pielāgoto metodi, jūs izmantojat `map` funkciju:
 
 ```php
-// Kartējiet savu metodi
+// Norādīt savu metodi
 Flight::map('hello', function (string $name) {
   echo "sveiki $name!";
 });
 
 // Izsauciet savu pielāgoto metodi
-Flight::hello('Bob');
+Flight::hello('Bobs');
 ```
 
-## Reģistrēšanas Klases / Konteinerizācija
+## Klases reģistrēšana / Konteinerizācija
 
-Lai reģistrētu savu klasi, izmantojiet funkciju `register`:
+Lai reģistrētu savu klasi, jūs izmantojat `register` funkciju:
 
 ```php
-// Reģistrējiet savu klasi
-Flight::register('lietotājs', Lietotājs::klase);
+// Reģistrēt savu klasi
+Flight::register('lietotājs', User::class);
 
-// Iegūstiet sava objekta piemēru
-$user = Flight::user();
+// Iegūstiet savas klases instanci
+$user = Flight::lietotājs();
 ```
 
-Reģistrēšanas metode arī ļauj nodot parametrus jūsu klases konstruktoram.
-Tāpēc, ielādējot savu pielāgoto klasi, tā būs iepriekš inicializēta.
-Jūs varat definēt konstruktora parametrus, nododot papildu masīvu.
-Šeit ir piemērs, kā ielādēt datu bāzes savienojumu:
+Reģistrēšanas metode arī ļauj jums nodot parametrus savas klases konstruktoram. Tāpēc, ielādējot savu pielāgoto klasi, tā tiks iepriekš inicializēta. Konstruktoram paredzētos parametrus var definēt, nododot papildu masīvu. Šeit ir piemērs, kā ielādēt datu bāzes savienojumu:
 
 ```php
-// Reģistrējiet klasi ar konstruktora parametriem
-Flight::register('db', PDO::klase, ['mysql:host=localhost;dbname=test', 'lietotājs', 'parole']);
+// Reģistrēt klasi ar konstruktoram paredzētajiem parametriem
+Flight::register('db', PDO::class, ['mysql:host=lokālais_dators;dbname=testa', 'lietotājs', 'parole']);
 
-// Iegūstiet sava objekta piemēru
-// Tas izveidos objektu ar definētajiem parametriem
+// Iegūstiet savas klases instanci
+// Tiks izveidots objekts ar definētajiem parametriem
 //
 // new PDO('mysql:host=localhost;dbname=test','user','pass');
 //
 $db = Flight::db();
 ```
 
-Ja nododat papildu atsauces parametru, tas tiks izpildīts nekavējoties
-pēc klases izveides. Tas ļauj jums veikt jebkādas iestatīšanas procedūras savam
-jaunajam objektam. Atsauces funkcija ņem vienu parametru, jauno objekta piemēru.
+Ja nododat papildu atsauces parametru, tas tiks izpildīts nekavējoties pēc klases konstrukcijas. Tas ļauj jums veikt jebkādas iestatīšanas procedūras jaunajam objektam. Atsauces funkcija ņem vienu parametru - jaunā objekta instanci.
 
 ```php
-// Atsauces tiks nodots objekts, kas tika izveidots
+// Atsaucei tiks padots izveidoto objektu
 Flight::register(
   'db',
-  PDO::klase,
-  ['mysql:host=localhost;dbname=test', 'lietotājs', 'parole'],
+  PDO::class,
+  ['mysql:host=localhost;dbname=test', 'user', 'pass'],
   function (PDO $db) {
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
   }
 );
 ```
 
-Pēc noklusējuma, katru reizi, kad ielādējat savu klasi, jūs saņemsiet koplietojuma piemēru.
-Lai iegūtu jaunu klases piemēru, vienkārši nododiet `false` kā parametru:
+Pēc noklusējuma, katru reizi, kad ielādējat savu klasi, jūs saņemsiet koplietojamo instanci. Ja vēlaties jaunu klases instanci, vienkārši nododiet `false` kā parametru:
 
 ```php
-// Klases koplietojuma piemērs
+// Koplietojama klases instance
 $shared = Flight::db();
 
-// Klases jauns piemērs
-$jauns = Flight::db(false);
+// Jauna klases instance
+$new = Flight::db(false);
 ```
 
-Ņemiet vērā, ka kartētām metodēm ir priekšrocība pār reģistrētām klasēm. Ja jūs
-deklarējat abas, izmantojot vienādu nosaukumu, tiks izsaukta tikai atkartotā metode.
+Ņemiet vērā, ka norādītajām metodēm ir prioritāte salīdzinājumā ar reģistrētajām klasēm. Ja jūs deklarējat abas ar vienādu nosaukumu, tiks izsaukta tikai norādītā metode.

@@ -1,18 +1,18 @@
 # Routage
 
-Le routage dans Flight est réalisé en faisant correspondre un schéma d'URL à une fonction de rappel.
+Le routage dans Flight est effectué en associant un modèle d'URL à une fonction de rappel.
 
 ```php
 Flight::route('/', function(){
-    echo 'Bonjour le monde!';
+    echo 'bonjour le monde!';
 });
 ```
 
-La fonction de rappel peut être n'importe quel objet qui est appelable. Vous pouvez donc utiliser une fonction régulière :
+Le rappel peut être n'importe quel objet qui est appelable. Ainsi, vous pouvez utiliser une fonction régulière :
 
 ```php
 function bonjour(){
-    echo 'Bonjour le monde!';
+    echo 'bonjour le monde!';
 }
 
 Flight::route('/', 'bonjour');
@@ -23,7 +23,7 @@ Ou une méthode de classe :
 ```php
 class Salutation {
     public static function bonjour() {
-        echo 'Bonjour le monde!';
+        echo 'bonjour le monde!';
     }
 }
 
@@ -40,7 +40,7 @@ class Salutation
     }
 
     public function bonjour() {
-        echo "Bonjour, {$this->name} !";
+        echo "Bonjour, {$this->name}!";
     }
 }
 
@@ -49,11 +49,11 @@ $salutation = new Salutation();
 Flight::route('/', array($salutation, 'bonjour'));
 ```
 
-Les routes sont associées dans l'ordre où elles sont définies. La première route à satisfaire une requête sera invoquée.
+Les routes sont associées dans l'ordre où elles sont définies. La première route à correspondre à une requête sera appelée.
 
-## Routage par Méthode
+## Routage par méthode
 
-Par défaut, les schémas de routage sont associés à toutes les méthodes de requête. Vous pouvez répondre à des méthodes spécifiques en plaçant un identifiant avant l'URL.
+Par défaut, les modèles de route sont associés à toutes les méthodes de requête. Vous pouvez répondre à des méthodes spécifiques en plaçant un identifiant avant l'URL.
 
 ```php
 Flight::route('GET /', function () {
@@ -69,11 +69,11 @@ Vous pouvez également mapper plusieurs méthodes à un seul rappel en utilisant
 
 ```php
 Flight::route('GET|POST /', function () {
-  echo 'J'ai reçu une requête GET ou POST.';
+  echo 'J'ai reçu soit une requête GET ou une requête POST.';
 });
 ```
 
-## Expressions Régulières
+## Expressions régulières
 
 Vous pouvez utiliser des expressions régulières dans vos routes :
 
@@ -83,13 +83,14 @@ Flight::route('/utilisateur/[0-9]+', function () {
 });
 ```
 
-## Paramètres Nommmés
+## Paramètres nommés
 
-Vous pouvez spécifier des paramètres nommés dans vos routes qui seront transmis à votre fonction de rappel.
+Vous pouvez spécifier des paramètres nommés dans vos routes qui seront transmis
+à votre fonction de rappel.
 
 ```php
 Flight::route('/@nom/@id', function (string $nom, string $id) {
-  echo "bonjour, $nom ($id) !";
+  echo "bonjour, $nom ($id)!";
 });
 ```
 
@@ -102,11 +103,12 @@ Flight::route('/@nom/@id:[0-9]{3}', function (string $nom, string $id) {
 });
 ```
 
-La correspondance de groupes regex `()` avec des paramètres nommés n'est pas prise en charge.
+La correspondance des groupes regex `()` avec des paramètres nommés n'est pas prise en charge.
 
-## Paramètres Optionnels
+## Paramètres optionnels
 
-Vous pouvez spécifier des paramètres nommés qui sont optionnels pour la correspondance en enveloppant des segments entre parenthèses.
+Vous pouvez spécifier des paramètres nommés qui sont optionnels pour la correspondance en enveloppant
+les segments entre parenthèses.
 
 ```php
 Flight::route(
@@ -121,11 +123,12 @@ Flight::route(
 );
 ```
 
-Tous les paramètres optionnels qui ne sont pas associés seront transmis en tant que NULL.
+Tous les paramètres optionnels non correspondants seront transmis en tant que NULL.
 
 ## Jokers
 
-La correspondance se fait uniquement sur des segments d'URL individuels. Si vous souhaitez faire correspondre plusieurs segments, vous pouvez utiliser le joker `*`.
+La correspondance est effectuée uniquement sur des segments d'URL individuels. Si vous souhaitez faire correspondre plusieurs
+segments, vous pouvez utiliser le joker `*`.
 
 ```php
 Flight::route('/blog/*', function () {
@@ -133,7 +136,7 @@ Flight::route('/blog/*', function () {
 });
 ```
 
-Pour faire correspondre toutes les demandes à un seul rappel, vous pouvez faire :
+Pour router toutes les requêtes vers un seul rappel, vous pouvez faire :
 
 ```php
 Flight::route('*', function () {
@@ -143,7 +146,8 @@ Flight::route('*', function () {
 
 ## Passage
 
-Vous pouvez passer l'exécution à la route correspondante suivante en renvoyant `true` depuis votre fonction de rappel.
+Vous pouvez passer l'exécution à la route correspondante suivante en retournant `true` à partir
+de votre fonction de rappel.
 
 ```php
 Flight::route('/utilisateur/@nom', function (string $nom) {
@@ -159,13 +163,16 @@ Flight::route('/utilisateur/*', function () {
 });
 ```
 
-## Infos sur la Route
+## Informations sur la route
 
-Si vous voulez inspecter les informations de route correspondantes, vous pouvez demander que l'objet de route soit transmis à votre fonction de rappel en passant `true` en tant que troisième paramètre dans la méthode de route. L'objet de route sera toujours le dernier paramètre transmis à votre fonction de rappel.
+Si vous souhaitez inspecter les informations sur la route correspondante, vous pouvez demander à ce que la route
+l'objet soit transmis à votre fonction de rappel en passant `true` en tant que troisième paramètre dans
+la méthode de route. L'objet de route sera toujours le dernier paramètre transmis à votre
+fonction de rappel.
 
 ```php
 Flight::route('/', function(\flight\net\Route $route) {
-  // Tableau des méthodes HTTP associées
+  // Tableau des méthodes HTTP correspondantes
   $route->methods;
 
   // Tableau des paramètres nommés
@@ -174,14 +181,15 @@ Flight::route('/', function(\flight\net\Route $route) {
   // Expression régulière correspondante
   $route->regex;
 
-  // Contient le contenu de tout '*' utilisé dans le schéma d'URL
+  // Contient le contenu de tout '*' utilisé dans le modèle d'URL
   $route->splat;
 }, true);
 ```
 
-## Regroupement de Routes
+## Regroupement des routes
 
-Il peut arriver que vous vouliez regrouper des routes associées ensemble (comme `/api/v1`). Vous pouvez le faire en utilisant la méthode `group` :
+Il peut arriver que vous souhaitiez regrouper des routes associées ensemble (comme `/api/v1`).
+Vous pouvez le faire en utilisant la méthode `group` :
 
 ```php
 Flight::group('/api/v1', function () {
@@ -189,8 +197,8 @@ Flight::group('/api/v1', function () {
 	// Correspond à /api/v1/utilisateurs
   });
 
-  Flight::route('/publications', function () {
-	// Correspond à /api/v1/publications
+  Flight::route('/articles', function () {
+	// Correspond à /api/v1/articles
   });
 });
 ```
@@ -200,22 +208,22 @@ Vous pouvez même imbriquer des groupes de groupes :
 ```php
 Flight::group('/api', function () {
   Flight::group('/v1', function () {
-	// Flight::get() obtient des variables, il ne définit pas une route ! Voir le contexte de l'objet ci-dessous
+	// Flight::get() obtient des variables, il ne définit pas de route ! Voir le contexte de l'objet ci-dessous
 	Flight::route('GET /utilisateurs', function () {
 	  // Correspond à GET /api/v1/utilisateurs
 	});
 
-	Flight::post('/publications', function () {
-	  // Correspond à POST /api/v1/publications
+	Flight::post('/articles', function () {
+	  // Correspond à POST /api/v1/articles
 	});
 
-	Flight::put('/publications/1', function () {
-	  // Correspond à PUT /api/v1/publications
+	Flight::put('/articles/1', function () {
+	  // Correspond à PUT /api/v1/articles
 	});
   });
   Flight::group('/v2', function () {
 
-	// Flight::get() obtient des variables, il ne définit pas une route ! Voir le contexte de l'objet ci-dessous
+	// Flight::get() obtient des variables, il ne définit pas de route ! Voir le contexte de l'objet ci-dessous
 	Flight::route('GET /utilisateurs', function () {
 	  // Correspond à GET /api/v2/utilisateurs
 	});
@@ -223,9 +231,9 @@ Flight::group('/api', function () {
 });
 ```
 
-### Regroupement avec le Contexte d'Objet
+### Regroupement avec le contexte de l'objet
 
-Vous pouvez toujours utiliser le regroupement de routes avec l'objet `Engine` de la manière suivante :
+Vous pouvez toujours utiliser le regroupement des routes avec l'objet `Engine` de la manière suivante :
 
 ```php
 $app = new \flight\Engine();
@@ -234,15 +242,15 @@ $app->group('/api/v1', function (Router $router) {
 	// Correspond à GET /api/v1/utilisateurs
   });
 
-  $router->post('/publications', function () {
-	// Correspond à POST /api/v1/publications
+  $router->post('/articles', function () {
+	// Correspond à POST /api/v1/articles
   });
 });
 ```
 
-## Alias de Route
+## Aliasing des routes
 
-Vous pouvez attribuer un alias à une route, afin que l'URL puisse être générée dynamiquement plus tard dans votre code (comme un modèle par exemple).
+Vous pouvez assigner un alias à une route, de sorte que l'URL puisse être générée dynamiquement plus tard dans votre code (comme un modèle par exemple).
 
 ```php
 Flight::route('/utilisateurs/@id', function($id) { echo 'utilisateur:'.$id; }, false, 'vue_utilisateur');
@@ -251,10 +259,10 @@ Flight::route('/utilisateurs/@id', function($id) { echo 'utilisateur:'.$id; }, f
 Flight::getUrl('vue_utilisateur', [ 'id' => 5 ]); // retournera '/utilisateurs/5'
 ```
 
-Cela est particulièrement utile si votre URL devait changer. Dans l'exemple ci-dessus, disons que les utilisateurs ont été déplacés vers `/admin/utilisateurs/@id` à la place.
-Avec l'alias en place, vous n'avez pas à changer les références à l'alias car celui-ci retournera maintenant `/admin/utilisateurs/5` comme dans l'exemple ci-dessus.
+Ceci est particulièrement utile si votre URL venait à changer. Dans l'exemple ci-dessus, disons que les utilisateurs ont été déplacés vers `/admin/utilisateurs/@id` à la place.
+Avec l'aliasing en place, vous n'avez pas à modifier partout où vous référencez l'alias car l'alias retournera maintenant `/admin/utilisateurs/5` comme dans l'exemple ci-dessus.
 
-L'alias de route fonctionne également dans les groupes :
+L'aliasing des routes fonctionne également dans les groupes :
 
 ```php
 Flight::group('/utilisateurs', function() {
@@ -266,60 +274,62 @@ Flight::group('/utilisateurs', function() {
 Flight::getUrl('vue_utilisateur', [ 'id' => 5 ]); // retournera '/utilisateurs/5'
 ```
 
-## Middleware de Routage
-Flight prend en charge les middleware de route et de groupe de route. Un middleware est une fonction qui est exécutée avant (ou après) le rappel de la route. C'est une excellente façon d'ajouter des vérifications d'authentification d'API dans votre code, ou de valider que l'utilisateur a la permission d'accéder à la route.
+## Middleware des routes
+
+Flight prend en charge le middleware des routes et du groupement des routes. Le middleware est une fonction qui est exécutée avant (ou après) le rappel de la route. C'est une excellente façon d'ajouter des vérifications d'authentification API dans votre code, ou de valider que l'utilisateur a l'autorisation d'accéder à la route.
 
 Voici un exemple de base :
 
 ```php
 // Si vous ne fournissez qu'une fonction anonyme, elle sera exécutée avant le rappel de la route. 
-// il n'y a pas de fonctions middleware "après" sauf pour les classes (voir ci-dessous)
-Flight::route('/chemin', function() { echo 'Me voilà !'; })->addMiddleware(function() {
-	echo 'Middleware d'abord !';
+// il n'y a pas de fonctions de middleware "after" sauf pour les classes (voir ci-dessous)
+Flight::route('/chemin', function() { echo 'Me voici!'; })->addMiddleware(function() {
+	echo 'Middleware en premier!';
 });
 
 Flight::start();
 
-// Cela affichera "Middleware d'abord ! Me voilà !"
+// Cela affichera "Middleware en premier! Me voici!"
 ```
 
-Il y a quelques notes très importantes sur les middleware que vous devriez connaître avant de les utiliser :
-- Les fonctions middleware sont exécutées dans l'ordre où elles sont ajoutées à la route. L'exécution est similaire à celle de la façon dont [Slim Framework gère ceci](https://www.slimframework.com/docs/v4/concepts/middleware.html#how-does-middleware-work).
-   - Les Avant sont exécutés dans l'ordre ajouté, et les Après sont exécutés dans l'ordre inverse.
-- Si votre fonction middleware retourne false, toute l'exécution s'arrête et une erreur 403 Forbidden est déclenchée. Vous voudrez probablement gérer cela de manière plus gracieuse avec un `Flight::rediriger()` ou quelque chose de similaire.
-- Si vous avez besoin de paramètres de votre route, ils seront transmis dans un seul tableau à votre fonction middleware. (`function($params) { ... }` ou `public function before($params) {}`). La raison en est que vous pouvez structurer vos paramètres en groupes et dans certains de ces groupes, vos paramètres pourraient apparaître dans un ordre différent ce qui casserait la fonction middleware en faisant référence au mauvais paramètre. De cette façon, vous pouvez y accéder par nom au lieu de par position.
+Il y a quelques notes très importantes sur le middleware que vous devez connaître avant de les utiliser :
+- Les fonctions de middleware sont exécutées dans l'ordre où elles sont ajoutées à la route. L'exécution est similaire à celle de [Slim Framework](https://www.slimframework.com/docs/v4/concepts/middleware.html#how-does-middleware-work).
+   - Les "avant" sont exécutés dans l'ordre ajouté, et les "après" sont exécutés dans l'ordre inverse.
+- Si votre fonction de middleware renvoie false, toute l'exécution est arrêtée et une erreur 403 Forbidden est déclenchée. Vous voudrez probablement gérer cela de manière plus gracieuse avec une `Flight::redirect()` ou quelque chose de similaire.
+- Si vous avez besoin de paramètres de votre route, ils seront transmis dans un seul tableau à votre fonction de middleware. (`function($params) { ... }` ou `public function before($params) {}`). La raison en est que vous pouvez structurer vos paramètres en groupes et que dans certains de ces groupes, vos paramètres peuvent apparaître dans un ordre différent, ce qui pourrait casser la fonction de middleware en se référant au mauvais paramètre. De cette façon, vous pouvez y accéder par nom au lieu de par position.
 
-### Classes Middleware
+### Classes de middleware
 
-Les middleware peuvent également être enregistrés en tant que classe. Si vous avez besoin de la fonctionnalité "après", vous devez utiliser une classe.
+Le middleware peut également être enregistré en tant que classe. Si vous avez besoin de la fonctionnalité "après", vous devez utiliser une classe.
 
 ```php
 class MonMiddleware {
 	public function before($params) {
-		echo 'Middleware d'abord !';
+		echo 'Middleware en premier!';
 	}
 
 	public function after($params) {
-		echo 'Middleware en dernier !';
+		echo 'Middleware en dernier!';
 	}
 }
 
 $MonMiddleware = new MonMiddleware();
-Flight::route('/chemin', function() { echo 'Me voilà! '; })->addMiddleware($MonMiddleware); // aussi ->addMiddleware([ $MonMiddleware, $MonMiddleware2 ]);
+Flight::route('/chemin', function() { echo ' Me voici! '; })->addMiddleware($MonMiddleware); // aussi ->addMiddleware([ $MonMiddleware, $MonMiddleware2 ]);
 
 Flight::start();
 
-// Cela affichera "Middleware d'abord ! Me voilà ! Middleware en dernier !"
+// Cela affichera "Middleware en premier! Me voici! Middleware en dernier!"
 ```
 
-### Groupes Middleware
+### Groupes de middleware
 
-Vous pouvez ajouter un groupe de route, et ensuite chaque route de ce groupe aura également le même middleware. C'est utile si vous devez regrouper un tas de routes par exemple en un middleware Auth pour vérifier la clé API dans l'en-tête.
+Vous pouvez ajouter un groupe de route, et ensuite chaque route dans ce groupe aura le même middleware également. C'est utile si vous avez besoin de regrouper un ensemble de routes par exemple avec un middleware Auth pour vérifier la clé API dans l'en-tête.
 
 ```php
 
-// ajouté à la fin de la méthode group
+// ajouté à la fin de la méthode de groupe
 Flight::group('/api', function() {
     Flight::route('/utilisateurs', function() { echo 'utilisateurs'; }, false, 'utilisateurs');
 	Flight::route('/utilisateurs/@id', function($id) { echo 'utilisateur:'.$id; }, false, 'vue_utilisateur');
-}, [ new MiddlewareApiAuth() ]);
+}, [ new ApiAuthMiddleware() ]);
+```

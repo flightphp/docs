@@ -1,25 +1,29 @@
-# MIT licences (MIT)
-=====================
+```
+MIT Licence (MIT)
+=================
 
-Autors: `2023` `@mikecao, @n0nag0n`
+Autortiesības © `2023` `@mikecao, @n0nag0n`
 
-Atļauja tiek piešķirta ikvienam interesentam bez maksas, lai
-iegūtu šī programmatūras un saistīto dokumentāciju
-failus (turpmāk "Programmatūra"), lai izmantotu Programmatūru
-bez ierobežojumiem, ieskaitot tiesības izmantot,
-kopēt, modificēt, apvienot, publicēt, izplatīt, sublicencēt un/vai pārdot
-Programmas kopijas, kā arī atļaut personām, kurām
-Programma ir nodota, darīt to, ievērojot
-sekojošos nosacījumus:
+Atļauja tiek izsniegta bez maksas jebkuram
+personai, kas iegūst šīs programmatūras
+kopiju un saistītos dokumentus (“Programmatūra”),
+izmantot Programmatūru bez
+ierobežojumiem, tostarp tiesības lietot,
+kopēt, modificēt, apvienot, publicēt, izplatīt,
+atļaut, un/vai pārdot Programmatūras kopijas, un atļaut
+personām, kurām Programmatūra tiek nodota, darīt to,
+atbilstoši šādiem nosacījumiem:
 
-Augstāk minētā autortiesību ziņojums un šī atļauja paziņojums jāiekļauj
-visos Programmas eksemplāros vai būtiskos tā gabalos.
+Augstāk minētā autortiesību paziņojums un šī atļaujas paziņojums
+jāiekļauj visās kopijās vai būtiskās Programmatūras daļās.
 
-PROGRAMMATŪRA TIEK NODROŠINĀTA "KĀ TA", BEZ JEBKĀDAS GARANTIJAS,
-EXPLICITI VAI IMPLICITI, IETVEROT, BET NEIEROBEŽOJOTIES GARANTIJAS
-PAR PĀRDEVĒJAMĪBU, PIEMĒROTĪBU KONKRĒTĀM VĀJĪBĀM UN
-IERAIDU. NEKĀDĀ GADĪJUMĀ AUTORI VAI AUTORPAMATNIEKI
-NEUZŅEMSIES ATBILDĪBU PAR JEBKĀDU PRASĪBU, ZAUDĒJUMIEM VAI CITĀM SAISTĪBĀM,
-NEATKARĪGI NO TĀ, VAI TĀS RODAS NO LĪGUMA DARĪJUMIEM, NETIESISKI
-VAI CITĀDI, RODAS NO PROGRAMMATŪRAS VAI LIETOJUMA VAI
-CITĀM DARĪBĀM AR PROGRAMMATŪRU.
+PROGRAMMATŪRA TIEK NODROŠINĀTA “KĀ TĀDA”, BEZ JEBKĀDAS GARANTIJAS,
+BŪTISKAS VAI PIEŠĶIRTAS, IETVEROT, BET BEZ IERIECĪBAS
+TIRGUMĪBAI, PIEMĒROTĪBU KONKRĒTAM MĒRKIM UN
+NEPIETIEKOŠUMU. NEKĀDOS APSTĀKĻOS AUTORI VAI AUTORU
+TIESNES NESATURĒS ATBILDĪBU PAR JEBKĀDU PRASĪBU, ZAUDĒJUMU VAI
+CITU SAISTĪBU, VAI TĀDAS RADĪŠANĀS,
+IZCELOTU JAUTĀJUMU, VAI CITĀDI, KAS RADIES
+NO, VAI SAISTĪTS AR PROGRAMMATŪRU VAI LIETOŠANU VAI
+CITĀM DARĪJUMIEM AR PROGRAMMATŪRU.   
+```  

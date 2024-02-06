@@ -1,11 +1,11 @@
 # Wruczek/PHP-File-Cache
 
-Classe PHP en cache de fichier légère, simple et autonome
+Classe de mise en cache de fichier PHP légère, simple et autonome
 
 **Avantages**
 - Légère, autonome et simple
 - Tout le code dans un seul fichier - pas de pilotes inutiles.
-- Sécurisé - chaque fichier de cache généré a un en-tête php avec die, rendant l'accès direct impossible même si quelqu'un connaît le chemin et que votre serveur n'est pas configuré correctement
+- Sécurisé - chaque fichier de cache généré a un en-tête php avec die, rendant l'accès direct impossible même si quelqu'un connait le chemin et que votre serveur n'est pas configuré correctement
 - Bien documenté et testé
 - Gère correctement la concurrence via flock
 - Prend en charge PHP 5.4.0 - 7.1+
@@ -31,20 +31,20 @@ $app = Flight::app();
 // Vous passez le répertoire dans lequel le cache sera stocké dans le constructeur
 $app->register('cache', PhpFileCache::class, [ __DIR__ . '/../cache/' ], function(PhpFileCache $cache) {
 
-	// Cela garantit que le cache n'est utilisé que lorsque le mode production est activé
+	// Cela garantit que le cache n'est utilisé que en mode production
 	// ENVIRONMENT est une constante définie dans votre fichier d'amorçage ou ailleurs dans votre application
 	$cache->setDevMode(ENVIRONMENT === 'development');
 });
 ```
 
-Ensuite, vous pouvez l'utiliser dans votre code de cette manière :
+Ensuite, vous pouvez l'utiliser dans votre code comme ceci :
 
 ```php
 
 // Obtenir l'instance du cache
 $cache = Flight::cache();
 $data = $cache->refreshIfExpired('simple-cache-test', function () {
-    return date("H:i:s"); // retourne les données à mettre en cache
+    return date("H:i:s"); // retourner les données à mettre en cache
 }, 10); // 10 secondes
 
 // ou
@@ -57,4 +57,4 @@ if(empty($data)) {
 
 ## Documentation
 
-Visitez [https://github.com/Wruczek/PHP-File-Cache](https://github.com/Wruczek/PHP-File-Cache) pour la documentation complète et assurez-vous de consulter le [dossier des exemples](https://github.com/Wruczek/PHP-File-Cache/tree/master/examples).
+Visitez [https://github.com/Wruczek/PHP-File-Cache](https://github.com/Wruczek/PHP-File-Cache) pour une documentation complète et assurez-vous de consulter le dossier [examples](https://github.com/Wruczek/PHP-File-Cache/tree/master/examples).

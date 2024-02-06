@@ -2,8 +2,8 @@
 
 ## Erros e Exceções
 
-Todos os erros e exceções são capturados pelo Flight e passados para o método `error`.
-O comportamento padrão é enviar uma resposta genérica de `Erro de Servidor Interno HTTP 500`
+Todos os erros e exceções são interceptados pelo Flight e passados para o método `error`.
+O comportamento padrão é enviar uma resposta genérica de `HTTP 500 Erro Interno do Servidor`
 com algumas informações de erro.
 
 Você pode substituir esse comportamento para suas próprias necessidades:
@@ -15,7 +15,8 @@ Flight::map('error', function (Throwable $error) {
 });
 ```
 
-Por padrão, os erros não são registrados no servidor web. Você pode ativar isso alterando a configuração:
+Por padrão, os erros não são registrados no servidor web. Você pode habilitar isso
+alterando a configuração:
 
 ```php
 Flight::set('flight.log_errors', true);
@@ -23,8 +24,8 @@ Flight::set('flight.log_errors', true);
 
 ## Não Encontrado
 
-Quando uma URL não pode ser encontrada, o Flight chama o método `notFound`. O comportamento padrão
-é enviar uma resposta de `Não Encontrado HTTP 404` com uma mensagem simples.
+Quando um URL não pode ser encontrado, o Flight chama o método `notFound`. O comportamento
+padrão é enviar uma resposta de `HTTP 404 Não Encontrado` com uma mensagem simples.
 
 Você pode substituir esse comportamento para suas próprias necessidades:
 
@@ -32,4 +33,4 @@ Você pode substituir esse comportamento para suas próprias necessidades:
 Flight::map('notFound', function () {
   // Lidar com não encontrado
 });
-```
+```  

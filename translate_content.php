@@ -10,7 +10,9 @@ $languages = [
 	'fr',
 	'lv',
 	'pt',
-	'de'
+	'de',
+	'ru',
+	'zh'
 ];
 
 $top_level_files = glob(__DIR__ . '/content/en/*.md');

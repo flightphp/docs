@@ -1,18 +1,18 @@
 # Latte
 
-Latte is a voll funktionsfähiger Template-Motor, der sehr einfach zu bedienen ist und sich näher an einer PHP-Syntax anfühlt als Twig oder Smarty. Es ist auch sehr einfach zu erweitern und eigene Filter und Funktionen hinzuzufügen.
+Latte ist eine vollständig ausgestattete Vorlagen-Engine, die sehr einfach zu bedienen ist und sich näher an einer PHP-Syntax als Twig oder Smarty anfühlt. Es ist auch sehr einfach zu erweitern und eigene Filter und Funktionen hinzuzufügen.
 
 ## Installation
 
-Installieren Sie mit Composer.
+Mit Composer installieren.
 
 ```bash
 composer require latte/latte
 ```
 
-## Grundkonfiguration
+## Grundlegende Konfiguration
 
-Es gibt einige grundlegende Konfigurationsoptionen, um loszulegen. Weitere Informationen dazu finden Sie in der [Latte-Dokumentation](https://latte.nette.org/en/guide).
+Es gibt einige grundlegende Konfigurationsoptionen, um zu beginnen. Weitere Informationen dazu finden Sie in der [Latte-Dokumentation](https://latte.nette.org/de/guide).
 
 ```php
 
@@ -24,12 +24,12 @@ $app = Flight::app();
 
 $app->register('latte', LatteEngine::class, [], function(LatteEngine $latte) use ($app) {
 
-	// Hier speichert Latte Ihre Templates, um die Geschwindigkeit zu erhöhen
-	// Eine coole Sache an Latte ist, dass es Ihren Cache automatisch erneuert,
-	// wenn Sie Änderungen an Ihren Templates vornehmen!
+	// Hier wird Latte Ihre Vorlagen zwischenspeichern, um die Dinge zu beschleunigen
+	// Eine interessante Sache an Latte ist, dass es automatisch Ihre
+	// Zwischenspeicher aktualisiert, wenn Sie Änderungen an Ihren Vorlagen vornehmen!
 	$latte->setTempDirectory(__DIR__ . '/../cache/');
 
-	// Sagen Sie Latte, wo sich das Stammverzeichnis Ihrer Ansichten befinden wird.
+	// Geben Sie Latte an, wo sich das Stammverzeichnis Ihrer Ansichten befindet.
 	$latte->setLoader(new \Latte\Loaders\FileLoader(__DIR__ . '/../views/'));
 });
 ```
@@ -41,7 +41,7 @@ Hier ist ein einfaches Beispiel für eine Layout-Datei. Diese Datei wird verwend
 ```html
 <!-- app/views/layout.latte -->
 <!doctype html>
-<html lang="en">
+<html lang="de">
 	<head>
 		<title>{$title ? $title . ' - '}Meine App</title>
 		<link rel="stylesheet" href="style.css">
@@ -67,7 +67,7 @@ Und jetzt haben wir Ihre Datei, die innerhalb dieses Inhaltsblocks gerendert wir
 
 ```html
 <!-- app/views/home.latte -->
-<!-- Dies sagt Latte, dass diese Datei "innerhalb" der layout.latte-Datei ist -->
+<!-- Dies teilt Latte mit, dass diese Datei "innerhalb" der layout.latte-Datei liegt -->
 {extends layout.latte}
 
 <!-- Dies ist der Inhalt, der innerhalb des Layouts im Inhaltsblock gerendert wird -->
@@ -77,10 +77,10 @@ Und jetzt haben wir Ihre Datei, die innerhalb dieses Inhaltsblocks gerendert wir
 {/block}
 ```
 
-Dann, wenn Sie dies in Ihrer Funktion oder Ihrem Controller rendern wollen, würden Sie etwas wie folgt tun:
+Dann, wenn Sie dies in Ihrer Funktion oder Ihrem Controller rendern möchten, würden Sie etwas wie folgt tun:
 
 ```php
-// einfacher Route
+// einfacher Routenaufruf
 Flight::route('/', function () {
 	Flight::latte()->render('home.latte', [
 		'title' => 'Startseite'
@@ -102,4 +102,4 @@ class HomeController
 }
 ```
 
-Sehen Sie sich die [Latte-Dokumentation](https://latte.nette.org/en/guide) für weitere Informationen zur Verwendung von Latte in vollem Umfang an!
+Sehen Sie sich die [Latte-Dokumentation](https://latte.nette.org/de/guide) für weitere Informationen darüber an, wie Sie Latte optimal nutzen können!

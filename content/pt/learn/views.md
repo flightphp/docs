@@ -1,12 +1,15 @@
-# Visualizações
+## Vistas
 
-Flight fornece alguma funcionalidade básica de modelagem por padrão. Para exibir um modelo de visualização, chame o método `render` com o nome do arquivo de modelo e dados de modelo opcionais:
+Flight fornece alguma funcionalidade básica de modelagem por padrão. Para exibir uma vista
+chame o método `render` com o nome do arquivo de modelo e dados de modelo opcionais:
 
 ```php
 Flight::render('hello.php', ['name' => 'Bob']);
 ```
 
-Os dados do modelo passados são automaticamente injetados no modelo e podem ser referenciados como uma variável local. Os arquivos de modelo são simplesmente arquivos PHP. Se o conteúdo do arquivo de modelo `hello.php` for:
+Os dados do modelo que você passa são automaticamente injetados no modelo e podem
+ser referenciados como uma variável local. Os arquivos de modelo são simplesmente arquivos PHP. Se o
+conteúdo do arquivo de modelo `hello.php` for:
 
 ```php
 Olá, <?= $name ?>!
@@ -30,9 +33,11 @@ A variável `name` agora está disponível em todas as suas visualizações. Ent
 Flight::render('hello');
 ```
 
-Observe que ao especificar o nome do modelo no método de renderização, você pode omitir a extensão `.php`.
+Observe que ao especificar o nome do modelo no método render, você pode
+omitir a extensão `.php`.
 
-Por padrão, o Flight procurará um diretório `views` para arquivos de modelo. Você pode definir um caminho alternativo para seus modelos configurando o seguinte:
+Por padrão, o Flight procurará um diretório `views` para arquivos de modelo. Você pode
+definir um caminho alternativo para seus modelos configurando o seguinte:
 
 ```php
 Flight::set('flight.views.path', '/caminho/para/views');
@@ -40,14 +45,15 @@ Flight::set('flight.views.path', '/caminho/para/views');
 
 ## Layouts
 
-É comum os sites terem um único arquivo de modelo de layout com conteúdo alternante. Para renderizar conteúdo a ser usado em um layout, você pode passar um parâmetro opcional para o método `render`.
+É comum que sites tenham um único arquivo de modelo de layout com conteúdo alternante. Para renderizar conteúdo a ser usado em um layout, você pode passar um parâmetro opcional para o método `render`.
 
 ```php
 Flight::render('header', ['heading' => 'Olá'], 'headerContent');
 Flight::render('body', ['body' => 'Mundo'], 'bodyContent');
 ```
 
-Sua visualização então terá variáveis salvas chamadas `headerContent` e `bodyContent`. Você pode então renderizar seu layout fazendo:
+Sua visualização então terá variáveis salvas chamadas `headerContent` e `bodyContent`.
+Você pode então renderizar seu layout fazendo:
 
 ```php
 Flight::render('layout', ['title' => 'Página Inicial']);
@@ -94,16 +100,18 @@ A saída seria:
 </html>
 ```
 
-## Visualizações Personalizadas
+## Vistas Personalizadas
 
-Flight permite que você altere a engine de visualização padrão simplesmente registrando sua própria classe de visualização. Aqui está como você usaria a [Smarty](http://www.smarty.net/) template engine para suas visualizações:
+O Flight permite que você substitua a engine de visualização padrão simplesmente registrando sua
+própria classe de visualização. Veja como você usaria o [Smarty](http://www.smarty.net/) 
+template engine para suas visualizações:
 
 ```php
-// Carregar biblioteca Smarty
+// Carregar biblioteca do Smarty
 require './Smarty/libs/Smarty.class.php';
 
-// Registrar o Smarty como a classe de visualização
-// Também passe uma função de retorno de chamada para configurar o Smarty ao carregar
+// Registrar Smarty como a classe de visualização
+// Também passar uma função de retorno de chamada para configurar o Smarty ao carregar
 Flight::register('view', Smarty::class, [], function (Smarty $smarty) {
   $smarty->setTemplateDir('./templates/');
   $smarty->setCompileDir('./templates_c/');
@@ -125,4 +133,4 @@ Flight::map('render', function(string $template, array $data): void {
   Flight::view()->assign($data);
   Flight::view()->display($template);
 });
-```  
+```

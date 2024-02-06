@@ -1,27 +1,28 @@
 # ¿Qué es Flight?
 
-Flight es un framework rápido, simple y extensible para PHP.
-Flight te permite construir aplicaciones web RESTful de forma rápida y sencilla.
+Flight es un marco rápido, simple y extensible para PHP. Es bastante versátil y se puede utilizar para construir cualquier tipo de aplicación web. Está construido con la simplicidad en mente y está escrito de una manera fácil de entender y usar.
+
+Flight es un gran marco para principiantes que son nuevos en PHP y quieren aprender a construir aplicaciones web. También es un gran marco para desarrolladores experimentados que desean construir aplicaciones web de forma rápida y sencilla. Está diseñado para construir fácilmente una API RESTful, una aplicación web simple o una aplicación web compleja.
 
 ```php
 <?php
 
 // si se instaló con composer
 require 'vendor/autoload.php';
-// o si se instaló manualmente mediante archivo zip
+// o si se instaló manualmente mediante un archivo zip
 // require 'flight/Flight.php';
 
 Flight::route('/', function() {
-  echo '¡Hola Mundo!';
+  echo '¡hola mundo!';
 });
 
 Flight::start();
 ```
 
-¿Suficientemente simple verdad? [¡Aprende más sobre Flight!](learn)
+¿Lo suficientemente simple verdad? [¡Aprende más sobre Flight!](learn)
 
-## Aplicación Skeleton
-Hay una aplicación de ejemplo que puede ayudarte a comenzar con el Framework Flight. ¡Ve a [flightphp/skeleton](https://github.com/flightphp/skeleton) para obtener instrucciones sobre cómo empezar!
+## Inicio Rápido
+Hay una aplicación de ejemplo que puede ayudarte a comenzar con el Marco de Flight. ¡Ve a [flightphp/skeleton](https://github.com/flightphp/skeleton) para obtener instrucciones sobre cómo empezar! También puedes visitar la página de [ejemplos](examples) para inspirarte en algunas de las cosas que puedes hacer con Flight.
 
 # Comunidad
 
@@ -29,15 +30,17 @@ Hay una aplicación de ejemplo que puede ayudarte a comenzar con el Framework Fl
 
 # Contribuir
 
-Este sitio web está alojado en [Github](https://github.com/flightphp/docs). Si notas un error, ¡siéntete libre de corregirlo y enviar un pull request!
-Intentamos estar al día con las cosas, pero las actualizaciones y traducciones de idiomas son bienvenidas.
+Hay dos formas en las que puedes contribuir a Flight: 
+
+1. Puedes contribuir al marco principal visitando el [repositorio central](https://github.com/flightphp/core). 
+1. Puedes contribuir a la documentación. Este sitio web de documentación está alojado en [Github](https://github.com/flightphp/docs). Si notas un error o deseas mejorar algo, ¡siéntete libre de corregirlo y enviar un pull request! Intentamos mantenernos al día con las cosas, pero las actualizaciones y traducciones de idiomas son bienvenidas.
 
 # Requisitos
 
 Flight requiere PHP 7.4 o superior.
 
-**Nota:** PHP 7.4 es compatible porque en el momento actual de escritura (2024) es la versión predeterminada para algunas distribuciones de Linux LTS. Forzar un cambio a PHP >8 causaría muchos dolores de cabeza para esos usuarios. El framework también es compatible con PHP >8.
+**Nota:** PHP 7.4 es compatible porque en el momento actual de escritura (2024) PHP 7.4 es la versión predeterminada para algunas distribuciones LTS de Linux. Forzar un cambio a PHP >8 causaría muchos dolores de cabeza para esos usuarios. El marco también es compatible con PHP >8.
 
 # Licencia
 
-Flight se publica bajo la licencia [MIT](https://github.com/flightphp/core/blob/master/LICENSE).
+Flight se lanza bajo la licencia [MIT](https://github.com/flightphp/core/blob/master/LICENSE).

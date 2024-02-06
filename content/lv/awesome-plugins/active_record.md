@@ -1,91 +1,92 @@
 # FlightPHP Aktīvais ieraksts
-Aktīvais ieraksts ir datu bāzes vienības atspoguļošana PHP objektā. Vienkārši runājot, ja jums ir lietotāji tabula datu bāzē, jūs varat "tulko" tabulā esošo rindiņu uz `User` klasi un `$user` objektu jūsu kodola bāzē. Skatiet [pamata piemēru](#pamata-piemērs).
 
-## Pamata piemērs
+Aktīvais ieraksts ir datu bāzes iedarbināšana PHP objektā. Runājot vienkārši, ja jums ir lietotāju tabula jūsu datu bāzē, jūs varat "pārtulkot" rindu šajā tabulā uz `User` klasi un `$user` objektu jūsu koda pamatnē. Skatiet [pamata piemēru](#pamata-piemērs).
 
-Pieņemsim, ka jums ir šāda tabula:
+## Pamata Piemērs
+
+Pretim ņemsim šo tabulu:
 
 ```sql
-CREATE TABLE users (
+CREATE TABLE lietotaji (
 	id INTEGER PRIMARY KEY, 
-	name TEXT, 
-	password TEXT 
+	vārds TEKSTS, 
+	parole TEKSTS 
 );
 ```
 
-Tagad jūs varat iestatīt jaunu klasi, lai pārstāvētu šo tabulu:
+Tagad jūs varat iestatīt jaunu klasi, lai attēlotu šo tabulu:
 
 ```php
 /**
  * ActiveRecord klase parasti ir vienskaitlis
  * 
- * Ļoti ieteicams pievienot tabulas īpašības kā komentārus šeit
+ * Ieteicams pievienot tabulas īpašības šeit kā komentārus
  * 
  * @property int    $id
- * @property string $name
- * @property string $password
+ * @property string $vārds
+ * @property string $parole
  */ 
-class User extends flight\ActiveRecord {
-	public function __construct($datu_bāzes_savienojums)
+class Lietotājs atspējas\ActiveRecord {
+	public function __construct($datubāzes_savienojums)
 	{
-		// to varat iestatīt šādi
-		parent::__construct($datu_bāzes_savienojums, 'users');
+		// jūs varat iestatīt to šādi
+		veids::__construct($datubāzes_savienojums, 'lietotaji');
 		// vai arī šādi
-		parent::__construct($datu_bāzes_savienojums, null, [ 'table' => 'users']);
+		veids::__construct($datubāzes_savienojums, null, [ 'tabula' => 'lietotaji']);
 	}
 }
 ```
 
-Tagad skatieties, kā notiek maģija!
+Tagad vērojiet maģiju notiekam!
 
 ```php
-// priekš sqlite
-$datu_bāzes_savienojums = new PDO('sqlite:test.db'); // tas ir tikai piemēram, jūs droši vien izmantotu reālu datu bāzes savienojumu
+// sqlite
+$datubāzes_savienojums = new PDO('sqlite:test.db'); // tas ir tikai piemēram, iespējams, izmantojat reālu datubāzes savienojumu
 
-// priekš mysql
-$datu_bāzes_savienojums = new PDO('mysql:host=localhost;dbname=test_db&charset=utf8bm4', 'lietotājvārds', 'parole');
+// mysql
+$datubāzes_savienojums = new PDO('mysql:host=localhost;dbname=test_db&charset=utf8bm4', 'lietotājvārds', 'parole');
 
 // vai mysqli
-$datu_bāzes_savienojums = new mysqli('localhost', 'lietotājvārds', 'parole', 'test_db');
-// vai arī mysqli ar objekta pamatotu izveidošanu
-$datu_bāzes_savienojums = mysqli_connect('localhost', 'lietotājvārds', 'parole', 'test_db');
+$datubāzes_savienojums = new mysqli('localhost', 'lietotājvārds', 'parole', 'test_db');
+// vai mysqli ar neobjektu pamata izveidošanu
+$datubāzes_savienojums = mysqli_connect('localhost', 'lietotājvārds', 'parole', 'test_db');
 
-$user = new User($datu_bāzes_savienojums);
-$user->name = 'John Doe';
-$user->password = password_hash('kāda lieliska parole');
-$user->insert();
-// vai $user->save();
+$lietotājs = new Lietotājs($datubāzes_savienojums);
+$lietotājs->vārds = 'Bobijs Tabules';
+$lietotājs->parole = password_hash('daudz jauka parole');
+$lietotājs->insert();
+// vai $lietotājs->save();
 
-echo $user->id; // 1
+echo $lietotājs->id; // 1
 
-$user->name = 'Jane Doe';
-$user->password = password_hash('atkal kāda lieliska parole!!!');
-$user->insert();
-// šeit nevar izmantot $user->save(), jo tas domās, ka tas ir atjaunojums!
+$lietotājs->vārds = 'Jozefs Mamma';
+$lietotājs->parole = password_hash('daudz jauka parole vēlreiz!!!');
+$lietotājs->insert();
+// šeit nevar izmantot $lietotājs->save(), citādi tas domās, ka tā ir atjaunināšana!
 
-echo $user->id; // 2
+echo $lietotājs->id; // 2
 ```
 
-Un tā bija tik viegli pievienot jaunu lietotāju! Tagad, kad datu bāzē ir lietotāja rinda, kā jūs to izraujat?
+Un tā bija tik vienkārši pievienot jaunu lietotāju! Tagad, kad datu bāzē ir lietotāja rinda, kā jūs to izvelkat?
 
 ```php
-$user->find(1); // atrod id = 1 datu bāzē un atgriež to.
-echo $user->name; // 'John Doe'
+$lietotājs->find(1); // atrast id = 1 datu bāzē un to atgriezt.
+echo $lietotājs->vārds; // 'Bobijs Tabules'
 ```
 
-Kas notiek, ja jūs vēlaties atrast visus lietotājus?
+Un ja jūs vēlaties atrast visus lietotājus?
 
 ```php
-$lietotāji = $user->findAll();
+$lietotāji = $lietotājs->findAll();
 ```
 
-Kā būtu ar noteiktu nosacījumu?
+Kas ir ar noteiktu nosacījumu?
 
 ```php
-$lietotāji = $user->like('name', '%mamma%')->findAll();
+$lietotāji = $lietotājs->like('vārds', '%mamma%')->findAll();
 ```
 
-Redzat, cik jautri tas ir? Uzstādiet to un sāciet lietot!
+Redzat cik jautri tas ir? Uzinstalēsim to un sāksim!
 
 ## Instalācija
 
@@ -97,161 +98,162 @@ composer require flightphp/active-record
 
 ## Lietošana
 
-To var izmantot kā patstāvīgu bibliotēku vai arī ar Flight PHP ietvaru. Pilnībā jūsu rokās.
+Šo var izmantot gan kā neatkarīgu bibliotēku, gan arī ar Flight PHP pamatni. Pilnībā ir atkarīgs no jums.
 
-### Patstāvīgi
-Vienkārši pārliecinieties, ka jūs nododat PDO savienojumu konstruktoram.
-
-```php
-$pdo_savienojums = new PDO('sqlite:test.db'); // tas ir tikai piemēram, jūs droši vien izmantojat reālu datu bāzes savienojumu
-
-$User = new User($pdo_savienojums);
-```
-
-### Flight PHP ietvars
-Ja izmantojat Flight PHP ietvaru, jūs varat reģistrēt ActiveRecord klasi kā servisu (bet jums patiešām nav to jādara).
+### Neatkarīgs
+Vienkārši nodrošiniet PDO savienojumu konstruktoram.
 
 ```php
-Flight::register('lietotājs', 'User', [ $pdo_savienojums ]);
+$pdo_savienojums = new PDO('sqlite:test.db'); // tas ir tikai piemēram, iespējams, izmantojat reālu datubāzes savienojumu
 
-// tad varat to izmantot tādējādi kontrolētājā, funkcijā, utt.
-
-Flight::user()->find(1);
+$Lietotājs = new Lietotājs($pdo_savienojums);
 ```
 
-## API atsauce
+### Flight PHP pamatne
+Ja izmantojat Flight PHP pamatni, jūs varat reģistrēt ActiveRecord klasi kā servisu (bet jums tiešām nav nepieciešams).
+
+```php
+Lidojums::reģistrēt('lietotājs', 'Lietotājs', [ $pdo_savienojums ]);
+
+// tad jūs to varat izmantot šādi kontrolorā, funkcijā, utt.
+
+Lidojums::lietotājs()->find(1);
+```
+
+## API Atsauce
 ### CRUD funkcijas
 
 #### `find($id = null) : boolean|ActiveRecord`
 
-Atrod vienu ierakstu un piešķir to pašreizējam objektam. Ja jūs padodat kādu `$id`, tas veiks meklēšanu pēc pamatatslēgas, uz kuru norāda vērtība. Ja nav nekā padots, tas vienkārši atradīs pirmo ierakstu tabulā.
+Atrast vienu ierakstu un piešķirt to pašreizējam objektam. Ja jūs padodat kādu `$id`, tas veiks meklēšanu pēc primārās atslēgas ar šo vērtību. Ja neko nepiedāvājat, tas vienkārši atradīs pirmo ierakstu tabulā.
 
-Turklāt jūs varat padot citus palīgmetodus, lai vaicātu jūsu tabulu.
+Papildus tam varat padot citus palīgmetodus, lai vaicātu savu tabulu.
 
 ```php
-// atrast ierakstu ar noteiktām nosacījumiem iepriekš
-$user->notNull('password')->orderBy('id DESC')->find();
+// atrast ierakstu ar dažādiem nosacījumiem pirms tam
+$lietotājs->notNull('parole')->orderBy('id desc')->find();
 
-// atrast ierakstu pēc noteiktā id
+// atrast ierakstu pēc konkrēta id
 $id = 123;
-$user->find($id);
+$lietotājs->find($id);
 ```
 
-#### `findAll(): array<int,ActiveRecord>`
+#### `findAll() : array<int,ActiveRecord>`
 
-Atrast visus ierakstus tabulā, ko norādījāt.
+Atrod visus ierakstus tabulā, ko norādāt.
 
 ```php
-$user->findAll();
+$lietotājs->findAll();
 ```
 
-#### `insert(): boolean|ActiveRecord`
+#### `insert() : boolean|ActiveRecord`
 
-Ievieto pašreizējo ierakstu datu bāzē.
+Ievietot pašreizējo ierakstu datu bāzē.
 
 ```php
-$user = new User($pdo_savienojums);
-$user->name = 'demo';
-$user->password = md5('demo');
-$user->insert();
+$lietotājs = new Lietotājs($pdo_savienojums);
+$lietotājs->vārds = 'demo';
+$lietotājs->parole = md5('demo');
+$lietotājs->insert();
 ```
 
-#### `update(): boolean|ActiveRecord`
+#### `update() : boolean|ActiveRecord`
 
-Atjaunina pašreizējo ierakstu datu bāzē.
+Atjaunināt pašreizējo ierakstu datu bāzē.
 
 ```php
-$user->greaterThan('id', 0)->orderBy('id desc')->find();
-$user->email = 'tests@example.com';
-$user->update();
+$lietotājs->greaterThan('id', 0)->orderBy('id desc')->find();
+$lietotājs->e-pasts = 'tests@example.com';
+$lietotājs->update();
 ```
 
-#### `delete(): boolean`
+#### `delete() : boolean`
 
-Dzēš pašreizējo ierakstu no datu bāzes.
+Dzēst pašreizējo ierakstu no datu bāzes.
 
 ```php
-$user->gt('id', 0)->orderBy('id desc')->find();
-$user->delete();
+$lietotājs->gt('id', 0)->orderBy('id desc')->find();
+$lietotājs->delete();
 ```
 
-#### `dirty(array  $dirty = []): ActiveRecord`
+#### `dirty(array  $dirty = []) : ActiveRecord`
 
-Netīra dati attiecas uz datiem, kas ir mainīti ierakstā.
+"Sliktie" dati attiecas uz datiem, kas ir mainījušies ierakstā.
 
 ```php
-$user->greaterThan('id', 0)->orderBy('id desc')->find();
+$lietotājs->gt('id', 0)->orderBy('id desc')->find();
 
-// nekas nav "netīrs" līdz šim brīdim.
+// šajā brīdī nekas nav "slikti".
 
-$user->email = 'tests@example.com'; // tagad e-pasts tiek uzskatīts par "netīru", jo tas ir mainījies.
-$user->update();
-// tagad nav netīru datu, jo tas ir atjaunināts un saglabāts datu bāzē.
+$lietotājs->e-pasts = 'tests@example.com'; // tagad e-pasts tiek uzskatīts par "slikto", jo tas ir mainījies.
+$lietotājs->update();
+// tagad nav datu, kas ir slikti, jo tas ir atjaunināts un saglabāts datu bāzē
 
-$user->password = password_hash()'jaunaparole'); // tagad šis ir netīrs
-$user->dirty(); // neko padot nekas nenotiks, jo nekas netika uzskatīts par netīru.
+$lietotājs->parole = password_hash()'jaunaparole'); // tagad tas ir slikti
+$lietotājs->dirty(); // pārsūtot neko notīrīs visus "sliktos" ierakstus.
+$lietotājs->update(); // nekas netiks atjaunināts, jo nav sagrābtu kā "slikts".
 
-$user->dirty([ 'name' => 'kas', 'password' => password_hash('cita parole') ]);
-$user->update(); // gan nosaukums, gan parole tiks atjaunoti.
+$lietotājs->dirty([ 'vārds' => 'kas', 'parole' => password_hash('atšķirīga parole') ]);
+$lietotājs->update(); // abi vārdi un parole tiek atjaunoti.
 ```
 
-### SQL vaicājuma metodes
+### SQL vaicājumu metodes
 #### `select(string $field1 [, string $field2 ... ])`
 
-Jūs varat atlasīt vairākas kolonnas tabulā, ja vēlaties (tas ir efektīvāk ar tiešām plašām tabulām ar daudzām kolonnām).
+Jūs varat atlasīt tikai dažus tabulas stabiņus, ja vēlaties (tas ir efektīvāk uz tiešām plašām tabulām ar daudziem stabiņiem)
 
 ```php
-$user->select('id', 'name')->find();
+$lietotājs->select('id', 'vārds')->find();
 ```
 
 #### `from(string $table)`
 
-Jūs tehniski varat izvēlēties citu tabulu arī! Kāpēc gan ne?!
+Jūs varat tehniski izvēlēties citu tabulu! Kāpēc ne?!
 
 ```php
-$user->select('id', 'name')->from('user')->find();
+$lietotājs->select('id', 'vārds')->from('lietotājs')->find();
 ```
 
 #### `join(string $table_name, string $join_condition)`
 
-Jūs pat varat pievienoties citai tabulai datu bāzē.
+Jūs varat pat pievienoties citai tabulai datu bāzē.
 
 ```php
-$user->join('contacts', 'contacts.user_id = users.id')->find();
+$lietotājs->join('kontakti', 'kontakti.lietotāja_id = lietotāji.id')->find();
 ```
 
 #### `where(string $where_conditions)`
 
-Jūs varat iestatīt dažādus pasūtījuma argumentus (šajā where teikumā nevarat iestatīt parametrus)
+Jūs varat iestatīt dažus pielāgotos WHERE argumentus (šajā where izteiksmē nevar iestatīt parametrus)
 
 ```php
-$user->where('id=1 AND name="demo"')->find();
+$lietotājs->where('id=1 AND vārds="demo"')->find();
 ```
 
-**Drošības piezīme** - Jums var būt kārdinājums izdarīt kaut ko tādu kā `$user->where("id = '{$id}' AND name = '{$name}'")->find();`. LŪDZU NEIEKŅĒPIET ŠO!!! Tas ir jutīgs pret tā sauktajiem SQL injekcijas uzbrukumiem. Ir daudz rakstu tiešsaistē, lūdzu, meklējiet Google "sql injection attacks php" un jūs atradīsiet daudz rakstu par šo tēmu. Pareizais veids, kā to apstrādāt ar šo bibliotēku, ir tāds, ka nevis šo `where()` metodi, jūs darītu kaut ko tādu kā `$user->eq('id', $id)->eq('name', $name)->find();`
+**Drošības piezīme** – Jūs varētu būt kārdināts darīt kaut ko līdzīgu `$lietotājs->where("id = '{$id}' AND vārds = '{$vārds}'")->find();`. LŪDZAM NEKĀRINĀT TO!!! Šis ir ievainojams pret tā sauktajām SQL injekcijas uzbrukumiem. Ir daudz rakstu tiešsaistē, lūdzu, meklējiet Google "sql injection attacks php" un jūs atradīsiet daudz rakstu par šo tēmu. Pareizais veids, kā apieties ar šo bibliotēku, ir tā vietā, lai izmantotu šo `where()` metodi, jums būtu jādara kaut kas līdzīgs `$lietotājs->eq('id', $id)->eq('name', $vārds)->find();`
 
 #### `group(string $group_by_statement)/groupBy(string $group_by_statement)`
 
-Gatavojiet rezultātus pēc kāda īpaša nosacījuma grupām.
+Grupējiet savus rezultātus pēc konkrēta nosacījuma.
 
 ```php
-$user->select('COUNT(*) as count')->groupBy('name')->findAll();
+$lietotājs->select('COUNT(*) kā skaits')->groupBy('vārds')->findAll();
 ```
 
 #### `order(string $order_by_statement)/orderBy(string $order_by_statement)`
 
-Kārtot atgriezto vaicājumu noteiktā veidā.
+Kārtot atgriezto vaicājumu noteiktā kārtībā.
 
 ```php
-$user->orderBy('name DESC')->find();
+$lietotājs->orderBy('vārds DESC')->find();
 ```
 
 #### `limit(string $limit)/limit(int $offset, int $limit)`
 
-Ierobežot atgriezamo ierakstu daudzumu. Ja tiek norādīts otra veselais skaitlis, tas būs nobīde, limits tikai kā SQL.
+Ierobežojiet atgriezto ierakstu skaitu. Ja tiek dots otrs int, tas būs nobīde, kā to varētu sagaidīt SQL.
 
 ```php
-$user->orderby('name DESC')->limit(0, 10)->findAll();
+$lietotājs->orderby('vārds DESC')->limit(0, 10)->findAll();
 ```
 
 ### WHERE nosacījumi
@@ -260,7 +262,7 @@ $user->orderby('name DESC')->limit(0, 10)->findAll();
 Kur `field = $value`
 
 ```php
-$user->eq('id', 1)->find();
+$lietotājs->eq('id', 1)->find();
 ```
 
 #### `notEqual(string $field, mixed $value) / ne(string $field, mixed $value)`
@@ -268,22 +270,22 @@ $user->eq('id', 1)->find();
 Kur `field <> $value`
 
 ```php
-$user->ne('id', 1)->find();
+$lietotājs->ne('id', 1)->find();
 ```
 
 #### `isNull(string $field)`
 
-Kur `field IS NULL`
+Kur `field IR NULL`
 
 ```php
-$user->isNull('id')->find();
+$lietotājs->isNull('id')->find();
 ```
 #### `isNotNull(string $field) / notNull(string $field)`
 
-Kur `field IS NOT NULL`
+Kur `fields NAV NULL`
 
 ```php
-$user->isNotNull('id')->find();
+$lietotājs->isNotNull('id')->find();
 ```
 
 #### `greaterThan(string $field, mixed $value) / gt(string $field, mixed $value)`
@@ -291,7 +293,7 @@ $user->isNotNull('id')->find();
 Kur `field > $value`
 
 ```php
-$user->gt('id', 1)->find();
+$lietotājs->gt('id', 1)->find();
 ```
 
 #### `lessThan(string $field, mixed $value) / lt(string $field, mixed $value)`
@@ -299,21 +301,21 @@ $user->gt('id', 1)->find();
 Kur `field < $value`
 
 ```php
-$user->lt('id', 1)->find();
+$lietotājs->lt('id', 1)->find();
 ```
 #### `greaterThanOrEqual(string $field, mixed $value) / ge(string $field, mixed $value) / gte(string $field, mixed $value)`
 
 Kur `field >= $value`
 
 ```php
-$user->ge('id', 1)->find();
+$lietotājs->ge('id', 1)->find();
 ```
 #### `lessThanOrEqual(string $field, mixed $value) / le(string $field, mixed $value) / lte(string $field, mixed $value)`
 
 Kur `field <= $value`
 
 ```php
-$user->le('id', 1)->find();
+$lietotājs->le('id', 1)->find();
 ```
 
 #### `like(string $field, mixed $value) / notLike(string $field, mixed $value)`
@@ -321,101 +323,47 @@ $user->le('id', 1)->find();
 Kur `field LIKE $value` vai `field NOT LIKE $value`
 
 ```php
-$user->like('name', 'de')->find();
+$lietotājs->like('vārds', 'de')->find();
 ```
 
 #### `in(string $field, array $values) / notIn(string $field, array $values)`
 
-Kur `field IN($value)` vai `field NOT IN($values)`
+Kur `field IN($value)` vai `field NAV IN($value)`
 
 ```php
-$user->in('id', [1, 2])->find();
+$lietotājs->in('id', [1, 2])->find();
 ```
 
 #### `between(string $field, array $values)`
 
-Kur `field BETWEEN $value AND $value1`
+Kur `field STARP $value UN $value1`
 
 ```php
-$user->between('id', [1, 2])->find();
+$lietotājs->between('id', [1, 2])->find();
 ```
 
 ### Attiecības
-Jūs varat iestatīt dažādas attiecības, izmantojot šo bibliotēku. Varat iestatīt viens->daudz un viens->viens attiecības starp tabulām. Tas prasa nedaudz papildu iestatījumu klases sākumā.
+Ar šo bibliotēku varat iestatīt vairākas attiecības. Jūs varat iestatīt viens->daudz un viens->viens attiecības starp tabulām. Tas prasa nedaudz papildu iestatīšanu klases priekšā.
 
-`$relations` masīva iestatīšana nav grūta, bet pareizo sintaksi var būt apgrūtinoši minēt.
-
-```php
-protected array $relations = [
-	// varat nosaukt atslēgu kā vēlaties. `ActiveRecord` nosaukums iespējams ir labs. Piemēram: `user`, `kontakts`, `klients`
-	'jebkura_active_record' => [
-		// obligāti
-		self::HAS_ONE, // tas ir attiecības tips
-
-		// obligāti
-		'Kāda_Klase', // tas ir "cits" ActiveRecord klase, uz ko šis norādīs
-
-		// obligāti
-		'lokālā_atslēga', // tas ir lokālā atslēga, kas norāda savienojumu.
-		// tikai lai jums būtu skaidrs, tas arī pievienojas pie "cita" modeļa primārās atslēgas.
-
-		// fakultatīvi
-		[ 'eq' => 1, 'select' => 'COUNT(*) as count', 'limit' 5 ], // pielāgoti metodes, ko vēlaties izpildīt. [] ja nevēlaties neko.
-
-		// fakultatīvi
-		'atpakaļ_referenču_nosaukums' // tas ir, ja vēlaties atpakaļ atsauces šo attiecību atpakaļ uz sevi. Piemēram: $user->kontakts->lietotājs;
-	];
-]
-```
+`$relations` masīva iestatīšana nav sarežģīta, bet pareiza sintakse var būt pārprasta.
 
 ```php
-class User extends ActiveRecord{
-	protected array $relations = [
-		'kontakti' => [ self::HAS_MANY, Kontakt::class, 'lietotāja_id' ],
-		'kontakts' => [ self::HAS_ONE, Kontakt::class, 'lietotāja_id' ],
-	];
+aizsargāts masīvs $relations = [
+	// jūs varat nosaukt atslēgu kā vēlaties. ActiveRecord nosaukums droši vien ir labs. Piemēram, lietotājs, kontakts, klients
+	'jebkurš_active_record' => [
+		// nepieciešams
+		self::HAS_ONE, // šī attiecības tips
 
-	public function __construct($datu_bāzes_savienojums)
-	{
-		parent::__construct($datu_bāzes_savienojums, 'lietotāji');
-	}
-}
+		// nepieciešams
+		'Daža_Klase', // tas ir "cits" ActiveRecord klase, uz ko tas atsaucas
 
-class Kontakti extends ActiveRecord{
-	protected array $relations = [
-		'lietotājs' => [ self::BELONGS_TO, Lietotājs::class, 'lietotāja_id' ],
-		'lietotājs_ar_atpakaļatradni' => [ self::BELONGS_TO, Lietotājs::class, 'lietotāja_id', [], 'kontakts' ],
-	];
-	public function __construct($datu_bāzes_savienojums)
-	{
-		parent::__construct($datu_bāzes_savienojums, 'kontakti');
-	}
-}
-```
+		// nepieciešams
+		'lokālā_atslēga', // tas ir lokālā atslēga, kas atsaucas pievienojuma.
+		// tikai FYI, tas arī pievienojas pie "citas" modela primārās atslēgas
 
-Tagad mums ir iestatīti ieraksti, tāpēc tos varat izmantot ļoti viegli!
+		// pēc izvēles
+		[ 'eq' => 1, 'select' => 'COUNT(*) kā skaits', 'limita' 5 ], // pielāgotas metodes, ko vēlaties izpildīt. [] nav nekas, ja jums tādas nav.
 
-```php
-$user = new User($pdo_savienojums);
-
-// atrodiet pēdējo lietotāju.
-$user->notNull('id')->orderBy('id desc')->find();
-
-// iegūstiet kontaktus, izmantojot attiecību:
-foreach($user->kontakti as $kontakts) {
-	echo $kontakts->id;
-}
-
-// vai arī varam iet citā virzienā.
-$kontakts = new Kontakti();
-
-// atrast```lv
-# FlightPHP Aktīvais ieraksts
-Aktīvais ieraksts ir datu bāzes vienības atspoguļošana PHP objektā. Citiem vārdiem sakot, ja jums ir lietotāji tabula jūsu datu bāzē, jūs varat "tulko" tabulā esošo rindu uz `Lietotājs` klasi un `$lietotājs` objektu jūsu kodola bāzē. Skatiet [pamata piemēru](#basic-example).
-
-## Pamata Piemērs
-
-Pieņemsim, ka jums ir šādas tabulas:
-...
-
-```
+		// pēc izvēles
+		'atpakaļ_ atsauce_nosaukums' // tas ir, ja vēlaties atpakaļ uz atsauci pašām attiecībam; piemēram, $lietotājs->kontakts->liet'ts`.
+  The content has been translated to Latvian (lv).

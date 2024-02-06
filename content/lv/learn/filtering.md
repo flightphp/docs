@@ -1,89 +1,89 @@
 # Filtrēšana
 
-Lidojums ļauj jums filtrēt metodēs pirms un pēc to izsaukšanas. Nav iepriekš definētu āķu, ko jums vajadzētu iemācīties atmiņā. Jūs varat filtrēt jebkuru noklusēto struktūras metodi, kā arī jebkuru pielāgoto metodi, ko esat kartējis.
+Lidojums ļauj jums filtrēt metodes pirms un pēc to izsaukšanas. Nav iepriekš definētu vadu, kurus jums ir jāiemācās. Jūs varat filtrēt jebkuru noklusējuma struktūras metodi, kā arī jebkuru pielāgoto metodi, ko esat pievienojis.
 
-Filtra funkcija izskatās šādi:
+Filtrēšanas funkcija izskatās šādi:
 
 ```php
 function (array &$params, string &$output): bool {
-  // Filtra kods
+  // Filtrēšanas kods
 }
 ```
 
-Izmantojot padotās mainīgās, jūs varat manipulēt ieejas parametriem un/vai izvadi.
+Izmantojot padotās mainīgās, jūs varat manipulēt ievades parametriem un/vai izvades rezultātu.
 
-Jūs varat izpildīt filtru pirms metodes, izmantojot:
+Jūs varat palaist filtru pirms metodes, izpildot:
 
 ```php
-Lidojums::before('sākt', function (array &$params, string &$output): bool {
+Flight::before('start', function (array &$params, string &$output): bool {
   // Darīt kaut ko
 });
 ```
 
-Jūs varat izpildīt filtru pēc metodes, izmantojot:
+Jūs varat palaist filtru pēc metodes, izpildot:
 
 ```php
-Lidojums::after('sākt', function (array &$params, string &$output): bool {
+Flight::after('start', function (array &$params, string &$output): bool {
   // Darīt kaut ko
 });
 ```
 
-Jūs varat pievienot tik daudz filtru, cik vēlaties, jebkurai metodai. Viņi tiks izsaukti secībā, kādā tie ir norādīti.
+Jūs varat pievienot tik daudz filtrus, cik vēlaties, jebkurai metodē. Viņi tiks izsaukti tā, kā tie ir deklarēti.
 
-Šeit ir filtrēšanas procesa piemērs:
+Šeit ir piemērs filtrēšanas procesam:
 
 ```php
-// Nozīmēt pielāgotu metodi
-Lidojums::kartēt('sveiki', function (string $vārds) {
-  atgriezt "Sveiki, $vārds!";
+// Pievienot pielāgotu metodi
+Flight::map('hello', function (string $name) {
+  return "Sveiki, $name!";
 });
 
 // Pievienot pirms filtra
-Lidojums::before('sveiki', function (array &$params, string &$output): bool {
+Flight::before('hello', function (array &$params, string &$output): bool {
   // Manipulēt parametru
-  $params[0] = 'Freds';
-  atgriezt true;
+  $params[0] = 'Fred';
+  return true;
 });
 
 // Pievienot pēc filtra
-Lidojums::after('sveiki', function (array &$params, string &$output): bool {
-  // Manipulēt izvadi
+Flight::after('hello', function (array &$params, string &$output): bool {
+  // Manipulēt rezultātu
   $output .= " Jauku dienu!";
-  atgriezt true;
+  return true;
 });
 
 // Izsaukt pielāgoto metodi
-echo Lidojums::sveiki('Bobs');
+echo Flight::hello('Bob');
 ```
 
-Tas parādīs:
+Tas jāattēlo:
 
 ```
-Sveiki Freds! Jauku dienu!
+Sveiki, Fred! Jauku dienu!
 ```
 
 Ja esat definējis vairākus filtrus, jūs varat pārtraukt ķēdi, atgriežot `false`
-jebkurā no saviem filtra funkcijām:
+jebkurā no jūsu filtra funkcijām:
 
 ```php
-Lidojums::before('sākt', function (array &$params, string &$output): bool {
+Flight::before('start', function (array &$params, string &$output): bool {
   echo 'viens';
-  atgriezt true;
+  return true;
 });
 
-Lidojums::before('sākt', function (array &$params, string &$output): bool {
+Flight::before('start', function (array &$params, string &$output): bool {
   echo 'divi';
 
   // Tas pārtrauks ķēdi
-  atgriezt false;
+  return false;
 });
 
 // Tas netiks izsaukts
-Lidojums::before('sākt', function (array &$params, string &$output): bool {
+Flight::before('start', function (array &$params, string &$output): bool {
   echo 'trīs';
-  atgriezt true;
+  return true;
 });
 ```
 
-Piezīme, pamata metodes, piemēram, `kartēt` un `reģistrēt`, nevar tikt filtrētas, jo tās
+Piezīme, pamata metodes, piemēram, `map` un `register`, nevar tikt filtrētas, jo tās
 tiek izsauktas tieši un netiek izsauktas dinamiski.

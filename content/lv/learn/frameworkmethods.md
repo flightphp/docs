@@ -1,42 +1,42 @@
-## Frameworka Metodes
+# Framework Metodes
 
-Lidojums ir izstrādāts tā, lai to būtu viegli izmantot un saprast. Zemāk ir pilns ietvars
-metožu kopums. Tas sastāv no pamatmetodēm, kas ir parastās
-statiskās metodes, un paplašināmās metodes, kas ir kartētas metodes, kuras var filtrēt
-vai pārdefinēt.
+Flight ir izstrādāts, lai būtu viegli lietojams un saprotams. Zemāk ir pilns
+metožu kopums ietvariem. Tas sastāv no pamatmetodēm, kas ir parastie
+statiskie metodes, un paplašināmās metodes, kas ir kartētas metodes, kurām var piemērot filtrus
+vai pārrakstīt.
 
 ## Pamatmetodes
 
 ```php
-Flight::map(virkne $name, atsauksme $callback, boolea $pass_route = false) // Izveido pielāgotu ietvaru metodi.
-Flight::register(virkne $name, virkne $class, masīvs $params = [], ?atsauksme $callback = null) // Reģistrē klasi ietvara metodē.
-Flight::before(virkne $name, atsauksme $callback) // Pievieno filtru pirms ietvara metodes.
-Flight::after(virkne $name, atsauksme $callback) // Pievieno filtru pēc ietvara metodes.
-Flight::path(virkne $path) // Pievieno ceļu klases automātiskai ielādei.
-Flight::get(virkne $key) // Saņem mainīgo.
-Flight::set(virkne $key, sajaukts $value) // Iestata mainīgo.
-Flight::has(virkne $key) // Pārbauda, vai mainīgais ir iestatīts.
-Flight::clear(masīvs|virkne $key = []) // Notīra mainīgo.
-Flight::init() // Inicializē ietvaru sākotnēji.
-Flight::app() // Saņem pieteikuma objekta instanci
+Flight::map(virkne $nosaukums, callable $atgriezamā_virziena_funkcija, bool $ietekme_uz_marsrutu = false) // Izveido pielāgotu ietvaru metodi.
+Flight::register(virkne $nosaukums, string $klase, masīvs $parametri = [], ?callable $atgriezamā_virziena_funkcija = null) // Reģistrē klasi ietvaru metodē.
+Flight::before(virkne $nosaukums, callable $atgriezamā_virziena_funkcija) // Pievieno filtru pirms ietvaru metodes.
+Flight::after(virkne $nosaukums, callable $atgriezamā_virziena_funkcija) // Pievieno filtru pēc ietvaru metodes.
+Flight::path(virkne $ceļš) // Pievieno ceļu automātiskai klasielu ielādei.
+Flight::get(virkne $atslēga) // Iegūst mainīgo.
+Flight::set(virkne $atslēga, mixed $vertība) // Iestata mainīgo.
+Flight::has(virkne $atslēga) // Pārbauda, vai mainīgais ir iestatīts.
+Flight::clear(masīvs|virkne $atslēga = []) // Nodzēš mainīgo.
+Flight::init() // Inicializē ietvaru tās noklusētajos iestatījumos.
+Flight::app() // Iegūst aplikācijas objekta instanci
 ```
 
-## Paplašināmās Metodes
+## Paplašināmās metodes
 
 ```php
-Flight::start() // Uzsāk ietvaru.
+Flight::start() // Sāk ietvaru.
 Flight::stop() // Aptur ietvaru un nosūta atbildi.
-Flight::halt(int $code = 200, virkne $message = '') // Aptur ietvaru ar iespējamo statusa kodu un ziņojumu.
-Flight::route(virkne $pattern, atsauksme $callback, boolea $pass_route = false) // Kartē URL paraugu pie atsauksmes.
-Flight::group(virkne $pattern, atsauksme $callback) // Izveido grupušanu vietnēm, paraugam jābūt virknei.
-Flight::redirect(virkne $url, int $code) // Novirza uz citu URL.
-Flight::render(virkne $fails, masīvs $data, ?virkne $key = null) // Atveido veidnes failu.
-Flight::error(Throwable $error) // Nosūta HTTP 500 atbildi.
+Flight::halt(int $kods = 200, virkne $ziņojums = '') // Aptur ietvaru ar neobligātu statusa kodu un ziņojumu.
+Flight::route(virkne $parauga, callable $atgriezamā_virziena_funkcija, bool $ietekme_uz_marsrutu = false) // Kartē URL paraugu atpakaļsaukumam.
+Flight::group(virkne $parauga, callable $atgriezamā_virziena_funkcija) // Izveido grupēšanu URL, paraugs ir jābūt virknei.
+Flight::redirect(virkne $url, int $kods) // Novirza uz citu URL.
+Flight::render(virkne $fails, masīvs $datus, ?string $atslēga = null) // Atveido veidnes failu.
+Flight::error(Throwable $kļūda) // Nosūta HTTP 500 atbildi.
 Flight::notFound() // Nosūta HTTP 404 atbildi.
-Flight::etag(virkne $id, virkne $type = 'string') // Veic ETag HTTP kešatmiņu.
-Flight::lastModified(int $time) // Veic pēdējo modificēto HTTP kešošanu.
-Flight::json(sajaukts $data, int $code = 200, boolea $encode = true, virkne $charset = 'utf8', int $option) // Nosūta JSON atbildi.
-Flight::jsonp(sajaukts $data, virkne $param = 'jsonp', int $code = 200, boolea $encode = true, virkne $charset = 'utf8', int $option) // Nosūta JSONP atbildi.
+Flight::etag(virkne $id, virkne $tips = 'string') // Veic ETag HTTP kešošanu.
+Flight::lastModified(int $laiks) // Veic pēdējo modificēto HTTP kešošanu.
+Flight::json(mixed $datus, int $kods = 200, bool $kodēt = true, virkne $kodēšanas_kopa = 'utf8', int $opcija) // Nosūta JSON atbildi.
+Flight::jsonp(mixed $datus, virkne $param = 'jsonp', int $kods = 200, bool $kodēt = true, virkne $kodēšanas_kopa = 'utf8', int $opcija) // Nosūta JSONP atbildi.
 ```
 
-Ar `map` un `register` pievienotās pielāgotās metodes var arī filtrēt.
+Jebkuras pielāgotas metodes, kas pievienotas ar `map` un `register`, var arī tikt filtrētas.

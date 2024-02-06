@@ -1,12 +1,10 @@
-# Extensão / Containers
+# Extensão / Contentores
 
-O Flight foi projetado para ser um framework extensível. O framework vem com um conjunto
-de métodos e componentes padrão, mas permite que você mapeie seus próprios métodos,
-registre suas próprias classes ou até substitua classes e métodos existentes.
+O Flight foi projetado para ser um framework extensível. O framework vem com um conjunto de métodos e componentes padrão, mas permite que você mapeie seus próprios métodos, registre suas próprias classes ou até substitua classes e métodos existentes.
 
 ## Mapeando Métodos
 
-Para mapear seu próprio método personalizado, você usa a função `map`:
+Para mapear seu próprio método personalizado, use a função `map`:
 
 ```php
 // Mapeie seu método
@@ -20,7 +18,7 @@ Flight::hello('Bob');
 
 ## Registrando Classes / Containerização
 
-Para registrar sua própria classe, você usa a função `register`:
+Para registrar sua própria classe, use a função `register`:
 
 ```php
 // Registre sua classe
@@ -30,13 +28,10 @@ Flight::register('user', User::class);
 $user = Flight::user();
 ```
 
-O método de registro também permite que você passe parâmetros para o construtor de sua classe
-para que, ao carregar sua classe personalizada, ela seja pré-inicializada.
-Você pode definir os parâmetros do construtor passando em um array adicional.
-Aqui está um exemplo de carregamento de uma conexão de banco de dados:
+O método de registro também permite que você passe parâmetros para o construtor de sua classe. Assim, quando você carrega sua classe personalizada, ela será pré-inicializada. Você pode definir os parâmetros do construtor passando em um array adicional. Aqui está um exemplo de carregamento de uma conexão de banco de dados:
 
 ```php
-// Registrar classe com parâmetros do construtor
+// Registre classe com parâmetros do construtor
 Flight::register('db', PDO::class, ['mysql:host=localhost;dbname=test', 'user', 'pass']);
 
 // Obtenha uma instância de sua classe
@@ -47,9 +42,7 @@ Flight::register('db', PDO::class, ['mysql:host=localhost;dbname=test', 'user', 
 $db = Flight::db();
 ```
 
-Se você passar um parâmetro de retorno de chamada adicional, ele será executado imediatamente
-após a construção da classe. Isso permite que você execute quaisquer procedimentos de configuração para o seu
-novo objeto. A função de retorno de chamada recebe um parâmetro, uma instância do novo objeto.
+Se você passar um parâmetro de retorno de chamada adicional, ele será executado imediatamente após a construção da classe. Isso permite que você execute quaisquer procedimentos de configuração para o seu novo objeto. A função de retorno de chamada recebe um parâmetro, uma instância do novo objeto.
 
 ```php
 // O retorno de chamada receberá o objeto que foi construído
@@ -63,8 +56,8 @@ Flight::register(
 );
 ```
 
-Por padrão, toda vez que você carregar sua classe, receberá uma instância compartilhada.
-Para obter uma nova instância de uma classe, basta passar `false` como parâmetro:
+Por padrão, toda vez que você carregar sua classe, você obterá uma instância compartilhada.
+Para obter uma nova instância de uma classe, simplesmente passe `false` como parâmetro:
 
 ```php
 // Instância compartilhada da classe
@@ -74,5 +67,4 @@ $compartilhado = Flight::db();
 $novo = Flight::db(false);
 ```
 
-Lembre-se de que métodos mapeados têm precedência sobre classes registradas. Se você
-declarar ambos com o mesmo nome, apenas o método mapeado será invocado.
+Lembre-se de que os métodos mapeados têm precedência sobre as classes registradas. Se você declarar ambos com o mesmo nome, apenas o método mapeado será invocado.

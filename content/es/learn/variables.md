@@ -1,6 +1,6 @@
 # Variables
 
-Vuelo te permite guardar variables para que puedan ser utilizadas en cualquier lugar de tu aplicación.
+Flight permite guardar variables para que puedan ser utilizadas en cualquier lugar de tu aplicación.
 
 ```php
 // Guarda tu variable
@@ -9,7 +9,8 @@ Flight::set('id', 123);
 // En otro lugar de tu aplicación
 $id = Flight::get('id');
 ```
-Para ver si una variable ha sido establecida puedes hacer:
+
+Para verificar si una variable ha sido establecida, puedes hacer lo siguiente:
 
 ```php
 if (Flight::has('id')) {
@@ -17,17 +18,17 @@ if (Flight::has('id')) {
 }
 ```
 
-Puedes borrar una variable haciendo:
+Puedes limpiar una variable haciendo:
 
 ```php
-// Borra la variable id
+// Elimina la variable id
 Flight::clear('id');
 
-// Borra todas las variables
+// Elimina todas las variables
 Flight::clear();
 ```
 
-Vuelo también utiliza variables con propósitos de configuración.
+Flight también utiliza variables con propósitos de configuración.
 
 ```php
 Flight::set('flight.log_errors', true);

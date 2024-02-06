@@ -1,10 +1,10 @@
-# Latte
+## Latte
 
-Latte es un motor de plantillas completo que es muy fácil de usar y se siente más cercano a una sintaxis PHP que Twig o Smarty. También es muy fácil de ampliar y agregar sus propios filtros y funciones.
+Latte is a full featured templating engine that is very easy to use and feels closer to a PHP syntax than Twig or Smarty. It's also very easy to extend and add your own filters and functions.
 
 ## Instalación
 
-Instale con composer.
+Instala con composer.
 
 ```bash
 composer require latte/latte
@@ -12,7 +12,7 @@ composer require latte/latte
 
 ## Configuración Básica
 
-Hay algunas opciones de configuración básicas para comenzar. Puede obtener más información sobre ellas en la [Documentación de Latte](https://latte.nette.org/es/guía).
+Hay algunas opciones de configuración básicas para empezar. Puedes leer más sobre ellas en la [Documentación de Latte](https://latte.nette.org/es/guia).
 
 ```php
 
@@ -24,26 +24,26 @@ $app = Flight::app();
 
 $app->register('latte', LatteEngine::class, [], function(LatteEngine $latte) use ($app) {
 
-	// Aquí es donde Latte almacenará en caché sus plantillas para acelerar las cosas
-	// ¡Una cosa interesante sobre Latte es que actualiza automáticamente su
-	// caché cuando realiza cambios en sus plantillas!
+	// Aquí es donde Latte almacenará la caché de tus plantillas para acelerar las cosas
+	// ¡Una cosa genial sobre Latte es que actualiza automáticamente tu caché
+	// cuando realizas cambios en tus plantillas!
 	$latte->setTempDirectory(__DIR__ . '/../cache/');
 
-	// Dígale a Latte dónde estará el directorio raíz de sus vistas.
+	// Indícale a Latte dónde estará ubicado el directorio raíz para tus vistas.
 	$latte->setLoader(new \Latte\Loaders\FileLoader(__DIR__ . '/../views/'));
 });
 ```
 
 ## Ejemplo de Diseño Simple
 
-Aquí hay un ejemplo simple de un archivo de diseño. Este es el archivo que se utilizará para envolver todas sus otras vistas.
+Aquí tienes un ejemplo simple de un archivo de diseño. Este es el archivo que se utilizará para envolver todas tus otras vistas.
 
 ```html
 <!-- app/views/layout.latte -->
 <!doctype html>
 <html lang="es">
 	<head>
-		<title>{$title ? $title . ' - '}Mi Aplicación</title>
+		<title>{$title ? $title . ' - '}Mi App</title>
 		<link rel="stylesheet" href="style.css">
 	</head>
 	<body>
@@ -53,7 +53,7 @@ Aquí hay un ejemplo simple de un archivo de diseño. Este es el archivo que se 
 			</nav>
 		</header>
 		<div id="content">
-			<!-- Aquí es donde está la magia -->
+			<!-- Aquí está la magia -->
 			{block content}{/block}
 		</div>
 		<div id="footer">
@@ -63,31 +63,31 @@ Aquí hay un ejemplo simple de un archivo de diseño. Este es el archivo que se 
 </html>
 ```
 
-Y ahora tenemos su archivo que se va a mostrar dentro de ese bloque de contenido:
+Y ahora tenemos tu archivo que se va a renderizar dentro de ese bloque de contenido:
 
 ```html
 <!-- app/views/home.latte -->
-<!-- Esto le dice a Latte que este archivo está "dentro" del archivo layout.latte -->
+<!-- Esto le indica a Latte que este archivo está "dentro" del archivo layout.latte -->
 {extends layout.latte}
 
 <!-- Este es el contenido que se renderizará dentro del diseño dentro del bloque de contenido -->
 {block content}
-	<h1>Página de inicio</h1>
+	<h1>Página de Inicio</h1>
 	<p>¡Bienvenido a mi aplicación!</p>
 {/block}
 ```
 
-Luego, cuando vaya a renderizar esto dentro de su función o controlador, haría algo así:
+Entonces, cuando vayas a renderizar esto dentro de tu función o controlador, deberías hacer algo como esto:
 
 ```php
 // ruta simple
 Flight::route('/', function () {
 	Flight::latte()->render('home.latte', [
-		'title' => 'Página de inicio'
+		'title' => 'Página de Inicio'
 	]);
 });
 
-// o si está utilizando un controlador
+// o si estás utilizando un controlador
 Flight::route('/', [HomeController::class, 'index']);
 
 // HomeController.php
@@ -96,10 +96,10 @@ class HomeController
 	public function index()
 	{
 		Flight::latte()->render('home.latte', [
-			'title' => 'Página de inicio'
+			'title' => 'Página de Inicio'
 		]);
 	}
 }
 ```
 
-¡Consulte la [Documentación de Latte](https://latte.nette.org/es/guía) para obtener más información sobre cómo utilizar Latte al máximo potencial!
+¡Consulta la [Documentación de Latte](https://latte.nette.org/es/guia) para obtener más información sobre cómo utilizar Latte al máximo!

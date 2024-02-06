@@ -1,68 +1,69 @@
 # Erweiterung / Container
 
-Flight ist so konzipiert, dass es ein erweiterbares Framework ist. Das Framework wird mit einer Reihe von Standardmethoden und -komponenten geliefert, aber es ermöglicht Ihnen, Ihre eigenen Methoden zu mappen, Ihre eigenen Klassen zu registrieren oder sogar vorhandene Klassen und Methoden zu überschreiben.
+Flight ist darauf ausgelegt, ein erweiterbares Framework zu sein. Das Framework wird mit einer Reihe von Standardmethoden und -komponenten geliefert, ermöglicht es Ihnen jedoch, Ihre eigenen Methoden zu mappen, Ihre eigenen Klassen zu registrieren oder sogar vorhandene Klassen und Methoden zu überschreiben.
 
-## Mapping von Methoden
+## Methoden Zuordnen
 
-Um Ihre eigene benutzerdefinierte Methode zu mappen, verwenden Sie die `map` Funktion:
+Um Ihre eigene benutzerdefinierte Methode zuzuordnen, verwenden Sie die `map`-Funktion:
 
 ```php
-// Ihre Methode mappen
-Flight::map('hallo', function (string $name) {
+// Ordne deine Methode zu
+Flight::map('hello', function (string $name) {
   echo "hallo $name!";
 });
 
-// Ihre benutzerdefinierte Methode aufrufen
-Flight::hallo('Bob');
+// Rufe deine benutzerdefinierte Methode auf
+Flight::hello('Bob');
 ```
 
-## Registrierung von Klassen / Containerisierung
+## Klassen registrieren / Containerisierung
 
-Um Ihre eigene Klasse zu registrieren, verwenden Sie die `register` Funktion:
+Um Ihre eigene Klasse zu registrieren, verwenden Sie die `register`-Funktion:
 
 ```php
-// Ihre Klasse registrieren
-Flight::register('benutzer', Benutzer::class);
+// Registriere deine Klasse
+Flight::register('user', User::class);
 
-// Eine Instanz Ihrer Klasse abrufen
-$benutzer = Flight::benutzer();
+// Erhalte eine Instanz deiner Klasse
+$user = Flight::user();
 ```
 
-Die `register` Methode ermöglicht es Ihnen auch, Parameter an den Konstruktor Ihrer Klasse zu übergeben. Wenn Sie Ihre benutzerdefinierte Klasse laden, wird sie vorkonfiguriert geliefert. Sie können die Konstruktorparameter festlegen, indem Sie ein zusätzliches Array übergeben. Hier ist ein Beispiel zum Laden einer Datenbankverbindung:
+Die `register`-Methode ermöglicht es auch, Parameter an den Konstruktor Ihrer Klasse zu übergeben. Wenn Sie Ihre benutzerdefinierte Klasse laden, wird sie also vorinitialisiert. Sie können die Konstruktorparameter definieren, indem Sie ein zusätzliches Array übergeben. Hier ist ein Beispiel für das Laden einer Datenbankverbindung:
 
 ```php
 // Klasse mit Konstruktorparametern registrieren
-Flight::register('db', PDO::class, ['mysql:host=localhost;dbname=test', 'benutzer', 'passwort']);
+Flight::register('db', PDO::class, ['mysql:host=localhost;dbname=test', 'user', 'pass']);
 
-// Eine Instanz Ihrer Klasse abrufen
+// Erhalte eine Instanz deiner Klasse
+// Dies erstellt ein Objekt mit den definierten Parametern
 //
-// new PDO('mysql:host=localhost;dbname=test','benutzer','passwort');
+// new PDO('mysql:host=localhost;dbname=test','user','pass');
 //
 $db = Flight::db();
 ```
 
-Wenn Sie einen zusätzlichen Rückrufparameter übergeben, wird er sofort nach der Klassenkonstruktion ausgeführt. Dies ermöglicht es Ihnen, beliebige Einrichtungsverfahren für Ihr neues Objekt durchzuführen. Die Rückruffunktion nimmt einen Parameter entgegen, nämlich eine Instanz des neuen Objekts.
+Wenn Sie einen zusätzlichen Rückrufparameter übergeben, wird dieser unmittelbar nach der Klassenkonstruktion ausgeführt. Dadurch können Sie für Ihr neues Objekt Einrichtungsverfahren durchführen. Die Rückruffunktion erhält einen Parameter, nämlich eine Instanz des neuen Objekts.
 
 ```php
-// Der Rückruf erhält das konstruierte Objekt übergeben
+// Der Rückruf erhält das konstruierte Objekt
 Flight::register(
   'db',
   PDO::class,
-  ['mysql:host=localhost;dbname=test', 'benutzer', 'passwort'],
+  ['mysql:host=localhost;dbname=test', 'user', 'pass'],
   function (PDO $db) {
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
   }
 );
 ```
 
-Standardmäßig erhalten Sie bei jedem Laden Ihrer Klasse eine gemeinsam genutzte Instanz. Um eine neue Instanz einer Klasse zu erhalten, geben Sie einfach `false` als Parameter an:
+Standardmäßig erhalten Sie jedes Mal, wenn Sie Ihre Klasse laden, eine gemeinsam genutzte Instanz. Um eine neue Instanz einer Klasse zu erhalten, geben Sie einfach `false` als Parameter an:
 
 ```php
 // Gemeinsam genutzte Instanz der Klasse
-$gemeinsam = Flight::db();
+$shared = Flight::db();
 
 // Neue Instanz der Klasse
-$neu = Flight::db(false);
+$new = Flight::db(false);
 ```
 
-Bitte beachten Sie, dass gemappte Methoden Vorrang vor registrierten Klassen haben. Wenn Sie beide mit demselben Namen deklarieren, wird nur die gemappte Methode aufgerufen.
+Beachten Sie, dass gemappte Methoden Vorrang vor registrierten Klassen haben. Wenn Sie beide mit demselben Namen deklarieren, wird nur die zugeordnete Methode aufgerufen.

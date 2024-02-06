@@ -1,21 +1,23 @@
+```de
 # JSON
 
-Flight unterstützt das Senden von JSON- und JSONP-Antworten. Um eine JSON-Antwort zu senden, geben Sie einige Daten an, die codiert werden sollen:
+Flight bietet Unterstützung für das Senden von JSON- und JSONP-Antworten. Um eine JSON-Antwort zu senden, übergeben Sie einige Daten, die in JSON kodiert werden sollen:
 
 ```php
 Flight::json(['id' => 123]);
 ```
 
-Für JSONP-Anfragen können Sie optional den Abfrageparameter angeben, den Sie verwenden, um Ihre Rückruffunktion zu definieren:
+Für JSONP-Anfragen können Sie optional den Abfrage-Parameter Namen angeben, den Sie verwenden, um Ihre Rückruffunktion zu definieren:
 
 ```php
 Flight::jsonp(['id' => 123], 'q');
 ```
 
-Daher sollten Sie beim Senden einer GET-Anfrage mit `?q=my_func` die Ausgabe erhalten:
+Wenn Sie also eine GET-Anfrage mit `?q=my_func` stellen, sollten Sie die Ausgabe erhalten:
 
 ```javascript
 my_func({"id":123});
 ```
 
-Wenn Sie keinen Abfrageparameter angeben, wird standardmäßig `jsonp` verwendet.
+Wenn Sie keinen Abfrageparameter Namen angeben, wird standardmäßig `jsonp` verwendet.
+```

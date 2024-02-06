@@ -1,6 +1,6 @@
 # Installation
 
-## **1\. Téléchargement des fichiers.**
+## Téléchargement des fichiers.
 
 Si vous utilisez [Composer](https://getcomposer.org), vous pouvez exécuter la commande suivante :
 
@@ -8,11 +8,12 @@ Si vous utilisez [Composer](https://getcomposer.org), vous pouvez exécuter la c
 composer require flightphp/core
 ```
 
-OU vous pouvez les [télécharger](https://github.com/flightphp/core/archive/master.zip) directement et les extraire dans votre répertoire web.
+OU vous pouvez [télécharger les fichiers](https://github.com/flightphp/core/archive/master.zip) directement et les extraire dans votre répertoire web.
 
-## **2\. Configurez votre serveur web.**
+## Configurez votre serveur Web.
 
-Pour *Apache*, modifiez votre fichier `.htaccess` comme suit :
+### Apache
+Pour Apache, modifiez votre fichier `.htaccess` comme suit :
 
 ```apacheconf
 RewriteEngine On
@@ -21,17 +22,19 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ index.php [QSA,L]
 ```
 
-> **Remarque**: Si vous devez utiliser Flight dans un sous-répertoire, ajoutez la ligne
-> `RewriteBase /sous-repertoire/` juste après `RewriteEngine On`.
-> **Remarque**: Si vous souhaitez protéger tous les fichiers du serveur, tels qu'une base de données ou un fichier env.
-> Placez ceci dans votre fichier `.htaccess` :
+> **Remarque** : Si vous devez utiliser Flight dans un sous-répertoire, ajoutez la ligne
+> `RewriteBase /subdir/` juste après `RewriteEngine On`.
+
+> **Remarque** : Si vous souhaitez protéger tous les fichiers du serveur, comme un fichier db ou env.
+> Mettez ceci dans votre fichier `.htaccess` :
 
 ```apacheconf
 RewriteEngine On
 RewriteRule ^(.*)$ index.php
 ```
 
-Pour *Nginx*, ajoutez ce qui suit à la déclaration de votre serveur :
+### Nginx
+Pour Nginx, ajoutez ce qui suit à votre déclaration du serveur :
 
 ```nginx
 server {
@@ -40,7 +43,8 @@ server {
   }
 }
 ```
-## **3\. Créez votre fichier `index.php`.**
+
+## Créez votre fichier `index.php`.
 
 ```php
 <?php

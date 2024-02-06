@@ -1,10 +1,10 @@
 # Tracy
 
-Tracy ir fantastisks kļūdu apstrādātājs, kas var tikt izmantots ar Flight. Tam ir vairākas panelis, kas var palīdzēt atkļūdot jūsu lietotni. Tam arī ir ļoti viegli paplašināt un pievienot savus paneļus. Flight komanda ir izveidojusi dažus paneļus speciāli Flight projektam ar [flightphp/tracy-extensions](https://github.com/flightphp/tracy-extensions) spraudni.
+Tracy ir brīnišķīgs kļūdu apstrādātājs, ko var izmantot ar Flight. Tam ir vairākas panelis, kas var palīdzēt jums atkļūdot jūsu lietojumprogrammu. Tas ir arī ļoti viegli paplašināms un pievienot savus paneļus. Flight komanda ir izveidojusi dažus paneļus speciāli Flight projektiem ar [flightphp/tracy-extensions](https://github.com/flightphp/tracy-extensions) spraudni.
 
-## Instalācija
+## Instalēšana
 
-Instalējiet ar komponistu. Un jūs patiešām vēlēsieties instalēt to bez izstrādes versijas, jo Tracy nāk ar ražošanas kļūdu apstrādes komponentu.
+Instalējiet ar komponistu. Un jūs faktiski vēlēsities instalēt to bez izstrādes versijas, jo Tracy nāk ar ražošanas kļūdu apstrādes komponentu.
 
 ```bash
 composer require tracy/tracy
@@ -12,35 +12,34 @@ composer require tracy/tracy
 
 ## Pamata konfigurācija
 
-Ir dažas pamata konfigurācijas opcijas, lai sāktu. Uzziniet vairāk par tām [Tracy dokumentācijā](https://tracy.nette.org/en/configuring).
+Ir dažas pamata konfigurācijas opcijas, lai sāktu. Jūs varat lasīt vairāk par tām [Tracy dokumentācijā](https://tracy.nette.org/en/configuring).
 
 ```php
-
 require 'vendor/autoload.php';
 
 use Tracy\Debugger;
 
 // Iespējot Tracy
 Debugger::enable();
-// Debugger::enable(Debugger::DEVELOPMENT) // dažreiz jums ir jābūt specifiskam (arī Debugger::PRODUCTION)
-// Debugger::enable('23.75.345.200'); // jūs varat arī nodot IP adreses masīvu
+// Debugger::enable(Debugger::DEVELOPMENT) // dažreiz jums ir jābūt skaidram (arī Debugger::PRODUCTION)
+// Debugger::enable('23.75.345.200'); // jūs varat arī norādīt IP adresu masīvu
 
-// Šeit tiks reģistrētas kļūdas un izņēmumi. Pārliecinieties, vai šis katalogs pastāv un tam ir rakstīšanas tiesības.
+// Šeit tiks reģistrētas kļūdas un izņēmumi. Pārliecinieties, ka šis katalogs eksistē un ir rakstāms.
 Debugger::$logDirectory = __DIR__ . '/../log/';
 Debugger::$strictMode = true; // rādīt visas kļūdas
-// Debugger::$strictMode = E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED; // visas kļūdas izņemot novecojušos paziņojumus
+// Debugger::$strictMode = E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED; // visas kļūdas, izņemot novecojušos paziņojumus
 if (Debugger::$showBar) {
-    $app->set('flight.content_length', false); // ja Tracy josla ir redzama, tad Flight nevar iestatīt satura garumu
+    $app->set('flight.content_length', false); // ja Debugger josla ir redzama, tad saturs garums nevar tikt iestatīts ar Flight
 
-	// Tas ir specifisks Tracy paplašinājumam Flight, ja esat to iekļāvis
+	// Tas ir specifisks Tracy Extension for Flight, ja esat to iekļāvis
 	// citādi izkomentējiet to.
 	new TracyExtensionLoader($app);
 }
 ```
 
-## Noderīgi padomi
+## Lietderīgi padomi
 
-Kad jūs atkļūkojat savu kodu, ir dažas ļoti noderīgas funkcijas, lai izvadītu datus jums.
+Kad jūs atkļūvojat savu kodu, ir dažas ļoti noderīgas funkcijas, lai izvadītu datus jums.
 
-- `bdump($var)` - Tas izvadīs mainīgo Tracy joslā atsevišķā panelī.
-- `dumpe($var)` - Tas izvadīs mainīgo un tad nekavējoties nomirs.
+- `bdump($var)` - Tas iznāksīs mainīgo uz Tracy Bar atsevišķā panelī.
+- `dumpe($var)` - Tas iznāksīs mainīgo un tad nomirs uzreiz.

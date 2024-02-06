@@ -1,40 +1,40 @@
-# Lielisks spraudņi
+# Lieliskie Spraudņi
 
-Flight ir ļoti paplašināms. Ir vairāki spraudņi, kas var tikt izmantoti, lai pievienotu funkcionalitāti jūsu Flight lietojumprogrammai. Daži no tiem oficiāli tiek atbalstīti arī ar FlightPHP komandas palīdzību, bet citi ir mikro/mīkstas bibliotēkas, lai jums palīdzētu sākt darbu.
+Flight ir ļoti paplašināms. Ir daudzi spraudņi, kas var tikt izmantoti, lai pievienotu funkcionalitāti jūsu Flight aplikācijai. Daži no tiem ir oficiāli atbalstīti ar FlightPHP komandas, bet citi ir mikro/lite bibliotēkas, lai palīdzētu jums sākt.
 
-## Kešatmiņa
+## Kešošana
 
-Kešatmiņa ir lielisks veids, kā paātrināt jūsu lietojumprogrammu. Ir daudz kešatmiņas bibliotēku, kas var tikt izmantotas ar Flight.
+Kešošana ir lielisks veids, kā paātrināt jūsu aplikāciju. Ir daudzas kešošanas bibliotēkas, kas var tikt izmantotas ar Flight.
 
-- [Wruczek/PHP-File-Cache](/awesome-plugins/php-file-cache) - Gaismas, vienkārša un neatkarīga PHP faila kešatmiņas klase
+- [Wruczek/PHP-File-Cache](/lieliskie-spraudņi/php-failu-kešošana) - Viega, vienkārša un neatkarīga PHP failu kešošanas klase
 
-## Kļūdu labošana
+## Debugošana
 
-Kļūdu labošana ir būtiska, kad jūs strādājat savā lokālajā vidē. Ir daži spraudņi, kas var uzlabot jūsu labošanas pieredzi.
+Debugošana ir kritiska, kad jūs izstrādājat savā lokālajā vidē. Ir daži spraudņi, kas var uzlabot jūsu debugošanas pieredzi.
 
-- [tracy/tracy](/awesome-plugins/tracy) - Šī ir pilnīgi iezīmēta kļūdu apstrādātāja, kas var tikt izmantota ar Flight. Tai ir vairākas panelis, kas var palīdzēt jums labot jūsu lietojumprogrammu. To ir arī ļoti viegli paplašināt un pievienot savas paneļu.
-- [flightphp/tracy-extensions](/awesome-plugins/tracy-extensions) - Izmantots kopā ar [Tracy](/awesome-plugins/tracy) kļūdu apstrādātāju, šis spraudnis pievieno dažus papildu paneļus, lai palīdzētu labot kļūdas, kas būtiski saistītas ar Flight projektiem.
+- [tracy/tracy](/lieliskie-spraudņi/tracy) - Šis ir pilnīgi iekļauts kļūdu apstrādātājs, ko var izmantot ar Flight. Tam ir daudz panelu, kas var palīdzēt jums atkļūdot jūsu aplikāciju. To ir arī ļoti viegli paplašināt un pievienot savus paneļus.
+- [flightphp/tracy-extensions](/lieliskie-spraudņi/tracy-paplašinājumi) - Lietots ar [Tracy](/lieliskie-spraudņi/tracy) kļūdu apstrādātāju, šis spraudnis pievieno vairākas papildus darbvirsmas, kas palīdz ar atkļūdošanu speciāli Flight projektos.
 
 ## Datubāzes
 
-Datubāzes ir pamats lielākajai daļai lietojumprogrammu. Tā ir veids, kā saglabāt un atgūt datus. Dažas datubāzu bibliotēkas ir vienkārši apvalki, lai rakstītu vaicājumus, bet citas ir pilnveidotas ORM sistēmas.
+Datubāzes ir lielākās daudzu aplikāciju pamats. Tā ir veids, kā jūs saglabājat un iegūstat datus. Dažas datubāzu bibliotēkas vienkārši ir apvalki, lai rakstītu vaicājumus, un dažas ir pilnvērtīgi ORM.
 
-- [flightphp/core PdoWrapper](/awesome-plugins/pdo-wrapper) - Oficiālais Flight PDO apvalks, kas ir daļa no pamata. Tas ir vienkāršs apvalks, kas palīdz vienkāršot vaicājumu rakstīšanas un izpildes procesu. Tas nav ORM.
-- [flightphp/active-record](/awesome-plugins/active-record) - Oficiālais Flight ActiveRecord ORM/Attēlveidotājs. Lieliska maza bibliotēka, lai viegli atgūtu un saglabātu datus jūsu datubāzē.
+- [flightphp/core PdoWrapper](/lieliskie-spraudņi/pdo-apvalks) - Oficiālais Flight PDO apvalks, kas ir daļa no pamata. Tas ir vienkāršs apvalks, lai palīdzētu vienkāršot vaicājumu rakstīšanas un izpildes procesu. Tas nav ORM.
+- [flightphp/active-record](/lieliskie-spraudņi/aktīvais-ieraksts) - Oficiālais Flight ActiveRecord ORM/Mapper. Lieliska neliela bibliotēka, lai viegli iegūtu un saglabātu datus savā datubāzē.
 
 ## Sesija
 
-Sesijas tiešām nav noderīgas API, bet, veidojot tīmekļa lietojumprogrammu, sesijas var būt būtiskas, lai uzturētu stāvokli un pieteikšanās informāciju.
+Sesijas nav tiešām noderīgas API'iem, bet, veidojot tīmekļa aplikāciju, sesijas var būt kritiskas stāvokļa un pieteikšanās informācijas uzturēšanai.
 
-- [Ghostff/Session](/awesome-plugins/session) - PHP Sesiju pārvaldnieks (nebloķējošs, flash, segments, sesiju šifrēšana). Izmantots PHP open_ssl sesiju datu pēc iespējas šifrēšanai/atšifrēšanai.
+- [Ghostff/Session](/lieliskie-spraudņi/sesija) - PHP sesiju vadītājs (nebloķējošs, flash, segments, sesiju šifrēšana). Lieto PHP open_ssl sesiju datu izvēles šifrēšanai/atkodēšanai.
 
-## Veidnes
+## Templēšana
 
-Veidnes ir būtiskas jebkurai tīmekļa lietojumprogrammai ar lietotāja saskarni. Ir daudz veidņu dzinēju, kas var tikt izmantoti ar Flight.
+Tempļēšana ir būtiska jebkurai tīmekļa aplikācijai ar lietotāja saskarni. Ir daudz tempļēšanas dzinēju, kas var tikt izmantoti ar Flight.
 
-- [flightphp/core View](/learn#view) - Tas ir ļoti pamata veidnes dzinējs, kas ir daļa no pamata. Nav ieteicams izmantot, ja jums ir vairākas lapas jūsu projektā.
-- [latte/latte](/awesome-plugins/latte) - Latte ir pilnveidots veidņu dzinējs, kas ir ļoti viegli lietojams un šķiet tuvāks PHP sintaksei nekā Twig vai Smarty. To ir arī ļoti viegli paplašināt un pievienot savas filtrus un funkcijas.
+- [flightphp/core View](/mācīties#skati) - Tas ir ļoti pamata tempļēšanas dzinējs, kas ir daļa no pamata. Nav ieteicams lietot, ja jums ir vairāk nekā dažas lappuses jūsu projektā.
+- [latte/latte](/lieliskie-spraudņi/latte) - Latte ir pilnīga iekļauta tempļēšanas dzinējs, kas ir ļoti viegli lietojams un jūtamas tuvāk PHP sintaksei nekā Twig vai Smarty. To ir arī ļoti viegli paplašināt un pievienot savus filtrus un funkcijas.
 
-## Contributing
+## Ieguldīšana
 
-Vai jums ir spraudnis, ko vēlaties kopīgot? Iesniedziet izvilkuma pieprasījumu, lai to pievienotu sarakstam!
+Ir spraudnis, ko vēlaties koplietot? Iesniedziet pieprasījumu, lai to pievienotu sarakstam!

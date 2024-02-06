@@ -1,16 +1,15 @@
 # Variables
 
-Flight vous permet de sauvegarder des variables afin qu'elles puissent être utilisées n'importe où dans votre application.
+Flight permet de sauvegarder des variables afin qu'elles puissent être utilisées n'importe où dans votre application.
 
 ```php
-// Enregistrez votre variable
+// Sauvegardez votre variable
 Flight::set('id', 123);
 
 // Ailleurs dans votre application
 $id = Flight::get('id');
 ```
-
-Pour voir si une variable a été définie, vous pouvez faire :
+Pour vérifier si une variable a été définie, vous pouvez faire :
 
 ```php
 if (Flight::has('id')) {

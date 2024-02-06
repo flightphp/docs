@@ -1,7 +1,7 @@
-# Ietvars Instance
+# Iestatītāja instances
 
-Tas vietā, lai palaistu Flight kā globālu statisku klasi, jūs varat izvēlēties palaist to
-kā objekta instance.
+Tā vietā, lai izpildītu Flight kā globālu statisku klasi, jūs to varat palaist
+kā objekta instanci.
 
 ```php
 require 'flight/autoload.php';
@@ -9,11 +9,11 @@ require 'flight/autoload.php';
 $app = Flight::app();
 
 $app->route('/', function () {
-  echo 'Sveika, pasaule!';
+  echo 'sveika, pasaule!';
 });
 
 $app->start();
 ```
 
-Tādēļ, tā vietā, lai izsauktu statisko metodi, jūs izsauktu instance metodi ar
+Tātad, lietojot statisko metodi, jūs izsauktu izpildes metodi ar
 tādu pašu nosaukumu uz Engine objektu.

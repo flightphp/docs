@@ -1,6 +1,6 @@
 # Latte
 
-Latte é um mecanismo de modelagem completo que é muito fácil de usar e se assemelha mais a uma sintaxe PHP do que o Twig ou o Smarty. Também é muito fácil de estender e adicionar seus próprios filtros e funções.
+Latte é um mecanismo de modelo completo que é muito fácil de usar e parece mais próximo da sintaxe PHP do que o Twig ou o Smarty. Também é muito fácil de estender e adicionar seus próprios filtros e funções.
 
 ## Instalação
 
@@ -25,11 +25,11 @@ $app = Flight::app();
 $app->register('latte', LatteEngine::class, [], function(LatteEngine $latte) use ($app) {
 
 	// Aqui é onde o Latte irá armazenar em cache seus modelos para acelerar as coisas
-	// Uma coisa legal sobre o Latte é que ele atualiza automaticamente seu
-	// cache quando você faz alterações em seus modelos!
+	// Uma coisa legal sobre o Latte é que ele atualiza automaticamente o cache
+	// quando você faz alterações em seus modelos!
 	$latte->setTempDirectory(__DIR__ . '/../cache/');
 
-	// Diga ao Latte onde estará o diretório raiz para suas visualizações.
+	// Diga ao Latte onde será o diretório raiz para suas visualizações.
 	$latte->setLoader(new \Latte\Loaders\FileLoader(__DIR__ . '/../views/'));
 });
 ```
@@ -41,7 +41,7 @@ Aqui está um exemplo simples de um arquivo de layout. Este é o arquivo que ser
 ```html
 <!-- app/views/layout.latte -->
 <!doctype html>
-<html lang="en">
+<html lang="pt">
 	<head>
 		<title>{$title ? $title . ' - '}My App</title>
 		<link rel="stylesheet" href="style.css">
@@ -53,7 +53,7 @@ Aqui está um exemplo simples de um arquivo de layout. Este é o arquivo que ser
 			</nav>
 		</header>
 		<div id="content">
-			<!-- Aqui está a mágica -->
+			<!-- Aqui é a magia -->
 			{block content}{/block}
 		</div>
 		<div id="footer">
@@ -67,17 +67,17 @@ E agora temos o seu arquivo que será renderizado dentro desse bloco de conteúd
 
 ```html
 <!-- app/views/home.latte -->
-<!-- Isso diz ao Latte que este arquivo está "dentro" do arquivo layout.latte -->
+<!-- Isso informa ao Latte que este arquivo está "dentro" do arquivo layout.latte -->
 {extends layout.latte}
 
-<!-- Este é o conteúdo que será renderizado dentro do layout dentro do bloco de conteúdo -->
+<!-- Este é o conteúdo que será renderizado dentro do layout no bloco de conteúdo -->
 {block content}
 	<h1>Página Inicial</h1>
 	<p>Bem-vindo à minha aplicação!</p>
 {/block}
 ```
 
-Então, quando você for renderizar isso dentro da sua função ou controlador, você faria algo assim:
+Então, quando você for renderizar isso em sua função ou controlador, você faria algo assim:
 
 ```php
 // rota simples
@@ -102,4 +102,4 @@ class HomeController
 }
 ```
 
-Veja a [Documentação do Latte](https://latte.nette.org/pt/guide) para mais informações sobre como usar o Latte ao máximo!
+Veja a [Documentação do Latte](https://latte.nette.org/pt/guide) para mais informações sobre como usar o Latte em todo o seu potencial!

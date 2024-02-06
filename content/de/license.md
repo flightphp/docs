@@ -1,21 +1,25 @@
 Die MIT-Lizenz (MIT)
 =====================
 
-Copyright © `2023` `@mikecao, @n0nag0n`
+Urheberrecht © `2023` `@mikecao, @n0nag0n`
 
-Hiermit wird unentgeltlich jeder Person, die eine Kopie der Software und der zugehörigen Dokumentationen (die "Software") erhält, die Erlaubnis erteilt, uneingeschränkt zu handeln, einschließlich und ohne Ausnahme das Recht, die Software zu verwenden,
-zu kopieren, zu verändern, zu fusionieren, zu veröffentlichen, zu verbreiten, zu unterlizenzieren und/oder zu verkaufen
-Kopien der Software zu erstellen und Personen, denen
-die Software zur Verfügung gestellt wird, dies zu ermöglichen, unter den folgenden
+Die Erlaubnis wird hiermit kostenlos erteilt, an jede Person,
+die eine Kopie dieser Software und der dazugehörigen Dokumentation
+Dateien (die "Software") erhält, die Software ohne
+Einschränkungen, einschließlich, aber nicht beschränkt auf das Recht,
+die Software zu verwenden, zu kopieren, zu modifizieren, zu fusionieren, zu veröffentlichen, zu verteilen, zu unterlizenzieren und/oder zu verkaufen
+Kopien der Software, und Personen zu erlauben, denen die
+Software bereitgestellt wird, dies zu tun, unterliegen den folgenden
 Bedingungen:
 
-Der obige Urheberrechtsvermerk und dieser Genehmigungsvermerk müssen in allen Kopien oder wesentlichen Teilen der Software enthalten sein.
+Der obige Urheberrechtsvermerk und dieser Erlaubnisvermerk müssen
+in allen Kopien oder wesentlichen Teilen der Software enthalten sein.
 
-DIE SOFTWARE WIRD "WIE BESEHEN" OHNE JEGLICHE GARANTIE BEREITGESTELLT,
-AUSDRÜCKLICH ODER IMPLIZIT, EINSCHLIESSLICH DER GEWÄHRLEISTUNGEN
-DER MARKTFÄHIGKEIT, DER EIGNUNG FÜR EINEN BESTIMMTEN ZWECK UND
-NICHTVERLETZUNG. IN KEINEM FALL SIND DIE AUTOREN ODER DAS URHEBERRECHT
-INHABER FÜR ANSPRÜCHE, SCHÄDEN ODER ANDERE HAFTUNGEN
-VERANTWORTLICH, OB IN EINER VERTRAGS- ODER DELIKTISCHE HANDLUNG ODER SONST
-WIE, DIE AUS ODER IN VERBINDUNG MIT DER SOFTWARE ODER DER VERWENDUNG ODER
-ANDEREN HANDELN IN DER SOFTWARE ENTSTEHEN.
+DIE SOFTWARE WIRD "SO WIE SIE IST" BEREITGESTELLT, OHNE GARANTIE IRGENDWELCHER ART,
+AUSDRÜCKLICH ODER IMPLIZIT, EINSCHLIESSLICH, ABER NICHT BESCHRÄNKT AUF GARANTIE
+DER HANDELSFÄHIGKEIT, EIGNUNG FÜR EINEN BESTIMMTEN ZWECK UND
+NICHTVERLETZUNG. IN KEINEM FALL HAFtEN DIE AUTOREN ODER URHEBERRECHT
+HALTER FÜR ANSPRÜCHE, SCHÄDEN ODER ANDERE VERANTWORTLICHKEITEN,
+OB IN EINER VERTRAGS-, TORT- ODER SONSTIGEN HANDLUNG,
+DIE AUS, IN ZUSAMMENHANG MIT DER SOFTWARE ODER DER VERWENDUNG
+ODER ANDEREN GESCHÄFTEN MIT DER SOFTWARE ENTSTEHEN.

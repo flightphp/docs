@@ -1,10 +1,14 @@
 # Mise en cache HTTP
 
-Flight fournit une prise en charge intégrée de la mise en cache au niveau HTTP. Si la condition de mise en cache est remplie, Flight renverra une réponse `304 Non modifié`. La prochaine fois que le client demandera la même ressource, il lui sera demandé d'utiliser sa version mise en cache localement.
+Flight offre une prise en charge intégrée pour la mise en cache au niveau HTTP. Si la condition de mise en cache
+est remplie, Flight renverra une réponse HTTP `304 Non modifié`. La prochaine fois que  
+le client demande la même ressource, il sera invité à utiliser sa version mise en cache localement.
 
 ## Dernière modification
 
-Vous pouvez utiliser la méthode `lastModified` et transmettre un horodatage UNIX pour définir la date et l'heure de la dernière modification d'une page. Le client continuera à utiliser son cache jusqu'à ce que la valeur de dernière modification soit modifiée.
+Vous pouvez utiliser la méthode `lastModified` et transmettre un horodatage UNIX pour définir la date
+et l'heure à laquelle une page a été modifiée pour la dernière fois. Le client continuera d'utiliser sa mise en cache jusqu'à ce que
+que la valeur de la dernière modification soit modifiée.
 
 ```php
 Flight::route('/actualites', function () {
@@ -15,7 +19,8 @@ Flight::route('/actualites', function () {
 
 ## ETag
 
-La mise en cache `ETag` est similaire à `Last-Modified`, sauf que vous pouvez spécifier n'importe quel identifiant que vous voulez pour la ressource:
+La mise en cache `ETag` est similaire à `Dernière modification`, sauf que vous pouvez spécifier n'importe quel identifiant
+que vous souhaitez pour la ressource :
 
 ```php
 Flight::route('/actualites', function () {
@@ -24,4 +29,6 @@ Flight::route('/actualites', function () {
 });
 ```
 
-Gardez à l'esprit qu'appeler `lastModified` ou `etag` définira et vérifiera à la fois la valeur du cache. Si la valeur du cache est la même entre les demandes, Flight enverra immédiatement une réponse `HTTP 304` et arrêtera le traitement.
+Gardez à l'esprit que l'appel à `lastModified` ou `etag` définira et vérifiera à la fois
+la valeur de la mise en cache. Si la valeur de mise en cache est la même entre les demandes, Flight enverra immédiatement
+une réponse `HTTP 304` et arrêtera le traitement.
