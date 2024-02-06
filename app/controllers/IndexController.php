@@ -108,7 +108,7 @@ class IndexController {
 		$app = $this->app;
 		$section_name_for_file = str_replace('-', '', $section_name);
 		$heading_data = $app->cache()->retrieve($section_name_for_file.'_heading_data_'.$this->language);
-		$markdown_html = $app->cache()->refreshIfExpired($section_name_for_file.'_html', function() use ($app, $section_name_for_file, &$heading_data)  {
+		$markdown_html = $app->cache()->refreshIfExpired($section_name_for_file.'_html_'.$this->language, function() use ($app, $section_name_for_file, &$heading_data)  {
 			$parsed_text = $app->parsedown()->text(file_get_contents(self::CONTENT_DIR . $this->language . '/learn/' . $section_name_for_file . '.md'));
 
 			$heading_data = [];
@@ -178,7 +178,7 @@ class IndexController {
 	public function awesomePluginsGet() {
 		$app = $this->app;
 		$heading_data = $app->cache()->retrieve('plugins_heading_data_'.$this->language);
-		$markdown_html = $app->cache()->refreshIfExpired('plugins_html', function() use ($app, &$heading_data)  {
+		$markdown_html = $app->cache()->refreshIfExpired('plugins_html_'.$this->language, function() use ($app, &$heading_data)  {
 			$parsed_text = $app->parsedown()->text(file_get_contents(self::CONTENT_DIR . $this->language . '/awesome-plugins/index.md'));
 			$heading_data = [];
 			$parsed_text = Text::generateAndConvertHeaderListFromHtml($parsed_text, $heading_data, 'h2');
@@ -197,7 +197,7 @@ class IndexController {
 		$app = $this->app;
 		$plugin_name_underscored = str_replace('-', '_', $plugin_name);
 		$heading_data = $app->cache()->retrieve($plugin_name_underscored.'_heading_data_'.$this->language);
-		$markdown_html = $app->cache()->refreshIfExpired($plugin_name_underscored.'_html', function() use ($app, $plugin_name_underscored, &$heading_data)  {
+		$markdown_html = $app->cache()->refreshIfExpired($plugin_name_underscored.'_html_'.$this->language, function() use ($app, $plugin_name_underscored, &$heading_data)  {
 			$parsed_text = $app->parsedown()->text(file_get_contents(self::CONTENT_DIR . $this->language . '/awesome-plugins/' . $plugin_name_underscored . '.md'));
 
 			$heading_data = [];
