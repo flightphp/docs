@@ -1,8 +1,8 @@
-# Want to setup a Skeleton/Boilerplate project quickly?
+# Need a quick start?
 
-Head over to the [flightphp/skeleton](https://github.com/flightphp/skeleton) repo to get started!
+Head over to the [flightphp/skeleton](https://github.com/flightphp/skeleton) repo to get started! This is a project that includes a single page file that includes everything you need to run your app. It also includes a more full fledged example with controllers and views.
 
-## Need some inspiration?
+## Need Some Inspiration?
 
 While these are not officially sponsored by the FlightPHP Team, these could give you ideas on how to structure your own projects that are built with Flight!
 
@@ -15,6 +15,6 @@ While these are not officially sponsored by the FlightPHP Team, these could give
 - [A tiny php framework based on Flight and medoo.](https://github.com/ycrao/tinyme)
 - [Example MVC Application](https://github.com/paddypei/Flight-MVC)
 
-## Do you have a project you want to share?
+## Want to Share Your Own Example?
 
 If you have a project you want to share, please submit a pull request to add it to this list!

@@ -58,16 +58,16 @@
         },
         {
             "name": "flightphp/core",
-            "version": "v3.3.0",
+            "version": "v3.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/flightphp/core.git",
-                "reference": "19e40b9b8a17cfa4e168191f9fa3c03ce2d03d7e"
+                "reference": "6e40f791c2b7b0a7966bfbd66d92c2cf3ceb282f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/flightphp/core/zipball/19e40b9b8a17cfa4e168191f9fa3c03ce2d03d7e",
-                "reference": "19e40b9b8a17cfa4e168191f9fa3c03ce2d03d7e",
+                "url": "https://api.github.com/repos/flightphp/core/zipball/6e40f791c2b7b0a7966bfbd66d92c2cf3ceb282f",
+                "reference": "6e40f791c2b7b0a7966bfbd66d92c2cf3ceb282f",
                 "shasum": ""
             },
             "require": {
@@ -87,14 +87,13 @@
             },
             "suggest": {
                 "latte/latte": "Latte template engine",
-                "phpstan": "PHP Static Analyzer",
+                "phpstan/phpstan": "PHP Static Analyzer",
                 "tracy/tracy": "Tracy debugger"
             },
             "type": "library",
             "autoload": {
                 "files": [
-                    "flight/autoload.php",
-                    "flight/Flight.php"
+                    "flight/autoload.php"
                 ]
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -124,9 +123,9 @@
             "homepage": "http://flightphp.com",
             "support": {
                 "issues": "https://github.com/flightphp/core/issues",
-                "source": "https://github.com/flightphp/core/tree/v3.3.0"
+                "source": "https://github.com/flightphp/core/tree/v3.4.0"
             },
-            "time": "2024-01-28T03:02:28+00:00"
+            "time": "2024-02-05T16:55:53+00:00"
         },
         {
             "name": "latte/latte",

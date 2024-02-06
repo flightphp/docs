@@ -2,6 +2,29 @@
 
 This is the source code for the Flight Micro Framework (built with Flight!)
 
+## Requirements
+
+This project requires PHP 8.2 or greater. You also need to install [composer](https://getcomposer.org/) to install the dependencies.
+
 ## Installation
 
-This was just created from the Flight skeleton app. To install, just clone the repo and run `composer install`. Then run `composer start` and copy `app/config/config_sample.php` to `app/config/config.php`.
+This was just created from the Flight skeleton app. To install just follow these steps:
+
+```bash
+# Clone the repo
+git clone https://github.com/flightphp/docs flight-docs/
+
+cd flight-docs/
+
+# Install the dependencies
+composer install
+
+# Copy the config file
+cp app/config/config_sample.php app/config/config.php
+
+# Start the server (if you have PHP >8.2 installed)
+composer start
+
+# Or if you have a different version of PHP installed, you can use the built-in server
+php82 -S localhost:8000 -t public/
+```

@@ -1,7 +1,8 @@
 # What is Flight?
 
-Flight is a fast, simple, extensible framework for PHP.
-Flight enables you to quickly and easily build RESTful web applications.
+Flight is a fast, simple, extensible framework for PHP. It is quite versatile and can be used for building any kind of web application. It is built with simplicity in mind and is written in a way that is easy to understand and use.
+
+Flight is a great beginner framework for those who are new to PHP and want to learn how to build web applications. It is also a great framework for experienced developers who want to build web applications quickly and easily. It is engineered to easily build a RESTful API, a simple web application, or a complex web application.
 
 ```php
 <?php
@@ -20,8 +21,8 @@ Flight::start();
 
 Simple enough right? [Learn more about Flight!](learn)
 
-## Skeleton App
-There is an example app that can help you get started with the Flight Framework. Go to [flightphp/skeleton](https://github.com/flightphp/skeleton) for instructions on how to get started!
+## Quick Start
+There is an example app that can help you get started with the Flight Framework. Go to [flightphp/skeleton](https://github.com/flightphp/skeleton) for instructions on how to get started! You can also visit the [examples](examples) page for inspiration on some of the things you can do with Flight.
 
 # Community
 
@@ -29,8 +30,10 @@ We're on Matrix! Chat with us at [#flight-php-framework:matrix.org](https://matr
 
 # Contributing
 
-This website is hosted on [Github](https://github.com/flightphp/docs). If you notice an error, feel free to correct it and submit a pull request!
-We try to keep up on things, but updates and language translations are welcome.
+There are two ways you can contribute to Flight: 
+
+1. You can contribute to the core framework by visiting the [core repository](https://github.com/flightphp/core). 
+1. You can contribute to the documentation. This documentation website is hosted on [Github](https://github.com/flightphp/docs). If you notice an error or want to flesh out something better, feel free to correct it and submit a pull request! We try to keep up on things, but updates and language translations are welcome.
 
 # Requirements
 

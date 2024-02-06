@@ -95,43 +95,85 @@ class IndexController {
 
 	public function learnGet() {
 		$app = $this->app;
-		$heading_data = $app->cache()->retrieve('learn_heading_data_'.$this->language);
-		$markdown_html = $app->cache()->refreshIfExpired('learn_html', function() use ($app, &$heading_data)  {
-			$learn_files_order = [
-				'routing.md',
-				'extending.md',
-				'overriding.md',
-				'filtering.md',
-				'variables.md',
-				'views.md',
-				'errorhandling.md',
-				'redirects.md',
-				'requests.md',
-				'stopping.md',
-				'httpcaching.md',
-				'json.md',
-				'configuration.md',
-				'frameworkmethods.md',
-				'frameworkinstance.md'
-			];
-			$text = '';
-			foreach($learn_files_order as $file) {
-				$text .= file_get_contents(self::CONTENT_DIR . $this->language . '/learn/' . $file) . "\n\n";
-			}
-			$parsed_text = $app->parsedown()->text($text);
+		$markdown_html = $app->cache()->refreshIfExpired('learn_html_'.$this->language, function() use ($app)  {
+			return $app->parsedown()->text(file_get_contents(self::CONTENT_DIR . $this->language . '/learn.md'));
+		}, 86400); // 1 day
+		$this->renderPage('single_page.latte', [
+			'page_title' => 'learn',
+			'markdown' => $markdown_html,
+		]);
+	}
 
-			// Find all the heading tags and add an id attribute to them
+	public function learnSectionsGet(string $section_name) {
+		$app = $this->app;
+		$section_name_for_file = str_replace('-', '', $section_name);
+		$heading_data = $app->cache()->retrieve($section_name_for_file.'_heading_data_'.$this->language);
+		$markdown_html = $app->cache()->refreshIfExpired($section_name_for_file.'_html', function() use ($app, $section_name_for_file, &$heading_data)  {
+			$parsed_text = $app->parsedown()->text(file_get_contents(self::CONTENT_DIR . $this->language . '/learn/' . $section_name_for_file . '.md'));
+
 			$heading_data = [];
-			$parsed_text = Text::generateAndConvertHeaderListFromHtml($parsed_text, $heading_data, 'h[12]');
-			$app->cache()->store('learn_heading_data_'.$this->language, $heading_data, 86400); // 1 day
+			$parsed_text = Text::generateAndConvertHeaderListFromHtml($parsed_text, $heading_data, 'h2');
+			$app->cache()->store($section_name_for_file.'_heading_data_'.$this->language, $heading_data, 86400); // 1 day
+
 			return $parsed_text;
 		}, 86400); // 1 day
+
+		// pull the title out of the first h1 tag
+		$page_title = '';
+		preg_match('/\<h1\>(.*)\<\/h1\>/i', $markdown_html, $matches);
+		if (isset($matches[1])) {
+			$page_title = $matches[1];
+		}
+
+		$Translator = new Translator($this->language);
+
 		$this->renderPage('single_page_scrollspy.latte', [
-			'page_title' => 'learn',
+			'custom_page_title' => $page_title.' - '.$Translator->translate('learn'),
 			'markdown' => $markdown_html,
 			'heading_data' => $heading_data,
 		]);
 	}
+
+	// public function learnSectionsGet(string $section_name) {
+	// 	$app = $this->app;
+	// 	$section_name_for_file = str_replace('-', '', $section_name);
+	// 	$heading_data = $app->cache()->retrieve('learn_heading_data_'.$this->language);
+	// 	$markdown_html = $app->cache()->refreshIfExpired('learn_html', function() use ($app, &$heading_data)  {
+	// 		$learn_files_order = [
+	// 			'routing.md',
+	// 			'extending.md',
+	// 			'overriding.md',
+	// 			'filtering.md',
+	// 			'variables.md',
+	// 			'views.md',
+	// 			'errorhandling.md',
+	// 			'redirects.md',
+	// 			'requests.md',
+	// 			'stopping.md',
+	// 			'httpcaching.md',
+	// 			'json.md',
+	// 			'configuration.md',
+	// 			'frameworkmethods.md',
+	// 			'frameworkinstance.md'
+	// 		];
+	// 		$text = '';
+	// 		foreach($learn_files_order as $file) {
+	// 			$text .= file_get_contents(self::CONTENT_DIR . $this->language . '/learn/' . $file) . "\n\n";
+	// 		}
+	// 		$parsed_text = $app->parsedown()->text($text);
+
+	// 		// Find all the heading tags and add an id attribute to them
+	// 		$heading_data = [];
+	// 		$parsed_text = Text::generateAndConvertHeaderListFromHtml($parsed_text, $heading_data, 'h[12]');
+	// 		$app->cache()->store('learn_heading_data_'.$this->language, $heading_data, 86400); // 1 day
+	// 		return $parsed_text;
+	// 	}, 86400); // 1 day
+	// 	$this->renderPage('single_page_scrollspy.latte', [
+	// 		'page_title' => 'learn',
+	// 		'markdown' => $markdown_html,
+	// 		'heading_data' => $heading_data,
+	// 	]);
+	// }
 
 	public function awesomePluginsGet() {
 		$app = $this->app;
