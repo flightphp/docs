@@ -1,40 +1,40 @@
 # 素晴らしいプラグイン
 
-Flightは非常に拡張性があります。Flightアプリケーションに機能を追加するために使用できるプラグインがいくつかあります。一部はFlightPHPチームによって公式にサポートされており、他にはスタートするのに役立つマイクロ/ライトライブラリがあります。
+Flightは非常に拡張性が高いです。Flightアプリケーションに機能を追加するために使用できるプラグインがいくつかあります。一部はFlightPHPチームによって公式にサポートされており、他のものはマイクロ/ライトライブラリで、開始するのに役立ちます。
 
 ## キャッシュ
 
-キャッシュはアプリケーションを高速化する素晴らしい方法です。Flightと一緒に使用できる複数のキャッシュライブラリがあります。
+キャッシュはアプリケーションのスピードを向上させる素晴らしい方法です。Flightと一緒に使用できるいくつかのキャッシングライブラリがあります。
 
-- [Wruczek/PHP-File-Cache](/awesome-plugins/php-file-cache) - 軽量でシンプルかつスタンドアロンのPHPインファイルキャッシュクラス
+- [Wruczek/PHP-File-Cache](/awesome-plugins/php-file-cache) - 軽量でシンプルなPHPファイル内キャッシュクラス
 
 ## デバッグ
 
-ローカル環境で開発しているときにデバッグは重要です。いくつかのプラグインがデバッグ体験を向上させることができます。
+ローカル環境で開発しているときにはデバッグが重要です。デバッグエクスペリエンスを向上させるいくつかのプラグインがあります。
 
-- [tracy/tracy](/awesome-plugins/tracy) - これはFlightと一緒に使用できるフル機能のエラーハンドラです。アプリケーションのデバッグに役立つ多くのパネルがあります。また、簡単に拡張して独自のパネルを追加できます。
-- [flightphp/tracy-extensions](/awesome-plugins/tracy-extensions) - [Tracy](/awesome-plugins/tracy)エラーハンドラと共に使用され、このプラグインはFlightプロジェクトのデバッグを支援するためのいくつかの追加パネルを追加します。
+- [tracy/tracy](/awesome-plugins/tracy) - Flightと一緒に使用できる完全機能のエラーハンドラです。アプリケーションのデバッグに役立ついくつかのパネルがあります。拡張や独自のパネルの追加も非常に簡単です。
+- [flightphp/tracy-extensions](/awesome-plugins/tracy-extensions) - [Tracy](/awesome-plugins/tracy)エラーハンドラと使用され、Flightプロジェクトのデバッグを手助けするいくつかの追加パネルを追加するプラグインです。
 
 ## データベース
 
-データベースはほとんどのアプリケーションの中核です。これはデータの格納と取得方法です。一部のデータベースライブラリはクエリを書くラッパーであり、一部は完全なORMです。
+データベースはほとんどのアプリケーションの中核です。これによってデータの格納と取得が行われます。一部のデータベースライブラリは単にクエリを書くラッパーであり、一部は完全なORMです。
 
-- [flightphp/core PdoWrapper](/awesome-plugins/pdo-wrapper) - Flightの公式PDOラッパーで、コアの一部です。これはクエリの記述と実行を簡素化するためのシンプルなラッパーです。ORMではありません。
-- [flightphp/active-record](/awesome-plugins/active-record) - 公式Flight ActiveRecord ORM/Mapper。データベースでデータを簡単に取得および格納するための優れた小さなライブラリです。
+- [flightphp/core PdoWrapper](/awesome-plugins/pdo-wrapper) - コアの一部である公式のFlight PDOラッパー。クエリの記述と実行のプロセスを簡素化するための簡単なラッパーです。ORMではありません。
+- [flightphp/active-record](/awesome-plugins/active-record) - 公式のFlight ActiveRecord ORM/Mapper。データの取得と保存を簡単に行うための素晴らしいライブラリ。
 
 ## セッション
 
-セッションはAPIにはあまり役立ちませんが、Webアプリケーションを構築する場合、状態とログイン情報を維持するために重要です。
+APIにはあまり役立ちませんが、Webアプリケーションの構築には、セッションが状態の維持やログイン情報の管理に非常に重要です。
 
-- [Ghostff/Session](/awesome-plugins/session) - PHPセッションマネージャ（非同期、フラッシュ、セグメント、セッション暗号化）。オプションでセッションデータの暗号化/復号化にPHP open_sslを使用します。
+- [Ghostff/Session](/awesome-plugins/session) - PHPセッションマネージャー（ノンブロッキング、フラッシュ、セグメント、セッション暗号化）。オプションでセッションデータの暗号化/復号化にPHP open_sslを使用します。
 
-## テンプレート
+## テンプレーティング
 
-テンプレートはUIを備えたすべてのWebアプリケーションの中核です。Flightと一緒に使用できる多くのテンプレートエンジンがあります。
+UIを持つ任意のWebアプリケーションの中核になるのがテンプレートです。Flightと一緒に使用できるいくつかのテンプレートエンジンがあります。
 
-- [flightphp/core View](/learn#views) - これはコアの一部である非常に基本的なテンプレートエンジンです。プロジェクトに複数のページがある場合は使用しないことをお勧めします。
-- [latte/latte](/awesome-plugins/latte) - Latteは非常に使いやすく、TwigやSmartyよりもPHP構文に近いフル機能のテンプレートエンジンです。また、独自のフィルターと関数を拡張して追加することが非常に簡単です。
+- [flightphp/core View](/learn#views) - コアの一部である非常に基本的なテンプレートエンジンです。プロジェクトに数ページ以上ある場合はお勧めしません。
+- [latte/latte](/awesome-plugins/latte) - Latteは非常に使いやすく、TwigやSmartyよりもPHP構文に近いフル機能のテンプレートエンジンです。フィルターや関数を簡単に拡張して追加することも非常に簡単です。
 
-## 貢献
+## コントリビューション
 
-共有したいプラグインはありますか？それをリストに追加するためのプルリクエストを送信してください！
+共有したいプラグインがありますか？リストに追加するプルリクエストを送信してください！

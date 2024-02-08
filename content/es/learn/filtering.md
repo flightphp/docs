@@ -1,8 +1,9 @@
+```es
 # Filtrado
 
 Flight te permite filtrar métodos antes y después de que sean llamados. No hay
-ganchos predefinidos que necesites memorizar. Puedes filtrar cualquiera de los métodos predeterminados del framework
-así como cualquier método personalizado que hayas mapeado.
+ganchos predefinidos que necesites memorizar. Puedes filtrar cualquiera de los métodos
+predeterminados del marco de trabajo, así como cualquier método personalizado que hayas mapeado.
 
 Una función de filtro se ve así:
 
@@ -14,7 +15,7 @@ function (array &$params, string &$output): bool {
 
 Usando las variables pasadas puedes manipular los parámetros de entrada y/o la salida.
 
-Puedes hacer que un filtro se ejecute antes de un método de esta forma:
+Puedes hacer que un filtro se ejecute antes de un método haciendo:
 
 ```php
 Flight::before('start', function (array &$params, string &$output): bool {
@@ -22,7 +23,7 @@ Flight::before('start', function (array &$params, string &$output): bool {
 });
 ```
 
-Puedes hacer que un filtro se ejecute después de un método de esta forma:
+Puedes hacer que un filtro se ejecute después de un método haciendo:
 
 ```php
 Flight::after('start', function (array &$params, string &$output): bool {
@@ -30,36 +31,36 @@ Flight::after('start', function (array &$params, string &$output): bool {
 });
 ```
 
-Puedes añadir tantos filtros como desees a cualquier método. Serán llamados en el
-orden en que sean declarados.
+Puedes añadir tantos filtros como quieras a cualquier método. Serán llamados en el
+orden en el que son declarados.
 
 Aquí tienes un ejemplo del proceso de filtrado:
 
 ```php
-// Mapea un método personalizado
+// Mapear un método personalizado
 Flight::map('hello', function (string $name) {
   return "¡Hola, $name!";
 });
 
-// Añade un filtro antes
+// Agregar un filtro antes
 Flight::before('hello', function (array &$params, string &$output): bool {
-  // Manipula el parámetro
+  // Manipular el parámetro
   $params[0] = 'Fred';
   return true;
 });
 
-// Añade un filtro después
+// Agregar un filtro después
 Flight::after('hello', function (array &$params, string &$output): bool {
-  // Manipula la salida
+  // Manipular la salida
   $output .= " ¡Que tengas un buen día!";
   return true;
 });
 
-// Invoca el método personalizado
+// Invocar el método personalizado
 echo Flight::hello('Bob');
 ```
 
-Esto mostrará:
+Esto debería mostrar:
 
 ```
 ¡Hola Fred! ¡Que tengas un buen día!
@@ -89,4 +90,5 @@ Flight::before('start', function (array &$params, string &$output): bool {
 ```
 
 Nota, los métodos principales como `map` y `register` no pueden ser filtrados porque
-son llamados directamente y no invocados dinámicamente.
+son llamados directamente y no son invocados dinámicamente.
+```

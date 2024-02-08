@@ -1,10 +1,11 @@
-## Latte
+```es
+# Latte
 
-Latte is a full featured templating engine that is very easy to use and feels closer to a PHP syntax than Twig or Smarty. It's also very easy to extend and add your own filters and functions.
+Latte es un motor de plantillas con todas las funciones que es muy fácil de usar y se siente más cercano a una sintaxis PHP que Twig o Smarty. También es muy fácil de extender y agregar tus propios filtros y funciones.
 
 ## Instalación
 
-Instala con composer.
+Instalar con composer.
 
 ```bash
 composer require latte/latte
@@ -12,7 +13,7 @@ composer require latte/latte
 
 ## Configuración Básica
 
-Hay algunas opciones de configuración básicas para empezar. Puedes leer más sobre ellas en la [Documentación de Latte](https://latte.nette.org/es/guia).
+Hay algunas opciones de configuración básicas para comenzar. Puedes leer más al respecto en la [Documentación de Latte](https://latte.nette.org/en/guide).
 
 ```php
 
@@ -24,12 +25,12 @@ $app = Flight::app();
 
 $app->register('latte', LatteEngine::class, [], function(LatteEngine $latte) use ($app) {
 
-	// Aquí es donde Latte almacenará la caché de tus plantillas para acelerar las cosas
-	// ¡Una cosa genial sobre Latte es que actualiza automáticamente tu caché
-	// cuando realizas cambios en tus plantillas!
+	// Aquí es donde Latte almacenará en caché tus plantillas para acelerar las cosas
+	// ¡Una cosa genial acerca de Latte es que automáticamente refresca tu
+	// caché cuando realizas cambios en tus plantillas!
 	$latte->setTempDirectory(__DIR__ . '/../cache/');
 
-	// Indícale a Latte dónde estará ubicado el directorio raíz para tus vistas.
+	// Indica a Latte dónde estará el directorio raíz para tus vistas.
 	$latte->setLoader(new \Latte\Loaders\FileLoader(__DIR__ . '/../views/'));
 });
 ```
@@ -72,22 +73,22 @@ Y ahora tenemos tu archivo que se va a renderizar dentro de ese bloque de conten
 
 <!-- Este es el contenido que se renderizará dentro del diseño dentro del bloque de contenido -->
 {block content}
-	<h1>Página de Inicio</h1>
+	<h1>Página de inicio</h1>
 	<p>¡Bienvenido a mi aplicación!</p>
 {/block}
 ```
 
-Entonces, cuando vayas a renderizar esto dentro de tu función o controlador, deberías hacer algo como esto:
+Luego, cuando vayas a renderizar esto dentro de tu función o controlador, harías algo así:
 
 ```php
 // ruta simple
 Flight::route('/', function () {
 	Flight::latte()->render('home.latte', [
-		'title' => 'Página de Inicio'
+		'title' => 'Página de inicio'
 	]);
 });
 
-// o si estás utilizando un controlador
+// o si estás usando un controlador
 Flight::route('/', [HomeController::class, 'index']);
 
 // HomeController.php
@@ -96,10 +97,11 @@ class HomeController
 	public function index()
 	{
 		Flight::latte()->render('home.latte', [
-			'title' => 'Página de Inicio'
+			'title' => 'Página de inicio'
 		]);
 	}
 }
 ```
 
-¡Consulta la [Documentación de Latte](https://latte.nette.org/es/guia) para obtener más información sobre cómo utilizar Latte al máximo!
+¡Consulta la [Documentación de Latte](https://latte.nette.org/en/guide) para obtener más información sobre cómo utilizar Latte al máximo! 
+```

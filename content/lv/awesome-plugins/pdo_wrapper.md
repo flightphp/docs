@@ -1,11 +1,11 @@
-# PdoWrapper PDO Helper Klase
+# PdoWrapper PDO Palīgklase
 
-Flight nāk ar palīgklasi PDO. Tas ļauj viegli vaicāt savu datu bāzi ar visu sagatavoto/izpildīt/izgūtVisus() sātanību. Tas ievērojami vienkāršo, kā jūs varat vaicāt savu datu bāzi.
+Flight tiek komplektēts ar palīgklasi PDO. Tas ļauj jums viegli vaicāt savu datu bāzi ar visām sagatavotajām /execute/fetchAll() nodarībām. Tas ievērojami vienkāršo, kā jūs varat vaicāt savu datu bāzi.
 
-## Reģistrējot PDO Helper Klasi
+## Reģistrējot PDO Palīgklasi
 
 ```php
-// Reģistrēt PDO palīgklasi
+// Reģistrējiet PDO palīgklasi
 Flight::register('db', \flight\database\PdoWrapper::class, ['mysql:host=localhost;dbname=cool_db_name', 'lietotājs', 'parole', [
 		PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES \'utf8mb4\'',
 		PDO::ATTR_EMULATE_PREPARES => false,
@@ -16,21 +16,21 @@ Flight::register('db', \flight\database\PdoWrapper::class, ['mysql:host=localhos
 ```
 
 ## Lietošana
-Šis objekts paplašina PDO, tāpēc visi normālie PDO metodēs ir pieejami. Lai veiktu datu bāzes vaicājumus vieglāk, tiek pievienotas šādas metodes:
+Šis objekts paplašina PDO, tāpēc visi parastie PDO metodēm ir pieejami. Lai padarītu datu bāzes vaicāšanu vieglāku, pievienoti šādiie metodēm:
 
 ### `runQuery(string $sql, array $params = []): PDOStatement`
-Izmantojiet to INSERT, UPDATE vai ja plānojat izmantot SELECT cilpā
+Izmantojiet to INSERTS, UPDATES vai ja plānojat izmantot SELECT cilpā
 
 ```php
 $db = Flight::db();
-$izpildpareizraksts = $db->runQuery("SELECT * FROM tabula WHERE kautkas = ?", [ $kautkas ]);
-while($rinda = $izpildpareizraksts->fetch()) {
+$statement = $db->runQuery("SELECT * FROM tabula WHERE kautkas = ?", [ $kautkas ]);
+while($row = $statement->fetch()) {
 	// ...
 }
 
-// Vai rakstīšana datu bāzē
-$db->runQuery("INSERT INTO tabula (nosaukums) VALUES (?)", [ $nosaukums ]);
-$db->runQuery("UPDATE tabula SET nosaukums = ? WHERE id = ?", [ $nosaukums, $id ]);
+// Vai rakstīt datu bāzē
+$db->runQuery("INSERT INTO tabula (vards) VALUES (?)", [ $vards ]);
+$db->runQuery("UPDATE tabula SET vards = ? WHERE id = ?", [ $vards, $id ]);
 ```
 
 ### `fetchField(string $sql, array $params = []): mixed`
@@ -38,7 +38,7 @@ Izvelk pirmo lauku no vaicājuma
 
 ```php
 $db = Flight::db();
-(skaitīt = $db->fetchField("SELECT COUNT(*) FROM tabula WHERE kautkas = ?", [ $kautkas ]);
+$count = $db->fetchField("SELECT COUNT(*) FROM tabula WHERE kautkas = ?", [ $kautkas ]);
 ```
 
 ### `fetchRow(string $sql, array $params = []): array`
@@ -46,68 +46,68 @@ Izvelk vienu rindu no vaicājuma
 
 ```php
 $db = Flight::db();
-$rinda = $db->fetchRow("SELECT * FROM tabula WHERE id = ?", [ $id ]);
+$row = $db->fetchRow("SELECT * FROM tabula WHERE id = ?", [ $id ]);
 ```
 
 ### `fetchAll(string $sql, array $params = []): array`
-Izvelk visus rindas no vaicājuma
+Izvelk visas rindas no vaicājuma
 
 ```php
 $db = Flight::db();
-$rindas = $db->fetchAll("SELECT * FROM tabula WHERE kautkas = ?", [ $kautkas ]);
-foreach($rindas as $rinda) {
-	// kaut ko dariet
+rows = $db->fetchAll("SELECT * FROM tabula WHERE kautkas = ?", [ $kautkas ]);
+foreach($rows as $row) {
+	// dari kaut ko
 }
 ```
 
-## Piezīme ar `IN()` sintakses
-Tam ir ari noderīgs ietinājums `IN()` apgalvojumiem. Vienkārši padodiet vienu jautājumu zīmi kā aizvietotāj simbolu `IN()` un tad masīvu ar vērtībām. Šeit ir piemērs, kā tas varētu izskatīties:
+## Piezīme ar `IN()` sintakse
+Šim ir noderīgs apvalks arī `IN()` teikumiem. Jūs vienkārši varat padot vienu jautājuma zīmi kā aizvietotājs `IN()` un tad vērtību masīvu. Šeit ir piemērs, kā tas varētu izskatīties:
 
 ```php
 $db = Flight::db();
-$vārds = 'Bobs';
-$uzņēmuma_id = [1,2,3,4,5];
-$rindas = $db->fetchAll("SELECT * FROM tabula WHERE vārds = ? AND uzņēmuma_id IN (?)", [ $vārds, $uzņēmuma_id ]);
+vards = 'Bobs';
+uznemumu_ids = [1,2,3,4,5];
+rows = $db->fetchAll("SELECT * FROM tabula WHERE vards = ? AND uznemuma_id IN (?)", [ $vards, $uznemumu_ids ]);
 ```
 
 ## Pilns piemērs
 
 ```php
-// Piemēra maršruts un kā izmantot šo ietinājumu
-Flight::route('/lietotāji', function () {
-	// iegūt visus lietotājus
-	$lietotāji = Flight::db()->fetchAll('SELECT * FROM lietotāji');
+// Piemēra route un kā jūs izmantotu šo apvalku
+Flight::route('/lietotaji', function () {
+	// Saņemt visus lietotājus
+	$lietotaji = Flight::db()->fetchAll('SELECT * FROM lietotaji');
 
-	// Plūst visi lietotāji
-	$izpildpareizraksts = Flight::db()->runQuery('SELECT * FROM lietotāji');
-	while ($lietotājs = $izpildpareizraksts->fetch()) {
-		echo $lietotājs['vārds'];
+	// Plūdēt visus lietotājus
+	$statement = Flight::db()->runQuery('SELECT * FROM lietotaji');
+	while ($lietotajs = $statement->fetch()) {
+		echo $lietotajs['vards'];
 	}
 
-	// Iegūt vienu lietotāju
-	$lietotājs = Flight::db()->fetchRow('SELECT * FROM lietotāji WHERE id = ?', [123]);
+	// Saņemt vienu lietotāju
+	$lietotajs = Flight::db()->fetchRow('SELECT * FROM lietotaji WHERE id = ?', [123]);
 
-	// Iegūt vienu vērtību
-	(skaitīt = Flight::db()->fetchField('SELECT COUNT(*) FROM lietotāji');
+	// Saņemt vienu vērtību
+	$count = Flight::db()->fetchField('SELECT COUNT(*) NO lietotaji');
 
-	// Īpašais IN() sintakse lai palīdzētu (pārliecinieties, ka IN ir lielie)
-	$lietotāji = Flight::db()->fetchAll('SELECT * FROM lietotāji WHERE id IN (?)', [[1,2,3,4,5]]);
-	// jūs varētu arī to izdarīt
-	$lietotāji = Flight::db()->fetchAll('SELECT * FROM lietotāji WHERE id IN (?)', [ '1,2,3,4,5']);
+	// Īpašs IN() sintaksei palīdzēt (pārliecinieties, ka IN ir lielie burti)
+	$lietotaji = Flight::db()->fetchAll('SELECT * FROM lietotaji WHERE id IN (?)', [[1,2,3,4,5]]);
+	// jūs varētu arī darīt šo
+	$lietotaji = Flight::db()->fetchAll('SELECT * FROM lietotaji WHERE id IN (?)', [ '1,2,3,4,5']);
 
 	// Ievietot jaunu lietotāju
-	Flight::db()->runQuery("INSERT INTO lietotāji (vārds, epasts) VēRTĪBAS (?, ?)", ['Bobs', 'bobs@example.com']);
+	Flight::db()->runQuery("INSERT INTO lietotaji (vards, e_pasts) VALUES (?, ?)", ['Bobs', 'bobs@piemers.lv']);
 	insert_id = Flight::db()->lastInsertId();
 
-	// Atjaunināt lietotāju
-	Flight::db()->runQuery("UPDATE lietotāji SET vārds = ? WHERE id = ?", ['Bobs', 123]);
+	// Atjaunot lietotāju
+	Flight::db()->runQuery("UPDATE lietotaji SET vards = ? WHERE id = ?", ['Bobs', 123]);
 
 	// Dzēst lietotāju
-	Flight::db()->runQuery("DELETE FROM lietotāji WHERE id = ?", [123]);
+	Flight::db()->runQuery("DZĒST NO lietotaji WHERE id = ?", [123]);
 
-	// Iegūt ietekmēto rindu skaitu
-	$izpildpareizraksts = Flight::db()->runQuery("update lietotāji SET vārds = ? WHERE vārds = ?", ['Bobs', 'Sally']);
-	affected_rows = $izpildpareizraksta->rowCount();
+	// Saņemiet ietekmēto rindu skaitu
+	$statement = Flight::db()->runQuery("UPDATE lietotaji SET vards = ? WHERE vards = ?", ['Bobs', 'Sally']);
+	afektētās_rindas = $statement->rowCount();
 
 });
 ```

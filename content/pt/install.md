@@ -2,20 +2,18 @@
 
 ## Baixe os arquivos.
 
-Se estiver a utilizar [Composer](https://getcomposer.org), pode executar o seguinte
-comando:
+Se estiver a usar [Composer](https://getcomposer.org), pode executar o seguinte comando:
 
 ```bash
 composer require flightphp/core
 ```
 
-OU pode [baixar os arquivos](https://github.com/flightphp/core/archive/master.zip)
- diretamente e extrai-los para o seu diretório web.
+OU então pode [baixar os arquivos](https://github.com/flightphp/core/archive/master.zip) diretamente e extrair para o seu diretório web.
 
-## Configure o seu Servidor Web.
+## Configure o seu servidor web.
 
 ### Apache
-Para o Apache, edite o arquivo `.htaccess` com o seguinte:
+Para o Apache, edite o seu ficheiro `.htaccess` com o seguinte:
 
 ```apacheconf
 RewriteEngine On
@@ -24,10 +22,10 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ index.php [QSA,L]
 ```
 
-> **Nota**: Se precisar de utilizar o flight num subdiretório, adicione a linha
-> `RewriteBase /subdir/` imediatamente após `RewriteEngine On`.
+> **Nota**: Se necessitar de utilizar o Flight numa subpasta, adicione a linha
+> `RewriteBase /subdir/` logo após `RewriteEngine On`.
 
-> **Nota**: Se quiser proteger todos os ficheiros do servidor, como um ficheiro db ou env.
+> **Nota**: Se quiser proteger todos os ficheiros do servidor, como um ficheiro de bd ou env.
 > Coloque isto no seu ficheiro `.htaccess`:
 
 ```apacheconf
@@ -52,16 +50,16 @@ server {
 ```php
 <?php
 
-// Se estiver a utilizar o Composer, requer o autoloader.
+// Se estiver a usar o Composer, requer o autoloader.
 require 'vendor/autoload.php';
-// se não estiver a utilizar o Composer, carregue o framework diretamente
+// se não estiver a usar o Composer, carregue o framework diretamente
 // require 'flight/Flight.php';
 
-// Em seguida, defina uma rota e atribua uma função para lidar com o pedido.
+// Depois defina uma rota e atribua uma função para lidar com o pedido.
 Flight::route('/', function () {
-  echo 'olá mundo!';
+  echo 'hello world!';
 });
 
-// Por último, inicie o framework.
+// Por fim, inicie o framework.
 Flight::start();
 ```

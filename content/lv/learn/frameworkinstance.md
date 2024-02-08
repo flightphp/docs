@@ -1,7 +1,7 @@
-# Iestatītāja instances
+# Framework instances
 
-Tā vietā, lai izpildītu Flight kā globālu statisku klasi, jūs to varat palaist
-kā objekta instanci.
+Vietā zīmēt `Flight` kā globālu statisku klasi, Jūs varat izpildespienākumu
+palaižot kā objekta instanci.
 
 ```php
 require 'flight/autoload.php';
@@ -15,5 +15,5 @@ $app->route('/', function () {
 $app->start();
 ```
 
-Tātad, lietojot statisko metodi, jūs izsauktu izpildes metodi ar
-tādu pašu nosaukumu uz Engine objektu.
+Tātad vietā, lai izsauktu statisko metodi, Jūs izsauktu instances metodi ar
+tādu pašu nosaukumu uz Dzinēja objektu.

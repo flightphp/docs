@@ -1,4 +1,4 @@
-# Pedidos
+# Solicitações
 
 Flight encapsula a solicitação HTTP em um único objeto, que pode ser
 acessado fazendo:
@@ -9,6 +9,7 @@ $request = Flight::request();
 
 O objeto de solicitação fornece as seguintes propriedades:
 
+- **body** - O corpo bruto da solicitação HTTP
 - **url** - O URL sendo solicitado
 - **base** - O subdiretório pai do URL
 - **method** - O método da solicitação (GET, POST, PUT, DELETE)
@@ -43,7 +44,7 @@ Ou você pode fazer:
 $id = Flight::request()->query->id;
 ```
 
-## Corpo da Solicitação RAW
+## Corpo da Solicitação em Formato RAW
 
 Para obter o corpo bruto da solicitação HTTP, por exemplo, ao lidar com solicitações PUT,
 você pode fazer:
@@ -54,9 +55,31 @@ $body = Flight::request()->getBody();
 
 ## Entrada JSON
 
-Se você enviar uma solicitação com o tipo `application/json` e os dados `{"id": 123}`
-eles estarão disponíveis na propriedade `data`:
+Se você enviar uma solicitação com o tipo `application/json` e os dados `{"id": 123}`,
+estarão disponíveis na propriedade `data`:
 
 ```php
 $id = Flight::request()->data->id;
+```
+
+## Acessando `$_SERVER`
+
+Existe um atalho disponível para acessar a matriz `$_SERVER` por meio do método `getVar()`:
+
+```php
+
+$host = Flight::request()->getVar['HTTP_HOST'];
+```
+
+## Acessando Cabeçalhos da Solicitação
+
+Você pode acessar cabeçalhos de solicitação usando o método `getHeader()` ou `getHeaders()`:
+
+```php
+
+// Talvez você precise do cabeçalho de Autorização
+$host = Flight::request()->getHeader('Authorization');
+
+// Se precisar obter todos os cabeçalhos
+$headers = Flight::request()->getHeaders();
 ```

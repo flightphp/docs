@@ -4,7 +4,7 @@ Tracy est un gestionnaire d'erreurs incroyable qui peut être utilisé avec Flig
 
 ## Installation
 
-Installez avec composer. Et en fait, vous voudrez installer ceci sans la version dev car Tracy est livré avec un composant de gestion des erreurs en production.
+Installez avec composer. Et vous voudrez en fait installer ceci sans la version dev car Tracy est livré avec un composant de gestion des erreurs de production.
 
 ```bash
 composer require tracy/tracy
@@ -12,34 +12,35 @@ composer require tracy/tracy
 
 ## Configuration de base
 
-Il y a quelques options de configuration de base pour commencer. Vous pouvez en savoir plus à leur sujet dans la [documentation de Tracy](https://tracy.nette.org/fr/configuring).
+Il existe quelques options de configuration de base pour commencer. Vous pouvez en savoir plus à leur sujet dans la [Documentation de Tracy](https://tracy.nette.org/en/configuring).
 
 ```php
+
 require 'vendor/autoload.php';
 
 use Tracy\Debugger;
 
 // Activer Tracy
 Debugger::enable();
-// Debugger::enable(Debugger::DEVELOPMENT) // parfois il faut être explicite (aussi Debugger::PRODUCTION)
+// Debugger::enable(Debugger::DEVELOPMENT) // parfois vous devez être explicite (également Debugger::PRODUCTION)
 // Debugger::enable('23.75.345.200'); // vous pouvez également fournir un tableau d'adresses IP
 
-// C'est là que les erreurs et exceptions seront enregistrées. Assurez-vous que ce répertoire existe et est accessible en écriture.
+// C'est là que les erreurs et exceptions seront journalisées. Assurez-vous que ce répertoire existe et est accessible en écriture.
 Debugger::$logDirectory = __DIR__ . '/../log/';
 Debugger::$strictMode = true; // afficher toutes les erreurs
-// Debugger::$strictMode = E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED; // toutes les erreurs sauf les notifications obsolètes
+// Debugger::$strictMode = E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED; // toutes les erreurs sauf les avis obsolètes
 if (Debugger::$showBar) {
-    $app->set('flight.content_length', false); // si la barre Debugger est visible, alors la longueur du contenu ne peut pas être définie par Flight
+    $app->set('flight.content_length', false); // si la barre de débogage est visible, alors la longueur du contenu ne peut pas être définie par Flight
 
-	// Cela est spécifique à l'extension Tracy pour Flight si vous l'avez incluse
-	// sinon commentez ceci.
+	// Ceci est spécifique à l'extension Tracy pour Flight si vous l'avez incluse
+	// sinon mettez en commentaire.
 	new TracyExtensionLoader($app);
 }
 ```
 
 ## Conseils utiles
 
-Lorsque vous déboguez votre code, il existe quelques fonctions très utiles pour afficher les données pour vous.
+Lorsque vous déboguez votre code, il y a quelques fonctions très utiles pour afficher des données pour vous.
 
-- `bdump($var)` - Cela affichera la variable dans la Barre Tracy dans un panneau séparé.
-- `dumpe($var)` - Cela affichera la variable puis arrêtera immédiatement.
+- `bdump($var)` - Cela affichera la variable dans la barre de Tracy dans un panneau séparé.
+- `dumpe($var)` - Cela affichera la variable puis s'arrêtera immédiatement.

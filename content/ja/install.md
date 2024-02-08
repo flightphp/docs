@@ -2,18 +2,18 @@
 
 ## ファイルをダウンロードします。
 
-もし[Composer](https://getcomposer.org)を使用している場合、以下のコマンドを実行できます:
+もし[Composer](https://getcomposer.org)を使用している場合、次のコマンドを実行できます:
 
 ```bash
 composer require flightphp/core
 ```
 
-または[ファイルをダウンロード](https://github.com/flightphp/core/archive/master.zip)して、それらをウェブディレクトリに直接展開できます。
+または、[ファイルをダウンロード](https://github.com/flightphp/core/archive/master.zip)して、それらをウェブディレクトリに直接展開することもできます。
 
-## Webサーバーを設定します。
+## ウェブサーバを構成します。
 
 ### Apache
-Apacheの場合、`.htaccess`ファイルを以下のように編集します:
+Apacheを使用する場合、`.htaccess`ファイルを以下のように編集してください:
 
 ```apacheconf
 RewriteEngine On
@@ -22,9 +22,9 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ index.php [QSA,L]
 ```
 
-> **注意**: もしflightをサブディレクトリで使用する必要がある場合は、`RewriteEngine On`のすぐ後に`RewriteBase /subdir/`という行を追加してください。
+> **注意**: サブディレクトリでflightを使用する必要がある場合は、`RewriteEngine On`の直後に行を追加してください: `RewriteBase /subdir/`。
 
-> **注意**: もしdbやenvファイルなどのすべてのサーバーファイルを保護したい場合は、次の内容を`.htaccess`ファイルに追加してください:
+> **注意**: データベースや環境ファイルなどのすべてのサーバファイルを保護する必要がある場合は、`.htaccess`ファイルに以下を追加してください:
 
 ```apacheconf
 RewriteEngine On
@@ -32,8 +32,7 @@ RewriteRule ^(.*)$ index.php
 ```
 
 ### Nginx
-
-Nginxの場合、以下をサーバーの宣言に追加してください:
+Nginxを使用する場合、以下をサーバ定義に追加してください:
 
 ```nginx
 server {
@@ -48,16 +47,16 @@ server {
 ```php
 <?php
 
-// もしComposerを使用している場合、オートローダーをrequireしてください。
+// Composerを使用している場合、オートローダーを要求します。
 require 'vendor/autoload.php';
-// もしComposerを使用していない場合は、フレームワークを直接ロードしてください
+// Composerを使用していない場合、フレームワークを直接ロードします
 // require 'flight/Flight.php';
 
-// 次に、ルートを定義し、リクエストを処理する関数を割り当てます。
+// 次に、ルートを定義し、リクエストを処理するための関数を割り当てます。
 Flight::route('/', function () {
   echo 'hello world!';
 });
 
-// 最後に、フレームワークを起動します。
+// 最後に、フレームワークをスタートします。
 Flight::start();
 ```

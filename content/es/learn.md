@@ -1,21 +1,53 @@
-# Aprende Sobre Flight
+# Aprende sobre Flight
 
-Flight es un marco de trabajo rápido, simple y extensible para PHP. Es bastante versátil y se puede utilizar para construir cualquier tipo de aplicación web. Está construido con simplicidad en mente y está escrito de una manera que es fácil de entender y usar.
+Flight es un framework rápido, simple y extensible para PHP. Es bastante versátil y se puede utilizar para construir cualquier tipo de aplicación web. Está construido con la simplicidad en mente y está escrito de una manera que es fácil de entender y usar.
 
-A continuación se presentan algunos temas para comenzar a aprender sobre Flight:
+## Conceptos Importantes del Framework
 
-- [Enrutamiento](/aprender/enrutamiento) - Aprende cómo gestionar rutas para tu aplicación web. Esto también incluye agrupar rutas, parámetros de ruta y middleware.
-- [Extendiendo Flight](/aprender/extendiendo) - Aprende cómo extender el marco de trabajo con la adición de tus propios métodos y clases. Así es como Flight maneja ligeramente algo llamado contenerización.
-- [Sobrescribiendo Métodos del Marco de Trabajo](/aprender/sobrescribiendo) - Aprende cómo sobrescribir los métodos predeterminados del marco de trabajo con tu propia funcionalidad personalizada.
-- [Eventos y Filtrado](/aprender/filtrado) - Aprende cómo utilizar el sistema de eventos para agregar ganchos a tus métodos y métodos internos del marco de trabajo.
-- [Variables](/aprender/variables) - Aprende cómo almacenar tus propias variables personalizadas en tu aplicación para usarlas en cada solicitud.
-- [Vistas](/aprender/vistas) - Aprende cómo utilizar el motor de vista incorporado para renderizar tus plantillas HTML.
-- [Manejo de Errores](/aprender/manejo-errores) - Aprende cómo manejar errores y excepciones en tu aplicación.
-- [Redirecciones](/aprender/redirecciones) - Aprende cómo redirigir a los usuarios a diferentes páginas en tu aplicación.
-- [Solicitudes](/aprender/solicitudes) - Aprende cómo manejar solicitudes y respuestas en tu aplicación.
-- [Detener](/aprender/detener) - Aprende cómo detener el marco de trabajo de procesar más.
-- [Caché HTTP](/aprender/caché-http) - Aprende cómo usar la caché HTTP para mejorar el rendimiento de tu aplicación.
-- [Respuestas JSON](/aprender/json) - Aprende cómo enviar respuestas JSON a tus usuarios.
-- [Configuración](/aprender/configuración) - Aprende cómo configurar el marco de trabajo para tu aplicación.
-- [Métodos del Marco de Trabajo](/aprender/métodos-marco) - Aprende sobre los métodos principales del marco de trabajo.
-- [Instancia del Marco de Trabajo](/aprender/instancia-marco) - Aprende cómo usar el marco de trabajo desde una instancia de objeto en lugar de los métodos estáticos.
+##### [¿Por qué un Framework?](/learn/why-frameworks)
+
+Aquí tienes un breve artículo sobre por qué deberías usar un framework. Es una buena idea entender los beneficios de usar un framework antes de comenzar a utilizar uno.
+
+Adicionalmente, se ha creado un excelente tutorial por [@lubiana](https://git.php.fail/lubiana). Si bien no entra en gran detalle sobre Flight específicamente, esta guía te ayudará a entender algunos de los conceptos principales que rodean a un framework y por qué son beneficiosos de usar. Puedes encontrar el tutorial [aquí](https://git.php.fail/lubiana/no-framework-tutorial/src/branch/master/04-development-helpers.md).
+
+## Temas Principales
+
+##### [Enrutamiento](/learn/routing)
+
+Aprende cómo gestionar las rutas para tu aplicación web. Esto también incluye agrupar rutas, parámetros de ruta y middleware.
+
+##### [Middleware](/learn/middleware)
+
+Aprende a utilizar middleware para filtrar las peticiones y respuestas en tu aplicación.
+
+##### [Peticiones](/learn/requests)
+
+Aprende cómo manejar las peticiones y respuestas en tu aplicación.
+
+##### [Respuestas](/learn/responses)
+
+Aprende cómo enviar respuestas a tus usuarios.
+
+##### [Plantillas HTML](/learn/templates)
+
+Aprende cómo utilizar el motor de vista integrado para renderizar tus plantillas HTML.
+
+##### [Seguridad](/learn/security)
+
+Aprende cómo asegurar tu aplicación de amenazas de seguridad comunes.
+
+##### [Configuración](/learn/configuration)
+
+Aprende cómo configurar el framework para tu aplicación.
+
+##### [Extender Flight](/learn/extending)
+
+Aprende cómo extender el framework añadiendo tus propios métodos y clases. Esto es también cómo Flight maneja de forma flexible algo llamado contenerización.
+
+##### [Eventos y Filtrado](/learn/filtering)
+
+Aprende cómo utilizar el sistema de eventos para añadir ganchos a tus métodos y métodos internos del framework.
+
+##### [API del Framework](/learn/api)
+
+Aprende sobre los métodos principales del framework.

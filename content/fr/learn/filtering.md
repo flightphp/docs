@@ -1,20 +1,20 @@
 # Filtrage
 
 Flight vous permet de filtrer les méthodes avant et après leur appel. Il n'y a pas de
-crochets prédéfinis que vous devez mémoriser. Vous pouvez filtrer n'importe laquelle des méthodes par défaut du framework
-ainsi que toutes les méthodes personnalisées que vous avez mappées.
+crochets prédéfinis que vous devez mémoriser. Vous pouvez filtrer n'importe quelle des méthodes par défaut
+du framework ainsi que n'importe quelle méthode personnalisée que vous avez mappée.
 
-Une fonction de filtre ressemble à ceci:
+Une fonction de filtre ressemble à ceci :
 
 ```php
 function (array &$params, string &$output): bool {
-  // Code de filtrage
+  // Code de filtre
 }
 ```
 
 En utilisant les variables passées en paramètre, vous pouvez manipuler les paramètres d'entrée et/ou la sortie.
 
-Vous pouvez exécuter un filtre avant une méthode en faisant:
+Vous pouvez faire exécuter un filtre avant une méthode en faisant :
 
 ```php
 Flight::before('start', function (array &$params, string &$output): bool {
@@ -22,7 +22,7 @@ Flight::before('start', function (array &$params, string &$output): bool {
 });
 ```
 
-Vous pouvez exécuter un filtre après une méthode en faisant:
+Vous pouvez faire exécuter un filtre après une méthode en faisant :
 
 ```php
 Flight::after('start', function (array &$params, string &$output): bool {
@@ -30,10 +30,9 @@ Flight::after('start', function (array &$params, string &$output): bool {
 });
 ```
 
-Vous pouvez ajouter autant de filtres que vous le souhaitez à n'importe quelle méthode. Ils seront appelés dans
-l'ordre dans lequel ils sont déclarés.
+Vous pouvez ajouter autant de filtres que vous le souhaitez à n'importe quelle méthode. Ils seront appelés dans l'ordre où ils sont déclarés.
 
-Voici un exemple du processus de filtrage:
+Voici un exemple du processus de filtrage :
 
 ```php
 // Mapper une méthode personnalisée
@@ -51,7 +50,7 @@ Flight::before('hello', function (array &$params, string &$output): bool {
 // Ajouter un filtre après
 Flight::after('hello', function (array &$params, string &$output): bool {
   // Manipuler la sortie
-  $output .= " Passe une bonne journée!";
+  $output .= " Passez une bonne journée !";
   return true;
 });
 
@@ -59,14 +58,14 @@ Flight::after('hello', function (array &$params, string &$output): bool {
 echo Flight::hello('Bob');
 ```
 
-Cela devrait afficher:
+Cela devrait afficher :
 
 ```
-Bonjour Fred! Passe une bonne journée!
+Bonjour Fred ! Passez une bonne journée !
 ```
 
-Si vous avez défini plusieurs filtres, vous pouvez interrompre la chaîne en retournant `false`
-dans l'une de vos fonctions de filtre:
+Si vous avez défini plusieurs filtres, vous pouvez interrompre la chaîne en renvoyant `false`
+dans l'une de vos fonctions de filtre :
 
 ```php
 Flight::before('start', function (array &$params, string &$output): bool {
@@ -81,7 +80,7 @@ Flight::before('start', function (array &$params, string &$output): bool {
   return false;
 });
 
-// Ceci ne sera pas appelé
+// Cela ne sera pas appelé
 Flight::before('start', function (array &$params, string &$output): bool {
   echo 'trois';
   return true;
@@ -89,4 +88,4 @@ Flight::before('start', function (array &$params, string &$output): bool {
 ```
 
 Notez que les méthodes de base telles que `map` et `register` ne peuvent pas être filtrées car elles
-sont appelées directement et non invoquées dynamiquement.
+sont appelées directement et n'exécutent pas de manière dynamique.

@@ -1,6 +1,6 @@
 # Filtrēšana
 
-Lidojums ļauj jums filtrēt metodes pirms un pēc to izsaukšanas. Nav iepriekš definētu vadu, kurus jums ir jāiemācās. Jūs varat filtrēt jebkuru noklusējuma struktūras metodi, kā arī jebkuru pielāgoto metodi, ko esat pievienojis.
+Lidojums ļauj jums filtrēt metodes pirms un pēc to izsaukšanas. Nav iepriekš definētu āķu, ko jums vajadzētu iemācīties atmiņā. Jūs varat filtrēt jebkuru noklusējuma ietvaru metodi, kā arī jebkuras pielāgotas metodes, ko esat atainojis.
 
 Filtrēšanas funkcija izskatās šādi:
 
@@ -10,9 +10,9 @@ function (array &$params, string &$output): bool {
 }
 ```
 
-Izmantojot padotās mainīgās, jūs varat manipulēt ievades parametriem un/vai izvades rezultātu.
+Izmantojot padotos mainīgos, jūs varat manipulēt ievades parametrus un/vai izvadi.
 
-Jūs varat palaist filtru pirms metodes, izpildot:
+Jūs varat ļaut filtram darboties pirms metodes, izmantojot:
 
 ```php
 Flight::before('start', function (array &$params, string &$output): bool {
@@ -20,7 +20,7 @@ Flight::before('start', function (array &$params, string &$output): bool {
 });
 ```
 
-Jūs varat palaist filtru pēc metodes, izpildot:
+Jūs varat ļaut filtram darboties pēc metodes, izmantojot:
 
 ```php
 Flight::after('start', function (array &$params, string &$output): bool {
@@ -28,38 +28,38 @@ Flight::after('start', function (array &$params, string &$output): bool {
 });
 ```
 
-Jūs varat pievienot tik daudz filtrus, cik vēlaties, jebkurai metodē. Viņi tiks izsaukti tā, kā tie ir deklarēti.
+Jūs varat pievienot tik daudz filtrus, cik vēlaties, jebkurai metodai. Tie tiks izsaukti tādā secībā, kādā tie ir deklarēti.
 
-Šeit ir piemērs filtrēšanas procesam:
+Šeit ir piemērs par filtrēšanas procesu:
 
 ```php
-// Pievienot pielāgotu metodi
+// Atainot pielāgotu metodi
 Flight::map('hello', function (string $name) {
   return "Sveiki, $name!";
 });
 
-// Pievienot pirms filtra
+// Pievienot pirms filtru
 Flight::before('hello', function (array &$params, string &$output): bool {
   // Manipulēt parametru
-  $params[0] = 'Fred';
+  $params[0] = 'Jānis';
   return true;
 });
 
 // Pievienot pēc filtra
 Flight::after('hello', function (array &$params, string &$output): bool {
-  // Manipulēt rezultātu
-  $output .= " Jauku dienu!";
+  // Manipulēt izvadi
+  $output .= " Jums laimīgu dienu!";
   return true;
 });
 
 // Izsaukt pielāgoto metodi
-echo Flight::hello('Bob');
+echo Flight::hello('Roberts');
 ```
 
-Tas jāattēlo:
+Tas vajadzētu parādīt:
 
 ```
-Sveiki, Fred! Jauku dienu!
+Sveiki Jānis! Jums laimīgu dienu!
 ```
 
 Ja esat definējis vairākus filtrus, jūs varat pārtraukt ķēdi, atgriežot `false`
@@ -85,5 +85,5 @@ Flight::before('start', function (array &$params, string &$output): bool {
 });
 ```
 
-Piezīme, pamata metodes, piemēram, `map` un `register`, nevar tikt filtrētas, jo tās
-tiek izsauktas tieši un netiek izsauktas dinamiski.
+Piezīme, pamata metodes, piemēram, `map` un `register`, nevar būt filtri, jo
+tos izsauc tieši, nevis dinamiski.

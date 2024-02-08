@@ -1,25 +1,10 @@
-The MIT License (MIT)
+# The MIT License (MIT)
 =====================
 
-Copyright © `2023` `@mikecao, @n0nag0n`
+저작권 © `2023` `@mikecao, @n0nag0n`
 
-Permission is hereby granted, free of charge, to any person
-obtaining a copy of this software and associated documentation
-files (the “Software”), to deal in the Software without
-restriction, including without limitation the rights to use,
-copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the
-Software is furnished to do so, subject to the following
-conditions:
+어떤 사람에게나 무료로 소프트웨어 및 관련 문서 파일(이하 "소프트웨어"라 함) 사본을 취득할 수 있는 권한이 여기에 부여됩니다. 이 권한은 소프트웨어를 제한 없이 사용, 복사, 수정, 병합, 게시, 배포, 라이선스 부여 및/또는 판매할 수 있는 권한을 포함하여 어떠한 제한도 없이 인정됩니다. 또한 소프트웨어를 취급할 수 있도록 소프트웨어를 제공받은 자에게 이를 동일하게 행할 수 있도록 허용됩니다. 다만, 다음 조건에 따라야 합니다.
 
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
+상기 저작권 고지와 본 허가 고지는 소프트웨어의 모든 사본 또는 주요 부분에 포함되어야 합니다.
 
-THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-OTHER DEALINGS IN THE SOFTWARE.
+본 소프트웨어는 "있는 그대로" 제공되며, 어떠한 종류의 보증 없이 명시적이든 묵시적이든 제공됩니다. 이에는 상품성, 특정 목적에 대한 적합성 및 비침해성에 대한 보증이 포함되나 이에 한하지 않습니다. 저자나 저작권 보유자는 소프트웨어 또는 소프트웨어 사용 또는 기타 거래와 관련하여 발생하는 어떠한 청구, 손해 또는 기타 책임에 대해서도 책임을 지지 않습니다.

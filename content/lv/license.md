@@ -1,29 +1,31 @@
 ```
-MIT Licence (MIT)
+MIT License (MIT)
 =================
 
 Autortiesības © `2023` `@mikecao, @n0nag0n`
 
-Atļauja tiek izsniegta bez maksas jebkuram
-personai, kas iegūst šīs programmatūras
-kopiju un saistītos dokumentus (“Programmatūra”),
-izmantot Programmatūru bez
-ierobežojumiem, tostarp tiesības lietot,
-kopēt, modificēt, apvienot, publicēt, izplatīt,
-atļaut, un/vai pārdot Programmatūras kopijas, un atļaut
-personām, kurām Programmatūra tiek nodota, darīt to,
-atbilstoši šādiem nosacījumiem:
+Atļauja tiek piešķirta bez maksas jebkurai personai,
+kas iegūst šīs programmatūras kopiju un saistītos
+dokumentus (turpmāk - “Programmatūra”), lai varētu
+izmantot Programmatūru bez ierobežojumiem, ieskaitot,
+bet neaprobežojoties ar, tiesības izmantot, kopēt,
+modificēt, apvienot, publicēt, izplatīt, sublicencēt
+un/vai pārdot Programmatūras kopijas, kā arī atļaut
+personām, kurām Programmatūra tiek nodrošināta, to darīt,
+ievērojot sekojošos nosacījumus:
 
-Augstāk minētā autortiesību paziņojums un šī atļaujas paziņojums
-jāiekļauj visās kopijās vai būtiskās Programmatūras daļās.
+Piemērotie autortiesību paziņojumi un šī atļauja
+paziņojums obligāti jāiekļauj visos kopiju vai
+īpaši lielos Programmatūras daļās.
 
-PROGRAMMATŪRA TIEK NODROŠINĀTA “KĀ TĀDA”, BEZ JEBKĀDAS GARANTIJAS,
-BŪTISKAS VAI PIEŠĶIRTAS, IETVEROT, BET BEZ IERIECĪBAS
-TIRGUMĪBAI, PIEMĒROTĪBU KONKRĒTAM MĒRKIM UN
-NEPIETIEKOŠUMU. NEKĀDOS APSTĀKĻOS AUTORI VAI AUTORU
-TIESNES NESATURĒS ATBILDĪBU PAR JEBKĀDU PRASĪBU, ZAUDĒJUMU VAI
-CITU SAISTĪBU, VAI TĀDAS RADĪŠANĀS,
-IZCELOTU JAUTĀJUMU, VAI CITĀDI, KAS RADIES
-NO, VAI SAISTĪTS AR PROGRAMMATŪRU VAI LIETOŠANU VAI
-CITĀM DARĪJUMIEM AR PROGRAMMATŪRU.   
-```  
+Programmatūra tiek nodrošināta “kā ir”, bez
+jebkādām garantijām, izteiktām vai pieļaujamām,
+ieskaitot, bet neaprobežojoties ar, komerciālo
+kvalitāti, piemērotību konkrētai vajadzībai un
+nepārkāpšanu. Autori vai autortiesību turētāji
+nav atbildīgi par nekādiem prasījumiem, zaudējumiem
+vai citiem pienākumiem, vai nu, līgumtiesiski,
+deliktiski vai citādi, ko rada, izriet no vai saistīti
+ar Programmatūru vai tās izmantošanu vai citiem darījumiem
+ar Programmatūru.
+```

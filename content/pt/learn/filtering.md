@@ -1,12 +1,12 @@
 # Filtragem
 
-Flight permite que você filtre os métodos antes e depois de serem chamados. Não há ganchos predefinidos que você precise memorizar. Você pode filtrar qualquer um dos métodos padrão do framework, bem como quaisquer métodos personalizados que você tenha mapeado.
+O Flight permite que você filtre métodos antes e depois de serem chamados. Não há ganchos predefinidos que você precise memorizar. Você pode filtrar qualquer um dos métodos padrão do framework, bem como quaisquer métodos personalizados que você tenha mapeado.
 
-Uma função de filtro se parece com isso:
+Uma função de filtro parece com isso:
 
 ```php
 function (array &$params, string &$output): bool {
-  // Código de filtro
+  // Código do filtro
 }
 ```
 
@@ -20,7 +20,7 @@ Flight::before('start', function (array &$params, string &$output): bool {
 });
 ```
 
-Você pode ter um filtro sendo executado depois de um método fazendo:
+Você pode ter um filtro sendo executado após um método fazendo:
 
 ```php
 Flight::after('start', function (array &$params, string &$output): bool {
@@ -28,31 +28,31 @@ Flight::after('start', function (array &$params, string &$output): bool {
 });
 ```
 
-Você pode adicionar quantos filtros quiser a qualquer método. Eles serão chamados na ordem em que foram declarados.
+Você pode adicionar quantos filtros quiser a qualquer método. Eles serão chamados na ordem em que são declarados.
 
 Aqui está um exemplo do processo de filtragem:
 
 ```php
-// Mapear um método personalizado
+// Mapeie um método personalizado
 Flight::map('hello', function (string $name) {
   return "Olá, $name!";
 });
 
-// Adicionar um filtro antes
+// Adicione um filtro antes
 Flight::before('hello', function (array &$params, string &$output): bool {
-  // Manipular o parâmetro
+  // Manipule o parâmetro
   $params[0] = 'Fred';
   return true;
 });
 
-// Adicionar um filtro depois
+// Adicione um filtro após
 Flight::after('hello', function (array &$params, string &$output): bool {
-  // Manipular a saída
+  // Manipule a saída
   $output .= " Tenha um bom dia!";
   return true;
 });
 
-// Invocar o método personalizado
+// Invoque o método personalizado
 echo Flight::hello('Bob');
 ```
 
@@ -62,8 +62,7 @@ Isso deve exibir:
 Olá Fred! Tenha um bom dia!
 ```
 
-Se você definiu múltiplos filtros, você pode quebrar a cadeia retornando `false`
-em qualquer uma de suas funções de filtro:
+Se você definiu vários filtros, você pode interromper a cadeia retornando `false` em qualquer uma de suas funções de filtro:
 
 ```php
 Flight::before('start', function (array &$params, string &$output): bool {
@@ -74,7 +73,7 @@ Flight::before('start', function (array &$params, string &$output): bool {
 Flight::before('start', function (array &$params, string &$output): bool {
   echo 'dois';
 
-  // Isso encerrará a cadeia
+  // Isso irá encerrar a cadeia
   return false;
 });
 
@@ -85,5 +84,4 @@ Flight::before('start', function (array &$params, string &$output): bool {
 });
 ```
 
-Observação, métodos principais como `map` e `register` não podem ser filtrados porque
-são chamados diretamente e não invocados dinamicamente.
+Observação, métodos principais como `map` e `register` não podem ser filtrados porque são chamados diretamente e não invocados dinamicamente.

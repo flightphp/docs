@@ -1,30 +1,30 @@
-# Tracy Flight Panel Extensions
+Tracy Flight Panel Extensions
 =====
 
-これは、Flightを使いやすくするための拡張セットです。
+これはFlightを使いやすくするための拡張機能セットです。
 
 - Flight - すべてのFlight変数を分析します。
-- データベース - ページで実行されたすべてのクエリを分析します（データベース接続を正しく初期化した場合）
-- リクエスト - すべての`$_SERVER`変数を分析し、すべてのグローバルペイロード（`$_GET`、`$_POST`、`$_FILES`）を検査します。
-- セッション - セッションがアクティブな場合、すべての`$_SESSION`変数を分析します。
+- Database - ページで実行されたすべてのクエリを分析します（データベース接続を正しく初期化する場合）
+- Request - すべての`$_SERVER`変数を分析し、すべてのグローバルペイロード（`$_GET`、`$_POST`、`$_FILES`）を調べます。
+- Session - セッションがアクティブな場合はすべての`$_SESSION`変数を分析します。
 
-# これはパネルです
+これがパネルです
 
-![Flight Bar（フライトバー）](https://raw.githubusercontent.com/flightphp/tracy-extensions/master/flight-tracy-bar.png)
+![Flight Bar](https://raw.githubusercontent.com/flightphp/tracy-extensions/master/flight-tracy-bar.png)
 
-そして、各パネルはアプリケーションについて非常に役立つ情報を表示します！
+そして各パネルにはアプリケーションに関する非常に役立つ情報が表示されます！
 
-![Flight Data（フライトデータ）](https://raw.githubusercontent.com/flightphp/tracy-extensions/master/flight-var-data.png)
-![Flight Database（フライトデータベース）](https://raw.githubusercontent.com/flightphp/tracy-extensions/master/flight-db.png)
-![Flight Request（フライトリクエスト）](https://raw.githubusercontent.com/flightphp/tracy-extensions/master/flight-request.png)
+![Flight Data](https://raw.githubusercontent.com/flightphp/tracy-extensions/master/flight-var-data.png)
+![Flight Database](https://raw.githubusercontent.com/flightphp/tracy-extensions/master/flight-db.png)
+![Flight Request](https://raw.githubusercontent.com/flightphp/tracy-extensions/master/flight-request.png)
 
-## インストール
+インストール
 -------
-`composer require flightphp/tracy-extensions --dev` を実行して、設定が完了です！
+`composer require flightphp/tracy-extensions --dev` を実行して、準備は完了です！
 
-## 設定
+構成
 -------
-始めるにはほとんど設定する必要はありません。[https://tracy.nette.org/en/guide](https://tracy.nette.org/en/guide) を使用する前にTracyデバッガを初期化する必要があります：
+これを開始するために行う必要がある構成は非常に少ないです。Tracyデバッガを使用する前にこれを初期化する必要があります [https://tracy.nette.org/en/guide](https://tracy.nette.org/en/guide):
 
 ```php
 <?php
@@ -39,19 +39,19 @@ Debugger::enable();
 // Debugger::enable(Debugger::DEVELOPMENT) で環境を指定する必要があるかもしれません
 
 // アプリケーションでデータベース接続を使用する場合、
-// 開発環境でのみ使用する必須のPDOラッパーがあります（本番での使用は避けてください）
-// 通常のPDO接続と同じパラメータを持っています
+// 開発環境でのみ使用する必要があるPDOラッパーがあります（本番環境では使用しないでください！）
+// 通常のPDO接続と同じパラメータが必要です
 $pdo = new PdoQueryCapture('sqlite:test.db', 'user', 'pass');
-// またはFlightフレームワークにこれをアタッチする場合
+// またはFlightフレームワークにこれを添付する場合
 Flight::register('db', PdoQueryCapture::class, ['sqlite:test.db', 'user', 'pass']);
-// クエリを実行するたびに、時間、クエリ、およびパラメータがキャプチャされます
+// クエリを実行すると、時間、クエリ、およびパラメータがキャプチャされます
 
-// これで全体のイメージがつかめます
+// これが関連付けられます
 if(Debugger::$showBar === true) {
 	new TracyExtensionLoader(Flight::app());
 }
 
-// もっとコード
+// その他のコード
 
 Flight::start();
-```
+```  

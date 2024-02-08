@@ -8,10 +8,10 @@ require 'flight/autoload.php';
 $app = Flight::app();
 
 $app->route('/', function () {
-  // affiche 'bonjour le monde!'
+  echo 'hello world!';
 });
 
 $app->start();
 ```
 
-Ainsi, au lieu d'appeler la méthode statique, vous appelleriez la méthode d'instance avec le même nom sur l'objet Moteur.
+Donc, au lieu d'appeler la méthode statique, vous appelleriez la méthode d'instance avec le même nom sur l'objet Engine.

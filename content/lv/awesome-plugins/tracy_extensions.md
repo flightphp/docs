@@ -1,30 +1,30 @@
 Tracy Flight Panel Extensions
 =====
 
-Šī ir komplekta paplašinājumi, lai darbs ar Flight būtu nedaudz bagātīgāks.
+Šis ir paplašinājumu komplekts, kas padara darbu ar Flight nedaudz bagātīgāku.
 
-- Flight - Analizēt visas Flight mainīgās.
-- Database - Analizēt visas vaicājumus, kas ir izpildīti uz lapas (ja pareizi iniciējat datu datubāzes savienojumu)
-- Request - Analizēt visas `$_SERVER` mainīgās un izpētīt visus globālos dati (`$_GET`, `$_POST`, `$_FILES`)
-- Session - Analizēt visas `$_SESSION` mainīgās, ja sesijas ir aktīvas.
+- Lidojums - Analizēt visas Lidojuma mainīgās.
+- Datu bāze - Analizēt visas pieprasījumus, kas ir aizskrējuši lapā (ja pareizi iniciējat datu bāzes savienojumu).
+- Pieprasījums - Analizēt visas `$_SERVER` mainīgās un izpētīt visas globālās payloads (`$_GET`, `$_POST`, `$_FILES`).
+- Sesija - Analizēt visas `$_SESSION` mainīgās, ja sesijas ir aktīvas.
 
-Tas ir panelis
+Šis ir panelis
 
-![Flight Bar](https://raw.githubusercontent.com/flightphp/tracy-extensions/master/flight-tracy-bar.png)
+![Lidojuma josla](https://raw.githubusercontent.com/flightphp/tracy-extensions/master/flight-tracy-bar.png)
 
 Un katrs panelis parāda ļoti noderīgu informāciju par jūsu lietojumprogrammu!
 
-![Flight Data](https://raw.githubusercontent.com/flightphp/tracy-extensions/master/flight-var-data.png)
-![Flight Database](https://raw.githubusercontent.com/flightphp/tracy-extensions/master/flight-db.png)
-![Flight Request](https://raw.githubusercontent.com/flightphp/tracy-extensions/master/flight-request.png)
+![Lidojuma dati](https://raw.githubusercontent.com/flightphp/tracy-extensions/master/flight-var-data.png)
+![Lidojuma datu bāze](https://raw.githubusercontent.com/flightphp/tracy-extensions/master/flight-db.png)
+![Lidojuma pieprasījums](https://raw.githubusercontent.com/flightphp/tracy-extensions/master/flight-request.png)
 
-Instalēšana
+Instalācija
 -------
-Izpildiet `composer require flightphp/tracy-extensions --dev` un jūs esat startā!
+Izpildiet `composer require flightphp/tracy-extensions --dev` un jūs esat ceļā!
 
 Konfigurācija
 -------
-Ir ļoti maz konfigurācijas, ko jums jāveic, lai sāktu darbu ar to. Jums būs jāiniciē Tracy atkļūdošanas rīkotājs pirms šī izmantošanas [https://tracy.nette.org/en/guide](https://tracy.nette.org/en/guide):
+Jums ir ļoti maz konfigurācijas, ko jums jādara, lai sāktu darbu ar to. Jums būs jāiniti Tracy atkļūdētājs pirms šī lietojuma lietošanas [https://tracy.nette.org/en/guide](https://tracy.nette.org/en/guide):
 
 ```php
 <?php
@@ -32,19 +32,19 @@ Ir ļoti maz konfigurācijas, ko jums jāveic, lai sāktu darbu ar to. Jums būs
 use Tracy\Debugger;
 use flight\debug\tracy\TracyExtensionLoader;
 
-// ielādes kods
+// izstrādes kods
 require __DIR__ . '/vendor/autoload.php';
 
 Debugger::enable();
-// Varbūt jums būs jānorāda sava vide, izmantojot Debugger::enable(Debugger::DEVELOPMENT)
+// Jums var būt jānorāda savs vides režīms ar Debugger::enable(Debugger::DEVELOPMENT)
 
-// ja lietojat datubāzes savienojumus savā lietojumprogrammā, ir 
-// nepieciešams PDO apvalks, ko LIETOJIE TIKAI IZSTRĀDĀJUMOS (lūdzu, neizmantojiet ražošanā!)
-// Tam ir tādas pašas parametrs kā parasta PDO savienojumam
-$pdo = new PdoQueryCapture('sqlite:test.db', 'lietotājvārds', 'parole');
-// vai, ja pievienojat to Flight ietvara
-Flight::register('db', PdoQueryCapture::class, ['sqlite:test.db', 'lietotājvārds', 'parole']);
-// tagad, kad veicat vaicājumu, tas saglabās laiku, vaicājumu un parametrus
+// ja lietojat datu bāzes savienojumus savā lietojumprogrammā, ir
+// nepieciešams PDO appķērs, ko izmantot TIKAI IZSTRĀDEI (lūdzu, neizmantojiet ražošanā!)
+// Tam ir tie paši parametri kā parastam PDO savienojumam
+$pdo = new PdoQueryCapture('sqlite:test.db', 'lietotājs', 'parole');
+// vai, ja piesaistāt šo Flight ietvaru
+Flight::register('db', PdoQueryCapture::class, ['sqlite:test.db', 'lietotājs', 'parole']);
+// tagad, kad veicat vaicājumu, tas uztverēs laiku, vaicājumu un parametrus
 
 // Tas savieno punktus
 if(Debugger::$showBar === true) {

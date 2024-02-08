@@ -1,15 +1,15 @@
 # Flightとは何ですか？
 
-FlightはPHPのための高速でシンプルで拡張可能なフレームワークです。非常に多様であり、あらゆる種類のWebアプリケーションの構築に使用できます。シンプルさを念頭に置いて構築され、理解しやすく使用しやすい方法で書かれています。
+FlightはPHP用の高速でシンプルで拡張可能なフレームワークです。非常に汎用性があり、あらゆる種類のWebアプリケーションの構築に使用できます。シンプルさを念頭に置いて構築され、理解しやすく使用しやすい方法で記述されています。
 
-Flightは、PHPに新しくてWebアプリケーションの構築方法を学びたい初心者にとって優れたフレームワークです。また、迅速かつ簡単にWebアプリケーションを構築したい経験豊富な開発者にとっても優れたフレームワークです。簡単にRESTful API、シンプルなWebアプリケーション、または複雑なWebアプリケーションを構築できるように設計されています。
+Flightは、PHPに新しく取り組み、Webアプリケーションの構築方法を学びたい初心者にとって優れたフレームワークです。また、Webアプリケーションを迅速かつ簡単に構築したい経験豊富な開発者にとっても優れたフレームワークです。これには、RESTful API、シンプルなWebアプリケーション、または複雑なWebアプリケーションを簡単に構築するための機能が備わっています。
 
 ```php
 <?php
 
-// composerでインストールされている場合
+// if installed with composer
 require 'vendor/autoload.php';
-// またはzipファイルで手動でインストールされている場合
+// or if installed manually by zip file
 // require 'flight/Flight.php';
 
 Flight::route('/', function() {
@@ -19,27 +19,27 @@ Flight::route('/', function() {
 Flight::start();
 ```
 
-それほど単純ですよね？ [Flightについて詳しく学ぶ！](learn)
+それなりにシンプルでしょ？ [Flightについてもっと学ぶ！](learn)
 
 ## クイックスタート
-Flight Frameworkで始めるための例のアプリケーションがあります。 [flightphp/skeleton](https://github.com/flightphp/skeleton) に移動して始め方の手順を確認してください！また、[examples](examples) ページに移動してFlightでできるいくつかのことのインスピレーションを得ることもできます。
+Flight Frameworkを使用して始めるのに役立つ例のアプリケーションがあります。始め方に関する手順については、[flightphp/skeleton](https://github.com/flightphp/skeleton)に移動してください！Flightでできることの一部についてのインスピレーションを得るには、[examples](examples) ページを訪問してもいいでしょう。
 
 # コミュニティ
 
-Matrixにいます！[#flight-php-framework:matrix.org](https://matrix.to/#/#flight-php-framework:matrix.org) でチャットしてください。
+Matrix上にいます！[#flight-php-framework:matrix.org](https://matrix.to/#/#flight-php-framework:matrix.org)でチャットしてください。
 
 # 貢献
 
 Flightに貢献する方法は2つあります：
 
-1. [core repository](https://github.com/flightphp/core) を訪れることで、コアフレームワークに貢献することができます。
-1. ドキュメントに貢献することができます。このドキュメントのウェブサイトは[GitHub](https://github.com/flightphp/docs) にホスティングされています。エラーを発見したり、より良い内容にするための提案があれば、修正してプルリクエストを送信してください！私たちは最新の情報を提供しようとしていますが、更新と言語翻訳は歓迎します。
+1. [コアリポジトリ](https://github.com/flightphp/core)を訪れて、コアフレームワークに貢献することができます。
+1. ドキュメントに貢献することができます。このドキュメントのウェブサイトは[GitHub](https://github.com/flightphp/docs)上にホスティングされています。エラーを見つけたり、何かをより良くするために改善したい場合は、遠慮せず修正してプルリクエストを送信してください！私たちは最新情報を提供しようと努力していますが、アップデートや言語の翻訳は歓迎されています。
 
 # 必要条件
 
-FlightにはPHP 7.4以上が必要です。
+FlightはPHP 7.4以上が必要です。
 
-**注意:** PHP 7.4がサポートされている理由は、執筆時（2024年）に一部のLTS Linuxディストリビューションでデフォルトのバージョンであるためです。PHP >8への移行はこれらのユーザーに多くの頭痛を引き起こすでしょう。このフレームワークはまたPHP >8をサポートしています。
+**注意:** PHP 7.4がサポートされている理由は、執筆時点（2024年）において、一部のLTS Linuxディストリビューションでデフォルトのバージョンとして利用されているためです。PHP >8への移行を強制すると、これらのユーザーに多くの問題が発生します。このフレームワークはPHP >8もサポートしています。
 
 # ライセンス
 

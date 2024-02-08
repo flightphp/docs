@@ -1,7 +1,6 @@
-
 # PdoWrapper PDO ヘルパークラス
 
-Flight には PDO のためのヘルパークラスが付属しています。これにより、すべての prepared/execute/fetchAll() の難しさを簡単にデータベースにクエリすることができます。データベースのクエリ方法を大幅に簡略化します。
+Flight には PDO 用のヘルパークラスが付属しています。これにより、準備/実行/fetchAll() の一連の手順を簡単にデータベースにクエリできます。データベースのクエリ方法を大幅に簡略化します。
 
 ## PDO ヘルパークラスの登録
 
@@ -17,10 +16,10 @@ Flight::register('db', \flight\database\PdoWrapper::class, ['mysql:host=localhos
 ```
 
 ## 使用法
-このオブジェクトは PDO を拡張しているため、通常の PDO メソッドがすべて利用可能です。次のメソッドはデータベースのクエリを容易にするために追加されています:
+このオブジェクトは PDO を拡張しているため、通常の PDO メソッドすべてが利用可能です。以下のメソッドが追加され、データベースのクエリを簡単にします:
 
 ### `runQuery(string $sql, array $params = []): PDOStatement`
-INSERT、UPDATE、または while ループで SELECT を使用する場合に使用します
+これを使用して、INSERT、UPDATE、または while ループでの SELECT を使用する場合に使用します。
 
 ```php
 $db = Flight::db();
@@ -29,13 +28,13 @@ while($row = $statement->fetch()) {
 	// ...
 }
 
-// またはデータベースに書き込み
+// またはデータベースへの書き込み
 $db->runQuery("INSERT INTO table (name) VALUES (?)", [ $name ]);
 $db->runQuery("UPDATE table SET name = ? WHERE id = ?", [ $name, $id ]);
 ```
 
 ### `fetchField(string $sql, array $params = []): mixed`
-クエリから最初のフィールドを取得します
+クエリから最初のフィールドを取得します。
 
 ```php
 $db = Flight::db();
@@ -43,7 +42,7 @@ $count = $db->fetchField("SELECT COUNT(*) FROM table WHERE something = ?", [ $so
 ```
 
 ### `fetchRow(string $sql, array $params = []): array`
-クエリから1行を取得します
+クエリから1行取得します。
 
 ```php
 $db = Flight::db();
@@ -51,18 +50,18 @@ $row = $db->fetchRow("SELECT * FROM table WHERE id = ?", [ $id ]);
 ```
 
 ### `fetchAll(string $sql, array $params = []): array`
-クエリからすべての行を取得します
+クエリからすべての行を取得します。
 
 ```php
 $db = Flight::db();
 $rows = $db->fetchAll("SELECT * FROM table WHERE something = ?", [ $something ]);
 foreach($rows as $row) {
-	// 何かをします
+	// 何かを行います
 }
 ```
 
-## `IN()` 構文について
-これには、`IN()` 文のための便利なラッパーもあります。`IN()` のプレースホルダーとして単純に 1 つの疑問符を渡し、その後に値の配列を渡すだけです。以下はその例です:
+## `IN()` 構文の注意
+これには `IN()` ステートメントのための便利なラッパーもあります。`IN()` のプレースホルダーとして単に1つのクエスチョンマークを渡し、その後に値の配列を渡すことができます。以下はその例です:
 
 ```php
 $db = Flight::db();
@@ -74,24 +73,24 @@ $rows = $db->fetchAll("SELECT * FROM table WHERE name = ? AND company_id IN (?)"
 ## 完全な例
 
 ```php
-// 例とこのラッパーの使用方法
+// 例: ルートとこのラッパーの使用方法
 Flight::route('/users', function () {
 	// すべてのユーザーを取得
 	$users = Flight::db()->fetchAll('SELECT * FROM users');
 
-	// すべてのユーザーに対して処理
+	// すべてのユーザーをストリームで取得
 	$statement = Flight::db()->runQuery('SELECT * FROM users');
 	while ($user = $statement->fetch()) {
 		echo $user['name'];
 	}
 
-	// 単一のユーザーを取得
+	// 1人のユーザーを取得
 	$user = Flight::db()->fetchRow('SELECT * FROM users WHERE id = ?', [123]);
 
-	// 単一の値を取得
+	// 1つの値を取得
 	$count = Flight::db()->fetchField('SELECT COUNT(*) FROM users');
 
-	// IN() 構文を使用して特定 (IN が大文字であることを確認してください)
+	// お手伝いするための特別な IN() 構文
 	$users = Flight::db()->fetchAll('SELECT * FROM users WHERE id IN (?)', [[1,2,3,4,5]]);
 	// これもできます
 	$users = Flight::db()->fetchAll('SELECT * FROM users WHERE id IN (?)', [ '1,2,3,4,5']);

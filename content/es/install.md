@@ -1,6 +1,6 @@
 # Instalación
 
-## Descarga los archivos.
+## Descargar los archivos.
 
 Si estás utilizando [Composer](https://getcomposer.org), puedes ejecutar el siguiente comando:
 
@@ -8,9 +8,10 @@ Si estás utilizando [Composer](https://getcomposer.org), puedes ejecutar el sig
 composer require flightphp/core
 ```
 
-O puedes [descargar los archivos](https://github.com/flightphp/core/archive/master.zip) directamente y extraerlos en tu directorio web.
+O puedes [descargar los archivos](https://github.com/flightphp/core/archive/master.zip)
+ directamente y extraerlos en tu directorio web.
 
-## Configura tu servidor web.
+## Configurar tu Servidor Web.
 
 ### Apache
 Para Apache, edita tu archivo `.htaccess` con lo siguiente:
@@ -22,11 +23,11 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ index.php [QSA,L]
 ```
 
-> **Nota**: Si necesitas usar Flight en un subdirectorio, agrega la línea
+> **Nota**: Si necesitas usar flight en un subdirectorio, añade la línea
 > `RewriteBase /subdir/` justo después de `RewriteEngine On`.
 
-> **Nota**: Si deseas proteger todos los archivos del servidor, como un archivo de base de datos o de entorno.
-> Coloca esto en tu archivo `.htaccess`:
+> **Nota**: Si deseas proteger todos los archivos del servidor, como un archivo de base de datos o env.
+> Agrega esto en tu archivo `.htaccess`:
 
 ```apacheconf
 RewriteEngine On
@@ -45,21 +46,21 @@ server {
 }
 ```
 
-## Crea tu archivo `index.php`.
+## Crea tu archivo `index.php`. 
 
 ```php
 <?php
 
-// Si estás utilizando Composer, requerir el cargador automático.
+// Si estás utilizando Composer, requiere el cargador automático.
 require 'vendor/autoload.php';
 // si no estás utilizando Composer, carga el framework directamente
 // require 'flight/Flight.php';
 
 // Luego define una ruta y asigna una función para manejar la solicitud.
 Flight::route('/', function () {
-  echo '¡hola mundo!';
+  echo '¡Hola Mundo!';
 });
 
 // Finalmente, inicia el framework.
 Flight::start();
-```  
+```

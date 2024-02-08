@@ -1,12 +1,11 @@
+# PdoWrapper PDO 助手类
 
-# PdoWrapper PDO Helper 类
+Flight 自带一个 PDO 助手类。它允许您轻松地使用全部预准备/执行/fetchAll() 操作来查询您的数据库。极大地简化了您查询数据库的方式。
 
-Flight带有一个用于PDO的辅助类。它允许您轻松查询数据库并使用所有的prepared/execute/fetchAll()功能。它极大地简化了您查询数据库的方式。
-
-## 注册PDO辅助类
+## 注册 PDO 助手类
 
 ```php
-// 注册PDO辅助类
+// 注册 PDO 助手类
 Flight::register('db', \flight\database\PdoWrapper::class, ['mysql:host=localhost;dbname=cool_db_name', 'user', 'pass', [
 		PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES \'utf8mb4\'',
 		PDO::ATTR_EMULATE_PREPARES => false,
@@ -17,10 +16,10 @@ Flight::register('db', \flight\database\PdoWrapper::class, ['mysql:host=localhos
 ```
 
 ## 用法
-该对象扩展了PDO，因此所有常规的PDO方法都可以使用。以下方法是为了使查询数据库更加容易而添加的：
+此对象扩展了 PDO，因此所有常规的 PDO 方法都可用。以下方法是为了更轻松地查询数据库而添加的：
 
 ### `runQuery(string $sql, array $params = []): PDOStatement`
-用于INSERTS、UPDATES或者如果您计划在while循环中使用SELECT时使用
+用于 INSERTS、UPDATES，或者如果您打算在 while 循环中使用 SELECT
 
 ```php
 $db = Flight::db();
@@ -35,7 +34,7 @@ $db->runQuery("UPDATE table SET name = ? WHERE id = ?", [ $name, $id ]);
 ```
 
 ### `fetchField(string $sql, array $params = []): mixed`
-从查询中提取第一个字段
+从查询结果中提取第一个字段
 
 ```php
 $db = Flight::db();
@@ -43,7 +42,7 @@ $count = $db->fetchField("SELECT COUNT(*) FROM table WHERE something = ?", [ $so
 ```
 
 ### `fetchRow(string $sql, array $params = []): array`
-从查询中提取一行
+从查询结果中获取一行
 
 ```php
 $db = Flight::db();
@@ -51,18 +50,18 @@ $row = $db->fetchRow("SELECT * FROM table WHERE id = ?", [ $id ]);
 ```
 
 ### `fetchAll(string $sql, array $params = []): array`
-从查询中提取所有行
+从查询结果中获取所有行
 
 ```php
 $db = Flight::db();
 $rows = $db->fetchAll("SELECT * FROM table WHERE something = ?", [ $something ]);
 foreach($rows as $row) {
-	// 执行某些操作
+	// 做一些事情
 }
 ```
 
-## `IN()` 语法注意事项
-这还有一个有用的`IN()`语句的包装程序。您可以简单地传递一个问号作为`IN()`的占位符，然后是一个值数组。以下是一个可能的示例：
+## 关于 `IN()` 语法的注意事项
+这还有一个有用的 `IN()` 语句包装器。您可以简单地传递一个问号作为 `IN()` 的占位符，然后是一个值数组。以下是可能的例子：
 
 ```php
 $db = Flight::db();
@@ -74,12 +73,12 @@ $rows = $db->fetchAll("SELECT * FROM table WHERE name = ? AND company_id IN (?)"
 ## 完整示例
 
 ```php
-// 示例路由和如何使用此包装程序
+// 示例路由以及如何使用此包装器
 Flight::route('/users', function () {
-	// 获取所有用户
+	// 获取全部用户
 	$users = Flight::db()->fetchAll('SELECT * FROM users');
 
-	// 流式传输所有用户
+	// 流式传输全部用户
 	$statement = Flight::db()->runQuery('SELECT * FROM users');
 	while ($user = $statement->fetch()) {
 		echo $user['name'];
@@ -91,7 +90,7 @@ Flight::route('/users', function () {
 	// 获取单个值
 	$count = Flight::db()->fetchField('SELECT COUNT(*) FROM users');
 
-	// 特殊的IN()语法帮助 (确保IN大写)
+	// 特殊的 IN() 语法以帮助您（确保 IN 大写）
 	$users = Flight::db()->fetchAll('SELECT * FROM users WHERE id IN (?)', [[1,2,3,4,5]]);
 	// 您也可以这样做
 	$users = Flight::db()->fetchAll('SELECT * FROM users WHERE id IN (?)', [ '1,2,3,4,5']);

@@ -1,17 +1,17 @@
-# Wruczek/PHP-Datei-Cache
+# Wruczek/PHP-File-Cache
 
-Leichte, einfache und eigenständige PHP-Dateicache-Klasse
+Leichte, einfache und eigenständige PHP-In-File-Caching-Klasse
 
 **Vorteile**
 - Leicht, eigenständig und einfach
 - Der gesamte Code in einer Datei - keine sinnlosen Treiber.
-- Sicher - jede generierte Cache-Datei hat einen PHP-Header mit Die, was direkten Zugriff selbst dann unmöglich macht, wenn jemand den Pfad kennt und Ihr Server nicht ordnungsgemäß konfiguriert ist
+- Sicher - jede generierte Cache-Datei enthält einen PHP-Header mit die, wodurch ein direkter Zugriff auch dann unmöglich ist, wenn jemand den Pfad kennt und Ihr Server nicht ordnungsgemäß konfiguriert ist.
 - Gut dokumentiert und getestet
 - Behandelt Parallelität korrekt über flock
 - Unterstützt PHP 5.4.0 - 7.1+
 - Kostenlos unter einer MIT-Lizenz
 
-# Installation
+## Installation
 
 Installiere über Composer:
 
@@ -19,42 +19,42 @@ Installiere über Composer:
 composer require wruczek/php-file-cache
 ```
 
-# Verwendung
+## Verwendung
 
-Die Verwendung ist ziemlich unkompliziert.
+Die Verwendung ist ziemlich einfach.
 
 ```php
 use Wruczek\PhpFileCache\PhpFileCache;
 
 $app = Flight::app();
 
-// Du übergibst das Verzeichnis, in dem der Cache gespeichert wird, dem Konstruktor
-$app->register('cache', PhpDateiCache::class, [ __DIR__ . '/../cache/' ], function(PhpFileCache $cache) {
+// Sie geben das Verzeichnis, in dem der Cache gespeichert wird, dem Konstruktor an
+$app->register('cache', PhpFileCache::class, [ __DIR__ . '/../cache/' ], function(PhpFileCache $cache) {
 
 	// Dies stellt sicher, dass der Cache nur im Produktionsmodus verwendet wird
-	// UMGEBUNG ist eine Konstante, die in deiner Bootstrap-Datei oder anderswo in deiner App festgelegt ist
+	// UMGEBUNG ist eine Konstante, die in Ihrer Startdatei oder an anderer Stelle in Ihrer App festgelegt ist
 	$cache->setDevMode(ENVIRONMENT === 'development');
 });
 ```
 
-Danach kannst du es in deinem Code wie folgt verwenden:
+Dann können Sie es in Ihrem Code wie folgt verwenden:
 
 ```php
 
-// Hole Cache-Instanz
+// Cache-Instanz abrufen
 $cache = Flight::cache();
-$data = $cache->refreshIfExpired('einfacher-cache-test', function () {
-    return date("H:i:s"); // gibt die zu cachenden Daten zurück
+$data = $cache->refreshIfExpired('simple-cache-test', function () {
+    return date("H:i:s"); // Daten zurückgeben, die zwischengespeichert werden sollen
 }, 10); // 10 Sekunden
 
 // oder
-$data = $cache->retrieve('einfacher-cache-test');
+$data = $cache->retrieve('simple-cache-test');
 if(empty($data)) {
 	$data = date("H:i:s");
-	$cache->store('einfacher-cache-test', $data, 10); // 10 Sekunden
+	$cache->store('simple-cache-test', $data, 10); // 10 Sekunden
 }
 ```
 
-# Dokumentation
+## Dokumentation
 
-Besuche [https://github.com/Wruczek/PHP-Datei-Cache](https://github.com/Wruczek/PHP-File-Cache) für die vollständige Dokumentation und sieh dir unbedingt den [Beispiele](https://github.com/Wruczek/PHP-Datei-Cache/tree/master/examples) Ordner an.
+Besuchen Sie [https://github.com/Wruczek/PHP-File-Cache](https://github.com/Wruczek/PHP-File-Cache) für die vollständige Dokumentation und stellen Sie sicher, dass Sie den [Beispiele](https://github.com/Wruczek/PHP-File-Cache/tree/master/examples) Ordner ansehen.

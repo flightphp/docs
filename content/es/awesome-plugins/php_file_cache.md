@@ -1,11 +1,11 @@
 # Wruczek/PHP-File-Cache
 
-Clase PHP de almacenamiento en caché en archivo, ligera, simple y autónoma
+Clase de almacenamiento en caché de PHP en archivo ligera, simple y independiente
 
 **Ventajas**
-- Ligera, autónoma y simple
-- Todo el código en un solo archivo, sin controladores innecesarios
-- Seguro: cada archivo de caché generado tiene un encabezado php con die, lo que hace imposible el acceso directo incluso si alguien conoce la ruta y su servidor no está configurado correctamente
+- Ligero, independiente y simple
+- Todo el código en un solo archivo, sin controladores innecesarios.
+- Seguro, cada archivo de caché generado tiene una cabecera de php con die, lo que hace que el acceso directo sea imposible incluso si alguien conoce la ruta y su servidor no está configurado correctamente
 - Bien documentado y probado
 - Maneja la concurrencia correctamente a través de flock
 - Compatible con PHP 5.4.0 - 7.1+
@@ -37,14 +37,14 @@ $app->register('cache', PhpFileCache::class, [ __DIR__ . '/../cache/' ], functio
 });
 ```
 
-Luego puedes usarlo en tu código de esta manera:
+Luego puedes usarlo en tu código de la siguiente manera:
 
 ```php
 
 // Obtener instancia de caché
 $cache = Flight::cache();
 $data = $cache->refreshIfExpired('simple-cache-test', function () {
-    return date("H:i:s"); // devuelve los datos a almacenar en caché
+    return date("H:i:s"); // devolver datos para ser almacenados en caché
 }, 10); // 10 segundos
 
 // o
@@ -57,4 +57,4 @@ if(empty($data)) {
 
 ## Documentación
 
-Visita [https://github.com/Wruczek/PHP-File-Cache](https://github.com/Wruczek/PHP-File-Cache) para ver la documentación completa y asegúrate de consultar la carpeta de [ejemplos](https://github.com/Wruczek/PHP-File-Cache/tree/master/examples).
+Visita [https://github.com/Wruczek/PHP-File-Cache](https://github.com/Wruczek/PHP-File-Cache) para ver la documentación completa y asegúrate de ver la carpeta de [ejemplos](https://github.com/Wruczek/PHP-File-Cache/tree/master/examples).

@@ -1,6 +1,7 @@
 # Framework-Instanz
 
-Anstatt Flight als globale statische Klasse auszuführen, können Sie es optional als Objektinstanz ausführen.
+Anstatt Flight als globale statische Klasse auszuführen, können Sie es optional als
+ein Objektinstanz ausführen.
 
 ```php
 require 'flight/autoload.php';
@@ -8,10 +9,11 @@ require 'flight/autoload.php';
 $app = Flight::app();
 
 $app->route('/', function () {
-  echo 'hello world!';
+  echo 'Hallo Welt!';
 });
 
 $app->start();
 ```
 
-Anstatt die statische Methode aufzurufen, würden Sie also die Instanzmethode mit demselben Namen auf dem Engine-Objekt aufrufen.
+Also würden Sie anstelle des Aufrufs der statischen Methode die Instanzmethode mit
+demselben Namen am Engine-Objekt aufrufen.

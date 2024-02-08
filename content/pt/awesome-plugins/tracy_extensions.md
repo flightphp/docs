@@ -1,18 +1,18 @@
-Tracy Flight Painel Extensions
+Tracy Flight Painel Extensões
 =====
 
 Este é um conjunto de extensões para tornar o trabalho com o Flight um pouco mais rico.
 
-- Flight - Analisar todas as variáveis do Flight.
-- Database - Analisar todas as consultas que foram executadas na página (se você inicializar corretamente a conexão com o banco de dados)
-- Request - Analisar todas as variáveis `$_SERVER` e examinar todos os payloads globais (`$_GET`, `$_POST`, `$_FILES`)
-- Session - Analisar todas as variáveis `$_SESSION` se as sessões estiverem ativas.
+- Flight - Analise todas as variáveis do Flight.
+- Banco de Dados - Analise todas as consultas que foram executadas na página (se você iniciar corretamente a conexão com o banco de dados)
+- Requisição - Analise todas as variáveis `$_SERVER` e examine todos os payloads globais (`$_GET`, `$_POST`, `$_FILES`)
+- Sessão - Analise todas as variáveis `$_SESSION` se as sessões estiverem ativas.
 
 Este é o Painel
 
 ![Barra do Flight](https://raw.githubusercontent.com/flightphp/tracy-extensions/master/flight-tracy-bar.png)
 
-E cada painel exibe informações muito úteis sobre sua aplicação!
+E cada painel exibe informações muito úteis sobre a sua aplicação!
 
 ![Dados do Flight](https://raw.githubusercontent.com/flightphp/tracy-extensions/master/flight-var-data.png)
 ![Banco de Dados do Flight](https://raw.githubusercontent.com/flightphp/tracy-extensions/master/flight-db.png)
@@ -20,11 +20,11 @@ E cada painel exibe informações muito úteis sobre sua aplicação!
 
 Instalação
 -------
-Execute `composer require flightphp/tracy-extensions --dev` e você está pronto!
+Execute `composer require flightphp/tracy-extensions --dev` e você está pronto para começar!
 
 Configuração
 -------
-Há muito pouca configuração que você precisa fazer para começar. Você precisará inicializar o depurador Tracy antes de usar isso [https://tracy.nette.org/en/guide](https://tracy.nette.org/en/guide):
+Há muito pouca configuração que você precisa fazer para começar. Você precisará iniciar o depurador Tracy antes de usar isso [https://tracy.nette.org/en/guide](https://tracy.nette.org/en/guide):
 
 ```php
 <?php
@@ -36,17 +36,17 @@ use flight\debug\tracy\TracyExtensionLoader;
 require __DIR__ . '/vendor/autoload.php';
 
 Debugger::enable();
-// Talvez seja necessário especificar seu ambiente com Debugger::enable(Debugger::DEVELOPMENT)
+// Talvez você precise especificar seu ambiente com Debugger::enable(Debugger::DEVELOPMENT)
 
 // se você usar conexões de banco de dados em seu aplicativo, há um
-// wrapper PDO necessário para uso SOMENTE NO DESENVOLVIMENTO (não na produção, por favor!)
-// Ele possui os mesmos parâmetros que uma conexão PDO regular
-$pdo = new PdoQueryCapture('sqlite:test.db', 'user', 'pass');
-// ou se você conectar isso ao framework Flight
-Flight::register('db', PdoQueryCapture::class, ['sqlite:test.db', 'user', 'pass']);
-// agora, toda vez que você fizer uma consulta, ele capturará o tempo, a consulta e os parâmetros
+// invólucro PDO necessário a ser usado APENAS NO DESENVOLVIMENTO (não em produção, por favor!)
+// Tem os mesmos parâmetros de uma conexão PDO regular
+$pdo = new PdoQueryCapture('sqlite:test.db', 'usuário', 'senha');
+// ou se você anexar isso ao framework Flight
+Flight::register('db', PdoQueryCapture::class, ['sqlite:test.db', 'usuário', 'senha']);
+// agora, sempre que você fizer uma consulta, ela capturará o tempo, a consulta e os parâmetros
 
-// Isso conecta os pontos
+// Isto conecta os pontos
 if(Debugger::$showBar === true) {
 	new TracyExtensionLoader(Flight::app());
 }
@@ -54,4 +54,4 @@ if(Debugger::$showBar === true) {
 // mais código
 
 Flight::start();
-```  
+```

@@ -1,25 +1,25 @@
-Die MIT-Lizenz (MIT)
+Die MIT Lizenz (MIT)
 =====================
 
-Urheberrecht © `2023` `@mikecao, @n0nag0n`
+Copyright © `2023` `@mikecao, @n0nag0n`
 
-Die Erlaubnis wird hiermit kostenlos erteilt, an jede Person,
-die eine Kopie dieser Software und der dazugehörigen Dokumentation
-Dateien (die "Software") erhält, die Software ohne
-Einschränkungen, einschließlich, aber nicht beschränkt auf das Recht,
-die Software zu verwenden, zu kopieren, zu modifizieren, zu fusionieren, zu veröffentlichen, zu verteilen, zu unterlizenzieren und/oder zu verkaufen
-Kopien der Software, und Personen zu erlauben, denen die
-Software bereitgestellt wird, dies zu tun, unterliegen den folgenden
-Bedingungen:
+Hiermit wird unentgeltlich die Erlaubnis erteilt, von jeder Person,
+die eine Kopie dieser Software und der zugehörigen Dokumentationsdateien
+(the "Software") erhält, diese Software ohne Einschränkungen zu nutzen,
+einschließlich, aber nicht beschränkt auf das Recht, sie zu verwenden,
+zu kopieren, zu modifizieren, zu fusionieren, zu veröffentlichen,
+zu verbreiten, unterzulizenzieren und/oder zu verkaufen
+Kopien der Software sowie Personen, denen die Software überlassen wird,
+dies unter den folgenden Bedingungen zu tun:
 
-Der obige Urheberrechtsvermerk und dieser Erlaubnisvermerk müssen
-in allen Kopien oder wesentlichen Teilen der Software enthalten sein.
+Der obige Urheberrechtsvermerk und dieser Genehmigungsvermerk sind
+in allen Kopien oder wesentlichen Teilen der Software einzubeziehen.
 
-DIE SOFTWARE WIRD "SO WIE SIE IST" BEREITGESTELLT, OHNE GARANTIE IRGENDWELCHER ART,
-AUSDRÜCKLICH ODER IMPLIZIT, EINSCHLIESSLICH, ABER NICHT BESCHRÄNKT AUF GARANTIE
-DER HANDELSFÄHIGKEIT, EIGNUNG FÜR EINEN BESTIMMTEN ZWECK UND
-NICHTVERLETZUNG. IN KEINEM FALL HAFtEN DIE AUTOREN ODER URHEBERRECHT
-HALTER FÜR ANSPRÜCHE, SCHÄDEN ODER ANDERE VERANTWORTLICHKEITEN,
-OB IN EINER VERTRAGS-, TORT- ODER SONSTIGEN HANDLUNG,
-DIE AUS, IN ZUSAMMENHANG MIT DER SOFTWARE ODER DER VERWENDUNG
-ODER ANDEREN GESCHÄFTEN MIT DER SOFTWARE ENTSTEHEN.
+DIE SOFTWARE WIRD "WIE SIE IST" BEREITGESTELLT, OHNE JEGLICHE GEWÄHRLEISTUNG,
+AUSDRÜCKLICH ODER IMPLIZIERT, EINSCHLIESSLICH DER GEWÄHRLEISTUNG
+DER MARKTFÄHIGKEIT, DER EIGNUNG FÜR EINEN BESTIMMTEN ZWECK
+UND NICHTVERLETZUNG. UNTER KEINEN UMSTÄNDEN SIND DIE AUTOREN ODER
+URHEBERRECHTSINHABER HAFTBAR FÜR ANSPRÜCHE, SCHÄDEN ODER ANDERE HAFTUNG,
+OB IN EINER VERTRAGS- ODER DELIKTISCHE HANDLUNG, DIE AUS
+ODER IN VERBINDUNG MIT DER SOFTWARE ODER DER VERWENDUNG ODER
+ANDEREN GESCHÄFTEN IN DER SOFTWARE ENTSTEHEN.

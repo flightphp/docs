@@ -1,6 +1,6 @@
 # Installation
 
-## Dateien herunterladen.
+## Lade die Dateien herunter.
 
 Wenn Sie [Composer](https://getcomposer.org) verwenden, können Sie den folgenden Befehl ausführen:
 
@@ -8,7 +8,8 @@ Wenn Sie [Composer](https://getcomposer.org) verwenden, können Sie den folgende
 composer require flightphp/core
 ```
 
-ODER Sie können die [Dateien herunterladen](https://github.com/flightphp/core/archive/master.zip) und sie direkt in Ihr Webverzeichnis extrahieren.
+ODER Sie können die [Dateien herunterladen](https://github.com/flightphp/core/archive/master.zip)
+ direkt und sie in Ihr Webverzeichnis extrahieren.
 
 ## Konfigurieren Sie Ihren Webserver.
 
@@ -22,10 +23,11 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ index.php [QSA,L]
 ```
 
-> **Hinweis**: Wenn Sie Flight in einem Unterverzeichnis verwenden müssen, fügen Sie die Zeile `RewriteBase /subdir/` direkt nach `RewriteEngine On` hinzu.
+> **Hinweis**: Wenn Sie Flight in einem Unterverzeichnis verwenden müssen, fügen Sie die Zeile hinzu
+> `RewriteBase /subdir/` direkt nach `RewriteEngine On` hinzu.
 
-> **Hinweis**: Wenn Sie alle Serverdateien schützen möchten, wie z. B. eine db- oder env-Datei.
-> Fügen Sie dies in Ihre `.htaccess`-Datei ein:
+> **Hinweis**: Wenn Sie alle Serverdateien schützen möchten, wie z.B. eine db- oder env-Datei.
+> Fügen Sie dies Ihrer `.htaccess`-Datei hinzu:
 
 ```apacheconf
 RewriteEngine On
@@ -33,7 +35,8 @@ RewriteRule ^(.*)$ index.php
 ```
 
 ### Nginx
-Für Nginx fügen Sie folgendes zu Ihrer Serverdeklaration hinzu:
+
+Für Nginx fügen Sie Folgendes zu Ihrer Serverdeklaration hinzu:
 
 ```nginx
 server {
@@ -50,10 +53,10 @@ server {
 
 // Wenn Sie Composer verwenden, fordern Sie den Autoloader an.
 require 'vendor/autoload.php';
-// Wenn Sie Composer nicht verwenden, laden Sie das Framework direkt
+// wenn Sie Composer nicht verwenden, laden Sie das Framework direkt
 // require 'flight/Flight.php';
 
-// Definieren Sie dann eine Route und weisen Sie eine Funktion zur Bearbeitung der Anfrage zu.
+// Definieren Sie dann eine Route und weisen Sie eine Funktion zu, um die Anfrage zu bearbeiten.
 Flight::route('/', function () {
   echo 'Hallo Welt!';
 });

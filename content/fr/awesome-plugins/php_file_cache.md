@@ -1,11 +1,11 @@
 # Wruczek/PHP-File-Cache
 
-Classe de mise en cache de fichier PHP légère, simple et autonome
+Classe de mise en cache en fichier PHP légère, simple et autonome
 
 **Avantages**
 - Légère, autonome et simple
-- Tout le code dans un seul fichier - pas de pilotes inutiles.
-- Sécurisé - chaque fichier de cache généré a un en-tête php avec die, rendant l'accès direct impossible même si quelqu'un connait le chemin et que votre serveur n'est pas configuré correctement
+- Tout le code dans un seul fichier - pas de drivers inutiles
+- Sécurisé - chaque fichier de cache généré a un en-tête php avec die, rendant l'accès direct impossible même si quelqu'un connaît le chemin et que votre serveur n'est pas configuré correctement
 - Bien documenté et testé
 - Gère correctement la concurrence via flock
 - Prend en charge PHP 5.4.0 - 7.1+
@@ -13,7 +13,7 @@ Classe de mise en cache de fichier PHP légère, simple et autonome
 
 ## Installation
 
-Installer via composer :
+Installez via composer :
 
 ```bash
 composer require wruczek/php-file-cache
@@ -33,7 +33,7 @@ $app->register('cache', PhpFileCache::class, [ __DIR__ . '/../cache/' ], functio
 
 	// Cela garantit que le cache n'est utilisé que en mode production
 	// ENVIRONMENT est une constante définie dans votre fichier d'amorçage ou ailleurs dans votre application
-	$cache->setDevMode(ENVIRONMENT === 'development');
+	$cache->setDevMode(ENVIRONMENT === 'développement');
 });
 ```
 
@@ -57,4 +57,4 @@ if(empty($data)) {
 
 ## Documentation
 
-Visitez [https://github.com/Wruczek/PHP-File-Cache](https://github.com/Wruczek/PHP-File-Cache) pour une documentation complète et assurez-vous de consulter le dossier [examples](https://github.com/Wruczek/PHP-File-Cache/tree/master/examples).
+Visitez [https://github.com/Wruczek/PHP-File-Cache](https://github.com/Wruczek/PHP-File-Cache) pour obtenir la documentation complète et assurez-vous de consulter le dossier [examples](https://github.com/Wruczek/PHP-File-Cache/tree/master/examples).

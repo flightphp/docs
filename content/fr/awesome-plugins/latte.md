@@ -12,7 +12,7 @@ composer require latte/latte
 
 ## Configuration de base
 
-Il existe certaines options de configuration de base pour commencer. Vous pouvez en savoir plus à leur sujet dans la [Documentation de Latte](https://latte.nette.org/en/guide).
+Il existe quelques options de configuration de base pour commencer. Vous pouvez en savoir plus à leur sujet dans la [Documentation de Latte](https://latte.nette.org/en/guide).
 
 ```php
 
@@ -24,9 +24,9 @@ $app = Flight::app();
 
 $app->register('latte', LatteEngine::class, [], function(LatteEngine $latte) use ($app) {
 
-	// C'est là que Latte mettra en cache vos modèles pour accélérer les choses
-	// Une chose intéressante à propos de Latte est qu'il rafraîchit automatiquement votre
-	// cache lorsque vous apportez des modifications à vos modèles!
+	// C'est ici que Latte mettra en cache vos modèles pour accélérer les choses
+	// Une chose sympa avec Latte est qu'il rafraîchit automatiquement votre
+	// cache lorsque vous apportez des modifications à vos modèles !
 	$latte->setTempDirectory(__DIR__ . '/../cache/');
 
 	// Indiquez à Latte où se trouvera le répertoire racine de vos vues.
@@ -43,7 +43,7 @@ Voici un exemple simple d'un fichier de mise en page. Ce fichier sera utilisé p
 <!doctype html>
 <html lang="en">
 	<head>
-		<title>{$title ? $title . ' - '}My App</title>
+		<title>{$title ? $title . ' - '}Mon application</title>
 		<link rel="stylesheet" href="style.css">
 	</head>
 	<body>
@@ -53,11 +53,11 @@ Voici un exemple simple d'un fichier de mise en page. Ce fichier sera utilisé p
 			</nav>
 		</header>
 		<div id="content">
-			<!-- Voici la magie ici -->
+			<!-- C'est là que la magie opère -->
 			{block content}{/block}
 		</div>
 		<div id="footer">
-			&copy; Droit d'auteur
+			&copy; Droits d'auteur
 		</div>
 	</body>
 </html>
@@ -70,7 +70,7 @@ Et maintenant nous avons votre fichier qui va être rendu à l'intérieur de ce 
 <!-- Cela indique à Latte que ce fichier est "à l'intérieur" du fichier layout.latte -->
 {extends layout.latte}
 
-<!-- Ceci est le contenu qui sera rendu à l'intérieur de la mise en page à l'intérieur du bloc de contenu -->
+<!-- C'est le contenu qui sera rendu à l'intérieur de la mise en page à l'intérieur du bloc de contenu -->
 {block content}
 	<h1>Page d'accueil</h1>
 	<p>Bienvenue sur mon application !</p>
@@ -83,7 +83,7 @@ Ensuite, lorsque vous allez rendre ceci à l'intérieur de votre fonction ou con
 // route simple
 Flight::route('/', function () {
 	Flight::latte()->render('home.latte', [
-		'title' => 'Page d'accueil'
+		'title' => 'Page d\'accueil'
 	]);
 });
 
@@ -96,7 +96,7 @@ class HomeController
 	public function index()
 	{
 		Flight::latte()->render('home.latte', [
-			'title' => 'Page d'accueil'
+			'title' => 'Page d\'accueil'
 		]);
 	}
 }

@@ -1,6 +1,8 @@
 # Routen
 
-Routing in Flight erfolgt durch das Abgleichen eines URL-Musters mit einer Rückruffunktion.
+> **Hinweis:** Möchten Sie mehr über Routing erfahren? Schauen Sie sich die [Warum Frameworks](/learn/why-frameworks) Seite für eine ausführlichere Erklärung an.
+
+Das grundlegende Routing in Flight erfolgt durch das Zuordnen eines URL-Musters mit einer Rückruffunktion oder einem Array einer Klasse und Methode.
 
 ```php
 Flight::route('/', function(){
@@ -8,7 +10,7 @@ Flight::route('/', function(){
 });
 ```
 
-Der Rückruf kann jedes Objekt sein, das aufrufbar ist. Sie können also eine normale Funktion verwenden:
+Der Rückruf kann ein beliebiges Objekt sein, das aufrufbar ist. Sie können also eine reguläre Funktion verwenden:
 
 ```php
 function hallo(){
@@ -33,10 +35,12 @@ Flight::route('/', array('Gruß','hallo'));
 Oder eine Objektmethode:
 
 ```php
+
+// Gruß.php
 class Gruß
 {
     public function __construct() {
-        $this->name = 'John Doe';
+        $this->name = 'Max Mustermann';
     }
 
     public function hallo() {
@@ -44,33 +48,55 @@ class Gruß
     }
 }
 
+// index.php
 $gruß = new Gruß();
 
 Flight::route('/', array($gruß, 'hallo'));
 ```
 
-Die Routen werden in der Reihenfolge abgeglichen, in der sie definiert sind. Die erste übereinstimmende Route für eine Anfrage wird aufgerufen.
+Die Routen werden in der Reihenfolge abgeglichen, in der sie definiert sind. Die erste passende Route einer Anforderung wird aufgerufen.
 
-## Methodenrouten
+## Methoden-Routing
 
-Standardmäßig werden Routenmuster mit allen Anforderungsmethoden übereinstimmen. Sie können auf bestimmte Methoden reagieren, indem Sie einen Bezeichner vor der URL platzieren.
+Standardmäßig werden Routenmuster gegen alle Anforderungsmethoden abgeglichen. Sie können auf spezifische Methoden reagieren, indem Sie einen Bezeichner vor der URL platzieren.
 
 ```php
 Flight::route('GET /', function () {
-  echo 'Ich habe eine GET-Anfrage erhalten.';
+  echo 'Ich habe eine GET-Anforderung erhalten.';
 });
 
 Flight::route('POST /', function () {
-  echo 'Ich habe eine POST-Anfrage erhalten.';
+  echo 'Ich habe eine POST-Anforderung erhalten.';
 });
 ```
 
-Sie können auch mehrere Methoden zu einem einzelnen Rückruf zuordnen, indem Sie einen `|`-Trenner verwenden:
+Sie können auch mehrere Methoden einem einzelnen Rückruf zuordnen, indem Sie einen `|`-Trennzeichen verwenden:
 
 ```php
 Flight::route('GET|POST /', function () {
-  echo 'Ich habe entweder eine GET- oder eine POST-Anfrage erhalten.';
+  echo 'Ich habe entweder eine GET- oder eine POST-Anforderung erhalten.';
 });
+```
+
+Zusätzlich können Sie das Routenobjekt erhalten, das einige Hilfsmethoden für Sie bereitstellt:
+
+```php
+
+$router = Flight::router();
+
+// ordnet alle Methoden zu
+$router->map('/', function() {
+	echo 'Hallo Welt!';
+});
+
+// GET-Anforderung
+$router->get('/benutzer', function() {
+	echo 'Benutzer';
+});
+// $router->post();
+// $router->put();
+// $router->delete();
+// $router->patch();
 ```
 
 ## Reguläre Ausdrücke
@@ -83,6 +109,9 @@ Flight::route('/benutzer/[0-9]+', function () {
 });
 ```
 
+Obwohl diese Methode verfügbar ist, wird empfohlen, benannte Parameter oder 
+benannte Parameter mit regulären Ausdrücken zu verwenden, da sie lesbarer und einfacher zu pflegen sind.
+
 ## Benannte Parameter
 
 Sie können benannte Parameter in Ihren Routen angeben, die an Ihre Rückruffunktion übergeben werden.
@@ -93,7 +122,7 @@ Flight::route('/@name/@id', function (string $name, string $id) {
 });
 ```
 
-Sie können auch reguläre Ausdrücke mit Ihren benannten Parametern einschließen, indem Sie den `:`-Trenner verwenden:
+Sie können auch reguläre Ausdrücke mit Ihren benannten Parametern einschließen, indem Sie den `:`-Trennzeichen verwenden:
 
 ```php
 Flight::route('/@name/@id:[0-9]{3}', function (string $name, string $id) {
@@ -102,11 +131,11 @@ Flight::route('/@name/@id:[0-9]{3}', function (string $name, string $id) {
 });
 ```
 
-Das Zuordnen von Regex-Gruppen `()` mit benannten Parametern wird nicht unterstützt.
+> **Hinweis:** Das Zuordnen von Regex-Gruppen `()` mit benannten Parametern wird nicht unterstützt. :'\(
 
 ## Optionale Parameter
 
-Sie können benannte Parameter angeben, die optional für die Übereinstimmung sind, indem Sie Segmente in Klammern einschließen.
+Sie können benannte Parameter spezifizieren, die optional für den Abgleich sind, indem Sie Segmente in Klammern einschließen.
 
 ```php
 Flight::route(
@@ -121,11 +150,12 @@ Flight::route(
 );
 ```
 
-Alle optionalen Parameter, die nicht übereinstimmen, werden als NULL übergeben.
+Alle optionalen Parameter, die nicht abgeglichen werden, werden als `NULL` übergeben.
 
 ## Platzhalter
 
-Die Übereinstimmung erfolgt nur auf einzelnen URL-Segmenten. Wenn Sie mehrere Segmente übereinstimmen möchten, können Sie den `*` Platzhalter verwenden.
+Der Abgleich erfolgt nur an einzelnen URL-Segmenten. Wenn Sie mehrere
+Segmente abgleichen möchten, können Sie den `*`-Platzhalter verwenden.
 
 ```php
 Flight::route('/blog/*', function () {
@@ -133,7 +163,7 @@ Flight::route('/blog/*', function () {
 });
 ```
 
-Um alle Anfragen an einen einzigen Rückruf zu leiten, können Sie folgendes tun:
+Um alle Anforderungen an einen einzelnen Rückruf zu routen, können Sie Folgendes tun:
 
 ```php
 Flight::route('*', function () {
@@ -141,15 +171,15 @@ Flight::route('*', function () {
 });
 ```
 
-## Weiterleitung
+## Weitergabe
 
-Sie können die Ausführung an die nächste übereinstimmende Route weiterleiten, indem Sie `true` aus Ihrer Rückruffunktion zurückgeben.
+Sie können die Ausführung an die nächste passende Route weitergeben, indem Sie `true` aus Ihrer Rückruffunktion zurückgeben.
 
 ```php
 Flight::route('/benutzer/@name', function (string $name) {
-  // Überprüfen Sie eine Bedingung
+  // Überprüfen einer Bedingung
   if ($name !== "Bob") {
-    // Weiter zur nächsten Route
+    // Zur nächsten Route weitergehen
     return true;
   }
 });
@@ -159,13 +189,43 @@ Flight::route('/benutzer/*', function () {
 });
 ```
 
+## Routen-Alias
+
+Sie können einer Route einen Alias zuweisen, damit die URL später in Ihrem Code dynamisch generiert werden kann (zum Beispiel wie eine Vorlage).
+
+```php
+Flight::route('/benutzer/@id', function($id) { echo 'benutzer:'.$id; }, false, 'benutzer_anzeigen');
+
+// später im Code an anderer Stelle
+Flight::getUrl('benutzer_anzeigen', [ 'id' => 5 ]); // gibt '/benutzer/5' zurück
+```
+
+Dies ist besonders hilfreich, wenn sich Ihre URL zufällig ändert. Im obigen Beispiel, wenn Benutzer nach `/admin/benutzer/@id` verschoben wurde.
+Dank des Aliasierens müssen Sie nirgendwo, wo Sie den Alias referenzieren, Änderungen vornehmen, da der Alias nun wie im
+obigen Beispiel `/admin/benutzer/5` zurückgibt.
+
+Das Aliasieren von Routen funktioniert auch in Gruppen:
+
+```php
+Flight::group('/benutzer', function() {
+    Flight::route('/@id', function($id) { echo 'benutzer:'.$id; }, false, 'benutzer_anzeigen');
+});
+
+
+// später im Code an anderer Stelle
+Flight::getUrl('benutzer_anzeigen', [ 'id' => 5 ]); // gibt '/benutzer/5' zurück
+```
+
 ## Routeninformationen
 
-Wenn Sie die übereinstimmenden Routeninformationen untersuchen möchten, können Sie anfordern, dass das Routenobjekt an Ihre Rückruffunktion übergeben wird, indem Sie `true` als dritten Parameter in der Routenmethode übergeben. Das Routenobjekt wird immer der letzte Parameter, der an Ihre Rückruffunktion übergeben wird.
+Wenn Sie die übereinstimmenden Routeninformationen inspizieren möchten, können Sie die Route
+Objekt anfordern, das Ihrer Rückruffunktion übergeben wird, indem Sie `true` als drittes Argument in
+der Routenmethode übergeben. Das Routenobjekt wird immer als letzter Parameter an Ihre
+Rückruffunktion übergeben.
 
 ```php
 Flight::route('/', function(\flight\net\Route $route) {
-  // Array der mit den HTTP-Methoden übereinstimmenden
+  // Array der gegenübergestellten HTTP-Methoden
   $route->methods;
 
   // Array der benannten Parameter
@@ -176,21 +236,31 @@ Flight::route('/', function(\flight\net\Route $route) {
 
   // Enthält den Inhalt von '*' in dem URL-Muster
   $route->splat;
+
+  // Zeigt den URL-Pfad an.... wenn Sie ihn wirklich benötigen
+  $route->pattern;
+
+  // Zeigt an, welcher Middleware dieser Route zugewiesen ist
+  $route->middleware;
+
+  // Zeigt den diesem Route zugewiesenen Alias an
+  $route->alias;
 }, true);
 ```
 
-## Routengruppen
+## Routengruppierung
 
-Manchmal möchten Sie möglicherweise zusammenhängende Routen zusammenfassen (z. B. `/api/v1`). Dies können Sie durch Verwendung der `group`-Methode erreichen:
+Manchmal möchten Sie verwandte Routen zusammenfassen (z. B. `/api/v1`).
+Das können Sie durch Verwendung der `group` Methode tun:
 
 ```php
 Flight::group('/api/v1', function () {
   Flight::route('/benutzer', function () {
-    // Übereinstimmungen /api/v1/benutzer
+	// Passt zu /api/v1/benutzer
   });
 
   Flight::route('/beiträge', function () {
-    // Übereinstimmungen /api/v1/beiträge
+	// Passt zu /api/v1/beiträge
   });
 });
 ```
@@ -200,126 +270,44 @@ Sie können sogar Gruppen von Gruppen verschachteln:
 ```php
 Flight::group('/api', function () {
   Flight::group('/v1', function () {
-    // Flight::get() ruft Variablen ab, setzt aber keine Route! Siehe Objektkontext unten
-    Flight::route('GET /benutzer', function () {
-      // Übereinstimmungen GET /api/v1/benutzer
-    });
+	// Flight::get() holt Variablen, setzt jedoch keine Route! Siehe Objektkontext unten
+	Flight::route('GET /benutzer', function () {
+	  // Passt zu GET /api/v1/benutzer
+	});
 
-    Flight::post('/beiträge', function () {
-      // Übereinstimmungen POST /api/v1/beiträge
-    });
+	Flight::post('/beiträge', function () {
+	  // Passt zu POST /api/v1/beiträge
+	});
 
-    Flight::put('/beiträge/1', function () {
-      // Übereinstimmungen PUT /api/v1/beiträge
-    });
+	Flight::put('/beiträge/1', function () {
+	  // Passt zu PUT /api/v1/beiträge
+	});
   });
   Flight::group('/v2', function () {
 
-    // Flight::get() ruft Variablen ab, setzt aber keine Route! Siehe Objektkontext unten
-    Flight::route('GET /benutzer', function () {
-      // Übereinstimmungen GET /api/v2/benutzer
-    });
+	// Flight::get() holt Variablen, setzt jedoch keine Route! Siehe Objektkontext unten
+	Flight::route('GET /benutzer', function () {
+	  // Passt zu GET /api/v2/benutzer
+	});
   });
 });
 ```
 
 ### Gruppierung mit Objektkontext
 
-Sie können weiterhin Routengruppen mit dem `Engine`-Objekt auf folgende Weise verwenden:
+Sie können die Routengruppierung immer noch mit dem `Engine`-Objekt auf folgende Weise verwenden:
 
 ```php
 $app = new \flight\Engine();
 $app->group('/api/v1', function (Router $router) {
+
+  // benutze die Variable $router
   $router->get('/benutzer', function () {
-    // Übereinstimmungen GET /api/v1/benutzer
+	// Passt zu GET /api/v1/benutzer
   });
 
   $router->post('/beiträge', function () {
-    // Übereinstimmungen POST /api/v1/beiträge
+	// Passt zu POST /api/v1/beiträge
   });
 });
 ```
-
-## RoutenAlias
-
-Sie können einem Route einen Alias zuweisen, damit die URL später in Ihrem Code dynamisch generiert werden kann (z. B. in einer Vorlage).
-
-```php
-Flight::route('/benutzer/@id', function($id) { echo 'benutzer:'.$id; }, false, 'benutzer_ansicht');
-
-// später im Code irgendwo
-Flight::getUrl('benutzer_ansicht', [ 'id' => 5 ]); // gibt '/benutzer/5' zurück
-```
-
-Dies ist besonders hilfreich, wenn sich Ihre URL ändert. In obigem Beispiel wurde Benutzer beispielsweise stattdessen nach `/admin/benutzer/@id` verschoben. Mit dem Alias müssen Sie nirgendwo den Alias ändern, da der Alias nun `/admin/benutzer/5` wie im obigen Beispiel zurückgibt.
-
-Routenalias funktionieren auch in Gruppen:
-
-```php
-Flight::group('/benutzer', function() {
-    Flight::route('/@id', function($id) { echo 'benutzer:'.$id; }, false, 'benutzer_ansicht');
-});
-
-
-// später im Code irgendwo
-Flight::getUrl('benutzer_ansicht', [ 'id' => 5 ]); // gibt '/benutzer/5' zurück
-```
-
-## Routen-Middleware
-
-Flight unterstützt Routen- und Gruppenrouten-Middleware. Middleware ist eine Funktion, die vor (oder nach) dem Routenrückruf ausgeführt wird. Dies ist eine großartige Möglichkeit, API-Authentifizierungsprüfungen in Ihrem Code hinzuzufügen oder zu validieren, dass der Benutzer die Berechtigung für den Zugriff auf die Route hat.
-
-Hier ist ein grundlegendes Beispiel:
-
-```php
-// Wenn Sie nur eine anonyme Funktion bereitstellen, wird sie vor dem Routenrückruf ausgeführt. 
-// es gibt keine "nach" Middleware-Funktionen außer für Klassen (siehe unten)
-Flight::route('/pfad', function() { echo ' Hier bin ich!'; })->addMiddleware(function() {
-	echo 'Middleware zuerst!';
-});
-
-Flight::start();
-
-// Dies gibt "Middleware zuerst! Hier bin ich!" aus
-```
-
-Es gibt einige sehr wichtige Hinweise zum Middleware, die Sie beachten sollten, bevor Sie sie verwenden:
-- Middleware-Funktionen werden in der Reihenfolge ausgeführt, in der sie der Route hinzugefügt wurden. Die Ausführung erfolgt ähnlich wie dies [Slim Framework handhabt](https://www.slimframework.com/docs/v4/concepts/middleware.html#how-does-middleware-work).
-   - "Before"-Funktionen werden in der Hinzufügereihenfolge ausgeführt, und "After"-Funktionen werden in umgekehrter Reihenfolge ausgeführt.
-- Wenn Ihre Middleware-Funktion `false` zurückgibt, wird die gesamte Ausführung gestoppt und es wird ein 403 Forbidden Fehler ausgelöst. Wahrscheinlich möchten Sie dies mit einer `Flight::redirect()` oder etwas Ähnlichem eleganter behandeln.
-- Wenn Sie Parameter von Ihrer Route benötigen, werden sie als einzelnes Array an Ihre Middleware-Funktion übergeben. (`function($params) { ... }` oder `public function before($params) {}`). Der Grund dafür ist, dass Sie Ihre Parameter in Gruppen strukturieren können und in einigen dieser Gruppen können Ihre Parameter tatsächlich in einer anderen Reihenfolge angezeigt werden, was die Middleware-Funktion durch Verweis auf den falschen Parameter unterbrechen würde. Auf diese Weise können Sie auf sie nach Namen anstelle von Position zugreifen.
-
-### Middleware-Klassen
-
-Middleware kann auch als Klasse registriert werden. Wenn Sie die "After"-Funktionalität benötigen, müssen Sie eine Klasse verwenden.
-
-```php
-class MeineMiddleware {
-	public function before($params) {
-		echo 'Middleware zuerst!';
-	}
-
-	public function after($params) {
-		echo 'Middleware zuletzt!';
-	}
-}
-
-$MeineMiddleware = new MeineMiddleware();
-Flight::route('/pfad', function() { echo ' Hier bin ich! '; })->addMiddleware($MeineMiddleware); // auch ->addMiddleware([ $MeineMiddleware, $MeineMiddleware2 ]);
-
-Flight::start();
-
-// Dies wird "Middleware zuerst! Hier bin ich! Middleware zuletzt!" anzeigen
-```
-
-### Middleware-Gruppen
-
-Sie können eine Routengruppe hinzufügen, und dann wird jede Route in dieser Gruppe dieselbe Middleware haben. Dies ist nützlich, wenn Sie eine Gruppe von Routen zusammenfassen müssen, z. B. durch eine Auth-Middleware, um den API-Schlüssel im Header zu überprüfen.
-
-```php
-
-// am Ende der Gruppenmethode hinzugefügt
-Flight::group('/api', function() {
-    Flight::route('/benutzer', function() { echo 'benutzer'; }, false, 'benutzer');
-	Flight::route('/benutzer/@id', function($id) { echo 'benutzer:'.$id; }, false, 'benutzer_ansicht');
-}, [ new ApiAuthMiddleware() ]);

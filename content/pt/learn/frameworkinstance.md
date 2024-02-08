@@ -1,6 +1,6 @@
 # Instância do Framework
 
-Em vez de executar a Flight como uma classe estática global, você pode opcionalmente executá-la como uma instância de objeto.
+Em vez de executar o Flight como uma classe estática global, você pode executá-lo opcionalmente como uma instância de objeto.
 
 ```php
 require 'flight/autoload.php';
@@ -8,7 +8,7 @@ require 'flight/autoload.php';
 $app = Flight::app();
 
 $app->route('/', function () {
-  // exibe 'olá mundo!'
+  echo 'olá mundo!';
 });
 
 $app->start();

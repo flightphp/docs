@@ -1,20 +1,20 @@
-# Vai vēlaties ātri sākt?
+# Vai nepieciešams ātrs starts?
 
-Dodieties uz [flightphp/skeleton](https://github.com/flightphp/skeleton) repo, lai sāktu! Šis ir projekts, kas ietver vienas lapas failu, kas ietver visu nepieciešamo, lai palaistu savu lietotni. Tas arī ietver plašāku piemēru ar kontroloriem un skatiem.
+Iedomājies [flightphp/skeleton](https://github.com/flightphp/skeleton) repozitoriju, lai sāktu! Tas ir projekts, kas iekļauj vienas lapas failu, kurā iekļauts viss nepieciešamais, lai palaistu savu lietotni. Tas ietver arī pilnīgāku piemēru ar kontroloriem un skatiem.
 
-## Vajadzīga Iedvesma?
+## Vai Tev Nepieciešama Iedvesma?
 
-Lai gan šie nav oficiāli atbalstīti no FlightPHP komandas, tie varētu dot jums idejas, kā strukturēt savus projektus, kas izveidoti ar Flight!
+Lai arī šie nav oficiāli atbalstīti no FlightPHP komandas puses, tie varētu dot Tev idejas, kā strukturēt savus projektus, kas izveidoti ar Flight!
 
-- [Pamata skeleta lietotne](https://github.com/markhughes/flight-skeleton)
-- [Piemēra viki](https://github.com/Skayo/FlightWiki)
-- [IT-Inovatora PHP ietvaru lietojumprogramma](https://github.com/itinnovator/myphp-app)
-- [Maza izglītojoša CMS (spāņu valodā)](https://github.com/casgin/LittleEducationalCMS)
-- [Itāļu dzelteno lapu API](https://github.com/chiccomagnus/PGAPI)
-- [Vispārīgs saturu pārvaldības sistēma (ar.... ļoti mazu dokumentāciju)](https://github.com/recepuncu/cms)
-- [Maza php ietvara pamats, pamatojoties uz Flight un medoo.](https://github.com/ycrao/tinyme)
-- [Piemēra MVC lietojumprogramma](https://github.com/paddypei/Flight-MVC)
+- [Pamata Skeletona Lietotne](https://github.com/markhughes/flight-skeleton)
+- [Piemēra Viki](https://github.com/Skayo/FlightWiki)
+- [IT-Inovatora PHP Frameworka Lietotne](https://github.com/itinnovator/myphp-app)
+- [Mazais Izglītojošais CMS (Spāņu valodā)](https://github.com/casgin/LittleEducationalCMS)
+- [Itāļu Zelta lapu API](https://github.com/chiccomagnus/PGAPI)
+- [Ģeneriskais Saturs Pārvaldības Sistēma (ar.... ļoti mazu dokumentāciju)](https://github.com/recepuncu/cms)
+- [Neliels php framework, balstīts uz Flight un medoo.](https://github.com/ycrao/tinyme)
+- [Piemēra MVC Lietotne](https://github.com/paddypei/Flight-MVC)
 
-## Vēlaties Dalīties Ar Savu Paša Piemēru?
+## Vēlies Dalīties Ar Savu Paša Piemēru?
 
-Ja jums ir projekts, ko vēlaties dalīties, lūdzu iesniedziet pieprasījumu izvilkt to pie šī saraksta!
+Ja Tev ir projekts, ko vēlies dalīties, lūdzu iesniedz pieprasījumu izmaiņām, lai to pievienotu šai sarakstam!

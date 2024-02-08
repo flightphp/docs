@@ -1,14 +1,12 @@
-# PdoWrapper Clase de Ayuda PDO
+# La classe d'aide PdoWrapper pour PDO
 
-Flight viene con una clase de ayuda para PDO. Te permite consultar fácilmente tu base de datos
-con toda la locura de preparar/ejecutar/fetchAll(). Simplifica en gran medida cómo puedes
-consultar tu base de datos.
+Flight est livré avec une classe d'aide pour PDO. Cela vous permet d'interroger facilement votre base de données avec toute la folie de préparation/exécution/fetchAll(). Cela simplifie grandement la façon dont vous pouvez interroger votre base de données.
 
-## Registrando la Clase de Ayuda PDO
+## Enregistrer la classe d'aide PDO
 
 ```php
-// Registrar la clase de ayuda de PDO
-Flight::registrar('db', \flight\base de datos\PdoWrapper::class, ['mysql:host=localhost;dbname=cool_db_name', 'usuario', 'contraseña', [
+// Enregistrer la classe d'aide PDO
+Flight::register('db', \flight\database\PdoWrapper::class, ['mysql:host=localhost;dbname=cool_db_name', 'user', 'pass', [
 		PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES \'utf8mb4\'',
 		PDO::ATTR_EMULATE_PREPARES => false,
 		PDO::ATTR_STRINGIFY_FETCHES => false,
@@ -17,34 +15,34 @@ Flight::registrar('db', \flight\base de datos\PdoWrapper::class, ['mysql:host=lo
 ]);
 ```
 
-## Uso
-Este objeto extiende PDO, por lo que todos los métodos normales de PDO están disponibles. Se agregan los siguientes métodos para facilitar la consulta de la base de datos:
+## Utilisation
+Cet objet étend PDO donc toutes les méthodes normales de PDO sont disponibles. Les méthodes suivantes sont ajoutées pour rendre la requête à la base de données plus facile :
 
 ### `runQuery(string $sql, array $params = []): PDOStatement`
-Úsalo para INSERTS, UPDATES, o si planeas usar un SELECT en un bucle while
+Utilisez ceci pour les INSERT, les UPDATES, ou si vous prévoyez d'utiliser un SELECT dans une boucle while
 
 ```php
 $db = Flight::db();
-$declaración = $db->runQuery("SELECT * FROM table WHERE something = ?", [ $algo ]);
-while($fila = $declaración->fetch()) {
+$statement = $db->runQuery("SELECT * FROM table WHERE something = ?", [ $something ]);
+while($row = $statement->fetch()) {
 	// ...
 }
 
-// O escribiendo en la base de datos
-$db->runQuery("INSERT INTO table (nombre) VALUES (?)", [ $nombre ]);
-$db->runQuery("UPDATE table SET nombre = ? WHERE id = ?", [ $nombre, $id ]);
+// Ou pour écrire dans la base de données
+$db->runQuery("INSERT INTO table (name) VALUES (?)", [ $name ]);
+$db->runQuery("UPDATE table SET name = ? WHERE id = ?", [ $name, $id ]);
 ```
 
 ### `fetchField(string $sql, array $params = []): mixed`
-Extrae el primer campo de la consulta
+Extrait le premier champ de la requête
 
 ```php
 $db = Flight::db();
-$count = $db->fetchField("SELECT COUNT(*) FROM table WHERE something = ?", [ $algo ]);
+$count = $db->fetchField("SELECT COUNT(*) FROM table WHERE something = ?", [ $something ]);
 ```
 
 ### `fetchRow(string $sql, array $params = []): array`
-Extrae una fila de la consulta
+Extrait une ligne de la requête
 
 ```php
 $db = Flight::db();
@@ -52,64 +50,64 @@ $row = $db->fetchRow("SELECT * FROM table WHERE id = ?", [ $id ]);
 ```
 
 ### `fetchAll(string $sql, array $params = []): array`
-Extrae todas las filas de la consulta
+Extrait toutes les lignes de la requête
 
 ```php
 $db = Flight::db();
-$rows = $db->fetchAll("SELECT * FROM table WHERE something = ?", [ $algo ]);
-foreach($rows as $fila) {
-	// hacer algo
+$rows = $db->fetchAll("SELECT * FROM table WHERE something = ?", [ $something ]);
+foreach($rows as $row) {
+	// faire quelque chose
 }
 ```
 
-## Nota con la sintaxis `IN()`
-Esto también tiene un envoltorio útil para las declaraciones `IN()`. Simplemente puedes pasar un signo de interrogación como marcador de posición para `IN()` y luego un array de valores. Aquí tienes un ejemplo de cómo podría ser eso:
+## Remarque sur la syntaxe de `IN()`
+Il y a également un wrapper utile pour les déclarations `IN()`. Vous pouvez simplement passer un point d'interrogation unique comme espace réservé pour `IN()` et ensuite un tableau de valeurs. Voici un exemple de ce à quoi cela pourrait ressembler :
 
 ```php
 $db = Flight::db();
-$nombre = 'Bob';
+$name = 'Bob';
 $company_ids = [1,2,3,4,5];
-$rows = $db->fetchAll("SELECT * FROM table WHERE nombre = ? AND company_id IN (?)", [ $nombre, $company_ids ]);
+$rows = $db->fetchAll("SELECT * FROM table WHERE name = ? AND company_id IN (?)", [ $name, $company_ids ]);
 ```
 
-## Ejemplo Completo
+## Exemple complet
 
 ```php
-// Ruta de ejemplo y cómo usar este envoltorio
-Flight::ruta('/usuarios', function () {
-	// Obtener todos los usuarios
-	$usuarios = Flight::db()->fetchAll('SELECT * FROM usuarios');
+// Route d'exemple et comment vous utiliseriez ce wrapper
+Flight::route('/users', function () {
+	// Obtenir tous les utilisateurs
+	$users = Flight::db()->fetchAll('SELECT * FROM users');
 
-	// Transmitir todos los usuarios
-	$declaración = Flight::db()->runQuery('SELECT * FROM usuarios');
-	while ($usuario = $declaración->fetch()) {
-		echo $usuario['nombre'];
+	// Lire tous les utilisateurs
+	$statement = Flight::db()->runQuery('SELECT * FROM users');
+	while ($user = $statement->fetch()) {
+		echo $user['name'];
 	}
 
-	// Obtener un solo usuario
-	$usuario = Flight::db()->fetchRow('SELECT * FROM usuarios WHERE id = ?', [123]);
+	// Obtenir un seul utilisateur
+	$user = Flight::db()->fetchRow('SELECT * FROM users WHERE id = ?', [123]);
 
-	// Obtener un solo valor
-	$count = Flight::db()->fetchField('SELECT COUNT(*) FROM usuarios');
+	// Obtenir une seule valeur
+	$count = Flight::db()->fetchField('SELECT COUNT(*) FROM users');
 
-	// Sintaxis especial IN() para ayudar (asegúrate de que IN esté en mayúsculas)
-	$usuarios = Flight::db()->fetchAll('SELECT * FROM usuarios WHERE id IN (?)', [[1,2,3,4,5]]);
-	// también podrías hacer esto
-	$usuarios = Flight::db()->fetchAll('SELECT * FROM usuarios WHERE id IN (?)', [ '1,2,3,4,5']);
+	// Syntaxe spéciale IN() pour aider (assurez-vous que IN est en majuscules)
+	$users = Flight::db()->fetchAll('SELECT * FROM users WHERE id IN (?)', [[1,2,3,4,5]]);
+	// vous pourriez également faire ceci
+	$users = Flight::db()->fetchAll('SELECT * FROM users WHERE id IN (?)', [ '1,2,3,4,5']);
 
-	// Insertar un nuevo usuario
-	Flight::db()->runQuery("INSERT INTO usuarios (nombre, email) VALUES (?, ?)", ['Bob', 'bob@example.com']);
+	// Insérer un nouvel utilisateur
+	Flight::db()->runQuery("INSERT INTO users (name, email) VALUES (?, ?)", ['Bob', 'bob@example.com']);
 	$insert_id = Flight::db()->lastInsertId();
 
-	// Actualizar un usuario
-	Flight::db()->runQuery("UPDATE usuarios SET nombre = ? WHERE id = ?", ['Bob', 123]);
+	// Mettre à jour un utilisateur
+	Flight::db()->runQuery("UPDATE users SET name = ? WHERE id = ?", ['Bob', 123]);
 
-	// Borrar un usuario
-	Flight::db()->runQuery("DELETE FROM usuarios WHERE id = ?", [123]);
+	// Supprimer un utilisateur
+	Flight::db()->runQuery("DELETE FROM users WHERE id = ?", [123]);
 
-	// Obtener el número de filas afectadas
-	$declaración = Flight::db()->runQuery("UPDATE usuarios SET nombre = ? WHERE nombre = ?", ['Bob', 'Sally']);
-	$filas_afectadas = $declaración->rowCount();
+	// Obtenir le nombre de lignes affectées
+	$statement = Flight::db()->runQuery("UPDATE users SET name = ? WHERE name = ?", ['Bob', 'Sally']);
+	$affected_rows = $statement->rowCount();
 
 });
 ```

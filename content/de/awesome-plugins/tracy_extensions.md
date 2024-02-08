@@ -1,22 +1,22 @@
-Tracy Flight Panel Extensions
+Tracy Flight Panel Erweiterungen
 =====
 
-Dies ist ein Satz von Erweiterungen, um die Arbeit mit Flight etwas umfangreicher zu gestalten.
+Das ist eine Reihe von Erweiterungen, um die Arbeit mit Flight etwas zu bereichern.
 
-- Flight - Analysiere alle Flight-Variablen.
-- Datenbank - Analysiere alle Abfragen, die auf der Seite ausgeführt wurden (wenn Sie die Datenbankverbindung korrekt initialisieren)
-- Anfrage - Analysiere alle `$_SERVER`-Variablen und untersuche alle globalen Payloads (`$_GET`, `$_POST`, `$_FILES`)
-- Sitzung - Analysiere alle `$_SESSION`-Variablen, wenn Sitzungen aktiv sind.
+- Flight - Analysiere alle Flugvariablen.
+- Database - Analysiere alle Abfragen, die auf der Seite ausgeführt wurden (wenn Sie die Datenbankverbindung korrekt initialisieren)
+- Request - Analysiere alle `$_SERVER`-Variablen und untersuche alle globalen Nutzlasten (`$_GET`, `$_POST`, `$_FILES`)
+- Session - Analysiere alle `$_SESSION`-Variablen, wenn Sitzungen aktiv sind.
 
-Dies ist das Panel
+Das ist das Panel
 
 ![Flight Bar](https://raw.githubusercontent.com/flightphp/tracy-extensions/master/flight-tracy-bar.png)
 
 Und jedes Panel zeigt sehr hilfreiche Informationen über Ihre Anwendung!
 
-![Flight Data](https://raw.githubusercontent.com/flightphp/tracy-extensions/master/flight-var-data.png)
-![Flight Database](https://raw.githubusercontent.com/flightphp/tracy-extensions/master/flight-db.png)
-![Flight Request](https://raw.githubusercontent.com/flightphp/tracy-extensions/master/flight-request.png)
+![Flight Daten](https://raw.githubusercontent.com/flightphp/tracy-extensions/master/flight-var-data.png)
+![Flight Datenbank](https://raw.githubusercontent.com/flightphp/tracy-extensions/master/flight-db.png)
+![Flight Anfrage](https://raw.githubusercontent.com/flightphp/tracy-extensions/master/flight-request.png)
 
 Installation
 -------
@@ -24,7 +24,7 @@ Führen Sie `composer require flightphp/tracy-extensions --dev` aus und los geht
 
 Konfiguration
 -------
-Es sind sehr wenige Konfigurationen erforderlich, um dies zu starten. Sie müssen den Tracy-Debugger initialisieren, bevor Sie dies verwenden können [https://tracy.nette.org/en/guide](https://tracy.nette.org/en/guide):
+Es gibt sehr wenig Konfiguration, die Sie durchführen müssen, um dies zu starten. Sie müssen den Tracy-Debugger initialisieren, bevor Sie diese verwenden [https://tracy.nette.org/en/guide](https://tracy.nette.org/en/guide):
 
 ```php
 <?php
@@ -36,17 +36,17 @@ use flight\debug\tracy\TracyExtensionLoader;
 require __DIR__ . '/vendor/autoload.php';
 
 Debugger::enable();
-// Möglicherweise müssen Sie Ihre Umgebung mit Debugger::enable(Debugger::DEVELOPMENT) spezifizieren
+// Möglicherweise müssen Sie Ihre Umgebung mit Debugger::enable(Debugger::DEVELOPMENT) angeben
 
-// Wenn Sie Datenbankverbindungen in Ihrer App verwenden, gibt es ein
-// erforderlicher PDO-Wrapper NUR IN DER ENTWICKLUNG verwenden (bitte nicht in Produktion!)
-// Es hat die gleichen Parameter wie eine reguläre PDO-Verbindung
+// Wenn Sie Datenbankverbindungen in Ihrer App verwenden, gibt es einen
+// erforderlichen PDO-Wrapper, der NUR IN DER ENTWICKLUNG verwendet werden soll (nicht in der Produktion bitte!)
+// Er hat die gleichen Parameter wie eine reguläre PDO-Verbindung
 $pdo = new PdoQueryCapture('sqlite:test.db', 'benutzer', 'passwort');
 // oder wenn Sie dies an das Flight-Framework anhängen
 Flight::register('db', PdoQueryCapture::class, ['sqlite:test.db', 'benutzer', 'passwort']);
-// jetzt, wenn Sie eine Abfrage machen, wird die Zeit, die Abfrage und die Parameter erfasst
+// Jetzt werden immer, wenn Sie eine Abfrage durchführen, die Zeit, die Abfrage und die Parameter erfasst
 
-// Dies verbindet die Punkte
+// Das verbindet die Punkte
 if(Debugger::$showBar === true) {
 	new TracyExtensionLoader(Flight::app());
 }
