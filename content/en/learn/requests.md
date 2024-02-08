@@ -9,6 +9,7 @@ $request = Flight::request();
 
 The request object provides the following properties:
 
+- **body** - The raw HTTP request body
 - **url** - The URL being requested
 - **base** - The parent subdirectory of the URL
 - **method** - The request method (GET, POST, PUT, DELETE)
@@ -59,4 +60,26 @@ it will be available from the `data` property:
 
 ```php
 $id = Flight::request()->data->id;
+```
+
+## Accessing `$_SERVER`
+
+There is a shortcut available to access the `$_SERVER` array via the `getVar()` method:
+
+```php
+
+$host = Flight::request()->getVar['HTTP_HOST'];
+```
+
+## Accessing Request Headers
+
+You can access request headers using the `getHeader()` or `getHeaders()` method:
+
+```php
+
+// Maybe you need Authorization header
+$host = Flight::request()->getHeader('Authorization');
+
+// If you need to grab all headers
+$headers = Flight::request()->getHeaders();
 ```

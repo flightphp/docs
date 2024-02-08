@@ -50,63 +50,73 @@ class IndexController {
 		$this->app->latte()->render($latte_file, $params);
 	}
 
-	public function licenseGet() {
+	protected function compileSinglePage(string $section) {
 		$app = $this->app;
-		$markdown_html = $app->cache()->refreshIfExpired('license_html', function() use ($app)  {
-			return $app->parsedown()->text((self::CONTENT_DIR . $this->language . '/license.md'));
+		$markdown_html = $app->cache()->refreshIfExpired($section.'_html_'.$this->language, function() use ($app, $section)  {
+			return $app->parsedown()->text($this->Translator->getMarkdownLanguageFile($section . '.md'));
 		}, 86400); // 1 day
 		$this->renderPage('single_page.latte', [
-			'page_title' => 'license',
+			'page_title' => $section,
 			'markdown' => $markdown_html,
 		]);
+	}
+
+	protected function compileScrollspyPage(string $section, string $sub_section) {
+		$app = $this->app;
+		$section_file_path = str_replace('_', '-', $section);
+		$sub_section_underscored = str_replace('-', '_', $sub_section);
+		$heading_data = $app->cache()->retrieve($sub_section_underscored.'_heading_data_'.$this->language);
+		$markdown_html = $app->cache()->refreshIfExpired($sub_section_underscored.'_html_'.$this->language, function() use ($app, $section_file_path, $sub_section_underscored, &$heading_data)  {
+			$parsed_text = $app->parsedown()->text($this->Translator->getMarkdownLanguageFile('/'.$section_file_path.'/' . $sub_section_underscored . '.md'));
+
+			$heading_data = [];
+			$parsed_text = Text::generateAndConvertHeaderListFromHtml($parsed_text, $heading_data, 'h2');
+			$app->cache()->store($sub_section_underscored.'_heading_data_'.$this->language, $heading_data, 86400); // 1 day
+
+			return $parsed_text;
+		}, 86400); // 1 day
+
+		// pull the title out of the first h1 tag
+		$page_title = '';
+		preg_match('/\<h1\>(.*)\<\/h1\>/i', $markdown_html, $matches);
+		if (isset($matches[1])) {
+			$page_title = $matches[1];
+		}
+
+		$Translator = new Translator($this->language);
+
+		$this->renderPage('single_page_scrollspy.latte', [
+			'custom_page_title' => ($page_title ? $page_title.' - ' : '').$Translator->translate($section),
+			'markdown' => $markdown_html,
+			'heading_data' => $heading_data,
+		]);
+	}
+
+	public function licenseGet() {
+		$this->compileSinglePage('license');
 	}
 
 	public function aboutGet() {
-		$app = $this->app;
-		$markdown_html = $app->cache()->refreshIfExpired('about_html_'.$this->language, function() use ($app)  {
-			return $app->parsedown()->text($this->Translator->getMarkdownLanguageFile('about.md'));
-		}, 86400); // 1 day
-		$this->renderPage('single_page.latte', [
-			'page_title' => 'about',
-			'markdown' => $markdown_html,
-		]);
+		$this->compileSinglePage('about');
 	}
 
 	public function examplesGet() {
-		$app = $this->app;
-		$markdown_html = $app->cache()->refreshIfExpired('examples_html_'.$this->language, function() use ($app)  {
-			return $app->parsedown()->text($this->Translator->getMarkdownLanguageFile('examples.md'));
-		}, 86400); // 1 day
-		$this->renderPage('single_page.latte', [
-			'page_title' => 'examples',
-			'markdown' => $markdown_html,
-		]);
+		$this->compileSinglePage('examples');
 	}
+
 	public function installGet() {
-		$app = $this->app;
-		$markdown_html = $app->cache()->refreshIfExpired('install_html_'.$this->language, function() use ($app)  {
-			return $app->parsedown()->text(file_get_contents(self::CONTENT_DIR . $this->language . '/install.md'));
-		}, 86400); // 1 day
-		$this->renderPage('single_page.latte', [
-			'page_title' => 'install',
-			'markdown' => $markdown_html,
-		]);
+		$this->compileSinglePage('install');
 	}
 
 	public function learnGet() {
-		$app = $this->app;
-		$markdown_html = $app->cache()->refreshIfExpired('learn_html_'.$this->language, function() use ($app)  {
-			return $app->parsedown()->text(file_get_contents(self::CONTENT_DIR . $this->language . '/learn.md'));
-		}, 86400); // 1 day
-		$this->renderPage('single_page.latte', [
-			'page_title' => 'learn',
-			'markdown' => $markdown_html,
-		]);
+		$this->compileSinglePage('learn');
 	}
 
 	public function learnSectionsGet(string $section_name) {
+		$this->compileScrollspyPage('learn', $section_name);
+		return;
 		$app = $this->app;
-		$section_name_for_file = str_replace('-', '', $section_name);
+		$section_name_for_file = str_replace('-', '_', $section_name);
 		$heading_data = $app->cache()->retrieve($section_name_for_file.'_heading_data_'.$this->language);
 		$markdown_html = $app->cache()->refreshIfExpired($section_name_for_file.'_html_'.$this->language, function() use ($app, $section_name_for_file, &$heading_data)  {
 			$parsed_text = $app->parsedown()->text(file_get_contents(self::CONTENT_DIR . $this->language . '/learn/' . $section_name_for_file . '.md'));
@@ -134,48 +144,9 @@ class IndexController {
 		]);
 	}
 
-	// public function learnSectionsGet(string $section_name) {
-	// 	$app = $this->app;
-	// 	$section_name_for_file = str_replace('-', '', $section_name);
-	// 	$heading_data = $app->cache()->retrieve('learn_heading_data_'.$this->language);
-	// 	$markdown_html = $app->cache()->refreshIfExpired('learn_html', function() use ($app, &$heading_data)  {
-	// 		$learn_files_order = [
-	// 			'routing.md',
-	// 			'extending.md',
-	// 			'overriding.md',
-	// 			'filtering.md',
-	// 			'variables.md',
-	// 			'views.md',
-	// 			'errorhandling.md',
-	// 			'redirects.md',
-	// 			'requests.md',
-	// 			'stopping.md',
-	// 			'httpcaching.md',
-	// 			'json.md',
-	// 			'configuration.md',
-	// 			'frameworkmethods.md',
-	// 			'frameworkinstance.md'
-	// 		];
-	// 		$text = '';
-	// 		foreach($learn_files_order as $file) {
-	// 			$text .= file_get_contents(self::CONTENT_DIR . $this->language . '/learn/' . $file) . "\n\n";
-	// 		}
-	// 		$parsed_text = $app->parsedown()->text($text);
-
-	// 		// Find all the heading tags and add an id attribute to them
-	// 		$heading_data = [];
-	// 		$parsed_text = Text::generateAndConvertHeaderListFromHtml($parsed_text, $heading_data, 'h[12]');
-	// 		$app->cache()->store('learn_heading_data_'.$this->language, $heading_data, 86400); // 1 day
-	// 		return $parsed_text;
-	// 	}, 86400); // 1 day
-	// 	$this->renderPage('single_page_scrollspy.latte', [
-	// 		'page_title' => 'learn',
-	// 		'markdown' => $markdown_html,
-	// 		'heading_data' => $heading_data,
-	// 	]);
-	// }
-
 	public function awesomePluginsGet() {
+		$this->compileScrollspyPage('awesome_plugins', 'index');
+		return;
 		$app = $this->app;
 		$heading_data = $app->cache()->retrieve('plugins_heading_data_'.$this->language);
 		$markdown_html = $app->cache()->refreshIfExpired('plugins_html_'.$this->language, function() use ($app, &$heading_data)  {
@@ -194,6 +165,8 @@ class IndexController {
 	}
 
 	public function pluginGet(string $plugin_name) {
+		$this->compileScrollspyPage('awesome_plugins', $plugin_name);
+		return;
 		$app = $this->app;
 		$plugin_name_underscored = str_replace('-', '_', $plugin_name);
 		$heading_data = $app->cache()->retrieve($plugin_name_underscored.'_heading_data_'.$this->language);

@@ -1,6 +1,8 @@
 # Routing
 
-Routing in Flight is done by matching a URL pattern with a callback function.
+> **Note:** Want to understand more about routing? Check out the [why frameworks](/learn/why-frameworks) page for a more in-depth explanation.
+
+Basic routing in Flight is done by matching a URL pattern with a callback function or an array of a class and method.
 
 ```php
 Flight::route('/', function(){
@@ -33,6 +35,8 @@ Flight::route('/', array('Greeting','hello'));
 Or an object method:
 
 ```php
+
+// Greeting.php
 class Greeting
 {
     public function __construct() {
@@ -44,6 +48,7 @@ class Greeting
     }
 }
 
+// index.php
 $greeting = new Greeting();
 
 Flight::route('/', array($greeting, 'hello'));
@@ -74,6 +79,27 @@ Flight::route('GET|POST /', function () {
 });
 ```
 
+Additionally you can grab the Router object which has some helper methods for you to use:
+
+```php
+
+$router = Flight::router();
+
+// maps all methods
+$router->map('/', function() {
+	echo 'hello world!';
+});
+
+// GET request
+$router->get('/users', function() {
+	echo 'users';
+});
+// $router->post();
+// $router->put();
+// $router->delete();
+// $router->patch();
+```
+
 ## Regular Expressions
 
 You can use regular expressions in your routes:
@@ -83,6 +109,9 @@ Flight::route('/user/[0-9]+', function () {
   // This will match /user/1234
 });
 ```
+
+Although this method is available, it is recommended to use named parameters, or 
+named parameters with regular expressions, as they are more readable and easier to maintain.
 
 ## Named Parameters
 
@@ -105,7 +134,7 @@ Flight::route('/@name/@id:[0-9]{3}', function (string $name, string $id) {
 });
 ```
 
-Matching regex groups `()` with named parameters isn't supported.
+> **Note:** Matching regex groups `()` with named parameters isn't supported. :'\(
 
 ## Optional Parameters
 
@@ -125,7 +154,7 @@ Flight::route(
 );
 ```
 
-Any optional parameters that are not matched will be passed in as NULL.
+Any optional parameters that are not matched will be passed in as `NULL`.
 
 ## Wildcards
 
@@ -165,6 +194,33 @@ Flight::route('/user/*', function () {
 });
 ```
 
+## Route Aliasing
+
+You can assign an alias to a route, so that the URL can dynamically be generated later in your code (like a template for instance).
+
+```php
+Flight::route('/users/@id', function($id) { echo 'user:'.$id; }, false, 'user_view');
+
+// later in code somewhere
+Flight::getUrl('user_view', [ 'id' => 5 ]); // will return '/users/5'
+```
+
+This is especially helpful if your URL happens to change. In the above example, lets say that users was moved to `/admin/users/@id` instead.
+With aliasing in place, you don't have to change anywhere you reference the alias because the alias will now return `/admin/users/5` like in the 
+example above.
+
+Route aliasing still works in groups as well:
+
+```php
+Flight::group('/users', function() {
+    Flight::route('/@id', function($id) { echo 'user:'.$id; }, false, 'user_view');
+});
+
+
+// later in code somewhere
+Flight::getUrl('user_view', [ 'id' => 5 ]); // will return '/users/5'
+```
+
 ## Route Info
 
 If you want to inspect the matching route information, you can request for the route
@@ -185,6 +241,15 @@ Flight::route('/', function(\flight\net\Route $route) {
 
   // Contains the contents of any '*' used in the URL pattern
   $route->splat;
+
+  // Shows the url path....if you really need it
+  $route->pattern;
+
+  // Shows what middleware is assigned to this
+  $route->middleware;
+
+  // Shows the alias assigned to this route
+  $route->alias;
 }, true);
 ```
 
@@ -240,6 +305,8 @@ You can still use route grouping with the `Engine` object in the following way:
 ```php
 $app = new \flight\Engine();
 $app->group('/api/v1', function (Router $router) {
+
+  // user the $router variable
   $router->get('/users', function () {
 	// Matches GET /api/v1/users
   });
@@ -248,90 +315,4 @@ $app->group('/api/v1', function (Router $router) {
 	// Matches POST /api/v1/posts
   });
 });
-```
-
-## Route Aliasing
-
-You can assign an alias to a route, so that the URL can dynamically be generated later in your code (like a template for instance).
-
-```php
-Flight::route('/users/@id', function($id) { echo 'user:'.$id; }, false, 'user_view');
-
-// later in code somewhere
-Flight::getUrl('user_view', [ 'id' => 5 ]); // will return '/users/5'
-```
-
-This is especially helpful if your URL happens to change. In the above example, lets say that users was moved to `/admin/users/@id` instead.
-With aliasing in place, you don't have to change anywhere you reference the alias because the alias will now return `/admin/users/5` like in the 
-example above.
-
-Route aliasing still works in groups as well:
-
-```php
-Flight::group('/users', function() {
-    Flight::route('/@id', function($id) { echo 'user:'.$id; }, false, 'user_view');
-});
-
-
-// later in code somewhere
-Flight::getUrl('user_view', [ 'id' => 5 ]); // will return '/users/5'
-```
-
-## Route Middleware
-Flight supports route and group route middleware. Middleware is a function that is executed before (or after) the route callback. This is a great way to add API authentication checks in your code, or to validate that the user has permission to access the route.
-
-Here's a basic example:
-
-```php
-// If you only supply an anonymous function, it will be executed before the route callback. 
-// there are no "after" middleware functions except for classes (see below)
-Flight::route('/path', function() { echo ' Here I am!'; })->addMiddleware(function() {
-	echo 'Middleware first!';
-});
-
-Flight::start();
-
-// This will output "Middleware first! Here I am!"
-```
-
-There are some very important notes about middleware that you should be aware of before you use them:
-- Middleware functions are executed in the order they are added to the route. The execution is similar to how [Slim Framework handles this](https://www.slimframework.com/docs/v4/concepts/middleware.html#how-does-middleware-work).
-   - Befores are executed in the order added, and Afters are executed in reverse order.
-- If your middleware function returns false, all execution is stopped and a 403 Forbidden error is thrown. You'll probably want to handle this more gracefully with a `Flight::redirect()` or something similar.
-- If you need parameters from your route, they will be passed in a single array to your middleware function. (`function($params) { ... }` or `public function before($params) {}`). The reason for this is that you can structure your parameters into groups and in some of those groups, your parameters may actually show up in a different order which would break the middleware function by referring to the wrong parameter. This way, you can access them by name instead of position.
-
-### Middleware Classes
-
-Middleware can be registered as a class as well. If you need the "after" functionality, you must use a class.
-
-```php
-class MyMiddleware {
-	public function before($params) {
-		echo 'Middleware first!';
-	}
-
-	public function after($params) {
-		echo 'Middleware last!';
-	}
-}
-
-$MyMiddleware = new MyMiddleware();
-Flight::route('/path', function() { echo ' Here I am! '; })->addMiddleware($MyMiddleware); // also ->addMiddleware([ $MyMiddleware, $MyMiddleware2 ]);
-
-Flight::start();
-
-// This will display "Middleware first! Here I am! Middleware last!"
-```
-
-### Middleware Groups
-
-You can add a route group, and then every route in that group will have the same middleware as well. This is useful if you need to group a bunch of routes by say an Auth middleware to check the API key in the header.
-
-```php
-
-// added at the end of the group method
-Flight::group('/api', function() {
-    Flight::route('/users', function() { echo 'users'; }, false, 'users');
-	Flight::route('/users/@id', function($id) { echo 'user:'.$id; }, false, 'user_view');
-}, [ new ApiAuthMiddleware() ]);
 ```

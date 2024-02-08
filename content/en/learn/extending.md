@@ -6,7 +6,7 @@ register your own classes, or even override existing classes and methods.
 
 ## Mapping Methods
 
-To map your own custom method, you use the `map` function:
+To map your own simple custom method, you use the `map` function:
 
 ```php
 // Map your method
@@ -18,9 +18,13 @@ Flight::map('hello', function (string $name) {
 Flight::hello('Bob');
 ```
 
+This is used more when you need to pass variables into your method to get an expected
+value. Using the `register()` method like below is more for passing in configuration
+and then calling your pre-configured class.
+
 ## Registering Classes / Containerization
 
-To register your own class, you use the `register` function:
+To register your own class and configure it, you use the `register` function:
 
 ```php
 // Register your class
@@ -45,6 +49,13 @@ Flight::register('db', PDO::class, ['mysql:host=localhost;dbname=test', 'user', 
 // new PDO('mysql:host=localhost;dbname=test','user','pass');
 //
 $db = Flight::db();
+
+// and if you needed it later in your code, you just call the same method again
+class SomeController {
+  public function __construct() {
+	$this->db = Flight::db();
+  }
+}
 ```
 
 If you pass in an additional callback parameter, it will be executed immediately
@@ -76,3 +87,33 @@ $new = Flight::db(false);
 
 Keep in mind that mapped methods have precedence over registered classes. If you
 declare both using the same name, only the mapped method will be invoked.
+
+## Overriding
+
+Flight allows you to override its default functionality to suit your own needs,
+without having to modify any code.
+
+For example, when Flight cannot match a URL to a route, it invokes the `notFound`
+method which sends a generic `HTTP 404` response. You can override this behavior
+by using the `map` method:
+
+```php
+Flight::map('notFound', function() {
+  // Display custom 404 page
+  include 'errors/404.html';
+});
+```
+
+Flight also allows you to replace core components of the framework.
+For example you can replace the default Router class with your own custom class:
+
+```php
+// Register your custom class
+Flight::register('router', MyRouter::class);
+
+// When Flight loads the Router instance, it will load your class
+$myrouter = Flight::router();
+```
+
+Framework methods like `map` and `register` however cannot be overridden. You will
+get an error if you try to do so.
