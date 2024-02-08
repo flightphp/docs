@@ -8,7 +8,7 @@ Flight ir ātrs, vienkāršs, paplašināms PHP ietvars. Tas ir diezgan daudzpus
 
 Šeit ir īss raksts par to, kāpēc jums vajadzētu izmantot ietvaru. Pirms sākat izmantot kādu, ir laba doma saprast ietvara izmantošanas priekšrocības.
 
-Papildus ir izveidots lielisks pamācības materiāls, ko izveidojis [@lubiana](https://git.php.fail/lubiana). Lai arī tas neietilpst sīkākās detaļās par "Flight" konkrēti, šis ceļvedis palīdzēs jums saprast dažus galvenos jēdzienus, kas saistīti ar ietvaru, un kāpēc tos ir izdevīgi izmantot. Jūs varat atrast pamācību [šeit](https://git.php.fail/lubiana/no-framework-tutorial/src/branch/master/04-development-helpers.md).
+Papildus ir izveidots lielisks pamācības materiāls, ko izveidojis [@lubiana](https://git.php.fail/lubiana). Lai arī tas neietilpst sīkākās detaļās par "Flight" konkrēti, šis ceļvedis palīdzēs jums saprast dažus galvenos jēdzienus, kas saistīti ar ietvaru, un kāpēc tos ir izdevīgi izmantot. Jūs varat atrast pamācību [šeit](https://git.php.fail/lubiana/no-framework-tutorial/src/branch/master/README.md).
 
 ## Pamata Tēmas
 

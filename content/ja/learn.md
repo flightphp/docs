@@ -8,7 +8,7 @@
 
 フレームワークを使用すべき理由についての短い記事です。フレームワークを使用する前に、その利点を理解することは良い考えです。
 
-さらに、[@lubiana](https://git.php.fail/lubiana) による優れたチュートリアルが作成されています。特にFligthについて詳しくは言及していませんが、このガイドは、フレームワークを取り巻く主要な概念とその利点を理解するのに役立ちます。チュートリアルは[こちら](https://git.php.fail/lubiana/no-framework-tutorial/src/branch/master/04-development-helpers.md) で見つけることができます。
+さらに、[@lubiana](https://git.php.fail/lubiana) による優れたチュートリアルが作成されています。特にFligthについて詳しくは言及していませんが、このガイドは、フレームワークを取り巻く主要な概念とその利点を理解するのに役立ちます。チュートリアルは[こちら](https://git.php.fail/lubiana/no-framework-tutorial/src/branch/master/README.md) で見つけることができます。
 
 ## コアトピック
 

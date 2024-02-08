@@ -8,7 +8,7 @@ Flight ist ein schnelles, einfaches, erweiterbares Framework für PHP. Es ist se
 
 Hier ist ein kurzer Artikel darüber, warum Sie ein Framework verwenden sollten. Es ist eine gute Idee, die Vorteile der Verwendung eines Frameworks zu verstehen, bevor Sie eines verwenden.
 
-Zusätzlich wurde ein ausgezeichnetes Tutorial von [@lubiana](https://git.php.fail/lubiana) erstellt. Obwohl es nicht im Detail auf Flight eingeht, hilft Ihnen dieser Leitfaden, einige der wichtigsten Konzepte rund um ein Framework und deren Vorteile zu verstehen. Sie können das Tutorial [hier](https://git.php.fail/lubiana/no-framework-tutorial/src/branch/master/04-development-helpers.md) finden.
+Zusätzlich wurde ein ausgezeichnetes Tutorial von [@lubiana](https://git.php.fail/lubiana) erstellt. Obwohl es nicht im Detail auf Flight eingeht, hilft Ihnen dieser Leitfaden, einige der wichtigsten Konzepte rund um ein Framework und deren Vorteile zu verstehen. Sie können das Tutorial [hier](https://git.php.fail/lubiana/no-framework-tutorial/src/branch/master/README.md) finden.
 
 ## Kernthemen
 

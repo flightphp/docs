@@ -8,7 +8,7 @@ Flight是一个快速、简单、可扩展的PHP框架。它非常通用，可�
 
 这是一篇关于为什么应该使用框架的简短文章。在开始使用框架之前了解使用框架的好处是一个好主意。
 
-此外，[@lubiana](https://git.php.fail/lubiana) 创建了一份优秀的教程。虽然它没有深入介绍Flight，但这份指南将帮助您了解围绕框架的一些主要概念以及使用框架的好处。您可以在[这里](https://git.php.fail/lubiana/no-framework-tutorial/src/branch/master/04-development-helpers.md)找到这个教程。
+此外，[@lubiana](https://git.php.fail/lubiana) 创建了一份优秀的教程。虽然它没有深入介绍Flight，但这份指南将帮助您了解围绕框架的一些主要概念以及使用框架的好处。您可以在[这里](https://git.php.fail/lubiana/no-framework-tutorial/src/branch/master/README.md)找到这个教程。
 
 ## 核心主题
 
