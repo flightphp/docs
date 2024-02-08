@@ -116,7 +116,7 @@ class IndexController {
 		$this->compileScrollspyPage('learn', $section_name);
 		return;
 		$app = $this->app;
-		$section_name_for_file = str_replace('-', '', $section_name);
+		$section_name_for_file = str_replace('-', '_', $section_name);
 		$heading_data = $app->cache()->retrieve($section_name_for_file.'_heading_data_'.$this->language);
 		$markdown_html = $app->cache()->refreshIfExpired($section_name_for_file.'_html_'.$this->language, function() use ($app, $section_name_for_file, &$heading_data)  {
 			$parsed_text = $app->parsedown()->text(file_get_contents(self::CONTENT_DIR . $this->language . '/learn/' . $section_name_for_file . '.md'));

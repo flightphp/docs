@@ -1,8 +1,12 @@
 # Views
 
-Flight provides some basic templating functionality by default. To display a view
-template call the `render` method with the name of the template file and optional
-template data:
+Flight provides some basic templating functionality by default. 
+
+If you need more complex templating needs, you can visit the [Latte](/awesome-plugins/latte) page.
+
+To display a view template call the `render` method with the name 
+of the template file and optional template data:
+
 
 ```php
 Flight::render('hello.php', ['name' => 'Bob']);
