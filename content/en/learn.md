@@ -40,12 +40,6 @@ Learn how to secure your application from common security threats.
 
 Learn how to configure the framework for your application.
 
-##### [Framework API](/learn/api)
-
-Learn about the core methods of the framework.
-
-
-## Further Customization
 ##### [Extending Flight](/learn/extending)
 
 Learn how to extend the framework to with adding your own methods and classes. This is also how Flight loosely handles something called containerization.
@@ -54,6 +48,6 @@ Learn how to extend the framework to with adding your own methods and classes. T
 
 Learn how to use the event system to add hooks to your methods and internal framework methods.
 
-##### [Overriding Framework Methods](/learn/overriding)
+##### [Framework API](/learn/api)
 
-Learn how to override the default methods of the framework with your own custom functionality.
+Learn about the core methods of the framework.
