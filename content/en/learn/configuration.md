@@ -7,6 +7,8 @@ through the `set` method.
 Flight::set('flight.log_errors', true);
 ```
 
+## Available Configuration Settings
+
 The following is a list of all the available configuration settings:
 
 - **flight.base_url** - Override the base url of the request. (default: null)
@@ -15,3 +17,75 @@ The following is a list of all the available configuration settings:
 - **flight.log_errors** - Log errors to the web server's error log file. (default: false)
 - **flight.views.path** - Directory containing view template files. (default: ./views)
 - **flight.views.extension** - View template file extension. (default: .php)
+
+## Variables
+
+Flight allows you to save variables so that they can be used anywhere in your application.
+
+```php
+// Save your variable
+Flight::set('id', 123);
+
+// Elsewhere in your application
+$id = Flight::get('id');
+```
+To see if a variable has been set you can do:
+
+```php
+if (Flight::has('id')) {
+  // Do something
+}
+```
+
+You can clear a variable by doing:
+
+```php
+// Clears the id variable
+Flight::clear('id');
+
+// Clears all variables
+Flight::clear();
+```
+
+Flight also uses variables for configuration purposes.
+
+```php
+Flight::set('flight.log_errors', true);
+```
+
+## Error Handling
+
+### Errors and Exceptions
+
+All errors and exceptions are caught by Flight and passed to the `error` method.
+The default behavior is to send a generic `HTTP 500 Internal Server Error`
+response with some error information.
+
+You can override this behavior for your own needs:
+
+```php
+Flight::map('error', function (Throwable $error) {
+  // Handle error
+  echo $error->getTraceAsString();
+});
+```
+
+By default errors are not logged to the web server. You can enable this by
+changing the config:
+
+```php
+Flight::set('flight.log_errors', true);
+```
+
+### Not Found
+
+When a URL can't be found, Flight calls the `notFound` method. The default
+behavior is to send an `HTTP 404 Not Found` response with a simple message.
+
+You can override this behavior for your own needs:
+
+```php
+Flight::map('notFound', function () {
+  // Handle not found
+});
+```

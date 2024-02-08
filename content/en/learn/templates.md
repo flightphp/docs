@@ -2,7 +2,7 @@
 
 Flight provides some basic templating functionality by default. 
 
-If you need more complex templating needs, you can visit the [Latte](/awesome-plugins/latte) page.
+If you need more complex templating needs, see the Smarty and Latte examples in the [Custom Views](#custom-views) section.
 
 To display a view template call the `render` method with the name 
 of the template file and optional template data:
@@ -110,7 +110,11 @@ The output would be:
 ## Custom Views
 
 Flight allows you to swap out the default view engine simply by registering your
-own view class. Here's how you would use the [Smarty](http://www.smarty.net/)
+own view class. 
+
+### Smarty
+
+Here's how you would use the [Smarty](http://www.smarty.net/)
 template engine for your views:
 
 ```php
@@ -139,5 +143,31 @@ For completeness, you should also override Flight's default render method:
 Flight::map('render', function(string $template, array $data): void {
   Flight::view()->assign($data);
   Flight::view()->display($template);
+});
+```
+
+### Latte
+
+Here's how you would use the [Latte](https://latte.nette.org/)
+template engine for your views:
+
+```php
+
+// Register Latte as the view class
+// Also pass a callback function to configure Latte on load
+Flight::register('view', Latte\Engine::class, [], function (Latte\Engine $latte) {
+  // This is where Latte will cache your templates to speed things up
+	// One neat thing about Latte is that it automatically refreshes your
+	// cache when you make changes to your templates!
+	$latte->setTempDirectory(__DIR__ . '/../cache/');
+
+	// Tell Latte where the root directory for your views will be at.
+	$latte->setLoader(new \Latte\Loaders\FileLoader(__DIR__ . '/../views/'));
+});
+
+// And wrap it up so you can use Flight::render() correctly
+Flight::map('render', function(string $template, array $data): void {
+  // This is like $latte_engine->render($template, $data);
+  echo Flight::view()->render($template, $data);
 });
 ```

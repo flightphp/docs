@@ -57,16 +57,3 @@ Learn how to use the event system to add hooks to your methods and internal fram
 ##### [Overriding Framework Methods](/learn/overriding)
 
 Learn how to override the default methods of the framework with your own custom functionality.
-
-
-## Do something with these Topics
-- [Variables](/learn/variables) - Learn how to store your own custom variables in your application to use throughout each request.
-- [Views](/learn/views) - Learn how to use the built-in view engine to render your HTML templates.
-- [Error Handling](/learn/error-handling) - Learn how to handle errors and exceptions in your application.
-- [Redirects](/learn/redirects) - Learn how to redirect users to different pages in your application.
-- [Requests](/learn/requests) - Learn how to handle requests and responses in your application.
-- [Stopping](/learn/stopping) - Learn how to stop the framework from processing further.
-- [HTTP Caching](/learn/http-caching) - Learn how to use HTTP caching to improve the performance of your application.
-- [JSON Responses](/learn/json) - Learn how to send JSON responses to your users.
-- [Framework Methods](/learn/framework-methods) - Learn about the core methods of the framework.
-- [Framework Instance](/learn/framework-instance) - Learn how to use the framework from an object instance instead of the static methods.
