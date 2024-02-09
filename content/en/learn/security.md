@@ -9,14 +9,12 @@ Cross Site Request Forgery (CSRF) is a type of attack where a malicious website 
 First you need to generate a CSRF token and store it in the user's session. You can then use this token in your forms and check it when the form is submitted.
 
 ```php
-
 // Generate a CSRF token and store it in the user's session
 // (assuming you've created a session object at attached it to Flight)
 Flight::session()->set('csrf_token', bin2hex(random_bytes(32)) );
 ```
 
 ```html
-
 <!-- Use the CSRF token in your form -->
 <form method="post">
 	<input type="hidden" name="csrf_token" value="<?= Flight::session()->get('csrf_token') ?>">
@@ -27,7 +25,6 @@ Flight::session()->set('csrf_token', bin2hex(random_bytes(32)) );
 And then you can check the CSRF token using event filters:
 
 ```php
-
 // This middleware checks if the request is a POST request and if it is, it checks if the CSRF token is valid
 Flight::before('start', function() {
 	if(Flight::request()->method == 'POST') {
