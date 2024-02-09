@@ -113,6 +113,7 @@ class CorsMiddleware
 					"Access-Control-Allow-Headers: {$_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']}"
 				);
 			}
+			$response->send();
 			exit(0);
 		}
 	}
