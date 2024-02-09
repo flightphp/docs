@@ -28,3 +28,9 @@ composer start
 # Or if you have a different version of PHP installed, you can use the built-in server
 php82 -S localhost:8000 -t public/
 ```
+
+## Additional Translations
+
+Please note that the additional translations are provided by ChatGPT and are not official translations. Please don't make a PR to fix a translation as when the documentation is retranslated, your contribution will be lost. 
+
+If your translation is really not good, please open an issue and we will look into possible having you maintain that translation without the assistance of ChatGPT.

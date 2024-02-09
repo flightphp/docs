@@ -17,13 +17,24 @@ $languages = [
 	'ko'
 ];
 
+// pull from-date from cli args
+$opts = getopt('', ['from-date:']);
+$fromDate = $opts['from-date'] ?? 0;
+if($fromDate) {
+	$fromDate = strtotime($fromDate.' 00:00:00');
+}
+
 $top_level_files = glob(__DIR__ . '/content/en/*.md');
 
 $files = array_merge($top_level_files, glob(__DIR__ . '/content/en/**/*.md'));
 
 // pull all markdown files our of the content/en/ folder and each subdirectory
 foreach($files as $file) {
-	echo $file . PHP_EOL;
+	echo "Processing ". $file . PHP_EOL;
+	if(filemtime($file) < $fromDate) {
+		echo "  **Skipping file because it's older than the from-date**" . PHP_EOL;
+		continue;
+	}
 	
 	foreach($languages as $languageAbbreviation) {
 
@@ -73,6 +84,6 @@ foreach($files as $file) {
 		}
 		file_put_contents($translatedFilePath, $full_response);
 
-		echo "Updated: " . $translatedFilePath . PHP_EOL;
+		echo "	Updated: " . $translatedFilePath . PHP_EOL;
 	}
 }
