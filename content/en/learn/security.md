@@ -6,7 +6,25 @@ Security is a big deal when it comes to web applications. You want to make sure 
 
 Cross Site Request Forgery (CSRF) is a type of attack where a malicious website can make a user's browser send a request to your website. This can be used to perform actions on your website without the user's knowledge. Flight does not provide a built-in CSRF protection mechanism, but you can easily implement your own by using middleware.
 
-Here's an example of how you might implement CSRF protection using event filters:
+First you need to generate a CSRF token and store it in the user's session. You can then use this token in your forms and check it when the form is submitted.
+
+```php
+
+// Generate a CSRF token and store it in the user's session
+// (assuming you've created a session object at attached it to Flight)
+Flight::session()->set('csrf_token', bin2hex(random_bytes(32)) );
+```
+
+```html
+
+<!-- Use the CSRF token in your form -->
+<form method="post">
+	<input type="hidden" name="csrf_token" value="<?= Flight::session()->get('csrf_token') ?>">
+	<!-- other form fields -->
+</form>
+```
+
+And then you can check the CSRF token using event filters:
 
 ```php
 
@@ -16,7 +34,7 @@ Flight::before('start', function() {
 
 		// capture the csrf token from the form values
 		$token = Flight::request()->data->csrf_token;
-		if($token != $_SESSION['csrf_token']) {
+		if($token !== Flight::session()->get('csrf_token')) {
 			Flight::halt(403, 'Invalid CSRF token');
 		}
 	}
