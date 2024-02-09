@@ -87,30 +87,59 @@ Cross-Origin Resource Sharing (CORS) is a mechanism that allows many resources (
 
 ```php
 
+// app/middleware/CorsMiddleware.php
+
+namespace app\middleware;
+
+class CorsMiddleware
+{
+	public function before(array $params): void
+	{
+		$response = Flight::response();
+		if (isset($_SERVER['HTTP_ORIGIN'])) {
+			$this->allowOrigins();
+			$response->header('Access-Control-Allow-Credentials: true');
+			$response->header('Access-Control-Max-Age: 86400');
+		}
+
+		if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+			if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD'])) {
+				$response->header(
+					'Access-Control-Allow-Methods: GET, POST, PUT, DELETE, PATCH, OPTIONS'
+				);
+			}
+			if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS'])) {
+				$response->header(
+					"Access-Control-Allow-Headers: {$_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']}"
+				);
+			}
+			exit(0);
+		}
+	}
+
+	private function allowOrigins(): void
+	{
+		$allowed = [
+			'capacitor://localhost',
+			'ionic://localhost',
+			'http://localhost',
+			'http://localhost:4200',
+			'http://localhost:8080',
+			'http://localhost:8100',
+		];
+
+		if (in_array($_SERVER['HTTP_ORIGIN'], $allowed)) {
+			$response = Flight::response();
+			$response->header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
+		}
+	}
+}
+
+// index.php or wherever you have your routes
 Flight::route('/users', function() {
 	$users = Flight::db()->fetchAll('SELECT * FROM users');
 	Flight::json($users);
-})->addMiddleware(function() {
-	if (isset($_SERVER['HTTP_ORIGIN'])) {
-		header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
-		header('Access-Control-Allow-Credentials: true');
-		header('Access-Control-Max-Age: 86400');
-	}
-
-	if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
-		if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD'])) {
-			header(
-				'Access-Control-Allow-Methods: GET, POST, PUT, DELETE, PATCH, OPTIONS'
-			);
-		}
-		if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS'])) {
-			header(
-				"Access-Control-Allow-Headers: {$_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']}"
-			);
-		}
-		exit(0);
-	}
-});
+})->addMiddleware(new CorsMiddleware());
 ```
 
 ## Conclusion
