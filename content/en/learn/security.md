@@ -73,10 +73,10 @@ $users = Flight::db()->fetchAll('SELECT * FROM users WHERE username = :username'
 $statement = Flight::db()->fetchAll('SELECT * FROM users WHERE username = ?', [ $username ]);
 
 // Just promise you will never EVER do something like this...
-$users = Flight::db()->fetchAll("SELECT * FROM users WHERE username = '{$username}'");
-// because what if $username = "' OR 1=1;"; After the query is build it looks
+$users = Flight::db()->fetchAll("SELECT * FROM users WHERE username = '{$username}' LIMIT 5");
+// because what if $username = "' OR 1=1; -- "; After the query is build it looks
 // like this
-// SELECT * FROM users WHERE username = '' OR 1=1;
+// SELECT * FROM users WHERE username = '' OR 1=1; -- LIMIT 5
 // It looks strange, but it's a valid query that will work. In fact,
 // it's a very common SQL injection attack that will return all users.
 ```
