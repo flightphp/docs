@@ -1,84 +1,83 @@
 # Solicitudes
 
-Flight encapsula la solicitud HTTP en un solo objeto, al cual se puede acceder haciendo:
+Flight encapsula la solicitud HTTP en un solo objeto, al cual se puede acceder así:
 
 ```php
-$request = Flight::request();
+$solicitud = Flight::solicitud();
 ```
 
 El objeto de solicitud proporciona las siguientes propiedades:
 
-- **body** - El cuerpo de la solicitud HTTP sin procesar
+- **cuerpo** - El cuerpo sin procesar de la solicitud HTTP
 - **url** - La URL solicitada
-- **base** - El subdirectorio principal de la URL
-- **method** - El método de solicitud (GET, POST, PUT, DELETE)
-- **referrer** - La URL del referente
+- **base** - El subdirectorio padre de la URL
+- **método** - El método de solicitud (GET, POST, PUT, DELETE)
+- **refererente** - La URL del referente
 - **ip** - Dirección IP del cliente
 - **ajax** - Si la solicitud es una solicitud AJAX
-- **scheme** - El protocolo del servidor (http, https)
+- **esquema** - El protocolo del servidor (http, https)
 - **user_agent** - Información del navegador
-- **type** - El tipo de contenido
-- **length** - La longitud del contenido
+- **tipo** - El tipo de contenido
+- **longitud** - La longitud del contenido
 - **query** - Parámetros de la cadena de consulta
-- **data** - Datos de publicación o datos JSON
+- **datos** - Datos de la publicación o datos JSON
 - **cookies** - Datos de cookies
-- **files** - Archivos subidos
-- **secure** - Si la conexión es segura
-- **accept** - Parámetros de aceptación de HTTP
+- **archivos** - Archivos subidos
+- **seguro** - Si la conexión es segura
+- **aceptar** - Parámetros de aceptación HTTP
 - **proxy_ip** - Dirección IP del proxy del cliente
 - **host** - El nombre del host de la solicitud
 
-Puedes acceder a las propiedades `query`, `data`, `cookies` y `files`
+Se puede acceder a las propiedades `query`, `datos`, `cookies` y `archivos`
 como arreglos u objetos.
 
 Entonces, para obtener un parámetro de cadena de consulta, puedes hacer:
 
 ```php
-$id = Flight::request()->query['id'];
+$id = Flight::solicitud()->query['id'];
 ```
 
 O puedes hacer:
 
 ```php
-$id = Flight::request()->query->id;
+$id = Flight::solicitud()->query->id;
 ```
 
 ## Cuerpo de Solicitud sin Procesar
 
-Para obtener el cuerpo de la solicitud HTTP sin procesar, por ejemplo cuando se trata de solicitudes PUT,
+Para obtener el cuerpo sin procesar de la solicitud HTTP, por ejemplo, al tratar con solicitudes PUT,
 puedes hacer:
 
 ```php
-$body = Flight::request()->getBody();
+$cuerpo = Flight::solicitud()->getBody();
 ```
 
 ## Entrada JSON
 
 Si envías una solicitud con el tipo `application/json` y los datos `{"id": 123}`
-estará disponible desde la propiedad `data`:
+estará disponible desde la propiedad `datos`:
 
 ```php
-$id = Flight::request()->data->id;
+$id = Flight::solicitud()->datos->id;
 ```
 
-## Accediendo a `$_SERVER`
+## Acceso a `$_SERVER`
 
 Hay un atajo disponible para acceder a la matriz `$_SERVER` a través del método `getVar()`:
 
 ```php
-
-$host = Flight::request()->getVar['HTTP_HOST'];
+$host = Flight::solicitud()->getVar['HTTP_HOST'];
 ```
 
-## Accediendo a Encabezados de Solicitud
+## Accediendo a Cabeceras de Solicitud
 
-Puedes acceder a los encabezados de solicitud utilizando el método `getHeader()` o `getHeaders()`:
+Puedes acceder a las cabeceras de la solicitud utilizando el método `getHeader()` o `getHeaders()`:
 
 ```php
 
-// Tal vez necesitas el encabezado de Autorización
-$host = Flight::request()->getHeader('Authorization');
+// Tal vez necesites la cabecera de Autorización
+$host = Flight::solicitud()->getHeader('Authorization');
 
-// Si necesitas obtener todos los encabezados
-$headers = Flight::request()->getHeaders();
-```  
+// Si necesitas obtener todas las cabeceras
+$cabeceras = Flight::solicitud()->getHeaders();
+```

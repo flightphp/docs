@@ -1,46 +1,46 @@
 # Kas ir Flight?
 
-Flight ir ātrs, vienkāršs, paplašināms ietvars PHP valodā. Tas ir diezgan daudzpusīgs un var tikt izmantots, lai izveidotu jebkura veida tīmekļa lietojumprogrammu. Tas ir izveidots, ņemot vērā vienkāršību, un ir rakstīts tā, lai būtu viegli saprotams un lietojams.
+Flight ir ātrs, vienkāršs, paplašināms PHP programmēšanas pamatsistēma. Tā ir diezgan daudzpusīga un var tikt izmantota jebkura veida tīmekļa lietotņu izstrādei. Tā ir izstrādāta, ņemot vērā vienkāršību, un ir rakstīta tā, lai būtu viegli saprotama un izmantojama.
 
-Flight ir lielisks ietvars iesācējiem tiem, kas nav iepazinušies ar PHP un vēlas uzzināt, kā veidot tīmekļa lietojumprogrammas. Tas ir arī lielisks ietvars pieredzējušiem izstrādātājiem, kuri vēlas ātri un viegli veidot tīmekļa lietojumprogrammas. Tas ir izstrādāts tā, lai viegli būtu iespējams izveidot RESTful API, vienkāršu tīmekļa lietojumprogrammu vai sarežģītu tīmekļa lietojumprogrammu.
+Flight ir lieliska iesācējiem domāta pamatsistēma tiem, kuri ir jauni PHP un vēlas uzzināt, kā veidot tīmekļa lietotnes. Tāpat tā ir lieliska sistēma pieredzējušiem izstrādātājiem, kuri vēlas ātri un viegli veidot tīmekļa lietotnes. Tā ir izstrādāta tā, lai ļautu viegli izveidot RESTful API, vienkāršu tīmekļa lietotni vai sarežģītu tīmekļa lietotni.
 
 ```php
 <?php
 
-// ja ir uzstādīts ar komponistu
+// ja instalēts ar komponistu
 require 'vendor/autoload.php';
-// vai arī ja ir uzstādīti manuāli, izmantojot zip failu
+// vai ja instalēts manuāli ar zip failu
 // require 'flight/Flight.php';
 
 Flight::route('/', function() {
-  echo 'sveika, pasaule!';
+  echo 'sveika pasaule!';
 });
 
 Flight::start();
 ```
 
-Pietiekami vienkārši, vai ne? [Uzziniet vairāk par Flight!](learn)
+Diezgan vienkārši, vai ne? [Uzzini vairāk par Flight!](learn)
 
-## Ātrā sākšana
-Ir piemēra lietotne, kas var jums palīdzēt sākt darbu ar Flight ietvaru. Dodieties uz [flightphp/skeleton](https://github.com/flightphp/skeleton), lai iegūtu norādes par to, kā sākt darbu! Jūs arī varat apmeklēt [piemēri](examples) lapu, lai iedvesmotu idejas par to, kas viss ir iespējams ar Flight.
+## Ātrs sākums
+Ir pieejama piemēra lietotne, kas var palīdzēt sākt strādāt ar Flight programmēšanas pamatsistēmu. Dodieties uz [flightphp/skeleton](https://github.com/flightphp/skeleton), lai iegūtu instrukcijas, kā sākt! Jūs varat arī apmeklēt [piemērus](examples) lapu, lai iedvesmotu sevi ar dažādām iespējām Flight izmantošanai.
 
 # Kopiena
 
-Mēs esam pieejami Matrix! Sarunājieties ar mums šeit: [#flight-php-framework:matrix.org](https://matrix.to/#/#flight-php-framework:matrix.org).
+Mēs esam Matrix tīmeklī! Sarunājieties ar mums vietnē [#flight-php-framework:matrix.org](https://matrix.to/#/#flight-php-framework:matrix.org).
 
-# Contributing
+# Ieguldīt
 
-Ir divi veidi, kā jūs varat piedalīties Flight:
+Ir divi veidi, kā jūs varat ieguldīt Flight programmēšanas pamatsistēmā:
 
-1. Jūs varat piedalīties pamat ietvarā, apmeklējot [core repository](https://github.com/flightphp/core).
-1. Jūs varat piedalīties dokumentācijā. Šī dokumentācijas vietne ir uzglabāta [Github](https://github.com/flightphp/docs). Ja pamanāt kādu kļūdu vai vēlaties uzlabot kaut ko, jūs varat to izlabot un iesniegt Pieprasījumu izmaiņām! Mēs cenšamies uzturēt atjauninājumus, bet labprāt sagaidīsim jauninājumus un valodas tulkojumus.
+1. Jūs varat ieguldīt pamatsistēmas kodā, apmeklējot [pamata repozitoriju](https://github.com/flightphp/core).
+1. Jūs varat ieguldīt dokumentācijā. Šīs dokumentācijas vietne tiek uzturēta [Github](https://github.com/flightphp/docs). Ja Jūs pamanāt kļūdu vai vēlaties uzlabot kādu materiālu, jūs varat labot to un iesniegt pieprasījumu pull! Mēs cenšamies turēties atjaunināti, bet atjauninājumi un valodas tulkojumi ir laipni gaidīti.
 
 # Prasības
 
-Flight prasa PHP 7.4 vai vēl jaunāku versiju.
+Flight prasa PHP 7.4 vai jaunāku.
 
-**Piezīme:** PHP 7.4 tiek atbalstīts, jo rakstīšanas (2024. gadā) brīdī PHP 7.4 ir pēc noklusējuma versija dažiem LTS Linux izplatījumiem. Piespiežot pāriet uz PHP >8, radītu daudz sarežģījumu šiem lietotājiem. Ietvars arī atbalsta PHP >8.
+**Piezīme:** PHP 7.4 tiek atbalstīts, jo raksta laikā (2024. gadā) PHP 7.4 ir noklusējuma versija dažām LTS Linux izplatījumiem. Pāreja uz PHP >8 radītu daudz problēmu šiem lietotājiem. Pamatsistēma arī atbalsta PHP >8.
 
-# Licence
+# Licences līgums
 
-Flight ir izlaists zem [MIT](https://github.com/flightphp/core/blob/master/LICENSE) licences.
+Flight ir izlaidusi [MIT](https://github.com/flightphp/core/blob/master/LICENSE) licences līgumu.

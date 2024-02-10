@@ -1,10 +1,10 @@
 # Respostas
 
-Flight ajuda a gerar parte dos cabeçalhos de resposta para você, mas você tem a maior parte do controle sobre o que enviar de volta para o usuário. Às vezes, você pode acessar o objeto `Response` diretamente, mas na maioria das vezes, usará a instância `Flight` para enviar uma resposta.
+O Flight ajuda a gerar parte dos cabeçalhos de resposta para você, mas você tem a maior parte do controle sobre o que enviar de volta para o usuário. Às vezes, você pode acessar o objeto `Response` diretamente, mas na maioria das vezes você usará a instância `Flight` para enviar uma resposta.
 
 ## Enviando uma Resposta Básica
 
-Flight usa ob_start() para armazenar em buffer a saída. Isso significa que você pode usar `echo` ou `print` para enviar uma resposta ao usuário e o Flight capturará e enviará de volta para o usuário com os cabeçalhos apropriados.
+O Flight usa ob_start() para armazenar em buffer a saída. Isso significa que você pode usar `echo` ou `print` para enviar uma resposta ao usuário, e o Flight capturará e enviará de volta ao usuário com os cabeçalhos apropriados.
 
 ```php
 
@@ -25,10 +25,10 @@ Como alternativa, você pode chamar o método `write()` para adicionar ao corpo 
 
 // Isso enviará "Olá, Mundo!" para o navegador do usuário
 Flight::route('/', function() {
-	// verboso, mas faz o trabalho às vezes quando você precisa
+	// detalhado, mas funciona às vezes quando você precisa
 	Flight::response()->write("Olá, Mundo!");
 
-	// se deseja recuperar o corpo que definiu neste ponto
+	// se você quiser recuperar o corpo que definiu até este ponto
 	// você pode fazer assim
 	$body = Flight::response()->getBody();
 });
@@ -50,7 +50,7 @@ Flight::route('/@id', function($id) {
 });
 ```
 
-Se desejar obter o código de status atual, pode usar o método `status` sem argumentos:
+Se quiser obter o código de status atual, você pode usar o método `status` sem nenhum argumento:
 
 ```php
 Flight::response()->status(); // 200
@@ -73,7 +73,7 @@ Flight::route('/', function() {
 
 ## JSON
 
-Flight fornece suporte para o envio de respostas JSON e JSONP. Para enviar uma resposta JSON, você passa alguns dados a serem codificados em JSON:
+O Flight fornece suporte para enviar respostas JSON e JSONP. Para enviar uma resposta JSON, você passa alguns dados a serem codificados em JSON:
 
 ```php
 Flight::json(['id' => 123]);
@@ -81,7 +81,7 @@ Flight::json(['id' => 123]);
 
 ### JSONP
 
-Para solicitações JSONP, opcionalmente pode passar o nome do parâmetro de consulta que está utilizando para definir sua função de retorno de chamada:
+Para solicitações JSONP, você pode passar opcionalmente o nome do parâmetro da consulta que está usando para definir sua função de retorno de chamada:
 
 ```php
 Flight::jsonp(['id' => 123], 'q');
@@ -93,7 +93,7 @@ Portanto, ao fazer uma solicitação GET usando `?q=my_func`, você deve receber
 my_func({"id":123});
 ```
 
-Se não passar um nome de parâmetro de consulta, ele será padrão para `jsonp`.
+Se você não passar um nome de parâmetro de consulta, ele será padrão para `jsonp`.
 
 ## Redirecionar para outra URL
 
@@ -104,7 +104,7 @@ uma nova URL:
 Flight::redirect('/nova/localizacao');
 ```
 
-Por padrão, o Flight envia um código de status HTTP 303 ("Veja Outro"). Opcionalmente, é possível definir um
+Por padrão, o Flight envia um código de status HTTP 303 ("Consulte Outros"). Você pode opcionalmente definir um
 código personalizado:
 
 ```php
@@ -113,44 +113,44 @@ Flight::redirect('/nova/localizacao', 401);
 
 ## Parando
 
-É possível parar o framework em qualquer ponto chamando o método `halt`:
+Você pode parar o framework em qualquer ponto chamando o método `halt`:
 
 ```php
 Flight::halt();
 ```
 
-Também é possível especificar um código de status `HTTP` e uma mensagem opcional:
+Você também pode especificar um código de status e mensagem `HTTP` opcional:
 
 ```php
-Flight::halt(200, 'Volto já...');
+Flight::halt(200, 'Já volto...');
 ```
 
-Chamar `halt` descartará qualquer conteúdo de resposta até esse ponto. Se deseja interromper
+Chamar `halt` descartará qualquer conteúdo de resposta até aquele ponto. Se você quiser parar
 o framework e exibir a resposta atual, use o método `stop`:
 
 ```php
 Flight::stop();
 ```
 
-## Caching HTTP
+## Cache HTTP
 
-Flight fornece suporte integrado para o cache de nível HTTP. Se a condição de cache
-for atendida, o Flight retornará uma resposta `304 Not Modified` HTTP. Na próxima vez que o
-cliente solicitar o mesmo recurso, será solicitado a usar sua versão em cache local.
+O Flight oferece suporte integrado para cache em nível HTTP. Se a condição de cache
+for atendida, o Flight retornará uma resposta HTTP `304 Não Modificado`. Na próxima vez que o
+cliente solicitar o mesmo recurso, ele será solicitado a usar sua versão em cache local.
 
-### Cache no Nível da Rota
+### Cache em Nível de Rota
 
-Se deseja armazenar em cache toda a resposta, pode usar o método `cache()` e passar o tempo para armazenar em cache.
+Se você quiser armazenar em cache toda a resposta, você pode usar o método `cache()` e passar o tempo de armazenamento em cache.
 
 ```php
 
-// Isto armazenará em cache a resposta por 5 minutos
+// Isso armazenará em cache a resposta por 5 minutos
 Flight::route('/noticias', function () {
   Flight::cache(time() + 300);
   echo 'Este conteúdo será armazenado em cache.';
 });
 
-// Alternativamente, pode usar uma string que passaria
+// Alternativamente, você pode usar uma string que passaria
 // para o método strtotime()
 Flight::route('/noticias', function () {
   Flight::cache('+5 minutes');
@@ -160,9 +160,9 @@ Flight::route('/noticias', function () {
 
 ### Última Modificação
 
-Pode usar o método `lastModified` e passar um carimbo de data UNIX para definir a data
+Você pode usar o método `lastModified` e passar um carimbo de data UNIX para definir a data
 e hora em que uma página foi modificada pela última vez. O cliente continuará a usar seu cache até
-o valor da última modificação ser alterado.
+que o valor da última modificação seja alterado.
 
 ```php
 Flight::route('/noticias', function () {
@@ -173,7 +173,7 @@ Flight::route('/noticias', function () {
 
 ### ETag
 
-O cache de `ETag` é semelhante ao de `Última Modificação`, exceto que pode especificar qualquer identidade
+O cache `ETag` é semelhante ao `Última-Modificação`, exceto que você pode especificar qualquer identificação
 desejada para o recurso:
 
 ```php
@@ -183,6 +183,6 @@ Flight::route('/noticias', function () {
 });
 ```
 
-Lembre-se de que chamar `lastModified` ou `etag` definirá e verificará o
-valor de cache. Se o valor de cache for o mesmo entre as solicitações, o Flight enviará imediatamente
+Lembre-se de que chamar `lastModified` ou `etag` irá definir e verificar o
+valor em cache. Se o valor em cache for o mesmo entre as solicitações, o Flight enviará imediatamente
 uma resposta `HTTP 304` e interromperá o processamento.

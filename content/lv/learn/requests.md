@@ -1,6 +1,6 @@
 # Pieprasījumi
 
-Flight ietver HTTP pieprasījumu vienā objektā, uz kuru var piekļūt, veicot:
+Flight ietver HTTP pieprasījumu vienā objektā, kuram var piekļūt, veicot:
 
 ```php
 $request = Flight::request();
@@ -8,51 +8,53 @@ $request = Flight::request();
 
 Pieprasījuma objekts nodrošina šādas īpašības:
 
-- **body** - Siets HTTP pieprasījuma ķermenis
+- **body** - Neapstrādātais HTTP pieprasījuma ķermenis
 - **url** - Pieprasītais URL
 - **base** - URL pamata apakškatalogs
 - **method** - Pieprasījuma metode (GET, POST, PUT, DELETE)
-- **referrer** - Ieteicamais URL
+- **referrer** - Norādītāja URL
 - **ip** - Klienta IP adrese
 - **ajax** - Vai pieprasījums ir AJAX pieprasījums
 - **scheme** - Servera protokols (http, https)
-- **user_agent** - Pārlūka informācija
-- **type** - Saturs tipa
-- **length** - Saturs garums
-- **query** - Meklēšanas virknes parametri
+- **user_agent** - Pārlūkprogrammas informācija
+- **type** - Saturs tips
+- **length** - Satura garums
+- **query** - Pieprasījuma virknes parametri
 - **data** - Post datu vai JSON datu
 - **cookies** - Sīkdatņu dati
 - **files** - Augšupielādētie faili
 - **secure** - Vai savienojums ir drošs
 - **accept** - HTTP pieņemšanas parametri
-- **proxy_ip** - Klienta pilnvara IP adrese
-- **host** - Pieprasījuma resursa nosaukums
+- **proxy_ip** - Klienta proxy IP adrese
+- **host** - Pieprasījuma resursdatora nosaukums
 
 Jūs varat piekļūt `query`, `data`, `cookies` un `files` īpašībām kā masīviem vai objektiem.
 
-Tātad, lai iegūtu meklēšanas virknes parametru, jūs varat veikt:
+Tātad, lai iegūtu pieprasījuma virknes parametru, jūs varat izdarīt:
 
 ```php
 $id = Flight::request()->query['id'];
 ```
 
-Vai arī jūs varat veikt:
+Vai arī varat izdarīt:
 
 ```php
 $id = Flight::request()->query->id;
 ```
 
-## RAW Pieprasījuma Ķermenis
+## NEAPSTRĀDĀTS Pieprasījuma ķermenis
 
-Lai iegūtu sieta HTTP pieprasījuma ķermeni, piemēram, darbojoties ar PUT pieprasījumiem, jūs varat veikt:
+Lai iegūtu neapstrādātu HTTP pieprasījuma ķermeni, piemēram, darbojoties ar PUT pieprasījumiem,
+jūs varat izdarīt:
 
 ```php
 $body = Flight::request()->getBody();
 ```
 
-## JSON ievade
+## JSON Ievade
 
-Ja nosūtāt pieprasījumu ar tipu `application/json` un datu `{"id": 123}`, tas būs pieejams no īpašības `data`:
+Ja nosūtāt pieprasījumu ar tipu `application/json` un datiem `{"id": 123}`
+tas būs pieejams no `data` īpašības:
 
 ```php
 $id = Flight::request()->data->id;
@@ -60,22 +62,22 @@ $id = Flight::request()->data->id;
 
 ## Piekļuve `$_SERVER`
 
-Ir pieejams saīsne, lai piekļūtu `$_SERVER` masīvam, izmantojot metodi `getVar()`:
+Ir ātrgaita pieejama, lai piekļūtu `$_SERVER` masīvam, izmantojot `getVar()` metodi:
 
 ```php
 
 $host = Flight::request()->getVar['HTTP_HOST'];
 ```
 
-## Pieprasījuma Galvenēm Piekļuves
+## Pieprasījuma galvenumu piekļuve
 
-Jūs varat piekļūt pieprasījuma galvenēm, izmantojot metodi `getHeader()` vai `getHeaders()`:
+Jūs varat piekļūt pieprasījuma galvenumiem, izmantojot `getHeader()` vai `getHeaders()` metodi:
 
 ```php
 
-// Iespējams, jums ir nepieciešama Autentifikācijas galvene
+// Varbūt jums nepieciešams Autentifikācijas galvenums
 $host = Flight::request()->getHeader('Authorization');
 
-// Ja ir nepieciešams iegūt visas galvenes
+// Ja vēlaties iegūt visus galvenumus
 $headers = Flight::request()->getHeaders();
 ```

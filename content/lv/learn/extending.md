@@ -1,69 +1,69 @@
 # Paplašināšana / Konteineri
 
-Flight ir izstrādāts, lai būtu paplašināms ietvars. Ietvars nāk ar komplektu
-noklusējuma metožu un komponentiem, bet tas ļauj jums norādīt savas metodes,
+Flight ir izstrādāts, lai būtu paplašināms ietvars. Ietvars tiek piegādāts ar kopa
+no noklusējuma metodēm un komponentēm, bet tas ļauj jums noīmēt savas paša metodes,
 reģistrēt savas klases vai pat pārrakstīt esošās klases un metodes.
 
-## Kartēšanas Metodes
+## Kartošanas Metodes
 
-Lai norādītu savu vienkāršo pielāgoto metodi, izmantojiet `map` funkciju:
+Lai iemērotu savu vienkāršo pielāgoto metodi, izmantojiet `map` funkciju:
 
 ```php
-// Norādiet savu metodi
+// Iemērojiet savu metodi
 Flight::map('hello', function (string $name) {
   echo "sveiki $name!";
 });
 
 // Izsauciet savu pielāgoto metodi
-Flight::hello('Jānis');
+Flight::hello('Bob');
 ```
 
-Šis tiek izmantots vairāk, ja jums ir nepieciešams nodot mainīgos savai metodai, lai iegūtu gaidīto
-vērtību. Lai nodotu iestatīšanu, izmantojiet `register()` metodi tālāk, kas ir vairāk paredzēta konfigurācijas
-nodrošināšanai un pēc tam izsaukt jūsu iepriekš konfigurēto klasi.
+Šo biežāk izmantojat, kad ir nepieciešams padot mainīgos savai metodai, lai iegūtu gaidīto
+vērtību. Izmantojot `register()` metodi tālāk, ir vairāk paredzēts konfigurācijas padot
+un tad izsaukt savu iepriekš konfigurēto klasi. 
 
-## Reģistrēšana Klašu / Konteinerizācija
+## Klasu Reģistrēšana / Konteinervirzīšana
 
-Lai reģistrētu savu klasi un konfigurētu to, izmantojiet `register` funkciju:
+Lai reģistrētu savu paša klasi un to konfigurētu, izmantojiet `register` funkciju:
 
 ```php
-// Reģistrējiet savu klasi
+// Reģistrējiet savu klasu
 Flight::register('lietotājs', Lietotājs::class);
 
-// Iegūstiet savas klases piemēru
-$user = Flight::lietotājs();
+// Iegūstiet savas klases instanci
+lietotājs = Flight::user();
 ```
 
-Reģistrēšanas metode arī ļauj nodot parametrus jūsu klases
-konstruktoram. Tāpēc, kad ielādējat savu pielāgoto klasi, tā tiks iepriekš inicializēta.
-Konstruktoram varat definēt parametrus, padodot papildu masīvu.
+Reģistrēšanas metode arī ļauj jums padot parametrus savas klases konstruktoram.
+Tātad, ielādējot savu pielāgoto klasi, tā tiks iepriekš inicializēta.
+Jūs varat definēt konstruktoram parametrus, padodot papildu masīvu.
 Šeit ir piemērs, kā ielādēt datu bāzes savienojumu:
 
 ```php
-// Reģistrē klasi ar konstruktoram parametriem
+// Reģistrējiet klasi ar konstruktoram parametriem
 Flight::register('db', PDO::class, ['mysql:host=localhost;dbname=test', 'lietotājs', 'parole']);
 
-// Iegūstiet savas klases piemēru
-// Tiks izveidots objekts ar definētajiem parametriem
+// Iegūstiet savas klases instanci
+// Tas izveidos objektu ar definētajiem parametriem
 //
 // new PDO('mysql:host=localhost;dbname=test','lietotājs','parole');
 //
-$db = Flight::db();
+db = Flight::db();
 
-// un ja vēlāk jūsu kodā tas būtu nepieciešams, vienkārši izsauciet to pašu metodi vēlreiz
-class KādsKontrolieris {
-  public function __construct() {
-	$this->db = Flight::db();
+// un ja jums vajadzētu to vēlāk savā kodā, vienkārši atkal izsaukt to pašu metodi
+klase SomeController {
+  publika funkcija __construct() {
+	Šis->db = Flight::db();
   }
 }
 ```
 
-Ja nododat papildu atsauces parametru, tas tiks nekavējoties izpildīts
-pēc klases konstruēšanas. Tas ļauj veikt jebkādas iestatīšanas procedūras priekš
-jaunā objekta. Atsauces funkcija paņem vienu parametru, jaunu objekta piemēru.
+Ja jūs padodat papildu atrodi masīva parametru, tas tiks izpildīts nekavējoties
+pēc klašu konstrukcijas. Tas ļauj jums veikt visus iestatīšanas procedūras jūsu
+jaunajam objektam. Atrodlaukuma funkcija pieņem vienu parametru, jaunu objekta piemēru.
 
 ```php
-// Atsauces parametram tiks šis izveidots objekts
+// Atrodlaukumam tiks padots konstruētais objekts
 Flight::register(
   'db',
   PDO::class,
@@ -74,46 +74,46 @@ Flight::register(
 );
 ```
 
-Pēc noklusējuma, katru reizi, kad ielādējat savu klasi, jūs saņemsiet koplietojamo piemēru.
-Lai iegūtu jaunu klases piemēru, vienkārši nododiet `false` kā parametru:
+Pēc noklusējuma, katru reizi, kad ielādējat savu klasi, jūs saņemsiet koplietojamo instanci.
+Lai iegūtu jaunu klases instanci, vienkārši padodiet `false` kā parametru:
 
 ```php
-// Koplietots klases piemērs
-$shared = Flight::db();
+// Klases koplietotā instances
+koplietotais = Flight::db();
 
-// Jauns klases piemērs
-$new = Flight::db(false);
+// Jauna klases instances
+jauns = Flight::db(false);
 ```
 
-Ņemiet vērā, ka norādītajām metodēm ir prioritāte pār reģistrētajām klasēm. Ja
-deklarējat abas, izmantojot vienādu nosaukumu, tikai kartētā metode tiks izsaukta.
+Ņemiet vērā, ka iemāpota metodei ir priekšroka pār reģistrētajām klasēm. Ja jūs
+deklarējat abas, izmantojot to pašu nosaukumu, tiks izsaukta tikai iemāpota metode.
 
 ## Pārrakstīšana
 
-Flight ļauj jums pārrakstīt tās noklusējuma funkcionalitāti, lai atbilstu jūsu pašu vajadzībām,
-neizmainot nevienu kodu.
+Flight ļauj jums pārrakstīt tās noklusējuma funkcionalitāti, lai piemērotu savas vajadzības,
+neiestrādājot nekādu kodu.
 
-Piemēram, kad Flight nevar atrast URL, lai saistītu ar maršrutu, tas izsauks `notFound`
-metodi, kas nosūta vispārīgu `HTTP 404` atbildi. Varat pārrakstīt šo darbību
+Piemēram, kad Flight nevar saskaņot URL ar maršrutu, tā izsauc `notFound`
+metodi, kas nosūta ģenerisku `HTTP 404` atbildi. Jūs varat pārrakstīt šo uzvedību
 izmantojot `map` metodi:
 
 ```php
 Flight::map('notFound', function() {
-  // Parādīt pielāgoto 404 lapu
-  iekļaut 'kļūdas/404.html';
+  // Parādiet pielāgoto 404 lapu
+  include 'kļūdas/404.html';
 });
 ```
 
-Flight arī ļauj jums aizstāt ietvarā esošās galvenās komponentes.
+Flight arī ļauj jums aizstāt ietvaru pamata komponentes.
 Piemēram, jūs varat aizstāt noklusējuma Maršrutētāja klasi ar savu pielāgoto klasi:
 
 ```php
 // Reģistrējiet savu pielāgoto klasi
-Flight::register('router', MansMaršrutētājs::class);
+Flight::register('maršrutētājs', ManaMaršrutētājs::class);
 
 // Kad Flight ielādē Maršrutētāja instanci, tas ielādēs jūsu klasi
-$manisMaršrutētājs = Flight::router();
+manamaršrutētājs = Flight::maršrutētājs();
 ```
 
-Ietvara metodes, piemēram, `map` un `register`, tomēr nevar būt pārrakstītas. Jums
-tiks kļūda, ja mēģināsiet to darīt.
+Ietvara metodes, piemēram, `map` un `register`, tomēr nevar būt pārrakstītas. Jūs saņemsiet
+kļūdu, ja mēģināsit to izdarīt.

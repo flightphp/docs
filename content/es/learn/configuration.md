@@ -1,43 +1,42 @@
 # Configuración
 
-Puede personalizar ciertos comportamientos de Flight configurando valores de configuración a través del método `set`.
+Puede personalizar ciertos comportamientos de Flight configurando los valores de configuración a través del método `set`.
 
 ```php
 Flight::set('flight.log_errors', true);
 ```
 
-## Configuración Disponible
+## Configuraciones Disponibles
 
 La siguiente es una lista de todas las configuraciones disponibles:
 
-- **flight.base_url** - Sobrescriba la URL base de la solicitud. (por defecto: null)
-- **flight.case_sensitive** - Coincidencia sensible a mayúsculas y minúsculas para URL. (por defecto: false)
-- **flight.handle_errors** - Permitir a Flight manejar todos los errores internamente. (por defecto: true)
-- **flight.log_errors** - Registrar errores en el archivo de registro de errores del servidor web. (por defecto: false)
-- **flight.views.path** - Directorio que contiene archivos de plantillas de vista. (por defecto: ./views)
-- **flight.views.extension** - Extensión del archivo de plantilla de vista. (por defecto: .php)
+- **flight.base_url** - Anular la URL base de la solicitud. (predeterminado: nulo)
+- **flight.case_sensitive** - Coincidencia sensible a mayúsculas y minúsculas para las URL. (predeterminado: falso)
+- **flight.handle_errors** - Permitir que Flight maneje todos los errores internamente. (predeterminado: verdadero)
+- **flight.log_errors** - Registrar errores en el archivo de registro de errores del servidor web. (predeterminado: falso)
+- **flight.views.path** - Directorio que contiene archivos de plantillas de vista. (predeterminado: ./views)
+- **flight.views.extension** - Extensión de archivo de plantilla de vista. (predeterminado: .php)
 
 ## Variables
 
-Flight le permite guardar variables para que puedan ser utilizadas en cualquier lugar de su aplicación.
+Flight le permite guardar variables para que puedan ser utilizadas en cualquier parte de su aplicación.
 
 ```php
-// Guarde su variable
+// Guarda tu variable
 Flight::set('id', 123);
 
-// En otro lugar de su aplicación
+// En otro lugar de tu aplicación
 $id = Flight::get('id');
 ```
-
-Para ver si una variable ha sido configurada puede hacer:
+Para ver si una variable ha sido establecida, puede hacer lo siguiente:
 
 ```php
 if (Flight::has('id')) {
-  // Hacer algo
+  // Haz algo
 }
 ```
 
-Puede borrar una variable haciendo:
+Puede borrar una variable haciendo lo siguiente:
 
 ```php
 // Borra la variable id
@@ -47,7 +46,7 @@ Flight::clear('id');
 Flight::clear();
 ```
 
-Flight también utiliza variables con propósitos de configuración.
+Flight también utiliza variables con fines de configuración.
 
 ```php
 Flight::set('flight.log_errors', true);
@@ -57,7 +56,8 @@ Flight::set('flight.log_errors', true);
 
 ### Errores y Excepciones
 
-Todos los errores y excepciones son capturados por Flight y pasados al método `error`. El comportamiento predeterminado es enviar una respuesta genérica de `HTTP 500 Internal Server Error` con alguna información de error.
+Todos los errores y excepciones son capturados por Flight y pasados al método `error`.
+El comportamiento predeterminado es enviar una respuesta genérica de `HTTP 500 Internal Server Error` con cierta información de error.
 
 Puede anular este comportamiento según sus necesidades:
 
@@ -68,7 +68,7 @@ Flight::map('error', function (Throwable $error) {
 });
 ```
 
-Por defecto, los errores no se registran en el servidor web. Puede habilitar esto cambiando la configuración:
+De forma predeterminada, los errores no se registran en el servidor web. Puede habilitar esto cambiando la configuración:
 
 ```php
 Flight::set('flight.log_errors', true);
@@ -76,7 +76,7 @@ Flight::set('flight.log_errors', true);
 
 ### No Encontrado
 
-Cuando no se puede encontrar una URL, Flight llama al método `notFound`. El comportamiento predeterminado es enviar una respuesta de `HTTP 404 Not Found` con un mensaje simple.
+Cuando una URL no se puede encontrar, Flight llama al método `notFound`. El comportamiento predeterminado es enviar una respuesta de `HTTP 404 Not Found` con un mensaje simple.
 
 Puede anular este comportamiento según sus necesidades:
 

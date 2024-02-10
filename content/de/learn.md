@@ -1,6 +1,6 @@
-# Informieren Sie sich über Flight
+# Erfahren Sie mehr über Flight
 
-Flight ist ein schnelles, einfaches, erweiterbares Framework für PHP. Es ist sehr vielseitig und kann für den Aufbau beliebiger Webanwendungen verwendet werden. Es wurde mit Einfachheit im Sinn entwickelt und ist so geschrieben, dass es einfach zu verstehen und zu verwenden ist.
+Flight ist ein schnelles, einfaches, erweiterbares Framework für PHP. Es ist ziemlich vielseitig und kann für den Aufbau jeder Art von Webanwendung verwendet werden. Es wurde mit Einfachheit im Hinterkopf entwickelt und ist so geschrieben, dass es einfach zu verstehen und zu verwenden ist.
 
 ## Wichtige Framework-Konzepte
 
@@ -8,17 +8,17 @@ Flight ist ein schnelles, einfaches, erweiterbares Framework für PHP. Es ist se
 
 Hier ist ein kurzer Artikel darüber, warum Sie ein Framework verwenden sollten. Es ist eine gute Idee, die Vorteile der Verwendung eines Frameworks zu verstehen, bevor Sie eines verwenden.
 
-Zusätzlich wurde ein ausgezeichnetes Tutorial von [@lubiana](https://git.php.fail/lubiana) erstellt. Obwohl es nicht im Detail auf Flight eingeht, hilft Ihnen dieser Leitfaden, einige der wichtigsten Konzepte rund um ein Framework und deren Vorteile zu verstehen. Sie können das Tutorial [hier](https://git.php.fail/lubiana/no-framework-tutorial/src/branch/master/README.md) finden.
+Zusätzlich wurde ein ausgezeichnetes Tutorial von [@lubiana](https://git.php.fail/lubiana) erstellt. Obwohl es nicht detailliert auf Flight eingeht, wird Ihnen dieser Leitfaden helfen, einige der wichtigsten Konzepte rund um ein Framework zu verstehen und warum es vorteilhaft ist, eines zu verwenden. Sie finden das Tutorial [hier](https://git.php.fail/lubiana/no-framework-tutorial/src/branch/master/README.md).
 
 ## Kernthemen
 
 ##### [Routing](/learn/routing)
 
-Erfahren Sie, wie Sie Routen für Ihre Webanwendung verwalten. Dies beinhaltet auch das Gruppieren von Routen, Routenparameter und Middleware.
+Erfahren Sie, wie Sie Routen für Ihre Webanwendung verwalten können. Dies umfasst auch das Gruppieren von Routen, Routenparameter und Middleware.
 
 ##### [Middleware](/learn/middleware)
 
-Erfahren Sie, wie Sie Middleware verwenden, um Anfragen und Antworten in Ihrer Anwendung zu filtern.
+Erfahren Sie, wie Sie Middleware verwenden können, um Anfragen und Antworten in Ihrer Anwendung zu filtern.
 
 ##### [Anfragen](/learn/requests)
 
@@ -42,7 +42,7 @@ Erfahren Sie, wie Sie das Framework für Ihre Anwendung konfigurieren können.
 
 ##### [Flight erweitern](/learn/extending)
 
-Erfahren Sie, wie Sie das Framework erweitern können, indem Sie Ihre eigenen Methoden und Klassen hinzufügen. So handhabt Flight lose auch etwas namens Containerization.
+Erfahren Sie, wie Sie das Framework erweitern können, indem Sie Ihre eigenen Methoden und Klassen hinzufügen. Hierbei wird auch behandelt, wie Flight etwas namens Containerisierung locker handhabt.
 
 ##### [Ereignisse und Filterung](/learn/filtering)
 

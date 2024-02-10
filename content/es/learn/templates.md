@@ -1,29 +1,25 @@
 # Vistas
 
-Flight proporciona algunas funcionalidades básicas de plantillas de forma predeterminada.
+Flight proporciona alguna funcionalidad básica de plantillas de forma predeterminada.
 
-Si necesitas necesidades de plantillas más complejas, consulta los ejemplos de Smarty y Latte en la sección de [Vistas Personalizadas](#custom-views).
+Si necesitas necesidades de plantillas más complejas, consulta los ejemplos de Smarty y Latte en la sección de [Vistas Personalizadas](#vistas-personalizadas).
 
-Para mostrar una plantilla de vista, llama al método `render` con el nombre
-del archivo de la plantilla y datos de plantilla opcionales:
-
+Para mostrar una plantilla de vista llama al método `render` con el nombre del archivo de la plantilla y datos de la plantilla opcionales:
 
 ```php
 Flight::render('hello.php', ['name' => 'Bob']);
 ```
 
-Los datos de la plantilla que pasas se inyectan automáticamente en la plantilla y se pueden
-referenciar como una variable local. Los archivos de plantilla son simplemente archivos PHP. Si el
-contenido del archivo de plantilla `hello.php` es:
+Los datos de la plantilla que pasas se inyectan automáticamente en la plantilla y pueden ser referenciados como una variable local. Los archivos de plantilla son simplemente archivos PHP. Si el contenido del archivo de plantilla `hello.php` es:
 
 ```php
-Hola, <?= $name ?>!
+¡Hola, <?= $name ?>!
 ```
 
 La salida sería:
 
 ```
-Hola, Bob!
+¡Hola, Bob!
 ```
 
 También puedes establecer manualmente variables de vista usando el método set:
@@ -32,17 +28,15 @@ También puedes establecer manualmente variables de vista usando el método set:
 Flight::view()->set('name', 'Bob');
 ```
 
-La variable `name` ahora está disponible en todas tus vistas. Por lo tanto, simplemente puedes hacer:
+La variable `name` está ahora disponible en todas tus vistas. Por lo tanto, simplemente puedes hacer:
 
 ```php
 Flight::render('hello');
 ```
 
-Ten en cuenta que al especificar el nombre de la plantilla en el método render, puedes
-omitir la extensión `.php`.
+Ten en cuenta que al especificar el nombre de la plantilla en el método render, puedes omitir la extensión `.php`.
 
-Por defecto, Flight buscará un directorio `views` para archivos de plantillas. Puedes
-establecer una ruta alternativa para tus plantillas configurando lo siguiente:
+Por defecto, Flight buscará un directorio `views` para archivos de plantilla. Puedes establecer una ruta alternativa para tus plantillas configurando lo siguiente:
 
 ```php
 Flight::set('flight.views.path', '/ruta/a/vistas');
@@ -50,23 +44,20 @@ Flight::set('flight.views.path', '/ruta/a/vistas');
 
 ## Diseños
 
-Es común que los sitios web tengan un solo archivo de plantilla de diseño con un contenido intercambiable.
-Para renderizar contenido que se utilizará en un diseño, puedes pasar un parámetro opcional
-al método `render`.
+Es común que los sitios web tengan un único archivo de plantilla de diseño con contenido intercambiable. Para renderizar contenido que se utilizará en un diseño, puedes pasar un parámetro opcional al método `render`.
 
 ```php
 Flight::render('header', ['heading' => 'Hola'], 'headerContent');
 Flight::render('body', ['body' => 'Mundo'], 'bodyContent');
 ```
 
-Tu vista entonces tendrá variables guardadas llamadas `headerContent` y `bodyContent`.
-Luego puedes renderizar tu diseño haciendo:
+Tu vista tendrá entonces variables guardadas llamadas `headerContent` y `bodyContent`. Luego puedes renderizar tu diseño haciendo:
 
 ```php
 Flight::render('layout', ['title' => 'Página de Inicio']);
 ```
 
-Si los archivos de plantilla se ven así:
+Si los archivos de plantilla lucen así:
 
 `header.php`:
 
@@ -95,6 +86,7 @@ Si los archivos de plantilla se ven así:
 ```
 
 La salida sería:
+
 ```html
 <html>
   <head>
@@ -109,13 +101,11 @@ La salida sería:
 
 ## Vistas Personalizadas
 
-Flight te permite cambiar el motor de vistas predeterminado simplemente registrando tu
-propia clase de vista.
+Flight te permite intercambiar el motor de vista predeterminado simplemente registrando tu propia clase de vista.
 
 ### Smarty
 
-Así es como usarías el motor de plantillas [Smarty](http://www.smarty.net/)
-para tus vistas:
+Así es como usarías el motor de plantillas [Smarty](http://www.smarty.net/) para tus vistas:
 
 ```php
 // Cargar biblioteca de Smarty
@@ -129,14 +119,14 @@ Flight::register('view', Smarty::class, [], function (Smarty $smarty) {
   $smarty->setConfigDir('./config/');
 });
 
-// Asignar datos de plantilla
+// Asignar datos de la plantilla
 Flight::view()->assign('name', 'Bob');
 
 // Mostrar la plantilla
 Flight::view()->display('hello.tpl');
 ```
 
-Por completitud, también deberías anular el método de renderización predeterminado de Flight:
+Para completitud, también deberías sobrescribir el método render predeterminado de Flight:
 
 ```php
 Flight::map('render', function(string $template, array $data): void {
@@ -147,19 +137,18 @@ Flight::map('render', function(string $template, array $data): void {
 
 ### Latte
 
-Así es como usarías el motor de plantillas [Latte](https://latte.nette.org/)
-para tus vistas:
+Así es como usarías el motor de plantillas [Latte](https://latte.nette.org/) para tus vistas:
 
 ```php
+
 // Registrar Latte como la clase de vista
 // También pasa una función de devolución de llamada para configurar Latte al cargar
-Flight::register('view', Latte\Engine::class, [], function (Latte\Engine $latte) {
+Flight::register('view', Latte\Engine::class, [], function (Latte\Engine $laette) {
   // Aquí es donde Latte almacenará en caché tus plantillas para acelerar las cosas
-  // ¡Una característica interesante de Latte es que actualiza automáticamente tu
-  // caché cuando haces cambios en tus plantillas!
+  // ¡Algo genial de Latte es que actualiza automáticamente tu caché cuando realizas cambios en tus plantillas!
   $latte->setTempDirectory(__DIR__ . '/../cache/');
 
-  // Indica a Latte cuál será el directorio raíz de tus vistas
+  // Indica a Latte dónde estará el directorio raíz para tus vistas.
   $latte->setLoader(new \Latte\Loaders\FileLoader(__DIR__ . '/../views/'));
 });
 

@@ -1,81 +1,79 @@
 # リクエスト
 
-FlightはHTTPリクエストを1つのオブジェクトにカプセル化し、次のようにアクセスできます：
+Flight は、HTTP リクエストを単一のオブジェクトにカプセル化し、次のようにアクセスできます：
 
 ```php
 $request = Flight::request();
 ```
 
-リクエストオブジェクトは次のプロパティを提供します：
+リクエストオブジェクトは、次のプロパティを提供します：
 
-- **body** - 生のHTTPリクエストボディ
-- **url** - 要求されているURL
-- **base** - URLの親サブディレクトリ
-- **method** - リクエストメソッド（GET、POST、PUT、DELETE）
-- **referrer** - リファラURL
-- **ip** - クライアントのIPアドレス
-- **ajax** - リクエストがAJAXリクエストかどうか
-- **scheme** - サーバープロトコル（http、https）
-- **user_agent** - ブラウザの情報
+- **body** - 生の HTTP リクエストボディ
+- **url** - リクエストされている URL
+- **base** - URL の親ディレクトリ
+- **method** - リクエストメソッド (GET、POST、PUT、DELETE)
+- **referrer** - リファラ URL
+- **ip** - クライアントの IP アドレス
+- **ajax** - リクエストが AJAX リクエストであるかどうか
+- **scheme** - サーバープロトコル (http、https)
+- **user_agent** - ブラウザ情報
 - **type** - コンテンツタイプ
-- **length** - コンテンツの長さ
+- **length** - コンテンツ長
 - **query** - クエリ文字列パラメータ
-- **data** - POSTデータまたはJSONデータ
+- **data** - POST データまたは JSON データ
 - **cookies** - クッキーデータ
 - **files** - アップロードされたファイル
 - **secure** - 接続がセキュアかどうか
-- **accept** - HTTPアクセプトパラメータ
-- **proxy_ip** - クライアントのプロキシIPアドレス
+- **accept** - HTTP accept パラメータ
+- **proxy_ip** - クライアントのプロキシ IP アドレス
 - **host** - リクエストホスト名
 
-`query`、 `data`、 `cookies`、および `files` プロパティには、配列またはオブジェクトとしてアクセスできます。
+`query`、`data`、`cookies`、`files` プロパティには、配列やオブジェクトとしてアクセスできます。
 
-したがって、クエリ文字列パラメータを取得するには、次のようにします：
+そのため、クエリ文字列パラメータを取得するには、次のようにします：
 
 ```php
 $id = Flight::request()->query['id'];
 ```
 
-または、次のようにすることもできます：
+または、次のようにもできます：
 
 ```php
 $id = Flight::request()->query->id;
 ```
 
-## RAWリクエストボディ
+## RAW リクエストボディ
 
-例えばPUTリクエストを扱う場合など、生のHTTPリクエストボディを取得するには、次のようにします：
+例えば PUT リクエストを処理する場合など、生の HTTP リクエストボディを取得するには、次のようにします：
 
 ```php
 $body = Flight::request()->getBody();
 ```
 
-## JSON入力
+## JSON 入力
 
-タイプが `application/json` でデータが `{"id": 123}` を含むリクエストを送信した場合、それは `data` プロパティから利用できるようになります：
+タイプが `application/json` でデータが `{"id": 123}` としてリクエストを送信した場合、それは `data` プロパティから利用できます：
 
 ```php
 $id = Flight::request()->data->id;
 ```
 
-## `$_SERVER`へのアクセス
+## `$_SERVER` へのアクセス
 
 `getVar()` メソッドを介して `$_SERVER` 配列にアクセスするショートカットが利用可能です：
 
 ```php
-
 $host = Flight::request()->getVar['HTTP_HOST'];
 ```
 
-## リクエストヘッダーのアクセス
+## リクエストヘッダへのアクセス
 
-`getHeader()` または `getHeaders()` メソッドを使用してリクエストヘッダーにアクセスできます：
+`getHeader()` または `getHeaders()` メソッドを使用してリクエストヘッダにアクセスできます：
 
 ```php
-
-// Authorizationヘッダーが必要な場合
+// たとえば、Authorization ヘッダが必要な場合
 $host = Flight::request()->getHeader('Authorization');
 
-// すべてのヘッダーを取得する必要がある場合
+// すべてのヘッダを取得する必要がある場合
 $headers = Flight::request()->getHeaders();
 ```

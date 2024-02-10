@@ -1,14 +1,14 @@
 # Atbildes
 
-Flight palīdz ģenerēt daļu no atbilžu galvenēm, bet lielāko kontroli pār to, ko nosūtat atpakaļ lietotājam, jūs turat. Dažreiz varat piekļūt objektam `Response` tieši, bet lielāko laiku jūs izmantosiet `Flight` instanci, lai nosūtītu atbildi.
+Flight palīdz jums ģenerēt daļu no atbildes galvenēm, bet jums lielākoties ir kontrole pār to, ko nosūtāt lietotājam atpakaļ. Dažreiz jūs varat tieši piekļūt `Response` objektam, bet lielāko daļu laika jūs izmantosiet `Flight` gadījumu, lai nosūtītu atbildi.
 
 ## Nosūtīt pamata atbildi
 
-Flight izmanto `ob_start()`, lai buferētu izvadi. Tas nozīmē, ka jūs varat izmantot `echo` vai `print`, lai nosūtītu atbildi lietotājam, un Flight to uztverēs un atsūtīs atpakaļ lietotājam ar atbilstošajām galvenēm.
+Flight izmanto ob_start(), lai buferētu izvadi. Tas nozīmē, ka jūs varat izmantot `echo` vai `print`, lai nosūtītu atbildi lietotājam, un Flight to gūdīs un nosūtīs atpakaļ lietotājam ar atbilstošajiem galvenēm.
 
 ```php
 
-// Tas nosūtīs "Sveika, pasaule!" uz lietotāja pārlūkprogrammu
+// Tas nosūtīs "Sveika, pasaule!" lietotāja pārlūkam
 Flight::route('/', function() {
 	echo "Sveika, pasaule!";
 });
@@ -19,16 +19,16 @@ Flight::route('/', function() {
 // Sveika, pasaule!
 ```
 
-Kā alternatīvu varat izsaukt metodi `write()`, lai pievienotu arī ķermenim.
+Kā alternatīvu, jūs varat izsaukt `write()` metodi, lai pievienotu arī saturu.
 
 ```php
 
-// Tas nosūtīs "Sveika, pasaule!" uz lietotāja pārlūkprogrammu
+// Tas nosūtīs "Sveika, pasaule!" lietotāja pārlūkam
 Flight::route('/', function() {
-	// izsmeļošs, bet darbojās pa laikam, kad tas ir nepieciešams
+	// detalizēts, bet darbojas dažreiz, kad jums tas ir nepieciešams
 	Flight::response()->write("Sveika, pasaule!");
 
-	// ja vēlaties saņemt ķermeni, ko esat iestatījuši šajā punktā
+	// ja vēlaties iegūt satura, ko esat iestatījis šajā punktā
 	// to varat izdarīt šādi
 	$body = Flight::response()->getBody();
 });
@@ -36,7 +36,7 @@ Flight::route('/', function() {
 
 ## Statusa kodi
 
-Atbildes statusa kodu varat iestatīt, izmantojot metodi `status`:
+Jūs varat iestatīt atbildes statusa kodu, izmantojot `status` metodi:
 
 ```php
 Flight::route('/@id', function($id) {
@@ -50,7 +50,7 @@ Flight::route('/@id', function($id) {
 });
 ```
 
-Ja vēlaties iegūt pašreizējo statusa kodu, varat izmantot metodi `status` bez argumentiem:
+Ja vēlaties iegūt pašreizējo statusa kodu, jūs varat izmantot `status` metodi bez argumentiem:
 
 ```php
 Flight::response()->status(); // 200
@@ -58,11 +58,11 @@ Flight::response()->status(); // 200
 
 ## Iestatot atbildes galveni
 
-Jūs varat iestatīt galveni, piemēram, atbildes satura veidu, izmantojot metodi `header`:
+Jūs varat iestatīt galveni, piemēram, atbildes satura tipu, izmantojot `header` metodi:
 
 ```php
 
-// Tas nosūtīs "Sveika, pasaule!" uz lietotāja pārlūkprogrammu vienkāršā tekstā
+// Tas nosūtīs "Sveika, pasaule!" lietotāja pārlūkam vienkāršā teksta formātā
 Flight::route('/', function() {
 	Flight::response()->header('Content-Type', 'text/plain');
 	echo "Sveika, pasaule!";
@@ -73,7 +73,8 @@ Flight::route('/', function() {
 
 ## JSON
 
-Flight nodrošina atbalstu JSON un JSONP atbilžu nosūtīšanai. Lai nosūtītu JSON atbildi, jums jāpadod dati, kas būtu jāpārkoda JSON formātā:
+Flight piedāvā atbalstu JSON un JSONP atbilžu nosūtīšanai. Lai nosūtītu JSON atbildi
+jūs padodat datus, kas jāpārvērš par JSON:
 
 ```php
 Flight::json(['id' => 123]);
@@ -81,7 +82,8 @@ Flight::json(['id' => 123]);
 
 ### JSONP
 
-JSONP pieprasījumiem jūs varat neobligāti nosūtīt vaicājuma parametra nosaukumu, ko lietojat, lai definētu savu atsauces funkciju:
+JSONP pieprasījumiem, jūs varat pēc izvēles padot vaicājuma parametra nosaukumu
+kurš tiek izmantots, lai definētu jūsu atsauces funkciju:
 
 ```php
 Flight::jsonp(['id' => 123], 'q');
@@ -93,39 +95,40 @@ Tātad, veicot GET pieprasījumu, izmantojot `?q=my_func`, jums vajadzētu saņe
 my_func({"id":123});
 ```
 
-Ja neesat nodod pārbaudes parametra nosaukumu, tas pēc noklusējuma būs `jsonp`.
+Ja jūs nepadodat vaicājuma parametra nosaukumu, tas pēc noklusējuma būs `jsonp`.
 
-## Novirzīt uz citu URL
+## Pāradresēt uz citu URL
 
-Pašreizējo pieprasījumu varat novirzīt, izmantojot `redirect()` metodi un padodot
+Jūs varat pāradresēt pašreizējo pieprasījumu, izmantojot `redirect()` metodi un padodot
 jaunu URL:
 
 ```php
-Flight::redirect('/jauns/vietne');
+Flight::redirect('/jauns/atrašanās_vieta');
 ```
 
-Pēc noklusējuma Flight nosūta HTTP 303 ("Skatīt citu") statusa kodu. Pēc izvēles varat iestatīt pielāgotu kodu:
+Pēc noklusējuma Flight nosūta HTTP 303 ("Redzēt citu") statusa kodu. Jūs varat pēc izvēles iestatīt
+pielāgotu kodu:
 
 ```php
-Flight::redirect('/jauns/vietne', 401);
+Flight::redirect('/jauns/atrašanās_vieta', 401);
 ```
 
-## Apturēt
+## Apturēšana
 
-Jūs varat apturēt pamatstruktūru jebkurā brīdī, izsaucot metodi `halt`:
+Jūs varat apturēt pamata struktūru jebkurā brīdī, izsaucot `halt` metodi:
 
 ```php
 Flight::halt();
 ```
 
-Jūs arī varat norādīt neobligātu `HTTP` statusa kodu un ziņojumu:
+Jūs varat arī norādīt neobligātu `HTTP` statusa kodu un ziņojumu:
 
 ```php
-Flight::halt(200, 'Atgriezies drīz...');
+Flight::halt(200, 'Es atgriezšos drīz...');
 ```
 
-Izsaukums `halt` noraidīs jebkuru atbildes saturu līdz tam brīdim. Ja vēlaties apturēt
-struktūru un izvadīt pašreizējo atbildi, izmantojiet metodi `stop`:
+Izsaukšana `halt` iznīcinās jebkuru atbildes saturu līdz tam punktam. Ja vēlaties apturēt
+pamata struktūru un izvadīt pašreizējo atbildi, izmantojiet `stop` metodi:
 
 ```php
 Flight::stop();
@@ -133,14 +136,14 @@ Flight::stop();
 
 ## HTTP kešošana
 
-Flight nodrošina iebūvētu atbalstu HTTP līmeņa kešošanai. Ja kešošanas nosacījums
-ir izpildīts, Flight atgriezīs HTTP `304 Nav modificēts` atbildi. Nākamajā reizē
-klients pieprasa to pašu resursu, viņiem tiks lūgts izmantot lokāli
-kešoto versiju.
+Flight iebūvēti atbalsta HTTP līmeņa kešošanai. Ja tiek izpildīta kešošanas nosacījums
+Flight atgriezīs HTTP `304 Nav modificēts` atbildi. Nākamajā reizē, kad
+klients pieprasa to pašu resursu, viņi tiks aicināti izmantot vietējo
+saglabāto versiju.
 
-### Maršruta līmeņa kešošana
+### Ceļa līmeņa kešošana
 
-Ja vēlaties kešot visu atbildi, varat izmantot `cache()` metodi un nodot laiku kešošanai.
+Ja vēlaties kešot visu atbildi, jūs varat izmantot `cache()` metodi un padot laiku, ko saglabāt kešā.
 
 ```php
 
@@ -150,7 +153,7 @@ Flight::route('/jaunumi', function () {
   echo 'Šis saturs tiks kešots.';
 });
 
-// Alternatīvi, varat izmantot virkni, ko nodotu
+// Kā alternatīvu, jūs varat izmantot tekstu, ko padodat
 // funkcijai strtotime()
 Flight::route('/jaunumi', function () {
   Flight::cache('+5 minutes');
@@ -160,9 +163,9 @@ Flight::route('/jaunumi', function () {
 
 ### Pēdējais mainījums
 
-Varat izmantot metodi `lastModified` un nodot UNIX laika zīmogu, lai iestatītu datumu
-un laiku, kad lapa pēdējoreiz tika modificēta. Klients turpinās izmantot savu kešatmiņu,
-līdz pēdējais modificēšanas laiks tiek mainīts.
+Jūs varat izmantot `lastModified` metodi un padot UNIX laika zīmi, lai iestatītu datumu
+un laiku, kad lapa tika pēdējo reizi modificēta. Klients turpinās izmantot savu kešu līdz
+pēdējais modificēšanas laika vērtība tiek mainīta.
 
 ```php
 Flight::route('/jaunumi', function () {
@@ -173,8 +176,8 @@ Flight::route('/jaunumi', function () {
 
 ### ETag
 
-`ETag` kešošana ir līdzīga `Pēdējam mainījumam`, izņemot to, ka varat norādīt jebkuru identifikatoru
-resursam, ko vēlaties:
+`ETag` kešošana ir līdzīga `Pēdējais modificējums`, izņemot to, ka jūs varat norādīt jebkuru id vienību
+ko vēlaties resursam:
 
 ```php
 Flight::route('/jaunumi', function () {
@@ -183,6 +186,6 @@ Flight::route('/jaunumi', function () {
 });
 ```
 
-Ņemiet vērā, ka izsaukums `lastModified` vai `etag` gan iestatīs, gan pārbaudīs
-keša vērtību. Ja keša vērtība ir vienāda starp pieprasījumiem, Flight nekavējoties
-nosūtīs `HTTP 304` atbildi un pārtrauks apstrādi.
+Ņemiet vērā, ka izsaucot gan `lastModified`, gan `etag` gan iestatīs, gan pārbaudīs kešu
+vērtību. Ja kešu vērtība ir vienāda starp pieprasījumiem, Flight nekavējoties
+nosūtīs `HTTP 304` atbildi un apturēs apstrādi.

@@ -1,20 +1,20 @@
 # Roteamento
 
-> **Nota:** Quer entender mais sobre roteamento? Confira a página [por que frameworks](/learn/why-frameworks) para uma explicação mais detalhada.
+> **Observação:** Quer entender mais sobre roteamento? Confira a página [why frameworks](/learn/why-frameworks) para uma explicação mais detalhada.
 
 O roteamento básico no Flight é feito combinando um padrão de URL com uma função de retorno ou um array de uma classe e método.
 
 ```php
 Flight::route('/', function(){
-    echo 'olá mundo!';
+    echo 'Olá mundo!';
 });
 ```
 
-A função de retorno pode ser qualquer objeto que seja chamável. Assim, você pode usar uma função regular:
+A função de retorno pode ser qualquer objeto que seja invocável. Portanto, você pode usar uma função regular:
 
 ```php
 function hello(){
-    echo 'olá mundo!';
+    echo 'Olá mundo!';
 }
 
 Flight::route('/', 'hello');
@@ -25,7 +25,7 @@ Ou um método de classe:
 ```php
 class Greeting {
     public static function hello() {
-        echo 'olá mundo!';
+        echo 'Olá mundo!';
     }
 }
 
@@ -54,11 +54,11 @@ $greeting = new Greeting();
 Flight::route('/', array($greeting, 'hello'));
 ```
 
-As rotas são combinadas na ordem em que são definidas. A primeira rota a corresponder a uma solicitação será invocada.
+As rotas são correspondidas na ordem em que são definidas. A primeira rota a corresponder a uma solicitação será invocada.
 
-## Roteamento por Método
+## Roteamento de Método
 
-Por padrão, os padrões de rota são combinados com todos os métodos de solicitação. Você pode responder a métodos específicos colocando um identificador antes da URL.
+Por padrão, os padrões de rota são correspondidos a todos os métodos de solicitação. Você pode responder a métodos específicos colocando um identificador antes da URL.
 
 ```php
 Flight::route('GET /', function () {
@@ -70,7 +70,7 @@ Flight::route('POST /', function () {
 });
 ```
 
-Você também pode mapear vários métodos para um único retorno, usando um delimitador `|`:
+Você também pode mapear vários métodos para um único retorno usando o delimitador `|`:
 
 ```php
 Flight::route('GET|POST /', function () {
@@ -78,14 +78,15 @@ Flight::route('GET|POST /', function () {
 });
 ```
 
-Além disso, você pode pegar o objeto Router que possui alguns métodos auxiliares para você usar:
+Além disso, você pode obter o objeto Router que tem alguns métodos auxiliares para você usar:
 
 ```php
+
 $router = Flight::router();
 
 // mapeia todos os métodos
 $router->map('/', function() {
-	echo 'olá mundo!';
+	echo 'Olá mundo!';
 });
 
 // solicitação GET
@@ -104,15 +105,17 @@ Você pode usar expressões regulares em suas rotas:
 
 ```php
 Flight::route('/usuário/[0-9]+', function () {
-  // Isso corresponderá a /usuário/1234
+  // Isso corresponderá a /user/1234
 });
 ```
 
-Embora este método esteja disponível, é recomendado usar parâmetros nomeados, ou parâmetros nomeados com expressões regulares, pois são mais legíveis e fáceis de manter.
+Embora esse método esteja disponível, é recomendado usar parâmetros nomeados, ou
+parâmetros nomeados com expressões regulares, pois são mais legíveis e fáceis de manter.
 
 ## Parâmetros Nomeados
 
-Você pode especificar parâmetros nomeados em suas rotas que serão passados para sua função de retorno.
+Você pode especificar parâmetros nomeados em suas rotas que serão passados para
+a sua função de retorno.
 
 ```php
 Flight::route('/@nome/@id', function (string $nome, string $id) {
@@ -120,7 +123,8 @@ Flight::route('/@nome/@id', function (string $nome, string $id) {
 });
 ```
 
-Você também pode incluir expressões regulares com seus parâmetros nomeados, usando o delimitador `:`:
+Você também pode incluir expressões regulares com seus parâmetros nomeados usando
+o delimitador `:`:
 
 ```php
 Flight::route('/@nome/@id:[0-9]{3}', function (string $nome, string $id) {
@@ -129,12 +133,12 @@ Flight::route('/@nome/@id:[0-9]{3}', function (string $nome, string $id) {
 });
 ```
 
-> **Nota:** Não é suportada a correspondência de grupos regex `()` com parâmetros nomeados. :'\(
+> **Observação:** Combinar grupos regex `()` com parâmetros nomeados não é suportado. :'\(
 
 ## Parâmetros Opcionais
 
-Você pode especificar parâmetros nomeados que são opcionais para combinar, envolvendo
-segmentos em parênteses.
+Você pode especificar parâmetros nomeados que são opcionais para combinação envolvendo
+segmentos entre parênteses.
 
 ```php
 Flight::route(
@@ -149,16 +153,16 @@ Flight::route(
 );
 ```
 
-Quaisquer parâmetros opcionais que não correspondem serão passados como `NULL`.
+Quaisquer parâmetros opcionais que não corresponderem serão passados como `NULL`.
 
 ## Curetagem
 
-A combinação é feita apenas em segmentos individuais de URL. Se você quiser corresponder a vários
+A correspondência é feita apenas em segmentos individuais de URL. Se você deseja corresponder a vários
 segmentos, pode usar o curinga `*`.
 
 ```php
 Flight::route('/blog/*', function () {
-  // Isso correspondará a /blog/2000/02/01
+  // Isso corresponderá a /blog/2000/02/01
 });
 ```
 
@@ -170,7 +174,7 @@ Flight::route('*', function () {
 });
 ```
 
-## Passando Adiante
+## Passando
 
 Você pode passar a execução para a próxima rota correspondente retornando `true` de
 sua função de retorno.
@@ -178,8 +182,8 @@ sua função de retorno.
 ```php
 Flight::route('/usuário/@nome', function (string $nome) {
   // Verifique alguma condição
-  if ($nome !== "Fulano") {
-    // Continue para a próxima rota
+  if ($nome !== "Bob") {
+    // Continuar para a próxima rota
     return true;
   }
 });
@@ -189,62 +193,62 @@ Flight::route('/usuário/*', function () {
 });
 ```
 
-## Apelidamento de Rota
+## Alias de Rota
 
 Você pode atribuir um alias a uma rota, para que a URL possa ser gerada dinamicamente mais tarde em seu código (como um modelo, por exemplo).
 
 ```php
-Flight::route('/usuários/@id', function($id) { echo 'usuário:'.$id; }, false, 'visualização_usuário');
+Flight::route('/usuários/@id', function($id) { echo 'usuário:'.$id; }, false, 'visualização_do_usuario');
 
-// mais tarde no código
-Flight::getUrl('visualização_usuário', [ 'id' => 5 ]); // retornará '/usuários/5'
+// mais tarde no código em algum lugar
+Flight::getUrl('visualização_do_usuario', [ 'id' => 5 ]); // retornará '/usuários/5'
 ```
 
-Isso é especialmente útil se sua URL mudar. No exemplo acima, digamos que usuários foram movidos para `/admin/usuarios/@id` em vez disso.
-Com o apelido, você não precisa alterar em nenhum lugar que faça referência ao alias, porque o alias agora retornará `/admin/usuarios/5` como no
+Isso é especialmente útil se sua URL mudar. No exemplo acima, digamos que os usuários foram movidos para `/admin/usuarios/@id` em vez disso.
+Com o uso de aliasing, você não precisa alterar onde refere o alias, porque o alias agora retornará `/admin/usuarios/5` como no
 exemplo acima.
 
-O apelido de rota também funciona em grupos:
+O alias de rota ainda funciona em grupos também:
 
 ```php
 Flight::group('/usuários', function() {
-    Flight::route('/@id', function($id) { echo 'usuário:'.$id; }, false, 'visualização_usuário');
+    Flight::route('/@id', function($id) { echo 'usuário:'.$id; }, false, 'visualização_do_usuario');
 });
 
 
-// mais tarde no código
-Flight::getUrl('visualização_usuário', [ 'id' => 5 ]); // retornará '/usuários/5'
+// mais tarde no código em algum lugar
+Flight::getUrl('visualização_do_usuario', [ 'id' => 5 ]); // retornará '/usuários/5'
 ```
 
-## Informações de Rota
+## Informações da Rota
 
-Se você deseja inspecionar informações de rota correspondente, você pode solicitar o objeto de rota
-ser passado para sua função de retorno passando `true` como terceiro parâmetro no
-método de rota. O objeto de rota sempre será o último parâmetro passado para sua
+Se você deseja inspecionar as informações da rota correspondente, pode solicitar o objeto de rota
+para ser passado para sua função de retorno passando `true` como o terceiro parâmetro no
+método de rota. O objeto de rota será sempre o último parâmetro passado para sua
 função de retorno.
 
 ```php
-Flight::route('/', function(\flight\net\Route $route) {
-  // Array de métodos HTTP correspondem
-  $route->methods;
+Flight::route('/', function(\flight\net\Route $rota) {
+  // Array de métodos HTTP correspondidos
+  $rota->métodos;
 
   // Array de parâmetros nomeados
-  $route->params;
+  $rota->params;
 
   // Expressão regular correspondente
-  $route->regex;
+  $rota->regex;
 
   // Contém o conteúdo de qualquer '*' usado no padrão de URL
-  $route->splat;
+  $rota->splat;
 
-  // Mostra o caminho da URL....se você realmente precisar
-  $route->pattern;
+  // Mostra o caminho da URL... se você realmente precisar
+  $rota->modelo;
 
   // Mostra qual middleware está atribuído a isso
-  $route->middleware;
+  $rota->middleware;
 
-  // Mostra o apelido atribuído a esta rota
-  $route->alias;
+  // Mostra o alias atribuído a esta rota
+  $rota->alias;
 }, true);
 ```
 
@@ -276,11 +280,11 @@ Flight::group('/api', function () {
 	});
 
 	Flight::post('/posts', function () {
-	  // Combina com POST /api/v1/posts
+	  // Corresponde a POST /api/v1/posts
 	});
 
 	Flight::put('/posts/1', function () {
-	  // Combina com PUT /api/v1/posts/1
+	  // Corresponde a PUT /api/v1/posts
 	});
   });
   Flight::group('/v2', function () {
@@ -293,7 +297,7 @@ Flight::group('/api', function () {
 });
 ```
 
-### Agrupando com Contexto de Objeto
+### Agrupamento com Contexto de Objeto
 
 Você ainda pode usar o agrupamento de rotas com o objeto `Engine` da seguinte maneira:
 
@@ -301,7 +305,7 @@ Você ainda pode usar o agrupamento de rotas com o objeto `Engine` da seguinte m
 $app = new \flight\Engine();
 $app->group('/api/v1', function (Router $router) {
 
-  // use a variável $router
+  // use a variável de $router
   $router->get('/usuários', function () {
 	// Corresponde a GET /api/v1/usuários
   });
@@ -310,4 +314,4 @@ $app->group('/api/v1', function (Router $router) {
 	// Corresponde a POST /api/v1/posts
   });
 });
-```  
+```

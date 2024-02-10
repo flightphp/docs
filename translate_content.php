@@ -5,6 +5,11 @@
 // You'll need your own chatgpt key to run this script
 $chatgpt_key = getenv('CHATGPT_KEY');
 
+if(empty($chatgpt_key)) {
+	echo "You need to set the CHATGPT_KEY environment variable to run this script" . PHP_EOL;
+	exit(1);
+}
+
 $languages = [
 	'es',
 	'fr',
@@ -23,6 +28,8 @@ $fromDate = $opts['from-date'] ?? 0;
 if($fromDate) {
 	$fromDate = strtotime($fromDate.' 00:00:00');
 }
+
+echo "Translating content from " . date('Y-m-d', $fromDate) . PHP_EOL;
 
 $top_level_files = glob(__DIR__ . '/content/en/*.md');
 

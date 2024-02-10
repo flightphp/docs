@@ -2,15 +2,15 @@
 
 Flight はデフォルトでいくつかの基本的なテンプレート機能を提供します。
 
-より複雑なテンプレートのニーズがある場合は、[カスタムビュー](#custom-views)セクションの Smarty と Latte の例を参照してください。
+より複雑なテンプレートが必要な場合は、[カスタムビュー](#custom-views) セクションの Smarty および Latte の例を参照してください。
 
-ビューテンプレートを表示するには、`render` メソッドをテンプレートファイルの名前とオプションのテンプレートデータと共に呼び出します:
+ビューテンプレートを表示するには、 `render` メソッドを呼び出して、テンプレートファイルの名前とオプションのテンプレートデータを指定します。
 
 ```php
 Flight::render('hello.php', ['name' => 'Bob']);
 ```
 
-渡すテンプレートデータは自動的にテンプレートに注入され、ローカル変数のように参照できます。テンプレートファイルは単純に PHP ファイルです。`hello.php` テンプレートファイルの内容が次のとおりである場合:
+渡すテンプレートデータは自動的にテンプレートに挿入され、ローカル変数のように参照することができます。テンプレートファイルは単純に PHP ファイルです。 `hello.php` テンプレートファイルの内容が次のような場合:
 
 ```php
 Hello, <?= $name ?>!
@@ -28,15 +28,15 @@ Hello, Bob!
 Flight::view()->set('name', 'Bob');
 ```
 
-変数 `name` は今やすべてのビューで利用可能です。したがって、次のように簡単に行うことができます:
+変数 `name` はこれ以降すべてのビューで使用可能になります。したがって、次のように単に行うことができます:
 
 ```php
 Flight::render('hello');
 ```
 
-`render` メソッドでテンプレートの名前を指定する際に、`.php` 拡張子を省略することができることに注意してください。
+`render` メソッドの中でテンプレートの名前を指定する際に、`.php` 拡張子を省略することができることに注意してください。
 
-Flight はデフォルトでテンプレートファイルを探すために `views` ディレクトリを見に行きます。テンプレートの代替パスを設定するには、次の設定を行います:
+Flight はデフォルトでテンプレートファイルのために `views` ディレクトリを探します。テンプレートの代替パスを設定するには、次の設定を行います:
 
 ```php
 Flight::set('flight.views.path', '/path/to/views');
@@ -44,20 +44,20 @@ Flight::set('flight.views.path', '/path/to/views');
 
 ## レイアウト
 
-ウェブサイトで単一のレイアウトテンプレートファイルがあり、その内容が交代することは一般的です。レイアウトに使用されるコンテンツをレンダリングするには、`render` メソッドにオプションのパラメータを渡すことができます。
+ウェブサイトでは、入れ替わるコンテンツを持つ単一のレイアウトテンプレートファイルを持つことが一般的です。 レイアウトに使用されるコンテンツをレンダリングするには、`render` メソッドにオプションのパラメータを渡します。
 
 ```php
 Flight::render('header', ['heading' => 'Hello'], 'headerContent');
 Flight::render('body', ['body' => 'World'], 'bodyContent');
 ```
 
-このようにすると、`headerContent` と `bodyContent` という保存された変数がビューにあります。次に、次のようにしてレイアウトをレンダリングすることができます:
+これにより、ビューに `headerContent` と `bodyContent` という保存された変数があります。その後、次のようにしてレイアウトをレンダリングできます:
 
 ```php
 Flight::render('layout', ['title' => 'Home Page']);
 ```
 
-テンプレートファイルが次のようになっていれば:
+テンプレートファイルが次のようになっている場合:
 
 `header.php`:
 
@@ -100,18 +100,18 @@ Flight::render('layout', ['title' => 'Home Page']);
 
 ## カスタムビュー
 
-Flight では、デフォルトのビューエンジンを簡単に入れ替えることができます。それは自分自身のビュークラスを登録することによってです。
+Flight では、独自のビュークラスを登録することで、デフォルトのビューエンジンを簡単に切り替えることができます。
 
 ### Smarty
 
-ここに、ビューに [Smarty](http://www.smarty.net/) を使用する方法があります:
+次のように、[Smarty](http://www.smarty.net/) テンプレートエンジンをビューに使用します:
 
 ```php
-// Smarty ライブラリをロード
+// Smarty ライブラリの読み込み
 require './Smarty/libs/Smarty.class.php';
 
 // ビュークラスとして Smarty を登録
-// また、Smarty のロードを設定するためのコールバック関数を渡します
+// また、Smarty をロード時に設定するためのコールバック関数も渡します
 Flight::register('view', Smarty::class, [], function (Smarty $smarty) {
   $smarty->setTemplateDir('./templates/');
   $smarty->setCompileDir('./templates_c/');
@@ -119,14 +119,14 @@ Flight::register('view', Smarty::class, [], function (Smarty $smarty) {
   $smarty->setCacheDir('./cache/');
 });
 
-// テンプレートデータを指定
+// テンプレートデータの割り当て
 Flight::view()->assign('name', 'Bob');
 
 // テンプレートを表示
 Flight::view()->display('hello.tpl');
 ```
 
-完全性のために、Flight のデフォルトの render メソッドをオーバーライドする必要があります:
+完全性のために、Flight のデフォルトのレンダリングメソッドもオーバーライドする必要があります:
 
 ```php
 Flight::map('render', function(string $template, array $data): void {
@@ -137,25 +137,24 @@ Flight::map('render', function(string $template, array $data): void {
 
 ### Latte
 
-ここに、ビューに [Latte](https://latte.nette.org/) を使用する方法があります:
+次のように、[Latte](https://latte.nette.org/) テンプレートエンジンをビューに使用します:
 
 ```php
 
 // ビュークラスとして Latte を登録
-// また、Latte のロードを設定するためのコールバック関数を渡します
+// また、Latte をロード時に設定するためのコールバック関数も渡します
 Flight::register('view', Latte\Engine::class, [], function (Latte\Engine $latte) {
-  // これは Latte がテンプレートをキャッシュする場所です
-	// Latte の素晴らしいところは、テンプレートを変更すると自動的に
-	// キャッシュを更新してくれることです！
+  // ここは Latte がテンプレートを高速化するためにキャッシュする場所です
+	// Latte の素晴らしい点の1つは、テンプレートを変更すると自動的にキャッシュを更新することです!
 	$latte->setTempDirectory(__DIR__ . '/../cache/');
 
-	// Latte に、ビューのルートディレクトリがどこにあるかを教えてください。
+	// Latte にビューのルートディレクトリがある場所を伝えます
 	$latte->setLoader(new \Latte\Loaders\FileLoader(__DIR__ . '/../views/'));
 });
 
-// そして、Flight::render() を正しく使用できるようにします
+// そして、Flight::render() を正しく使用できるようにラップします
 Flight::map('render', function(string $template, array $data): void {
-  // これは $latte_engine->render($template, $data); のようなものです
+  // これは $latte_engine->render($template, $data); と同等です
   echo Flight::view()->render($template, $data);
 });
 ```
