@@ -12,6 +12,10 @@ Additionally an excellent tutorial has been created by [@lubiana](https://git.ph
 
 ## Core Topics
 
+##### [Autoloading](/learn/autoloading)
+
+Learn how to autoload your own classes in your application.
+
 ##### [Routing](/learn/routing)
 
 Learn how to manage routes for your web application. This also includes grouping routes, route parameters and middleware.
