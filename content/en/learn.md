@@ -55,3 +55,6 @@ Learn how to use the event system to add hooks to your methods and internal fram
 ##### [Framework API](/learn/api)
 
 Learn about the core methods of the framework.
+
+##### [Migrating to v3](/learn/migrating-to-v3)
+Backwards compatibility has for the most part been maintained, but there are some changes that you should be aware of when migrating from v2 to v3.
