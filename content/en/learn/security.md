@@ -31,6 +31,9 @@ Flight::response()->header('Referrer-Policy', 'no-referrer-when-downgrade');
 
 // Set the Strict-Transport-Security header to force HTTPS
 Flight::response()->header('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
+
+// Set the Permissions-Policy header to control what features and APIs can be used
+Flight::response()->header('Permissions-Policy', 'geolocation=()');
 ```
 
 These can be added at the top of your `bootstrap.php` or `index.php` files.
@@ -48,6 +51,7 @@ Flight::before('start', function() {
 	Flight::response()->header('X-Content-Type-Options', 'nosniff');
 	Flight::response()->header('Referrer-Policy', 'no-referrer-when-downgrade');
 	Flight::response()->header('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
+	Flight::response()->header('Permissions-Policy', 'geolocation=()');
 });
 ```
 
@@ -70,6 +74,7 @@ class SecurityHeadersMiddleware
 		Flight::response()->header('X-Content-Type-Options', 'nosniff');
 		Flight::response()->header('Referrer-Policy', 'no-referrer-when-downgrade');
 		Flight::response()->header('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
+		Flight::response()->header('Permissions-Policy', 'geolocation=()');
 	}
 }
 
