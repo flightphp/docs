@@ -176,6 +176,12 @@ $user->gt('id', 0)->orderBy('id desc')->find();
 $user->delete();
 ```
 
+You can also delete multiple records executing a search before hand.
+
+```php
+$user->like('name', 'Bob%')->delete();
+```
+
 #### `dirty(array  $dirty = []): ActiveRecord`
 
 Dirty data refers to the data that has been changed in a record.
@@ -195,6 +201,23 @@ $user->update(); // nothing will update cause nothing was captured as dirty.
 
 $user->dirty([ 'name' => 'something', 'password' => password_hash('a different password') ]);
 $user->update(); // both name and password are updated.
+```
+
+#### `reset(bool $include_query_data = true): ActiveRecord`
+
+Resets the current record to it's initial state. This is really good to use in loop type behaviors.
+If you pass `true` it will also reset the query data that was used to find the current object (default behavior).
+
+```php
+$users = $user->greaterThan('id', 0)->orderBy('id desc')->find();
+$user_company = new UserCompany($pdo_connection);
+
+foreach($users as $user) {
+	$user_company->reset(); // start with a clean slate
+	$user_company->user_id = $user->id;
+	$user_company->company_id = $some_company_id;
+	$user_company->insert();
+}
 ```
 
 ### SQL Query Methods
