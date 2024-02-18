@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\middleware\HeaderSecurityMiddleware;
 use app\utils\Text;
 use app\utils\Translator;
 use Exception;
@@ -47,6 +48,7 @@ class IndexController {
 		}
 		// Here we can set variables that will be available on any page
 		$params['url'] = $request->getScheme() . '://' . $request->getHeader('Host') . $uri;
+		$params['nonce'] = HeaderSecurityMiddleware::$nonce;
 		$this->app->latte()->render($latte_file, $params);
 	}
 
