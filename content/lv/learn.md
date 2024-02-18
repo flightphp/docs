@@ -30,7 +30,7 @@ Uzziniet, kā apstrādāt pieprasījumus un atbildes savā lietojumprogrammā.
 
 ##### [Atbildes](/learn/responses)
 
-Uzziniet, kā nosūtīt atbildes saviem lietotājiem.
+Uzziniet, kā nosūtīt atbildes savu lietotājiem.
 
 ##### [HTML veidnes](/learn/templates)
 

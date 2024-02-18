@@ -14,7 +14,7 @@ Zusätzlich wurde ein ausgezeichnetes Tutorial von [@lubiana](https://git.php.fa
 
 ##### [Autoload](/learn/autoloading)
 
-Erfahren Sie, wie Sie Ihre eigenen Klassen in Ihrer Anwendung automatisch laden.
+Erfahren Sie, wie Sie Ihre eigenen Klassen in Ihrer Anwendung autoloaden können.
 
 ##### [Routing](/learn/routing)
 
@@ -22,7 +22,7 @@ Erfahren Sie, wie Sie Routen für Ihre Webanwendung verwalten. Dies beinhaltet a
 
 ##### [Middleware](/learn/middleware)
 
-Erfahren Sie, wie Sie Middleware verwenden können, um Anfragen und Antworten in Ihrer Anwendung zu filtern.
+Lernen Sie, wie Sie Middleware verwenden können, um Anfragen und Antworten in Ihrer Anwendung zu filtern.
 
 ##### [Anfragen](/learn/requests)
 
@@ -30,7 +30,7 @@ Erfahren Sie, wie Sie Anfragen und Antworten in Ihrer Anwendung verarbeiten kön
 
 ##### [Antworten](/learn/responses)
 
-Erfahren Sie, wie Sie Antworten an Ihre Benutzer senden können.
+Lernen Sie, wie Sie Antworten an Ihre Benutzer senden können.
 
 ##### [HTML-Vorlagen](/learn/templates)
 
@@ -38,11 +38,11 @@ Erfahren Sie, wie Sie den integrierten Ansichts-Engine verwenden können, um Ihr
 
 ##### [Sicherheit](/learn/security)
 
-Erfahren Sie, wie Sie Ihre Anwendung vor gängigen Sicherheitsbedrohungen schützen können.
+Lernen Sie, wie Sie Ihre Anwendung vor üblichen Sicherheitsbedrohungen schützen können.
 
 ##### [Konfiguration](/learn/configuration)
 
-Erfahren Sie, wie Sie das Framework für Ihre Anwendung konfigurieren können.
+Lernen Sie, wie Sie das Framework für Ihre Anwendung konfigurieren können.
 
 ##### [Flight erweitern](/learn/extending)
 

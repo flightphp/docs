@@ -24,9 +24,9 @@ Apprenez comment gérer les routes pour votre application web. Cela inclut égal
 
 Apprenez comment utiliser les middleware pour filtrer les demandes et les réponses dans votre application.
 
-##### [Demandes](/learn/requests)
+##### [Requêtes](/learn/requests)
 
-Apprenez comment gérer les demandes et les réponses dans votre application.
+Apprenez comment gérer les requêtes et les réponses dans votre application.
 
 ##### [Réponses](/learn/responses)
 
@@ -50,7 +50,7 @@ Apprenez comment étendre le framework en ajoutant vos propres méthodes et clas
 
 ##### [Événements et Filtrage](/learn/filtering)
 
-Apprenez comment utiliser le système d'événements pour ajouter des crochets à vos méthodes et aux méthodes internes du framework.
+Apprenez comment utiliser le système d'événement pour ajouter des crochets à vos méthodes et aux méthodes internes du framework.
 
 ##### [API du Framework](/learn/api)
 

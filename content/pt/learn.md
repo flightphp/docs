@@ -24,7 +24,7 @@ Aprenda a gerenciar rotas para sua aplicação web. Isso também inclui agrupar 
 
 Aprenda a usar middleware para filtrar solicitações e respostas em sua aplicação.
 
-##### [Solicitações](/learn/requests)
+##### [Requisições](/learn/requests)
 
 Aprenda a lidar com solicitações e respostas em sua aplicação.
 
@@ -32,13 +32,13 @@ Aprenda a lidar com solicitações e respostas em sua aplicação.
 
 Aprenda a enviar respostas para seus usuários.
 
-##### [Modelos HTML](/learn/templates)
+##### [Templates HTML](/learn/templates)
 
 Aprenda a usar o mecanismo de visualização integrado para renderizar seus modelos HTML.
 
 ##### [Segurança](/learn/security)
 
-Aprenda como proteger sua aplicação contra ameaças de segurança comuns.
+Aprenda como proteger sua aplicação de ameaças de segurança comuns.
 
 ##### [Configuração](/learn/configuration)
 

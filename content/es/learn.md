@@ -12,7 +12,7 @@ Adicionalmente se ha creado un excelente tutorial por [@lubiana](https://git.php
 
 ## Temas Principales
 
-##### [Autocarga](/learn/autoloading)
+##### [Carga Automática](/learn/autoloading)
 
 Aprende cómo cargar automáticamente tus propias clases en tu aplicación.
 
