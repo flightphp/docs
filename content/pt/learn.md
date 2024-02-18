@@ -1,14 +1,14 @@
-# Aprenda Sobre o Flight
+# Aprenda Sobre Flight
 
-O Flight é um framework rápido, simples e extensível para PHP. É bastante versátil e pode ser usado para construir qualquer tipo de aplicação web. Ele é construído com simplicidade em mente e é escrito de forma fácil de entender e usar.
+Flight é um framework rápido, simples e extensível para PHP. É bastante versátil e pode ser utilizado para construir qualquer tipo de aplicação web. Foi construído com simplicidade em mente e é escrito de uma maneira que é fácil de entender e usar.
 
 ## Conceitos Importantes do Framework
 
 ##### [Por Que um Framework?](/learn/why-frameworks)
 
-Aqui está um artigo curto sobre por que você deve usar um framework. É uma boa ideia entender os benefícios de usar um framework antes de começar a usá-lo.
+Aqui está um breve artigo sobre por que você deve usar um framework. É uma boa ideia entender os benefícios de usar um framework antes de começar a usá-lo.
 
-Adicionalmente, um excelente tutorial foi criado por [@lubiana](https://git.php.fail/lubiana). Embora não entre em grande detalhe sobre o Flight especificamente, este guia irá ajudá-lo a entender alguns dos principais conceitos em torno de um framework e por que são benéficos de usar. Você pode encontrar o tutorial [aqui](https://git.php.fail/lubiana/no-framework-tutorial/src/branch/master/README.md).
+Além disso, um excelente tutorial foi criado por [@lubiana](https://git.php.fail/lubiana). Embora não entre em muitos detalhes sobre o Flight especificamente, este guia irá ajudá-lo a entender alguns dos principais conceitos em torno de um framework e por que eles são benéficos de serem usados. Você pode encontrar o tutorial [aqui](https://git.php.fail/lubiana/no-framework-tutorial/src/branch/master/README.md).
 
 ## Tópicos Principais
 
@@ -18,31 +18,31 @@ Aprenda como carregar automaticamente suas próprias classes em sua aplicação.
 
 ##### [Roteamento](/learn/routing)
 
-Aprenda como gerenciar rotas para a sua aplicação web. Isso também inclui agrupar rotas, parâmetros de rota e middleware.
+Aprenda como gerenciar rotas para sua aplicação web. Isso também inclui agrupamento de rotas, parâmetros de rota e middleware.
 
 ##### [Middleware](/learn/middleware)
 
-Aprenda como usar middleware para filtrar solicitações e respostas em sua aplicação.
+Aprenda como usar middleware para filtrar requisições e respostas em sua aplicação.
 
-##### [Solicitações](/learn/requests)
+##### [Requisições](/learn/requests)
 
-Aprenda como lidar com solicitações e respostas em sua aplicação.
+Aprenda como lidar com requisições e respostas em sua aplicação.
 
 ##### [Respostas](/learn/responses)
 
 Aprenda como enviar respostas para seus usuários.
 
-##### [Modelos HTML](/learn/templates)
+##### [Templates HTML](/learn/templates)
 
-Aprenda como usar o mecanismo de visualização integrado para renderizar seus modelos HTML.
+Aprenda como usar o mecanismo de visualização integrado para renderizar seus templates HTML.
 
 ##### [Segurança](/learn/security)
 
-Aprenda como proteger sua aplicação contra ameaças de segurança comuns.
+Aprenda como proteger sua aplicação de ameaças de segurança comuns.
 
 ##### [Configuração](/learn/configuration)
 
-Aprenda como configurar o framework para a sua aplicação.
+Aprenda como configurar o framework para sua aplicação.
 
 ##### [Estendendo o Flight](/learn/extending)
 
