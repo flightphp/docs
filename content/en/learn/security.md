@@ -6,6 +6,8 @@ Security is a big deal when it comes to web applications. You want to make sure 
 
 HTTP headers are one of the easiest ways to secure your web applications. You can use headers to prevent clickjacking, XSS, and other attacks. There are several ways that you can add these headers to your application.
 
+Two great websites to check for the security of your headers are [securityheaders.com](https://securityheaders.com/) and [observatory.mozilla.org](https://observatory.mozilla.org/).
+
 ### Add By Hand
 
 You can manually add these headers by using the `header` method on the `Flight\Response` object.
