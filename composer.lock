@@ -58,16 +58,16 @@
         },
         {
             "name": "flightphp/core",
-            "version": "v3.4.1",
+            "version": "v3.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/flightphp/core.git",
-                "reference": "8bec3658b0160f7bf48264721aff8d6d11d344fa"
+                "reference": "5073758cfadd4a70d5b0f424a399ff25c317af73"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/flightphp/core/zipball/8bec3658b0160f7bf48264721aff8d6d11d344fa",
-                "reference": "8bec3658b0160f7bf48264721aff8d6d11d344fa",
+                "url": "https://api.github.com/repos/flightphp/core/zipball/5073758cfadd4a70d5b0f424a399ff25c317af73",
+                "reference": "5073758cfadd4a70d5b0f424a399ff25c317af73",
                 "shasum": ""
             },
             "require": {
@@ -123,9 +123,9 @@
             "homepage": "http://flightphp.com",
             "support": {
                 "issues": "https://github.com/flightphp/core/issues",
-                "source": "https://github.com/flightphp/core/tree/v3.4.1"
+                "source": "https://github.com/flightphp/core/tree/v3.5.0"
             },
-            "time": "2024-02-07T00:36:41+00:00"
+            "time": "2024-02-18T08:04:49+00:00"
         },
         {
             "name": "latte/latte",
@@ -387,5 +387,5 @@
         "ext-json": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.6.0"
 }
