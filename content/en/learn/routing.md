@@ -1,6 +1,6 @@
 # Routing
 
-> **Note:** Want to understand more about routing? Check out the [why frameworks](/learn/why-frameworks) page for a more in-depth explanation.
+> **Note:** Want to understand more about routing? Check out the ["why a framework?"](/learn/why-frameworks) page for a more in-depth explanation.
 
 Basic routing in Flight is done by matching a URL pattern with a callback function or an array of a class and method.
 
@@ -315,4 +315,39 @@ $app->group('/api/v1', function (Router $router) {
 	// Matches POST /api/v1/posts
   });
 });
+```
+
+## Streaming
+
+You can now stream responses to the client using the `streamWithHeaders()` method. 
+This is useful for sending large files, long running processes, or generating large responses. 
+Streaming a route is handled a little differently than a regular route.
+
+> **Note:** Streaming responses is only available if you have [`flight.v2.output_buffering`](/learn/migrating-to-v3#output_buffering) set to false.
+
+```php
+Flight::route('/stream-users', function() {
+
+	// however you pull your data, just as an example...
+	$users_stmt = Flight::db()->query("SELECT id, first_name, last_name FROM users");
+
+	echo '{';
+	$user_count = count($users);
+	while($user = $users_stmt->fetch(PDO::FETCH_ASSOC)) {
+		echo json_encode($user);
+		if(--$user_count > 0) {
+			echo ',';
+		}
+
+		// This is required to send the data to the client
+		ob_flush();
+	}
+	echo '}';
+
+// This is how you'll set the headers before you start streaming.
+})->streamWithHeaders([
+	'Content-Type' => 'application/json',
+	// optional status code, defaults to 200
+	'status' => 200
+]);
 ```
