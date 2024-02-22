@@ -1,60 +1,60 @@
-# Erfahren Sie mehr über Flight
+# Lerne Über Flight
 
-Flight ist ein schnelles, einfaches, erweiterbares Framework für PHP. Es ist ziemlich vielseitig und kann für den Aufbau verschiedener Arten von Webanwendungen verwendet werden. Es wurde mit Einfachheit im Hinterkopf entwickelt und ist so geschrieben, dass es leicht verständlich und benutzbar ist.
+Flight ist ein schnelles, einfaches, erweiterbares Framework für PHP. Es ist ziemlich vielseitig und kann für den Aufbau jeder Art von Webanwendung verwendet werden. Es wurde mit Blick auf Einfachheit entwickelt und ist so geschrieben, dass es leicht verständlich und anwendbar ist.
 
 ## Wichtige Framework-Konzepte
 
 ##### [Warum ein Framework?](/learn/why-frameworks)
 
-Hier ist ein kurzer Artikel darüber, warum Sie ein Framework verwenden sollten. Es ist eine gute Idee, die Vorteile der Verwendung eines Frameworks zu verstehen, bevor Sie eines verwenden.
+Hier ist ein kurzer Artikel darüber, warum du ein Framework verwenden solltest. Es ist eine gute Idee, die Vorteile der Verwendung eines Frameworks zu verstehen, bevor du eins verwendest.
 
-Zusätzlich wurde ein ausgezeichnetes Tutorial von [@lubiana](https://git.php.fail/lubiana) erstellt. Auch wenn es nicht im Detail auf Flight eingeht, wird Sie dieser Leitfaden dabei unterstützen, einige der wichtigsten Konzepte rund um ein Framework zu verstehen und warum deren Verwendung vorteilhaft ist. Sie finden das Tutorial [hier](https://git.php.fail/lubiana/no-framework-tutorial/src/branch/master/README.md).
+Zusätzlich wurde ein ausgezeichnetes Tutorial von [@lubiana](https://git.php.fail/lubiana) erstellt. Auch wenn es nicht detailliert speziell auf Flight eingeht, wird dir dieser Leitfaden helfen, einige der wichtigsten Konzepte rund um ein Framework zu verstehen und warum es vorteilhaft ist, sie zu verwenden. Du findest das Tutorial [hier](https://git.php.fail/lubiana/no-framework-tutorial/src/branch/master/README.md).
 
 ## Kernthemen
 
-##### [Autoload](/learn/autoloading)
+##### [Autoloading](/learn/autoloading)
 
-Erfahren Sie, wie Sie Ihre eigenen Klassen in Ihrer Anwendung autoloaden können.
+Lerne, wie du deine eigenen Klassen in deiner Anwendung automatisch lädst.
 
 ##### [Routing](/learn/routing)
 
-Erfahren Sie, wie Sie Routen für Ihre Webanwendung verwalten. Dies beinhaltet auch das Gruppieren von Routen, Routenparameter und Middleware.
+Lerne, wie du Routen für deine Webanwendung verwaltest. Dies beinhaltet auch das Gruppieren von Routen, Routenparameter und Middleware.
 
 ##### [Middleware](/learn/middleware)
 
-Lernen Sie, wie Sie Middleware verwenden können, um Anfragen und Antworten in Ihrer Anwendung zu filtern.
+Lerne, wie du Middleware verwendest, um Anfragen und Antwort in deiner Anwendung zu filtern.
 
 ##### [Anfragen](/learn/requests)
 
-Erfahren Sie, wie Sie Anfragen und Antworten in Ihrer Anwendung verarbeiten können.
+Lerne, wie du Anfragen und Antworten in deiner Anwendung behandeln kannst.
 
 ##### [Antworten](/learn/responses)
 
-Lernen Sie, wie Sie Antworten an Ihre Benutzer senden können.
+Lerne, wie du Antworten an deine Benutzer senden kannst.
 
 ##### [HTML-Vorlagen](/learn/templates)
 
-Erfahren Sie, wie Sie den integrierten Ansichts-Engine verwenden können, um Ihre HTML-Vorlagen zu rendern.
+Lerne, wie du den integrierten Ansichtsmotor verwendest, um deine HTML-Vorlagen zu rendern.
 
 ##### [Sicherheit](/learn/security)
 
-Lernen Sie, wie Sie Ihre Anwendung vor üblichen Sicherheitsbedrohungen schützen können.
+Lerne, wie du deine Anwendung vor gängigen Sicherheitsbedrohungen schützen kannst.
 
 ##### [Konfiguration](/learn/configuration)
 
-Lernen Sie, wie Sie das Framework für Ihre Anwendung konfigurieren können.
+Lerne, wie du das Framework für deine Anwendung konfigurierst.
 
-##### [Flight erweitern](/learn/extending)
+##### [Flight Erweitern](/learn/extending)
 
-Erfahren Sie, wie Sie das Framework erweitern können, indem Sie Ihre eigenen Methoden und Klassen hinzufügen. So behandelt Flight auch lose etwas, das Containerisierung genannt wird.
+Lerne, wie du das Framework erweiterst, indem du eigene Methoden und Klassen hinzufügst. So handhabt Flight auch etwas lose etwas namens Containerisierung.
 
-##### [Ereignisse und Filterung](/learn/filtering)
+##### [Events und Filterung](/learn/filtering)
 
-Erfahren Sie, wie Sie das Ereignissystem verwenden können, um Hooks zu Ihren Methoden und internen Frameworkmethoden hinzuzufügen.
+Lerne, wie du das Ereignissystem verwendest, um Hooks zu deinen Methoden und internen Framework-Methoden hinzuzufügen.
 
-##### [Framework-API](/learn/api)
+##### [Framework API](/learn/api)
 
-Erfahren Sie mehr über die Kernmethoden des Frameworks.
+Erfahre mehr über die Kernmethoden des Frameworks.
 
 ##### [Migration zu v3](/learn/migrating-to-v3)
-Rückwärtskompatibilität wurde größtenteils beibehalten, aber es gibt einige Änderungen, über die Sie sich im Klaren sein sollten, wenn Sie von v2 auf v3 migrieren.
+Die Abwärtskompatibilität wurde größtenteils beibehalten, aber es gibt einige Änderungen, über die du informiert sein solltest, wenn du von v2 auf v3 migrierst.

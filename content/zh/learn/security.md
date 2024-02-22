@@ -1,43 +1,48 @@
 # 安全
 
-在Web应用程序中，安全性是一件大事。您希望确保您的应用程序是安全的，用户的数据是安全的。Flight提供了许多功能来帮助您保护您的Web应用程序。
+对于 Web 应用程序来说，安全性是一个大问题。您希望确保您的应用程序是安全的，并且用户的数据是安全的。Flight 提供了许多功能来帮助您确保您的 Web 应用程序的安全性。
 
-## 头信息
+## 头部
 
-HTTP标头是保护Web应用程序的最简单方式之一。您可以使用标头来防止点击劫持、跨站脚本（XSS）和其他攻击。您可以通过几种方式将这些标头添加到您的应用程序中。
+HTTP 头是确保 Web 应用程序安全的最简单方法之一。您可以使用头部来防止点击劫持、XSS 和其他攻击。您可以通过几种方式向您的应用程序添加这些头部。
+
+查看您头部安全性的两个很棒的网站是 [securityheaders.com](https://securityheaders.com/) 和 [observatory.mozilla.org](https://observatory.mozilla.org/)。
 
 ### 手动添加
 
-您可以通过在`Flight\Response`对象上使用 `header` 方法手动添加这些标头。
+您可以使用 `Flight\Response` 对象上的 `header` 方法手动添加这些头部。
 ```php
-// 设置X-Frame-Options标头以防止点击劫持
+// 设置 X-Frame-Options 头部以防止点击劫持
 Flight::response()->header('X-Frame-Options', 'SAMEORIGIN');
 
-// 设置Content-Security-Policy标头以防止跨站脚本攻击
-// 注：此标头可能非常复杂，请查看互联网上的示例以供参考
+// 设置 Content-Security-Policy 头部以防止 XSS
+// 注意：此头部可能非常复杂，因此您需要在互联网上查找示例以符合您的应用程序
 Flight::response()->header("Content-Security-Policy", "default-src 'self'");
 
-// 设置X-XSS-Protection标头以防止跨站脚本攻击
+// 设置 X-XSS-Protection 头部以防止 XSS
 Flight::response()->header('X-XSS-Protection', '1; mode=block');
 
-// 设置X-Content-Type-Options标头以防止MIME嗅探
+// 设置 X-Content-Type-Options 头部以防止 MIME 嗅探
 Flight::response()->header('X-Content-Type-Options', 'nosniff');
 
-// 设置Referrer-Policy标头以控制发送的引荐信息量
+// 设置 Referrer-Policy 头部以控制发送多少引用者信息
 Flight::response()->header('Referrer-Policy', 'no-referrer-when-downgrade');
 
-// 设置Strict-Transport-Security标头以强制使用HTTPS
+// 设置 Strict-Transport-Security 头部以强制使用 HTTPS
 Flight::response()->header('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
+
+// 设置 Permissions-Policy 头部以控制可以使用哪些功能和 API
+Flight::response()->header('Permissions-Policy', 'geolocation=()');
 ```
 
-这些可以添加在您的`bootstrap.php`或`index.php`文件的顶部。
+这些可以添加到您的 `bootstrap.php` 或 `index.php` 文件的顶部。
 
 ### 作为过滤器添加
 
-您也可以将它们添加在一个过滤器/钩子中，如下所示：
+您也可以在过滤器/挂钩中添加它们，如下所示：
 
 ```php
-// 在过滤器中添加标头
+// 在过滤器中添加头部
 Flight::before('start', function() {
 	Flight::response()->header('X-Frame-Options', 'SAMEORIGIN');
 	Flight::response()->header("Content-Security-Policy", "default-src 'self'");
@@ -45,12 +50,13 @@ Flight::before('start', function() {
 	Flight::response()->header('X-Content-Type-Options', 'nosniff');
 	Flight::response()->header('Referrer-Policy', 'no-referrer-when-downgrade');
 	Flight::response()->header('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
+	Flight::response()->header('Permissions-Policy', 'geolocation=()');
 });
 ```
 
 ### 作为中间件添加
 
-您也可以将它们作为中间件类添加。这是保持代码清晰和有条理的好方法。
+您还可以将它们作为中间件类添加。这是保持代码清晰和有序的好方法。
 
 ```php
 // app/middleware/SecurityHeadersMiddleware.php
@@ -67,13 +73,12 @@ class SecurityHeadersMiddleware
 		Flight::response()->header('X-Content-Type-Options', 'nosniff');
 		Flight::response()->header('Referrer-Policy', 'no-referrer-when-downgrade');
 		Flight::response()->header('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
+		Flight::response()->header('Permissions-Policy', 'geolocation=()');
 	}
 }
 
-// index.php或您放置路由的任何地方
-// 顺便说一下，这个空的字符串组充当全局中间件以应用于
-// 所有路由。当然，您也可以做同样的事情，只需将其添加
-// 到特定路由。
+// index.php 或您设定路由的地方
+// 请注意，此空字符串组作为全局中间件对于所有路由起作用。当然，您也可以仅将其添加到特定路由。
 Flight::group('', function(Router $router) {
 	$router->get('/users', [ 'UserController', 'getUsers' ]);
 	// 更多路由
@@ -81,45 +86,45 @@ Flight::group('', function(Router $router) {
 ```
 
 
-## 跨站请求伪造（CSRF）
+## 跨站点请求伪造 (CSRF)
 
-跨站请求伪造（CSRF）是一种攻击类型，恶意网站可以使用户的浏览器向您的网站发送请求。这可以被用于在用户不知情的情况下在您的网站上执行操作。Flight不提供内置的CSRF保护机制，但您可以通过使用中间件轻松实现自己的保护机制。
+跨站点请求伪造 (CSRF) 是一种攻击类型，恶意网站可以让用户的浏览器向您的网站发送请求。这可以用于在用户不知情的情况下执行网站上的操作。Flight 不提供内置的 CSRF 保护机制，但您可以轻松通过使用中间件实现自己的保护。
 
 ### 设置
 
-首先，您需要生成一个CSRF令牌并将其存储在用户会话中。然后，您可以在表单中使用此令牌，并在提交表单时进行检查。
+首先，您需要生成一个 CSRF 令牌并将其存储在用户会话中。然后您可以在您的表单中使用此令牌，并在提交表单时进行检查。
 
 ```php
-// 生成一个CSRF令牌并将其存储在用户会话中
-// （假设您已经创建了一个会话对象并将其附加到Flight）
-// 您只需要为每个会话生成一个令牌（以便它可以跨多个标签页和请求为同一用户工作）
+// 生成一个 CSRF 令牌并将其存储在用户会话中
+// (假设您已经创建了一个会话对象并将其附加到 Flight)
+// 您只需要为每个会话生成一个令牌 (这样它就可以在同一用户的多个标签和请求中工作)
 if(Flight::session()->get('csrf_token') === null) {
 	Flight::session()->set('csrf_token', bin2hex(random_bytes(32)) );
 }
 ```
 
 ```html
-<!-- 在您的表单中使用CSRF令牌 -->
+<!-- 在您的表单中使用 CSRF 令牌 -->
 <form method="post">
 	<input type="hidden" name="csrf_token" value="<?= Flight::session()->get('csrf_token') ?>">
 	<!-- 其他表单字段 -->
 </form>
 ```
 
-#### 使用Latte
+#### 使用 Latte
 
-您还可以设置一个自定义函数以在您的Latte模板中输出CSRF令牌。
+您还可以设置一个自定义函数，在您的 Latte 模板中输出 CSRF 令牌。
 
 ```php
-// 设置一个自定义函数以输出CSRF令牌
-// 注意：View已配置为将Latte作为视图引擎
+// 设置一个自定义函数来输出 CSRF 令牌
+// 注意：视图已被配置为使用 Latte 作为视图引擎
 Flight::view()->addFunction('csrf', function() {
 	$csrfToken = Flight::session()->get('csrf_token');
 	return new \Latte\Runtime\Html('<input type="hidden" name="csrf_token" value="' . $csrfToken . '">');
 });
 ```
 
-现在，在您的Latte模板中，您可以使用 `csrf()` 函数来输出CSRF令牌。
+现在在您的 Latte 模板中，您可以使用 `csrf()` 函数来输出 CSRF 令牌。
 
 ```html
 <form method="post">
@@ -128,18 +133,18 @@ Flight::view()->addFunction('csrf', function() {
 </form>
 ```
 
-简短而简单，对吧？
+是不是很简单？
 
-### 检查CSRF令牌
+### 检查 CSRF 令牌
 
-您可以使用事件过滤器检查CSRF令牌：
+您可以使用事件过滤器来检查 CSRF 令牌：
 
 ```php
-// 此中间件检查请求是否为POST请求，如果是，则检查CSRF令牌是否有效
+// 此中间件检查请求是否为 POST 请求，若是，则检查 CSRF 令牌是否有效
 Flight::before('start', function() {
 	if(Flight::request()->method == 'POST') {
 
-		// 从表单值中获取csrf令牌
+		// 从表单值中捕获 csrf 令牌
 		$token = Flight::request()->data->csrf_token;
 		if($token !== Flight::session()->get('csrf_token')) {
 			Flight::halt(403, 'Invalid CSRF token');
@@ -148,7 +153,7 @@ Flight::before('start', function() {
 });
 ```
 
-或者，您可以使用中间件类：
+或者您可以使用一个中间件类：
 
 ```php
 // app/middleware/CsrfMiddleware.php
@@ -168,7 +173,7 @@ class CsrfMiddleware
 	}
 }
 
-// index.php或您放置路由的任何地方
+// index.php 或您设定路由的地方
 Flight::group('', function(Router $router) {
 	$router->get('/users', [ 'UserController', 'getUsers' ]);
 	// 更多路由
@@ -176,50 +181,50 @@ Flight::group('', function(Router $router) {
 ```
 
 
-## 跨站脚本（XSS）
+## 跨站脚本攻击 (XSS)
 
-跨站脚本（XSS）是一种攻击类型，恶意网站可以向您的网站注入代码。大多数机会来自您的最终用户填写的表单值。您**永远不应**信任用户的输出！始终假定他们都是世界上最厉害的黑客。他们可以将恶意JavaScript或HTML注入到您的页面中。此代码可用于从用户那里窃取信息或在您的网站上执行操作。使用Flight的视图类，您可以轻松转义输出以防止XSS攻击。
+跨站脚本攻击 (XSS) 是一种攻击类型，恶意网站可以将代码注入到您的网站中。大多数机会都来自您的最终用户填写的表单值。永远不要相信用户提交的内容！始终假定他们都是世界上最好的黑客。他们可以将恶意 JavaScript 或 HTML 注入到您的页面中。这些代码可用于窃取用户信息或在您的网站上执行操作。使用 Flight 的视图类，您可以轻松转义输出以防止 XSS 攻击。
 
 ```php
-// 假设用户很聪明，尝试将此作为其名称
+// 假设用户很聪明并尝试将此用作他们的姓名
 $name = '<script>alert("XSS")</script>';
 
 // 这将转义输出
 Flight::view()->set('name', $name);
 // 这将输出：&lt;script&gt;alert(&quot;XSS&quot;)&lt;/script&gt;
 
-// 如果您使用像Latte这样被注册为视图类，它也将自动转义此内容。
+// 如果您使用像 Latte 这样的视图类注册，它也会自动转义此内容。
 Flight::view()->render('template', ['name' => $name]);
 ```
 
-## SQL注入
+## SQL 注入
 
-SQL注入是一种攻击类型，恶意用户可以将SQL代码注入到您的数据库中。这可以用于从数据库中窃取信息或在数据库上执行操作。同样，您**永远不应**相信用户的输入！始终假定他们是来找麻烦的。您可以在`PDO`对象中使用预处理语句来防止SQL注入。
+SQL 注入是一种攻击类型，恶意用户可以将 SQL 代码注入到您的数据库中。这可用于从数据库中窃取信息或在数据库上执行操作。同样，永远不要相信您的用户输入！始终认为他们是为了危害而来。您可以在您的 `PDO` 对象中使用准备好的语句来防止 SQL 注入。
 
 ```php
-// 假设您已注册Flight::db()为您的PDO对象
+// 假设您已将 Flight::db() 注册为您的 PDO 对象
 $statement = Flight::db()->prepare('SELECT * FROM users WHERE username = :username');
 $statement->execute([':username' => $username]);
 $users = $statement->fetchAll();
 
-// 如果您使用了PdoWrapper类，则可以轻松地在一行中执行此操作
+// 如果您使用了 PdoWrapper 类，这也可以在一行中轻松完成
 $users = Flight::db()->fetchAll('SELECT * FROM users WHERE username = :username', [ 'username' => $username ]);
 
-// 您还可以使用带有？占位符的PDO对象执行相同操作
+// 您也可以使用具有 ? 占位符的 PDO 对象完成同样的事情
 $statement = Flight::db()->fetchAll('SELECT * FROM users WHERE username = ?', [ $username ]);
 
-// 只是承诺您永远不要像这样做...
+// 只是承诺您绝对永远不要像这样做...
 $users = Flight::db()->fetchAll("SELECT * FROM users WHERE username = '{$username}' LIMIT 5");
 // 因为如果 $username = "' OR 1=1; -- "; 
-// 查询构建后看起来像这样
+// 在查询生成后，它看起来像这样
 // SELECT * FROM users WHERE username = '' OR 1=1; -- LIMIT 5
-// 看起来很奇怪，但这是一个有效的查询，将起作用。实际上，
-// 这是一个非常常见的SQL注入攻击，将返回所有用户。
+// 看起来很奇怪，但它是一个有效的查询，将起作用。事实上，
+// 这是一个非常常见的 SQL 注入攻击，将返回所有用户。
 ```
 
-## 跨域资源共享（CORS）
+## CORS
 
-跨域资源共享（CORS）是一种允许在网页上请求来自源站之外的许多资源（例如字体、JavaScript等）的机制。Flight没有内置功能，但是可以通过类似于CSRF的中间件或事件过滤器轻松处理这个功能。
+跨源资源共享 (CORS) 是一种机制，允许从 Web 页面请求来自原始域之外的另一个域的许多资源（例如字体、JavaScript 等）。Flight 没有内置功能，但可以通过与 CSRF 类似的中间件或事件过滤器轻松处理此问题。
 
 ```php
 // app/middleware/CorsMiddleware.php
@@ -255,7 +260,7 @@ class CorsMiddleware
 
 	private function allowOrigins(): void
 	{
-		// 在此定义您允许的主机。
+		// 在此处自定义您允许的主机。
 		$allowed = [
 			'capacitor://localhost',
 			'ionic://localhost',
@@ -272,7 +277,7 @@ class CorsMiddleware
 	}
 }
 
-// index.php或您放置路由的任何地方
+// index.php 或您设定路由的地方
 Flight::route('/users', function() {
 	$users = Flight::db()->fetchAll('SELECT * FROM users');
 	Flight::json($users);
@@ -282,4 +287,4 @@ Flight::route('/users', function() {
 
 ## 结论
 
-安全性是很重要的，确保您的Web应用程序是安全的是至关重要的。Flight提供了许多功能来帮助您保护您的Web应用程序，但重要的是要始终保持警惕，确保您尽力保护用户的数据安全。始终设想最坏的情况，并且永远不要信任用户的输入。始终转义输出并使用预处理语句来防止SQL注入。始终使用中间件来保护您的路由免受CSRF和CORS攻击。如果您执行所有这些操作，您将在打造安全的Web应用程序的道路上走得很顺利。
+安全性非常重要，确保您的 Web 应用程序是安全的至关重要。Flight 提供了许多功能来帮助确保您的 Web 应用程序的安全性，但始终保持警惕并确保您尽一切可能保护用户数据的安全性是非常重要的。永远假设最坏的情况，并且永远不要相信用户输入。始终转义输出并使用准备好的语句来防止 SQL 注入。始终使用中间件保护您的路由不受 CSRF 和 CORS 攻击。如果您做到这些，您将为构建安全的 Web 应用程序迈出重要的一步。

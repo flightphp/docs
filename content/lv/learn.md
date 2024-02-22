@@ -1,52 +1,52 @@
-# Uzziniet par Lidojumu
+# Uzziniet par Flight
 
-Lidojums ir ātrs, vienkāršs, paplašināms ietvars PHP valodai. Tas ir diezgan daudzveidīgs un var tikt izmantots, lai izveidotu jebkura veida tīmekļa lietojumprogrammu. Tas ir izstrādāts, ņemot vērā vienkāršību, un rakstīts tā, lai būtu viegli saprotams un lietojams.
+Flight ir ātrs, vienkāršs, paplašināms ietvars PHP. Tas ir diezgan daudzpusīgs un tiek izmantots jebkura veida tīmekļa lietotnes izveidošanai. Tas ir izstrādāts, ņemot vērā vienkāršību, un ir rakstīts veidā, kas ir viegli saprotams un lietojams.
 
-## Svarīgākie ietvara koncepti
+## Svarīgi ietvara koncepti
 
-##### [Kāpēc ietvars?](/learn/why-frameworks)
+##### [Kāpēc izmantot ietvaru?](/learn/why-frameworks)
 
-Šeit ir īss raksts par to, kāpēc jums vajadzētu izmantot ietvaru. Pirms sākat lietot ietvaru, ir laba doma saprast ietvara izmantošanas priekšrocības.
+Šeit ir īss raksts par to, kāpēc jums vajadzētu izmantot ietvaru. Pirms sākat izmantot kādu ietvaru, ir laba doma saprast šīs ietvaru priekšrocības.
 
-Papildus [@lubiana](https://git.php.fail/lubiana) ir izveidojusi lielisku pamācību. Lai gan tā nenokļūst ļoti dziļi Flight konkrēti, šī rokasgrāmata palīdzēs jums saprast dažus galvenos jēdzienus, kas saistīti ar ietvaru, un kāpēc tie ir noderīgi lietošanā. Jūs varat atrast pamācību [šeit](https://git.php.fail/lubiana/no-framework-tutorial/src/branch/master/README.md).
+Papildus ļoti labam jaunajam ir izveidots pamācības materiāls [@lubiana](https://git.php.fail/lubiana). Lai arī tas neiet detalizēti uz Flight specifiski, šī vadlīnija palīdzēs jums saprast dažus galvenos jēdzienus, kas saistīti ar ietvaru, un kāpēc tos ir izdevīgi izmantot. Jūs varat atrast pamācību [šeit](https://git.php.fail/lubiana/no-framework-tutorial/src/branch/master/README.md).
 
 ## Pamata tēmas
 
-##### [Automātiskā ielāde](/learn/autoloading)
+##### [Automātiska ielāde](/learn/autoloading)
 
-Uzziniet, kā automatizēti ielādēt savas klases savā lietojumprogrammā.
+Uzziniet, kā automātiski ielādēt savas klases savā lietotnē.
 
 ##### [Maršrutēšana](/learn/routing)
 
-Uzziniet, kā pārvaldīt maršrutus savai tīmekļa lietojumprogrammai. Tas ietver arī maršrutu grupēšanu, maršrutu parametrus un starpoperācijas.
+Uzziniet, kā pārvaldīt maršrutus savai tīmekļa lietotnei. Tas ietver arī maršrutu grupēšanu, maršrutu parametrus un starpniekprogrammas.
 
-##### [Starpoperācijas](/learn/middleware)
+##### [Starpniekprogrammas](/learn/middleware)
 
-Uzziniet, kā izmantot starpoperācijas, lai filtrētu pieprasījumus un atbildes savā lietojumprogrammā.
+Uzziniet, kā izmantot starpniekprogrammas, lai filtrētu pieprasījumus un atbildes savā lietotnē.
 
 ##### [Pieprasījumi](/learn/requests)
 
-Uzziniet, kā apstrādāt pieprasījumus un atbildes savā lietojumprogrammā.
+Uzziniet, kā apstrādāt pieprasījumus un atbildes savā lietotnē.
 
 ##### [Atbildes](/learn/responses)
 
-Uzziniet, kā nosūtīt atbildes savu lietotājiem.
+Uzziniet, kā nosūtīt atbildes savai lietotājiem.
 
 ##### [HTML veidnes](/learn/templates)
 
-Uzziniet, kā izmantot iebūvēto skatu dzinēju, lai atveidotu jūsu HTML veidnes.
+Uzziniet, kā izmantot iebūvēto skata dzinēju, lai rendētu savas HTML veidnes.
 
 ##### [Drošība](/learn/security)
 
-Uzziniet, kā pasargāt savu lietojumprogrammu no vispārīgiem drošības draudiem.
+Uzziniet, kā nodrošināt savu lietotni pret bieži sastopamām drošības draudiem.
 
 ##### [Konfigurācija](/learn/configuration)
 
-Uzziniet, kā konfigurēt ietvaru savai lietojumprogrammai.
+Uzziniet, kā konfigurēt ietvaru savai lietotnei.
 
-##### [Paplašināšana](/learn/extending)
+##### [Paplašinājums Flight](/learn/extending)
 
-Uzziniet, kā paplašināt ietvaru, pievienojot savas metodes un klases. Tas ir arī veids, kā Lidojums brīvi apstrādā kaut ko sauktu par konteinerizāciju.
+Uzziniet, kā paplašināt ietvaru, pievienojot savas metodes un klases. Tas ir arī veids, kā Flight brīvi apstrādā kaut ko, ko sauc par konteinerizāciju.
 
 ##### [Notikumi un Filtrēšana](/learn/filtering)
 
@@ -54,7 +54,7 @@ Uzziniet, kā izmantot notikumu sistēmu, lai pievienotu āķus savām metodēm 
 
 ##### [Ietvara API](/learn/api)
 
-Uzziniet par ietvara pamatmetodēm.
+Uzziniet par ietvara pamata metodēm.
 
-##### [Pāreja uz v3](/learn/migrating-to-v3)
-Atgrieztsavietojamība lielā mērā ir saglabāta, bet pastāv dažas izmaiņas, par kurām jums jābūt informētiem, pārejot no v2 uz v3.
+##### [Migrācija uz v3](/learn/migrating-to-v3)
+Atkārtotās saderības ir lielākoties saglabātas, bet ir dažas izmaiņas, par kurām jums jābūt informētam, pārejot no v2 uz v3.

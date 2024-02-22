@@ -1,10 +1,10 @@
-# FlightPHP Aktīvais ieraksts
+# FlightPHP Darbības ieraksts
 
-Aktīvais ieraksts ir datu bāzes vienības attēlošana PHP objektā. Runājot vienkārši, ja jums ir lietotāju tabula jūsu datu bāzē, jūs varat "tulkot" rindu no šīs tabulas uz `User` klasi un `$user` objektu jūsu koda bāzē. Skatieties [pamata piemēru](#pamata-piemērs).
+Darbības ieraksts nozīmē datu bāzes vienības atainošanu kā PHP objektu. Vienkārši izsakoties, ja jums ir lietotāju tabula jūsu datu bāzē, jūs varat "pārvērst" tabulas rindu `User` klases un `$user` objektā jūsu koda bāzē. Skatīt [pamata piemēru](#pamata-piemērs).
 
-## Pamata piemērs
+## Pamata Piemērs
 
-Ņemsim vērā, ka jums ir šāda tabula:
+Tātad, pieņemsim, ka jums ir šāda tabula:
 
 ```sql
 CREATE TABLE users (
@@ -18,9 +18,9 @@ Tagad jūs varat iestatīt jaunu klasi, lai pārstāvētu šo tabulu:
 
 ```php
 /**
- * Aktīvā ieraksta klase parasti ir vienaskaitļa
+ * Darbības ieraksta klase parasti ir vienā skaitnī.
  * 
- * Ļoti ieteicams šeit pievienot tabulas rekvizītus kā komentārus
+ * Ieteicams šeit pievienot tabulas īpašības kā komentārus
  * 
  * @property int    $id
  * @property string $name
@@ -29,64 +29,64 @@ Tagad jūs varat iestatīt jaunu klasi, lai pārstāvētu šo tabulu:
 class User extends flight\ActiveRecord {
 	public function __construct($datu_bāzes_savienojums)
 	{
-		// jūs varat to iestatīt šādi
-		parent::__construct($datu_bāzes_savienojums, 'users');
-		// vai šādi
-		parent::__construct($datu_bāzes_savienojums, null, [ 'tabula' => 'users']);
+		// varat iestatīt to šādi
+		parent::__construct($datu_bāzes_savienojums, 'lietotāji');
+		// vai arī šādi
+		parent::__construct($datu_bāzes_savienojums, null, [ 'tabula' => 'lietotāji']);
 	}
 }
 ```
 
-Tagad vērojiet, kas notiek!
+Tagad vērojiet, kā notiek maģija!
 
 ```php
-// sqlite gadījumā
-$datu_bāzes_savienojums = new PDO('sqlite:test.db'); // tas ir tikai piemēram, visticamāk, ka jūs izmantosiet reālu datu bāzes savienojumu
+// izmantojot sqlite
+$datu_bāzes_savienojums = new PDO('sqlite:test.db'); // tas ir tikai piemēram, jūs visdrīzāk izmantotu reālu datu bāzes savienojumu
 
-// mysql gadījumā
+// izmantojot mysql
 $datu_bāzes_savienojums = new PDO('mysql:host=localhost;dbname=test_db&charset=utf8bm4', 'lietotājvārds', 'parole');
 
-// vai mysqli gadījumā
+// vai arī mysqli
 $datu_bāzes_savienojums = new mysqli('localhost', 'lietotājvārds', 'parole', 'test_db');
-// vai mysqli ar ne-objekta pamatotu izveidi
+// vai arī mysqli ar neobjekta pamatā izveidi
 $datu_bāzes_savienojums = mysqli_connect('localhost', 'lietotājvārds', 'parole', 'test_db');
 
 $user = new User($datu_bāzes_savienojums);
 $user->name = 'Bobby Tables';
-$user->password = password_hash('daža forša parole');
+$user->password = password_hash('some cool password');
 $user->insert();
 // vai $user->save();
 
 echo $user->id; // 1
 
 $user->name = 'Joseph Mamma';
-$user->password = password_hash('daža forša parole atkārtoti!!!');
+$user->password = password_hash('some cool password again!!!');
 $user->insert();
 // šeit nevar izmantot $user->save(), jo tas domās, ka tas ir atjauninājums!
 
 echo $user->id; // 2
 ```
 
-Un tā bija tik viegli pievienot jaunu lietotāju! Tagad, kad datu bāzē ir lietotāja rinda, kā jūs to izvilksiet?
+Un tā arī vienkārši tika pievienots jauns lietotājs! Tagad, kad datu bāzē ir lietotāja rinda, kā jūs to izvilksiet?
 
 ```php
-$user->find(1); // atrast id = 1 datu bāzē un atgriezt to.
+$user->find(1); // atrast id = 1 datu bāzē un to atgriezt.
 echo $user->name; // 'Bobby Tables'
 ```
 
-Un ko darīt, ja jūs vēlaties atrast visus lietotājus?
+Un ja jūs vēlaties atrast visus lietotājus?
 
 ```php
 $lietotāji = $user->findAll();
 ```
 
-Kas attiecas uz noteiktu nosacījumu?
+Kā ir ar kādu nosacījumu?
 
 ```php
-$lietotāji = $user->like('name', '%mamma%')->findAll();
+$users = $user->like('name', '%mamma%')->findAll();
 ```
 
-Redziet, cik jautri tas ir? Uzstādiet to un sāciet darbu!
+Redziet, cik jautri tas ir? Instalēsim to un sāksim!
 
 ## Instalācija
 
@@ -98,49 +98,49 @@ composer require flightphp/active-record
 
 ## Lietošana
 
-To var lietot kā atsevišķu bibliotēku vai arī ar Flight PHP ietvaru. Pilnīgi jūsu izvēlei.
+To var izmantot kā neatkarīgu bibliotēku vai arī ar Flight PHP Framework. Pilnīgi jūsu ziņā.
 
-### Atsevišķs izmantošanas veids
-Vienkārši pārliecinieties, ka jūs nododat PDO savienojumu konstruktoram.
+### Neatkarīgs
+Vienkārši nodrošiniet PDO savienojumu konstruktoram.
 
 ```php
-$pdo_savienojums = new PDO('sqlite:test.db'); // tas ir tikai piemēram, visticamāk, ka jūs izmantosiet reālu datu bāzes savienojumu
+$pdo_savienojums = new PDO('sqlite:test.db'); // tas ir tikai piemēram, jūs visdrīzāk izmantosiet reālu datu bāzes savienojumu
 
 $User = new User($pdo_savienojums);
 ```
 
-### Flight PHP ietvars
-Ja lietojat Flight PHP ietvaru, varat reģistrēt ActiveRecord klasi kā servisu (bet jums patiesībā nav jādara).
+### Flight PHP Framework
+Ja izmantojat Flight PHP Framework, jūs varat reģistrēt ActiveRecord klasi kā servisu (bet jums godīgi nav tas jādara).
 
 ```php
-Flight::register('lietotājs', 'User', [ $pdo_savienojums ]);
+Flight::register('user', 'User', [ $pdo_savienojums ]);
 
 // tad to varat izmantot šādi kontrolētājā, funkcijā, utt.
 
 Flight::user()->find(1);
 ```
 
-## API atsauce
+## API Atsauce
 ### CRUD funkcijas
 
 #### `find($id = null) : boolean|ActiveRecord`
 
-Atrast vienu ierakstu un piešķirt to pašreizējam objektam. Ja jūs padodat kādu `$id`, tas veiks meklēšanu pēc primārās atslēgas ar to vērtību. Ja nekas netiek padots, tas vienkārši atradīs pirmo ierakstu tabulā.
+Atrast vienu ierakstu un piešķirt to pašreizējam objektam. Ja jūs norādāt kādu `$id`, tas veiks meklēšanu pēc primārās atslēgas ar šo vērtību. Ja nekas netiek norādīts, tas vienkārši atrod pirmo ierakstu tabulā.
 
-Papildus tam jūs varat padot tam citas palīglīdzekļus, lai pieprasītu savu tabulu.
+Papildus jūs varat norādīt citus palīgmetodus, lai vaicātu jūsu tabulā.
 
 ```php
 // atrast ierakstu ar dažiem nosacījumiem iepriekš
 $user->notNull('password')->orderBy('id DESC')->find();
 
-// atrast ierakstu ar konkrētu id
+// atrast ierakstu pēc konkrēta id
 $id = 123;
 $user->find($id);
 ```
 
 #### `findAll(): array<int,ActiveRecord>`
 
-Atrast visus ierakstus tabulā, ko norādāt.
+Atrod visus ierakstus tabulā, ko norādāt.
 
 ```php
 $user->findAll();
@@ -148,7 +148,7 @@ $user->findAll();
 
 #### `insert(): boolean|ActiveRecord`
 
-Ievieto pašreizējo ierakstu datu baze.
+Ievieto pašreizējo ierakstu datu bāzē.
 
 ```php
 $user = new User($pdo_savienojums);
@@ -159,7 +159,7 @@ $user->insert();
 
 #### `update(): boolean|ActiveRecord`
 
-Atjauniniet pašreizējo ierakstu datu bāzē.
+Atjauno pašreizējo ierakstu datu bāzē.
 
 ```php
 $user->greaterThan('id', 0)->orderBy('id desc')->find();
@@ -169,38 +169,61 @@ $user->update();
 
 #### `delete(): boolean`
 
-Dzēst pašreizējo ierakstu no datu bāzes.
+Dzēš pašreizējo ierakstu no datu bāzes.
 
 ```php
 $user->gt('id', 0)->orderBy('id desc')->find();
 $user->delete();
 ```
 
+Jūs varat arī dzēst vairākus ierakstus, izpildot meklēšanu iepriekš.
+
+```php
+$user->like('name', 'Bob%')->delete();
+```
+
 #### `dirty(array  $dirty = []): ActiveRecord`
 
-Netīra dati attiecas uz datiem, kas ir mainījušies ierakstā.
+"Sliktie" dati attiecas uz datiem, kas ir mainīti ierakstā.
 
 ```php
 $user->greaterThan('id', 0)->orderBy('id desc')->find();
 
-// nekas nav "netīrs" līdz šim brīdim.
+// šajā punktā nav nekas "slikti".
 
-$user->email = 'test@example.com'; // tagad e-pasts tiek uzskatīts par "netīru", jo tas ir mainījies.
+$user->email = 'test@example.com'; // tagad e-pasts tiek uzskatīts par "sliktu", jo tas ir mainīts.
 $user->update();
-// tagad nav nekādu datu, kas ir netīri, jo tie ir atjaunināti un saglabāti datu bāzē
+// tagad nav "sliktu" datu, jo tie ir atjaunināti un saglabāti datu bāzē.
 
-$user->password = password_hash()'newpassword'); // tagad tas ir netīrs
-$user->dirty(); // neko padot nekas, tiks notīrīti visi netīrie ieraksti.
-$user->update(); // nekas netiks atjaunots, jo nekas netika saglabāts kā netīrs.
+$user->password = password_hash()'newpassword'); // tagad tas ir slikts
+$user->dirty(); // nedzēlīšu neko tīru, jo nav noteikts nekāds "slikts".
+$user->update(); // nekas netiks atjaunināts, jo nekas nav uzskatīts par "sliktu".
 
 $user->dirty([ 'name' => 'something', 'password' => password_hash('a different password') ]);
-$user->update(); // abi nosaukumi un parole ir atjaunoti.
+$user->update(); // gan vārds, gan parole tiks atjauninātas.
+```
+
+#### `reset(bool $include_query_data = true): ActiveRecord`
+
+Atiestata pašreizējo ierakstu uz sākotnējo stāvokli. Tas ir ļoti noderīgi, ja izmantojat cikla tipa darbības.
+Ja jūs nododat `true`, tas atiestata arī vaicājuma datus, kas tika izmantoti pašreizējā objekta atrašanai (noklusējuma darbība).
+
+```php
+$users = $user->greaterThan('id', 0)->orderBy('id desc')->find();
+$user_company = new UserCompany($pdo_savienojums);
+
+foreach($users as $user) {
+	$user_company->reset(); // sāciet ar tīru līniju
+	$user_company->user_id = $user->id;
+	$user_company->company_id = $some_company_id;
+	$user_company->insert();
+}
 ```
 
 ### SQL vaicājuma metodes
 #### `select(string $field1 [, string $field2 ... ])`
 
-Jūs varat atlasīt tikai dažas kolonnas tabulā, ja vēlaties (tas ir efektīvāk uz ļoti plašām tabulām ar daudzām kolonnām).
+Jūs varat izvēlēties tikai dažus tabulas stabiņus, ja vēlaties (tas ir efektīvāks, ja ir ļoti plašas tabulas ar daudziem stabiņiem)
 
 ```php
 $user->select('id', 'name')->find();
@@ -208,7 +231,7 @@ $user->select('id', 'name')->find();
 
 #### `from(string $table)`
 
-Jūs tehniski varat izvēlēties arī citu tabulu! Kāpēc gan nē?!
+Jūs tehniski varat izvēlēties citu tabulu arī! Kāpēc gan nē?!
 
 ```php
 $user->select('id', 'name')->from('user')->find();
@@ -219,22 +242,22 @@ $user->select('id', 'name')->from('user')->find();
 Jūs pat varat pievienoties citai tabulai datu bāzē.
 
 ```php
-$user->join('saziņa', 'saziņa.lietotājs_id = lietotāji.id')->find();
+$user->join('contacts', 'contacts.user_id = users.id')->find();
 ```
 
 #### `where(string $where_conditions)`
 
-Jūs varat iestatīt dažus pielāgotos where argumentus (jūs nevarat iestatīt parametrus šajā where paziņojumā).
+Jūs varat iestatīt dažus pielāgotus where argumentus (jūs nevarat iestatīt parametrus šajā where norādījumā)
 
 ```php
 $user->where('id=1 AND name="demo"')->find();
 ```
 
-**Siksnības piezīme** - Jūs varētu būt kārdinājis darīt kaut ko tādu kā `$user->where("id = '{$id}' AND name = '{$name}'")->find();`. LŪDZAM, NEDARIET TO!!! Šis ir uzņēmīgs pret datu ievietošanas uzbrukumiem. Ir daudz rakstu tiešsaistē, lūdzu, meklējiet internetā par "sql ievietošanas uzbrukumi php" un jūs atradīsiet daudz rakstu par šo tēmu. Pareizais veids, kā rīkoties ar šo bibliotēku, ir tā vietā, lai to dariet ar `where()` metodi, jūs darītu kaut ko līdzīgu `$user->eq('id', $id)->eq('name', $name)->find();`
+**Drošības piezīme** - Jūs varētu būt kārdināts izdarīt kaut ko tādu kā `$user->where("id = '{$id}' AND name = '{$name}'")->find();`. LŪDZAM, TO NEDARIET!!! Tas ir ievainojams pret tā saukto SQL injekcijas uzbrukumiem. Ir daudz rakstu tiešsaistē, lūdzu, meklējiet tīmeklī "sql injection attacks php" un jūs atradīsiet daudz rakstu par šo tēmu. Pareizais veids, kā rīkoties ar šo bibliotēku, ir nevis šis `where()` metods, bet gan kaut kas līdzīgs `$user->eq('id', $id)->eq('name', $name)->find();`
 
 #### `group(string $group_by_statement)/groupBy(string $group_by_statement)`
 
-Cērtiet savi rezultāti pēc konkrētas sausmas.
+Grupējiet savus rezultātus pēc konkrēta nosacījuma.
 
 ```php
 $user->select('COUNT(*) as count')->groupBy('name')->findAll();
@@ -242,7 +265,7 @@ $user->select('COUNT(*) as count')->groupBy('name')->findAll();
 
 #### `order(string $order_by_statement)/orderBy(string $order_by_statement)`
 
-Kārtot atgriezto vaicājumu konkrētu veidu.
+Kārtot atgriezto vaicājumu noteiktā secībā.
 
 ```php
 $user->orderBy('name DESC')->find();
@@ -250,7 +273,7 @@ $user->orderBy('name DESC')->find();
 
 #### `limit(string $limit)/limit(int $offset, int $limit)`
 
-Ierobežojiet atgriezto ierakstu skaitu. Ja tiek dots otrs int, tas būs nobīde, limitēt tāpat kā SQL.
+Ierobežojiet atgriezto ierakstu daudzumu. Ja tiek norādīts otrais integers, tas būs nobīde, limits tikpat kā SQL.
 
 ```php
 $user->orderby('name DESC')->limit(0, 10)->findAll();
@@ -259,7 +282,7 @@ $user->orderby('name DESC')->limit(0, 10)->findAll();
 ### WHERE nosacījumi
 #### `equal(string $field, mixed $value) / eq(string $field, mixed $value)`
 
-Kur `laukums = $vērtība`
+Kur `field = $value`
 
 ```php
 $user->eq('id', 1)->find();
@@ -267,7 +290,7 @@ $user->eq('id', 1)->find();
 
 #### `notEqual(string $field, mixed $value) / ne(string $field, mixed $value)`
 
-Kur `laukums <> $vērtība`
+Kur `field <> $value`
 
 ```php
 $user->ne('id', 1)->find();
@@ -275,14 +298,14 @@ $user->ne('id', 1)->find();
 
 #### `isNull(string $field)`
 
-Kur `laukums IR NULL`
+Kur `field IS NULL`
 
 ```php
 $user->isNull('id')->find();
 ```
 #### `isNotNull(string $field) / notNull(string $field)`
 
-Kur `laukums NAV NULL`
+Kur `field IS NOT NULL`
 
 ```php
 $user->isNotNull('id')->find();
@@ -290,7 +313,7 @@ $user->isNotNull('id')->find();
 
 #### `greaterThan(string $field, mixed $value) / gt(string $field, mixed $value)`
 
-Kur `laukums > $vērtība`
+Kur `field > $value`
 
 ```php
 $user->gt('id', 1)->find();
@@ -298,21 +321,21 @@ $user->gt('id', 1)->find();
 
 #### `lessThan(string $field, mixed $value) / lt(string $field, mixed $value)`
 
-Kur `laukums < $vērtība`
+Kur `field < $value`
 
 ```php
 $user->lt('id', 1)->find();
 ```
 #### `greaterThanOrEqual(string $field, mixed $value) / ge(string $field, mixed $value) / gte(string $field, mixed $value)`
 
-Kur `laukums >= $vērtība`
+Kur `field >= $value`
 
 ```php
 $user->ge('id', 1)->find();
 ```
 #### `lessThanOrEqual(string $field, mixed $value) / le(string $field, mixed $value) / lte(string $field, mixed $value)`
 
-Kur `laukums <= $vērtība`
+Kur `field <= $value`
 
 ```php
 $user->le('id', 1)->find();
@@ -320,7 +343,7 @@ $user->le('id', 1)->find();
 
 #### `like(string $field, mixed $value) / notLike(string $field, mixed $value)`
 
-Kur `laukums LĪDZINĀS $vērtība` vai `laukums NAV LĪDZINĀTS $vērtība`
+Kur `field LIKE $value` vai `field NOT LIKE $value`
 
 ```php
 $user->like('name', 'de')->find();
@@ -328,7 +351,7 @@ $user->like('name', 'de')->find();
 
 #### `in(string $field, array $values) / notIn(string $field, array $values)`
 
-Kur `laukums IN($vērtība)` vai `laukums NAV IN($vērtība)`
+Kur `field IN($value)` vai `field NOT IN($value)`
 
 ```php
 $user->in('id', [1, 2])->find();
@@ -336,36 +359,36 @@ $user->in('id', [1, 2])->find();
 
 #### `between(string $field, array $values)`
 
-Kur `laukums STARP $vērtība UN $vērtība1`
+Kur `field BETWEEN $value AND $value1`
 
 ```php
 $user->between('id', [1, 2])->find();
 ```
 
 ### Attiecības
-Šajā bibliotēkā varat uzstādīt vairāku veidu attiecības. Jūs varat iestatīt viens->daudz un viens->viens attiecības starp tabulām. Tas prasa nedaudz papildu iestatījumu šai klasei iepriekš.
+Šajā bibliotēkā varat iestatīt vairāku veidu attiecības. Jūs varat noteikt viens → daudzi un viens → viens attiecības starp tabulām. Lai to paveiktu, ir nepieciešama nedaudz papildu iestatīšana klātienē.
 
-$relations iestatīšana nav grūta, bet pareizās sintakses minēšana var būt mulsinoša.
+`$relations` masīva iestatīšana nav grūta, bet pareizā sintakse var būt samulsinoša.
 
 ```php
 protected array $relations = [
-	// jūs varat nosaukt atslēgu tā, kā vēlaties. Aktīvais ieraksts ir ļoti labs nosaukums. Piemēram, lietotājs, kontakts, klients
-	'jebkādas_active_record' => [
-		// nepieciešams
-		self::HAS_ONE, // tas ir attiecību veids
+	// varat nosaukt atslēgu jebko, ko vēlētos. ActiveRecord nosaukums ir iespējams labais. Piemēram: lietotājs, kontakts, klients
+	'whatever_active_record' => [
+		// obligāts
+		self::HAS_ONE, // šis ir attiecību veids
 
-		// nepieciešams
-		'Kāda_Klase', // šis ir "cits" ActiveRecord klase, uz kuru tas attiecas
+		// obligāti
+		'Some_Class', // šī ir "cita" ActiveRecord klase, uz kuru tas norādīs
 
-		// nepieciešams
-		'vietējais_atslēgas', // tas ir lokālā atslēga, kas saistās pievienošanu.
-		// tikai FYI, tas arī pievienojas tikai pie "citas" modeļa primārās atslēgas
-
-		// neobligāti
-		[ 'eq' => 1, 'select' => 'COUNT(*) as count', 'limit' 5 ], // pielāgotas metodes, ko jūs vēlaties izpildīt. [] ja jums nevajag neko.
+		// obligāti
+		'lokalizācijas_atslēga', // tas ir vietējais atslēgas, kurš norāda uz pievienošanos.
+		// tikai FYI, tas arī pievienojas pie "cita" modeļa primārās atslēgas
 
 		// neobligāti
-		'atpakaļ_atsauces_nosaukums' // tas ir, ja vēlaties atpakaļ atsauces attiecību atpakaļ sev, piemēram, $user->kontakts->lietotājs;
+		[ 'eq' => 1, 'select' => 'COUNT(*) as count', 'limit' 5 ], // pielāgoti metodes, kuras jūs vēlaties izpildīt. [] ja jums nav vajadzīgs nekas.
+
+		// neobligāti
+		'atpakaļ_atsauces_vārds' // tas ir, ja jūs vēlaties atzīmēt šo attiecību atpakaļ uz sevi, piemēram, $user->kontakts->lietotājs;
 	];
 ]
 ```
@@ -373,8 +396,8 @@ protected array $relations = [
 ```php
 class User extends ActiveRecord{
 	protected array $relations = [
-		'kontakti' => [ self::HAS_MANY, Contact::class, 'lietotājs_id' ],
-		'kontakts' => [ self::HAS_ONE, Contact::class, 'lietotājs_id' ],
+		'contacts' => [ self::HAS_MANY, Contact::class, 'user_id' ],
+		'contact' => [ self::HAS_ONE, Contact::class, 'user_id' ],
 	];
 
 	public function __construct($datu_bāzes_savienojums)
@@ -385,63 +408,63 @@ class User extends ActiveRecord{
 
 class Contact extends ActiveRecord{
 	protected array $relations = [
-		'lietotājs' => [ self::BELONGS_TO, User::class, 'lietotājs_id' ],
-		'lietotājs_ar_atpakaļ_atsauces' => [ self::BELONGS_TO, User::class, 'lietotājs_id', [], 'kontakts' ],
-	];
-	public function __construct($datu_bāzes_savienojums)
-	{
-parent::__construct($datu_bāzes_savienojums, 'kontakti');
-	}
+	'lietotāji' => [ self::HAS_MANY, Kontakts::class, 'lietotājs_id' ],
+	'kontakts' => [ self::HAS_ONE, Kontakts::class, 'lietotājs_id' ],
+];
+
+public function __construct($datu_bāzes_savienojums)
+{
+	parent::__construct($datu_bāzes_savienojums, 'kontakti');
 }
 ```
 
-Tagad mums ir iestatītas atsauces, tāpēc varam tos ļoti viegli izmantot!
+Tagad atsauces ir iestatītas, lai tās būtu ļoti viegli izmantot!
 
 ```php
 $user = new User($pdo_savienojums);
 
-// atrast jaunāko lietotāju.
+// atrast visjaunāko lietotāju.
 $user->notNull('id')->orderBy('id desc')->find();
 
-// iegūstiet kontaktus, izmantojot attiecību:
+// iegūt kontaktus, izmantojot attiecību:
 foreach($user->kontakti as $kontakts) {
 	echo $kontakts->id;
 }
 
-// vai varam doties citā virzienā.
-$kontakts = new Kontakt();
+// vai arī mēs varam iet otrajā virzienā.
+$kontakts = new Contact();
 
 // atrast vienu kontaktu
 $kontakts->find();
 
-// iegūstiet lietotāju, izmantojot attiecību:
+// iegūt lietotāju, izmantojot attiecību:
 echo $kontakts->lietotājs->name; // tas ir lietotāja vārds
 ```
 
-Ļoti forši, vai ne?
+Diezgan forši, vai ne?
 
-### Iestatīšana pielāgotiem datiem
-Dažreiz var būt nepieciešams pievienot kaut ko īpašu savam ActiveRecord, piemēram, pielāgotu izrēķinu, kas varētu būt vieglāk pievienot objektam, ko pēc tam nododiet, teiksim, veidlapai.
+### Iestatīt pielāgotus datus
+Dažreiz jums var būt nepieciešams pievienot kaut ko unikālu jūsu ActiveRecord, piemēram, pielāgotu aprēķinu, kas varētu būt vieglāk piesaistīts objektam, ko pēc tam nodotu, teiksim, veidlapai.
 
 #### `setCustomData(string $field, mixed $value)`
-Pielāgoto datus pievienojat ar `setCustomData()` metodi.
+Jūs pievienojat pielāgoto datus ar `setCustomData()` metodi.
 ```php
-$user->setCustomData('page_view_count', $page_view_count);
+$user->setCustomData('lapas_apmeklējumu_skaits', $lapas_apmeklējumu_skaits);
 ```
 
-Un tad vienkārši norādiet to kā normālu objekta rekvizītu.
+Un tad vienkārši to norādiet, it kā tā būtu parasta objekta īpašība.
 
 ```php
-echo $user->page_view_count;
+echo $user->lapas_apmeklējumu_skaits;
 ```
 
 ### Notikumi
 
-Vēl viens super foršs šīs bibliotēkas elements ir par notikumiem. Notikumi tiek izsaukti noteiktos laikos, pamatojoties uz konkrētiem metodēm, ko jūs izsaucat. Tie ir ļoti noderīgi dati automātiski uzstādīšanai jums.
+Vēl viena lieliska funkcija par šo bibliotēku ir notikumi. Notikumi tiek izraisīti noteiktos laikos atkarībā no konkrētajiem sauktajiem metodēm. Tie ļoti ļoti palīdz iestatīt datus jums automātiski.
 
 #### `onConstruct(ActiveRecord $ActiveRecord, array &config)`
 
-Tas ir ļoti noderīgi, ja jums ir jāiestata noklusējuma savienojums vai kaut kas tamlīdzīgs.
+Tas ir tiešām noderīgi, ja jums ir nepieciešams iestatīt noklusēto savienojumu vai kaut ko līdzīgu.
 
 ```php
 // index.php vai bootstrap.php
@@ -454,21 +477,21 @@ Flight::register('db', 'PDO', [ 'sqlite:test.db' ]);
 // User.php
 class User extends flight\ActiveRecord {
 
-	protected function onConstruct(self $self, array &$config) { // nedrīkst aizmirst & atsauce
-		// jūs varētu to darīt, lai automātiski iestatītu savienojumu
-		$config['connection'] = Flight::db();
-		// vai tā
+	protected function onConstruct(self $self, array &$config) { // neaizmirstiet & atsauci
+		// jūs varētu to izdarīt, lai automātiski iestatītu savienojumu
+		$config['savienojums'] = Flight::db();
+		// vai arī šo
 		$self->transformAndPersistConnection(Flight::db());
 		
-		// Jūs varat arī šādi iestatīt tabulas nosaukumu.
-		$config['table'] = 'users';
+		// Jūs varat arī iestatīt tabulas nosaukumu šajā veidā.
+		$config['tabula'] = 'lietotāji';
 	} 
 }
 ```
 
 #### `beforeFind(ActiveRecord $ActiveRecord)`
 
-Tas visticamāk būs noderīgi, ja jums ir jāveic vaicājuma manipulācija katru reizi.
+Iespējams, ka tas noder tikai tad, ja jums ir jāveic jautājumu manipulācija katru reizi.
 
 ```php
 class User extends flight\ActiveRecord {
@@ -479,7 +502,7 @@ class User extends flight\ActiveRecord {
 	}
 
 	protected function beforeFind(self $self) {
-		// vienmēr palaist id >= 0, ja tas ir jūsu gaume
+		// vienmēr palaist id >= 0, ja tā ir jūsu gaume
 		$self->gte('id', 0); 
 	} 
 }
@@ -487,7 +510,7 @@ class User extends flight\ActiveRecord {
 
 #### `afterFind(ActiveRecord $ActiveRecord)`
 
-Šis visticamāk būs noderīgi, ja jums vienmēr ir nepieciešams palaist kādu loģiku katru reizi, kad šis ieraksts tiek iegūts. Vai jums ir nepieciešams šifrēt kaut ko? Vai jums ir nepieciešams palaist pielāgotu skaitījumu vaicājumu katru reizi (nav efektīvs, bet nē).
+Šis, visticamāk, ir noderīgāks, ja vienmēr jums ir nepieciešams izpildīt kādu loģiku katru reizi, kad šis ieraksts tiek iegūts. Vai jums ir nepieciešams dešifrēt kaut ko? Vai jums ir nepieciešams izpildīt kādu pielāgotu skaitīšanas vaicājumu katru reizi (neefektīvs, bet nu jau).
 
 ```php
 class User extends flight\ActiveRecord {
@@ -498,11 +521,187 @@ class User extends flight\ActiveRecord {
 	}
 
 	protected function afterFind(self $self) {
-		// atšifrēšana
-		$self->noslēpums = tavaAtšifrēšanasFunkcija($self->noslēpums, kāds_atslēga);
+		// atšifrējot kaut ko
+		$self->noslēpums = jūsuAtšifrēšanasFunkcija($self->noslēpums, $kāds_atslēga);
 
-		// varbūt saglabāt kaut ko pielāgotu, piemēram, vaicājumu???
-		$self->setCustomData('skatījumu_skaits', $self->select('COUNT(*) count')->from('lietotāja_skatījumi')->eq('lietotāja_id', $self->id)['count']; 
+		// iespējams saglabāšana kautkas pielāgots, piemēram, vaicājums???
+		$self->setCustomData('skatīšanās_skaits', $self->select('COUNT(*) count')->from('lietotāja_skatījumi')->eq('lietotājs_id', $self->id)['skaita']; 
 	} 
 }
 ```
+
+#### `beforeFindAll(ActiveRecord $ActiveRecord)`
+
+Tas ir derīgs, ja katru reizi jums ir jāveic vaicājuma manipulācija.
+
+```php
+class User extends flight\ActiveRecord {
+	
+	public function __construct($datu_bāzes_savienojums)
+	{
+		parent::__construct($datu_bāzes_savienojums, 'lietotāji');
+	}
+
+	protected function beforeFindAll(self $self) {
+		// vienmēr palaist id >= 0, ja tā ir jūsu gaume
+		$self->gte('id', 0); 
+	} 
+}
+```
+
+#### `afterFindAll(array<int,ActiveRecord> $results)`
+
+Līdzīgi kā `afterFind()`, bet jūsu var to darīt visiem ierakstiem!
+
+```php
+class User extends flight\ActiveRecord {
+	
+	public function __construct($datu_bāzes_savienojums)
+	{
+		parent::__construct($datu_bāzes_savienojums, 'lietotāji');
+	}
+
+	protected function afterFindAll(array $results) {
+
+		foreach($results as $self) {
+			// dariet kaut ko foršu kā afterFind()
+		}
+	} 
+}
+```
+
+#### `beforeInsert(ActiveRecord $ActiveRecord)`
+
+Tiešām noderīgi, ja jums ir nepieciešamas noklusējuma vērtības katru reizi.
+
+```php
+class User extends flight\ActiveRecord {
+	
+	public function __construct($datu_bāzes_savienojums)
+	{
+		parent::__construct($datu_bāzes_savienojums, 'lietotāji');
+	}
+
+	protected function beforeInsert(self $self) {
+		// iestatiet dažas standarta vērtības
+		if(!$self->izveides_datums) {
+			$self->izveides_datums = gmdate('Y-m-d');
+		}
+
+		if(!$self->parole) {
+			$self->parole = password_hash((string) microtime(true));
+		}
+	} 
+}
+```
+
+#### `afterInsert(ActiveRecord $ActiveRecord)`
+
+Piedāvājat gadījumu, kad dati tiek mainīti pēc ievietošanas?
+
+```php
+class User extends flight\ActiveRecord {
+	
+	public function __construct($datu_bāzes_savienojums)
+	{
+		parent::__construct($datu_bāzes_savienojums, 'lietotāji');
+	}
+
+	protected function afterInsert(self $self) {
+		// dariet ko vēlaties
+		Flight::kešatmiņa()->set('jaunākais_ievietošanas_id', $self->id);
+		// vai cits....
+	} 
+}
+```
+
+#### `beforeUpdate(ActiveRecord $ActiveRecord)`
+
+Tiešām noderīgi, ja jums ir nepieciešamas noklusējuma vērtības katru reizi atjaunināšanai.
+
+```php
+class User extends flight\ActiveRecord {
+	
+	public function __construct($datu_bāzes_savienojums)
+	{
+		parent::__construct($datu_bāzes_savienojums, 'lietotāji');
+	}
+
+	protected function beforeInsert(self $self) {
+		// iestatiet dažas standarta vērtības
+		if(!$self->atjaunināšanas_datums) {
+			$self->atjaunināšanas_datums = gmdate('Y-m-d');
+		}
+	} 
+}
+```
+
+#### `afterUpdate(ActiveRecord $ActiveRecord)`
+
+Iespējams, ka ir lietas, ko vēlaties mainīt pēc atjaunināšanas?
+
+```php
+class User extends flight\ActiveRecord {
+	
+	public function __construct($datu_bāzes_savienojums)
+	{
+		parent::__construct($datu_bāzes_savienojums, 'lietotāji');
+	}
+
+	protected function afterInsert(self $self) {
+		// dariet ko vēlaties
+		Flight::kešatmiņa()->set('pēdējais_atjauninātais_lietotāja_id', $self->id);
+		// vai cits....
+	} 
+}
+```
+
+#### `beforeSave(ActiveRecord $ActiveRecord)/afterSave(ActiveRecord $ActiveRecord)`
+
+Tas ir noderīgi, ja vēlaties, lai notikumi notiktu gan, kad notiek ievietošana, gan atjaunināšana. Iespējams, jūs varat minēt, kas tas ir.
+
+```php
+class User extends flight\ActiveRecord {
+	
+	public function __construct($datu_bāzes_savienojums)
+	{
+		parent::__construct($datu_bāzes_savienojums, 'lietotāji');
+	}
+
+	protected function beforeSave(self $self) {
+		$self->pēdējais_atjaunināšanās = gmdate('Y-m-d H:i:s');
+	} 
+}
+```
+
+#### `beforeDelete(ActiveRecord $ActiveRecord)/afterDelete(ActiveRecord $ActiveRecord)`
+
+Nav skaidrs, ko jūs šeit vēlaties darīt, bet nav nekādu sūdzību! Varat to izdarīt!
+
+```php
+class User extends flight\ActiveRecord {
+	
+	public function __construct($datu_bāzes_savienojums)
+	{
+		parent::__construct($datu_bāzes_savienojums, 'lietotāji');
+	}
+
+	protected function beforeDelete(self $self) {
+		echo 'Viņš bija drosmīgs karavīrs... :cry-face:';
+	} 
+}
+```
+
+## Contributing
+
+Lūdzu, dariet to.
+
+### Setup
+
+Kad jūs dodat savu ieguldījumu, pārliecinieties, ka izpildāt `composer test-coverage`, lai uzturētu 100% testu pārklājumu (tas nav īsts testu pārklājums, drīzāk integrācijas testi).
+
+Lūdzu, pārliecinieties, ka pēc iespējas izpildīt `composer beautify` un `composer phpcs`, lai labotu jebkādus linting kļūdas.
+
+## License
+
+MIT

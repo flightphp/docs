@@ -1,10 +1,10 @@
 # FlightPHP アクティブレコード
 
-アクティブレコードは、データベースエンティティをPHPオブジェクトにマッピングするものです。端的に言えば、データベースに users テーブルがある場合、そのテーブル内の行を `User` クラスと `$user` オブジェクトに"変換"することができます。[基本的な例](#basic-example)を参照してください。
+アクティブレコードはデータベースエンティティをPHPオブジェクトにマッピングするものです。単純に言えば、データベースに`users`テーブルがある場合、そのテーブルの行を`User`クラスおよび`$user`オブジェクトに「変換」できます。[基本例](#basic-example)を参照してください。
 
 ## 基本的な例
 
-以下のテーブルがあると仮定します：
+次のテーブルがあると仮定してみましょう:
 
 ```sql
 CREATE TABLE users (
@@ -14,11 +14,11 @@ CREATE TABLE users (
 );
 ```
 
-これを表す新しいクラスを設定できます：
+これに対応する新しいクラスを設定できます:
 
 ```php
 /**
- * アクティブレコードクラスは一般的に単数形です
+ * アクティブレコードクラスは通常単数形です
  * 
  * ここにテーブルのプロパティをコメントとして追加することを強く推奨します
  * 
@@ -29,27 +29,27 @@ CREATE TABLE users (
 class User extends flight\ActiveRecord {
 	public function __construct($database_connection)
 	{
-		// このように設定できます
+		// この方法で設定できます
 		parent::__construct($database_connection, 'users');
-		// またはこのようにもできます
+		// またはこの方法でも設定できます
 		parent::__construct($database_connection, null, [ 'table' => 'users']);
 	}
 }
 ```
 
-さあ、魔法が起こります！
+さて、魔法が起こるのを見ましょう！
 
 ```php
-// SQLite の場合
-$database_connection = new PDO('sqlite:test.db'); // これは例です、実際には実在するデータベース接続を使用するはずです
+// sqliteの場合
+$database_connection = new PDO('sqlite:test.db'); // これは例です。実際にはリアルなデータベース接続を使用します
 
-// MySQL の場合
-$database_connection = new PDO('mysql:host=localhost;dbname=test_db&charset=utf8bm4', 'ユーザ名', 'パスワード');
+// mysqlの場合
+$database_connection = new PDO('mysql:host=localhost;dbname=test_db&charset=utf8bm4', 'username', 'password');
 
-// または mysqli の場合
-$database_connection = new mysqli('localhost', 'ユーザ名', 'パスワード', 'test_db');
-// またはオブジェクトベースでない mysqli の場合
-$database_connection = mysqli_connect('localhost', 'ユーザ名', 'パスワード', 'test_db');
+// またはmysqli
+$database_connection = new mysqli('localhost', 'username', 'password', 'test_db');
+// またはオブジェクトベースでないmysqli
+$database_connection = mysqli_connect('localhost', 'username', 'password', 'test_db');
 
 $user = new User($database_connection);
 $user->name = 'Bobby Tables';
@@ -62,85 +62,85 @@ echo $user->id; // 1
 $user->name = 'Joseph Mamma';
 $user->password = password_hash('some cool password again!!!');
 $user->insert();
-// ここでは $user->save() は使用できません！
+// ここでは$user->save()を使うことはできません！
 
 echo $user->id; // 2
 ```
 
-新しいユーザを追加するのはこれだけ簡単でした！さて、データベース内にユーザ行があるので、それを取得する方法は？
+新しいユーザーを追加するのはこれだけ簡単でした！では、データベースにユーザー行があるとして、それを取り出す方法はどうすればよいですか？
 
 ```php
-$user->find(1); // データベース内の id = 1 を見つけ、それを返します。
+$user->find(1); // データベースからid = 1を見つけて返す。
 echo $user->name; // 'Bobby Tables'
 ```
 
-そして、すべてのユーザを検索したい場合は？
+すべてのユーザーを見つけたい場合は？
 
 ```php
 $users = $user->findAll();
 ```
 
-ある条件で検索したい場合はどうすればいいですか？
+特定の条件で見つけたい場合は？
 
 ```php
 $users = $user->like('name', '%mamma%')->findAll();
 ```
 
-楽しいですね！インストールして始めましょう！
+これがどれほど楽しいか見てみましょう？インストールして始めましょう！
 
 ## インストール
 
-Composer で簡単にインストールできます
+Composerを使用して簡単にインストールできます
 
 ```php
 composer require flightphp/active-record 
 ```
 
-## 使用方法
+## 使用法
 
-これはスタンドアロンライブラリとしても、Flight PHP Framework と一緒に使用できます。完全にお好みに合わせて選択してください。
+これはスタンドアロンのライブラリとして使用するか、Flight PHPフレームワークと組み合わせて使用できます。完全にあなた次第です。
 
 ### スタンドアロン
-単純に PDO 接続をコンストラクタに渡すだけです。
+単純にコンストラクタにPDO接続を渡してください。
 
 ```php
-$pdo_connection = new PDO('sqlite:test.db'); // これは例です、実際には実在するデータベース接続を使用するはずです
+$pdo_connection = new PDO('sqlite:test.db'); // これは例です。実際にはリアルなデータベース接続を使用します
 
 $User = new User($pdo_connection);
 ```
 
-### Flight PHP Framework
-Flight PHP Framework を使用している場合、ActiveRecord クラスをサービスとして登録できます（しかし、実際には必要ありません）。
+### Flight PHPフレームワーク
+Flight PHPフレームワークを使用している場合、ActiveRecordクラスをサービスとして登録できます（しかし、正直言って必要はありません）。
 
 ```php
 Flight::register('user', 'User', [ $pdo_connection ]);
 
-// その後、コントローラや関数などで次のように使用できます。
+// 続いて、コントローラや関数などで次のように使用できます。
 
 Flight::user()->find(1);
 ```
 
-## API リファレンス
-### CRUD 関数
+## APIリファレンス
+### CRUD関数
 
 #### `find($id = null) : boolean|ActiveRecord`
 
-1つのレコードを見つけて、現在のオブジェクトに割り当てます。何らかの `$id` を渡すと、その値で主キーを検索します。何も渡されない場合は、テーブル内の最初のレコードだけを検索します。
+1つのレコードを見つけて現在のオブジェクトに割り当てます。 `$id`を指定した場合、その値に対応する主キーでルックアップを実行します。何も渡さない場合、テーブル内の最初のレコードを取得します。
 
-追加で、テーブルをクエリするための他のヘルパーメソッドを渡すこともできます。
+また、他のヘルパーメソッドを使ってテーブルをクエリできます。
 
 ```php
-// 事前にいくつかの条件でレコードを検索
+// 前もっていくつかの条件でレコードを見つける
 $user->notNull('password')->orderBy('id DESC')->find();
 
-// 特定の ID でレコードを検索
+// 特定のIDでレコードを見つける
 $id = 123;
 $user->find($id);
 ```
 
 #### `findAll(): array<int,ActiveRecord>`
 
-指定したテーブル内のすべてのレコードを検索します。
+指定したテーブル内のすべてのレコードを見つけます。
 
 ```php
 $user->findAll();
@@ -152,14 +152,14 @@ $user->findAll();
 
 ```php
 $user = new User($pdo_connection);
-$user->name = 'デモ';
-$user->password = md5('デモ');
+$user->name = 'demo';
+$user->password = md5('demo');
 $user->insert();
 ```
 
 #### `update(): boolean|ActiveRecord`
 
-現在のレコードをデータベース内で更新します。
+現在のレコードをデータベースで更新します。
 
 ```php
 $user->greaterThan('id', 0)->orderBy('id desc')->find();
@@ -176,31 +176,54 @@ $user->gt('id', 0)->orderBy('id desc')->find();
 $user->delete();
 ```
 
+検索前に検索を実行して複数のレコードを削除することもできます。
+
+```php
+$user->like('name', 'Bob%')->delete();
+```
+
 #### `dirty(array  $dirty = []): ActiveRecord`
 
-"Dirty" データとは、レコード内で変更されたデータのことを指します。
+"Dirty"データとは、レコードで変更されたデータのことです。
 
 ```php
 $user->greaterThan('id', 0)->orderBy('id desc')->find();
 
 // この時点では何も "dirty" ではありません。
 
-$user->email = 'test@example.com'; // 今、email は変更されたため "dirty" と見なされます。
+$user->email = 'test@example.com'; // emailが変更されたので "dirty" と見なされます。
 $user->update();
-// 今やデータベースに反映されたので、"dirty" データはもうありません。
+// 今は、データベースに更新され、dirtyなデータがないことになります。
 
-$user->password = password_hash()'newpassword'); // これは今 "dirty" です
-$user->dirty(); // 何も渡さない場合は、すべての "dirty" エントリをクリアします。
-$user->update(); // "dirty" なデータがキャプチャされていないため、何も更新されません。
+$user->password = password_hash()'newpassword'); // これは今dirtyです
+$user->dirty(); // 何も渡さないと、dirtyエントリーがすべてクリアされます。
+$user->update(); // 何もdirtyとしてキャプチャされなかったため、更新されません。
 
 $user->dirty([ 'name' => 'something', 'password' => password_hash('a different password') ]);
-$user->update(); // name と password が両方更新されます。
+$user->update(); // 名前とパスワードが両方更新されます。
 ```
 
-### SQL クエリメソッド
+#### `reset(bool $include_query_data = true): ActiveRecord`
+
+現在のレコードを初期状態にリセットします。これはループタイプの挙動で使用するのに非常に役立ちます。
+`true` を渡すと、現在のオブジェクトを検索するために使用されたクエリデータもリセットされます（デフォルト動作）。
+
+```php
+$users = $user->greaterThan('id', 0)->orderBy('id desc')->find();
+$user_company = new UserCompany($pdo_connection);
+
+foreach($users as $user) {
+	$user_company->reset(); // クリーンなスレートで開始
+	$user_company->user_id = $user->id;
+	$user_company->company_id = $some_company_id;
+	$user_company->insert();
+}
+```
+
+### SQLクエリメソッド
 #### `select(string $field1 [, string $field2 ... ])`
 
-テーブル内のいくつかの列だけを選択できます（多くの列を持つ非常に幅広いテーブルではパフォーマンスが向上します）。
+テーブルの列の一部だけを選択することができます（列が多くて幅が広いテーブルではパフォーマンスが向上します）
 
 ```php
 $user->select('id', 'name')->find();
@@ -208,7 +231,7 @@ $user->select('id', 'name')->find();
 
 #### `from(string $table)`
 
-別のテーブルも選択できます！
+他のテーブルも選択できます！
 
 ```php
 $user->select('id', 'name')->from('user')->find();
@@ -216,7 +239,7 @@ $user->select('id', 'name')->from('user')->find();
 
 #### `join(string $table_name, string $join_condition)`
 
-データベース内の別のテーブルにも結合できます。
+データベース内の別のテーブルに結合することもできます。
 
 ```php
 $user->join('contacts', 'contacts.user_id = users.id')->find();
@@ -224,17 +247,17 @@ $user->join('contacts', 'contacts.user_id = users.id')->find();
 
 #### `where(string $where_conditions)`
 
-カスタムの where 引数を設定できます（この where 文にはパラメータを設定できません）。
+カスタムのwhere引数を設定できます（このwhereステートメントではパラメータを設定できません）
 
 ```php
 $user->where('id=1 AND name="demo"')->find();
 ```
 
-**セキュリティ注意** - `$user->where("id = '{$id}' AND name = '{$name}'")->find();` のようにしたくなるかもしれませんが、これは SQL インジェクション攻撃に対して脆弱です。これについて多くの記事がオンラインで見つかりますので、"sql injection attacks php" で Google 検索してみてください。このライブラリでこれを処理する適切な方法は、この `where()` メソッドの代わりに、`$user->eq('id', $id)->eq('name', $name)->find();` のようにすることです。
+**セキュリティ注意** - `$user->where("id = '{$id}' AND name = '{$name}'")->find();`のようなことをすることに誘惑されるかもしれません。これはSQLインジェクション攻撃に対して脆弱です。オンラインで多くの記事があるので、"sql injection attacks php"で検索してください。このライブラリでこれを処理する正しい方法は、この`where()`メソッドの代わりに、`$user->eq('id', $id)->eq('name', $name)->find();`のようにすることです。
 
 #### `group(string $group_by_statement)/groupBy(string $group_by_statement)`
 
-結果を特定の条件でグループ化します。
+特定の条件で結果をグループ化します。
 
 ```php
 $user->select('COUNT(*) as count')->groupBy('name')->findAll();
@@ -242,7 +265,7 @@ $user->select('COUNT(*) as count')->groupBy('name')->findAll();
 
 #### `order(string $order_by_statement)/orderBy(string $order_by_statement)`
 
-クエリの結果を特定の方法でソートします。
+特定の方法で返されたクエリを並べ替えます。
 
 ```php
 $user->orderBy('name DESC')->find();
@@ -250,16 +273,16 @@ $user->orderBy('name DESC')->find();
 
 #### `limit(string $limit)/limit(int $offset, int $limit)`
 
-返されるレコードの数を制限します。2 番目の int が与えられると、SQL と同じようにオフセット、リミットが適用されます。
+返されるレコードの数を制限します。第二引数にintが指定された場合、オフセット、制限があり、SQLと同じように動作します。
 
 ```php
 $user->orderby('name DESC')->limit(0, 10)->findAll();
 ```
 
-### WHERE 条件
+### WHERE条件
 #### `equal(string $field, mixed $value) / eq(string $field, mixed $value)`
 
-`field = $value` を適用します。
+「field = $value」で検索します。
 
 ```php
 $user->eq('id', 1)->find();
@@ -267,7 +290,7 @@ $user->eq('id', 1)->find();
 
 #### `notEqual(string $field, mixed $value) / ne(string $field, mixed $value)`
 
-`field <> $value` を適用します。
+「field <> $value」で検索します。
 
 ```php
 $user->ne('id', 1)->find();
@@ -275,14 +298,14 @@ $user->ne('id', 1)->find();
 
 #### `isNull(string $field)`
 
-`field IS NULL` を適用します。
+「field IS NULL」となる条件で検索します。
 
 ```php
 $user->isNull('id')->find();
 ```
 #### `isNotNull(string $field) / notNull(string $field)`
 
-`field IS NOT NULL` を適用します。
+「field IS NOT NULL」となる条件で検索します。
 
 ```php
 $user->isNotNull('id')->find();
@@ -290,7 +313,7 @@ $user->isNotNull('id')->find();
 
 #### `greaterThan(string $field, mixed $value) / gt(string $field, mixed $value)`
 
-`field > $value` を適用します。
+「field > $value」となる条件で検索します。
 
 ```php
 $user->gt('id', 1)->find();
@@ -298,22 +321,21 @@ $user->gt('id', 1)->find();
 
 #### `lessThan(string $field, mixed $value) / lt(string $field, mixed $value)`
 
-`field < $value` を適用します。
+「field < $value」となる条件で検索します。
 
 ```php
 $user->lt('id', 1)->find();
 ```
-
 #### `greaterThanOrEqual(string $field, mixed $value) / ge(string $field, mixed $value) / gte(string $field, mixed $value)`
 
-`field >= $value` を適用します。
+「field >= $value」となる条件で検索します。
 
 ```php
 $user->ge('id', 1)->find();
 ```
 #### `lessThanOrEqual(string $field, mixed $value) / le(string $field, mixed $value) / lte(string $field, mixed $value)`
 
-`field <= $value` を適用します。
+「field <= $value」となる条件で検索します。
 
 ```php
 $user->le('id', 1)->find();
@@ -321,7 +343,7 @@ $user->le('id', 1)->find();
 
 #### `like(string $field, mixed $value) / notLike(string $field, mixed $value)`
 
-`field LIKE $value` または `field NOT LIKE $value` を適用します。
+「field LIKE $value」または「field NOT LIKE $value」となる条件で検索します。
 
 ```php
 $user->like('name', 'de')->find();
@@ -329,7 +351,7 @@ $user->like('name', 'de')->find();
 
 #### `in(string $field, array $values) / notIn(string $field, array $values)`
 
-`field IN($value)` または `field NOT IN($value)` を適用します。
+「field IN($value)」または「field NOT IN($value)」となる条件で検索します。
 
 ```php
 $user->in('id', [1, 2])->find();
@@ -337,785 +359,81 @@ $user->in('id', [1, 2])->find();
 
 #### `between(string $field, array $values)`
 
-`field BETWEEN $value AND $value1` を適用します。
+「field BETWEEN $value AND $value1」となる条件で検索します。
 
 ```php
 $user->between('id', [1, 2])->find();
 ```
 
-### 関連性
-このライブラリを使用して、さまざまな種類の関係を設定できます。テーブル間での one->many および one->one の関係を設定できます。これにはクラスの事前に少しのセットアップが必要です。
-
-`$relations` 配列を設定することは難しくありませんが、正しい構文を推測することが混乱する可能性があります。
+### リレーションシップ
+このライブラリを使用してさまざまな種類のリレーションシップを設定できます。テーブル間の1対多および1対1のリレーションシップを設定できます。事前にクラスで`$relations`配列を設定する必要がありますが、正しい構文を推測するのはやや混乱するかもしれません。
 
 ```php
 protected array $relations = [
-	// キー名は何でもかまいません。ActiveRecord の名前がおそらくいいでしょう。例: user, contact, client
+	// キーの名前は何でもよいです。ActiveRecordの名前がおそらく適しています。例: user, contact, client
 	'whatever_active_record' => [
 		// 必須
-		self::HAS_ONE, // これは関係の種類です
+		self::HAS_ONE, // このリレーションシップのタイプ
 
 		// 必須
-		'Some_Class', // これは "other" ActiveRecord クラスです
+		'Some_Class', // これが参照するもう一つのActiveRecordクラスです
 
 		// 必須
-		'local_key', // 参照する join の local_key です。
-		// ちなみに、これは "other" モデルの主キーにのみ参加します
+		'local_key', // ジョインを参照するローカルキーです。
+		// ちなみに、これは "other" モデルの主キーにも結合されます
 
-		// オプション
-		[ 'eq' => 1, 'select' => 'COUNT(*) as count', 'limit' 5 ], // 実行しようとするカスタムメソッド。何も欲しくない場合は [] です。
-
-		// オプション
-		'back_reference_name' // これはこの関係を自身に戻す場合の名前です Ex: $user->contact->user;
-	];
-]
-```
-
-```php
-class User extends ActiveRecord{
-	protected array $relations = [
-		'contacts' => [ self::HAS_MANY, Contact::class, 'user_id' ],
-		'contact' => [ self::HAS_ONE, Contact::class, 'user_id' ],
-	];
-
-	public function __construct($database_connection)
-	{
-		parent::__construct($database_connection, 'users');
-	}
-}
-
-class Contact extends ActiveRecord{
-	protected array $relations = [
-		'user' => [ self::BELONGS_TO, User::class, 'user_id' ],
-		'user_with_backref' => [ self::BELONGS_TO, User::class, 'user_id', [], 'contact' ],
-	];
-	public function __construct($database_connection)
-	{
-		parent::__construct($database_connection, 'contacts');
-	}
-}
-```
-
-これで参照が設定されましたので、非常に簡単に使用できます！
-
-```php
-$user = new User($pdo_connection);
-
-// 最新のユーザを見つける
-$user->notNull('id')->orderBy('id desc')->find();
-
-// 関係を使ってコンタクトを取得：
-foreach($user->contacts as $contact) {
-	echo $contact->id;
-}
-
-// または逆もできます。
-$contact = new Contact();
-
-// コンタクトを 1 つ見つける
-$contact->find();
-
-// 関係を使ってユーザを取得：
-echo $contact->user->name; // これがユーザー名です
-```
-
-すごく面白いですね？
-
-### カスタムデータの設定
-場合によっては、テンプレートに渡すのが簡単なカスタム計算など、レコードに独自のものをアタッチする場合があります。
-
-#### `setCustomData(string $field, mixed $value)`
-`setCustomData()` メソッドを使用して、カスタムデータをアタッチします。
-```php
-$user->setCustomData('page_view_count', $page_view_count);
-```
-
-そして、通常のオブジェクトのプロパティのように参照します。
-
-```php
-echo $user->page_view_count;
-``# フライトPHP アクティブレコード
-
-アクティブレコードは、データベースエンティティをPHPオブジェクトにマッピングするものです。端的に言えば、データベースに users テーブルがある場合、そのテーブル内の行を `User` クラスと `$user` オブジェクトに"変換"することができます。[基本的な例](#basic-example)を参照してください。
-
-## 基本的な例
-
-以下のテーブルがあると仮定します：
-
-```sql
-CREATE TABLE users (
-	id INTEGER PRIMARY KEY, 
-	name TEXT, 
-	password TEXT 
-);
-```
-
-これを表す新しいクラスを設定できます：
-
-```php
-/**
- * アクティブレコードクラスは一般的に単数形です
- * 
- * ここにテーブルのプロパティをコメントとして追加することを強く推奨します
- * 
- * @property int    $id
- * @property string $name
- * @property string $password
- */ 
-class User extends flight\ActiveRecord {
-	public function __construct($database_connection)
-	{
-		// このように設定できます
-		parent::__construct($database_connection, 'users');
-		// またはこのようにもできます
-		parent::__construct($database_connection, null, [ 'table' => 'users']);
-	}
-}
-```
-
-さあ、魔法が起こります！
-
-```php
-// SQLite の場合
-$database_connection = new PDO('sqlite:test.db'); // これは例です、実際には実在するデータベース接続を使用するはずです
-
-// MySQL の場合
-$database_connection = new PDO('mysql:host=localhost;dbname=test_db&charset=utf8bm4', 'ユーザ名', 'パスワード');
-
-// または mysqli の場合
-$database_connection = new mysqli('localhost', 'ユーザ名', 'パスワード', 'test_db');
-// またはオブジェクトベースでない mysqli の場合
-$database_connection = mysqli_connect('localhost', 'ユーザ名', 'パスワード', 'test_db');
-
-$user = new User($database_connection);
-$user->name = 'Bobby Tables';
-$user->password = password_hash('some cool password');
-$user->insert();
-// または $user->save();
-
-echo $user->id; // 1
-
-$user->name = 'Joseph Mamma';
-$user->password = password_hash('some cool password again!!!');
-$user->insert();
-// ここでは $user->save() は使用できません！
-
-echo $user->id; // 2
-```
-
-新しいユーザを追加するのはこれだけ簡単でした！さて、データベース内にユーザ行があるので、それを取得する方法は？
-
-```php
-$user->find(1); // データベース内の id = 1 を見つけ、それを返します。
-echo $user->name; // 'Bobby Tables'
-```
-
-そして、すべてのユーザを検索したい場合は？
-
-```php
-$users = $user->findAll();
-```
-
-ある条件で検索したい場合はどうすればいいですか？
-
-```php
-$users = $user->like('name', '%mamma%')->findAll();
-```
-
-楽しいですね！インストールして始めましょう！
-
-## インストール
-
-Composer で簡単にインストールできます
-
-```php
-composer require flightphp/active-record 
-```
-
-## 使用方法
-
-これはスタンドアロンライブラリとしても、Flight PHP Framework と一緒に使用できます。完全にお好みに合わせて選択してください。
-
-### スタンドアロン
-単純に PDO 接続をコンストラクタに渡すだけです。
-
-```php
-$pdo_connection = new PDO('sqlite:test.db'); // これは例です、実際には実在するデータベース接続を使用するはずです
-
-$User = new User($pdo_connection);
-```
-
-### Flight PHP Framework
-Flight PHP Framework を使用している場合、ActiveRecord クラスをサービスとして登録できます（しかし、実際には必要ありません）。
-
-```php
-Flight::register('user', 'User', [ $pdo_connection ]);
-
-// その後、コントローラや関数などで次のように使用できます。
-
-Flight::user()->find(1);
-```
-
-## API リファレンス
-### CRUD 関数
-
-#### `find($id = null) : boolean|ActiveRecord`
-
-1つのレコードを見つけて、現在のオブジェクトに割り当てます。何らかの `$id` を渡すと、その値で主キーを検索します。何も渡されない場合は、テーブル内の最初のレコードだけを検索します。
-
-追加で、テーブルをクエリするための他のヘルパーメソッドを渡すこともできます。
-
-```php
-// 事前にいくつかの条件でレコードを検索
-$user->notNull('password')->orderBy('id DESC')->find();
-
-// 特定の ID でレコードを検索
-$id = 123;
-$user->find($id);
-```
-
-#### `findAll(): array<int,ActiveRecord>`
-
-指定したテーブル内のすべてのレコードを検索します。
-
-```php
-$user->findAll();
-```
-
-#### `insert(): boolean|ActiveRecord`
-
-現在のレコードをデータベースに挿入します。
-
-```php
-$user = new User($pdo_connection);
-$user->name = 'デモ';
-$user->password = md5('デモ');
-$user->insert();
-```
-
-#### `update(): boolean|ActiveRecord`
-
-現在のレコードをデータベース内で更新します。
-
-```php
-$user->greaterThan('id', 0)->orderBy('id desc')->find();
-$user->email = 'test@example.com';
-$user->update();
-```
-
-#### `delete(): boolean`
-
-現在のレコードをデータベースから削除します。
-
-```php
-$user->gt('id', 0)->orderBy('id desc')->find();
-$user->delete();
-```
-
-#### `dirty(array  $dirty = []): ActiveRecord`
-
-"Dirty" データとは、レコード内で変更されたデータのことを指します。
-
-```php
-$user->greaterThan('id', 0)->orderBy('id desc')->find();
-
-// この時点では何も "dirty" ではありません。
-
-$user->email = 'test@example.com'; // 今、email は変更されたため "dirty" と見なされます。
-$user->update();
-// 今やデータベースに反映されたので、"dirty" データはもうありません。
-
-$user->password = password_hash()'newpassword'); // これは今 "dirty" です
-$user->dirty(); // 何も渡さない場合は、すべての "dirty" エントリをクリアします。
-$user->update(); // "dirty" なデータがキャプチャされていないため、何も更新されません。
-
-$user->dirty([ 'name' => 'something', 'password' => password_hash('a different password') ]);
-$user->update(); // name と password が両方更新されます。
-```
-
-### SQL クエリメソッド
-#### `select(string $field1 [, string $field2 ... ])`
-
-テーブル内のいくつかの列だけを選択できます（多くの列を持つ非常に幅広いテーブルではパフォーマンスが向上します）。
-
-```php
-$user->select('id', 'name')->find();
-```
-
-#### `from(string $table)`
-
-別のテーブルも選択できます！
-
-```php
-$user->select('id', 'name')->from('user')->find();
-```
-
-#### `join(string $table_name, string $join_condition)`
-
-データベース内の別のテーブルにも結合できます。
-
-```php
-$user->join('contacts', 'contacts.user_id = users.id')->find();
-```
-
-#### `where(string $where_conditions)`
-
-カスタムの where 引数を設定できます（この where 文にはパラメータを設定できません）。
-
-```php
-$user->where('id=1 AND name="demo"')->find();
-```
-
-**セキュリティ注意** - `$user->where("id = '{$id}' AND name = '{$name}'")->find();` のようにしたくなるかもしれませんが、これは SQL インジェクション攻撃に対して脆弱です。これについて多くの記事がオンラインで見つかりますので、"sql injection attacks php" で Google 検索してみてください。このライブラリでこれを処理する適切な方法は、この `where()` メソッドの代わりに、`$user->eq('id', $id)->eq('name', $name)->find();` のようにすることです。
-
-#### `group(string $group_by_statement)/groupBy(string $group_by_statement)`
-
-結果を特定の条件でグループ化します。
-
-```php
-$user->select('COUNT(*) as count')->groupBy('name')->findAll();
-```
-
-#### `order(string $order_by_statement)/orderBy(string $order_by_statement)`
-
-クエリの結果を特定の方法でソートします。
-
-```php
-$user->orderBy('name DESC')->find();
-```
-
-#### `limit(string $limit)/limit(int $offset, int $limit)`
-
-返されるレコードの数を制限します。2 番目の int が与えられると、SQL と同じようにオフセット、リミットが適用されます。
-
-```php
-$user->orderby('name DESC')->limit(0, 10)->findAll();
-```
-
-### WHERE 条件
-#### `equal(string $field, mixed $value) / eq(string $field, mixed $value)`
-
-`field = $value` を適用します。
-
-```php
-$user->eq('id', 1)->find();
-```
-
-#### `notEqual(string $field, mixed $value) / ne(string $field, mixed $value)`
-
-`field <> $value` を適用します。
-
-```php
-$user->ne('id', 1)->find();
-```
-
-#### `isNull(string $field)`
-
-`field IS NULL` を適用します。
-
-```php
-$user->isNull('id')->find();
-```
-#### `isNotNull(string $field) / notNull(string $field)`
-
-`field IS NOT NULL` を適用します。
-
-```php
-$user->isNotNull('id')->find();
-```
-
-#### `greaterThan(string $field, mixed $value) / gt(string $field, mixed $value)`
-
-`field > $value` を適用します。
-
-```php
-$user->gt('id', 1)->find();
-```
-
-#### `lessThan(string $field, mixed $value) / lt(string $field, mixed $value)`
-
-`field < $value` を適用します。
-
-```php
-$user->lt('id', 1)->find();
-```
-
-#### `greaterThanOrEqual(string $field, mixed $value) / ge(string $field, mixed $value) / gte(string $field, mixed $value)`
-
-`field >= $value` を適用します。
-
-```php
-$user->ge('id', 1)->find();
-```
-#### `lessThanOrEqual(string $field, mixed $value) / le(string $field, mixed $value) / lte(string $field, mixed $value)`
-
-`field <= $value` を適用します。
-
-```php
-$user->le('id', 1)->find();
-```
-
-#### `like(string $field, mixed $value) / notLike(string $field, mixed $value)`
-
-`field LIKE $value` または `field NOT LIKE $value` を適用します。
-
-```php
-$user->like('name', 'de')->find();
-```
-
-#### `in(string $field, array $values) / notIn(string $field, array $values)`
-
-`field IN($value)` または `field NOT IN($value)` を適用します。
-
-```php
-$user->in('id', [1, 2])->find();
-```
-
-#### `between(string $field, array $values)`
-
-`field BETWEEN $value AND $value1` を適用します。
-
-```php
-$user->between('id', [1, 2])->find();
-```
-
-### 関連性
-このライブラリを使用して、さまざまな種類の関係を設定できます。テーブル間での one->many および one->one の関係を設定できます。これにはクラスの事前に少しのセットアップが必要です。
-
-`$relations` 配列を設定することは難しくありませんが、正しい構文を推測することが混乱する可能性があります。
-
-```php
-protected array $relations = [
-	// キー名は何でもかまいません。ActiveRecord の名前がおそらくいいでしょう。例: user, contact, client
-	'whatever_active_record' => [
-		// 必須
-		self::HAS_ONE, // これは関係の種類です
-
-		// 必須
-		'Some_Class', // これは "other" ActiveRecord クラスです
-
-		// 必須
-		'local_key', // 参照する join の local_key です。
-		// ちなみに、これは "other" モデルの主キーにのみ参加します
-
-		// オプション
-		[ 'eq' => 1, 'select' => 'COUNT(*) as count', 'limit' 5 ], // 実行しようとするカスタムメソッド。何も欲しくない場合は [] です。
-
-		// オプション
-		'back_reference_name' // これはこの関係を自身に戻す場合の名前です Ex: $user->contact->user;
-	];
-]
-```
-
-```php
-class User extends ActiveRecord{
-	protected array $relations = [
-		'contacts' => [ self::HAS_MANY, Contact::class, 'user_id' ],
-		'contact' => [ self::HAS_ONE, Contact::class, 'user_id' ],
-	];
-
-	public function __construct($database_connection)
-	{
-		parent::__construct($database_connection, 'users');
-	}
-}
-
-class Contact extends ActiveRecord{
-	protected array $relations = [
-		'user' => [ self::BELONGS_TO, User::class, 'user_id' ],
-		'user_with_backref' => [ self::BELONGS_TO, User::class, 'user_id', [], 'contact' ],
-	];
-	public function __construct($database_connection)
-	{
-		parent::__construct($database_connection, 'contacts');
-	}
-}
-```
-
-これで参照が設定されましたので、非常に簡単に使用できます！
-
-```php
-$user = new User($pdo_connection);
-
-// 最新のユーザを見つける
-$user->notNull('id')->orderBy('id desc')->find();
-
-// 関係を使ってコンタクトを取得：
-foreach($user->contacts as $contact) {
-	echo $contact->id;
-}
-
-// または逆もできます。
-$contact = new Contact();
-
-// コンタクトを 1 つ見つける
-$contact->find();
-
-// 関係を使ってユーザを取得：
-echo $contact->user->name; // これがユーザー名です
-```
-
-すごく面白いですね？
-
-### カスタムデータの設定
-場合によっては、テンプレートに渡すのが簡単なカスタム計算など、レコードに独自のものをアタッチする場合があります。
-
-#### `setCustomData(string $field, mixed $value)`
-`setCustomData()` メソッドを使用して、カスタムデータをアタッチします。
-```php
-$user->setCustomData('page_view_count', $page_view_count);
-```
-
-And then you simply reference it like a normal object property.
-
-```php
-echo $user->page_view_count;
-```
-
-### イベント
-
-このライブラリについてのもう1つの素晴らしい機能は、イベントについてです。イベントは、特定のメソッドを呼び出したときに特定のタイミングでトリガーされます。自動データの設定などに非常に役立ちます。
-
-#### `onConstruct(ActiveRecord $ActiveRecord, array &config)`
-
-これは、デフォルト接続などを設定する必要がある場合に本当に便利です。
-
-```php
-// index.php または bootstrap.php
-Flight::register('db', 'PDO', [ 'sqlite:test.db' ]);
-
-//
-//
-//
-
-// User.php
-class User extends flight\ActiveRecord {
-
-	protected function onConstruct(self $self, array &$config) { // & reference を忘れないでください
-		// 接続を自動的に設定することができます
-		$config['connection'] = Flight::db();
-		// またはこれ
-		$self->transformAndPersistConnection(Flight::db());
+		// カスタムメソッドを実行する場合は、[ 'eq' => 1, 'select' => 'COUNT(*) as count', 'limit' 5 ]のように指定します（カスタムメソッドが不要な場合は[]）
 		
-		// このようにしてテーブル名を設定することもできます。
-		$config['table'] = 'users';
-	} 
-}
+		// オプション
+		'back_reference_name' // このリレーションシップを自身に逆参照する場合（例: $user->contact->user）
+	];
+]
 ```
 
-#### `beforeFind(ActiveRecord $ActiveRecord)`
-
-これは、常にクエリを変更する必要がある場合以外は有用でしょう。
-
 ```php
-class User extends flight\ActiveRecord {
-	
+class User extends ActiveRecord{
+	protected array $relations = [
+		'contacts' => [ self::HAS_MANY, Contact::class, 'user_id' ],
+		'contact' => [ self::HAS_ONE, Contact::class, 'user_id' ],
+	];
+
 	public function __construct($database_connection)
 	{
 		parent::__construct($database_connection, 'users');
 	}
-
-	protected function beforeFind(self $self) {
-		// それが好きならば常に id >= 0 を実行します
-		$self->gte('id', 0); 
-	} 
 }
-```
 
-#### `afterFind(ActiveRecord $ActiveRecord)`
-
-これは、常に特定のロジックを実行する必要がある場合に便利です。何かを復号化する必要がありますか？カスタムのカウントクエリを毎回実行する必要がありますか（パフォーマンスは良くありませんが、やりたいことでしょう）？
-
-```php
-class User extends flight\ActiveRecord {
-	
+class Contact extends ActiveRecord{
+	protected array $relations = [
+		'user' => [ self::BELONGS_TO, User::class, 'user_id' ],
+		'user_with_backref' => [ self::BELONGS_TO, User::class, 'user_id', [], 'contact' ],
+	];
 	public function __construct($database_connection)
 	{
-		parent::__construct($database_connection, 'users');
+		parent::__construct($database_connection, 'contacts');
 	}
-
-	protected function afterFind(self $self) {
-		// 何かを復号化する
-		$self->secret = yourDecryptFunction($self->secret, $some_key);
-
-		// クエリのようなカスタムデータを保存する可能性もあります
-		$self->setCustomData('view_count', $self->select('COUNT(*) count')->from('user_views')->eq('user_id', $self->id)['count']; 
-	} 
 }
 ```
 
-#### `beforeFindAll(ActiveRecord $ActiveRecord)`
-
-これは、常にクエリを変更する必要がある場合以外は有用でしょう。
+これで参照が設定されたので、非常に簡単に使用できます！
 
 ```php
-class User extends flight\ActiveRecord {
-	
-	public function __construct($database_connection)
-	{
-		parent::__construct($database_connection, 'users');
-	}
+$user = new User($pdo_connection);
 
-	protected function beforeFindAll(self $self) {
-		// それが好きならば常に id >= 0 を実行します
-		$self->gte('id', 0); 
-	} 
+// 最新のユーザーを見つける
+$user->notNull('id')->orderBy('id desc')->find();
+
+// リレーションを使って連絡先を取得する
+foreach($user->contacts as $contact) {
+	echo $contact->id;
 }
+
+// または逆に行くこともできます。
+$contact = new Contact();
+
+// 1つの連絡先を見つける
+$contact->find();
+
+// リレーションを使ってユーザーを取得する
+echo $contact->user->name; // これはユーザー名です
 ```
-
-#### `afterFindAll(array<int,ActiveRecord> $results)`
-
-`afterFind()` と同様ですが、すべてのレコードにそれを適用できます！
-
-```php
-class User extends flight\ActiveRecord {
-	
-	public function __construct($database_connection)
-	{
-		parent::__construct($database_connection, 'users');
-	}
-
-	protected function afterFindAll(array $results) {
-
-		foreach($results as $self) {
-			// `afterFind()` のようなクールなことをします
-		}
-	} 
-}
-```
-
-#### `beforeInsert(ActiveRecord $ActiveRecord)`
-
-常にいくつかのデフォルト値を設定する必要がある場合に本当に役立ちます。
-
-```php
-class User extends flight\ActiveRecord {
-	
-	public function __construct($database_connection)
-	{
-		parent::__construct($database_connection, 'users');
-	}
-
-	protected function beforeInsert(self $self) {
-		// サウンドなデフォルトが設定されます
-		if(!$self->created_date) {
-			$self->created_date = gmdate('Y-m-d');
-		}
-
-		if(!$self->password) {
-			$self->password = password_hash((string) microtime(true));
-		}
-	} 
-}
-```
-
-#### `afterInsert(ActiveRecord $ActiveRecord)`
-
-挿入後にデータを変更するためのユースケースがあるかもしれません？
-
-```php
-class User extends flight\ActiveRecord {
-	
-	public function __construct($database_connection)
-	{
-		parent::__construct($database_connection, 'users');
-	}
-
-	protected function afterInsert(self $self) {
-		// あなた自身が行う
-		Flight::cache()->set('most_recent_insert_id', $self->id);
-		// または他に何か....
-	} 
-}
-```
-
-#### `beforeUpdate(ActiveRecord $ActiveRecord)`
-
-常に更新時にデフォルト値を設定する必要がある場合に本当に役立ちます。
-
-```php
-class User extends flight\ActiveRecord {
-	
-	public function __construct($database_connection)
-	{
-		parent::__construct($database_connection, 'users');
-	}
-
-	protected function beforeInsert(self $self) {
-		// サウンドなデフォルトが設定されます
-		if(!$self->updated_date) {
-			$self->updated_date = gmdate('Y-m-d');
-		}
-	} 
-}
-```
-
-#### `afterUpdate(ActiveRecord $ActiveRecord)`
-
-更新後にデータを変更するためのユースケースがあるかもしれません？
-
-```php
-class User extends flight\ActiveRecord {
-	
-	public function __construct($database_connection)
-	{
-		parent::__construct($database_connection, 'users');
-	}
-
-	protected function afterInsert(self $self) {
-		// あなた自身が行う
-		Flight::cache()->set('most_recently_updated_user_id', $self->id);
-		// または他に何か....
-	} 
-}
-```
-
-#### `beforeSave(ActiveRecord $ActiveRecord)/afterSave(ActiveRecord $ActiveRecord)`
-
-挿入または更新が行われたときの両方でイベントが必要な場合に役立ちます。長い説明は省きますが、何をするかはわかるはずです。
-
-```php
-class User extends flight\ActiveRecord {
-	
-	public function __construct($database_connection)
-	{
-		parent::__construct($database_connection, 'users');
-	}
-
-	protected function beforeSave(self $self) {
-		$self->last_updated = gmdate('Y-m-d H:i:s');
-	} 
-}
-```
-
-#### `beforeDelete(ActiveRecord $ActiveRecord)/afterDelete(ActiveRecord $ActiveRecord)`
-
-ここで何をしたいのかよくわかりませんが、ここでは評価しません！やってみてください！
-
-```php
-class User extends flight\ActiveRecord {
-	
-	public function __construct($database_connection)
-	{
-		parent::__construct($database_connection, 'users');
-	}
-
-	protected function beforeDelete(self $self) {
-		echo 'He was a brave soldier... :cry-face:';
-	} 
-}
-```
-
-## 貢献
-
-どうぞ。
-
-### セットアップ
-
-貢献する際は、`composer test-coverage` を実行してテストカバレッジを維持することを確認してください（これは真のユニットテストカバレッジではなく、統合テストに近いものです）。
-
-また、`composer beautify` と `composer phpcs` を実行して、リントエラーを修正してください。
-
-## ライセンス
-
-MIT
