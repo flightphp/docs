@@ -172,3 +172,7 @@ blockquote {
 	padding: 10px 10px 1px 10px;
 	margin: 20px 0;
 }
+
+.autoComplete_wrapper>ul {
+	z-index: 10000;
+}

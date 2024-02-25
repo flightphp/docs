@@ -4,7 +4,7 @@ Head over to the [flightphp/skeleton](https://github.com/flightphp/skeleton) rep
 
 ## Need Some Inspiration?
 
-While these are not officially sponsored by the FlightPHP Team, these could give you ideas on how to structure your own projects that are built with Flight!
+While these are not officially sponsored by the Flight Team, these could give you ideas on how to structure your own projects that are built with Flight!
 
 - [Commentable Paste Bin](https://github.com/n0nag0n/commie2)
 - [Basic Skeleton App](https://github.com/markhughes/flight-skeleton)

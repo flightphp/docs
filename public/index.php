@@ -1,7 +1,7 @@
 <?php
 
 /*
- * FlightPHP Framework
+ * Flight Framework
  * @copyright   Copyright (c) 2024, Mike Cao <mike@mikecao.com>, n0nag0n <n0nag0n@sky-9.com>
  * @license     MIT, https://docs.flightphp.com/license
                                                                   .____   __ _

@@ -1,4 +1,4 @@
-# FlightPHP Active Record 
+# Flight Active Record 
 
 An active record is mapping a database entity to a PHP object. Spoken plainly, if you have a users table in your database, you can "translate" a row in that table to a `User` class and a `$user` object in your codebase. See [basic example](#basic-example).
 

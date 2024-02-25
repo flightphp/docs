@@ -1,6 +1,6 @@
 # Awesome Plugins
 
-Flight is incredibly extensible. There are a number of plugins that can be used to add functionality to your Flight application. Some are officially supported by the FlightPHP Team and others are micro/lite libraries to help you get started.
+Flight is incredibly extensible. There are a number of plugins that can be used to add functionality to your Flight application. Some are officially supported by the Flight Team and others are micro/lite libraries to help you get started.
 
 ## Caching
 

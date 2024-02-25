@@ -114,6 +114,48 @@ class IndexController {
 		$this->compileSinglePage('learn');
 	}
 
+	public function searchGet() {
+		$query = $this->app->request()->query['query'];
+		$language_directory_to_grep = self::CONTENT_DIR . $this->language . '/';
+		$grep_command = 'grep -r -i -n --color=never --include="*.md" '.escapeshellarg($query).' '.escapeshellarg($language_directory_to_grep);
+		exec($grep_command, $grep_output);
+
+		$files_found = [];
+		foreach($grep_output as $line) {
+			$line_parts = explode(':', $line);
+			$file_path = $line_parts[0];
+			$line_number = $line_parts[1];
+			$line_content = $line_parts[2];
+
+			// pull the title from the first header tag in the markdown file.
+			preg_match('/# (.+)/', file_get_contents($file_path), $matches);
+			if(empty($matches[1])) {
+				continue;
+			}
+			$title = $matches[1];
+			$files_found[$file_path][] = [
+				'line_number' => $line_number,
+				'line_content' => $line_content,
+				'page_name' => $title
+			];
+		}
+
+		$final_search = [];
+		foreach($files_found as $file_path => $data) {
+			$count = count($files_found[$file_path]);
+			$final_search[] = [
+				'search_result' => $data[0]['page_name'].' ("'.$query.'" '.$count.'x)',
+				'url' => '/'.str_replace([ $language_directory_to_grep, '.md', '_' ], [ '', '', '-' ], $file_path),
+				'hits' => $count
+			];
+		}
+
+		// sort by descending order by putting $b first
+		usort($final_search, fn($a, $b) => $b['hits'] <=> $a['hits']);
+
+		$this->app->json($final_search);
+	}
+
 	public function learnSectionsGet(string $section_name) {
 		$this->compileScrollspyPage('learn', $section_name);
 		return;

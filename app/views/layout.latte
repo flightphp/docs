@@ -9,6 +9,7 @@
 		<link rel="stylesheet" href="https://unpkg.com/prismjs@1.29.0/themes/prism.min.css" id="prism_link" />
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@algolia/autocomplete-theme-classic" />
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@10.2.7/dist/css/autoComplete.min.css">
 		<link rel="stylesheet" href="/css/style.css">
 
 		<link rel="alternate" hreflang="en" href="{$url}?lang=en" />
@@ -53,7 +54,7 @@
 			<header id="header" class="row justify-content-center">
 				<div class="title col-12">Flight</div>
 				<div class="subtitle col-12">{_'subtitle'}</div>
-				<div class="m-2 col-xs-4 col-md-6" id="autocomplete"></div>
+				<input class="m-2 col-xs-4 col-md-6" id="autocomplete">
 				<nav class="navbar navbar-expand-lg navbar-light">
   					<div class="container-fluid">
 					<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main_navBarFlight" aria-controls="main_navBarFlight" aria-expanded="false" aria-label="Toggle navigation">
@@ -176,53 +177,48 @@
 				
 			})();
 		</script>
-		<script src="https://cdn.jsdelivr.net/npm/@algolia/autocomplete-js"></script>
-		<script src="https://cdn.jsdelivr.net/npm/algoliasearch@4.22.1/dist/algoliasearch-lite.umd.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@10.2.7/dist/autoComplete.min.js"></script>
 		<script nonce="{$nonce}" n:syntax="double">
-			const algoliasearch = window['algoliasearch'];
-			const { autocomplete, getAlgoliaResults } = window['@algolia/autocomplete-js'];
+			const autoCompletejs = new autoComplete({
+				data: {
+					src: async () => {
+						const query = encodeURIComponent(document.getElementById('autocomplete').value);
+						const searchUrl = {{Flight::getUrl('search')}};
+						try {
+							// Fetch Data from external Source
+							const source = await fetch(`${searchUrl}?query=${query}`);
+							// Data should be an array of `Objects` or `Strings`
+							const data = await source.json();
 
-			const searchClient = algoliasearch(
-				'ILLJNWA0XY',
-				'fdf4f7d49a18e4e00fcc0aab1ce59040'
-			);
-
-			autocomplete({
-				container: '#autocomplete',
-				placeholder: {{_'search_the_docs'}},
-				insights: true,
-				getSources({ query }) {
-					return [
-						{
-							sourceId: 'searchResults',
-							getItems() {
-								return getAlgoliaResults({
-									searchClient,
-									queries: [
-										{
-											indexName: 'flightphp',
-											query,
-											params: {
-												hitsPerPage: 8,
-											},
-										},
-									],
-								});
-							},
-							templates: {
-								item({ item, html }) {
-									var value = [];
-									for(var lv in item.hierarchy) {
-										if(item.hierarchy[lv] && item.hierarchy[lv] !== 'Documentation') {
-											value.push(item.hierarchy[lv]);
-										}
-									}
-									return html`<div><a href="${item.url}">${value.join(' - ')}</a></div>`;
-								},
-							},
-						},
-					];
-				}
+							return data;
+						} catch (error) {
+							return error;
+						}
+					},
+					keys: ["search_result"],
+					cache: false
+				},
+				selector: "#autocomplete",
+				threshold: 2,
+				debounce: 300,
+				placeHolder: {{_'search_the_docs'}},
+				highlight: true,
+				resultsList: {
+					maxResults: 10,
+					noResults: false
+				},
+				resultItem: {
+					highlight: true
+				},
+				events: {
+                input: {
+                    selection: (event) => {
+						console.log(event);
+                        const selection = event.detail.selection.value;
+                        window.location.href = selection.url;
+                    }
+                }
+            }
 			});
 		</script>
 	</body>
