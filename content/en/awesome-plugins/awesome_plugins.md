@@ -8,6 +8,12 @@ Caching is a great way to speed up your application. There are a number of cachi
 
 - [Wruczek/PHP-File-Cache](/awesome-plugins/php-file-cache) - Light, simple and standalone PHP in-file caching class
 
+## Cookies
+
+Cookies are a great way to store small bits of data on the client side. They can be used to store user preferences, application settings, and more.
+
+- [overclokk/cookie](/awesome-plugins/php-cookie) - PHP Cookie is a PHP library that provides a simple and effective way to manage cookies.
+
 ## Debugging
 
 Debugging is crucial when you are developing in your local environment. There are a few plugins that can elevate your debugging experience.

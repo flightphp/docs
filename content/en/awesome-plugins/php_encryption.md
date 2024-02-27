@@ -29,6 +29,10 @@ Now that you have the library and an encryption key, you can start encrypting an
 use Defuse\Crypto\Crypto;
 use Defuse\Crypto\Key;
 
+/*
+ * Set in your bootstrap or public/index.php file
+ */
+
 // Encryption method
 Flight::map('encrypt', function($raw_data) {
 	$encryption_key = /* $config['encryption_key'] or a file_get_contents of where you put the key */;
