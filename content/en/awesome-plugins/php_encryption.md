@@ -27,6 +27,7 @@ Now that you have the library and an encryption key, you can start encrypting an
 ```php
 
 use Defuse\Crypto\Crypto;
+use Defuse\Crypto\Key;
 
 // Encryption method
 Flight::map('encrypt', function($raw_data) {
