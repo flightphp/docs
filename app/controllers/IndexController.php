@@ -114,6 +114,18 @@ class IndexController {
 		$this->compileSinglePage('learn');
 	}
 
+	public function learnSectionsGet(string $section_name) {
+		$this->compileScrollspyPage('learn', $section_name);
+	}
+
+	public function awesomePluginsGet() {
+		$this->compileScrollspyPage('awesome_plugins', 'awesome_plugins');
+	}
+
+	public function pluginGet(string $plugin_name) {
+		$this->compileScrollspyPage('awesome_plugins', $plugin_name);
+	}
+
 	public function searchGet() {
 		$query = $this->app->request()->query['query'];
 		$language_directory_to_grep = self::CONTENT_DIR . $this->language . '/';
@@ -154,90 +166,6 @@ class IndexController {
 		usort($final_search, fn($a, $b) => $b['hits'] <=> $a['hits']);
 
 		$this->app->json($final_search);
-	}
-
-	public function learnSectionsGet(string $section_name) {
-		$this->compileScrollspyPage('learn', $section_name);
-		return;
-		$app = $this->app;
-		$section_name_for_file = str_replace('-', '_', $section_name);
-		$heading_data = $app->cache()->retrieve($section_name_for_file.'_heading_data_'.$this->language);
-		$markdown_html = $app->cache()->refreshIfExpired($section_name_for_file.'_html_'.$this->language, function() use ($app, $section_name_for_file, &$heading_data)  {
-			$parsed_text = $app->parsedown()->text(file_get_contents(self::CONTENT_DIR . $this->language . '/learn/' . $section_name_for_file . '.md'));
-
-			$heading_data = [];
-			$parsed_text = Text::generateAndConvertHeaderListFromHtml($parsed_text, $heading_data, 'h2');
-			$app->cache()->store($section_name_for_file.'_heading_data_'.$this->language, $heading_data, 86400); // 1 day
-
-			return $parsed_text;
-		}, 86400); // 1 day
-
-		// pull the title out of the first h1 tag
-		$page_title = '';
-		preg_match('/\<h1\>(.*)\<\/h1\>/i', $markdown_html, $matches);
-		if (isset($matches[1])) {
-			$page_title = $matches[1];
-		}
-
-		$Translator = new Translator($this->language);
-
-		$this->renderPage('single_page_scrollspy.latte', [
-			'custom_page_title' => $page_title.' - '.$Translator->translate('learn'),
-			'markdown' => $markdown_html,
-			'heading_data' => $heading_data,
-		]);
-	}
-
-	public function awesomePluginsGet() {
-		$this->compileScrollspyPage('awesome_plugins', 'index');
-		return;
-		$app = $this->app;
-		$heading_data = $app->cache()->retrieve('plugins_heading_data_'.$this->language);
-		$markdown_html = $app->cache()->refreshIfExpired('plugins_html_'.$this->language, function() use ($app, &$heading_data)  {
-			$parsed_text = $app->parsedown()->text(file_get_contents(self::CONTENT_DIR . $this->language . '/awesome-plugins/index.md'));
-			$heading_data = [];
-			$parsed_text = Text::generateAndConvertHeaderListFromHtml($parsed_text, $heading_data, 'h2');
-			$app->cache()->store('plugins_heading_data_'.$this->language, $heading_data, 86400); // 1 day
-			return $parsed_text;
-		}, 86400); // 1 day
-
-		$this->renderPage('single_page_scrollspy.latte', [
-			'page_title' => 'awesome_plugins',
-			'markdown' => $markdown_html,
-			'heading_data' => $heading_data,
-		]);
-	}
-
-	public function pluginGet(string $plugin_name) {
-		$this->compileScrollspyPage('awesome_plugins', $plugin_name);
-		return;
-		$app = $this->app;
-		$plugin_name_underscored = str_replace('-', '_', $plugin_name);
-		$heading_data = $app->cache()->retrieve($plugin_name_underscored.'_heading_data_'.$this->language);
-		$markdown_html = $app->cache()->refreshIfExpired($plugin_name_underscored.'_html_'.$this->language, function() use ($app, $plugin_name_underscored, &$heading_data)  {
-			$parsed_text = $app->parsedown()->text(file_get_contents(self::CONTENT_DIR . $this->language . '/awesome-plugins/' . $plugin_name_underscored . '.md'));
-
-			$heading_data = [];
-			$parsed_text = Text::generateAndConvertHeaderListFromHtml($parsed_text, $heading_data, 'h2');
-			$app->cache()->store($plugin_name_underscored.'_heading_data_'.$this->language, $heading_data, 86400); // 1 day
-
-			return $parsed_text;
-		}, 86400); // 1 day
-
-		// pull the title out of the first h1 tag
-		$plugin_title = '';
-		preg_match('/\<h1\>(.*)\<\/h1\>/i', $markdown_html, $matches);
-		if (isset($matches[1])) {
-			$plugin_title = $matches[1];
-		}
-
-		$Translator = new Translator($this->language);
-
-		$this->renderPage('single_page_scrollspy.latte', [
-			'custom_page_title' => $plugin_title.' - '.$Translator->translate('awesome_plugins'),
-			'markdown' => $markdown_html,
-			'heading_data' => $heading_data,
-		]);
 	}
 
 	public function updateStuffPost() {

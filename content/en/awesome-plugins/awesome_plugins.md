@@ -22,6 +22,12 @@ Databases are the core to most applications. This is how you store and retrieve 
 - [flightphp/core PdoWrapper](/awesome-plugins/pdo-wrapper) - Official Flight PDO Wrapper that's part of the core. This is a simple wrapper to help simplify the process of writing queries and executing them. It is not an ORM.
 - [flightphp/active-record](/awesome-plugins/active-record) - Official Flight ActiveRecord ORM/Mapper. Great little library for easily retrieving and storing data in your database.
 
+## Encryption
+
+Encryption is crucial for any application that stores sensitive data. Encrypting and decrypting the data isn't terribly hard, but properly storing the encryption key [can](https://stackoverflow.com/questions/6767839/where-should-i-store-an-encryption-key-for-php#:~:text=Write%20a%20php%20config%20file%20and%20store%20it,folder%20is%20not%20accessible%20to%20the%20end%20user.) [be](https://www.reddit.com/r/PHP/comments/luqsn/the_encryption_key_where_do_you_store_it/) [difficult](https://security.stackexchange.com/questions/48047/location-to-store-an-encryption-key). The most important thing is to never store your encryption key in a public directory or to commit it to your code repository.
+
+- [defuse/php-encryption](/awesome-plugins/php-encryption) - This is a library that can be used to encrypt and decrypt data. Getting up and running is fairly simple to start encrypting and decrypting data.
+
 ## Session
 
 Sessions aren't really useful for API's but for building out a web application, sessions can be crucial for maintaining state and login information.
