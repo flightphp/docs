@@ -18,8 +18,16 @@ Flight::route('/', function() {
   echo 'hello world!';
 });
 
+Flight::route('/json', function() {
+  Flight::json(['hello' => 'world']);
+});
+
 Flight::start();
 ```
+
+<div class="video-container">
+	<iframe width="100vw" height="315" src="https://www.youtube.com/embed/VCztp1QLC2c?si=W3fSWEKmoCIlC7Z5" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+</div>
 
 Simple enough right? [Learn more about Flight in the documentation!](learn)
 

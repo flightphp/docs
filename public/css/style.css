@@ -187,4 +187,28 @@ html[data-bs-theme="dark"] .autoComplete_wrapper > ul {
 
 html[data-bs-theme="dark"] .autoComplete_wrapper > ul > li {
 	color: #fff;
+.video-container {
+	position: relative;
+	padding-bottom: 56.25%;
+	padding-top: 30px;
+	height: 0;
+	overflow: hidden;
+}
+
+.video-container iframe {
+	border:0;
+	width:100%;
+	height:100%;
+	left: 0;
+	top: 0;
+	position: absolute;
+}
+
+/* on mobile make it full width */
+@media only screen and (min-width: 768px) {
+  .video-container {
+	width: 50%;
+	margin: 0 auto;
+	padding-bottom: 35%;
+  }
 }
