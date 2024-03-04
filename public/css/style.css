@@ -176,3 +176,15 @@ blockquote {
 .autoComplete_wrapper>ul {
 	z-index: 10000;
 }
+
+html[data-bs-theme="dark"] .autoComplete_wrapper > ul > li, html[data-bs-theme="dark"] .autoComplete_wrapper > input {
+	background-color: #212529;
+}
+
+html[data-bs-theme="dark"] .autoComplete_wrapper > ul {
+	background-color: #4b5055;
+}
+
+html[data-bs-theme="dark"] .autoComplete_wrapper > ul > li {
+	color: #fff;
+}

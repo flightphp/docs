@@ -1,8 +1,8 @@
 # Maršrutēšana
 
-> **Piezīme:** Vai vēlaties uzzināt vairāk par maršrutēšanu? Apskati ["kāpēc izmantot ietvaru?"](/learn/why-frameworks) lapu, lai iegūtu detalizētāku skaidrojumu.
+> **Piezīme:** Vēlaties uzzināt vairāk par maršrutēšanu? Apskatiet ["kāpēc izmantot struktūru?"](/learn/why-frameworks) lapu, lai iegūtu detalizētāku izskaidrojumu.
 
-Pamata maršrutēšana Flight notiek, salīdzinot URL paraugu ar atgriezeniskās izsaukuma funkciju vai klases un metodes masīvu.
+Vienkārša maršrutēšana Filtā tiek veikta, salīdzinot URL paraugu ar atpakaļsaicināšanas funkciju vai klases un metodes masīvu.
 
 ```php
 Flight::route('/', function(){
@@ -10,51 +10,51 @@ Flight::route('/', function(){
 });
 ```
 
-Atgriezeniskā izsaukuma funkcija var būt jebkura izsaukāmais objekts. Tāpēc varat izmantot parastu funkciju:
+Atpakaļsaicinājums var būt jebkura objekta funkcija. Tāpēc varat izmantot parastu funkciju:
 
 ```php
-function sveiki(){
+function hello(){
     echo 'sveika, pasaule!';
 }
 
-Flight::route('/', 'sveiki');
+Flight::route('/', 'hello');
 ```
 
 Vai arī klases metodi:
 
 ```php
-class sveiciens {
-    public static function sveiki() {
+class Greeting {
+    public static function hello() {
         echo 'sveika, pasaule!';
     }
 }
 
-Flight::route('/', array('sveiciens','sveiki'));
+Flight::route('/', array('Greeting','hello'));
 ```
 
 Vai objekta metodi:
 
 ```php
 
-// Sveiciens.php
-class sveiciens
+// Greeting.php
+class Greeting
 {
     public function __construct() {
-        $this->vards = 'Jānis Bērziņš';
+        $this->name = 'Jānis Bērziņš';
     }
 
-    public function sveiki() {
-        echo "Sveiki, {$this->vards}!";
+    public function hello() {
+        echo "Sveiki, {$this->name}!";
     }
 }
 
 // index.php
-$sveiciens = new sveiciens();
+$greeting = new Greeting();
 
-Flight::route('/', array($sveiciens, 'sveiki'));
+Flight::route('/', array($greeting, 'hello'));
 ```
 
-Maršruti tiek salīdzināti ar to secībā, kā tie ir definēti. Pirmajam piemērotajam maršrutam tiks izsaukts.
+Maršruti tiek salīdzināti tā, kā tie ir definēti. Pirmajam maršrutam, kas atbilst pieprasījumam, tiks izsaukts.
 
 ## Metodes Maršrutēšana
 
@@ -62,89 +62,89 @@ Pēc noklusējuma maršruta paraugi tiek salīdzināti ar visām pieprasījuma m
 
 ```php
 Flight::route('GET /', function () {
-  echo 'Es saņēmu GET pieprasījumu.';
+  echo 'Esmu saņēmis GET pieprasījumu.';
 });
 
 Flight::route('POST /', function () {
-  echo 'Es saņēmu POST pieprasījumu.';
+  echo 'Esmu saņēmis POST pieprasījumu.';
 });
 ```
 
-Jūs varat arī piešķirt vairākas metodes vienai funkcijai, izmantojot `|` atdalītāju:
+Jūs varat arī pievienot vairākas metodes vienai atpakaļsaicinājumam, izmantojot `|` atdalītāju:
 
 ```php
 Flight::route('GET|POST /', function () {
-  echo 'Es saņēmu gan GET, gan POST pieprasījumu.';
+  echo 'Esmu saņēmis vai nu GET, vai POST pieprasījumu.';
 });
 ```
 
-Papildus jūs varat iegūt Maršrutētāja objektu, kuram ir daži palīgmetodi, ko varat izmantot:
+Papildus jūs varat paņemt Maršruta objektu, kuram ir dažas palīginstrumentu metodes, ko varat izmantot:
 
 ```php
 
-$maršrutētājs = Flight::router();
+$router = Flight::router();
 
 // atbilst visām metodēm
-$maršrutētājs->map('/', function() {
+$router->map('/', function() {
 	echo 'sveika, pasaule!';
 });
 
 // GET pieprasījums
-$maršrutētājs->get('/lietotāji', function() {
+$router->get('/lietotāji', function() {
 	echo 'lietotāji';
 });
-// $maršrutētājs->post();
-// $maršrutētājs->put();
-// $maršrutētājs->delete();
-// $maršrutētājs->patch();
+// $router->post();
+// $router->put();
+// $router->delete();
+// $router->patch();
 ```
 
-## Regulārās Izteiksmes
+## Regulārās izteiksmes
 
 Jūs varat izmantot regulārās izteiksmes savos maršrutos:
 
 ```php
 Flight::route('/lietotājs/[0-9]+', function () {
-  // Tas sakritīs ar /lietotājs/1234
+  // Tas atbilstēs /lietotājs/1234
 });
 ```
 
-Lai gan šī metode ir pieejama, ieteicams izmantot nosauktās parametrus vai
-nosauktus parametrus ar regulārām izteiksmēm, jo tās ir lasāmākas un vieglāk uzturamas.
+Kaut arī šī metode ir pieejama, ir ieteicams izmantot nosauktos parametrus vai
+nosauktos parametrus ar regulārajām izteiksmēm, jo tie ir lasāmāki un vieglāk uzturami.
 
 ## Nosauktie Parametri
 
 Jūs varat norādīt nosauktos parametrus savos maršrutos, kas tiks nodoti
-jūsu atgriezeniskajai funkcijai.
+jūsu atpakaļsaicinājuma funkcijai.
 
 ```php
-Flight::route('/@vards/@id', function (string $vards, string $id) {
-  echo "sveiki, $vards ($id)!";
+Flight::route('/@name/@id', function (string $name, string $id) {
+  echo "sveiki, $name ($id)!";
 });
 ```
 
-Jūs varat iekļaut regulārās izteiksmes ar savām nosauktajām parametriem, izmantojot
+Jūs varat iekļaut arī regulārās izteiksmes savos nosauktajos parametros, izmantojot
 `:` atdalītāju:
 
 ```php
-Flight::route('/@vards/@id:[0-9]{3}', function (string $vards, string $id) {
-  // Tas sakritīs ar /bobs/123
-  // Bet nesakritīs ar /bobs/12345
+Flight::route('/@name/@id:[0-9]{3}', function (string $name, string $id) {
+  // Tas atbilstēs /bob/123
+  // Bet neatbilstēs /bob/12345
 });
 ```
 
-> **Piezīme:**  Nesakritības regex grupām `()` ar nosauktajiem parametriem nav atbalstītas. :'\(
+> **Piezīme:** Sakritība ar nosauktajiem parametriem ar nosauktajām parametru grupām `()` nav atbalstīta. :'\(
 
 ## Neobligātie Parametri
 
-Jūs varat norādīt neobligātus nosauktos parametrus, lai tos salīdzinātu, ietinot
+Jūs varat norādīt nosauktos parametrus, kas ir neobligāti, lai atbilstu, ietverot
 segmentus iekavās.
 
 ```php
 Flight::route(
-  '/blogs(/@gads(/@mēnesis(/@diena)))',
-  function(?string $gads, ?string $mēnesis, ?string $diena) {
-    // Tas sakrīt ar šādiem URL:
+  '/blogs(/@year(/@month(/@day)))',
+  function(?string $year, ?string $month, ?string $day) {
+    // Tas atbilst šādiem URLS:
     // /blogs/2012/12/10
     // /blogs/2012/12
     // /blogs/2012
@@ -153,162 +153,196 @@ Flight::route(
 );
 ```
 
-Visi neobligātie parametri, kas nesakrīt, tiks nodoti kā `NULL`.
+Visi neobligātie parametri, kas nav atbilstoši, tiks nodoti kā `NULL`.
 
-## Aizstājvārdi
+## Vaļējiem Simboliem
 
-Jūs varat piešķirt aizstājvārdu maršrutējumam, lai URL varētu dinamiski tikt ģenerēts vēlāk jūsu kodā (piemēram, kā šablons).
+Atbilstība tiek veikta tikai individuāliem URL segmentiem. Ja vēlaties atbilst vairākiem
+segmentiem, varat izmantot `*` vaļējo simbolu.
 
 ```php
-Flight::route('/lietotāji/@id', function($id) { echo 'lietotājs:'.$id; }, false, 'lietotāja_skatījums');
-
-// vēlāk jūsu kodā
-Flight::getUrl('lietotāja_skatījums', [ 'id' => 5 ]); // atgriezīs '/lietotāji/5'
+Flight::route('/blogs/*', function () {
+  // Tas atbilstēs /blogs/2000/02/01
+});
 ```
 
-Šis ir īpaši noderīgi, ja jūsu URL gadījumā mainās. Iepriekš minētajā piemērā, ja lietotāji tiek pārvietoti uz `/admin/lietotāji/@id` vietā.
-Izmantojot aizstājvārdus, jums nav jāmaina visi vietas, kur atsauktos uz aizstājvārdu, jo aizstājvārds tagad atgriezīs `/admin/lietotāji/5` kā augstāk minētajā
-piemērā.
+Lai novirzītu visus pieprasījumus uz vienu atpakaļsaicinājumu, varat:
 
-Maršruta aizstājvārdi joprojām darbojas grupās arī:
+```php
+Flight::route('*', function () {
+  // Ko darīt
+});
+```
+
+## Pāreja
+
+Izpildi var nodot nākamajam atbilstošajam maršrutam, atgriežot `true`
+no jūsu atpakaļsaicinājuma funkcijas.
+
+```php
+Flight::route('/lietotājs/@name', function (string $name) {
+  // Pārbaudiet kādu nosacījumu
+  if ($name !== "Jānis") {
+    // Turpināt nākamajam maršrutam
+    return true;
+  }
+});
+
+Flight::route('/lietotājs/*', function () {
+  // Tas tiks izsaukts
+});
+```
+
+## Maršruta Aliasēšana
+
+Jūs varat piešķirt aliasu maršrutai, lai URL varētu dinamiski tikt ģenerēta vēlāk jūsu kodā (piemēram, veidlapai).
+
+```php
+Flight::route('/lietotāji/@id', function($id) { echo 'lietotājs:'.$id; }, false, 'lietotāja_skats');
+
+// vēlāk kādā kodā
+Flight::getUrl('lietotāja_skats', [ 'id' => 5 ]); // atgriezīs '/lietotāji/5'
+```
+
+Šis ir īpaši noderīgs, ja jūsu URL mainās. Šajā piemērā, apstākļi tika pārvietoti uz `/admin/lietotāji/@id`.
+Ar aliasēšanu vietas jums nav jāmaina visur, kur norādat aliasu, jo aliasējot tagad tiks atgriests `/admin/lietotāji/5`, tāpat kā
+piemērā iepriekš.
+
+Maršruta aliasēšana joprojām darbojas arī grupās:
 
 ```php
 Flight::group('/lietotāji', function() {
-    Flight::route('/@id', function($id) { echo 'lietotājs:'.$id; }, false, 'lietotāja_skatījums');
+    Flight::route('/@id', function($id) { echo 'lietotājs:'.$id; }, false, 'lietotāja_skats');
 });
 
 
-// vēlāk jūsu kodā
-Flight::getUrl('lietotāja_skatījums', [ 'id' => 5 ]); // atgriezīs '/lietotāji/5'
+// vēlāk kādā kodā
+Flight::getUrl('lietotāja_skats', [ 'id' => 5 ]); // atgriezīs '/lietotāji/5'
 ```
 
 ## Maršruta Informācija
 
-Ja vēlaties pārbaudīt atbilstošā maršruta informāciju, jūs varat pieprasīt maršruta
-objektu nodot jūsu atgriezeniskajai funkcijai, padodot `true` kā trešo parametru
-maršruta metodē. Maršruta objekts vienmēr tiks nodots ka pēdējais parametrs jūsu
-atgriezeniskajai funkcijai.
+Ja vēlaties pārbaudīt atbilstošo maršruta informāciju, jūs varat pieprasīt maršruta objektu tikt nodotam uz jūsu atpakaļsaicinājuma funkciju, ievadot `true` kā trešo parametru maršruta metodē. Maršruta objekts vienmēr būs pēdējais parametrs, kas tiek nodots jūsu atpakaļsaicinājuma funkcijai.
 
 ```php
-Flight::route('/', function(\flight\net\Route $maršruts) {
-  // Masīvs ar atbilstošajām HTTP metodēm
-  $maršruts->metodes;
+Flight::route('/', function(\flight\net\Route $route) {
+  // Līdzinātie HTTP metodi masīvs
+  $route->methods;
 
-  // Nosauktie parametri masīvā
-  $maršruts->parametri;
+  // Nosaukto parametru masīvs
+  $route->params;
 
   // Atbilstošā regulārā izteiksme
-  $maršruts->regex;
+  $route->regex;
 
-  // Saturs jebkuriem '*' izmantotajiem URL paraugiem
-  $maršruts->splat;
+  // satur jebkura '*' izmantotā URL parauga saturu
+  $route->splat;
 
-  // Parāda URL ceļu.... ja tiešām tas ir nepieciešams
-  $maršruts->paraugs;
+  // Rāda URL ceļu .... ja tiešām to vajag
+  $route->pattern;
 
-  // Parāda, kās starpciņas ir piešķirtas šim
-  $maršruts->middleware;
+  // Rāda kāda starpā ir piešķirts šim
+  $route->middleware;
 
-  // Parāda aizstājvārdu, kas piešķirts šim maršrutam
-  $maršruts->aizstāv;
+  // Rāda aliasu, kas šim maršrutam ir piešķirts
+  $route->alias;
 }, true);
 ```
 
 ## Maršruta Grupēšana
 
-Var gadīties, ka vēlaties grupēt saistītos maršrutus kopā (piemēram, `/api/v1`).
-To var izdarīt, izmantojot `group` metodi:
+Var būt laiki, kad vēlaties grupēt saistītos maršrutus kopā (piemēram, `/api/v1`).
+To varat izdarīt, izmantojot `group` metodi:
 
 ```php
 Flight::group('/api/v1', function () {
   Flight::route('/lietotāji', function () {
-	// Sakrīt ar /api/v1/lietotāji
+	// Atbilst /api/v1/lietotāji
   });
 
   Flight::route('/ziņas', function () {
-	// Sakrīt ar /api/v1/ziņas
+	// Atbilst /api/v1/ziņas
   });
 });
 ```
 
-Jūs pat varat iekļaut grupas grupas:
+Pat variet iekšnest grupas grupas:
 
 ```php
 Flight::group('/api', function () {
   Flight::group('/v1', function () {
-	// Flight::get() iegūst mainīgos, tas nenosaka maršrutu! Skatiet objekta kontekstu zemāk
+	// Flight::get() iegūst mainīgos, tas nenosaka maršrutu! Skatīt objektu kontekstu zemāk
 	Flight::route('GET /lietotāji', function () {
-	  // Sakrīt ar GET /api/v1/lietotāji
+	  // Atbilst GET /api/v1/lietotāji
 	});
 
 	Flight::post('/ziņas', function () {
-	  // Sakrīt ar POST /api/v1/ziņas
+	  // Atbilst POST /api/v1/ziņas
 	});
 
 	Flight::put('/ziņas/1', function () {
-	  // Sakrīt ar PUT /api/v1/ziņas
+	  // Atbilst PUT /api/v1/ziņas
 	});
   });
   Flight::group('/v2', function () {
 
-	// Flight::get() iegūst mainīgos, tas nenosaka maršrutu! Skatiet objekta kontekstu zemāk
+	// Flight::get() iegūst mainīgos, tas nenosaka maršrutu! Skatīt objektu kontekstu zemāk
 	Flight::route('GET /lietotāji', function () {
-	  // Sakrīt ar GET /api/v2/lietotāji
+	  // Atbilst GET /api/v2/lietotāji
 	});
   });
 });
 ```
 
-### Grupēšana ar Objekta Kontekstu
+### Grupēšana ar objektu kontekstu
 
 Joprojām varat izmantot maršruta grupēšanu ar `Engine` objektu šādā veidā:
 
 ```php
 $app = new \flight\Engine();
-$app->group('/api/v1', function (Router $maršrutētājs) {
+$app->group('/api/v1', function (Router $router) {
 
-  // lietojam $maršrutētāj mainīgo
-  $maršrutētājs->get('/lietotāji', function () {
-	// Sakrīt ar GET /api/v1/lietotāji
+  // izmantojiet $router mainīgo
+  $router->get('/lietotāji', function () {
+	// Atbilst GET /api/v1/lietotāji
   });
 
-  $maršrutētājs->post('/ziņas', function () {
-	// Sakrīt ar POST /api/v1/ziņas
+  $router->post('/ziņas', function () {
+	// Atbilst POST /api/v1/ziņas
   });
 });
 ```
 
-## Strūklināšana
+## Strumēšana
 
-Tagad jūs varat strūklināt atbildes klientam, izmantojot `streamWithHeaders()` metodi. 
-Tas ir noderīgi, lai nosūtītu lielas failus, ilgi darbojošies procesus vai ģenerētu lielas atbildes. 
-Maršruta strūklināšana tiek apstrādāta nedaudz atšķirīgi nekā parasts maršruts.
+Tagad varat strādāt ar strūklošanu klientam izmantojot `streamWithHeaders()` metodi.
+Tas ir noderīgi, lai sūtītu lielas datnes, ilgstošas procesus vai ģenerētu lielas atbildes.
+Maršruta strūklošana tiek apstrādāta nedaudz atšķirīgi nekā parasts maršruts.
 
-> **Piezīme:** Strūklināta atbildes ir pieejama tikai tad, ja jums ir iestatīts[`flight.v2.output_buffering`](/learn/migrating-to-v3#output_buffering) uz false.
+> **Piezīme:** Strumelēšanas atbildes ir pieejamas tikai tad, ja jums ir iestatīts [`flight.v2.output_buffering`](/learn/migrating-to-v3#output_buffering) uz false.
 
 ```php
-Flight::route('/plūdveida-lietotāji', function() {
+Flight::route('/strumeļo-lietotājus', function() {
 
-	// kā vien izvelc savus datus, vienkārši kā piemērs...
-	$lietotaji_stmt = Flight::db()->query("SELECT id, vards, uzvārds FROM lietotaji");
+	// kā jūs izvelkat savus datus, tikai kā piemēru...
+	$lietotaji_pazinj = Flight::db()->query("SELECT id, vārds, uzvārds FROM lietotāji");
 
 	echo '{';
-	$lietotāja_skaita = count($lietotaji);
-	while($lietotājs = $lietotaji_stmt->fetch(PDO::FETCH_ASSOC)) {
+	$lietotaju_skaits = count($lietotaji);
+	while($lietotājs = $lietotaji_pazinj->fetch(PDO::FETCH_ASSOC)) {
 		echo json_encode($lietotājs);
-		if(--$lietotāja_skaita > 0) {
+		if(--$lietotaju_skaits > 0) {
 			echo ',';
 		}
 
-		// Nepieciešams nosūtīt datus klientam
+		// Šis ir nepieciešams, lai nosūtītu datus klientam
 		ob_flush();
 	}
 	echo '}';
 
-// Tā jūs iestatīsiet galvenes pirms sākat strūklināt.
+// Tā jums jāiestata galvenes pirms strūklošanas sākuma.
 })->streamWithHeaders([
 	'Content-Type' => 'application/json',
-	// fakultatīvs statusa kods, noklusējuma vērtība ir 200
-	'statuss' => 200
+	// neobligāts statusa kods, pēc noklusējuma 200
+	'stāvoklis' => 200
 ]);
-```

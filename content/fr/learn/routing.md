@@ -2,34 +2,34 @@
 
 > **Remarque :** Vous voulez en savoir plus sur le routage ? Consultez la page ["pourquoi un framework ?"](/learn/why-frameworks) pour une explication plus approfondie.
 
-Le routage de base dans Flight est réalisé en faisant correspondre un modèle d'URL avec une fonction de rappel ou un tableau d'une classe et d'une méthode.
+Le routage de base dans Flight est effectué en associant un motif d'URL à une fonction de rappel ou à un tableau d'une classe et d'une méthode.
 
 ```php
 Flight::route('/', function(){
-    echo 'Bonjour le monde!';
+    echo 'bonjour le monde!';
 });
 ```
 
-La fonction de rappel peut être n'importe quel objet appelable. Vous pouvez donc utiliser une fonction régulière :
+Le rappel peut être un objet qui est appelable. Vous pouvez donc utiliser une fonction régulière :
 
 ```php
-function hello(){
-    echo 'Bonjour le monde!';
+function bonjour(){
+    echo 'bonjour le monde!';
 }
 
-Flight::route('/', 'hello');
+Flight::route('/', 'bonjour');
 ```
 
 Ou une méthode de classe :
 
 ```php
-class Greeting {
-    public static function hello() {
-        echo 'Bonjour le monde!';
+class Salutation {
+    public static function bonjour() {
+        echo 'bonjour le monde!';
     }
 }
 
-Flight::route('/', array('Greeting','hello'));
+Flight::route('/', array('Salutation', 'bonjour'));
 ```
 
 Ou une méthode d'objet :
@@ -37,48 +37,48 @@ Ou une méthode d'objet :
 ```php
 
 // Greeting.php
-class Greeting
+class Salutation
 {
     public function __construct() {
-        $this->name = 'John Doe';
+        $this->nom = 'Jean Dupont';
     }
 
-    public function hello() {
-        echo "Bonjour, {$this->name} !";
+    public function bonjour() {
+        echo "Bonjour, {$this->nom} !";
     }
 }
 
 // index.php
-$greeting = new Greeting();
+$salutation = new Salutation();
 
-Flight::route('/', array($greeting, 'hello'));
+Flight::route('/', array($salutation, 'bonjour'));
 ```
 
-Les itinéraires sont mis en correspondance dans l'ordre où ils sont définis. Le premier itinéraire correspondant à une demande sera invoqué.
+Les routes sont associées dans l'ordre où elles sont définies. La première route à correspondre à une requête sera invoquée.
 
-## Routage par méthode
+## Routage par Méthode
 
-Par défaut, les modèles de routage sont associés à toutes les méthodes de demande. Vous pouvez répondre à des méthodes spécifiques en plaçant un identifiant avant l'URL.
+Par défaut, les motifs de routage sont associés à toutes les méthodes de requête. Vous pouvez répondre à des méthodes spécifiques en plaçant un identifiant avant l'URL.
 
 ```php
 Flight::route('GET /', function () {
-  echo 'J´ai reçu une requête GET.';
+  echo 'J'ai reçu une requête GET.';
 });
 
 Flight::route('POST /', function () {
-  echo 'J´ai reçu une requête POST.';
+  echo 'J'ai reçu une requête POST.';
 });
 ```
 
-Vous pouvez également mapper plusieurs méthodes vers un seul rappel en utilisant un délimiteur `|` :
+Vous pouvez également mapper plusieurs méthodes à un seul rappel en utilisant un délimiteur `|` :
 
 ```php
 Flight::route('GET|POST /', function () {
-  echo 'J´ai reçu une requête GET ou POST.';
+  echo 'J'ai reçu une requête GET ou POST.';
 });
 ```
 
-De plus, vous pouvez obtenir l'objet Router qui dispose de quelques méthodes d'aide que vous pouvez utiliser :
+De plus, vous pouvez récupérer l'objet Router qui a quelques méthodes d'aide à utiliser :
 
 ```php
 
@@ -86,11 +86,11 @@ $router = Flight::router();
 
 // mappe toutes les méthodes
 $router->map('/', function() {
-	echo 'Bonjour le monde!';
+	echo 'bonjour le monde !';
 });
 
-// demande GET
-$router->get('/users', function() {
+// Requête GET
+$router->get('/utilisateurs', function() {
 	echo 'utilisateurs';
 });
 // $router->post();
@@ -99,9 +99,9 @@ $router->get('/users', function() {
 // $router->patch();
 ```
 
-## Expressions régulières
+## Expressions Régulières
 
-Vous pouvez utiliser des expressions régulières dans vos itinéraires :
+Vous pouvez utiliser des expressions régulières dans vos routes :
 
 ```php
 Flight::route('/utilisateur/[0-9]+', function () {
@@ -109,13 +109,11 @@ Flight::route('/utilisateur/[0-9]+', function () {
 });
 ```
 
-Bien que cette méthode soit disponible, il est recommandé d'utiliser des paramètres nommés, ou des
-paramètres nommés avec expressions régulières, car ils sont plus lisibles et plus faciles à maintenir.
+Bien que cette méthode soit disponible, il est recommandé d'utiliser des paramètres nommés, ou des paramètres nommés avec des expressions régulières, car ils sont plus lisibles et plus faciles à entretenir.
 
-## Paramètres nommés
+## Paramètres Nommés
 
-Vous pouvez spécifier des paramètres nommés dans vos itinéraires qui seront transmis
-à votre fonction de rappel.
+Vous pouvez spécifier des paramètres nommés dans vos routes qui seront transmis à votre fonction de rappel.
 
 ```php
 Flight::route('/@nom/@id', function (string $nom, string $id) {
@@ -123,8 +121,7 @@ Flight::route('/@nom/@id', function (string $nom, string $id) {
 });
 ```
 
-Vous pouvez également inclure des expressions régulières avec vos paramètres nommés en utilisant
-le délimiteur `:` :
+Vous pouvez également inclure des expressions régulières avec vos paramètres nommés en utilisant le délimiteur `:` :
 
 ```php
 Flight::route('/@nom/@id:[0-9]{3}', function (string $nom, string $id) {
@@ -133,11 +130,11 @@ Flight::route('/@nom/@id:[0-9]{3}', function (string $nom, string $id) {
 });
 ```
 
-> **Remarque :** La correspondance de groupes de regex `()` avec des paramètres nommés n'est pas prise en charge. :'\(
+> **Remarque :** La correspondance des groupes regex `()` avec des paramètres nommés n'est pas prise en charge. :'(
 
-## Paramètres optionnels
+## Paramètres Optionnels
 
-Vous pouvez spécifier des paramètres nommés qui sont facultatifs pour la correspondance en encapsulant
+Vous pouvez spécifier des paramètres nommés qui sont optionnels pour la correspondance en enveloppant
 les segments entre parenthèses.
 
 ```php
@@ -153,12 +150,12 @@ Flight::route(
 );
 ```
 
-Tous les paramètres optionnels qui ne correspondent pas seront transmis en tant que `NULL`.
+Tous les paramètres optionnels non correspondants seront passés en tant que `NULL`.
 
-## Caractères génériques
+## Jokers
 
-La mise en correspondance est effectuée uniquement sur des segments d'URL individuels. Si vous voulez faire correspondre plusieurs
-segments, vous pouvez utiliser le caractère générique `*`.
+La correspondance se fait uniquement sur des segments d'URL individuels. Si vous souhaitez faire correspondre plusieurs
+segments, vous pouvez utiliser le joker `*`.
 
 ```php
 Flight::route('/blog/*', function () {
@@ -166,24 +163,24 @@ Flight::route('/blog/*', function () {
 });
 ```
 
-Pour faire correspondre toutes les demandes à un seul rappel, vous pouvez faire :
+Pour router toutes les requêtes vers un seul rappel, vous pouvez faire :
 
 ```php
 Flight::route('*', function () {
-  // Faites quelque chose
+  // Faire quelque chose
 });
 ```
 
-## Passage
+## Transmission
 
-Vous pouvez passer l'exécution au prochain itinéraire correspondant en retournant `true` depuis
-votre fonction de rappel.
+Vous pouvez passer l'exécution à la route correspondante suivante en retournant `true` de votre
+fonction de rappel.
 
 ```php
 Flight::route('/utilisateur/@nom', function (string $nom) {
   // Vérifier une condition
   if ($nom !== "Bob") {
-    // Continuer vers le prochain itinéraire
+    // Continuer vers la prochaine route
     return true;
   }
 });
@@ -193,67 +190,66 @@ Flight::route('/utilisateur/*', function () {
 });
 ```
 
-## Aliasing d'itinéraire
+## Attribution d'Alias de Route
 
-Vous pouvez attribuer un alias à un itinéraire, de sorte que l'URL puisse être générée dynamiquement plus tard dans votre code (comme un modèle, par exemple).
+Vous pouvez attribuer un alias à une route, de sorte que l'URL puisse être générée dynamiquement ultérieurement dans votre code (comme un modèle par exemple).
 
 ```php
-Flight::route('/utilisateurs/@id', function($id) { echo 'utilisateur:'.$id; }, false, 'user_view');
+Flight::route('/utilisateurs/@id', function($id) { echo 'utilisateur:'.$id; }, false, 'vue_utilisateur');
 
 // plus tard dans le code quelque part
-Flight::getUrl('user_view', [ 'id' => 5 ]); // retournera '/utilisateurs/5'
+Flight::getUrl('vue_utilisateur', [ 'id' => 5 ]); // renverra '/utilisateurs/5'
 ```
 
-Ceci est particulièrement utile si votre URL change. Dans l'exemple ci-dessus, supposons que les utilisateurs ont été déplacés vers `/admin/utilisateurs/@id`.
-Avec l'alias en place, vous n'avez pas à modifier partout où vous faites référence à l'alias car l'alias renverra maintenant `/admin/utilisateurs/5` comme dans l'exemple ci-dessus.
+Cela est particulièrement utile si votre URL change. Dans l'exemple ci-dessus, disons que les utilisateurs ont été déplacés vers `/admin/utilisateurs/@id` au lieu de cela.
+Avec l'attribution d'alias en place, vous n'avez pas à modifier partout où vous faites référence à l'alias car l'alias renverra maintenant `/admin/utilisateurs/5` comme dans l'exemple ci-dessus.
 
-L'aliasing d'itinéraire fonctionne également dans les groupes :
+L'attribution d'alias de route fonctionne également dans les groupes :
 
 ```php
 Flight::group('/utilisateurs', function() {
-    Flight::route('/@id', function($id) { echo 'utilisateur:'.$id; }, false, 'user_view');
+    Flight::route('/@id', function($id) { echo 'utilisateur:'.$id; }, false, 'vue_utilisateur');
 });
 
 
 // plus tard dans le code quelque part
-Flight::getUrl('user_view', [ 'id' => 5 ]); // retournera '/utilisateurs/5'
+Flight::getUrl('vue_utilisateur', [ 'id' => 5 ]); // renverra '/utilisateurs/5'
 ```
 
-## Info d'itinéraire
+## Informations sur la Route
 
-Si vous voulez inspecter les informations d'itinéraire correspondant, vous pouvez demander que l'objet d'itinéraire
-soit transmis à votre fonction de rappel en passant `true` comme troisième paramètre dans
-la méthode d'itinéraire. L'objet d'itinéraire sera toujours le dernier paramètre transmis à votre
+Si vous souhaitez inspecter les informations sur la route correspondante, vous pouvez demander que l'objet route soit passé à votre fonction de rappel en passant `true` comme troisième paramètre dans
+la méthode de routage. L'objet route sera toujours le dernier paramètre passé à votre
 fonction de rappel.
 
 ```php
 Flight::route('/', function(\flight\net\Route $route) {
-  // Tableau des méthodes HTTP mises en correspondance
+  // Tableau des méthodes HTTP correspondantes
   $route->methods;
 
   // Tableau des paramètres nommés
   $route->params;
 
-  // Expression régulière mise en correspondance
+  // Expression régulière correspondante
   $route->regex;
 
-  // Contient le contenu de tout '*' utilisé dans le schéma d'URL
+  // Contient le contenu de tout '*' utilisé dans le motif d'URL
   $route->splat;
 
-  // Affiche le chemin de l'URL....si vous en avez vraiment besoin
+  // Affiche le chemin URL....si vous en avez vraiment besoin
   $route->pattern;
 
-  // Affiche quels middleware sont assignés à cela
+  // Montre quel middleware est assigné à cela
   $route->middleware;
 
-  // Affiche l'alias assigné à cet itinéraire
+  // Affiche l'alias attribué à cette route
   $route->alias;
 }, true);
 ```
 
-## Regroupement d'itinéraire
+## Regroupement des Routes
 
-Il peut arriver que vous vouliez regrouper des itinéraires liés ensemble (comme `/api/v1`).
+Il peut arriver que vous vouliez regrouper des routes liées ensemble (comme `/api/v1`).
 Vous pouvez le faire en utilisant la méthode `group` :
 
 ```php
@@ -273,7 +269,7 @@ Vous pouvez même imbriquer des groupes de groupes :
 ```php
 Flight::group('/api', function () {
   Flight::group('/v1', function () {
-	// Flight::get() obtient des variables, il ne définit pas un itinéraire ! Voir le contexte objet ci-dessous
+	// Flight::get() obtient des variables, il ne définit pas de route ! Voir le contexte de l'objet ci-dessous
 	Flight::route('GET /utilisateurs', function () {
 	  // Correspond à GET /api/v1/utilisateurs
 	});
@@ -288,7 +284,7 @@ Flight::group('/api', function () {
   });
   Flight::group('/v2', function () {
 
-	// Flight::get() obtient des variables, il ne définit pas un itinéraire ! Voir le contexte objet ci-dessous
+	// Flight::get() obtient des variables, il ne définit pas de route ! Voir le contexte de l'objet ci-dessous
 	Flight::route('GET /utilisateurs', function () {
 	  // Correspond à GET /api/v2/utilisateurs
 	});
@@ -298,7 +294,7 @@ Flight::group('/api', function () {
 
 ### Regroupement avec Contexte d'Objet
 
-Vous pouvez toujours utiliser le regroupement d'itinéraire avec l'objet `Engine` de la manière suivante :
+Vous pouvez toujours utiliser le regroupement des routes avec l'objet `Engine` de la manière suivante :
 
 ```php
 $app = new \flight\Engine();
@@ -315,18 +311,18 @@ $app->group('/api/v1', function (Router $router) {
 });
 ```
 
-## Diffusion en continu
+## Diffusion en Continu
 
-Vous pouvez désormais diffuser des réponses au client en utilisant la méthode `streamWithHeaders()`.
-Ceci est utile pour l'envoi de grands fichiers, de processus longs ou la génération de réponses volumineuses.
-La diffusion d'un itinéraire est gérée un peu différemment qu'un itinéraire régulier.
+Vous pouvez maintenant diffuser des réponses vers le client en utilisant la méthode `streamWithHeaders()`. 
+C'est utile pour envoyer de gros fichiers, des processus longs, ou générer de grandes réponses. 
+Diffuser une route est géré un peu différemment qu'une route régulière.
 
-> **Remarque :** La diffusion de réponses n'est disponible que si vous avez défini [`flight.v2.output_buffering`](/learn/migrating-to-v3#output_buffering) sur false.
+> **Remarque :** La diffusion des réponses n'est disponible que si vous avez défini [`flight.v2.output_buffering`](/learn/migrating-to-v3#output_buffering) sur false.
 
 ```php
 Flight::route('/utilisateurs-en-streaming', function() {
 
-	// de quelque façon que vous extrayez vos données, juste à titre d'exemple...
+	// cependant vous récupérez vos données, juste à titre d'exemple...
 	$users_stmt = Flight::db()->query("SELECT id, first_name, last_name FROM users");
 
 	echo '{';
@@ -337,14 +333,15 @@ Flight::route('/utilisateurs-en-streaming', function() {
 			echo ',';
 		}
 
-		// Cela est nécessaire pour envoyer les données au client
+		// C'est nécessaire pour envoyer les données au client
 		ob_flush();
 	}
 	echo '}';
 
-// Voici comment vous allez définir les en-têtes avant de commencer la diffusion.
+// Voici comment vous définirez les en-têtes avant de commencer la diffusion.
 })->streamWithHeaders([
 	'Content-Type' => 'application/json',
 	// code d'état facultatif, par défaut à 200
 	'status' => 200
 ]);
+```

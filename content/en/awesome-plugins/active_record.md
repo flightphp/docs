@@ -120,8 +120,7 @@ Flight::register('user', 'User', [ $pdo_connection ]);
 Flight::user()->find(1);
 ```
 
-## API Reference
-### CRUD functions
+## CRUD functions
 
 #### `find($id = null) : boolean|ActiveRecord`
 
@@ -220,7 +219,7 @@ foreach($users as $user) {
 }
 ```
 
-### SQL Query Methods
+## SQL Query Methods
 #### `select(string $field1 [, string $field2 ... ])`
 
 You can select only a few of the columns in a table if you'd like (it is more performant on really wide tables with many columns)
@@ -279,7 +278,7 @@ Limit the amount of records returned. If a second int is given, it will be offse
 $user->orderby('name DESC')->limit(0, 10)->findAll();
 ```
 
-### WHERE conditions
+## WHERE conditions
 #### `equal(string $field, mixed $value) / eq(string $field, mixed $value)`
 
 Where `field = $value`
@@ -365,7 +364,7 @@ Where `field BETWEEN $value AND $value1`
 $user->between('id', [1, 2])->find();
 ```
 
-### Relationships
+## Relationships
 You can set several kinds of relationships using this library. You can set one->many and one->one relationships between tables. This requires a little extra setup in the class beforehand.
 
 Setting the `$relations` array is not hard, but guessing the correct syntax can be confusing.
@@ -373,19 +372,25 @@ Setting the `$relations` array is not hard, but guessing the correct syntax can 
 ```php
 protected array $relations = [
 	// you can name the key anything you'd like. The name of the ActiveRecord is probably good. Ex: user, contact, client
-	'whatever_active_record' => [
+	'user' => [
 		// required
+		// self::HAS_MANY, self::HAS_ONE, self::BELONGS_TO
 		self::HAS_ONE, // this is the type of relationship
 
 		// required
 		'Some_Class', // this is the "other" ActiveRecord class this will reference
 
 		// required
-		'local_key', // this is the local_key that references the join.
+		// depending on the relationship type
+		// self::HAS_ONE = the foreign key that references the join
+		// self::HAS_MANY = the foreign key that references the join
+		// self::BELONGS_TO = the local key that references the join
+		'local_or_foreign_key',
 		// just FYI, this also only joins to the primary key of the "other" model
 
 		// optional
-		[ 'eq' => 1, 'select' => 'COUNT(*) as count', 'limit' 5 ], // custom methods you want executed. [] if you don't want any.
+		[ 'eq' => [ 'client_id', 5 ], 'select' => 'COUNT(*) as count', 'limit' 5 ], // additional conditions you want when joining the relation
+		// $record->eq('client_id', 5)->select('COUNT(*) as count')->limit(5))
 
 		// optional
 		'back_reference_name' // this is if you want to back reference this relationship back to itself Ex: $user->contact->user;
@@ -443,7 +448,7 @@ echo $contact->user->name; // this is the user name
 
 Pretty cool eh?
 
-### Setting Custom Data
+## Setting Custom Data
 Sometimes you may need to attach something unique to your ActiveRecord such as a custom calculation that might be easier to just attach to the object that would then be passed to say a template.
 
 #### `setCustomData(string $field, mixed $value)`
@@ -458,7 +463,7 @@ And then you simply reference it like a normal object property.
 echo $user->page_view_count;
 ```
 
-### Events
+## Events
 
 One more super awesome feature about this library is about events. Events are triggered at certain times based on certain methods you call. They are very very helpful in setting up data for you automatically.
 
@@ -696,7 +701,7 @@ class User extends flight\ActiveRecord {
 
 Please do.
 
-### Setup
+## Setup
 
 When you contribute, make sure you run `composer test-coverage` to maintain 100% test coverage (this isn't true unit test coverage, more like integration testing).
 
