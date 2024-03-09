@@ -187,6 +187,8 @@ html[data-bs-theme="dark"] .autoComplete_wrapper > ul {
 
 html[data-bs-theme="dark"] .autoComplete_wrapper > ul > li {
 	color: #fff;
+}
+
 .video-container {
 	position: relative;
 	padding-bottom: 56.25%;
