@@ -145,6 +145,16 @@ Finds all records in the table that you specify.
 $user->findAll();
 ```
 
+#### `isHydrated(): boolean` (v0.4.0)
+
+Returns `true` if the current record has been hydrated (fetched from the database).
+
+```php
+$user->find(1);
+// if a record is found with data...
+$user->isHydrated(); // true
+```
+
 #### `insert(): boolean|ActiveRecord`
 
 Inserts the current record into database.
@@ -165,6 +175,19 @@ $user->greaterThan('id', 0)->orderBy('id desc')->find();
 $user->email = 'test@example.com';
 $user->update();
 ```
+
+#### `save(): boolean|ActiveRecord`
+
+Inserts or updates the current record into the database. If the record has an id, it will update, otherwise it will insert.
+
+```php
+$user = new User($pdo_connection);
+$user->name = 'demo';
+$user->password = md5('demo');
+$user->save();
+```
+
+**Note:** If you have relationships defined in the class, it will recursively save those relations as well if they have been defined, instantiated and have dirty data to update. (v0.4.0 and above)
 
 #### `delete(): boolean`
 
@@ -200,6 +223,25 @@ $user->update(); // nothing will update cause nothing was captured as dirty.
 
 $user->dirty([ 'name' => 'something', 'password' => password_hash('a different password') ]);
 $user->update(); // both name and password are updated.
+```
+
+#### `copyFrom(array $data): ActiveRecord` (v0.4.0)
+
+This is an alias for the `dirty()` method. It's a little more clear what you are doing.
+
+```php
+$user->copyFrom([ 'name' => 'something', 'password' => password_hash('a different password') ]);
+$user->update(); // both name and password are updated.
+```
+
+#### `isDirty(): boolean` (v0.4.0)
+
+Returns `true` if the current record has been changed.
+
+```php
+$user->greaterThan('id', 0)->orderBy('id desc')->find();
+$user->email = 'test@email.com';
+$user->isDirty(); // true
 ```
 
 #### `reset(bool $include_query_data = true): ActiveRecord`
@@ -252,7 +294,7 @@ You can set some custom where arguments (you cannot set params in this where sta
 $user->where('id=1 AND name="demo"')->find();
 ```
 
-**Security Note** - You might be tempted to do something like `$user->where("id = '{$id}' AND name = '{$name}'")->find();`. Please DO NOT DO THIS!!! This is susceptible to what is knows as SQL Injection attacks. There are lots of articles online, please Google "sql injection attacks php" and you'll find a lot of articles on this subject. The proper way to handle this with this library is instead of this `where()` method, you would do something more like `$user->eq('id', $id)->eq('name', $name)->find();`
+**Security Note** - You might be tempted to do something like `$user->where("id = '{$id}' AND name = '{$name}'")->find();`. Please DO NOT DO THIS!!! This is susceptible to what is knows as SQL Injection attacks. There are lots of articles online, please Google "sql injection attacks php" and you'll find a lot of articles on this subject. The proper way to handle this with this library is instead of this `where()` method, you would do something more like `$user->eq('id', $id)->eq('name', $name)->find();` If you absolutely have to do this, the `PDO` library has `$pdo->quote($var)` to escape it for you. Only after you use `quote()` can you use it in a `where()` statement.
 
 #### `group(string $group_by_statement)/groupBy(string $group_by_statement)`
 
