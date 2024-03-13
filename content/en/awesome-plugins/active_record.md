@@ -249,6 +249,10 @@ $user->isDirty(); // true
 Resets the current record to it's initial state. This is really good to use in loop type behaviors.
 If you pass `true` it will also reset the query data that was used to find the current object (default behavior).
 
+#### `getBuiltSql(): string` (v0.4.1)
+
+After you run a `find()`, `findAll()`, `insert()`, `update()`, or `save()` method you can get the SQL that was built and use it for debugging purposes.
+
 ```php
 $users = $user->greaterThan('id', 0)->orderBy('id desc')->find();
 $user_company = new UserCompany($pdo_connection);
@@ -739,9 +743,25 @@ class User extends flight\ActiveRecord {
 }
 ```
 
+## Database Connection Management
+
+When you are using this library, you can set the database connection in a few different ways. You can set the connection in the constructor, you can set it via a config variable `$config['connection']` or you can set it via `setDatabaseConnection()` (v0.4.1). 
+
+```php
+$pdo_connection = new PDO('sqlite:test.db'); // for example
+$user = new User($pdo_connection);
+// or
+$user = new User(null, [ 'connection' => $pdo_connection ]);
+// or
+$user = new User();
+$user->setDatabaseConnection($pdo_connection);
+```
+
+If you need to refresh the database connection, for instance if you are running a long running CLI script and need to refresh the connection every so often, you can re-set the connection with `$your_record->setDatabaseConnection($pdo_connection)`.
+
 ## Contributing
 
-Please do.
+Please do. :D
 
 ## Setup
 
