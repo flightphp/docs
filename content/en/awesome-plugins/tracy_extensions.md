@@ -48,10 +48,37 @@ Flight::register('db', PdoQueryCapture::class, ['sqlite:test.db', 'user', 'pass'
 
 // This connects the dots
 if(Debugger::$showBar === true) {
+	// This needs to be false or Tracy can't actually render :(
+	Flight::set('flight.content_length', false);
 	new TracyExtensionLoader(Flight::app());
 }
 
 // more code
+
+Flight::start();
+```
+
+## Additional Configuration
+
+If you have a custom session handler (such as ghostff/session), you can add the session handler to the Flight app and the Tracy extension will use it.
+
+```php
+
+use Ghostff\Session\Session;
+
+require 'vendor/autoload.php';
+
+$app = Flight::app();
+
+$app->register('session', Session::class);
+
+if(Debugger::$showBar === true) {
+	// This needs to be false or Tracy can't actually render :(
+	Flight::set('flight.content_length', false);
+	new TracyExtensionLoader(Flight::app(), [ 'session_data' => Flight::session()->getAll() ]);
+}
+
+// routes and other things...
 
 Flight::start();
 ```
