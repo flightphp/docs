@@ -60,7 +60,8 @@ Flight::start();
 
 ## Additional Configuration
 
-If you have a custom session handler (such as ghostff/session), you can add the session handler to the Flight app and the Tracy extension will use it.
+### Session Data
+If you have a custom session handler (such as ghostff/session), you can pass any array of session data to Tracy and it will automatically output it for you. You pass it in with the `session_data` key in the second parameter of the `TracyExtensionLoader` constructor.
 
 ```php
 
@@ -82,3 +83,28 @@ if(Debugger::$showBar === true) {
 
 Flight::start();
 ```
+
+### Latte
+
+If you have Latte installed in your project, you can use the Latte panel to analyze your templates. You can pass in the Latte instance to the `TracyExtensionLoader` constructor with the `latte` key in the second parameter.
+
+```php
+
+use Latte\Engine;
+
+require 'vendor/autoload.php';
+
+$app = Flight::app();
+
+$app->register('latte', Engine::class, [], function($latte) {
+	$latte->setTempDirectory(__DIR__ . '/temp');
+
+	// this is where you add the Latte Panel to Tracy
+	$latte->addExtension(new Latte\Bridges\Tracy\TracyExtension);
+});
+
+if(Debugger::$showBar === true) {
+	// This needs to be false or Tracy can't actually render :(
+	Flight::set('flight.content_length', false);
+	new TracyExtensionLoader(Flight::app());
+}
