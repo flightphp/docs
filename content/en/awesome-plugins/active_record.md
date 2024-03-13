@@ -249,10 +249,6 @@ $user->isDirty(); // true
 Resets the current record to it's initial state. This is really good to use in loop type behaviors.
 If you pass `true` it will also reset the query data that was used to find the current object (default behavior).
 
-#### `getBuiltSql(): string` (v0.4.1)
-
-After you run a `find()`, `findAll()`, `insert()`, `update()`, or `save()` method you can get the SQL that was built and use it for debugging purposes.
-
 ```php
 $users = $user->greaterThan('id', 0)->orderBy('id desc')->find();
 $user_company = new UserCompany($pdo_connection);
@@ -264,6 +260,10 @@ foreach($users as $user) {
 	$user_company->insert();
 }
 ```
+
+#### `getBuiltSql(): string` (v0.4.1)
+
+After you run a `find()`, `findAll()`, `insert()`, `update()`, or `save()` method you can get the SQL that was built and use it for debugging purposes.
 
 ## SQL Query Methods
 #### `select(string $field1 [, string $field2 ... ])`
