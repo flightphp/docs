@@ -328,6 +328,14 @@ Streaming a route is handled a little differently than a regular route.
 ```php
 Flight::route('/stream-users', function() {
 
+	// If you have additional headers to set here after the route has executed
+	// you must define them before anything is echoed out.
+	// They must all be a raw call to the header() function or 
+	// a call to Flight::response()->setRealHeader()
+	header('Content-Disposition: attachment; filename="users.json"');
+	// or
+	Flight::response()->setRealHeader('Content-Disposition', 'attachment; filename="users.json"');
+
 	// however you pull your data, just as an example...
 	$users_stmt = Flight::db()->query("SELECT id, first_name, last_name FROM users");
 
