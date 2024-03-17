@@ -2,7 +2,8 @@
 
 Flight comes with a helper class for PDO. It allows you to easily query your database
 with all the prepared/execute/fetchAll() wackiness. It greatly simplifies how you can 
-query your database. 
+query your database. Each row result is returned as a Flight Collection class which
+allows you to access your data via array syntax or object syntax.
 
 ## Registering the PDO Helper Class
 
@@ -48,7 +49,10 @@ Pulls one row from the query
 
 ```php
 $db = Flight::db();
-$row = $db->fetchRow("SELECT * FROM table WHERE id = ?", [ $id ]);
+$row = $db->fetchRow("SELECT id, name FROM table WHERE id = ?", [ $id ]);
+echo $row['name'];
+// or
+echo $row->name;
 ```
 
 ### `fetchAll(string $sql, array $params = []): array`
@@ -56,9 +60,11 @@ Pulls all rows from the query
 
 ```php
 $db = Flight::db();
-$rows = $db->fetchAll("SELECT * FROM table WHERE something = ?", [ $something ]);
+$rows = $db->fetchAll("SELECT id, name FROM table WHERE something = ?", [ $something ]);
 foreach($rows as $row) {
-	// do something
+	echo $row['name'];
+	// or
+	echo $row->name;
 }
 ```
 
@@ -69,7 +75,7 @@ This also has a helpful wrapper for `IN()` statements. You can simply pass a sin
 $db = Flight::db();
 $name = 'Bob';
 $company_ids = [1,2,3,4,5];
-$rows = $db->fetchAll("SELECT * FROM table WHERE name = ? AND company_id IN (?)", [ $name, $company_ids ]);
+$rows = $db->fetchAll("SELECT id, name FROM table WHERE name = ? AND company_id IN (?)", [ $name, $company_ids ]);
 ```
 
 ## Full Example
@@ -84,6 +90,7 @@ Flight::route('/users', function () {
 	$statement = Flight::db()->runQuery('SELECT * FROM users');
 	while ($user = $statement->fetch()) {
 		echo $user['name'];
+		// or echo $user->name;
 	}
 
 	// Get a single user
