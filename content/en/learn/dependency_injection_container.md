@@ -22,16 +22,19 @@ require 'vendor/autoload.php';
 
 // class to manage users from the database
 class UserController {
-  public function __construct(PDO $pdo) {
-	$this->pdo = $pdo;
-  }
 
-  public function view(int $id) {
-	$stmt = $this->pdo->prepare('SELECT * FROM users WHERE id = :id');
-	$stmt->execute(['id' => $id]);
+	protected PDO $pdo;
 
-	print_r($stmt->fetch());
-  }
+	public function __construct(PDO $pdo) {
+		$this->pdo = $pdo;
+	}
+
+	public function view(int $id) {
+		$stmt = $this->pdo->prepare('SELECT * FROM users WHERE id = :id');
+		$stmt->execute(['id' => $id]);
+
+		print_r($stmt->fetch());
+	}
 }
 
 $User = new UserController(new PDO('mysql:host=localhost;dbname=test', 'user', 'pass'));
@@ -52,16 +55,19 @@ require 'vendor/autoload.php';
 
 // same class as above. Nothing changed
 class UserController {
-  public function __construct(PDO $pdo) {
-	$this->pdo = $pdo;
-  }
 
-  public function view(int $id) {
-	$stmt = $this->pdo->prepare('SELECT * FROM users WHERE id = :id');
-	$stmt->execute(['id' => $id]);
+	protected PDO $pdo;
 
-	print_r($stmt->fetch());
-  }
+	public function __construct(PDO $pdo) {
+		$this->pdo = $pdo;
+	}
+
+	public function view(int $id) {
+		$stmt = $this->pdo->prepare('SELECT * FROM users WHERE id = :id');
+		$stmt->execute(['id' => $id]);
+
+		print_r($stmt->fetch());
+	}
 }
 
 // create a new container
