@@ -46,11 +46,15 @@ Learn how to configure the framework for your application.
 
 ##### [Extending Flight](/learn/extending)
 
-Learn how to extend the framework to with adding your own methods and classes. This is also how Flight loosely handles something called containerization.
+Learn how to extend the framework to with adding your own methods and classes.
 
 ##### [Events and Filtering](/learn/filtering)
 
 Learn how to use the event system to add hooks to your methods and internal framework methods.
+
+##### [Dependency Injection Container](/learn/dependency-injection-container)
+
+Learn how to use dependency injection containers (DIC) to manage your application's dependencies.
 
 ##### [Framework API](/learn/api)
 

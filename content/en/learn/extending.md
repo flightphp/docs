@@ -22,7 +22,7 @@ This is used more when you need to pass variables into your method to get an exp
 value. Using the `register()` method like below is more for passing in configuration
 and then calling your pre-configured class.
 
-## Registering Classes / Containerization
+## Registering Classes
 
 To register your own class and configure it, you use the `register` function:
 
@@ -88,7 +88,7 @@ $new = Flight::db(false);
 Keep in mind that mapped methods have precedence over registered classes. If you
 declare both using the same name, only the mapped method will be invoked.
 
-## Overriding
+## Overriding Framework Methods
 
 Flight allows you to override its default functionality to suit your own needs,
 without having to modify any code.
