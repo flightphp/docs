@@ -1,60 +1,64 @@
 # Uzziniet par Flight
 
-Flight ir ātrs, vienkāršs, paplašināms ietvars PHP. Tas ir diezgan daudzpusīgs un tiek izmantots jebkura veida tīmekļa lietotnes izveidošanai. Tas ir izstrādāts, ņemot vērā vienkāršību, un ir rakstīts veidā, kas ir viegli saprotams un lietojams.
+Flight ir ātrs, vienkāršs, paplašināms ietvars PHP valodai. Tas ir diezgan universāls un var tikt izmantots, lai izveidotu jebkuru veida tīmekļa lietojumprogrammu. Tas ir izstrādāts, ņemot vērā vienkāršību un uzrakstīts tā, lai būtu viegli saprotams un izmantojams.
 
-## Svarīgi ietvara koncepti
+## Svarīgi Ietvara Jēdzieni
 
-##### [Kāpēc izmantot ietvaru?](/learn/why-frameworks)
+##### [Kāpēc Ietvars?](/learn/why-frameworks)
 
-Šeit ir īss raksts par to, kāpēc jums vajadzētu izmantot ietvaru. Pirms sākat izmantot kādu ietvaru, ir laba doma saprast šīs ietvaru priekšrocības.
+Šeit ir īss raksts par to, kāpēc jums vajadzētu izmantot ietvaru. Ir laba ideja saprast ietvaru izmantošanas priekšrocības pirms sākat to izmantot.
 
-Papildus ļoti labam jaunajam ir izveidots pamācības materiāls [@lubiana](https://git.php.fail/lubiana). Lai arī tas neiet detalizēti uz Flight specifiski, šī vadlīnija palīdzēs jums saprast dažus galvenos jēdzienus, kas saistīti ar ietvaru, un kāpēc tos ir izdevīgi izmantot. Jūs varat atrast pamācību [šeit](https://git.php.fail/lubiana/no-framework-tutorial/src/branch/master/README.md).
+Turklāt [@lubiana](https://git.php.fail/lubiana) ir izveidojusi lielisku pamācību. Lai arī tā nenodzīvo Flight konkrēti, šī vadlīnija palīdzēs jums saprast dažus galvenos jēdzienus, kas saistīti ar ietvaru, un kāpēc tos ir izdevīgi izmantot. Jūs varat atrast pamācību [šeit](https://git.php.fail/lubiana/no-framework-tutorial/src/branch/master/README.md).
 
-## Pamata tēmas
+## Pamata Tēmas
 
-##### [Automātiska ielāde](/learn/autoloading)
+##### [Automātiskā Ielāde](/learn/autoloading)
 
-Uzziniet, kā automātiski ielādēt savas klases savā lietotnē.
+Iemācieties, kā automātiski ielādēt savas klases savā lietojumprogrammā.
 
-##### [Maršrutēšana](/learn/routing)
+##### [Maršruta Nosūtīšana](/learn/routing)
 
-Uzziniet, kā pārvaldīt maršrutus savai tīmekļa lietotnei. Tas ietver arī maršrutu grupēšanu, maršrutu parametrus un starpniekprogrammas.
+Iemācieties, kā pārvaldīt maršrutus savai tīmekļa lietojumprogrammai. Tas ietver arī maršrutu grupēšanu, maršruta parametrus un starpierobežojumus.
 
-##### [Starpniekprogrammas](/learn/middleware)
+##### [Starpnieklis](/learn/middleware)
 
-Uzziniet, kā izmantot starpniekprogrammas, lai filtrētu pieprasījumus un atbildes savā lietotnē.
+Iemācieties, kā izmantot starpnieku, lai filtrētu pieprasījumus un atbildes savā lietojumprogrammā.
 
 ##### [Pieprasījumi](/learn/requests)
 
-Uzziniet, kā apstrādāt pieprasījumus un atbildes savā lietotnē.
+Iemācieties, kā apstrādāt pieprasījumus un atbildes savā lietojumprogrammā.
 
 ##### [Atbildes](/learn/responses)
 
-Uzziniet, kā nosūtīt atbildes savai lietotājiem.
+Iemācieties, kā nosūtīt atbildes saviem lietotājiem.
 
-##### [HTML veidnes](/learn/templates)
+##### [HTML Veidnes](/learn/templates)
 
-Uzziniet, kā izmantot iebūvēto skata dzinēju, lai rendētu savas HTML veidnes.
+Iemācieties, kā izmantot iebūvēto skatu dzinēju, lai renderētu savas HTML veidnes.
 
 ##### [Drošība](/learn/security)
 
-Uzziniet, kā nodrošināt savu lietotni pret bieži sastopamām drošības draudiem.
+Iemācieties, kā nodrošināt savu lietojumprogrammu pret vispārīgiem drošības apdraudējumiem.
 
 ##### [Konfigurācija](/learn/configuration)
 
-Uzziniet, kā konfigurēt ietvaru savai lietotnei.
+Iemācieties, kā konfigurēt ietvaru savai lietojumprogrammai.
 
-##### [Paplašinājums Flight](/learn/extending)
+##### [Paplašinot Flight](/learn/extending)
 
-Uzziniet, kā paplašināt ietvaru, pievienojot savas metodes un klases. Tas ir arī veids, kā Flight brīvi apstrādā kaut ko, ko sauc par konteinerizāciju.
+Iemācieties, kā paplašināt ietvaru ar savu metožu un klašu pievienošanu.
 
 ##### [Notikumi un Filtrēšana](/learn/filtering)
 
-Uzziniet, kā izmantot notikumu sistēmu, lai pievienotu āķus savām metodēm un iekšējām ietvara metodēm.
+Iemācieties, kā izmantot notikumu sistēmu, lai pievienotu āķus saviem metodēm un iekšējiem ietvaru metodēm.
+
+##### [Atkarību Ievietošanas Konteiners](/learn/dependency-injection-container)
+
+Iemācieties, kā izmantot atkarību ievietošanas konteinerus (DIC), lai pārvaldītu savas lietojumprogrammas atkarības.
 
 ##### [Ietvara API](/learn/api)
 
-Uzziniet par ietvara pamata metodēm.
+Uzziniet par ietvaras galvenajām metodēm.
 
-##### [Migrācija uz v3](/learn/migrating-to-v3)
-Atkārtotās saderības ir lielākoties saglabātas, bet ir dažas izmaiņas, par kurām jums jābūt informētam, pārejot no v2 uz v3.
+##### [Pāreja uz v3](/learn/migrating-to-v3)
+Atgrieztais savietojamība lielākoties ir saglabāta, bet ir dažas izmaiņas, par kurām jums vajadzētu zināt, pārejot no v2 uz v3.

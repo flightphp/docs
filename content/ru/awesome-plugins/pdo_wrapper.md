@@ -1,14 +1,12 @@
-# PdoWrapper Класс Помощника PDO
+# Класс-помощник PdoWrapper PDO
 
-Flight поставляется с классом-помощником для PDO. Он позволяет легко выполнять запросы к вашей базе данных
-со всем этим заранее подготовленным/выполненным/fetchAll() безумием. Он значительно упрощает способ
-выполнения запросов к вашей базе данных.
+Flight поставляется с вспомогательным классом для PDO. Он позволяет вам легко выполнять запросы к вашей базе данных с помощью всех штучек для подготовки/выполнения/fetchAll(). Он значительно упрощает способ запроса к вашей базе данных. Каждый строковый результат возвращается в виде класса Flight Collection, который позволяет вам получить доступ к вашим данным с помощью синтаксиса массива или синтаксиса объекта.
 
-## Регистрация Класса Помощника PDO
+## Регистрация класса-помощника PDO
 
 ```php
-// Зарегистрируйте класс-помощник PDO
-Flight::register('db', \flight\database\PdoWrapper::class, ['mysql:host=localhost;dbname=cool_db_name', 'user', 'pass', [
+// Регистрация класса-помощника PDO
+Flight::зарегистрировать('db', \flight\database\PdoWrapper::class, ['mysql:host=localhost;dbname=cool_db_name', 'user', 'pass', [
 		PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES \'utf8mb4\'',
 		PDO::ATTR_EMULATE_PREPARES => false,
 		PDO::ATTR_STRINGIFY_FETCHES => false,
@@ -18,7 +16,7 @@ Flight::register('db', \flight\database\PdoWrapper::class, ['mysql:host=localhos
 ```
 
 ## Использование
-Этот объект расширяет PDO, поэтому все стандартные методы PDO доступны. Следующие методы добавлены для упрощения выполнения запросов к базе данных:
+Этот объект расширяет PDO, поэтому все стандартные методы PDO доступны. Следующие методы добавлены для упрощения запроса к базе данных:
 
 ### `runQuery(string $sql, array $params = []): PDOStatement`
 Используйте это для INSERTS, UPDATES или если вы планируете использовать SELECT в цикле while
@@ -48,7 +46,10 @@ $count = $db->fetchField("SELECT COUNT(*) FROM table WHERE something = ?", [ $so
 
 ```php
 $db = Flight::db();
-$row = $db->fetchRow("SELECT * FROM table WHERE id = ?", [ $id ]);
+$row = $db->fetchRow("SELECT id, name FROM table WHERE id = ?", [ $id ]);
+echo $row['name'];
+// или
+echo $row->name;
 ```
 
 ### `fetchAll(string $sql, array $params = []): array`
@@ -56,26 +57,28 @@ $row = $db->fetchRow("SELECT * FROM table WHERE id = ?", [ $id ]);
 
 ```php
 $db = Flight::db();
-$rows = $db->fetchAll("SELECT * FROM table WHERE something = ?", [ $something ]);
+$rows = $db->fetchAll("SELECT id, name FROM table WHERE something = ?", [ $something ]);
 foreach($rows as $row) {
-	// что-то делаем
+	echo $row['name'];
+	// или
+	echo $row->name;
 }
 ```
 
-## Примечание о синтаксисе `IN()`
-Также есть полезная оболочка для операторов `IN()`. Просто передайте один вопросительный знак в качестве заполнителя для `IN()` и затем массив значений. Вот пример того, как это может выглядеть:
+## Примечание с синтаксисом `IN()`
+Также есть полезная обертка для выражений `IN()`. Вы можете просто передать одиночный вопросительный знак в качестве заполнителя для `IN()` и затем массив значений. Вот пример, как это может выглядеть:
 
 ```php
 $db = Flight::db();
-$name = 'Bob';
+$name = 'Боб';
 $company_ids = [1,2,3,4,5];
-$rows = $db->fetchAll("SELECT * FROM table WHERE name = ? AND company_id IN (?)", [ $name, $company_ids ]);
+$rows = $db->fetchAll("SELECT id, name FROM table WHERE name = ? AND company_id IN (?)", [ $name, $company_ids ]);
 ```
 
 ## Полный пример
 
 ```php
-// Пример маршрута и как использовать эту оболочку
+// Пример маршрута и как использовать эту обертку
 Flight::route('/users', function () {
 	// Получить всех пользователей
 	$users = Flight::db()->fetchAll('SELECT * FROM users');
@@ -84,6 +87,7 @@ Flight::route('/users', function () {
 	$statement = Flight::db()->runQuery('SELECT * FROM users');
 	while ($user = $statement->fetch()) {
 		echo $user['name'];
+		// или echo $user->name;
 	}
 
 	// Получить одного пользователя
@@ -94,21 +98,21 @@ Flight::route('/users', function () {
 
 	// Специальный синтаксис IN() для помощи (убедитесь, что IN написано заглавными буквами)
 	$users = Flight::db()->fetchAll('SELECT * FROM users WHERE id IN (?)', [[1,2,3,4,5]]);
-	// вы также можете сделать это
+	// также можно сделать так
 	$users = Flight::db()->fetchAll('SELECT * FROM users WHERE id IN (?)', [ '1,2,3,4,5']);
 
 	// Вставить нового пользователя
-	Flight::db()->runQuery("INSERT INTO users (name, email) VALUES (?, ?)", ['Bob', 'bob@example.com']);
+	Flight::db()->runQuery("INSERT INTO users (name, email) VALUES (?, ?)", ['Боб', 'bob@example.com']);
 	$insert_id = Flight::db()->lastInsertId();
 
 	// Обновить пользователя
-	Flight::db()->runQuery("UPDATE users SET name = ? WHERE id = ?", ['Bob', 123]);
+	Flight::db()->runQuery("UPDATE users SET name = ? WHERE id = ?", ['Боб', 123]);
 
 	// Удалить пользователя
 	Flight::db()->runQuery("DELETE FROM users WHERE id = ?", [123]);
 
 	// Получить количество затронутых строк
-	$statement = Flight::db()->runQuery("UPDATE users SET name = ? WHERE name = ?", ['Bob', 'Sally']);
+	$statement = Flight::db()->runQuery("UPDATE users SET name = ? WHERE name = ?", ['Боб', 'Салли']);
 	$affected_rows = $statement->rowCount();
 
 });

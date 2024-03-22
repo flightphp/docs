@@ -1,8 +1,11 @@
-# Extending / Containers
+# Extending
 
 Flight is designed to be an extensible framework. The framework comes with a set
 of default methods and components, but it allows you to map your own methods,
 register your own classes, or even override existing classes and methods.
+
+If you are looking for a DIC (Dependency Injection Container), hop over to the
+[Dependency Injection Container](dependency-injection-container) page.
 
 ## Mapping Methods
 

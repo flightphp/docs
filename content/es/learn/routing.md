@@ -1,43 +1,47 @@
 # Enrutamiento
 
-> **Nota:** ¿Quieres entender más sobre el enrutamiento? Echa un vistazo a la página ["¿por qué un framework?"](/learn/why-frameworks) para obtener una explicación más detallada.
+> **Nota:** ¿Quieres entender más sobre el enrutamiento? Consulta la página ["¿Por qué un framework?"](/learn/why-frameworks) para obtener una explicación más detallada.
 
-El enrutamiento básico en Flight se realiza al emparejar un patrón de URL con una función de devolución de llamada o una matriz de una clase y método.
+El enrutamiento básico en Flight se realiza al coincidir un patrón de URL con una función de devolución de llamada o un array de una clase y un método.
 
 ```php
 Flight::route('/', function(){
-    echo '¡hola mundo!';
+    echo '¡Hola Mundo!';
 });
 ```
 
-La devolución de llamada puede ser cualquier objeto que sea llamable. Por lo que puedes usar una función regular:
+> Las rutas se emparejan en el orden en que se definen. La primera ruta que coincida con una solicitud será invocada.
+
+### Devoluciones de llamada/Funciones
+La devolución de llamada puede ser cualquier objeto que sea invocable. Por lo tanto, puedes usar una función regular:
 
 ```php
 function hello(){
-    echo '¡hola mundo!';
+    echo '¡Hola Mundo!';
 }
 
 Flight::route('/', 'hello');
 ```
 
-O un método de clase:
+### Clases
+También puedes usar un método estático de una clase:
 
 ```php
-class Greeting {
+class Saludo {
     public static function hello() {
-        echo '¡hola mundo!';
+        echo '¡Hola Mundo!';
     }
 }
 
-Flight::route('/', array('Greeting','hello'));
+Flight::route('/', [ 'Saludo','hello' ]);
 ```
 
-O un método de objeto:
+O creando un objeto primero y luego llamando al método:
 
 ```php
 
 // Greeting.php
-class Greeting
+class Saludo
 {
     public function __construct() {
         $this->name = 'John Doe';
@@ -49,17 +53,72 @@ class Greeting
 }
 
 // index.php
-$greeting = new Greeting();
+$saludo = new Saludo();
 
-Flight::route('/', array($greeting, 'hello'));
+Flight::route('/', [ $saludo, 'hello' ]);
+// También puedes hacer esto sin crear primero el objeto
+// Nota: No se inyectarán argumentos en el constructor
+Flight::route('/', [ 'Saludo', 'hello' ]);
 ```
 
-Las rutas se emparejan en el orden en que se definen. La primera ruta que coincida con una solicitud será invocada.
+#### Inyección de Dependencias a través de DIC (Contenedor de Inyección de Dependencias)
+Si deseas usar la inyección de dependencias a través de un contenedor (PSR-11, PHP-DI, Dice, etc), el único tipo de rutas donde eso está disponible es o creando directamente el objeto tú mismo y usando el contenedor para crear tu objeto o puedes usar cadenas para definir la clase y el método a llamar. Puedes ir a la página de [Inyección de Dependencias](/learn/extending) para obtener más información.
 
-## Enrutamiento de Método
+Aquí tienes un ejemplo rápido:
 
-Por defecto, los patrones de ruta se emparejan con todos los métodos de solicitud. Puedes responder
-a métodos específicos colocando un identificador antes de la URL.
+```php
+
+use flight\database\PdoWrapper;
+
+// Saludo.php
+class Saludo
+{
+	protected PdoWrapper $pdoWrapper;
+	public function __construct(PdoWrapper $pdoWrapper) {
+		$this->pdoWrapper = $pdoWrapper;
+	}
+
+	public function hello(int $id) {
+		// hacer algo con $this->pdoWrapper
+		$name = $this->pdoWrapper->fetchField("SELECT name FROM users WHERE id = ?", [ $id ]);
+		echo "¡Hola, mundo! Mi nombre es {$name}!";
+	}
+}
+
+// index.php
+
+// Configura el contenedor con los parámetros que necesites
+// Consulta la página de Inyección de Dependencias para obtener más información sobre PSR-11
+$dice = new \Dice\Dice();
+
+// ¡No olvides reasignar la variable con '$dice = '!!!!!
+$dice = $dice->addRule('flight\database\PdoWrapper', [
+	'shared' => true,
+	'constructParams' => [ 
+		'mysql:host=localhost;dbname=test', 
+		'root',
+		'password'
+	]
+]);
+
+// Registra el manejador del contenedor
+Flight::registerContainerHandler(function($class, $params) use ($dice) {
+	return $dice->create($class, $params);
+});
+
+// Rutas como de costumbre
+Flight::route('/hola/@id', [ 'Saludo', 'hello' ]);
+// o
+Flight::route('/hola/@id', 'Saludo->hello');
+// o
+Flight::route('/hola/@id', 'Saludo::hello');
+
+Flight::start();
+```
+
+## Enrutamiento por Método
+
+Por defecto, los patrones de ruta se emparejan contra todos los métodos de solicitud. Puedes responder a métodos específicos colocando un identificador antes de la URL.
 
 ```php
 Flight::route('GET /', function () {
@@ -69,9 +128,16 @@ Flight::route('GET /', function () {
 Flight::route('POST /', function () {
   echo 'He recibido una solicitud POST.';
 });
+
+// No puedes usar Flight::get() para rutas ya que es un método 
+//    para obtener variables, no crear una ruta.
+// Flight::post('/', function() { /* código */ });
+// Flight::patch('/', function() { /* código */ });
+// Flight::put('/', function() { /* código */ });
+// Flight::delete('/', function() { /* código */ });
 ```
 
-También puedes asignar varios métodos a una única devolución de llamada usando un delimitador `|`:
+También puedes asignar múltiples métodos a una única devolución de llamada usando un delimitador `|`:
 
 ```php
 Flight::route('GET|POST /', function () {
@@ -85,9 +151,9 @@ Además, puedes obtener el objeto Router que tiene algunos métodos auxiliares p
 
 $router = Flight::router();
 
-// mapea todos los métodos
+// asigna todos los métodos
 $router->map('/', function() {
-	echo '¡hola mundo!';
+	echo '¡Hola Mundo!';
 });
 
 // solicitud GET
@@ -110,13 +176,13 @@ Flight::route('/usuario/[0-9]+', function () {
 });
 ```
 
-Aunque este método está disponible, se recomienda usar parámetros nombrados o
+Aunque este método está disponible, se recomienda usar parámetros nombrados, o
 parámetros nombrados con expresiones regulares, ya que son más legibles y fáciles de mantener.
 
 ## Parámetros Nombrados
 
-Puedes especificar parámetros nombrados en tus rutas que se pasarán a lo largo de
-tu función de devolución de llamada.
+Puedes especificar parámetros nombrados en tus rutas que se pasarán
+a tu función de devolución de llamada.
 
 ```php
 Flight::route('/@nombre/@id', function (string $nombre, string $id) {
@@ -138,14 +204,14 @@ Flight::route('/@nombre/@id:[0-9]{3}', function (string $nombre, string $id) {
 
 ## Parámetros Opcionales
 
-Puedes especificar parámetros nombrados que son opcionales para la coincidencia al envolver
-segmentos entre paréntesis.
+Puedes especificar parámetros nombrados que son opcionales para emparejar al envolver
+segmentos en paréntesis.
 
 ```php
 Flight::route(
   '/blog(/@año(/@mes(/@día)))',
   function(?string $año, ?string $mes, ?string $día) {
-    // Esto coincidirá con las siguientes URLS:
+    // Esto coincidirá con las siguientes URL:
     // /blog/2012/12/10
     // /blog/2012/12
     // /blog/2012
@@ -158,8 +224,8 @@ Cualquier parámetro opcional que no coincida se pasará como `NULL`.
 
 ## Comodines
 
-La coincidencia se realiza solo en segmentos individuales de URL. Si deseas coincidir con múltiples
-segmentos puedes usar el comodín `*`.
+El emparejamiento solo se realiza en segmentos individuales de URL. Si deseas emparejar múltiples
+segmentos, puedes usar el comodín `*`.
 
 ```php
 Flight::route('/blog/*', function () {
@@ -167,24 +233,24 @@ Flight::route('/blog/*', function () {
 });
 ```
 
-Para enrutamiento de todas las solicitudes a una única devolución de llamada, puedes hacerlo así:
+Para dirigir todas las solicitudes a una única devolución de llamada, puedes hacer:
 
 ```php
 Flight::route('*', function () {
-  // Haz algo
+  // Hacer algo
 });
 ```
 
-## Paso
+## Pasando
 
-Puedes pasar la ejecución a la siguiente ruta coincidente retornando `true` desde
+Puedes pasar la ejecución a la siguiente ruta coincidente devolviendo `true` desde
 tu función de devolución de llamada.
 
 ```php
 Flight::route('/usuario/@nombre', function (string $nombre) {
-  // Verifica alguna condición
+  // Comprueba alguna condición
   if ($nombre !== "Bob") {
-    // Continuar a la siguiente ruta
+    // Continuar con la siguiente ruta
     return true;
   }
 });
@@ -194,22 +260,20 @@ Flight::route('/usuario/*', function () {
 });
 ```
 
-## Aliasing de Ruta
+## Alias de Ruta
 
-Puedes asignar un alias a una ruta, para que la URL pueda generarse dinámicamente más tarde en tu código (como una plantilla por ejemplo).
+Puedes asignar un alias a una ruta, para que la URL se pueda generar dinámicamente más tarde en tu código (como una plantilla, por ejemplo).
 
 ```php
 Flight::route('/usuarios/@id', function($id) { echo 'usuario:'.$id; }, false, 'vista_usuario');
 
-// más adelante en algún lugar del código
+// más tarde en algún lugar del código
 Flight::getUrl('vista_usuario', [ 'id' => 5 ]); // devolverá '/usuarios/5'
 ```
 
-Esto es especialmente útil si tu URL llega a cambiar. En el ejemplo anterior, supongamos que los usuarios se movieron a `/admin/usuarios/@id` en su lugar.
-Con el alias en su lugar, no tienes que cambiar en ningún lugar donde haces referencia al alias porque el alias ahora devolverá `/admin/usuarios/5` como en el
-ejemplo anterior.
+Esto es especialmente útil si tu URL llega a cambiar. En el ejemplo anterior, digamos que los usuarios se movieron a `/admin/usuarios/@id` en su lugar. Con el alias en su lugar, no tienes que cambiar en ningún lugar donde haces referencia al alias porque el alias ahora devolverá `/admin/usuarios/5` como en el ejemplo anterior.
 
-El alias de ruta aun funciona en grupos también:
+El alias de ruta también funciona en grupos:
 
 ```php
 Flight::group('/usuarios', function() {
@@ -217,32 +281,32 @@ Flight::group('/usuarios', function() {
 });
 
 
-// más adelante en algún lugar del código
+// más tarde en algún lugar del código
 Flight::getUrl('vista_usuario', [ 'id' => 5 ]); // devolverá '/usuarios/5'
 ```
 
 ## Información de Ruta
 
-Si quieres inspeccionar la información de la ruta coincidente, puedes solicitar que el objeto de ruta se pase a tu devolución de llamada pasando `true` como el tercer parámetro en
+Si deseas inspeccionar la información de la ruta coincidente, puedes solicitar que se pase el objeto de ruta a tu devolución de llamada pasando `true` como tercer parámetro en
 el método de ruta. El objeto de ruta siempre será el último parámetro pasado a tu
 función de devolución de llamada.
 
 ```php
 Flight::route('/', function(\flight\net\Route $ruta) {
-  // Array de métodos HTTP emparejados
+  // Matriz de métodos HTTP emparejados
   $ruta->methods;
 
-  // Array de parámetros nombrados
+  // Matriz de parámetros nombrados
   $ruta->params;
 
-  // Expresión regular de coincidencia
+  // Expresión regular coincidente
   $ruta->regex;
 
-  // Contiene los contenidos de cualquier '*' utilizado en el patrón de URL
+  // Contiene el contenido de cualquier '*' usado en el patrón de URL
   $ruta->splat;
 
-  // Muestra la ruta de la URL.... si realmente lo necesitas
-  $ruta->pattern;
+  // Muestra la ruta de la URL....si realmente la necesitas
+  $ruta->patrón;
 
   // Muestra qué middleware está asignado a esto
   $ruta->middleware;
@@ -254,7 +318,7 @@ Flight::route('/', function(\flight\net\Route $ruta) {
 
 ## Agrupación de Rutas
 
-Puede haber momentos en los que quieras agrupar rutas relacionadas juntas (como `/api/v1`).
+Puede haber momentos en los que desees agrupar rutas relacionadas juntas (como `/api/v1`).
 Puedes hacer esto usando el método `group`:
 
 ```php
@@ -263,8 +327,8 @@ Flight::group('/api/v1', function () {
 	// Coincide con /api/v1/usuarios
   });
 
-  Flight::route('/posts', function () {
-	// Coincide con /api/v1/posts
+  Flight::route('/publicaciones', function () {
+	// Coindice con /api/v1/publicaciones
   });
 });
 ```
@@ -274,24 +338,24 @@ Incluso puedes anidar grupos de grupos:
 ```php
 Flight::group('/api', function () {
   Flight::group('/v1', function () {
-	// Flight::get() obtiene variables, ¡no establece una ruta! Ver el contexto del objeto abajo
+	// Flight::get() obtiene variables, ¡no establece una ruta! Ver contexto de objeto a continuación
 	Flight::route('GET /usuarios', function () {
-	  // Coincide con GET /api/v1/users
+	  // Coincide con GET /api/v1/usuarios
 	});
 
-	Flight::post('/posts', function () {
-	  // Coincide con POST /api/v1/posts
+	Flight::post('/publicaciones', function () {
+	  // Coincide con POST /api/v1/publicaciones
 	});
 
-	Flight::put('/posts/1', function () {
-	  // Coincide con PUT /api/v1/posts
+	Flight::put('/publicaciones/1', function () {
+	  // Coincide con PUT /api/v1/publicaciones
 	});
   });
   Flight::group('/v2', function () {
 
-	// Flight::get() obtiene variables, no establece una ruta. Ver el contexto del objeto abajo
+	// Flight::get() obtiene variables, ¡no establece una ruta! Ver contexto de objeto a continuación
 	Flight::route('GET /usuarios', function () {
-	  // Coincide con GET /api/v2/users
+	  // Coincide con GET /api/v2/usuarios
 	});
   });
 });
@@ -299,19 +363,19 @@ Flight::group('/api', function () {
 
 ### Agrupación con Contexto de Objeto
 
-Todavía puedes usar agrupación de rutas con el objeto `Engine` de la siguiente manera:
+Todavía puedes usar la agrupación de rutas con el objeto `Engine` de la siguiente manera:
 
 ```php
 $app = new \flight\Engine();
-$app->group('/api/v1', function (Router $router) {
+$app->group('/api/v1', function (Router $enrutador) {
 
   // usa la variable $router
-  $router->get('/usuarios', function () {
+  $enrutador->get('/usuarios', function () {
 	// Coincide con GET /api/v1/usuarios
   });
 
-  $router->post('/posts', function () {
-	// Coincide con POST /api/v1/posts
+  $enrutador->post('/publicaciones', function () {
+	// Coincide con POST /api/v1/publicaciones
   });
 });
 ```
@@ -319,22 +383,30 @@ $app->group('/api/v1', function (Router $router) {
 ## Streaming
 
 Ahora puedes transmitir respuestas al cliente usando el método `streamWithHeaders()`.
-Esto es útil para enviar archivos grandes, procesos largos en ejecución o generar respuestas grandes.
-La transmisión de una ruta se maneja un poco diferente que una ruta regular.
+Esto es útil para enviar archivos grandes, procesos prolongados o generar respuestas grandes.
+El enrutamiento de una transmisión se maneja un poco diferente que una ruta regular.
 
-> **Nota:** La transmisión de respuestas solo está disponible si tienes [`flight.v2.output_buffering`](/learn/migrating-to-v3#output_buffering) establecido en false.
+> **Nota:** Las respuestas en transmisión solo están disponibles si tienes [`flight.v2.output_buffering`](/learn/migrating-to-v3#output_buffering) configurado en `false`
 
 ```php
-Flight::route('/stream-usuarios', function() {
+Flight::route('/usuarios-en-transmision', function() {
 
-	// cómo extraes tus datos, solo como ejemplo...
+	// Si tienes encabezados adicionales para establecer aquí después de que se haya ejecutado la ruta
+	// debes definirlos antes de que se haya hecho cualquier eco.
+	// Todos deben ser una llamada directa a la función header() o
+	// una llamada a Flight::response()->setRealHeader()
+	header('Content-Disposition: attachment; filename="usuarios.json"');
+	// o
+	Flight::response()->setRealHeader('Content-Disposition', 'attachment; filename="usuarios.json"');
+
+	// como quieras obtener tus datos, solo como ejemplo...
 	$usuarios_stmt = Flight::db()->query("SELECT id, first_name, last_name FROM users");
 
 	echo '{';
-	$cantidad_usuarios = count($usuarios);
+	$conteo_usuarios = count($usuarios);
 	while($usuario = $usuarios_stmt->fetch(PDO::FETCH_ASSOC)) {
 		echo json_encode($usuario);
-		if(--$cantidad_usuarios > 0) {
+		if(--$conteo_usuarios > 0) {
 			echo ',';
 		}
 
@@ -343,10 +415,9 @@ Flight::route('/stream-usuarios', function() {
 	}
 	echo '}';
 
-// Así es como se establecerán las cabeceras antes de empezar a transmitir.
+// Así es como establecerás los encabezados antes de comenzar a transmitir.
 })->streamWithHeaders([
 	'Content-Type' => 'application/json',
 	// código de estado opcional, por defecto es 200
-	'status' => 200
+	'estado' => 200
 ]);
-```

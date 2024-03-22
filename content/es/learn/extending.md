@@ -1,13 +1,18 @@
-# Extensión / Contenedores
+# Extendiendo
 
-Flight está diseñado para ser un marco extensible. El marco viene con un conjunto de métodos y componentes predeterminados, pero te permite asignar tus propios métodos, registrar tus propias clases o incluso anular clases y métodos existentes.
+Flight está diseñado para ser un marco extensible. El marco viene con un conjunto
+de métodos y componentes predeterminados, pero te permite mapear tus propios métodos,
+registrar tus propias clases o incluso anular clases y métodos existentes.
 
-## Asignar Métodos
+Si buscas un DIC (Dependency Injection Container), dirígete a la página del
+[Dependency Injection Container](dependency-injection-container).
 
-Para asignar tu propio método personalizado simple, utilizas la función `map`:
+## Mapeo de Métodos
+
+Para mapear tu propio método personalizado simple, utiliza la función `map`:
 
 ```php
-// Asigna tu método
+// Mapea tu método
 Flight::map('hello', function (string $name) {
   echo "¡hola $name!";
 });
@@ -16,11 +21,13 @@ Flight::map('hello', function (string $name) {
 Flight::hello('Bob');
 ```
 
-Esto se usa más cuando necesitas pasar variables a tu método para obtener un valor esperado. Utilizar el método `register()` como se muestra a continuación es más para pasar configuración y luego llamar a tu clase preconfigurada.
+Esto se usa más cuando necesitas pasar variables a tu método para obtener un valor esperado.
+Utilizar el método `register()` como se muestra a continuación es más para pasar configuración
+y luego llamar a tu clase preconfigurada.
 
-## Registro de Clases / Contenedorización
+## Registro de Clases
 
-Para registrar tu propia clase y configurarla, utilizas la función `register`:
+Para registrar tu propia clase y configurarla, utiliza la función `register`:
 
 ```php
 // Registra tu clase
@@ -30,10 +37,13 @@ Flight::register('user', User::class);
 $user = Flight::user();
 ```
 
-El método de registro también te permite pasar parámetros al constructor de tu clase. Por lo tanto, al cargar tu clase personalizada, vendrá preinicializada. Puedes definir los parámetros del constructor pasando un array adicional. Aquí tienes un ejemplo de carga de una conexión a la base de datos:
+El método de registro también te permite pasar parámetros al constructor de tu clase.
+Entonces, al cargar tu clase personalizada, vendrá preinicializada.
+Puedes definir los parámetros del constructor pasando un array adicional.
+Aquí tienes un ejemplo de carga de una conexión de base de datos:
 
 ```php
-// Registra clase con parámetros del constructor
+// Registra clase con parámetros de constructor
 Flight::register('db', PDO::class, ['mysql:host=localhost;dbname=test', 'user', 'pass']);
 
 // Obtén una instancia de tu clase
@@ -51,10 +61,12 @@ class SomeController {
 }
 ```
 
-Si pasas un parámetro de callback adicional, se ejecutará inmediatamente después de la construcción de la clase. Esto te permite realizar cualquier procedimiento de configuración para tu nuevo objeto. La función de callback toma un parámetro, una instancia del nuevo objeto.
+Si pasas un parámetro adicional de callback, se ejecutará inmediatamente
+después de la construcción de la clase. Esto te permite realizar cualquier procedimiento de configuración para tu
+nuevo objeto. La función de callback toma un parámetro, una instancia del nuevo objeto.
 
 ```php
-// El callback recibirá el objeto que se construyó
+// Se pasará el objeto que se creó al callback
 Flight::register(
   'db',
   PDO::class,
@@ -65,23 +77,28 @@ Flight::register(
 );
 ```
 
-Por defecto, cada vez que cargas tu clase obtendrás una instancia compartida. Para obtener una nueva instancia de una clase, simplemente pasa `false` como parámetro:
+Por defecto, cada vez que cargas tu clase obtendrás una instancia compartida.
+Para obtener una nueva instancia de una clase, simplemente pasa `false` como parámetro:
 
 ```php
 // Instancia compartida de la clase
-$compartida = Flight::db();
+$compartido = Flight::db();
 
 // Nueva instancia de la clase
 $nueva = Flight::db(false);
 ```
 
-Ten en cuenta que los métodos asignados tienen precedencia sobre las clases registradas. Si declaras ambos usando el mismo nombre, solo se invocará el método asignado.
+Ten en cuenta que los métodos mapeados tienen precedencia sobre las clases registradas. Si
+declaras ambos con el mismo nombre, solo se invocará el método mapeado.
 
-## Anulación
+## Anulando Métodos del Marco
 
-Flight te permite anular su funcionalidad predeterminada para adaptarse a tus propias necesidades, sin tener que modificar ningún código.
+Flight te permite anular su funcionalidad predeterminada para adaptarse a tus propias necesidades,
+sin necesidad de modificar ningún código.
 
-Por ejemplo, cuando Flight no puede emparejar una URL con una ruta, invoca el método `notFound` que envía una respuesta générica `HTTP 404`. Puedes anular este comportamiento utilizando el método `map`:
+Por ejemplo, cuando Flight no puede hacer coincidir una URL con una ruta, invoca el método `notFound`
+que envía una respuesta genérica de `HTTP 404`. Puedes anular este comportamiento
+utilizando el método `map`:
 
 ```php
 Flight::map('notFound', function() {
@@ -90,8 +107,8 @@ Flight::map('notFound', function() {
 });
 ```
 
-Flight también te permite reemplazar componentes fundamentales del marco.
-Por ejemplo, puedes reemplazar la clase del enrutador predeterminado con tu propia clase personalizada:
+Flight también te permite reemplazar componentes principales del marco.
+Por ejemplo, puedes reemplazar la clase de Router predeterminada con tu propia clase personalizada:
 
 ```php
 // Registra tu clase personalizada
@@ -101,4 +118,4 @@ Flight::register('router', MyRouter::class);
 $mienrutador = Flight::router();
 ```
 
-Sin embargo, los métodos del marco como `map` y `register` no se pueden anular. Recibirás un error si intentas hacerlo.
+Sin embargo, los métodos del marco como `map` y `register` no se pueden anular. Obtendrás un error si intentas hacerlo.

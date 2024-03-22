@@ -1,21 +1,21 @@
 # クイックスタートが必要ですか？
 
-[flightphp/skeleton](https://github.com/flightphp/skeleton) レポジトリに移動して、始めましょう！これは、アプリを実行するのに必要なすべてが含まれる単一のページファイルを含むプロジェクトです。コントローラーやビューを備えたより充実した例も含まれています。
+[flightphp/skeleton](https://github.com/flightphp/skeleton) リポジトリで始めましょう！これは、アプリケーションを実行するのに必要なすべてのものが含まれた単一のページファイルを含むプロジェクトです。また、コントローラーやビューを備えたより充実した例も含まれています。
 
 ## インスピレーションが必要ですか？
 
-これらは公式にフライトチームによってスポンサーされていませんが、フライトで構築されたプロジェクトの構造化方法についてのアイデアを提供してくれるかもしれません！
+これらはFlightチームによって公式にスポンサーされていませんが、Flightで構築されたプロジェクトの構造化方法についてのアイデアを提供するかもしれません！
 
-- [コメント可能なペーストビン](https://github.com/n0nag0n/commie2)
-- [基本的なスケルトンアプリ](https://github.com/markhughes/flight-skeleton)
-- [例のウィキ](https://github.com/Skayo/FlightWiki)
-- [IT-Innovator PHPフレームワークアプリケーション](https://github.com/itinnovator/myphp-app)
-- [LittleEducationalCMS（スペイン語）](https://github.com/casgin/LittleEducationalCMS)
-- [イタリアのイエローページAPI](https://github.com/chiccomagnus/PGAPI)
-- [汎用コンテンツ管理システム（非常に少ないドキュメンテーション付き）](https://github.com/recepuncu/cms)
-- [Flightとmedooに基づく小さなPHPフレームワーク](https://github.com/ycrao/tinyme)
-- [MVCアプリケーションの例](https://github.com/paddypei/Flight-MVC)
+- [Commentable Paste Bin](https://github.com/n0nag0n/commie2)
+- [Basic Skeleton App](https://github.com/markhughes/flight-skeleton)
+- [Example Wiki](https://github.com/Skayo/FlightWiki)
+- [The IT-Innovator PHP Framework Application](https://github.com/itinnovator/myphp-app)
+- [LittleEducationalCMS (Spanish)](https://github.com/casgin/LittleEducationalCMS)
+- [Italian Yellow Pages API](https://github.com/chiccomagnus/PGAPI)
+- [Generic Content Management System (with....very little documentation)](https://github.com/recepuncu/cms)
+- [A tiny php framework based on Flight and medoo.](https://github.com/ycrao/tinyme)
+- [Example MVC Application](https://github.com/paddypei/Flight-MVC)
 
-## 自分の例を共有したいですか？
+## 自分自身の例を共有したいですか？
 
-共有したいプロジェクトがある場合は、追加するプルリクエストを提出してください！
+共有したいプロジェクトがある場合は、プルリクエストを送信してこのリストに追加してください！

@@ -1,8 +1,8 @@
-# Active Record Фреймворка
+# Flight Active Record
 
-Active Record - это сопоставление сущности базы данных с объектом PHP. Проще говоря, если у вас есть таблица пользователей в базе данных, вы можете "перевести" строку в этой таблице в класс `User` и объект `$user` в вашем кодовой базе. См. [пример](#basic-example).
+Активная запись - это сопоставление сущности базы данных с объектом PHP. Проще говоря, если у вас есть таблица пользователей в вашей базе данных, вы можете "перевести" строку в этой таблице в класс `User` и объект `$user` в вашем кодовой базе. См. [пример использования](#basic-example).
 
-## Базовый Пример
+## Базовый пример
 
 Давайте предположим, что у вас есть следующая таблица:
 
@@ -14,19 +14,19 @@ CREATE TABLE users (
 );
 ```
 
-Теперь вы можете настроить новый класс для представления этой таблицы:
+Теперь вы можете создать новый класс, чтобы представить эту таблицу:
 
 ```php
 /**
- * Класс ActiveRecord обычно в единственном числе
+ * Класс Active Record обычно в единственном числе
  * 
  * Крайне рекомендуется добавить свойства таблицы в виде комментариев здесь
  * 
  * @property int    $id
  * @property string $name
  * @property string $password
- */
-класс User расширяет flight\ActiveRecord {
+ */ 
+class User extends flight\ActiveRecord {
 	public function __construct($database_connection)
 	{
 		// вы можете установить это так
@@ -37,56 +37,56 @@ CREATE TABLE users (
 }
 ```
 
-Теперь посмотрите, как происходит волшебство!
+Теперь посмотрите, как волшебство начинает работать!
 
 ```php
 // для sqlite
-$database_connection = new PDO('sqlite:test.db'); // это просто для примера, вы скорее всего будете использовать реальное соединение с базой данных
+$database_connection = new PDO('sqlite:test.db'); // это просто для примера, вы, вероятно, будете использовать реальное соединение с базой данных
 
 // для mysql
 $database_connection = new PDO('mysql:host=localhost;dbname=test_db&charset=utf8bm4', 'username', 'password');
 
 // или mysqli
 $database_connection = new mysqli('localhost', 'username', 'password', 'test_db');
-// или mysqli с созданием на основе не объекта
+// или mysqli с созданием без объекта
 $database_connection = mysqli_connect('localhost', 'username', 'password', 'test_db');
 
 $user = new User($database_connection);
-$user->name = 'Бобби Тейблз';
-$user->password = password_hash('крутой пароль');
-$user->вставить();
+$user->name = 'Бобби Тейблс';
+$user->password = password_hash('некоторый крутой пароль');
+$user->insert();
 // или $user->save();
 
 echo $user->id; // 1
 
 $user->name = 'Джозеф Мамма';
-$user->password = password_hash('еще крутой пароль!!!');
+$user->password = password_hash('еще один крутой пароль!!!');
 $user->insert();
 // нельзя использовать $user->save() здесь, иначе он подумает, что это обновление!
 
 echo $user->id; // 2
 ```
 
-И это было настолько легко добавить нового пользователя! Теперь, когда в базе данных есть строка пользователя, как ее извлечь?
+И это было настолько просто добавить нового пользователя! Теперь, когда в базе данных есть строка пользователя, как вы ее извлекаете?
 
 ```php
-$user->find(1); // найти id = 1 в базе данных и вернуть его.
-echo $user->name; // 'Бобби Тейблз'
+$user->find(1); // находит id = 1 в базе данных и возвращает его.
+echo $user->name; // 'Бобби Тейблс'
 ```
 
-А что, если вы хотите найти всех пользователей?
+Что, если вы хотите найти всех пользователей?
 
 ```php
 $users = $user->findAll();
 ```
 
-Что насчет с определенным условием?
+А если вы хотите найти соответствующее условие?
 
 ```php
 $users = $user->like('name', '%mamma%')->findAll();
 ```
 
-Весело это, не правда ли? Установим его и начнем!
+Вам нравится этот процесс? Установим его и начнем!
 
 ## Установка
 
@@ -98,24 +98,24 @@ composer require flightphp/active-record
 
 ## Использование
 
-Это можно использовать как автономную библиотеку, так и с фреймворком PHP Flight. Полностью на ваше усмотрение.
+Это можно использовать как самостоятельную библиотеку, так и с фреймворком Flight PHP. Совершенно на ваше усмотрение.
 
-### Автономный режим
+### Самостоятельно
 Просто убедитесь, что вы передаете соединение PDO в конструктор.
 
 ```php
-$pdo_connection = new PDO('sqlite:test.db'); // это просто для примера, вы скорее всего будете использовать реальное соединение с базой данных
+$pdo_connection = new PDO('sqlite:test.db'); // это просто для примера, вы, вероятно, будете использовать реальное соединение с базой данных
 
 $User = new User($pdo_connection);
 ```
 
-### Фреймворк PHP Flight
-Если вы используете фреймворк PHP Flight, вы можете зарегистрировать класс ActiveRecord как сервис (но вам честно говоря, не обязательно).
+### Фреймворк Flight PHP
+Если вы используете фреймворк Flight PHP, вы можете зарегистрировать класс ActiveRecord в качестве сервиса (но честно говоря, это делать не обязательно).
 
 ```php
 Flight::register('user', 'User', [ $pdo_connection ]);
 
-// затем вы можете использовать его так в контроллере, функции и т. д.
+// тогда вы можете использовать его таким образом в контроллере, функции и т.д.
 
 Flight::user()->find(1);
 ```
@@ -124,17 +124,17 @@ Flight::user()->find(1);
 
 #### `find($id = null) : boolean|ActiveRecord`
 
-Находит одну запись и присваивает ее текущему объекту. Если вы передаете `$id` какой-либо, он выполнит поиск по первичному ключу с этим значением. Если ничего не передано, он просто найдет первую запись в таблице.
+Находит одну запись и присваивает ее текущему объекту. Если вы передаете `$id`, он выполнит поиск по первичному ключу с этим значением. Если ничего не передается, он просто найдет первую запись в таблице.
 
-Кроме того, вы можете передать ему другие вспомогательные методы для запроса вашей таблицы.
+Дополнительно вы можете передать ему другие вспомогательные методы для запроса вашей таблицы.
 
 ```php
-// найти запись с некоторыми условиями заранее
+// найти запись с определенными условиями заранее
 $user->notNull('password')->orderBy('id DESC')->find();
 
-// найти запись по конкретному id
+// найти запись по определенному идентификатору
 $id = 123;
-$user->найти($id);
+$user->find($id);
 ```
 
 #### `findAll(): array<int,ActiveRecord>`
@@ -143,6 +143,16 @@ $user->найти($id);
 
 ```php
 $user->findAll();
+```
+
+#### `isHydrated(): boolean` (v0.4.0)
+
+Возвращает `true`, если текущая запись была загружена (извлечена из базы данных).
+
+```php
+$user->find(1);
+// если запись найдена с данными...
+$user->isHydrated(); // true
 ```
 
 #### `insert(): boolean|ActiveRecord`
@@ -166,16 +176,29 @@ $user->email = 'test@example.com';
 $user->update();
 ```
 
+#### `save(): boolean|ActiveRecord`
+
+Вставляет или обновляет текущую запись в базе данных. Если у записи есть идентификатор, она будет обновлена, в противном случае она будет вставлена.
+
+```php
+$user = new User($pdo_connection);
+$user->name = 'демо';
+$user->password = md5('демо');
+$user->save();
+```
+
+**Примечание:** Если в классе определены отношения, оно рекурсивно сохранит также эти отношения, если они были определены, созданы и содержат данные для обновления. (v0.4.0 и выше)
+
 #### `delete(): boolean`
 
 Удаляет текущую запись из базы данных.
 
 ```php
 $user->gt('id', 0)->orderBy('id desc')->find();
-$user->удалить();
+$user->delete();
 ```
 
-Вы также можете удалить несколько записей, выполнив поиск заранее.
+Вы также можете удалить несколько записей, выполнить поиск заранее.
 
 ```php
 $user->like('name', 'Bob%')->delete();
@@ -183,28 +206,47 @@ $user->like('name', 'Bob%')->delete();
 
 #### `dirty(array  $dirty = []): ActiveRecord`
 
-Грязные данные относятся к данным, которые были изменены в записи.
+"Грязные" данные относятся к данным, которые были изменены в записи.
 
 ```php
 $user->greaterThan('id', 0)->orderBy('id desc')->find();
 
-// на данный момент ничто не является "грязным".
-$user->email = 'test@example.com'; // теперь электронная почта считается "грязной", так как она изменилась.
+// на данный момент ничего не является "грязным".
+$user->email = 'test@example.com'; // теперь электронная почта считается "грязной", так как она изменилась
 $user->update();
-// теперь нет данных, которые были бы загрязнены, потому что они были обновлены и сохранены в базе данных
+// теперь нет данных, которые считаются "грязными", потому что они были обновлены и сохранены в базе данных
 
-$user->password = password_hash()'newpassword'); // теперь это грязно
-$user->dirty(); // передача ничего не очистит все грязные записи.
-$user->update(); // ничто не обновится, так как ничего не было захвачено как грязное.
+$user->password = password_hash()'newpassword'); // теперь это "грязное" значение
+$user->dirty(); // ничего явно передано, поэтому все грязные записи очищены.
+$user->update(); // ничего не обновится, так как ничего не было отмечено как "грязное"
 
 $user->dirty([ 'name' => 'something', 'password' => password_hash('a different password') ]);
-$user->update(); // и имя, и пароль обновлены.
+$user->update(); // обновятся и имя, и пароль.
+```
+
+#### `copyFrom(array $data): ActiveRecord` (v0.4.0)
+
+Это псевдоним для метода `dirty()`. Он понятнее, что именно вы делаете.
+
+```php
+$user->copyFrom([ 'name' => 'something', 'password' => password_hash('a different password') ]);
+$user->update(); // как имя, так и пароль будут обновлены.
+```
+
+#### `isDirty(): boolean` (v0.4.0)
+
+Возвращает `true`, если текущая запись была изменена.
+
+```php
+$user->greaterThan('id', 0)->orderBy('id desc')->find();
+$user->email = 'test@email.com';
+$user->isDirty(); // true
 ```
 
 #### `reset(bool $include_query_data = true): ActiveRecord`
 
-Сбрасывает текущую запись до начального состояния. Это действительно хорошо использовать в циклических поведениях.
-Если вы передадите `true`, он также сбросит данные запроса, которые были использованы для нахождения текущего объекта (поведение по умолчанию).
+Сбрасывает текущую запись к ее начальному состоянию. Это действительно полезно использовать в циклическом поведении.
+Если вы передадите `true`, это также сбросит данные запроса, которые были использованы для нахождения текущего объекта (поведение по умолчанию).
 
 ```php
 $users = $user->greaterThan('id', 0)->orderBy('id desc')->find();
@@ -218,10 +260,14 @@ foreach($users as $user) {
 }
 ```
 
-## SQL Методы Запросов
+#### `getBuiltSql(): string` (v0.4.1)
+
+После выполнения методов `find()`, `findAll()`, `insert()`, `update()` или `save()` вы можете получить построенный SQL и использовать его для отладки.
+
+## Методы SQL-запросов
 #### `select(string $field1 [, string $field2 ... ])`
 
-Вы можете выбрать только несколько столбцов в таблице, если хотите (это более производительно на очень широких таблицах с множеством столбцов).
+Вы можете выбрать только несколько столбцов в таблице, если хотите (это более производительно для очень широких таблиц с многими столбцами)
 
 ```php
 $user->select('id', 'name')->find();
@@ -229,7 +275,7 @@ $user->select('id', 'name')->find();
 
 #### `from(string $table)`
 
-Технически вы можете также выбрать другую таблицу! Почему бы и нет?!
+Вы также можете выбрать другую таблицу! Почему бы и нет?!
 
 ```php
 $user->select('id', 'name')->from('user')->find();
@@ -237,7 +283,7 @@ $user->select('id', 'name')->from('user')->find();
 
 #### `join(string $table_name, string $join_condition)`
 
-Вы можете даже присоединяться к другой таблице в базе данных.
+Вы даже можете присоединиться к другой таблице в базе данных.
 
 ```php
 $user->join('contacts', 'contacts.user_id = users.id')->find();
@@ -245,17 +291,17 @@ $user->join('contacts', 'contacts.user_id = users.id')->find();
 
 #### `where(string $where_conditions)`
 
-Вы можете установить некоторые пользовательские аргументы `where` (вы не можете устанавливать параметры в этом операторе where)
+Вы можете установить пользовательские условия where (в этом where-выражении нельзя устанавливать параметры)
 
 ```php
 $user->where('id=1 AND name="demo"')->find();
 ```
 
-**Примечание о безопасности** - Вас может подкусить желание сделать что-то такое, как `$user->where("id = '{$id}' AND name = '{$name}'")->find();`. Пожалуйста, НЕ ДЕЛАЙТЕ ЭТО! Это подвержено так называемым атакам SQL-инъекций. Есть много статей онлайн, пожалуйста, введите в Google "атаки на SQL-инъекции PHP", и вы найдете много статей на эту тему. Правильный способ обработки этого с помощью этой библиотеки состоит в том, чтобы вместо этого метода `where()` вы делали что-то вроде `$user->eq('id', $id)->eq('name', $name)->find();`
+**Примечание безопасности** - Вас может подстерегать соблазн сделать что-то вроде `$user->where("id = '{$id}' AND name = '{$name}'")->find();`. ПОЖАЛУЙСТА, НЕ ДЕЛАЙТЕ ЭТО!!! Это уязвимо для так называемых атак внедрения SQL. Есть много статей в Интернете, пожалуйста, погуглите "SQL injection attacks php", и вы найдете много статей на эту тему. Правильным способом обработки этого с использованием этой библиотеки является, вместо метода `where()`, использовать что-то вроде `$user->eq('id', $id)->eq('name', $name)->find();` Если вам абсолютно необходимо это сделать, библиотека `PDO` имеет метод `$pdo->quote($var)`, который заэкранирует его для вас. Только после использования `quote()` вы можете использовать его в `where()` выражении.
 
 #### `group(string $group_by_statement)/groupBy(string $group_by_statement)`
 
-Группируйте ваши результаты по определенному условию.
+Группирует ваши результаты по определенному условию.
 
 ```php
 $user->select('COUNT(*) as count')->groupBy('name')->findAll();
@@ -263,7 +309,7 @@ $user->select('COUNT(*) as count')->groupBy('name')->findAll();
 
 #### `order(string $order_by_statement)/orderBy(string $order_by_statement)`
 
-Сортирует возвращаемый запрос определенным образом.
+Сортирует возвращенный запрос определенным образом.
 
 ```php
 $user->orderBy('name DESC')->find();
@@ -271,7 +317,7 @@ $user->orderBy('name DESC')->find();
 
 #### `limit(string $limit)/limit(int $offset, int $limit)`
 
-Ограничивает количество записей, возвращаемых. Если передано второе целое число, то это смещение, так же как в SQL.
+Ограничивает количество возвращаемых записей. Если передан второй int, это будет смещение, и предел, как в SQL.
 
 ```php
 $user->orderby('name DESC')->limit(0, 10)->findAll();
@@ -364,35 +410,35 @@ $user->between('id', [1, 2])->find();
 ```
 
 ## Отношения
-Вы можете устанавливать несколько видов отношений с использованием этой библиотеки. Вы можете определить отношения один ко многим и один к одному между таблицами. Это требует немного дополнительной настройки в классе заранее.
+Вы можете установить несколько видов отношений с использованием этой библиотеки. Вы можете установить отношения один->многие и один->один между таблицами. Для этого требуется немного дополнительной настройки в классе заранее.
 
-Установка массива `$relations` несложна, но догадаться о правильном синтаксисе может быть запутывающим.
+Установка массива `$relations` не сложна, но угадывание правильного синтаксиса может быть запутывающим.
 
 ```php
 protected array $relations = [
-	// вы можете назвать ключ как угодно. По имени ActiveRecord, вероятно, хорошо. Например, user, contact, client
+	// вы можете назвать ключ как угодно. Имя ActiveRecord, вероятно, подойдет. Например, user, contact, client
 	'user' => [
-		// обязательный параметр
+		// обязательно
 		// self::HAS_MANY, self::HAS_ONE, self::BELONGS_TO
 		self::HAS_ONE, // это тип отношения
 
-		// обязательный параметр
-		'Некий_Класс', // это "другой" класс ActiveRecord, который будет ссылаться на этот
+		// обязательно
+		'Some_Class', // это "другой" класс ActiveRecord, на который будет ссылка
 
-		// обязательный параметр
+		// обязательно
 		// в зависимости от типа отношения
-		// self::HAS_ONE = внешний ключ, который ссылается на соединение
-		// self::HAS_MANY = внешний ключ, который ссылается на соединение
-		// self::BELONGS_TO = локальный ключ, который ссылается на соединение
-		'локальный_или_внешний_ключ',
+		// self::HAS_ONE = внешний ключ, который ссылается на объединение
+		self::HAS_MANY = внешний ключ, который ссылается на объединение
+		// self::BELONGS_TO = локальный ключ, который ссылается на объединение
+		'local_or_foreign_key',
 		// просто FYI, это также соединяется только с первичным ключом "другой" модели
 
 		// необязательно
-		[ 'eq' => [ 'client_id', 5 ], 'select' => 'COUNT(*) as count', 'limit' 5 ], // дополнительные условия, которые вы хотите применить при объединении отношения
+		[ 'eq' => [ 'client_id', 5 ], 'select' => 'COUNT(*) as count', 'limit' 5 ], // дополнительные условия, которые вы хотите использовать при соединении отношения
 		// $record->eq('client_id', 5)->select('COUNT(*) as count')->limit(5))
 
 		// необязательно
-		'back_reference_name' // это, если вы хотите обратно ссылаться на это отношение обратно к себе, например, $user->contact->user;
+		'back_reference_name' // это, если вы хотите обратную ссылку этого отношения обратно к себе Ex: $user->contact->user;
 	];
 ]
 ```
@@ -422,494 +468,56 @@ class Contact extends ActiveRecord{
 }
 ```
 
-Теперь у нас есть настроенные ссылки, поэтому мы можем использовать их очень легко!
+Теперь у нас настроены ссылки, чтобы мы могли легко использовать их!
 
 ```php
 $user = new User($pdo_connection);
 
-// найти самого последнего пользователя.
+// найдем самого последнего пользователя.
 $user->notNull('id')->orderBy('id desc')->find();
 
-// получим контакты, используя отношение:
+// получить контакты, используя отношение:
 foreach($user->contacts as $contact) {
 	echo $contact->id;
 }
 
-// или мы можем пойти по-друг# Active Record Framework
-
-Active Record adalah pemetaan entitas database ke objek PHP. Dengan kata lain, jika Anda memiliki tabel pengguna di database Anda, Anda dapat "menerjemahkan" baris dalam tabel tersebut ke kelas `User` dan objek `$user` dalam kode Anda. Lihat [contoh dasar](#basic-example).
-
-## Contoh Dasar
-
-Misalkan Anda memiliki tabel berikut:
-
-```sql
-CREATE TABLE users (
-	id INTEGER PRIMARY KEY, 
-	name TEXT, 
-	password TEXT 
-);
-```
-
-Sekarang Anda dapat mengatur kelas baru untuk mewakili tabel ini:
-
-```php
-/**
- * Kelas ActiveRecord biasanya dalam bentuk tunggal
- * 
- * Sangat dianjurkan untuk menambahkan properti tabel sebagai komentar di sini
- * 
- * @property int    $id
- * @property string $name
- * @property string $password
- */ 
-class User extends flight\ActiveRecord {
-	public function __construct($database_connection)
-	{
-		// Anda dapat mengaturnya dengan cara ini
-		parent::__construct($database_connection, 'users');
-		// atau dengan cara ini
-		parent::__construct($database_connection, null, [ 'table' => 'users']);
-	}
-}
-```
-
-Sekarang lihat keajaiban terjadi!
-
-```php
-// untuk sqlite
-$database_connection = new PDO('sqlite:test.db'); // ini hanyalah contoh, Anda mungkin akan menggunakan koneksi database nyata
-
-// untuk mysql
-$database_connection = new PDO('mysql:host=localhost;dbname=test_db&charset=utf8bm4', 'username', 'password');
-
-// atau mysqli
-$database_connection = new mysqli('localhost', 'username', 'password', 'test_db');
-// atau mysqli dengan pembuatan non-object
-$database_connection = mysqli_connect('localhost', 'username', 'password', 'test_db');
-
-$user = new User($database_connection);
-$user->name = 'Bobby Tables';
-$user->password = password_hash('some cool password');
-$user->insert();
-// atau $user->save();
-
-echo $user->id; // 1
-
-$user->name = 'Joseph Mamma';
-$user->password = password_hash('some cool password again!!!');
-$user->insert();
-// tidak bisa menggunakan $user->save() di sini karena akan dianggap sebagai pembaruan!
-
-echo $user->id; // 2
-```
-
-Dan itu begitu mudah menambahkan pengguna baru! Sekarang bahwa ada baris pengguna di database, bagaimana cara mengambilnya?
-
-```php
-$user->find(1); // temukan id = 1 di database dan kembalikan.
-echo $user->name; // 'Bobby Tables'
-```
-
-Dan jika Anda ingin menemukan semua pengguna?
-
-```php
-$users = $user->findAll();
-```
-
-Bagaimana dengan kondisi tertentu?
-
-```php
-$users = $user->like('name', '%mamma%')->findAll();
-```
-
-Lihat seberapa menyenangkannya ini? Mari instalasi dan mulai!
-
-## Instalasi
-
-Hanya instalasi dengan Composer
-
-```php
-composer require flightphp/active-record 
-```
-
-## Penggunaan
-
-Ini bisa digunakan sebagai perpustakaan mandiri atau dengan Kerangka Kerja PHP Flight. Sepenuhnya terserah Anda.
-
-### Mandiri
-Pastikan Anda hanya melewati koneksi PDO ke konstruktor.
-
-```php
-$pdo_connection = new PDO('sqlite:test.db'); // ini hanyalah contoh, Anda mungkin akan menggunakan koneksi database nyata
-
-$User = new User($pdo_connection);
-```
-
-### Kerangka Kerja PHP Flight
-Jika Anda menggunakan Kerangka Kerja PHP Flight, Anda dapat mendaftarkan kelas ActiveRecord sebagai layanan (tetapi sebenarnya Anda tidak perlu melakukannya).
-
-```php
-Flight::register('user', 'User', [ $pdo_connection ]);
-
-// kemudian Anda dapat menggunakannya seperti ini di kontroler, dalam fungsi, dll.
-
-Flight::user()->find(1);
-```
-
-## Fungsi CRUD
-
-#### `find($id = null) : boolean|ActiveRecord`
-
-Temukan satu catatan dan berikan pada objek saat ini. Jika Anda melewati `$id` tertentu, itu akan melakukan pencarian pada kunci utama dengan nilai itu. Jika tidak ada yang dilewati, itu hanya akan menemukan catatan pertama dalam tabel.
-
-Selain itu, Anda bisa melewati metode bantu lainnya untuk mengkueri tabel Anda.
-
-```php
-// temukan catatan dengan beberapa kondisi sebelumnya
-$user->notNull('password')->orderBy('id DESC')->find();
-
-// temukan catatan dengan id tertentu
-$id = 123;
-$user->find($id);
-```
-
-#### `findAll(): array<int,ActiveRecord>`
-
-Temukan semua catatan dalam tabel yang Anda tentukan.
-
-```php
-$user->findAll();
-```
-
-#### `insert(): boolean|ActiveRecord`
-
-Masukkan catatan saat ini ke database.
-
-```php
-$user = new User($pdo_connection);
-$user->name = 'demo';
-$user->password = md5('demo');
-$user->insert();
-```
-
-#### `update(): boolean|ActiveRecord`
-
-Memperbarui catatan saat ini ke database.
-
-```php
-$user->greaterThan('id', 0)->orderBy('id desc')->find();
-$user->email = 'test@example.com';
-$user->update();
-```
-
-#### `delete(): boolean`
-
-Menghapus catatan saat ini dari database.
-
-```php
-$user->gt('id', 0)->orderBy('id desc')->find();
-$user->delete();
-```
-
-Anda juga dapat menghapus beberapa catatan dengan menjalankan pencarian terlebih dahulu.
-
-```php
-$user->like('name', 'Bob%')->delete();
-```
-
-#### `dirty(array  $dirty = []): ActiveRecord`
-
-Data yang kotor merujuk pada data yang telah diubah dalam sebuah catatan.
-
-```php
-$user->greaterThan('id', 0)->orderBy('id desc')->find();
-
-// saat ini tidak ada yang "kotor".
-$user->email = 'test@example.com'; // sekarang email dianggap "kotor" karena sudah berubah.
-$user->update();
-// sekarang tidak ada data yang kotor karena sudah diperbarui dan dipersistensikan dalam database
-
-$user->password = password_hash()'newpassword'); // sekarang ini kotor
-$user->dirty(); // melewati tidak akan membersihkan semua entri kotor.
-$user->update(); // tidak akan melakukan pembaruan karena tidak ada yang ditangkap sebagai kotor.
-
-$user->dirty([ 'name' => 'something', 'password' => password_hash('a different password') ]);
-$user->update(); // baik nama maupun password diperbarui.
-```
-
-#### `reset(bool $include_query_data = true): ActiveRecord`
-
-Meriset catatan saat ini ke keadaan awal. Ini bisa sangat baik digunakan dalam jenis struktur berulang.
-
-Jika Anda melewati `true`, itu juga akan mereset data query yang digunakan untuk menemukan objek saat ini (perilaku default).
-
-```php
-$users = $user->greaterThan('id', 0)->orderBy('id desc')->find();
-$user_company = new UserCompany($pdo_connection);
-
-foreach($users as $user) {
-	$user_company->reset(); // mulai dengan lempengan bersih
-	$user_company->user_id = $user->id;
-	$user_company->company_id = $some_company_id;
-	$user_company->insert();
-}
-```
-
-## Metode Kueri SQL
-#### `select(string $field1 [, string $field2 ... ])`
-
-Anda dapat memilih hanya beberapa kolom di tabel jika Anda mau (ini lebih efisien pada tabel yang sangat lebar dengan banyak kolom).
-
-```php
-$user->select('id', 'name')->find();
-```
-
-#### `from(string $table)`
-
-Teknisnya Anda juga bisa memilih tabel lain! Mengapa tidak?!
-
-```php
-$user->select('id', 'name')->from('user')->find();
-```
-
-#### `join(string $table_name, string $join_condition)`
-
-Anda bahkan bisa bergabung dengan tabel lain dalam database.
-
-```php
-$user->join('contacts', 'contacts.user_id = users.id')->find();
-```
-
-#### `where(string $where_conditions)`
-
-Anda dapat mengatur beberapa argumen khusus `where` (Anda tidak dapat mengatur parameter di pernyataan `where` ini).
-
-```php
-$user->where('id=1 AND name="demo"')->find();
-```
-
-**Catatan Keamanan** - Anda mungkin tergoda untuk melakukan sesuatu seperti `$user->where("id = '{$id}' AND name = '{$name}'")->find();`. Mohon JANGAN LAKUKAN HAL INI! Ini rentan terhadap apa yang dikenal sebagai serangan SQL Injection. Ada banyak artikel online, silakan Cari di Google "serangan SQL injection php" dan Anda akan menemukan banyak artikel tentang topik ini. Cara yang benar untuk menangani ini dengan perpustakaan ini adalah daripada menggunakan metode `where()` ini, Anda akan melakukan sesuatu seperti `$user->eq('id', $id)->eq('name', $name)->find();`
-
-#### `group(string $group_by_statement)/groupBy(string $group_by_statement)`
-
-Mengelompokkan hasil Anda berdasarkan kondisi tertentu.
-
-```php
-$user->select('COUNT(*) as count')->groupBy('name')->findAll();
-```
-
-#### `order(string $order_by_statement)/orderBy(string $order_by_statement)`
-
-Mengurutkan kueri yang dikembalikan dengan cara tertentu.
-
-```php
-$user->orderBy('name DESC')->find();
-```
-
-#### `limit(string $limit)/limit(int $offset, int $limit)`
-
-Membatasi jumlah catatan yang dikembalikan. Jika integer kedua diberikan, itu akan menjadi pergeseran, sama seperti dalam SQL.
-
-```php
-$user->orderBy('name DESC')->limit(0, 10)->findAll();
-```
-
-## Kondisi WHERE
-#### `equal(string $field, mixed $value) / eq(string $field, mixed $value)`
-
-Dimana `field = $value`
-
-```php
-$user->eq('id', 1)->find();
-```
-
-#### `notEqual(string $field, mixed $value) / ne(string $field, mixed $value)`
-
-Dimana `field <> $value`
-
-```php
-$user->ne('id', 1)->find();
-```
-
-#### `isNull(string $field)`
-
-Dimana `field IS NULL`
-
-```php
-$user->isNull('id')->find();
-```
-#### `isNotNull(string $field) / notNull(string $field)`
-
-Dimana `field IS NOT NULL`
-
-```php
-$user->isNotNull('id')->find();
-```
-
-#### `greaterThan(string $field, mixed $value) / gt(string $field, mixed $value)`
-
-Dimana `field > $value`
-
-```php
-$user->gt('id', 1)->find();
-```
-
-#### `lessThan(string $field, mixed $value) / lt(string $field, mixed $value)`
-
-Dimana `field < $value`
-
-```php
-$user->lt('id', 1)->find();
-```
-#### `greaterThanOrEqual(string $field, mixed $value) / ge(string $field, mixed $value) / gte(string $field, mixed $value)`
-
-Dimana `field >= $value`
-
-```php
-$user->ge('id', 1)->find();
-```
-#### `lessThanOrEqual(string $field, mixed $value) / le(string $field, mixed $value) / lte(string $field, mixed $value)`
-
-Dimana `field <= $value`
-
-```php
-$user->le('id', 1)->find();
-```
-
-#### `like(string $field, mixed $value) / notLike(string $field, mixed $value)`
-
-Dimana `field LIKE $value` atau `field NOT LIKE $value`
-
-```php
-$user->like('name', 'de')->find();
-```
-
-#### `in(string $field, array $values) / notIn(string $field, array $values)`
-
-Dimana `field IN($value)` atau `field NOT IN($value)`
-
-```php
-$user->in('id', [1, 2])->find();
-```
-
-#### `between(string $field, array $values)`
-
-Dimana `field BETWEEN $value AND $value1`
-
-```php
-$user->between('id', [1, 2])->find();
-```
-
-## Hubungan
-Anda dapat menetapkan beberapa jenis hubungan menggunakan perpustakaan ini. Anda dapat menetapkan hubungan satu->banyak dan satu->satu antara tabel. Ini memerlukan sedikit pengaturan tambahan dalam kelas sebelumnya.
-
-Mengatur larik `$relations` tidak sulit, tetapi menebak sintaksis yang benar mungkin membingungkan.
-
-```php
-protected array $relations = [
-	// Anda dapat memberi nama kunci apa pun yang Anda inginkan. Nama ActiveRecord mungkin baik. Misalnya, user, contact, client
-	'user' => [
-		// wajib
-		// self::HAS_MANY, self::HAS_ONE, self::BELONGS_TO
-		self::HAS_ONE, // ini adalah jenis hubungan
-
-		// wajib
-		'Some_Class', // kelas ActiveRecord "lain" ini akan merujuk
-
-		// wajib
-		// tergantung pada jenis hubungannya
-		// self::HAS_ONE = kunci asing yang merujuk pada gabungan
-		// self::HAS_MANY = kunci asing yang merujuk pada gabungan
-		// self::BELONGS_TO = kunci lokal yang merujuk pada gabungan
-		'kunci_lokal_atau_asing',
-		// hanya untuk pengetahuan, ini juga hanya bergabung dengan kunci utama model "lain"
-
-		// opsional
-		[ 'eq' => [ 'client_id', 5 ], 'select' => 'COUNT(*) as count', 'limit' 5 ], // kondisi tambahan yang ingin Anda gunakan saat menggabungkan hubungan
-		// $record->eq('client_id', 5)->select('COUNT(*) as count')->limit(5))
-
-		// opsional
-		'back_reference_name' // ini jika Anda ingin kembali merujuk pada hubungan ini ke dirinya sendiri, Misalnya $ user->contact->user;
-	];
-]
-```
-
-```php
-class User extends ActiveRecord{
-	protected array $relations = [
-		'contacts' => [ self::HAS_MANY, Contact::class, 'user_id' ],
-		'contact' => [ self::HAS_ONE, Contact::class, 'user_id' ],
-	];
-
-	public function __construct($database_connection)
-	{
-		parent::__construct($database_connection, 'users');
-	}
-}
-
-class Contact extends ActiveRecord{
-	protected array $relations = [
-		'user' => [ self::BELONGS_TO, User::class, 'user_id' ],
-		'user_with_backref' => [ self::BELONGS_TO, User::class, 'user_id', [], 'contact' ],
-	];
-	public function __construct($database_connection)
-	{
-		parent::__construct($database_connection, 'contacts');
-	}
-}
-```
-
-Sekarang kita sudah menyiapkan referensi sehingga kita bisa menggunakannya dengan sangat mudah!
-
-```php
-$user = new User($pdo_connection);
-
-// temukan pengguna terbaru.
-$user->notNull('id')->orderBy('id desc')->find();
-
-// dapatkan kontak dengan menggunakan hubungan:
-foreach($user->contacts as $contact) {
-	echo $contact->id;
-}
-
-// atau kita bisa pergi ke arah lain.
+// или можно пойти иным путем.
 $contact = new Contact();
 
-// temukan satu kontak
+// найти один контакт
 $contact->find();
 
-// dapatkan pengguna dengan menggunakan hubungan:
-echo $contact->user->name; // ini adalah nama pengguna
+// получить пользователя, используя отношение:
+echo $contact->user->name; // это имя пользователя
 ```
 
-Cukup keren ya?
+Довольно прикольно, да?
 
-## Menetapkan Data Khusus
-Terkadang Anda mungkin perlu melampirkan sesuatu yang unik ke ActiveRecord Anda seperti perhitungan kustom yang mungkin lebih mudah untuk melampirkan pada objek yang kemudian akan dilewatkan ke template misalnya.
+## Установка пользовательских данных
+Иногда вам может потребоваться присоединить к вашей Active Record что-то уникальное, такое как пользовательский расчет, который может быть проще всего присоединить к объекту и передать, скажем, шаблону.
 
 #### `setCustomData(string $field, mixed $value)`
-Anda melampirkan data khusus dengan metode `setCustomData()`.
+Вы присоединяете пользовательские данные с помощью метода `setCustomData()`.
 ```php
-$user->setCustomData('hitung_tampilan_halaman', $hitung_tampilan_h);
+$user->setCustomData('page_view_count', $page_view_count);
 ```
 
-Dan kemudian Anda cukup merujuknya seperti properti objek normal.
+И затем просто обращаетесь к нему, как к обычному свойству объекта.
 
 ```php
-echo $user->hitung_tampilan_halaman;
+echo $user->page_view_count;
 ```
 
-## Acara
+## События
 
-Satu fitur luar biasa lagi tentang perpustakaan ini adalah tentang acara. Acara dipicu pada waktu tertentu berdasarkan metode tertentu yang Anda panggil. Mereka sangat membantu dalam menyiapkan data untuk Anda secara otomatis.
+Еще одна потрясающая особенность этой библиотеки - это события. События вызываются в определенные моменты времени на основе определенных методов, которые вы вызываете. Они очень полезны для автоматической настройки данных для вас.
 
 #### `onConstruct(ActiveRecord $ActiveRecord, array &config)`
 
-Ini benar-benar membantu jika Anda perlu menetapkan koneksi default atau sesuatu seperti itu.
+Это действительно полезно, если вам нужно установить соединение по умолчанию или что-то подобное.
 
 ```php
-// index.php atau bootstrap.php
+// index.php или bootstrap.php
 Flight::register('db', 'PDO', [ 'sqlite:test.db' ]);
 
 //
@@ -919,13 +527,13 @@ Flight::register('db', 'PDO', [ 'sqlite:test.db' ]);
 // User.php
 class User extends flight\ActiveRecord {
 
-	protected function onConstruct(self $self, array &$config) { // jangan lupa referensikan &
-		// Anda bisa melakukan ini untuk secara otomatis mengatur koneksi
+	protected function onConstruct(self $self, array &$config) { // не забудьте ссылку на &
+		// вы могли бы сделать это, чтобы автоматически установить соединение
 		$config['connection'] = Flight::db();
-		// atau ini
+		// или так
 		$self->transformAndPersistConnection(Flight::db());
 		
-		// Anda juga bisa menetapkan nama tabel dengan cara ini.
+		// Вы также можете задать имя таблицы таким образом.
 		$config['table'] = 'users';
 	} 
 }
@@ -933,7 +541,7 @@ class User extends flight\ActiveRecord {
 
 #### `beforeFind(ActiveRecord $ActiveRecord)`
 
-Hal ini mungkin hanya berguna jika Anda perlu manipulasi kueri setiap kali.
+Это вероятно полезно только в случае необходимости манипулировать запросом каждый раз.
 
 ```php
 class User extends flight\ActiveRecord {
@@ -944,7 +552,7 @@ class User extends flight\ActiveRecord {
 	}
 
 	protected function beforeFind(self $self) {
-		// selalu menjalankan id >= 0 jika itu yang Anda inginkan
+		// всегда выполняйте id >= 0, если это ваше предпочтение
 		$self->gte('id', 0); 
 	} 
 }
@@ -952,7 +560,7 @@ class User extends flight\ActiveRecord {
 
 #### `afterFind(ActiveRecord $ActiveRecord)`
 
-Ini mungkin lebih berguna jika Anda perlu menjalankan logika setiap kali catatan ini diambil. Apakah Anda perlu mendekripsi sesuatu? Apakah Anda perlu menjalankan kueri perhitungan khusus setiap saat (tidak efisien tetu menjalankan?
+Вероятно, этот метод более полезен, если вам всегда нужно выполнять какую-то логику каждый раз, когда эта запись выбирается. Нужно ли вам расшифровать что-то? Нужно ли вам выполнить пользовательский запрос на подсчет каждый раз (не производительный, но как бы то ни было)?
 
 ```php
 class User extends flight\ActiveRecord {
@@ -963,187 +571,11 @@ class User extends flight\ActiveRecord {
 	}
 
 	protected function afterFind(self $self) {
-		// mendekripsi sesuatu
-		$self->rahasia = yourDecryptFunction($self->rahasia, $kunci);
+		// расшифровка чего-то
+		$self->secret = yourDecryptFunction($self->secret, $some_key);
 
-		// mungkin menyimpan sesuatu yang kustom seperti kueri???
-		$self->setCustomData('jumlah_tampilan', $self->select('COUNT(*) count')->from('tampilan_pengguna')->eq('id_pengguna', $self->id)['count']; 
+		// возможно, сохранение чего-то пользовательского, такого как запрос???
+		$self->setCustomData('view_count', $self->select('COUNT(*) count')->from('user_views')->eq('user_id', $self->id)['count']; 
 	} 
 }
 ```
-
-#### `beforeFindAll(ActiveRecord $ActiveRecord)`
-
-Hal ini mungkin hanya berguna jika Anda perlu manipulasi kueri setiap kali.
-
-```php
-class User extends flight\ActiveRecord {
-	
-	public function __construct($database_connection)
-	{
-		parent::__construct($database_connection, 'users');
-	}
-
-	protected function beforeFindAll(self $self) {
-		// selalu jalankan id >= 0 jika itu yang Anda inginkan
-		$self->gte('id', 0); 
-	} 
-}
-```
-
-#### `afterFindAll(array<int,ActiveRecord> $results)`
-
-Sama seperti `afterFind()` tetapi Anda bisa melakukannya pada semua catatan sebaliknya!
-
-```php
-class User extends flight\ActiveRecord {
-	
-	public function __construct($database_connection)
-	{
-		parent::__construct($database_connection, 'users');
-	}
-
-	protected function afterFindAll(array $results) {
-
-		foreach($results as $self) {
-			// lakukan sesuatu yang keren seperti afterFind()
-		}
-	} 
-}
-```
-
-#### `beforeInsert(ActiveRecord $ActiveRecord)`
-
-Sangat membantu jika Anda memerlukan nilai default yang diatur setiap kali.
-
-```php
-class User extends flight\ActiveRecord {
-	
-	public function __construct($database_connection)
-	{
-		parent::__construct($database_connection, 'users');
-	}
-
-	protected function beforeInsert(self $self) {
-		// atur nilai default
-		if(!$self->created_date) {
-			$self->created_date = gmdate('Y-m-d');
-		}
-
-		if(!$self->password) {
-			$self->password = password_hash((string) microtime(true));
-		}
-	} 
-}
-```
-
-#### `afterInsert(ActiveRecord $ActiveRecord)`
-
-Mungkin ada kasus penggunaan Anda untuk mengubah data setelah diinsert?
-
-```php
-class User extends flight\ActiveRecord {
-	
-	public function __construct($database_connection)
-	{
-		parent::__construct($database_connection, 'users');
-	}
-
-	protected function afterInsert(self $self) {
-		// lakukan metode yang Anda inginkan
-		Flight::cache()->set('id_pencatatan_terakhir', $self->id);
-		// atau apapun....
-	} 
-}
-```
-
-#### `beforeUpdate(ActiveRecord $ActiveRecord)`
-
-Sangat membantu jika Anda memerlukan nilai default yang diatur setiap kali diupdate.
-
-```php
-class User extends flight\ActiveRecord {
-	
-	public function __construct($database_connection)
-	{
-		parent::__construct($database_connection, 'users');
-	}
-
-	protected function beforeInsert(self $self) {
-		// atur nilai default
-		if(!$self->updated_date) {
-			$self->updated_date = gmdate('Y-m-d');
-		}
-	} 
-}
-```
-
-#### `afterUpdate(ActiveRecord $ActiveRecord)`
-
-Mungkin ada kasus penggunaan Anda untuk mengubah data setelah diupdate?
-
-```php
-class User extends flight\ActiveRecord {
-	
-	public function __construct($database_connection)
-	{
-		parent::__construct($database_connection, 'users');
-	}
-
-	protected function afterInsert(self $self) {
-		// lakukan apapun yang Anda inginkan
-		Flight::cache()->set('id_pengguna_terbaru', $self->id);
-		// atau apapun....
-	} 
-}
-```
-
-#### `beforeSave(ActiveRecord $ActiveRecord)/afterSave(ActiveRecord $ActiveRecord)`
-
-Ini bermanfaat jika Anda ingin peristiwa terjadi ketika insert atau update terjadi. Saya akan melewati penjelasan panjang, tetapi saya yakin Anda bisa menebaknya.
-
-```php
-class User extends flight\ActiveRecord {
-	
-	public function __construct($database_connection)
-	{
-		parent::__construct($database_connection, 'users');
-	}
-
-	protected function beforeSave(self $self) {
-		$self->terakhir_diperbarui = gmdate('Y-m-d H:i:s');
-	} 
-}
-```
-
-#### `beforeDelete(ActiveRecord $ActiveRecord)/afterDelete(ActiveRecord $ActiveRecord)`
-
-Saya tidak yakin apa yang ingin Anda lakukan di sini, tetapi tidak ada penilaian di sini! Lanjutkan!
-
-```php
-class User extends flight\ActiveRecord {
-	
-	public function __construct($database_connection)
-	{
-		parent::__construct($database_connection, 'users');
-	}
-
-	protected function beforeDelete(self $self) {
-		echo 'Dia adalah prajurit yang gagah... :cry-face:';
-	} 
-}
-```
-
-## Berkontribusi
-
-Harap lakukan.
-
-## Setup
-
-Saat Anda berkontribusi, pastikan Anda menjalankan `composer test-coverage` untuk menjaga 100% cakupan tes (ini bukan tes unit sejati, lebih seperti pengujian integrasi).
-
-Pastikan juga Anda menjalankan `composer beautify` dan `composer phpcs` untuk memperbaiki kesalahan linter.
-
-## Lisensi
-
-MIT

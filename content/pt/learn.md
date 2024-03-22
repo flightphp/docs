@@ -1,24 +1,24 @@
 # Aprenda Sobre o Flight
 
-Flight é um framework rápido, simples e extensível para PHP. É bastante versátil e pode ser usado para construir qualquer tipo de aplicação web. É construído com simplicidade em mente e é escrito de uma forma que é fácil de entender e usar.
+O Flight é um framework rápido, simples e extensível para PHP. É bastante versátil e pode ser usado para construir qualquer tipo de aplicativo web. É construído com simplicidade em mente e é escrito de uma forma que é fácil de entender e usar.
 
 ## Conceitos Importantes do Framework
 
-##### [Por que um Framework?](/learn/why-frameworks)
+##### [Por Que um Framework?](/learn/why-frameworks)
 
-Aqui está um breve artigo sobre por que você deve usar um framework. É uma boa ideia entender os benefícios de usar um framework antes de começar a usar um.
+Aqui está um artigo curto sobre por que você deve usar um framework. É uma boa ideia entender os benefícios de usar um framework antes de começar a usar um.
 
-Adicionalmente, um excelente tutorial foi criado por [@lubiana](https://git.php.fail/lubiana). Embora não entre em grande detalhe sobre o Flight especificamente, este guia irá ajudá-lo a entender alguns dos principais conceitos em torno de um framework e por que eles são benéficos de usar. Você pode encontrar o tutorial [aqui](https://git.php.fail/lubiana/no-framework-tutorial/src/branch/master/README.md).
+Além disso, um excelente tutorial foi criado por [@lubiana](https://git.php.fail/lubiana). Embora não entre em grande detalhe sobre o Flight especificamente, este guia ajudará você a entender alguns dos principais conceitos em torno de um framework e por que eles são benéficos de usar. Você pode encontrar o tutorial [aqui](https://git.php.fail/lubiana/no-framework-tutorial/src/branch/master/README.md).
 
 ## Tópicos Principais
 
-##### [Auto-carregamento](/learn/autoloading)
+##### [Carregamento Automático](/learn/autoloading)
 
 Aprenda como carregar automaticamente suas próprias classes em sua aplicação.
 
 ##### [Roteamento](/learn/routing)
 
-Aprenda como gerenciar rotas para sua aplicação web. Isso inclui agrupamento de rotas, parâmetros de rota e middleware.
+Aprenda como gerenciar rotas para o seu aplicativo web. Isso também inclui agrupamento de rotas, parâmetros de rota e middleware.
 
 ##### [Middleware](/learn/middleware)
 
@@ -38,23 +38,27 @@ Aprenda como usar o mecanismo de visualização integrado para renderizar seus m
 
 ##### [Segurança](/learn/security)
 
-Aprenda como proteger sua aplicação contra ameaças comuns de segurança.
+Aprenda como proteger sua aplicação contra ameaças de segurança comuns.
 
 ##### [Configuração](/learn/configuration)
 
 Aprenda como configurar o framework para sua aplicação.
 
-##### [Estendendo o Flight](/learn/extending)
+##### [Extendendo o Flight](/learn/extending)
 
-Aprenda como estender o framework adicionando seus próprios métodos e classes. Isso também é como o Flight lida de forma flexível com algo chamado containerização.
+Aprenda como estender o framework adicionando seus próprios métodos e classes.
 
 ##### [Eventos e Filtragem](/learn/filtering)
 
 Aprenda como usar o sistema de eventos para adicionar ganchos aos seus métodos e métodos internos do framework.
 
+##### [Contêiner de Injeção de Dependência](/learn/dependency-injection-container)
+
+Aprenda como usar contêineres de injeção de dependência (DIC) para gerenciar as dependências de sua aplicação.
+
 ##### [API do Framework](/learn/api)
 
-Saiba sobre os métodos principais do framework.
+Saiba mais sobre os métodos principais do framework.
 
 ##### [Migrando para v3](/learn/migrating-to-v3)
-A compatibilidade com versões anteriores foi mantida em grande parte, mas existem algumas alterações das quais você deve estar ciente ao migrar da v2 para a v3.
+Em termos de retrocompatibilidade, em sua maioria, foi mantida, mas existem algumas alterações das quais você deve estar ciente ao migrar da v2 para a v3.

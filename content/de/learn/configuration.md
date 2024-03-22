@@ -1,6 +1,6 @@
 # Konfiguration
 
-Sie können bestimmte Verhaltensweisen von Flight anpassen, indem Sie Konfigurationswerte über die `set` Methode setzen.
+Sie können bestimmte Verhaltensweisen von Flight anpassen, indem Sie Konfigurationswerte über die `set`-Methode festlegen.
 
 ```php
 Flight::set('flight.log_errors', true);
@@ -8,27 +8,30 @@ Flight::set('flight.log_errors', true);
 
 ## Verfügbare Konfigurationseinstellungen
 
-Das Folgende ist eine Liste aller verfügbaren Konfigurationseinstellungen:
+Folgende Liste enthält alle verfügbaren Konfigurationseinstellungen:
 
-- **flight.base_url** - Überschreiben Sie die Basis-URL der Anfrage. (Standard: null)
-- **flight.case_sensitive** - Groß- und Kleinschreibung für URLs beachten. (Standard: false)
-- **flight.handle_errors** - Erlauben Sie Flight, alle Fehler intern zu behandeln. (Standard: true)
-- **flight.log_errors** - Fehler in die Fehlerprotokolldatei des Webservers protokollieren. (Standard: false)
-- **flight.views.path** - Verzeichnis, das Ansichtsvorlagendateien enthält. (Standard: ./views)
-- **flight.views.extension** - Dateierweiterung der Ansichtsvorlagendatei. (Standard: .php)
+- **flight.base_url** `?string` - Überschreibe die Basis-URL der Anfrage. (Standard: null)
+- **flight.case_sensitive** `bool` - Groß-/Kleinschreibung bei URLs beachten. (Standard: false)
+- **flight.handle_errors** `bool` - Ermögliche Flight, alle Fehler intern zu behandeln. (Standard: true)
+- **flight.log_errors** `bool` - Fehler im Error-Log-Datei des Webservers protokollieren. (Standard: false)
+- **flight.views.path** `string` - Verzeichnis, das Ansichtsvorlagendateien enthält. (Standard: ./views)
+- **flight.views.extension** `string` - Dateierweiterung für Ansichtsvorlagen. (Standard: .php)
+- **flight.content_length** `bool` - Setze den `Content-Length`-Header. (Standard: true)
+- **flight.v2.output_buffering** `bool` - Verwende legacy Output-Pufferung. Siehe [Umstieg auf v3](migrating-to-v3). (Standard: false)
 
 ## Variablen
 
-Flight ermöglicht es Ihnen, Variablen zu speichern, damit sie überall in Ihrer Anwendung verwendet werden können.
+Flight ermöglicht es Ihnen, Variablen zu speichern, damit sie überall in Ihrer Anwendung genutzt werden können.
 
 ```php
-// Speichern Sie Ihre Variable
+// Speichere deine Variable
 Flight::set('id', 123);
 
-// Anderswo in Ihrer Anwendung
+// Anderswo in deiner Anwendung
 $id = Flight::get('id');
 ```
-Um festzustellen, ob eine Variable gesetzt wurde, können Sie Folgendes tun:
+
+Um zu prüfen, ob eine Variable gesetzt wurde, können Sie Folgendes tun:
 
 ```php
 if (Flight::has('id')) {
@@ -56,7 +59,7 @@ Flight::set('flight.log_errors', true);
 
 ### Fehler und Ausnahmen
 
-Alle Fehler und Ausnahmen werden von Flight erfasst und an die `error` Methode übergeben. Das Standardverhalten besteht darin, eine generische `HTTP 500 Internal Server Error`-Antwort mit einigen Fehlerinformationen zu senden.
+Alle Fehler und Ausnahmen werden von Flight erfasst und an die `error`-Methode weitergeleitet. Das Standardverhalten besteht darin, eine allgemeine `HTTP 500 Internal Server Error`-Antwort mit einigen Fehlerinformationen zu senden.
 
 Sie können dieses Verhalten nach Ihren eigenen Bedürfnissen überschreiben:
 
@@ -67,7 +70,7 @@ Flight::map('error', function (Throwable $error) {
 });
 ```
 
-Standardmäßig werden Fehler nicht in das Fehlerprotokoll des Webservers aufgezeichnet. Sie können dies aktivieren, indem Sie die Konfiguration ändern:
+Standardmäßig werden Fehler nicht im Webserverprotokoll protokolliert. Sie können dies aktivieren, indem Sie die Konfiguration ändern:
 
 ```php
 Flight::set('flight.log_errors', true);
@@ -75,7 +78,7 @@ Flight::set('flight.log_errors', true);
 
 ### Nicht gefunden
 
-Wenn eine URL nicht gefunden werden kann, ruft Flight die `notFound` Methode auf. Das Standardverhalten besteht darin, eine `HTTP 404 Not Found`-Antwort mit einer einfachen Nachricht zu senden.
+Wenn eine URL nicht gefunden werden kann, ruft Flight die Methode `notFound` auf. Das Standardverhalten besteht darin, eine `HTTP 404 Not Found`-Antwort mit einer einfachen Meldung zu senden.
 
 Sie können dieses Verhalten nach Ihren eigenen Bedürfnissen überschreiben:
 
@@ -83,4 +86,4 @@ Sie können dieses Verhalten nach Ihren eigenen Bedürfnissen überschreiben:
 Flight::map('notFound', function () {
   // Nicht gefunden behandeln
 });
-```
+```  

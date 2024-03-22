@@ -1,44 +1,44 @@
-# Apprenez à connaître Flight
+# Apprendre À Propos De Flight
 
-Flight est un cadre rapide, simple et extensible pour PHP. Il est assez polyvalent et peut être utilisé pour construire tout type d'application web. Il est conçu en gardant à l'esprit la simplicité et est écrit de manière facile à comprendre et à utiliser.
+Flight est un cadre rapide, simple et extensible pour PHP. Il est assez polyvalent et peut être utilisé pour construire n'importe quel type d'application Web. Il est construit en gardant à l'esprit la simplicité et est écrit d'une manière facile à comprendre et à utiliser.
 
-## Concepts Importants du Cadre
+## Concepts Importants Du Cadre
 
-##### [Pourquoi un cadre?](/learn/why-frameworks)
+##### [Pourquoi un Cadre?](/learn/why-frameworks)
 
-Voici un court article sur pourquoi vous devriez utiliser un cadre. Il est bon de comprendre les avantages d'utiliser un cadre avant de commencer à en utiliser un.
+Voici un bref article sur pourquoi vous devriez utiliser un cadre. Il est judicieux de comprendre les avantages d'utiliser un cadre avant de commencer à en utiliser un.
 
-De plus, un excellent tutoriel a été créé par [@lubiana](https://git.php.fail/lubiana). Bien qu'il n'entre pas dans les détails spécifiques de Flight, ce guide vous aidera à comprendre certains des principaux concepts entourant un cadre et pourquoi ils sont bénéfiques à utiliser. Vous pouvez trouver le tutoriel [ici](https://git.php.fail/lubiana/no-framework-tutorial/src/branch/master/README.md).
+De plus, un excellent tutoriel a été créé par [@lubiana](https://git.php.fail/lubiana). Bien qu'il n'entre pas en détail sur Flight en particulier, ce guide vous aidera à comprendre certains des principaux concepts entourant un cadre et pourquoi ils sont bénéfiques à utiliser. Vous pouvez trouver le tutoriel [ici](https://git.php.fail/lubiana/no-framework-tutorial/src/branch/master/README.md).
 
 ## Sujets Principaux
 
-##### [Chargement automatique](/learn/autoloading)
+##### [Chargement Automatique](/learn/autoloading)
 
 Apprenez comment charger automatiquement vos propres classes dans votre application.
 
 ##### [Itinéraire](/learn/routing)
 
-Apprenez à gérer les itinéraires de votre application web. Cela inclut également le regroupement des itinéraires, les paramètres d'itinéraire et les intergiciels.
+Apprenez comment gérer les itinéraires pour votre application Web. Cela inclut également le regroupement des itinéraires, les paramètres d'itinéraire et le middleware.
 
-##### [Intergiciel](/learn/middleware)
+##### [Middleware](/learn/middleware)
 
-Apprenez à utiliser l'intergiciel pour filtrer les demandes et les réponses dans votre application.
+Apprenez comment utiliser le middleware pour filtrer les requêtes et les réponses dans votre application.
 
-##### [Demandes](/learn/requests)
+##### [Requêtes](/learn/requests)
 
-Apprenez à gérer les demandes et les réponses dans votre application.
+Apprenez comment gérer les requêtes et les réponses dans votre application.
 
 ##### [Réponses](/learn/responses)
 
-Apprenez à envoyer des réponses à vos utilisateurs.
+Apprenez comment envoyer des réponses à vos utilisateurs.
 
 ##### [Modèles HTML](/learn/templates)
 
-Apprenez à utiliser le moteur de visualisation intégré pour rendre vos modèles HTML.
+Apprenez comment utiliser le moteur de vue intégré pour rendre vos modèles HTML.
 
 ##### [Sécurité](/learn/security)
 
-Apprenez à sécuriser votre application contre les menaces de sécurité courantes.
+Apprenez comment sécuriser votre application contre les menaces de sécurité courantes.
 
 ##### [Configuration](/learn/configuration)
 
@@ -46,15 +46,19 @@ Apprenez comment configurer le cadre pour votre application.
 
 ##### [Extension de Flight](/learn/extending)
 
-Apprenez comment étendre le cadre avec l'ajout de vos propres méthodes et classes. C'est aussi ainsi que Flight gère de manière lâche quelque chose appelé conteneurisation.
+Apprenez comment étendre le cadre en ajoutant vos propres méthodes et classes.
 
 ##### [Événements et Filtrage](/learn/filtering)
 
-Apprenez à utiliser le système d'événements pour ajouter des crochets à vos méthodes et aux méthodes internes du cadre.
+Apprenez comment utiliser le système d'événements pour ajouter des crochets à vos méthodes et aux méthodes internes du cadre.
+
+##### [Conteneur d'Injection de Dépendances](/learn/dependency-injection-container)
+
+Apprenez comment utiliser les conteneurs d'injection de dépendances (DIC) pour gérer les dépendances de votre application.
 
 ##### [API du Cadre](/learn/api)
 
-Apprenez sur les méthodes de base du cadre.
+Apprenez les méthodes de base du cadre.
 
 ##### [Migration vers v3](/learn/migrating-to-v3)
-La compatibilité ascendante a été en grande partie conservée, mais il y a quelques changements dont vous devez être conscient lorsque vous migrez de v2 à v3.
+La compatibilité ascendante a en grande partie été maintenue, mais il y a quelques changements dont vous devriez être conscient lors de la migration de v2 à v3.
