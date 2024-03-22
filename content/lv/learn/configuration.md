@@ -1,6 +1,6 @@
 # Konfigurācija
 
-Jūs varat pielāgot noteiktas Flight darbības, iestatot konfigurācijas vērtības, izmantojot `set` metodi.
+Jūs varat pielāgot noteiktas Flight uzvedības, iestatot konfigurācijas vērtības, izmantojot `set` metodi.
 
 ```php
 Flight::set('flight.log_errors', true);
@@ -8,27 +8,30 @@ Flight::set('flight.log_errors', true);
 
 ## Pieejamie konfigurācijas iestatījumi
 
-Zemāk ir uzskaitīti visi pieejamie konfigurācijas iestatījumi:
+Zemāk ir uzskaitīts visi pieejamie konfigurācijas iestatījumi:
 
-- **flight.base_url** - Pārrakstiet pieprasījuma bāzes URL. (noklusējums: null)
-- **flight.case_sensitive** - Lielo burtu atbilstība URL. (noklusējums: false)
-- **flight.handle_errors** - Atļaujiet Flight apstrādāt visas kļūdas iekšpusē. (noklusējums: true)
-- **flight.log_errors** - Reģistrējiet kļūdas tīmekļa servera kļūdu žurnālā. (noklusējums: false)
-- **flight.views.path** - Katalogs, kurā ir skata veidnes. (noklusējums: ./views)
-- **flight.views.extension** - Skata veidnes faila paplašinājums. (noklusējums: .php)
+- **flight.base_url** `?string` - Pārrakstīt pieprasījuma pamata URL. (pēc noklusējuma: null)
+- **flight.case_sensitive** `bool` - Reģistrjūtīga atbilstība URL. (pēc noklusējuma: false)
+- **flight.handle_errors** `bool` - Ļauj Flight apstrādāt visas kļūdas iekšēji. (pēc noklusējuma: true)
+- **flight.log_errors** `bool` - Reģistrēt kļūdas tīmekļa servera kļūdu žurnālā. (pēc noklusējuma: false)
+- **flight.views.path** `string` - Katalogs, kurā atrodas skata veidnes faili. (pēc noklusējuma: ./views)
+- **flight.views.extension** `string` - Skata veidnes faila paplašinājums. (pēc noklusējuma: .php)
+- **flight.content_length** `bool` - Iestatīt `Content-Length` galveni. (pēc noklusējuma: true)
+- **flight.v2.output_buffering** `bool` - Izmantot vecāku izvades buferēšanu. Skatiet [migrēšanu uz v3](migrating-to-v3). (pēc noklusējuma: false)
 
 ## Mainīgie
 
-Flight ļauj saglabāt mainīgos, lai tos varētu izmantot jebkurā vietā jūsu lietotnē.
+Flight ļauj saglabāt mainīgos, lai tos varētu izmantot jebkur jūsu lietojumprogrammā.
 
 ```php
 // Saglabājiet savu mainīgo
 Flight::set('id', 123);
 
-// Citur jūsu lietotnē
+// Cits jūsu lietojumprogrammas vietā
 $id = Flight::get('id');
 ```
-Lai pārbaudītu, vai mainīgais ir iestatīts, varat izdarīt šādi:
+
+Lai pārbaudītu, vai mainīgais ir iestatīts, varat:
 
 ```php
 if (Flight::has('id')) {
@@ -36,7 +39,7 @@ if (Flight::has('id')) {
 }
 ```
 
-Jūs varat notīrīt mainīgo darbībā:
+Jūs varat notīrīt mainīgo, darot:
 
 ```php
 // Notīra id mainīgo
@@ -56,20 +59,20 @@ Flight::set('flight.log_errors', true);
 
 ### Kļūdas un Izņēmumi
 
-Visas kļūdas un izņēmumi tiek noķertas ar Flight un padotas `error` metodē.
-Noklusējuma rīcība ir nosūtīt vispārēju `HTTP 500 Iekšēju servera kļūdu`
-atbildi ar dažiem kļūdas informāciju.
+Visas kļūdas un izņēmumi tiek noķerti ar Flight un nodoti `error` metodē.
+Noklusējuma uzvedība ir nosūtīt vienkāršu `HTTP 500 Internal Server Error`
+atbildi ar dažādu kļūdu informāciju.
 
-Jūs varat pārrakstīt šo rīcību savām vajadzībām:
+Jūs varat pārrakstīt šo uzvedību savām vajadzībām:
 
 ```php
 Flight::map('error', function (Throwable $error) {
-  // Risināt kļūdu
+  // Apstrādāt kļūdu
   echo $error->getTraceAsString();
 });
 ```
 
-Noklusējuma veidā kļūdas netiek reģistrētas tīmekļa serverī. To var iespējot,
+Noklusējuma uzvedībā kļūdas netiek reģistrētas tīmekļa serverī. Jūs varat iespējot to,
 mainot konfigurāciju:
 
 ```php
@@ -78,13 +81,13 @@ Flight::set('flight.log_errors', true);
 
 ### Nav Atrasts
 
-Kad nevar atrast URL, Flight izsauc `notFound` metodi. Noklusējuma
-rīcība ir nosūtīt `HTTP 404 Nav Atrasts` atbildi ar vienkāršu ziņu.
+Kad URL nav atrasts, Flight izsauc `notFound` metodi. Noklusējuma
+uzvedība ir nosūtīt `HTTP 404 Not Found` atbildi ar vienkāršu ziņojumu.
 
-Jūs varat pārrakstīt šo rīcību savām vajadzībām:
+Jūs varat pārrakstīt šo uzvedību savām vajadzībām:
 
 ```php
 Flight::map('notFound', function () {
-  // Risināt nav atrasts
+  // Apstrādāt nav atrasts
 });
 ```

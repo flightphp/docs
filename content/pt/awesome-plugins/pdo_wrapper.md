@@ -1,11 +1,11 @@
-# Classe Auxiliar PdoWrapper PDO
+# Classe Auxiliar PDO PdoWrapper
 
-Flight vem com uma classe auxiliar para PDO. Permite que você consulte facilmente seu banco de dados com toda a confusão preparada/executada/fetchAll(). Simplifica muito como você pode consultar seu banco de dados.
+Flight vem com uma classe auxiliar para PDO. Permite que você consulte facilmente seu banco de dados com toda a maluquice de prepared/execute/fetchAll(). Simplifica muito como você pode consultar seu banco de dados. Cada resultado de linha é retornado como uma classe Flight Collection que permite acessar seus dados via sintaxe de array ou sintaxe de objeto.
 
-## Registro da Classe Auxiliar PDO
+## Registrando a Classe Auxiliar PDO
 
 ```php
-// Registrar a classe auxiliar PDO
+// Registrar a classe auxiliar de PDO
 Flight::register('db', \flight\database\PdoWrapper::class, ['mysql:host=localhost;dbname=cool_db_name', 'user', 'pass', [
 		PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES \'utf8mb4\'',
 		PDO::ATTR_EMULATE_PREPARES => false,
@@ -19,7 +19,7 @@ Flight::register('db', \flight\database\PdoWrapper::class, ['mysql:host=localhos
 Este objeto estende o PDO, então todos os métodos normais do PDO estão disponíveis. Os seguintes métodos são adicionados para facilitar a consulta ao banco de dados:
 
 ### `runQuery(string $sql, array $params = []): PDOStatement`
-Use isso para INSERTS, UPDATES, ou se planeja usar um SELECT em um loop while
+Use isso para INSERTS, UPDATES ou se planeja usar um SELECT em um loop while
 
 ```php
 $db = Flight::db();
@@ -34,7 +34,7 @@ $db->runQuery("UPDATE table SET name = ? WHERE id = ?", [ $name, $id ]);
 ```
 
 ### `fetchField(string $sql, array $params = []): mixed`
-Puxa o primeiro campo da consulta
+Recupera o primeiro campo da consulta
 
 ```php
 $db = Flight::db();
@@ -42,39 +42,44 @@ $count = $db->fetchField("SELECT COUNT(*) FROM table WHERE something = ?", [ $so
 ```
 
 ### `fetchRow(string $sql, array $params = []): array`
-Puxa uma linha da consulta
+Recupera uma linha da consulta
 
 ```php
 $db = Flight::db();
-$row = $db->fetchRow("SELECT * FROM table WHERE id = ?", [ $id ]);
+$row = $db->fetchRow("SELECT id, name FROM table WHERE id = ?", [ $id ]);
+echo $row['name'];
+// ou
+echo $row->name;
 ```
 
 ### `fetchAll(string $sql, array $params = []): array`
-Puxa todas as linhas da consulta
+Recupera todas as linhas da consulta
 
 ```php
 $db = Flight::db();
-$rows = $db->fetchAll("SELECT * FROM table WHERE something = ?", [ $something ]);
+$rows = $db->fetchAll("SELECT id, name FROM table WHERE something = ?", [ $something ]);
 foreach($rows as $row) {
-	// faça algo
+	echo $row['name'];
+	// ou
+	echo $row->name;
 }
 ```
 
 ## Nota com a sintaxe `IN()`
-Isso também possui um wrapper útil para declarações `IN()`. Você pode simplesmente passar um ponto de interrogação como um espaço reservado para `IN()` e depois uma matriz de valores. Aqui está um exemplo de como isso poderia ser:
+Também tem uma função auxiliar útil para declarações `IN()`. Você pode simplesmente passar um ponto de interrogação como um espaço reservado para `IN()` e depois um array de valores. Aqui está um exemplo de como isso pode ser:
 
 ```php
 $db = Flight::db();
 $name = 'Bob';
 $company_ids = [1,2,3,4,5];
-$rows = $db->fetchAll("SELECT * FROM table WHERE name = ? AND company_id IN (?)", [ $name, $company_ids ]);
+$rows = $db->fetchAll("SELECT id, name FROM table WHERE name = ? AND company_id IN (?)", [ $name, $company_ids ]);
 ```
 
 ## Exemplo Completo
 
 ```php
 // Rota de exemplo e como você usaria este wrapper
-Flight::route('/users', function () {
+Flight::route('/usuarios', function () {
 	// Obter todos os usuários
 	$users = Flight::db()->fetchAll('SELECT * FROM users');
 
@@ -82,9 +87,10 @@ Flight::route('/users', function () {
 	$statement = Flight::db()->runQuery('SELECT * FROM users');
 	while ($user = $statement->fetch()) {
 		echo $user['name'];
+		// ou echo $user->name;
 	}
 
-	// Obter um usuário único
+	// Obter um único usuário
 	$user = Flight::db()->fetchRow('SELECT * FROM users WHERE id = ?', [123]);
 
 	// Obter um único valor

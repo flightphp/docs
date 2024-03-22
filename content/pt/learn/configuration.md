@@ -1,6 +1,6 @@
 # Configuração
 
-Você pode personalizar certos comportamentos do Flight definindo valores de configuração através do método `set`.
+Você pode personalizar determinados comportamentos do Flight configurando valores de configuração através do método `set`.
 
 ```php
 Flight::set('flight.log_errors', true);
@@ -10,16 +10,18 @@ Flight::set('flight.log_errors', true);
 
 A seguir está uma lista de todas as configurações disponíveis:
 
-- **flight.base_url** - Substituir a URL base da requisição. (padrão: nulo)
-- **flight.case_sensitive** - Correspondência sensível a maiúsculas e minúsculas para URLs. (padrão: falso)
-- **flight.handle_errors** - Permitir que o Flight lide com todos os erros internamente. (padrão: verdadeiro)
-- **flight.log_errors** - Registrar erros no arquivo de log de erros do servidor web. (padrão: falso)
-- **flight.views.path** - Diretório que contém arquivos de template de visualização. (padrão: ./views)
-- **flight.views.extension** - Extensão do arquivo de template de visualização. (padrão: .php)
+- **flight.base_url** `?string` - Substitua a URL base da solicitação. (padrão: nulo)
+- **flight.case_sensitive** `bool` - Correspondência considerando maiúsculas e minúsculas para URLs. (padrão: falso)
+- **flight.handle_errors** `bool` - Permitir que o Flight gerencie todos os erros internamente. (padrão: verdadeiro)
+- **flight.log_errors** `bool` - Registrar erros no arquivo de log de erros do servidor web. (padrão: falso)
+- **flight.views.path** `string` - Diretório contendo arquivos de modelo de visualização. (padrão: ./views)
+- **flight.views.extension** `string` - Extensão do arquivo de modelo de visualização. (padrão: .php)
+- **flight.content_length** `bool` - Defina o cabeçalho `Content-Length`. (padrão: verdadeiro)
+- **flight.v2.output_buffering** `bool` - Usar buffer de saída legado. Consulte [migrando para v3](migrating-to-v3). (padrão: falso)
 
 ## Variáveis
 
-O Flight permite que você salve variáveis para que elas possam ser usadas em qualquer lugar de sua aplicação.
+O Flight permite que você salve variáveis para que possam ser usadas em qualquer lugar de sua aplicação.
 
 ```php
 // Salve sua variável
@@ -57,13 +59,14 @@ Flight::set('flight.log_errors', true);
 
 ### Erros e Exceções
 
-Todos os erros e exceções são capturados pelo Flight e passados para o método `error`. O comportamento padrão é enviar uma resposta genérica de `HTTP 500 Internal Server Error` com algumas informações de erro.
+Todos os erros e exceções são capturados pelo Flight e passados para o método `error`.
+O comportamento padrão é enviar uma resposta genérica de `Erro de Servidor Interno HTTP 500` com algumas informações de erro.
 
-Você pode substituir esse comportamento para suas próprias necessidades:
+Você pode substituir esse comportamento conforme suas necessidades:
 
 ```php
 Flight::map('error', function (Throwable $error) {
-  // Manipular erro
+  // Tratar erro
   echo $error->getTraceAsString();
 });
 ```
@@ -76,9 +79,10 @@ Flight::set('flight.log_errors', true);
 
 ### Não Encontrado
 
-Quando uma URL não pode ser encontrada, o Flight chama o método `notFound`. O comportamento padrão é enviar uma resposta de `HTTP 404 Not Found` com uma mensagem simples.
+Quando uma URL não pode ser encontrada, o Flight chama o método `notFound`.
+O comportamento padrão é enviar uma resposta de `Não Encontrado HTTP 404` com uma mensagem simples.
 
-Você pode substituir esse comportamento para suas próprias necessidades:
+Você pode substituir esse comportamento conforme suas necessidades:
 
 ```php
 Flight::map('notFound', function () {

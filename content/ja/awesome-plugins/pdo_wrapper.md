@@ -1,11 +1,12 @@
 # PdoWrapper PDO ヘルパークラス
 
-Flight には PDO 用のヘルパークラスが付属しています。これにより、準備/実行/fetchAll() の一連の手順を簡単にデータベースにクエリできます。データベースのクエリ方法を大幅に簡略化します。
+Flight には PDO のヘルパークラスが付属しています。これにより、データベースへのクエリを簡単に実行することができます
+全ての prepared/execute/fetchAll() の混乱を解消します。データベースへのクエリがどのように簡素化されるかが大幅に向上します。各行の結果は Flight Collection クラスとして返され、配列構文またはオブジェクト構文を使用してデータにアクセスできます。
 
 ## PDO ヘルパークラスの登録
 
 ```php
-// PDO ヘルパークラスを登録
+// PDO ヘルパークラスの登録
 Flight::register('db', \flight\database\PdoWrapper::class, ['mysql:host=localhost;dbname=cool_db_name', 'user', 'pass', [
 		PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES \'utf8mb4\'',
 		PDO::ATTR_EMULATE_PREPARES => false,
@@ -15,11 +16,11 @@ Flight::register('db', \flight\database\PdoWrapper::class, ['mysql:host=localhos
 ]);
 ```
 
-## 使用法
-このオブジェクトは PDO を拡張しているため、通常の PDO メソッドすべてが利用可能です。以下のメソッドが追加され、データベースのクエリを簡単にします:
+## 使用方法
+このオブジェクトは PDO を拡張しているため、通常の PDO メソッドがすべて使用できます。データベースのクエリをより簡単に行うために、以下のメソッドが追加されています:
 
 ### `runQuery(string $sql, array $params = []): PDOStatement`
-これを使用して、INSERT、UPDATE、または while ループでの SELECT を使用する場合に使用します。
+INSERT、UPDATE、または while ループ内で SELECT を使用する場合に使用します
 
 ```php
 $db = Flight::db();
@@ -34,7 +35,7 @@ $db->runQuery("UPDATE table SET name = ? WHERE id = ?", [ $name, $id ]);
 ```
 
 ### `fetchField(string $sql, array $params = []): mixed`
-クエリから最初のフィールドを取得します。
+クエリから最初のフィールドを取得します
 
 ```php
 $db = Flight::db();
@@ -42,57 +43,63 @@ $count = $db->fetchField("SELECT COUNT(*) FROM table WHERE something = ?", [ $so
 ```
 
 ### `fetchRow(string $sql, array $params = []): array`
-クエリから1行取得します。
+クエリから1行を取得します
 
 ```php
 $db = Flight::db();
-$row = $db->fetchRow("SELECT * FROM table WHERE id = ?", [ $id ]);
+$row = $db->fetchRow("SELECT id, name FROM table WHERE id = ?", [ $id ]);
+echo $row['name'];
+// または
+echo $row->name;
 ```
 
 ### `fetchAll(string $sql, array $params = []): array`
-クエリからすべての行を取得します。
+クエリからすべての行を取得します
 
 ```php
 $db = Flight::db();
-$rows = $db->fetchAll("SELECT * FROM table WHERE something = ?", [ $something ]);
+$rows = $db->fetchAll("SELECT id, name FROM table WHERE something = ?", [ $something ]);
 foreach($rows as $row) {
-	// 何かを行います
+	echo $row['name'];
+	// または
+	echo $row->name;
 }
 ```
 
-## `IN()` 構文の注意
-これには `IN()` ステートメントのための便利なラッパーもあります。`IN()` のプレースホルダーとして単に1つのクエスチョンマークを渡し、その後に値の配列を渡すことができます。以下はその例です:
+## `IN()` 構文との注意
+`IN()` ステートメントのための便利なラッパーもあります。 `IN()` のプレースホルダーとして単一のクエスチョンマークを渡し、その後に値の配列を簡単に渡すことができます。以下はその例です:
 
 ```php
 $db = Flight::db();
 $name = 'Bob';
 $company_ids = [1,2,3,4,5];
-$rows = $db->fetchAll("SELECT * FROM table WHERE name = ? AND company_id IN (?)", [ $name, $company_ids ]);
+$rows = $db->fetchAll("SELECT id, name FROM table WHERE name = ? AND company_id IN (?)", [ $name, $company_ids ]);
 ```
 
 ## 完全な例
 
 ```php
-// 例: ルートとこのラッパーの使用方法
+// 例として、ルートとこのラッパーの使用方法
 Flight::route('/users', function () {
 	// すべてのユーザーを取得
 	$users = Flight::db()->fetchAll('SELECT * FROM users');
 
-	// すべてのユーザーをストリームで取得
+	// すべてのユーザーをストリーム化
 	$statement = Flight::db()->runQuery('SELECT * FROM users');
 	while ($user = $statement->fetch()) {
 		echo $user['name'];
+		// または echo $user->name;
 	}
 
-	// 1人のユーザーを取得
+	// 個々のユーザーを取得
 	$user = Flight::db()->fetchRow('SELECT * FROM users WHERE id = ?', [123]);
 
-	// 1つの値を取得
+	// 単一の値を取得
 	$count = Flight::db()->fetchField('SELECT COUNT(*) FROM users');
 
-	// お手伝いするための特別な IN() 構文
+	// ヘルプ用の特別な IN() 構文 (IN が大文字であることを確認してください)
 	$users = Flight::db()->fetchAll('SELECT * FROM users WHERE id IN (?)', [[1,2,3,4,5]]);
-	// これもできます
+	// これでも可能です
 	$users = Flight::db()->fetchAll('SELECT * FROM users WHERE id IN (?)', [ '1,2,3,4,5']);
 
 	// 新しいユーザーを挿入
@@ -105,7 +112,7 @@ Flight::route('/users', function () {
 	// ユーザーを削除
 	Flight::db()->runQuery("DELETE FROM users WHERE id = ?", [123]);
 
-	// 影響を受けた行の数を取得
+	// 影響を受ける行の数を取得
 	$statement = Flight::db()->runQuery("UPDATE users SET name = ? WHERE name = ?", ['Bob', 'Sally']);
 	$affected_rows = $statement->rowCount();
 

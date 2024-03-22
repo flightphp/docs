@@ -10,6 +10,9 @@ Flight::route('/', function(){
 });
 ```
 
+> Routes are matched in the order they are defined. The first route to match a request will be invoked.
+
+### Callbacks/Functions
 The callback can be any object that is callable. So you can use a regular function:
 
 ```php
@@ -20,7 +23,8 @@ function hello(){
 Flight::route('/', 'hello');
 ```
 
-Or a class method:
+### Classes
+You can use a static method of a class as well:
 
 ```php
 class Greeting {
@@ -29,10 +33,10 @@ class Greeting {
     }
 }
 
-Flight::route('/', array('Greeting','hello'));
+Flight::route('/', [ 'Greeting','hello' ]);
 ```
 
-Or an object method:
+Or by creating an object first and then calling the method:
 
 ```php
 
@@ -51,10 +55,70 @@ class Greeting
 // index.php
 $greeting = new Greeting();
 
-Flight::route('/', array($greeting, 'hello'));
+Flight::route('/', [ $greeting, 'hello' ]);
+// You also can do this without creating the object first
+// Note: No args will be injected into the constructor
+Flight::route('/', [ 'Greeting', 'hello' ]);
 ```
 
-Routes are matched in the order they are defined. The first route to match a request will be invoked.
+#### Dependency Injection via DIC (Dependency Injection Container)
+If you want to use dependency injection via a container (PSR-11, PHP-DI, Dice, etc), the
+only type of routes where that is available is either directly creating the object yourself
+and using the container to create your object or you can use strings to defined the class and
+method to call. You can go to the [Dependency Injection](/learn/extending) page for 
+more information. 
+
+Here's a quick example:
+
+```php
+
+use flight\database\PdoWrapper;
+
+// Greeting.php
+class Greeting
+{
+	protected PdoWrapper $pdoWrapper;
+	public function __construct(PdoWrapper $pdoWrapper) {
+		$this->pdoWrapper = $pdoWrapper;
+	}
+
+	public function hello(int $id) {
+		// do something with $this->pdoWrapper
+		$name = $this->pdoWrapper->fetchField("SELECT name FROM users WHERE id = ?", [ $id ]);
+		echo "Hello, world! My name is {$name}!";
+	}
+}
+
+// index.php
+
+// Setup the container with whatever params you need
+// See the Dependency Injection page for more information on PSR-11
+$dice = new \Dice\Dice();
+
+// Don't forget to reassign the variable with '$dice = '!!!!!
+$dice = $dice->addRule('flight\database\PdoWrapper', [
+	'shared' => true,
+	'constructParams' => [ 
+		'mysql:host=localhost;dbname=test', 
+		'root',
+		'password'
+	]
+]);
+
+// Register the container handler
+Flight::registerContainerHandler(function($class, $params) use ($dice) {
+	return $dice->create($class, $params);
+});
+
+// Routes like normal
+Flight::route('/hello/@id', [ 'Greeting', 'hello' ]);
+// or
+Flight::route('/hello/@id', 'Greeting->hello');
+// or
+Flight::route('/hello/@id', 'Greeting::hello');
+
+Flight::start();
+```
 
 ## Method Routing
 
@@ -69,6 +133,13 @@ Flight::route('GET /', function () {
 Flight::route('POST /', function () {
   echo 'I received a POST request.';
 });
+
+// You cannot use Flight::get() for routes as that is a method 
+//    to get variables, not create a route.
+// Flight::post('/', function() { /* code */ });
+// Flight::patch('/', function() { /* code */ });
+// Flight::put('/', function() { /* code */ });
+// Flight::delete('/', function() { /* code */ });
 ```
 
 You can also map multiple methods to a single callback by using a `|` delimiter:

@@ -1,6 +1,6 @@
-# Latte
+# 老司机
 
-Latte 是一个功能齐全的模板引擎，非常易于使用，比Twig或Smarty更接近PHP语法。它也非常容易扩展并添加自己的过滤器和函数。
+老司机是一个功能齐全的模板引擎，非常易于使用，比Twig或Smarty更贴近PHP语法。它也非常容易扩展和添加自己的过滤器和函数。
 
 ## 安装
 
@@ -12,7 +12,7 @@ composer require latte/latte
 
 ## 基本配置
 
-有一些基本配置选项可供开始使用。您可以在[Latte文档](https://latte.nette.org/en/guide)中阅读更多信息。
+有一些基本配置选项可供开始使用。您可以在[Latte文档](https://latte.nette.org/en/guide)中了解更多信息。
 
 ```php
 
@@ -24,23 +24,23 @@ $app = Flight::app();
 
 $app->register('latte', LatteEngine::class, [], function(LatteEngine $latte) use ($app) {
 
-	// 这是Latte将缓存您的模板以加快速度的位置
-	// Latte的一个好处是，当您对模板进行更改时，它会自动刷新您的缓存！
+	// 这是Latte将缓存您的模板以加快速度的地方
+	// 关于Latte的一个很棒的功能是，当您对模板进行更改时，它会自动刷新您的缓存！
 	$latte->setTempDirectory(__DIR__ . '/../cache/');
 
-	// 告诉Latte您的视图的根目录在哪里。
-	$latte->setLoader(new \Latte\Loaders\FileLoader(__DIR__ . '/../views/'));
+	// 告诉Latte您的视图的根目录将在哪里。
+	$latte->setLoader(new \Latte\Loaders\FileLoader($app->get('flight.views.path')));
 });
 ```
 
 ## 简单布局示例
 
-以下是一个布局文件的简单示例。这是用于包装所有其他视图的文件。
+以下是一个简单的布局文件示例。这个文件将用于包装所有其他视图。
 
 ```html
 <!-- app/views/layout.latte -->
 <!doctype html>
-<html lang="en">
+<html lang="zh-CN">
 	<head>
 		<title>{$title ? $title . ' - '}My App</title>
 		<link rel="stylesheet" href="style.css">
@@ -52,7 +52,7 @@ $app->register('latte', LatteEngine::class, [], function(LatteEngine $latte) use
 			</nav>
 		</header>
 		<div id="content">
-			<!-- 这就是魔法所在 -->
+			<!-- 这就是神奇的所在 -->
 			{block content}{/block}
 		</div>
 		<div id="footer">
@@ -62,21 +62,21 @@ $app->register('latte', LatteEngine::class, [], function(LatteEngine $latte) use
 </html>
 ```
 
-现在我们有一个将在内容块中呈现的文件：
+现在我们有一个文件，将在内容块中呈现：
 
 ```html
 <!-- app/views/home.latte -->
-<!-- 这告诉Latte，此文件位于layout.latte文件中"内部" -->
+<!-- 这告诉Latte这个文件是“内部”layout.latte文件 -->
 {extends layout.latte}
 
-<!-- 这是将在布局内部内容块中呈现的内容 -->
+<!-- 这是将在布局内渲染的内容 -->
 {block content}
 	<h1>主页</h1>
 	<p>欢迎来到我的应用！</p>
 {/block}
 ```
 
-然后，在渲染此内容时，您可以执行以下操作：
+然后当您要在函数或控制器中呈现它时，您可以这样做：
 
 ```php
 // 简单路由
@@ -101,4 +101,4 @@ class HomeController
 }
 ```
 
-查看[Latte文档](https://latte.nette.org/en/guide)以获取有关如何充分利用Latte的更多信息！
+请参阅[Latte文档](https://latte.nette.org/en/guide)获取有关如何充分利用Latte的更多信息！

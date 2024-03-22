@@ -1,8 +1,8 @@
 # Routen
 
-> **Hinweis:** Möchten Sie mehr über das Routing erfahren? Schauen Sie sich die ["warum ein Framework?"](/learn/why-frameworks) Seite für eine ausführlichere Erklärung an.
+> **Hinweis:** Möchten Sie mehr über Routenverständnis erfahren? Werfen Sie einen Blick auf die ["Warum ein Framework?"](/learn/why-frameworks) Seite für eine detailliertere Erklärung.
 
-Die grundlegende Routenfunktion in Flight erfolgt durch das Abgleichen eines URL-Musters mit einer Rückruffunktion oder einem Array einer Klasse und einer Methode.
+Die grundlegende Routenführung in Flight erfolgt durch das Zuordnen eines URL-Musters mit einer Rückruffunktion oder einem Array einer Klasse und Methode.
 
 ```php
 Flight::route('/', function(){
@@ -10,6 +10,9 @@ Flight::route('/', function(){
 });
 ```
 
+> Routen werden in der Reihenfolge abgeglichen, in der sie definiert sind. Die erste Route, die eine Anfrage abgleicht, wird aufgerufen.
+
+### Rückrufe/Funktionen
 Der Rückruf kann jedes Objekt sein, das aufrufbar ist. Sie können also eine reguläre Funktion verwenden:
 
 ```php
@@ -20,7 +23,8 @@ function hallo(){
 Flight::route('/', 'hallo');
 ```
 
-Oder eine Klassenmethode:
+### Klassen
+Sie können auch eine statische Methode einer Klasse verwenden:
 
 ```php
 class Begrüßung {
@@ -29,10 +33,10 @@ class Begrüßung {
     }
 }
 
-Flight::route('/', array('Begrüßung','hallo'));
+Flight::route('/', [ 'Begrüßung','hallo' ]);
 ```
 
-Oder eine Objektmethode:
+Oder indem Sie zuerst ein Objekt erstellen und dann die Methode aufrufen:
 
 ```php
 
@@ -49,47 +53,115 @@ class Begrüßung
 }
 
 // index.php
-$begrüßung = new Begrüßung();
+$begruessung = new Begrüßung();
 
-Flight::route('/', array($begrüßung, 'hallo'));
+Flight::route('/', [ $begruessung, 'hallo' ]);
+// Sie können dies auch tun, ohne das Objekt zuerst zu erstellen
+// Hinweis: Es werden keine Argumente in den Konstruktor eingesetzt
+Flight::route('/', [ 'Begrüßung', 'hallo' ]);
 ```
 
-Routen werden in der Reihenfolge abgeglichen, in der sie definiert sind. Die erste übereinstimmende Route für eine Anfrage wird aufgerufen.
+#### Dependency Injection via DIC (Dependency Injection Container)
+Wenn Sie die Dependency Injection über einen Container verwenden möchten (PSR-11, PHP-DI, Dice, etc), sind die
+einzigen Arten von Routen, bei denen dies verfügbar ist, entweder das direkte Erstellen des Objekts selbst
+und Verwendung des Containers zur Erstellung Ihres Objekts oder Sie können Zeichenfolgen verwenden, um die Klasse und
+Methode zum Aufrufen zu definieren. Sie können zur [Dependency Injection](/learn/extending) Seite gehen
+für weitere Informationen.
 
-## Methoden-Routing
+Hier ist ein schnelles Beispiel:
 
-Standardmäßig werden Routenmuster gegen alle Anfrage-Methoden abgeglichen. Sie können auf bestimmte Methoden reagieren, indem Sie einen Bezeichner vor der URL platzieren.
+```php
+
+use flight\database\PdoWrapper;
+
+// Begrüßung.php
+class Begrüßung
+{
+	protected PdoWrapper $pdoWrapper;
+	public function __construct(PdoWrapper $pdoWrapper) {
+		$this->pdoWrapper = $pdoWrapper;
+	}
+
+	public function hallo(int $id) {
+		// etwas mit $this->pdoWrapper machen
+		$name = $this->pdoWrapper->fetchField("SELECT name FROM users WHERE id = ?", [ $id ]);
+		echo "Hallo, Welt! Mein Name ist {$name}!";
+	}
+}
+
+// index.php
+
+// Container mit den erforderlichen Parametern einrichten
+// Siehe die Dependency Injection-Seite für mehr Informationen zu PSR-11
+$dice = new \Dice\Dice();
+
+// Vergessen Sie nicht, die Variable mit '$dice = 'neu zuzuweisen!
+$dice = $dice->addRule('flight\database\PdoWrapper', [
+	'shared' => true,
+	'constructParams' => [ 
+		'mysql:host=localhost;dbname=test', 
+		'root',
+		'passwort'
+	]
+]);
+
+// Container-Handler registrieren
+Flight::registerContainerHandler(function($class, $params) use ($dice) {
+	return $dice->create($class, $params);
+});
+
+// Routen wie gewohnt
+Flight::route('/hallo/@id', [ 'Begrüßung', 'hallo' ]);
+// oder
+Flight::route('/hallo/@id', 'Begrüßung->hallo');
+// oder
+Flight::route('/hallo/@id', 'Begrüßung::hallo');
+
+Flight::start();
+```
+
+## Methoden-Routen
+
+Standardmäßig werden Routenmuster gegen alle Anforderungsmethoden abgeglichen. Sie können
+auf bestimmte Methoden reagieren, indem Sie einen Bezeichner vor der URL platzieren.
 
 ```php
 Flight::route('GET /', function () {
-  echo 'Ich habe eine GET-Anfrage erhalten.';
+  echo 'Ich habe eine GET-Anforderung erhalten.';
 });
 
 Flight::route('POST /', function () {
-  echo 'Ich habe eine POST-Anfrage erhalten.';
+  echo 'Ich habe eine POST-Anforderung erhalten.';
 });
+
+// Sie können Flight::get() nicht für Routen verwenden, da dies eine Methode ist
+//     um Variablen zu erhalten, nicht um eine Route zu erstellen.
+// Flight::post('/', function() { /* Code */ });
+// Flight::patch('/', function() { /* Code */ });
+// Flight::put('/', function() { /* Code */ });
+// Flight::delete('/', function() { /* Code */ });
 ```
 
-Sie können auch mehrere Methoden auf eine einzelne Rückruffunktion mappen, indem Sie einen `|`-Trenner verwenden:
+Sie können auch mehrere Methoden auf einen einzigen Rückruf abbilden, indem Sie einen `|`-Trenner verwenden:
 
 ```php
 Flight::route('GET|POST /', function () {
-  echo 'Ich habe entweder eine GET- oder POST-Anfrage erhalten.';
+  echo 'Ich habe entweder eine GET- oder eine POST-Anforderung erhalten.';
 });
 ```
 
-Zusätzlich können Sie das Router-Objekt abrufen, das einige Hilfsmethoden für Sie bereitstellt:
+Zusätzlich können Sie das Router-Objekt abrufen, das einige Hilfsmethoden zum Verwenden hat:
 
 ```php
 
 $router = Flight::router();
 
-// mapped alle Methoden
+// Verknüpft alle Methoden
 $router->map('/', function() {
 	echo 'Hallo Welt!';
 });
 
-// GET-Anfrage
+// GET-Anforderung
 $router->get('/benutzer', function() {
 	echo 'Benutzer';
 });
@@ -105,15 +177,17 @@ Sie können reguläre Ausdrücke in Ihren Routen verwenden:
 
 ```php
 Flight::route('/benutzer/[0-9]+', function () {
-  // Dies entspricht /benutzer/1234
+  // Dies passt zu /benutzer/1234
 });
 ```
 
-Obwohl diese Methode verfügbar ist, wird empfohlen, benannte Parameter oder benannte Parameter mit regulären Ausdrücken zu verwenden, da sie besser lesbar und einfacher zu pflegen sind.
+Obwohl diese Methode verfügbar ist, wird empfohlen, benannte Parameter oder
+benannte Parameter mit regulären Ausdrücken zu verwenden, da sie lesbarer und einfacher zu warten sind.
 
 ## Benannte Parameter
 
-Sie können benannte Parameter in Ihren Routen angeben, die an Ihre Rückruffunktion übergeben werden.
+Sie können benannte Parameter in Ihren Routen angeben, die an
+Ihre Rückruffunktion übergeben werden.
 
 ```php
 Flight::route('/@name/@id', function (string $name, string $id) {
@@ -121,26 +195,28 @@ Flight::route('/@name/@id', function (string $name, string $id) {
 });
 ```
 
-Sie können auch reguläre Ausdrücke mit Ihren benannten Parametern verwenden, indem Sie den `:`-Trenner verwenden:
+Sie können auch reguläre Ausdrücke mit Ihren benannten Parametern verwenden, indem Sie
+den `:`-Trenner verwenden:
 
 ```php
 Flight::route('/@name/@id:[0-9]{3}', function (string $name, string $id) {
-  // Dies entspricht /bob/123
-  // Aber nicht /bob/12345
+  // Dies passt zu /bob/123
+  // Passt aber nicht zu /bob/12345
 });
 ```
 
-> **Hinweis:** Das Übereinstimmen von Regex-Gruppen `()` mit benannten Parametern wird nicht unterstützt. :'\(
+> **Hinweis:** Das Abgleichen von Regex-Gruppen `()` mit benannten Parametern wird nicht unterstützt. :'\(
 
 ## Optionale Parameter
 
-Sie können benannte Parameter angeben, die optional für die Übereinstimmung sind, indem Sie Segmente in Klammern einschließen.
+Sie können benannte Parameter angeben, die optional für den Abgleich sind, indem Sie
+Segmente in Klammern einschließen.
 
 ```php
 Flight::route(
   '/blog(/@year(/@month(/@day)))',
   function(?string $year, ?string $month, ?string $day) {
-    // Dies entspricht den folgenden URLs:
+    // Dies passt zu folgenden URLs:
     // /blog/2012/12/10
     // /blog/2012/12
     // /blog/2012
@@ -149,19 +225,20 @@ Flight::route(
 );
 ```
 
-Alle nicht übereinstimmenden optionalen Parameter werden als `NULL` übergeben.
+Nicht übereinstimmende optionale Parameter werden als `NULL` übergeben.
 
 ## Platzhalter
 
-Die Übereinstimmung erfolgt nur auf einzelnen URL-Segmenten. Wenn Sie mehrere Segmente übereinstimmen möchten, können Sie den `*`-Platzhalter verwenden.
+Das Abgleichen erfolgt nur auf einzelnen URL-Segmenten. Wenn Sie mehrere
+Segmenten abgleichen möchten, können Sie den `*`-Platzhalter verwenden.
 
 ```php
 Flight::route('/blog/*', function () {
-  // Dies entspricht /blog/2000/02/01
+  // Dies passt zu /blog/2000/02/01
 });
 ```
 
-Um alle Anfragen auf eine einzelne Rückruffunktion zu routen, können Sie Folgendes tun:
+Um alle Anforderungen an einen einzelnen Rückruf zu leiten, können Sie Folgendes tun:
 
 ```php
 Flight::route('*', function () {
@@ -171,13 +248,14 @@ Flight::route('*', function () {
 
 ## Weiterleitung
 
-Sie können die Ausführung an die nächste übereinstimmende Route weitergeben, indem Sie `true` aus Ihrer Rückruffunktion zurückgeben.
+Sie können die Ausführung an die nächste übereinstimmende Route weiterleiten, indem Sie `true` aus
+Ihrer Rückruffunktion zurückgeben.
 
 ```php
 Flight::route('/benutzer/@name', function (string $name) {
-  // Überprüfe eine Bedingung
+  // Eine Bedingung prüfen
   if ($name !== "Bob") {
-    // Weiter zur nächsten Route
+    // Zu nächster Route fortsetzen
     return true;
   }
 });
@@ -187,40 +265,43 @@ Flight::route('/benutzer/*', function () {
 });
 ```
 
-## Routen-Aliasing
+## Routenalias
 
-Sie können einer Route ein Alias zuweisen, damit die URL später in Ihrem Code dynamisch generiert werden kann (zum Beispiel wie eine Vorlage).
+Sie können einem Routen einen Alias zuweisen, damit die URL später in Ihrem Code dynamisch generiert werden kann (z. B. in einer Vorlage).
 
 ```php
-Flight::route('/benutzer/@id', function($id) { echo 'benutzer:'.$id; }, false, 'user_view');
+Flight::route('/benutzer/@id', function($id) { echo 'Benutzer:'.$id; }, false, 'benutzer_ansehen');
 
 // später im Code irgendwo
-Flight::getUrl('user_view', [ 'id' => 5 ]); // gibt '/benutzer/5' zurück
+Flight::getUrl('benutzer_ansehen', [ 'id' => 5 ]); // gibt '/benutzer/5' zurück
 ```
 
-Dies ist besonders hilfreich, wenn sich Ihre URL ändern sollte. In dem obigen Beispiel wurde beispielsweise der Benutzer auf `/admin/benutzer/@id` verschoben.
-Dank des Aliasings müssen Sie nirgends, wo Sie den Alias referenzieren, etwas ändern, da der Alias nun `/admin/benutzer/5` wie im oben genannten Beispiel zurückgibt.
+Dies ist besonders hilfreich, wenn sich Ihre URL ändern sollte. Im obigen Beispiel, nehmen wir an, dass Benutzer zu `/admin/benutzer/@id` verschoben wurde.
+Mit Aliasbildung müssen Sie nirgendwo, wo Sie auf den Alias verweisen, etwas ändern, da der Alias jetzt `/admin/benutzer/5` wie im
+obigen Beispiel zurückgeben wird.
 
-Das Routen-Aliasing funktioniert auch in Gruppen:
+Routenaliasierung funktioniert auch in Gruppen:
 
 ```php
 Flight::group('/benutzer', function() {
-    Flight::route('/@id', function($id) { echo 'benutzer:'.$id; }, false, 'user_view');
+    Flight::route('/@id', function($id) { echo 'Benutzer:'.$id; }, false, 'benutzer_ansehen');
 });
 
 
 // später im Code irgendwo
-Flight::getUrl('user_view', [ 'id' => 5 ]); // gibt '/benutzer/5' zurück
+Flight::getUrl('benutzer_ansehen', [ 'id' => 5 ]); // gibt '/benutzer/5' zurück
 ```
 
-## Routeninformation
+## Routeninformationen
 
-Wenn Sie Informationen zur übereinstimmenden Route inspizieren möchten, können Sie anfordern, dass das Routenobjekt Ihrer Rückruffunktion übergeben wird, indem Sie `true` als dritten Parameter in
-die Routenmethode übergeben. Das Routenobjekt wird immer als letzter Parameter an Ihre Rückruffunktion übergeben.
+Wenn Sie die übereinstimmenden Routeninformationen inspizieren möchten, können Sie die Routen
+Objekt anfordern, das an Ihre Rückruffunktion übergeben werden soll, indem Sie `true` als dritten Parameter in
+dem Routenmethode. Das Routenobjekt wird immer der letzte Parameter sein, der an Ihre
+Rückruffunktion übergeben wird.
 
 ```php
 Flight::route('/', function(\flight\net\Route $route) {
-  // Array der mit Methoden abgeglichenen HTTP-Methoden
+  // Array der HTTP-Methoden, die abgeglichen sind
   $route->methods;
 
   // Array der benannten Parameter
@@ -229,32 +310,33 @@ Flight::route('/', function(\flight\net\Route $route) {
   // Übereinstimmender regulärer Ausdruck
   $route->regex;
 
-  // Enthält die Inhalte von '*' die im URL-Muster verwendet werden
+  // Enthält den Inhalt von * in dem URL-Muster
   $route->splat;
 
-  // Zeigt den URL-Pfad an....falls wirklich benötigt
+  // Zeigt den URL-Pfad an....wenn Sie dies wirklich benötigen
   $route->pattern;
 
   // Zeigt an, welches Middleware dieser Route zugewiesen ist
   $route->middleware;
 
-  // Zeigt das dieser Route zugeordnete Alias an
+  // Zeigt den diesem Routen zugewiesenen Alias an
   $route->alias;
 }, true);
 ```
 
-## Routen-Gruppierung
+## Routengruppierung
 
-Es kann Situationen geben, in denen Sie verwandte Routen gruppieren möchten (z. B. `/api/v1`). Sie können dies durch Verwendung der `group` Methode tun:
+Es kann Zeiten geben, in denen Sie verwandte Routen zusammenfassen möchten (z. B. `/api/v1`).
+Sie können dies durch Verwendung der `group` Methode tun:
 
 ```php
 Flight::group('/api/v1', function () {
   Flight::route('/benutzer', function () {
-	// Übereinstimmung mit /api/v1/benutzer
+	// Passt zu /api/v1/benutzer
   });
 
-  Flight::route('/beiträge', function () {
-	// Übereinstimmung mit /api/v1/beiträge
+  Flight::route('/posten', function () {
+	// Passt zu /api/v1/posten
   });
 });
 ```
@@ -264,24 +346,24 @@ Sie können sogar Gruppen von Gruppen verschachteln:
 ```php
 Flight::group('/api', function () {
   Flight::group('/v1', function () {
-	// Flight::get() macht Variablen, es setzt keine Route! Siehe Objektkontext weiter unten
+	// Flight::get() ruft Variablen ab, setzt jedoch keine Route! Siehe Objektkontext unten
 	Flight::route('GET /benutzer', function () {
-	  // Übereinstimmung mit GET /api/v1/benutzer
+	  // Passt zu GET /api/v1/benutzer
 	});
 
-	Flight::post('/beiträge', function () {
-	  // Übereinstimmung mit POST /api/v1/beiträge
+	Flight::post('/posten', function () {
+	  // Passt zu POST /api/v1/posten
 	});
 
-	Flight::put('/beiträge/1', function () {
-	  // Übereinstimmung mit PUT /api/v1/beiträge
+	Flight::put('/posten/1', function () {
+	  // Passt zu PUT /api/v1/posten
 	});
   });
   Flight::group('/v2', function () {
 
-	// Flight::get() macht Variablen, es setzt keine Route! Siehe Objektkontext weiter unten
+	// Flight::get() ruft Variablen ab, setzt jedoch keine Route! Siehe Objektkontext unten
 	Flight::route('GET /benutzer', function () {
-	  // Übereinstimmung mit GET /api/v2/benutzer
+	  // Passt zu GET /api/v2/benutzer
 	});
   });
 });
@@ -289,36 +371,44 @@ Flight::group('/api', function () {
 
 ### Gruppierung mit Objektkontext
 
-Sie können die Routengruppierung weiterhin mit dem `Engine`-Objekt wie folgt verwenden:
+Sie können weiterhin Routengruppierung mit dem `Engine`-Objekt auf die folgende Weise verwenden:
 
 ```php
 $app = new \flight\Engine();
 $app->group('/api/v1', function (Router $router) {
 
-  // nutzen Sie die $router Variable
+  // Verwenden Sie die $router Variable
   $router->get('/benutzer', function () {
-	// Übereinstimmung mit GET /api/v1/benutzer
+	// Passt zu GET /api/v1/benutzer
   });
 
-  $router->post('/beiträge', function () {
-	// Übereinstimmung mit POST /api/v1/beiträge
+  $router->post('/posten', function () {
+	// Passt zu POST /api/v1/posten
   });
 });
 ```
 
-## Streaming
+## Streamen
 
-Sie können nun Antworten an den Client streamen, indem Sie die `streamWithHeaders()` Methode verwenden. 
-Dies ist nützlich zum Senden großer Dateien, lang laufender Prozesse oder generieren großer Antworten. 
-Das Streamen einer Route wird etwas anders als eine normale Route behandelt.
+Sie können jetzt Antworten an den Client streamen, indem Sie die `streamWithHeaders()`-Methode verwenden.
+Dies ist nützlich zum Senden großer Dateien, länger laufender Prozesse oder zur Erzeugung großer Antworten.
+Das Streamen einer Route wird etwas anders behandelt als eine reguläre Route.
 
-> **Hinweis:** Das Streamen von Antworten ist nur verfügbar, wenn [`flight.v2.output_buffering`](/learn/migrating-to-v3#output_buffering) auf false gesetzt ist.
+> **Hinweis:** Das Streamen von Antworten ist nur verfügbar, wenn Sie [`flight.v2.output_buffering`](/learn/migrating-to-v3#output_buffering) auf false gesetzt haben.
 
 ```php
-Flight::route('/stream-benutzer', function() {
+Flight::route('/benutzer-streamen', function() {
+
+	// Wenn Sie hier nach Ausführung der Route zusätzliche Header setzen müssen
+	// müssen Sie sie definieren, bevor irgendetwas ausgegeben wird.
+	// Sie müssen alle ein direkter Aufruf der header() Funktion oder
+	// ein Aufruf von Flight::response()->setRealHeader()
+	header('Content-Disposition: attachment; filename="benutzer.json"');
+	// oder
+	Flight::response()->setRealHeader('Content-Disposition', 'attachment; filename="benutzer.json"');
 
 	// wie auch immer Sie Ihre Daten abrufen, nur als Beispiel...
-	$users_stmt = Flight::db()->query("SELECT id, vorname, nachname FROM benutzer");
+	$users_stmt = Flight::db()->query("SELECT id, first_name, last_name FROM users");
 
 	echo '{';
 	$user_count = count($users);
@@ -336,7 +426,7 @@ Flight::route('/stream-benutzer', function() {
 // So setzen Sie die Header, bevor Sie mit dem Streamen beginnen.
 })->streamWithHeaders([
 	'Content-Type' => 'application/json',
-	// optionaler Statuscode, Standardwert ist 200
+	// optionaler Statuscode, Standard: 200
 	'status' => 200
 ]);
-```  
+```
