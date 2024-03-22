@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "806f61cc861e77087a7dc41421ba15c8",
+    "content-hash": "e96e203192a3314d07c9a98e1c153e07",
     "packages": [
         {
             "name": "erusev/parsedown",
@@ -58,16 +58,16 @@
         },
         {
             "name": "flightphp/core",
-            "version": "v3.6.2",
+            "version": "v3.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/flightphp/core.git",
-                "reference": "412596e86335e4d55f337878a18bc45df9c7f987"
+                "reference": "8d772b51b858f636794c8137cc05799f942b6f46"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/flightphp/core/zipball/412596e86335e4d55f337878a18bc45df9c7f987",
-                "reference": "412596e86335e4d55f337878a18bc45df9c7f987",
+                "url": "https://api.github.com/repos/flightphp/core/zipball/8d772b51b858f636794c8137cc05799f942b6f46",
+                "reference": "8d772b51b858f636794c8137cc05799f942b6f46",
                 "shasum": ""
             },
             "require": {
@@ -79,6 +79,8 @@
             },
             "require-dev": {
                 "ext-pdo_sqlite": "*",
+                "league/container": "^4.2",
+                "level-2/dice": "^4.0",
                 "phpstan/extension-installer": "^1.3",
                 "phpstan/phpstan": "^1.10",
                 "phpunit/phpunit": "^9.5",
@@ -123,9 +125,9 @@
             "homepage": "http://flightphp.com",
             "support": {
                 "issues": "https://github.com/flightphp/core/issues",
-                "source": "https://github.com/flightphp/core/tree/v3.6.2"
+                "source": "https://github.com/flightphp/core/tree/v3.7.0"
             },
-            "time": "2024-03-18T14:38:22+00:00"
+            "time": "2024-03-22T13:16:38+00:00"
         },
         {
             "name": "latte/latte",
@@ -382,9 +384,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "flightphp/core": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
