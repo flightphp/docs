@@ -1,87 +1,59 @@
 # Sicherheit
 
-Sicherheit ist bei Webanwendungen von großer Bedeutung. Sie möchten sicherstellen, dass Ihre Anwendung sicher ist und die Daten Ihrer Benutzer geschützt sind. Flight bietet eine Reihe von Funktionen, um Ihnen bei der Sicherung Ihrer Webanwendungen zu helfen.
+Sicherheit ist ein wichtiges Thema, wenn es um Webanwendungen geht. Sie möchten sicherstellen, dass Ihre Anwendung sicher ist und die Daten Ihrer Benutzer geschützt sind. Flight bietet eine Reihe von Funktionen, um Ihnen bei der Sicherung Ihrer Webanwendungen zu helfen.
 
-## Überschriften
+## Header
 
-HTTP-Überschriften sind eine der einfachsten Möglichkeiten, um Ihre Webanwendungen zu sichern. Sie können Überschriften verwenden, um Clickjacking, XSS und andere Angriffe zu verhindern. Es gibt mehrere Möglichkeiten, diese Überschriften in Ihre Anwendung einzufügen.
+HTTP-Header sind eine der einfachsten Möglichkeiten, um Ihre Webanwendungen abzusichern. Sie können Header verwenden, um Clickjacking, XSS und andere Angriffe zu verhindern. Es gibt mehrere Möglichkeiten, wie Sie diese Header zu Ihrer Anwendung hinzufügen können.
 
-Zwei großartige Websites zur Überprüfung der Sicherheit Ihrer Überschriften sind [securityheaders.com](https://securityheaders.com/) und [observatory.mozilla.org](https://observatory.mozilla.org/).
+Zwei großartige Websites, um die Sicherheit Ihrer Header zu überprüfen, sind [securityheaders.com](https://securityheaders.com/) und [observatory.mozilla.org](https://observatory.mozilla.org/).
 
 ### Manuell hinzufügen
 
-Sie können diese Überschriften manuell hinzufügen, indem Sie die `header`-Methode des `Flight\Response`-Objekts verwenden.
-```php
-// Setzen Sie die X-Frame-Options-Überschrift, um Clickjacking zu verhindern
-Flight::response()->header('X-Frame-Options', 'SAMEORIGIN');
+Sie können diese Header manuell hinzufügen, indem Sie die `header`-Methode auf dem `Flight\Response`-Objekt verwenden.
 
-// Setzen Sie die Content-Security-Policy-Überschrift, um XSS zu verhindern
-// Hinweis: Diese Überschrift kann sehr komplex werden, daher sollten Sie
-//  für Ihre Anwendung Beispiele im Internet konsultieren
-Flight::response()->header("Content-Security-Policy", "default-src 'self'");
-
-// Setzen Sie die X-XSS-Protection-Überschrift, um XSS zu verhindern
-Flight::response()->header('X-XSS-Protection', '1; mode=block');
-
-// Setzen Sie die X-Content-Type-Options-Überschrift, um MIME-Sniffing zu verhindern
-Flight::response()->header('X-Content-Type-Options', 'nosniff');
-
-// Setzen Sie die Referrer-Policy-Überschrift, um zu steuern, wie viele Referrer-Informationen gesendet werden
-Flight::response()->header('Referrer-Policy', 'no-referrer-when-downgrade');
-
-// Setzen Sie die Strict-Transport-Security-Überschrift, um HTTPS zu erzwingen
-Flight::response()->header('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
-
-// Setzen Sie die Permissions-Policy-Überschrift, um zu steuern, welche Funktionen und APIs verwendet werden können
-Flight::response()->header('Permissions-Policy', 'geolocation=()');
-```
-
-Diese können am Anfang Ihrer `bootstrap.php` oder `index.php`-Dateien hinzugefügt werden.
+Diese können am Anfang Ihrer `bootstrap.php` oder `index.php` Dateien hinzugefügt werden.
 
 ### Als Filter hinzufügen
 
 Sie können sie auch in einem Filter/Hook wie folgt hinzufügen:
 
-```php
-// Füge die Überschriften einem Filter hinzu
-Flight::before('start', function() {
-	Flight::response()->header( 'X-Frame-Options', 'SAMEORIGIN' );
-	Flight::response()->header( "Content-Security-Policy", "default-src 'self'" );
-	Flight::response()->header( 'X-XSS-Protection', '1; mode=block' );
-	Flight::response()->header( 'X-Content-Type-Options', 'nosniff' );
-	Flight::response()->header( 'Referrer-Policy', 'no-referrer-when-downgrade' );
-	Flight::response()->header( 'Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload' );
-	Flight::response()->header( 'Permissions-Policy', 'geolocation=()' );
-});
-```
-
 ### Als Middleware hinzufügen
 
 Sie können sie auch als Middleware-Klasse hinzufügen. Dies ist eine gute Möglichkeit, Ihren Code sauber und organisiert zu halten.
 
-```php
-// app/middleware/SecurityHeadersMiddleware.php
+## Cross Site Request Forgery (CSRF)
 
-namespace app\middleware;
+Cross Site Request Forgery (CSRF) ist eine Art von Angriff, bei dem eine bösartige Website den Browser eines Benutzers dazu bringen kann, eine Anfrage an Ihre Website zu senden. Flight bietet keinen eingebauten CSRF-Schutzmechanismus, aber Sie können leicht Ihren eigenen implementieren, indem Sie Middleware verwenden.
 
-class SecurityHeadersMiddleware
-{
-	public function before(array $params): void
-	{
-		Flight::response()->header( 'X-Frame-Options', 'SAMEORIGIN' );
-		Flight::response()->header( "Content-Security-Policy", "default-src 'self'" );
-		Flight::response()->header( 'X-XSS-Protection', '1; mode=block' );
-		Flight::response()->header( 'X-Content-Type-Options', 'nosniff' );
-		Flight::response()->header( 'Referrer-Policy', 'no-referrer-when-downgrade' );
-		Flight::response()->header( 'Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload' );
-		Flight::response()->header( 'Permissions-Policy', 'geolocation=()' );
-	}
-}
+### Einrichtung
 
-// index.php oder wo immer Ihre Routen sind
-// Übrigens fungiert diese leere String-Gruppe als globales Middleware für
-// alle Routen. Natürlich könnten Sie dasselbe tun und es nur zu bestimmten Routen hinzufügen.
-Flight::group('', function( Router $router ) {
-	$router->get('/users', [ 'UserController', 'getUsers' ]);
-	// weitere Routen
-}, [ new SecurityHeadersMiddleware() ]);
+Zuerst müssen Sie ein CSRF-Token generieren und es in der Sitzung des Benutzers speichern. Sie können dann dieses Token in Ihren Formularen verwenden und es beim Absenden des Formulars überprüfen.
+
+#### Verwendung von Latte
+
+Sie können auch eine benutzerdefinierte Funktion einstellen, um das CSRF-Token in Ihren Latte-Templates auszugeben.
+
+Und jetzt können Sie in Ihren Latte-Templates die `csrf()`-Funktion verwenden, um das CSRF-Token auszugeben.
+
+### Überprüfen des CSRF-Token
+
+Sie können das CSRF-Token mithilfe von Eventfiltern überprüfen.
+
+Oder Sie können eine Middleware-Klasse verwenden.
+
+## Cross Site Scripting (XSS)
+
+Cross Site Scripting (XSS) ist eine Art von Angriff, bei dem eine bösartige Website Code in Ihre Website einschleusen kann. Die meisten dieser Möglichkeiten stammen aus Formularwerten, die Ihre Endbenutzer ausfüllen. Sie sollten **niemals** Ausgaben Ihrer Benutzer vertrauen! Gehen Sie immer davon aus, dass alle von ihnen die besten Hacker der Welt sind. Sie können bösartiges JavaScript oder HTML in Ihre Seite einschleusen. Dieser Code kann verwendet werden, um Informationen von Ihren Benutzern zu stehlen oder Aktionen auf Ihrer Website auszuführen. Durch die Verwendung der View-Klasse von Flight können Sie Ausgaben einfach escapen, um XSS-Angriffe zu verhindern.
+
+## SQL Injection
+
+SQL Injection ist eine Art von Angriff, bei dem ein bösartiger Benutzer SQL-Code in Ihre Datenbank einschleusen kann. Dies kann verwendet werden, um Informationen aus Ihrer Datenbank zu stehlen oder Aktionen auf Ihrer Datenbank auszuführen. Wieder sollten Sie **niemals** Eingaben Ihrer Benutzer vertrauen! Gehen Sie immer davon aus, dass sie es auf Ihr Blut abgesehen haben. Sie können mit vorbereiteten Anweisungen in Ihren `PDO`-Objekten SQL-Injektionen verhindern.
+
+## CORS
+
+Cross-Origin Resource Sharing (CORS) ist ein Mechanismus, der es vielen Ressourcen (z. B. Schriften, JavaScript usw.) auf einer Webseite ermöglicht, von einer anderen Domain außerhalb der Domain, von der die Ressource stammt, angefordert zu werden. Flight hat keine integrierte Funktionalität, aber dies kann leicht mit Middleware oder Eventfiltern wie bei CSRF gehandhabt werden.
+
+## Fazit
+
+Sicherheit ist wichtig, und es ist wichtig sicherzustellen, dass Ihre Webanwendungen sicher sind. Flight bietet eine Reihe von Funktionen, um Ihnen bei der Sicherung Ihrer Webanwendungen zu helfen, aber es ist wichtig, immer wachsam zu sein und sicherzustellen, dass Sie alles tun, um die Daten Ihrer Benutzer zu schützen. Gehen Sie immer vom Schlimmsten aus und vertrauen Sie niemals den Eingaben Ihrer Benutzer. Escapen Sie immer Ausgaben und verwenden Sie vorbereitete Anweisungen, um SQL-Injektionen zu verhindern. Verwenden Sie immer Middleware, um Ihre Routen vor CSRF- und CORS-Angriffen zu schützen. Wenn Sie all dies tun, sind Sie auf dem besten Weg, sichere Webanwendungen zu erstellen.

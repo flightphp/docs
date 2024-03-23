@@ -1,18 +1,18 @@
-# ラッテ
+# ラテ
 
-ラッテは非常に使いやすく、TwigやSmartyよりもPHPの構文に近いフル機能のテンプレートエンジンです。拡張や独自のフィルタや関数を追加することも非常に簡単です。
+ラテは非常に使いやすく、TwigやSmartyよりもPHP構文に近いテンプレートエンジンで、フル機能を備えています。また、独自のフィルタや関数を簡単に拡張および追加できます。
 
 ## インストール
 
-コンポーザーでインストールします。
+Composerでインストールします。
 
 ```bash
 composer require latte/latte
 ```
 
-## 基本的な構成
+## 基本設定
 
-はじめに始めるための基本的な構成オプションがいくつかあります。詳細については、[ラッテドキュメント](https://latte.nette.org/en/guide)を参照できます。
+始めるための基本設定オプションがいくつかあります。詳細については、[ラテのドキュメント](https://latte.nette.org/en/guide)を参照してください。
 
 ```php
 
@@ -24,18 +24,18 @@ $app = Flight::app();
 
 $app->register('latte', LatteEngine::class, [], function(LatteEngine $latte) use ($app) {
 
-	// これはラッテがテンプレートをキャッシュして処理を高速化する場所です
-	// ラッテの素晴らしい点の1つは、テンプレートを変更すると自動的にキャッシュを更新することです！
+	// ここがラテがテンプレートをキャッシュして処理を高速化する場所です。
+	// ラテの素晴らしい点の1つは、テンプレートを変更すると自動的にキャッシュが更新されることです！
 	$latte->setTempDirectory(__DIR__ . '/../cache/');
 
-	// ラッテに、ビューのルートディレクトリを教えてください。
-	$latte->setLoader(new \Latte\Loaders\FileLoader(__DIR__ . '/../views/'));
+	// ビューのルートディレクトリをラテに伝えます。
+	$latte->setLoader(new \Latte\Loaders\FileLoader($app->get('flight.views.path')));
 });
 ```
 
-## シンプルなレイアウト例
+## シンプルなレイアウトの例
 
-以下はレイアウトファイルのシンプルな例です。これは他のすべてのビューを包むために使用されるファイルです。
+以下はレイアウトファイルのシンプルな例です。これは他のすべてのビューを囲むために使用されるファイルです。
 
 ```html
 <!-- app/views/layout.latte -->
@@ -48,7 +48,7 @@ $app->register('latte', LatteEngine::class, [], function(LatteEngine $latte) use
 	<body>
 		<header>
 			<nav>
-				<!-- ここにあなたのナビゲーション要素を挿入 -->
+				<!-- ここにナビゲーション要素を追加 -->
 			</nav>
 		</header>
 		<div id="content">
@@ -62,21 +62,21 @@ $app->register('latte', LatteEngine::class, [], function(LatteEngine $latte) use
 </html>
 ```
 
-そして、そのコンテンツブロック内にレンダリングされるファイルがあります：
+そして、そのコンテンツブロック内にレンダリングされるファイルを取得します：
 
 ```html
 <!-- app/views/home.latte -->
-<!-- これはレイアウト.latteファイル内にある「中」であることをラッテに伝えます -->
+<!-- これにより、このファイルがlayout.latteファイルの「内部」であることがラテに伝えられます -->
 {extends layout.latte}
 
-<!-- レイアウト内のコンテンツブロック内にレンダリングされるコンテンツです -->
+<!-- これはレイアウト内のコンテンツブロック内にレンダリングされるコンテンツです -->
 {block content}
 	<h1>ホームページ</h1>
 	<p>アプリへようこそ！</p>
 {/block}
 ```
 
-次に、これを関数やコントローラー内でレンダリングする場合は、次のようにします：
+次に、この機能またはコントローラー内でこれをレンダリングするときは、次のようにします：
 
 ```php
 // シンプルなルート
@@ -86,7 +86,7 @@ Flight::route('/', function () {
 	]);
 });
 
-// またはコントローラーを使用している場合
+// コントローラーを使用している場合
 Flight::route('/', [HomeController::class, 'index']);
 
 // HomeController.php
@@ -101,4 +101,4 @@ class HomeController
 }
 ```
 
-ラッテを最大限に活用するための詳細については、[ラッテドキュメント](https://latte.nette.org/en/guide)を参照してください！
+ラテを最大限に活用する方法の詳細については、[ラテのドキュメント](https://latte.nette.org/en/guide)を参照してください！

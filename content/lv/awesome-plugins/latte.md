@@ -1,8 +1,6 @@
-# Latvian
-
 # Kafija
 
-Kafija ir pilna funkciju sagatavošanas dzinējs, kas ir ļoti viegli lietojams un jūtas tuvāk PHP sintaksei nekā Twig vai Smarty. To ir arī ļoti viegli paplašināt un pievienot savus filtrus un funkcijas.
+Kafija ir pilnībā funkciju bagātota veidne, kas ir ļoti viegli lietojama un jūtas tuvāka PHP sintaksei nekā Twig vai Smarty. Turklāt to ir ļoti viegli paplašināt un pievienot savus filtrus un funkcijas.
 
 ## Instalācija
 
@@ -14,7 +12,7 @@ composer require latte/latte
 
 ## Pamata konfigurācija
 
-Ir dažas pamata konfigurācijas iespējas, ar kurām sākt. Par tām var uzzināt vairāk [Kafijas dokumentācijā] (https://latte.nette.org/en/guide).
+Ir dažas pamata konfigurācijas opcijas, lai sāktu darbu. Par tām variet lasīt vairāk [Kafijas Dokumentācijā](https://latte.nette.org/en/guide).
 
 ```php
 
@@ -24,28 +22,28 @@ require 'vendor/autoload.php';
 
 $app = Flight::app();
 
-$app->register('lativert', LatteEngine::class, [], function(LatteEngine $lativert) use ($app) {
+$app->register('latte', LatteEngine::class, [], function(LatteEngine $latte) use ($app) {
 
-	// Šis ir vieta, kur Kafija saglabās jūsu sagatavotās šablonus, lai paātrinātu lietas
-	// Viens lielisks lieta par Kafiju ir tas, ka tā automātiski atjauno jūsu
-	// kešatmiņu, kad veicat izmaiņas savos šablonos!
-	$lativert->setTempDirectory(__DIR__ . '/../cache/');
+	// Šeit Kafija saglabās jūsu veidnes, lai ātrinātu lietošanu
+	// Viena jauka lieta par Kafiju ir tā, ka tā automātiski atjaunina jūsu
+	// kešatmiņu, kad veicat izmaiņas veidnēs!
+	$latte->setTempDirectory(__DIR__ . '/../cache/');
 
-	// Pateikt Kafijai, kur būs jūsu skatus saturošais saknis direktorijā.
-	$lativert->setLoader(new \Latte\Loaders\FileLoader(__DIR__ . '/../views/'));
+	// Paziņojiet Kafijai, kur būs jūsu skatu saknes direktorija.
+	$latte->setLoader(new \Latte\Loaders\FileLoader($app->get('flight.views.path')));
 });
 ```
 
-## Vienkāršs izkārtojuma piemērs
+## Vienkārša izkārtojuma piemērs
 
-Šeit ir vienkāršs izkārtojuma faila piemērs. Šis fails tiks izmantots, lai apvalkātu visus jūsu citus skatus.
+Šeit ir vienkāršs piemērs izkārtojuma failam. Šis fails tiks izmantots, lai iesaiņotu visus pārējos skatus.
 
 ```html
 <!-- app/views/layout.latte -->
 <!doctype html>
-<html lang="en">
+<html lang="lv">
 	<head>
-		<title>{$title ? $title . ' - '}Manai lietotnei</title>
+		<title>{$title ? $title . ' - '}Mana Viedokļu Uzstādība</title>
 		<link rel="stylesheet" href="style.css">
 	</head>
 	<body>
@@ -55,7 +53,7 @@ $app->register('lativert', LatteEngine::class, [], function(LatteEngine $lativer
 			</nav>
 		</header>
 		<div id="content">
-			<!-- Šeit ir maģija -->
+			<!-- Šeit ir burvība -->
 			{block content}{/block}
 		</div>
 		<div id="footer">
@@ -65,43 +63,43 @@ $app->register('lativert', LatteEngine::class, [], function(LatteEngine $lativer
 </html>
 ```
 
-Un tagad mums ir jūsu fails, kas tiks atskaņots iekšējā šajā saturu blokā:
+Un tagad mums ir jūsu fails, kas tiks atveidots iekšējā šī satura blokā:
 
 ```html
 <!-- app/views/home.latte -->
-<!-- Tas pateiks Kafijai, ka šis fails ir "iekšā" layout.latte failā -->
+<!-- Tas paziņo Kafijai, ka šis fails ir "iekšpus" layout.latte faila -->
 {extends layout.latte}
 
-<!-- Tas ir saturs, kas tiks atskaņots iekšējā izkārtojumā iekšējā saturu blokā -->
+<!-- Šis ir saturs, kas tiks atveidots izkārtojumā iekšienē satura blokā -->
 {block content}
-	<h1>Mājas lapā</h1>
-	<p>Laipni lūdzam manā lietotnē!</p>
+	<h1>Mājas Lapaspuse</h1>
+	<p>Sveicināti manā aplikācijā!</p>
 {/block}
 ```
 
-Tad, kad jūs atskaņojat to iekšā savā funkcijā vai kontrolētājā, jums būtu jādara kaut kas tāds:
+Tad, kad jūs dodies atveidot to iekš savas funkcijas vai kontrolierā, jūs darītu kaut ko līdzīgu tam:
 
 ```php
-// vienkārša maršruta
+// vienkāršs maršruts
 Flight::route('/', function () {
-	Flight::lativert()->render('home.latte', [
-		'title' => 'Sākumlapa'
+	Flight::latte()->render('home.latte', [
+		'title' => 'Mājas Lapaspuse'
 	]);
 });
 
-// vai ja izmantojat kontrolētāju
+// vai, ja izmantojat kontroleri
 Flight::route('/', [HomeController::class, 'index']);
 
 // HomeController.php
-klase HomeController
+class HomeController
 {
 	public function index()
 	{
-		Flight::lativert()->render('home.latte', [
-			'title' => 'Sākumlapa'
+		Flight::latte()->render('home.latte', [
+			'title' => 'Mājas Lapaspuse'
 		]);
 	}
 }
 ```
 
-Redziet [Kafijas dokumentāciju] (https://latte.nette.org/en/guide), lai iegūtu vairāk informācijas par to, kā Kafiju izmantot tā pilnīgā potenciālā!
+Skatiet vairāk informācijas par to, kā izmantot Kafiju tā pilnīgākai potenciāla izmantošanai [Kafijas Dokumentācijā](https://latte.nette.org/en/guide)!

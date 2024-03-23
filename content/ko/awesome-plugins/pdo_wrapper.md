@@ -1,6 +1,6 @@
 # PdoWrapper PDO 도우미 클래스
 
-Flight에는 PDO를 위한 도우미 클래스가 함께 제공됩니다. 이를 통해 데이터베이스를 쉽게 쿼리할 수 있으며 모든 준비/실행/fetchAll() 기능을 사용할 수 있습니다. 데이터베이스를 쿼리하는 방법을 크게 단순화합니다.
+Flight은 PDO를 위한 도우미 클래스와 함께 제공됩니다. 이를 사용하면 데이터베이스를 손쉽게 쿼리할 수 있으며 모든 준비/실행/fetchAll() 관련 기능을 활용할 수 있습니다. 데이터베이스를 쿼리하는 방법이 크게 단순화됩니다. 각 행 결과는 Flight Collection 클래스로 반환되며, 이를 통해 배열 구문 또는 객체 구문을 사용하여 데이터에 액세스할 수 있습니다.
 
 ## PDO 도우미 클래스 등록
 
@@ -16,10 +16,10 @@ Flight::register('db', \flight\database\PdoWrapper::class, ['mysql:host=localhos
 ```
 
 ## 사용법
-이 객체는 PDO를 확장하므로 모든 표준 PDO 메서드를 사용할 수 있습니다. 데이터베이스 쿼리를 보다 쉽게 만들기 위해 다음 메서드가 추가되었습니다.
+이 객체는 PDO를 확장하기 때문에 모든 일반 PDO 메서드를 사용할 수 있습니다. 다음 메서드는 데이터베이스 쿼리를 더 쉽게 수행하기 위해 추가되었습니다:
 
 ### `runQuery(string $sql, array $params = []): PDOStatement`
-INSERT, UPDATE 또는 SELECT를 while 루프에서 사용할 계획이 있는 경우에 사용합니다.
+INSERT, UPDATE 또는 SELECT를 while 루프에서 사용할 경우에 사용합니다.
 
 ```php
 $db = Flight::db();
@@ -46,7 +46,10 @@ $count = $db->fetchField("SELECT COUNT(*) FROM table WHERE something = ?", [ $so
 
 ```php
 $db = Flight::db();
-$row = $db->fetchRow("SELECT * FROM table WHERE id = ?", [ $id ]);
+$row = $db->fetchRow("SELECT id, name FROM table WHERE id = ?", [ $id ]);
+echo $row['name'];
+// 또는
+echo $row->name;
 ```
 
 ### `fetchAll(string $sql, array $params = []): array`
@@ -54,26 +57,28 @@ $row = $db->fetchRow("SELECT * FROM table WHERE id = ?", [ $id ]);
 
 ```php
 $db = Flight::db();
-$rows = $db->fetchAll("SELECT * FROM table WHERE something = ?", [ $something ]);
+$rows = $db->fetchAll("SELECT id, name FROM table WHERE something = ?", [ $something ]);
 foreach($rows as $row) {
-	// 작업 수행
+	echo $row['name'];
+	// 또는
+	echo $row->name;
 }
 ```
 
-## `IN()` 구문 사용에 대한 참고
-이는 `IN()` 문을 위한 유용한 래퍼를 제공합니다. `IN()`에 대한 플레이스홀더로 단일 물음표를 간단히 전달한 다음 값의 배열을 사용할 수 있습니다. 예시는 다음과 같습니다:
+## `IN()` 구문 사용 시 유의사항
+`IN()` 문에 대한 유용한 래퍼도 제공됩니다. `IN()`에 대한 placeholder로 하나의 물음표를 간단히 전달한 다음 값 배열을 전달할 수 있습니다. 다음은 그 예시입니다:
 
 ```php
 $db = Flight::db();
 $name = 'Bob';
 $company_ids = [1,2,3,4,5];
-$rows = $db->fetchAll("SELECT * FROM table WHERE name = ? AND company_id IN (?)", [ $name, $company_ids ]);
+$rows = $db->fetchAll("SELECT id, name FROM table WHERE name = ? AND company_id IN (?)", [ $name, $company_ids ]);
 ```
 
-## 전체 예시
+## 완전한 예시
 
 ```php
-// 라우트 예시 및 이 래퍼를 사용하는 방법
+// 예시 루트 및 이 래퍼의 사용 방법
 Flight::route('/users', function () {
 	// 모든 사용자 가져오기
 	$users = Flight::db()->fetchAll('SELECT * FROM users');
@@ -82,6 +87,7 @@ Flight::route('/users', function () {
 	$statement = Flight::db()->runQuery('SELECT * FROM users');
 	while ($user = $statement->fetch()) {
 		echo $user['name'];
+		// 또는 echo $user->name;
 	}
 
 	// 단일 사용자 가져오기
@@ -90,16 +96,16 @@ Flight::route('/users', function () {
 	// 단일 값 가져오기
 	$count = Flight::db()->fetchField('SELECT COUNT(*) FROM users');
 
-	// 도움이 될 `IN()` 구문 (IN이 대문자이어야 함)
+	// 도움이 되는 IN() 구문 (IN이 대문자임을 확인하세요)
 	$users = Flight::db()->fetchAll('SELECT * FROM users WHERE id IN (?)', [[1,2,3,4,5]]);
-	// 또한 이렇게 할 수 있습니다
+	// 다음과 같이도 할 수 있습니다
 	$users = Flight::db()->fetchAll('SELECT * FROM users WHERE id IN (?)', [ '1,2,3,4,5']);
 
 	// 새 사용자 삽입
 	Flight::db()->runQuery("INSERT INTO users (name, email) VALUES (?, ?)", ['Bob', 'bob@example.com']);
 	$insert_id = Flight::db()->lastInsertId();
 
-	// 사용자 정보 업데이트
+	// 사용자 업데이트
 	Flight::db()->runQuery("UPDATE users SET name = ? WHERE id = ?", ['Bob', 123]);
 
 	// 사용자 삭제
