@@ -1,12 +1,15 @@
 # Need a quick start?
 
-Head over to the [flightphp/skeleton](https://github.com/flightphp/skeleton) repo to get started! This is a project that includes a single page file that includes everything you need to run your app. It also includes a more full fledged example with controllers and views.
+You have two options to get started with Flight:
+
+- [Single File Skeleton Boilerplate](https://github.com/flightphp/skeleton-simple): A single file that includes everything you need to run your app in a single simple file.
+- [Full Skeleton Boilerplate](https://github.com/flightphp/skeleton): A more full fledged example with controllers and views.
 
 ## Need Some Inspiration?
 
 While these are not officially sponsored by the Flight Team, these could give you ideas on how to structure your own projects that are built with Flight!
 
-- [Commentable Paste Bin](https://github.com/n0nag0n/commie2)
+- [Commentable Paste Bin](https://github.com/n0nag0n/commie2) - Flight v3
 - [Basic Skeleton App](https://github.com/markhughes/flight-skeleton)
 - [Example Wiki](https://github.com/Skayo/FlightWiki)
 - [The IT-Innovator PHP Framework Application](https://github.com/itinnovator/myphp-app)
