@@ -80,7 +80,7 @@ class UserController {
 }
 ```
 
-Hopefully you can start start to see the benefits of using a centralized routing system. It's a lot easier to manage and understand in the long run!
+Hopefully you can start to see the benefits of using a centralized routing system. It's a lot easier to manage and understand in the long run!
 
 ## Requests and Responses
 
