@@ -62,3 +62,6 @@ Learn about the core methods of the framework.
 
 ##### [Migrating to v3](/learn/migrating-to-v3)
 Backwards compatibility has for the most part been maintained, but there are some changes that you should be aware of when migrating from v2 to v3.
+
+##### [Troubleshooting](/learn/troubleshooting)
+There are some common issues that you may run into when using Flight. This page will help you troubleshoot those issues.

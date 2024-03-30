@@ -91,7 +91,7 @@ $app->register('session', Session::class, [ 'path/to/session_config.php', bin2he
 			Session::CONFIG_ENCRYPT_DATA  => true,
 			Session::CONFIG_SALT_KEY      => hash('sha256', 'my-super-S3CR3T-salt'), // please change this to be something else
 			Session::CONFIG_AUTO_COMMIT   => true, // only do this if it requires it and/or it's hard to commit() your session.
-												// additionally you could do Flight::after('start', function() { Flight::session()->commit(); });
+												   // additionally you could do Flight::after('start', function() { Flight::session()->commit(); });
 			Session::CONFIG_MYSQL_DS         => [
 				'driver'    => 'mysql',             # Database driver for PDO dns eg(mysql:host=...;dbname=...)
 				'host'      => '127.0.0.1',         # Database host
@@ -105,6 +105,40 @@ $app->register('session', Session::class, [ 'path/to/session_config.php', bin2he
 	}
 );
 ```
+
+## Help! My Session Data is Not Persisting!
+
+Are you setting your session data and it's not persisting between requests? You might have forgotten to commit your session data. You can do this by calling `$session->commit()` after you've set your session data.
+
+```php
+Flight::route('POST /login', function() {
+	$session = Flight::session();
+
+	// do your login logic here
+	// validate password, etc.
+
+	// if the login is successful
+	$session->set('is_logged_in', true);
+	$session->set('user', $user);
+
+	// any time you write to the session, you must commit it deliberately.
+	$session->commit();
+});
+```
+
+The other way around this is when you setup your session service, you have to set `auto_commit` to `true` in your configuration. This will automatically commit your session data after each request.
+
+```php
+
+$app->register('session', Session::class, [ 'path/to/session_config.php', bin2hex(random_bytes(32)) ], function(Session $session) {
+		$session->updateConfiguration([
+			Session::CONFIG_AUTO_COMMIT   => true,
+		]);
+	}
+);
+```
+
+Additionally you could do `Flight::after('start', function() { Flight::session()->commit(); });` to commit your session data after each request.
 
 ## Documentation
 

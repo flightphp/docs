@@ -6,7 +6,7 @@
 		<nav id="navbar-learn" class="sticky-top flex-column align-items-stretch pe-4 border-end">
 			<nav class="nav nav-pills flex-column">
 				{foreach $heading_data as $heading}
-					<a class="nav-link" href="#{$heading['id']}">{$heading['title']}</a>
+				<a class="nav-link" href="#{$heading['id']}" data-target="#{$heading['id']}">{$heading['title']}</a>
 				{/foreach}
 			</nav>
 		</nav>

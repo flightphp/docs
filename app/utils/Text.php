@@ -29,7 +29,7 @@ class Text {
 				$title = strip_tags( $matches[3] );
 				$slugged_title = Text::slugify( $title );
 				$heading_data[$slugged_title] = [ 'title' => $title, 'id' => $slugged_title, 'type' => $matches[2] ];
-				$matches[0] = $matches[1] . $matches[2] . ' id="' . $slugged_title . '">' . $title . $matches[4];
+				$matches[0] = $matches[1] . $matches[2] . ' id="' . $slugged_title . '">' . $title . ' <a href="#' . $slugged_title . '" class="bi bi-link-45deg" title="Permalink to this heading"></a>' . $matches[4];
 			}
 			return $matches[0];
 		}, $markdown_html );

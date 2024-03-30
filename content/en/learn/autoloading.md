@@ -46,7 +46,7 @@ Flight::path(__DIR__.'/../app/utils/');
 // no namespacing required
 
 // All autoloaded classes are recommended to be Pascal Case (each word capitalized, no spaces)
-// It is a requirement that you cannot have an underscore in your class name
+// As of 3.7.2, you can use Pascal_Snake_Case for your class names by running Loader::setV2ClassLoading(false);
 class MyController {
 
 	public function index() {
@@ -79,11 +79,11 @@ Now this is what your controller might look like. Look at the example below, but
 // namespaces are required
 // namespaces are the same as the directory structure
 // namespaces must follow the same case as the directory structure
-// namespaces and directories cannot have any underscores
+// namespaces and directories cannot have any underscores (unless Loader::setV2ClassLoading(false) is set)
 namespace app\controllers;
 
 // All autoloaded classes are recommended to be Pascal Case (each word capitalized, no spaces)
-// It is a requirement that you cannot have an underscore in your class name
+// As of 3.7.2, you can use Pascal_Snake_Case for your class names by running Loader::setV2ClassLoading(false);
 class MyController {
 
 	public function index() {
@@ -112,4 +112,31 @@ class ArrayHelperUtil {
 }
 ```
 
+## Underscores in Class Names
 
+As of 3.7.2, you can use Pascal_Snake_Case for your class names by running `Loader::setV2ClassLoading(false);`. This will allow you to use underscores in your class names. This is not recommended, but it is available for those who need it.
+
+```php
+
+/**
+ * public/index.php
+ */
+
+// Add a path to the autoloader
+Flight::path(__DIR__.'/../app/controllers/');
+Flight::path(__DIR__.'/../app/utils/');
+Loader::setV2ClassLoading(false);
+
+/**
+ * app/controllers/My_Controller.php
+ */
+
+// no namespacing required
+
+class My_Controller {
+
+	public function index() {
+		// do something
+	}
+}
+```
