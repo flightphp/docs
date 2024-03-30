@@ -14,4 +14,7 @@ return [
 	'made_with_love' => 'Сделано с <b style="color:red;">&lt;3</b> с использованием Flight. Авторское право © Mike Cao/Команда FlightPHP',
 	'license' => 'Лицензия',
 	'missing_documentation' => 'Отсутствует документация? <a href="https://github.com/flightphp/docs" target="_blank">Форкните и помогите улучшить!</a>',
+	'single_page_documentation' => 'Документация на одной странице',
+	'click_here' => 'Нажмите здесь',
+	'need_to_view_single_page' => 'Нужно просмотреть как одну страницу?'
 ];

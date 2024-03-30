@@ -144,16 +144,14 @@ class IndexController {
 		$markdown_html = $app->cache()->refreshIfExpired('single_page_html_'.$this->language, function() use ($app, $sections)  {
 			$markdown_html = '';
 			foreach($sections as $section) {
-				$markdown_html .= '<h1><a href="/'.$section.'">'.ucwords($section).'</a></h1>';
+				$slugged_section = Text::slugify( $section );
+				$markdown_html .= '<h1><a href="/'.$section.'" id="'. $slugged_section.'">'.ucwords($section).'</a> <a href="#' . $slugged_section . '" class="bi bi-link-45deg" title="Permalink to this heading"></a></h1>';
 				$markdown_html .= $app->parsedown()->text($this->Translator->getMarkdownLanguageFile($section . '.md'));
 			}
 			return $markdown_html;
 		}, 86400); // 1 day
-		// $markdown_html = $app->cache()->refreshIfExpired($section.'_html_'.$this->language, function() use ($app, $section)  {
-		// 	return $app->parsedown()->text($this->Translator->getMarkdownLanguageFile($section . '.md'));
-		// }, 86400); // 1 day
 		$this->renderPage('single_page.latte', [
-			'page_title' => $section,
+			'page_title' => 'single_page_documentation',
 			'markdown' => $markdown_html,
 		]);
 	}
