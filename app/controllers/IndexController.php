@@ -126,6 +126,38 @@ class IndexController {
 		$this->compileScrollspyPage('awesome_plugins', $plugin_name);
 	}
 
+	// This is if you want to save everything into a single page
+	public function singlePageGet() {
+		$app = $this->app;
+		// recursively look through all the content files, and pull out each section and render it
+		$sections = [];
+		$language_directory = self::CONTENT_DIR . $this->language . '/';
+		$files = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($language_directory));
+		foreach($files as $file) {
+			if($file->isDir()) {
+				continue;
+			}
+			$section = str_replace([ $language_directory, '.md' ], [ '', '' ], $file->getPathname());
+			$sections[] = $section;
+		}
+
+		$markdown_html = $app->cache()->refreshIfExpired('single_page_html_'.$this->language, function() use ($app, $sections)  {
+			$markdown_html = '';
+			foreach($sections as $section) {
+				$markdown_html .= '<h1><a href="/'.$section.'">'.ucwords($section).'</a></h1>';
+				$markdown_html .= $app->parsedown()->text($this->Translator->getMarkdownLanguageFile($section . '.md'));
+			}
+			return $markdown_html;
+		}, 86400); // 1 day
+		// $markdown_html = $app->cache()->refreshIfExpired($section.'_html_'.$this->language, function() use ($app, $section)  {
+		// 	return $app->parsedown()->text($this->Translator->getMarkdownLanguageFile($section . '.md'));
+		// }, 86400); // 1 day
+		$this->renderPage('single_page.latte', [
+			'page_title' => $section,
+			'markdown' => $markdown_html,
+		]);
+	}
+
 	public function searchGet() {
 		$query = $this->app->request()->query['query'];
 		$language_directory_to_grep = self::CONTENT_DIR . $this->language . '/';

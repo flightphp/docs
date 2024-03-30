@@ -11,6 +11,7 @@ use flight\net\Router;
 $app->group('', function(Router $router) use ($app) {
 	$IndexController = new IndexController($app);
 	$router->get('/', [ $IndexController, 'aboutGet' ], false, 'about');
+	$router->get('/single-page', [ $IndexController, 'singlePageGet' ], false, 'single_page');
 	$router->get('/about', [ $IndexController, 'aboutGet' ]);
 	$router->get('/install', [ $IndexController, 'installGet' ], false, 'install');
 	$router->get('/license', [ $IndexController, 'licenseGet' ], false, 'license');
