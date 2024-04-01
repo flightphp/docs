@@ -141,7 +141,7 @@ Wenn Sie Ihre gesamte Antwort zwischenspeichern möchten, können Sie die `cache
 
 // Dies zwischenspeichert die Antwort für 5 Minuten
 Flight::route('/nachrichten', function () {
-  Flight::cache(time() + 300);
+  Flight::response()->cache(time() + 300);
   echo 'Dieser Inhalt wird zwischengespeichert.';
 });
 

@@ -141,7 +141,7 @@ Si deseas cachear toda tu respuesta, puedes utilizar el método `cache()` y pasa
 
 // Esto cacheará la respuesta durante 5 minutos
 Flight::route('/noticias', function () {
-  Flight::cache(time() + 300);
+  Flight::response()->cache(time() + 300);
   echo 'Este contenido será almacenado en caché.';
 });
 

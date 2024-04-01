@@ -148,14 +148,14 @@ Si vous voulez mettre en cache toute votre réponse, vous pouvez utiliser la mé
 
 // Cela mettra en cache la réponse pendant 5 minutes
 Flight::route('/actualites', function () {
-  Flight::cache(time() + 300);
+  Flight::response()->cache(time() + 300);
   echo 'Ce contenu sera mis en cache.';
 });
 
 // Alternativement, vous pouvez utiliser une chaîne que vous passeriez
 // à la méthode strtotime()
 Flight::route('/actualites', function () {
-  Flight::cache('+5 minutes');
+  Flight::response()->cache('+5 minutes');
   echo 'Ce contenu sera mis en cache.';
 });
 ```

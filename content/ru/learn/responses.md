@@ -141,14 +141,14 @@ Flight предоставляет встроенную поддержку кэш
 
 // Это закэширует ответ на 5 минут
 Flight::route('/news', function () {
-  Flight::cache(time() + 300);
+  Flight::response()->cache(time() + 300);
   echo 'Этот контент будет кэшироваться.';
 });
 
 // Кроме того, вы можете использовать строку, которую вы бы передали
 // методу strtotime()
 Flight::route('/news', function () {
-  Flight::cache('+5 minutes');
+  Flight::response()->cache('+5 minutes');
   echo 'Этот контент будет кэшироваться.';
 });
 ```
