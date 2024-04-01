@@ -141,13 +141,13 @@ Flight 提供内置支持的 HTTP 级缓存。如果满足缓存条件，Flight 
 
 // 这将为 5 分钟缓存响应
 Flight::route('/news', function () {
-  Flight::cache(time() + 300);
+  Flight::response()->cache(time() + 300);
   echo '这个内容将被缓存。';
 });
 
 // 或者，您可以使用会传递给 strtotime() 方法的字符串
 Flight::route('/news', function () {
-  Flight::cache('+5 minutes');
+  Flight::response()->cache('+5 minutes');
   echo '这个内容将被缓存。';
 });
 ```

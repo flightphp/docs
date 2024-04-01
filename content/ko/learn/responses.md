@@ -145,13 +145,13 @@ Flight는 HTTP 수준 캐싱을 위한 내장 지원을 제공합니다. 캐싱 
 
 // 이것은 응답을 5분 동안 캐시합니다
 Flight::route('/news', function () {
-  Flight::cache(time() + 300);
+  Flight::response()->cache(time() + 300);
   echo '이 콘텐츠는 캐시됩니다.';
 });
 
 // 또는 strtotime() 메소드에 전달할 문자열을 사용할 수도 있습니다
 Flight::route('/news', function () {
-  Flight::cache('+5 minutes');
+  Flight::response()->cache('+5 minutes');
   echo '이 콘텐츠는 캐시됩니다.';
 });
 ```

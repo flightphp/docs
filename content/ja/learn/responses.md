@@ -139,13 +139,13 @@ Flightは、HTTPレベルのキャッシングのための組込みサポート�
 
 // これにより、レスポンスが5分間キャッシュされます
 Flight::route('/news', function () {
-  Flight::cache(time() + 300);
+  Flight::response()->cache(time() + 300);
   echo 'このコンテンツはキャッシュされます。';
 });
 
 // 代わりに、strtotime（）メソッドに渡す文字列を使用することもできます
 Flight::route('/news', function () {
-  Flight::cache('+5 minutes');
+  Flight::response()->cache('+5 minutes');
   echo 'このコンテンツはキャッシュされます。';
 });
 ```
