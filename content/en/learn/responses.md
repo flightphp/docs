@@ -75,9 +75,51 @@ Flight::response()->addResponseBodyCallback(function($body) {
 
 You can add multiple callbacks and they will be run in the order they were added. Because this can accept any callback, it can accept a class array `[ $class, 'method' ]`, a closure `$strReplace = function($body) { str_replace('hi', 'there', $body); };`, or a function name `'minify'` if you had a function to minify your html code for example.
 
-```php
+**Note:** Route callbacks will not work if you are using the `flight.v2.output_buffering` configuration option.
 
-**Note:** This will not work if you are using the `flight.v2.output_buffering` configuration option.
+### Specific Route Callback
+
+If you wanted this to only apply to a specific route, you could add the callback in the route itself:
+
+```php
+Flight::route('/users', function() {
+	$db = Flight::db();
+	$users = $db->fetchAll("SELECT * FROM users");
+	Flight::render('users_table', ['users' => $users]);
+
+	// This will gzip only the response for this route
+	Flight::response()->addResponseBodyCallback(function($body) {
+		return gzencode($body, 9);
+	});
+});
+```
+
+### Middleware Option
+
+You can also use middleware to apply the callback to all routes via middleware:
+
+```php
+// MinifyMiddleware.php
+class MinifyMiddleware {
+	public function run() {
+		Flight::response()->addResponseBodyCallback(function($body) {
+			// This is a 
+			return $this->minify($body);
+		});
+	}
+
+	protected function minify(string $body): string {
+		// minify the body
+		return $body;
+	}
+}
+
+// index.php
+Flight::group('/users', function() {
+	Flight::route('', function() { /* ... */ });
+	Flight::route('/@id', function($id) { /* ... */ });
+}, [ new MinifyMiddleware() ]);
+```
 
 ## Setting a Response Header
 
