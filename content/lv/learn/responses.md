@@ -149,14 +149,14 @@ Ja vēlaties kešot visu atbildi, jūs varat izmantot `cache()` metodi un padot 
 
 // Tas kešos atbildi uz 5 minūtēm
 Flight::route('/jaunumi', function () {
-  Flight::cache(time() + 300);
+  Flight::response()->cache(time() + 300);
   echo 'Šis saturs tiks kešots.';
 });
 
 // Kā alternatīvu, jūs varat izmantot tekstu, ko padodat
 // funkcijai strtotime()
 Flight::route('/jaunumi', function () {
-  Flight::cache('+5 minutes');
+  Flight::response()->cache('+5 minutes');
   echo 'Šis saturs tiks kešots.';
 });
 ```

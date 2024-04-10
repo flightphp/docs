@@ -170,14 +170,14 @@ If you want to cache your whole response, you can use the `cache()` method and p
 
 // This will cache the response for 5 minutes
 Flight::route('/news', function () {
-  Flight::cache(time() + 300);
+  Flight::response()->cache(time() + 300);
   echo 'This content will be cached.';
 });
 
 // Alternatively, you can use a string that you would pass
 // to the strtotime() method
 Flight::route('/news', function () {
-  Flight::cache('+5 minutes');
+  Flight::response()->cache('+5 minutes');
   echo 'This content will be cached.';
 });
 ```
