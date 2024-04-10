@@ -56,6 +56,29 @@ If you want to get the current status code, you can use the `status` method with
 Flight::response()->status(); // 200
 ```
 
+## Running a Callback on the Response Body
+
+You can run a callback on the response body by using the `addResponseBodyCallback` method:
+
+```php
+Flight::route('/users', function() {
+	$db = Flight::db();
+	$users = $db->fetchAll("SELECT * FROM users");
+	Flight::render('users_table', ['users' => $users]);
+});
+
+// This will gzip all the responses for any route
+Flight::response()->addResponseBodyCallback(function($body) {
+	return gzencode($body, 9);
+});
+```
+
+You can add multiple callbacks and they will be run in the order they were added. Because this can accept any callback, it can accept a class array `[ $class, 'method' ]`, a closure `$strReplace = function($body) { str_replace('hi', 'there', $body); };`, or a function name `'minify'` if you had a function to minify your html code for example.
+
+```php
+
+**Note:** This will not work if you are using the `flight.v2.output_buffering` configuration option.
+
 ## Setting a Response Header
 
 You can set a header such as content type of the response by using the `header` method:
@@ -68,8 +91,6 @@ Flight::route('/', function() {
 	echo "Hello, World!";
 });
 ```
-
-
 
 ## JSON
 
