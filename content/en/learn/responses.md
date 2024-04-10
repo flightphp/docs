@@ -73,7 +73,7 @@ Flight::response()->addResponseBodyCallback(function($body) {
 });
 ```
 
-You can add multiple callbacks and they will be run in the order they were added. Because this can accept any callback, it can accept a class array `[ $class, 'method' ]`, a closure `$strReplace = function($body) { str_replace('hi', 'there', $body); };`, or a function name `'minify'` if you had a function to minify your html code for example.
+You can add multiple callbacks and they will be run in the order they were added. Because this can accept any callable, it can accept a class array `[ $class, 'method' ]`, a closure `$strReplace = function($body) { str_replace('hi', 'there', $body); };`, or a function name `'minify'` if you had a function to minify your html code for example.
 
 **Note:** Route callbacks will not work if you are using the `flight.v2.output_buffering` configuration option.
 
