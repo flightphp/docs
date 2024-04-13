@@ -404,16 +404,19 @@ This is done with the `header()` php function or the `Flight::response()->setRea
 
 ```php
 Flight::route('/@filename', function($filename) {
+
+	// obviously you would sanitize the path and whatnot.
+	$fileNameSafe = basename($filename);
+	
 	// If you have additional headers to set here after the route has executed
 	// you must define them before anything is echoed out.
 	// They must all be a raw call to the header() function or 
 	// a call to Flight::response()->setRealHeader()
-	header('Content-Disposition: attachment; filename="'.$filename.'"');
+	header('Content-Disposition: attachment; filename="'.$fileNameSafe.'"');
 	// or
-	Flight::response()->setRealHeader('Content-Disposition', 'attachment; filename="'.$filename.'"');
+	Flight::response()->setRealHeader('Content-Disposition', 'attachment; filename="'.$fileNameSafe.'"');
 
-	// obviously you would sanitize the path and whatnot.
-	$fileData = file_get_contents('/some/path/to/files/'.basename($filename));
+	$fileData = file_get_contents('/some/path/to/files/'.$fileNameSafe);
 
 	// Error catching and whatnot
 	if(empty($fileData)) {
