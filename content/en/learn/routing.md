@@ -407,7 +407,7 @@ Flight::route('/@filename', function($filename) {
 
 	// obviously you would sanitize the path and whatnot.
 	$fileNameSafe = basename($filename);
-	
+
 	// If you have additional headers to set here after the route has executed
 	// you must define them before anything is echoed out.
 	// They must all be a raw call to the header() function or 
@@ -440,13 +440,8 @@ You can also use the `streamWithHeaders()` method to set the headers before you 
 ```php
 Flight::route('/stream-users', function() {
 
-	// If you have additional headers to set here after the route has executed
-	// you must define them before anything is echoed out.
-	// They must all be a raw call to the header() function or 
-	// a call to Flight::response()->setRealHeader()
-	header('Content-Disposition: attachment; filename="users.json"');
-	// or
-	Flight::response()->setRealHeader('Content-Disposition', 'attachment; filename="users.json"');
+	// you can add any additional headers you want here
+	// you just must use header() or Flight::response()->setRealHeader()
 
 	// however you pull your data, just as an example...
 	$users_stmt = Flight::db()->query("SELECT id, first_name, last_name FROM users");
@@ -467,6 +462,7 @@ Flight::route('/stream-users', function() {
 // This is how you'll set the headers before you start streaming.
 })->streamWithHeaders([
 	'Content-Type' => 'application/json',
+	'Content-Disposition' => 'attachment; filename="users.json"',
 	// optional status code, defaults to 200
 	'status' => 200
 ]);
