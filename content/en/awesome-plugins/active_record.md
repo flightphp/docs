@@ -166,6 +166,40 @@ $user->password = md5('demo');
 $user->insert();
 ```
 
+##### Text Based Primary Keys
+
+If you have a text based primary key (such as a UUID), you can set the primary key value before inserting in one of two ways.
+
+```php
+$user = new User($pdo_connection, [ 'primaryKey' => 'uuid' ]);
+$user->uuid = 'some-uuid';
+$user->name = 'demo';
+$user->password = md5('demo');
+$user->insert(); // or $user->save();
+```
+
+or you can have the primary key automatically generated for you through events.
+
+```php
+class User extends flight\ActiveRecord {
+	public function __construct($database_connection)
+	{
+		parent::__construct($database_connection, 'users', [ 'primaryKey' => 'uuid' ]);
+		// you can also set the primaryKey this way instead of the array above.
+		$this->primaryKey = 'uuid';
+	}
+
+	protected function beforeInsert(self $self) {
+		$self->uuid = uniqid(); // or however you need to generated your unique ids
+	}
+}
+```
+
+If you don't set the primary key before inserting, it will be set to the `rowid` and the 
+database will generate it for you, but it won't persist because that field may not exist
+in your table. This is why it's recommended to use the event to automatically handle this 
+for you.
+
 #### `update(): boolean|ActiveRecord`
 
 Updates the current record into the database.

@@ -47,6 +47,60 @@ Flight::start();
 // This will display "Middleware first! Here I am! Middleware last!"
 ```
 
+## Handling Middleware Errors
+
+Let's say you have an auth middleware and you want to redirect the user to a login page if they are not authenticated. You have a couple of options at your disposal:
+
+1. You can return false from the middleware function and Flight will automatically return a 403 Forbidden error, but have no customization.
+1. You can redirect the user to a login page using `Flight::redirect()`.
+1. You can create a custom error within the middleware and halt execution of the route.
+
+### Basic Example
+
+Here is a simple return false; example:
+```php
+class MyMiddleware {
+	public function before($params) {
+		if (isset($_SESSION['user']) === false) {
+			return false;
+		}
+
+		// since it's true, everything just keeps on going
+	}
+}
+```
+
+### Redirect Example
+
+Here is an example of redirecting the user to a login page:
+```php
+class MyMiddleware {
+	public function before($params) {
+		if (isset($_SESSION['user']) === false) {
+			Flight::redirect('/login');
+			exit;
+		}
+	}
+}
+```
+
+### Custom Error Example
+
+Let's say you need to throw a JSON error because you're building an API. You can do that like this:
+```php
+class MyMiddleware {
+	public function before($params) {
+		$authorization = Flight::request()->headers['Authorization'];
+		if(empty($authorization)) {
+			Flight::json(['error' => 'You must be logged in to access this page.'], 403);
+			exit;
+			// or
+			Flight::halt(403, json_encode(['error' => 'You must be logged in to access this page.']);
+		}
+	}
+}
+```
+
 ## Grouping Middleware
 
 You can add a route group, and then every route in that group will have the same middleware as well. This is useful if you need to group a bunch of routes by say an Auth middleware to check the API key in the header.
