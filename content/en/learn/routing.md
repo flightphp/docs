@@ -396,16 +396,52 @@ Streaming a route is handled a little differently than a regular route.
 
 > **Note:** Streaming responses is only available if you have [`flight.v2.output_buffering`](/learn/migrating-to-v3#output_buffering) set to false.
 
+### Stream with Manual Headers
+
+You can stream a response to the client by using the `stream()` method on a route. If you 
+do this, you must set all the methods by hand before you output anything to the client.
+This is done with the `header()` php function or the `Flight::response()->setRealHeader()` method.
+
 ```php
-Flight::route('/stream-users', function() {
+Flight::route('/@filename', function($filename) {
+
+	// obviously you would sanitize the path and whatnot.
+	$fileNameSafe = basename($filename);
 
 	// If you have additional headers to set here after the route has executed
 	// you must define them before anything is echoed out.
 	// They must all be a raw call to the header() function or 
 	// a call to Flight::response()->setRealHeader()
-	header('Content-Disposition: attachment; filename="users.json"');
+	header('Content-Disposition: attachment; filename="'.$fileNameSafe.'"');
 	// or
-	Flight::response()->setRealHeader('Content-Disposition', 'attachment; filename="users.json"');
+	Flight::response()->setRealHeader('Content-Disposition', 'attachment; filename="'.$fileNameSafe.'"');
+
+	$fileData = file_get_contents('/some/path/to/files/'.$fileNameSafe);
+
+	// Error catching and whatnot
+	if(empty($fileData)) {
+		Flight::halt(404, 'File not found');
+	}
+
+	// manually set the content length if you'd like
+	header('Content-Length: '.filesize($filename));
+
+	// Stream the data to the client
+	echo $fileData;
+
+// This is the magic line here
+})->stream();
+```
+
+### Stream with Headers
+
+You can also use the `streamWithHeaders()` method to set the headers before you start streaming.
+
+```php
+Flight::route('/stream-users', function() {
+
+	// you can add any additional headers you want here
+	// you just must use header() or Flight::response()->setRealHeader()
 
 	// however you pull your data, just as an example...
 	$users_stmt = Flight::db()->query("SELECT id, first_name, last_name FROM users");
@@ -426,6 +462,7 @@ Flight::route('/stream-users', function() {
 // This is how you'll set the headers before you start streaming.
 })->streamWithHeaders([
 	'Content-Type' => 'application/json',
+	'Content-Disposition' => 'attachment; filename="users.json"',
 	// optional status code, defaults to 200
 	'status' => 200
 ]);
