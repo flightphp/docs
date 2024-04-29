@@ -240,19 +240,19 @@ class CorsMiddleware
 		$resposta = Flight::response();
 		if (isset($_SERVER['HTTP_ORIGIN'])) {
 			$this->permitirOrigens();
-			$resposta->header('Access-Control-Allow-Credentials: true');
-			$resposta->header('Access-Control-Max-Age: 86400');
+			$resposta->header('Access-Control-Allow-Credentials', true;
+			$resposta->header('Access-Control-Max-Age', 86400);
 		}
 
 		if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 			if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD'])) {
 				$resposta->header(
-					'Access-Control-Allow-Methods: GET, POST, PUT, DELETE, PATCH, OPTIONS'
+					'Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS'
 				);
 			}
 			if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS'])) {
 				$resposta->header(
-					"Access-Control-Allow-Headers: {$_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']}"
+					"Access-Control-Allow-Headers", $_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']
 				);
 			}
 			$resposta->send();
@@ -274,7 +274,7 @@ class CorsMiddleware
 
 		if (in_array($_SERVER['HTTP_ORIGIN'], $permitido)) {
 			$resposta = Flight::response();
-			$resposta->header("Access-Control-Allow-Origin: {$_SERVER['HTTP_ORIGIN']}");
+			$resposta->header("Access-Control-Allow-Origin", $_SERVER['HTTP_ORIGIN']);
 		}
 	}
 }
