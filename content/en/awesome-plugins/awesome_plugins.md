@@ -8,6 +8,12 @@ Caching is a great way to speed up your application. There are a number of cachi
 
 - [Wruczek/PHP-File-Cache](/awesome-plugins/php-file-cache) - Light, simple and standalone PHP in-file caching class
 
+## CLI
+
+CLI applications are a great way to interact with your application. You can use them to generate controllers, display all routes, and more.
+
+- [flightphp/runway](/awesome-plugins/runway) - Runway is a CLI application that helps you manage your Flight applications.
+
 ## Cookies
 
 Cookies are a great way to store small bits of data on the client side. They can be used to store user preferences, application settings, and more.

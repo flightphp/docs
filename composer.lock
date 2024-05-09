@@ -58,16 +58,16 @@
         },
         {
             "name": "flightphp/core",
-            "version": "v3.7.0",
+            "version": "v3.9.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/flightphp/core.git",
-                "reference": "8d772b51b858f636794c8137cc05799f942b6f46"
+                "reference": "c3c5c29f7c2dc6e2ae08aad24c2c14ad5b2ac24b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/flightphp/core/zipball/8d772b51b858f636794c8137cc05799f942b6f46",
-                "reference": "8d772b51b858f636794c8137cc05799f942b6f46",
+                "url": "https://api.github.com/repos/flightphp/core/zipball/c3c5c29f7c2dc6e2ae08aad24c2c14ad5b2ac24b",
+                "reference": "c3c5c29f7c2dc6e2ae08aad24c2c14ad5b2ac24b",
                 "shasum": ""
             },
             "require": {
@@ -79,6 +79,7 @@
             },
             "require-dev": {
                 "ext-pdo_sqlite": "*",
+                "flightphp/runway": "^0.2.0",
                 "league/container": "^4.2",
                 "level-2/dice": "^4.0",
                 "phpstan/extension-installer": "^1.3",
@@ -125,22 +126,22 @@
             "homepage": "http://flightphp.com",
             "support": {
                 "issues": "https://github.com/flightphp/core/issues",
-                "source": "https://github.com/flightphp/core/tree/v3.7.0"
+                "source": "https://github.com/flightphp/core/tree/v3.9.0"
             },
-            "time": "2024-03-22T13:16:38+00:00"
+            "time": "2024-05-09T04:23:39+00:00"
         },
         {
             "name": "latte/latte",
-            "version": "v3.0.14",
+            "version": "v3.0.15",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/latte.git",
-                "reference": "1ab054b1af13ee647ccbc5bf2673a3483a7457d5"
+                "reference": "b4807f2f6ef774adb946da1b174e1e85171a9101"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/latte/zipball/1ab054b1af13ee647ccbc5bf2673a3483a7457d5",
-                "reference": "1ab054b1af13ee647ccbc5bf2673a3483a7457d5",
+                "url": "https://api.github.com/repos/nette/latte/zipball/b4807f2f6ef774adb946da1b174e1e85171a9101",
+                "reference": "b4807f2f6ef774adb946da1b174e1e85171a9101",
                 "shasum": ""
             },
             "require": {
@@ -210,22 +211,22 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/latte/issues",
-                "source": "https://github.com/nette/latte/tree/v3.0.14"
+                "source": "https://github.com/nette/latte/tree/v3.0.15"
             },
-            "time": "2024-03-19T09:03:26+00:00"
+            "time": "2024-04-30T05:57:23+00:00"
         },
         {
             "name": "tracy/tracy",
-            "version": "v2.10.5",
+            "version": "v2.10.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/tracy.git",
-                "reference": "86bdba4aa0f707d3f125933931d3df6e5c7aad79"
+                "reference": "7e7b25ba103968d5318d37db330b2e9c755dc765"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/tracy/zipball/86bdba4aa0f707d3f125933931d3df6e5c7aad79",
-                "reference": "86bdba4aa0f707d3f125933931d3df6e5c7aad79",
+                "url": "https://api.github.com/repos/nette/tracy/zipball/7e7b25ba103968d5318d37db330b2e9c755dc765",
+                "reference": "7e7b25ba103968d5318d37db330b2e9c755dc765",
                 "shasum": ""
             },
             "require": {
@@ -285,9 +286,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/tracy/issues",
-                "source": "https://github.com/nette/tracy/tree/v2.10.5"
+                "source": "https://github.com/nette/tracy/tree/v2.10.7"
             },
-            "time": "2023-10-16T21:54:18+00:00"
+            "time": "2024-04-29T11:44:00+00:00"
         },
         {
             "name": "wruczek/php-file-cache",

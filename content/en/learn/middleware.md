@@ -23,6 +23,7 @@ There are some very important notes about middleware that you should be aware of
    - Befores are executed in the order added, and Afters are executed in reverse order.
 - If your middleware function returns false, all execution is stopped and a 403 Forbidden error is thrown. You'll probably want to handle this more gracefully with a `Flight::redirect()` or something similar.
 - If you need parameters from your route, they will be passed in a single array to your middleware function. (`function($params) { ... }` or `public function before($params) {}`). The reason for this is that you can structure your parameters into groups and in some of those groups, your parameters may actually show up in a different order which would break the middleware function by referring to the wrong parameter. This way, you can access them by name instead of position.
+- If you pass in just the name of the middleware, it will automatically be executed by the [dependency injection container](dependency-injection-container) and the middleware will be executed with the parameters it needs. If you don't have a dependency injection container registered, it will pass in the `flight\Engine` instance into the `__construct()`.
 
 ## Middleware Classes
 
