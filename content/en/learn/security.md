@@ -227,38 +227,41 @@ $users = Flight::db()->fetchAll("SELECT * FROM users WHERE username = '{$usernam
 
 ## CORS
 
-Cross-Origin Resource Sharing (CORS) is a mechanism that allows many resources (e.g., fonts, JavaScript, etc.) on a web page to be requested from another domain outside the domain from which the resource originated. Flight does not have built in functionality but this can easily be handled with middleware of event filters similar to CSRF.
+Cross-Origin Resource Sharing (CORS) is a mechanism that allows many resources (e.g., fonts, JavaScript, etc.) on a web page to be requested from another domain outside the domain from which the resource originated. Flight does not have built in functionality, but this can easily be handled with a hook to run before the `Flight::start()` method is called.
 
 ```php
-// app/middleware/CorsMiddleware.php
+// app/utils/CorsUtil.php
 
-namespace app\middleware;
+namespace app\utils;
 
-class CorsMiddleware
+class CorsUtil
 {
-	public function before(array $params): void
+	public function set(array $params): void
 	{
+		$request = Flight::request();
 		$response = Flight::response();
-		if (isset($_SERVER['HTTP_ORIGIN'])) {
+		if ($request->getVar('HTTP_ORIGIN') !== '') {
 			$this->allowOrigins();
 			$response->header('Access-Control-Allow-Credentials', 'true');
 			$response->header('Access-Control-Max-Age', '86400');
 		}
 
-		if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
-			if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD'])) {
+		if ($request->method === 'OPTIONS') {
+			if ($request->getVar('HTTP_ACCESS_CONTROL_REQUEST_METHOD') !== '') {
 				$response->header(
-					'Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS'
+					'Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS, HEAD'
 				);
 			}
-			if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS'])) {
+			if ($request->getVar('HTTP_ACCESS_CONTROL_REQUEST_HEADERS') !== '') {
 				$response->header(
 					"Access-Control-Allow-Headers",
-					$_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']
+					$request->getVar('HTTP_ACCESS_CONTROL_REQUEST_HEADERS')
 				);
 			}
+
+			$response->status(200);
 			$response->send();
-			exit(0);
+			exit;
 		}
 	}
 
@@ -274,18 +277,19 @@ class CorsMiddleware
 			'http://localhost:8100',
 		];
 
-		if (in_array($_SERVER['HTTP_ORIGIN'], $allowed)) {
+		$request = Flight::request();
+
+		if (in_array($request->getVar('HTTP_ORIGIN'), $allowed, true) === true) {
 			$response = Flight::response();
-			$response->header("Access-Control-Allow-Origin", $_SERVER['HTTP_ORIGIN']);
+			$response->header("Access-Control-Allow-Origin", $request->getVar('HTTP_ORIGIN'));
 		}
 	}
 }
 
 // index.php or wherever you have your routes
-Flight::route('/users', function() {
-	$users = Flight::db()->fetchAll('SELECT * FROM users');
-	Flight::json($users);
-})->addMiddleware(new CorsMiddleware());
+$CorsUtil = new CorsUtil();
+Flight::before('start', [ $CorsUtil, 'setupCors' ]);
+
 ```
 
 ## Conclusion
