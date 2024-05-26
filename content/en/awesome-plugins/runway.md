@@ -37,6 +37,52 @@ Based on the configuration in your `.runway.json` file, the default location wil
 php runway make:controller MyController
 ```
 
+### Generate an Active Record Model
+
+Based on the configuration in your `.runway.json` file, the default location will generate a controller for you in the `app/records/` directory.
+
+```bash
+php runway make:record users
+```
+
+If for instance you have the `users` table with the following schema: `id`, `name`, `email`, `created_at`, `updated_at`, a file similar to the following will be created in the `app/records/UserRecord.php` file:
+
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace app\records;
+
+/**
+ * ActiveRecord class for the users table.
+ * @link https://docs.flightphp.com/awesome-plugins/active-record
+ * 
+ * @property int $id
+ * @property string $name
+ * @property string $email
+ * @property string $created_at
+ * @property string $updated_at
+ */
+class UserRecord extends \flight\ActiveRecord
+{
+    /**
+     * @var array $relations Set the relationships for the model
+     *   https://docs.flightphp.com/awesome-plugins/active-record#relationships
+     */
+    protected array $relations = [];
+
+    /**
+     * Constructor
+     * @param mixed $databaseConnection The connection to the database
+     */
+    public function __construct($databaseConnection)
+    {
+        parent::__construct($databaseConnection, 'users');
+    }
+}
+```
+
 ### Display All Routes
 
 This will display all of the routes that are currently registered with Flight.

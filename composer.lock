@@ -132,16 +132,16 @@
         },
         {
             "name": "latte/latte",
-            "version": "v3.0.15",
+            "version": "v3.0.16",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/latte.git",
-                "reference": "b4807f2f6ef774adb946da1b174e1e85171a9101"
+                "reference": "0984953d961123075e95a9fa33ec4c4f4de266d2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/latte/zipball/b4807f2f6ef774adb946da1b174e1e85171a9101",
-                "reference": "b4807f2f6ef774adb946da1b174e1e85171a9101",
+                "url": "https://api.github.com/repos/nette/latte/zipball/0984953d961123075e95a9fa33ec4c4f4de266d2",
+                "reference": "0984953d961123075e95a9fa33ec4c4f4de266d2",
                 "shasum": ""
             },
             "require": {
@@ -211,9 +211,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/latte/issues",
-                "source": "https://github.com/nette/latte/tree/v3.0.15"
+                "source": "https://github.com/nette/latte/tree/v3.0.16"
             },
-            "time": "2024-04-30T05:57:23+00:00"
+            "time": "2024-05-14T09:54:10+00:00"
         },
         {
             "name": "tracy/tracy",
