@@ -1,10 +1,10 @@
-# Ghostff/Session
+# Ghostff/Sesija
 
-PHP sesiju pārvaldnieks (nepiemērots bloķēšanai, flash, segmenta, sesijas šifrēšanai). Izmanto PHP open_ssl sesijas datu opcionālai šifrēšanai/atšifrēšanai. Atbalsta Failu, MySQL, Redis un Memcached.
+PHP sesiju pārvaldnieks (nenorobežojošs, uzrejamā, segmentēšana, sesiju šifrēšana). Izmanto PHP open_ssl, lai pēc nepieciešamības šifrētu/deshifrētu sesiju datus. Atbalsta Failu, MySQL, Redis un Memcached.
 
-## Instalācija
+## Instalēšana
 
-Instalēt ar composer.
+Instalē ar komponistu.
 
 ```bash
 composer require ghostff/session
@@ -12,20 +12,20 @@ composer require ghostff/session
 
 ## Pamata konfigurācija
 
-Jums nav nepieciešams nekas padot, lai izmantotu noklusējuma iestatījumus ar savu sesiju. Varat lasīt par vairāk iestatījumiem [Github Readme](https://github.com/Ghostff/Session).
+Jums nav obligāti jāpārsniedz nekas, lai izmantotu noklusējuma iestatījumus ar savu sesiju. Par papildu iestatījumiem varat lasīt [Github Readme](https://github.com/Ghostff/Session).
 
 ```php
 
-use Ghostff\Session\Session;
+izmantojiet Ghostff\Session\Session;
 
 require 'vendor/autoload.php';
 
 $app = Flight::app();
 
-$app->register('session', Session::class);
+$app->registret('sesija', Session::class);
 
-// viens lieta, ko atcerēties, ir tā, ka jums jāapsolībina savu sesiju katrā lapas ielādes laikā
-// vai jums būs jāpalaiž auto_commit savā konfigurācijā.
+// viena lieta, ko atcerēties, ir tā, ka jums katru lapu ielādējot ir jāizpilda sesiju
+// vai jums jāpalaiž auto_commit jūsu konfigurācijā.
 ```
 
 ## Vienkāršs piemērs
@@ -36,76 +36,110 @@ $app->register('session', Session::class);
 Flight::route('POST /login', function() {
 	$session = Flight::session();
 
-	// veiciet savu ielogošanās loģiku šeit
-	// pārbaudiet paroli, uc.
+	// šeit veiciet savu ielogošanās loģiku
+	// validējiet paroli, utt.
 
-	// ja ielogošanās ir veiksmīga
-	$session->set('is_logged_in', true);
-	$session->set('user', $user);
+	// ja ieraksts veiksmīgs
+	$session->set('ir_iebūvēts', true);
+	$session->set('lietotājs', $lietotājs);
 
-	// jebkurā laikā, kad rakstāt sesijā, jums jāapsolībina to apzināti.
+	// jebkurā laikā, kad ierakstāt sesijā, to jāiepilda apzināti.
 	$session->commit();
 });
 
-// Šī pārbaude varētu būt ierobežotās lapas loģikā vai ietīta ar starpnieku.
-Flight::route('/some-restricted-page', function() {
+// šis pārbaudījums varētu būt ierobežotas lapas loģikā vai ietīts ar starpniekprogrammu.
+Flight::route('/daža-ierobežota-lapa', function() {
 	$session = Flight::session();
 
-	if(!$session->get('is_logged_in')) {
-		Flight::redirect('/login');
+	if(!$session->get('ir_iebūvēts')) {
+		Flight::redirect('/ielogoties');
 	}
 
-	// veiciet savu ierobežotās lapas loģiku šeit
+	// šeit veiciet savu ierobežotas lapas loģiku
 });
 
-// starpnieku versija
-Flight::route('/some-restricted-page', function() {
-	// regulāra lapas loģika
+// starpniekprogrammu versija
+Flight::route('/daža-ierobežota-lapa', function() {
+	// regulārās lapas loģika
 })->addMiddleware(function() {
 	$session = Flight::session();
 
-	if(!$session->get('is_logged_in')) {
-		Flight::redirect('/login');
+	if(!$session->get('ir_iebūvēts')) {
+		Flight::redirect('/ielogoties');
 	}
 });
 ```
 
-## Vēl sarežģītāks piemērs
+## Lielāks piemērs
 
-Šeit ir vēl sarežģītāks piemērs, kā jūs varētu to izmantot.
+Šeit ir lielāks piemērs, kā jūs varētu to izmantot.
 
 ```php
 
-use Ghostff\Session\Session;
+izmantojiet Ghostff\Session\Session;
 
 require 'vendor/autoload.php';
 
 $app = Flight::app();
 
-// iestatiet pielāgotu ceļu uz jūsu sesijas konfigurācijas failu un piešķiriet tai nejaušu virkni sesijas id
-$app->register('session', Session::class, [ 'ceļš/uz/sesijas_konfigurācijas.php', bin2hex(random_bytes(32)) ], function(Session $session) {
-		// vai arī manuāli varat pārrakstīt konfigurācijas opcijas
+// iestatiet pielāgotu ceļu līdz jūsu sesiju konfigurācijas failam un norādiet gadījuma rindas simbolu sesijas ID
+$app->registret('sesija', Session::class, [ 'ceļš/uz/sesijas_konfigurācijas.php', bin2hex(nejauši_ģenerētas_baitu_virknes(32)) ], function(Session $sesija) {
+		// vai arī manuāli pārrakstiet konfigurācijas opcijas
 		$session->updateConfiguration([
-			// ja vēlaties glabāt sesijas datus datubāzē (labi, ja vēlaties kaut ko tādu kā "izlogot mani no visiem ierīces" funkciju)
+			// ja vēlaties saglabāt sesijas datus datu bāzē (laba izvēle, ja vēlaties kaut ko līdzīgu kā "izlogot visus ierīces" funkciju)
 			Session::CONFIG_DRIVER        => Ghostff\Session\Drivers\MySql::class,
 			Session::CONFIG_ENCRYPT_DATA  => true,
-			Session::CONFIG_SALT_KEY      => hash('sha256', 'mans-super-S3CR3T-solis'), // lūdzu, izmainiet to uz kaut ko citu
-			Session::CONFIG_AUTO_COMMIT   => true, // dariet to tikai tad, ja tas ir nepieciešams un/vai ir grūti apņemt() savu sesiju.
-												// papildus varētu darīt Flight::after('start', function() { Flight::session()->commit(); });
+			Session::CONFIG_SALT_KEY      => hash('sha256', 'mans-super-S3CR3T-salt'), // lūdzu, mainiet to uz kaut ko citu
+			Session::CONFIG_AUTO_COMMIT   => true, // izpildiet tikai tad, ja tas ir nepieciešams un/vai ir grūti izpildīt jūsu sesijas komandu.
+												   // papildus varat izpildīt Flight::after('start', function() { Flight::session()->commit(); });
 			Session::CONFIG_MYSQL_DS         => [
-				'driver'    => 'mysql',             # Datubāzes draiveris priekš PDO dns piemērs (mysql:host=...;dbname=...)
-				'host'      => '127.0.0.1',         # Datubāzes resursdators
-				'db_name'   => 'mana_lietotne_datubāze',   # Datubāzes nosaukums
-				'db_table'  => 'sesijas',          # Datubāzes tabula
-				'db_user'   => 'root',              # Datubāzes lietotājvārds
-				'db_pass'   => '',                  # Datubāzes parole
-				'persistent_conn'=> false,          # Izmantojiet pastāvīgu savienojumu, lai izvairītos no jauna savienojuma izmaksām katru reizi, kad skripts ir jārunā ar datubāzi, rezultātā ātrākas tīmekļa lietojumprogrammas. MEKLĒJAT AIZMUGURI PAŠI
+				'driver'    => 'mysql',             # Datu bāzes draiveris PDO dns piemērs(mysql:host=...;dbname=...)
+				'host'      => '127.0.0.1',         # Datu bāzes resurss
+				'db_name'   => 'mana_lietotnes_datubāze',   # Datu bāzes nosaukums
+				'db_table'  => 'sesijas',          # Datu bāzes tabula
+				'db_user'   => 'root',              # Datu bāzes lietotājvārds
+				'db_pass'   => '',                  # Datu bāzes parole
+				'persistent_conn'=> false,          # Ietaupot resursus, izveidojot jaunu savienojumu katru reizi, kad skripts ir savienojums ar datu bāzi, rezultātā ātrāka tīmekļa lietojumprogramma. ATRAST JŪS PAŠI
 			]
 		]);
 	}
 );
 ```
 
+## Palīdzība! Mana sesijas dati nav pastāvīgi!
+
+Vai jūs iestatāt savus sesijas datus un tie nepastāv starp pieprasījumiem? Varbūt aizmirsi komitēt savus sesijas datus. To var izdarīt, zvanot `$sesija->commit()` pēc sesijas datu iestatīšanas.
+
+```php
+Flight::route('POST /login', function() {
+	$session = Flight::session();
+
+	// šeit veiciet savu ielogošanās loģiku
+	// validējiet paroli, utt.
+
+	// ja ieraksts veiksmīgs
+	$session->set('ir_iebūvēts', true);
+	$session->set('lietotājs', $lietotājs);
+
+	// jebkurā laikā, kad ierakstāt sesijā, to jāiepilda apzināti.
+	$session->commit();
+});
+```
+
+Otrais veids, kā to izdarīt, ir, kad iestatāt savu sesiju servisu, jums jāiestata `auto_commit` uz `true` savā konfigurācijā. Tas automātiski komitēs jūsu sesijas datus pēc katra pieprasījuma.
+
+```php
+
+$app->registret('sesija', Session::class, [ 'ceļš/uz/sesijas_konfigurācijas.php', bin2hex(nejauši_ģenerētas_baitu_virknes(32)) ], function(Session $sesija) {
+		$sesija->updateConfiguration([
+			Session::CONFIG_AUTO_COMMIT   => true,
+		]);
+	}
+);
+```
+
+Papildus tam jūs varat darīt `Flight::after('start', function() { Flight::session()->commit(); });` lai komitētu savus sesijas datus pēc katra pieprasījuma.
+
 ## Dokumentācija
 
-Apmeklēt [Github Readme](https://github.com/Ghostff/Session) pilnu dokumentāciju. Konfigurācijas opcijas ir [labi dokumentētas default_config.php](https://github.com/Ghostff/Session/blob/master/src/default_config.php) failā pati. Kods ir viegli saprotams, ja jūs vēlaties paši izpētīt šo paketi.
+Apmeklējiet [Github Readme](https://github.com/Ghostff/Session), lai iegūtu pilnu dokumentāciju. Konfigurācijas opcijas ir [labi dokumentētas default_config.php failā](https://github.com/Ghostff/Session/blob/master/src/default_config.php) patiess. Kods ir viegli saprotams, ja vēlaties pārskatīt šo pakotni pats.

@@ -1,21 +1,21 @@
 # v3への移行
 
-後方互換性は大部分維持されていますが、v2からv3に移行する際に注意すべき変更がいくつかあります。
+後方互換性は大部分維持されていますが、v2からv3に移行する際に注意すべき変更点がいくつかあります。
 
-## 出力バッファリングの挙動（3.5.0）
+## 出力バッファリングの動作（3.5.0）
 
-[出力バッファリング](https://stackoverflow.com/questions/2832010/what-is-output-buffering-in-php) とは、PHPスクリプトによって生成された出力がクライアントに送信される前にバッファ（PHP内部）に保存されるプロセスのことです。これにより、出力がクライアントに送信される前に出力を変更することができます。
+[出力バッファリング](https://stackoverflow.com/questions/2832010/what-is-output-buffering-in-php) は、PHPスクリプトによって生成された出力がクライアントに送信される前に PHP 内部のバッファに格納されるプロセスです。これにより、出力をクライアントに送信する前に出力を変更することができます。
 
-MVCアプリケーションにおいて、コントローラーは「管理者」であり、ビューの動作を管理します。コントローラーの外部（またはFlightの場合、時々匿名関数内）で出力を生成することは、MVCパターンを壊します。この変更はMVCパターンにより適合し、フレームワークをより予測可能で使いやすくするためのものです。
+MVC アプリケーションでは、コントローラが「マネージャー」として機能し、ビューの動作を管理します。コントローラの外部で出力を生成する（またはFlightsの場合、時には無名関数で）と、MVC パターンが崩れます。この変更は、MVC パターンにより一致し、フレームワークを予測可能で使いやすくするためです。
 
-v2では、出力バッファリングは、自身の出力バッファを一貫して閉じていなかったため、[ユニットテスト](https://github.com/flightphp/core/pull/545/files#diff-eb93da0a3473574fba94c3c4160ce68e20028e30b267875ab0792ade0b0539a0R42) や [ストリーミング](https://github.com/flightphp/core/issues/413) がより困難になっていました。多くのユーザーにとって、この変更は実際には影響しません。ただし、コール可能なものやコントローラーの外でコンテンツをエコーしている場合（たとえばフック内）、問題が発生する可能性があります。フック内やフレームワークが実際に実行される前にコンテンツをエコーしていた場合は過去には機能していたかもしれませんが、今後は機能しなくなります。
+v2では、出力バッファリングは、自身の出力バッファを一貫して閉じない方法で処理され、[ユニットテスト](https://github.com/flightphp/core/pull/545/files#diff-eb93da0a3473574fba94c3c4160ce68e20028e30b267875ab0792ade0b0539a0R42) や [ストリーミング](https://github.com/flightphp/core/issues/413) が困難になりました。ほとんどのユーザーにとって、この変更は実際には影響しません。ただし、コール可能なものやコントローラの外部でコンテンツを出力している場合（例：フック内で）、問題が発生する可能性があります。フック内やフレームワークの実行前にコンテンツをエコーしていた場合は、過去には機能したかもしれませんが、今後は機能しません。
 
-### 問題が発生する可能性のある箇所
+### 問題が発生する可能性がある場所
 ```php
 // index.php
 require 'vendor/autoload.php';
 
-// ただの例です
+// just an example
 define('START_TIME', microtime(true));
 
 function hello() {
@@ -24,32 +24,32 @@ function hello() {
 
 Flight::map('hello', 'hello');
 Flight::after('hello', function(){
-	// これは実際には問題ありません
+	// this will actually be fine
 	echo '<p>This Hello World phrase was brought to you by the letter "H"</p>';
 });
 
 Flight::before('start', function(){
-	// これのようなものはエラーを引き起こします
+	// things like this will cause an error
 	echo '<html><head><title>My Page</title></head><body>';
 });
 
 Flight::route('/', function(){
-	// これは実際には大丈夫です
+	// this is actually just fine
 	echo 'Hello World';
 
-	// これも問題ありません
+	// This should be just fine as well
 	Flight::hello();
 });
 
 Flight::after('start', function(){
-	// これはエラーを引き起こします
+	// this will cause an error
 	echo '<div>Your page loaded in '.(microtime(true) - START_TIME).' seconds</div></body></html>';
 });
 ```
 
-### v2のレンダリング動作を有効にする
+### v2のレンダリング動作をオンにする
 
-v3と互換性のない書き換えを行わずに、古いコードをそのまま使い続けることはできますか？はい、可能です！ `flight.v2.output_buffering` 構成オプションを `true` に設定することで、v2のレンダリング動作を継続して使用できますが、将来的に修正することが推奨されています。フレームワークのv4では、この機能は削除されます。
+古いコードをそのままで v3 と連携させるために書き直すことなく、古いレンダリング動作を維持することはできますか？ はい、可能です！ `flight.v2.output_buffering` 構成オプションを `true` に設定することで、v2のレンダリング動作を有効にすることができます。これにより、古いレンダリング動作を引き続き使用できますが、今後は修正することが推奨されます。フレームワークのv4では、これが削除されます。
 
 ```php
 // index.php
@@ -58,13 +58,13 @@ require 'vendor/autoload.php';
 Flight::set('flight.v2.output_buffering', true);
 
 Flight::before('start', function(){
-	// こちらは問題ありません
+	// Now this will be just fine
 	echo '<html><head><title>My Page</title></head><body>';
 });
 
-// さらにコード 
+// more code 
 ```
 
 ## ディスパッチャーの変更（3.7.0）
 
-直接`ディスパッチャ（Dispatcher）`の静的メソッドを呼び出していた場合、`Dispatcher::invokeMethod()`、`Dispatcher::execute()` など、コードを更新してこれらのメソッドを直接呼び出さないようにする必要があります。`ディスパッチャ（Dispatcher）`はオブジェクト指向に変換されており、より容易に依存性注入コンテナを使用できるようになっています。`Dispatcher`と同様の方法でメソッドを呼び出す必要がある場合は、手動で `$result = $class->$method(...$params);` や `call_user_func_array()` のようなものを使用することができます。
+`Dispatcher::invokeMethod()`、`Dispatcher::execute()` などの `Dispatcher` の静的メソッドを直接呼び出している場合、これらのメソッドを直接呼び出さないようにコードを更新する必要があります。`Dispatcher` は、よりオブジェクト指向に変換され、DI コンテナをより簡単に使用できるようになりました。Dispatcherのようにメソッドを呼び出す必要がある場合は、`$result = $class->$method(...$params);` や `call_user_func_array()` のようなものを手動で使用することができます。

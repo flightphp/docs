@@ -1,14 +1,11 @@
 # PdoWrapper PDO Palīgklase
 
-Flight tiek nodrošināts ar palīgklasi priekš PDO. Tas ļauj jums viegli piekļūt datubāzei
-ar visu sagatavoto/izpildīto/pēcņemto() apjukumu. Tas ļoti vienkāršo to, kā jūs varat
-piekļūt datubāzei. Katrs rindiņas rezultāts tiek atgriezts kā Flight kolekcijas klase,
-kas ļauj jums piekļūt saviem datiem, izmantojot masīva sintaksi vai objekta sintaksi.
+Flight ir palīgklase PDO. Tas ļauj viegli vaicāt savu datu bāzi ar visu sagatavoto/izpildīto/fetchAll() šaubību. Tas ievērojami vienkāršo, kā jūs varat vaicāt savu datu bāzi. Katra rindas rezultāts tiek atgriezts kā "Flight Collection" klase, kas ļauj piekļūt datiem, izmantojot masīva sintaksi vai objekta sintaksi.
 
 ## Reģistrējot PDO Palīgklasi
 
 ```php
-// Reģistrēt PDO palīgklasi
+// Reģistrējiet PDO palīgklasi
 Flight::register('db', \flight\database\PdoWrapper::class, ['mysql:host=localhost;dbname=cool_db_name', 'user', 'pass', [
 		PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES \'utf8mb4\'',
 		PDO::ATTR_EMULATE_PREPARES => false,
@@ -19,10 +16,10 @@ Flight::register('db', \flight\database\PdoWrapper::class, ['mysql:host=localhos
 ```
 
 ## Lietošana
-Šis objekts paplašina PDO, tāpēc visi parasti pieejamie PDO metodēs ir pieejami. Lai piekļūtu datubāzei, ir pievienotas sekojošas metodes, lai atvieglotu vaicājumu veikšanu:
+Šis objekts paplašina PDO, tāpēc visi normālie PDO metodēs ir pieejami. Tika pievienotas šādas metodes, lai atvieglotu datu bāzes vaicājumu veikšanu:
 
 ### `runQuery(string $sql, array $params = []): PDOStatement`
-Izmanto šo funkciju IESNIEGUMIEM, ATJAUNINĀJUMIEM, vai ja plāno lietot IZVĒLES teikumu cilpā
+Izmantojiet šo INSERTS, UPDATE vai ja plānojat izmantot SELECT cilpas iekšā
 
 ```php
 $db = Flight::db();
@@ -31,7 +28,7 @@ while($row = $statement->fetch()) {
 	// ...
 }
 
-// Vai ierakstīt datubāzē
+// Vai ierakstiet datubāzē
 $db->runQuery("INSERT INTO table (name) VALUES (?)", [ $name ]);
 $db->runQuery("UPDATE table SET name = ? WHERE id = ?", [ $name, $id ]);
 ```
@@ -56,7 +53,7 @@ echo $row->name;
 ```
 
 ### `fetchAll(string $sql, array $params = []): array`
-Izvelk visas rindas no vaicājuma
+Izvelk visus rindas no vaicājuma
 
 ```php
 $db = Flight::db();
@@ -68,8 +65,8 @@ foreach($rows as $row) {
 }
 ```
 
-## Piezīme ar `IN()` sintaksi
-Šim ir noderīgs apvalks `IN()` teikumiem. Viens vienkāršs jautājuma zīme kā aizstājvietu `IN()` un tad masīvs ar vērtībām. Šeit ir piemērs, kā tas varētu izskatīties:
+## Piezīme par `IN()` sintaksi
+Tai ir noderīga aploksne `IN()` apgalvojumiem. Vienu jautājuma zīmi vienkārši varat padot kā vietotni `IN()` un pēc tam masīvu ar vērtībām. Šeit ir piemērs, kā tas varētu izskatīties:
 
 ```php
 $db = Flight::db();
@@ -78,30 +75,30 @@ $company_ids = [1,2,3,4,5];
 $rows = $db->fetchAll("SELECT id, name FROM table WHERE name = ? AND company_id IN (?)", [ $name, $company_ids ]);
 ```
 
-## Pilns Piemērs
+## Pilns piemērs
 
 ```php
-// Piemēra maršruts un kā jūs varētu izmantot šo apvalku
+// Piemēra maršruts un kā jūs izmantotu šo apvalku
 Flight::route('/users', function () {
-	// Saņemt visus lietotājus
+	// Iegūt visus lietotājus
 	$users = Flight::db()->fetchAll('SELECT * FROM users');
 
-	// Straumēt visus lietotājus
+	// Plūsmas visi lietotāji
 	$statement = Flight::db()->runQuery('SELECT * FROM users');
 	while ($user = $statement->fetch()) {
 		echo $user['name'];
 		// vai echo $user->name;
 	}
 
-	// Saņemt vienu lietotāju
+	// Iegūt vienu lietotāju
 	$user = Flight::db()->fetchRow('SELECT * FROM users WHERE id = ?', [123]);
 
-	// Saņemt vienu vērtību
+	// Iegūt vienu vērtību
 	$count = Flight::db()->fetchField('SELECT COUNT(*) FROM users');
 
-	// Īpašais IN() sintakse palīdzēt (pārliecinieties, ka IN ir lieliem burtiem)
+	// Speciālā IN() sintakse, lai palīdzētu (pārliecinieties, ka IN ir lieli burti)
 	$users = Flight::db()->fetchAll('SELECT * FROM users WHERE id IN (?)', [[1,2,3,4,5]]);
-	// Jūs varētu arī izdarīt šo
+	// jūs varētu arī darīt šo
 	$users = Flight::db()->fetchAll('SELECT * FROM users WHERE id IN (?)', [ '1,2,3,4,5']);
 
 	// Ievietot jaunu lietotāju
@@ -114,7 +111,7 @@ Flight::route('/users', function () {
 	// Dzēst lietotāju
 	Flight::db()->runQuery("DELETE FROM users WHERE id = ?", [123]);
 
-	// Saņemt ietekmēto rindu skaitu
+	// Iegūt ietekmēto rindu skaitu
 	$statement = Flight::db()->runQuery("UPDATE users SET name = ? WHERE name = ?", ['Bob', 'Sally']);
 	$affected_rows = $statement->rowCount();
 

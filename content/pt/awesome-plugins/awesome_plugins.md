@@ -1,52 +1,58 @@
-# Plug-ins Incríveis
+# Incríveis Plugins
 
-O Flight é incrivelmente extensível. Existem vários plug-ins que podem ser usados para adicionar funcionalidades à sua aplicação Flight. Alguns são oficialmente suportados pela Equipe do Flight e outros são bibliotecas micro/lite para ajudá-lo a começar.
+Flight é incrivelmente extensível. Existem vários plugins que podem ser usados para adicionar funcionalidades à sua aplicação do Flight. Alguns são oficialmente suportados pela Equipe do Flight e outros são bibliotecas micro/lite para ajudá-lo a começar.
 
-## Caching
+## Cache
 
-O armazenamento em cache é uma ótima maneira de acelerar a sua aplicação. Existem várias bibliotecas de cache que podem ser utilizadas com o Flight.
+O cache é uma ótima maneira de acelerar sua aplicação. Existem várias bibliotecas de cache que podem ser usadas com o Flight.
 
-- [Wruczek/PHP-File-Cache](/awesome-plugins/php-file-cache) - Classe de armazenamento em cache PHP leve, simples e independente de arquivos
+- [Wruczek/PHP-File-Cache](/pt/awesome-plugins/php-file-cache) - Classe de cache PHP leve, simples e autônoma em arquivo
+
+## CLI
+
+Aplicações CLI são uma ótima maneira de interagir com sua aplicação. Você pode usá-las para gerar controladores, exibir todas as rotas e muito mais.
+
+- [flightphp/runway](/pt/awesome-plugins/runway) - Runway é uma aplicação CLI que ajuda a gerenciar suas aplicações do Flight.
 
 ## Cookies
 
-Os cookies são uma ótima maneira de armazenar pequenos pedaços de dados no lado do cliente. Eles podem ser usados para armazenar preferências do usuário, configurações da aplicação e muito mais.
+Cookies são uma ótima maneira de armazenar pequenos pedaços de dados no lado do cliente. Eles podem ser usados para armazenar preferências do usuário, configurações da aplicação e muito mais.
 
-- [overclokk/cookie](/awesome-plugins/php-cookie) - O PHP Cookie é uma biblioteca PHP que fornece uma maneira simples e eficaz de gerenciar cookies.
+- [overclokk/cookie](/pt/awesome-plugins/php-cookie) - O PHP Cookie é uma biblioteca PHP que fornece uma maneira simples e eficaz de gerenciar cookies.
 
-## Debugging
+## Depuração
 
-A depuração é crucial quando você está desenvolvendo em seu ambiente local. Existem alguns plug-ins que podem elevar sua experiência de depuração.
+A depuração é crucial ao desenvolver em seu ambiente local. Existem alguns plugins que podem aprimorar sua experiência de depuração.
 
-- [tracy/tracy](/awesome-plugins/tracy) - Este é um manipulador de erros completo que pode ser usado com o Flight. Possui vários painéis que podem ajudá-lo a depurar a sua aplicação. Também é muito fácil de estender e adicionar seus próprios painéis.
-- [flightphp/tracy-extensions](/awesome-plugins/tracy-extensions) - Usado com o manipulador de erros [Tracy](/awesome-plugins/tracy), este plug-in adiciona alguns painéis extras para ajudar na depuração, especificamente para projetos Flight.
+- [tracy/tracy](/pt/awesome-plugins/tracy) - Este é um manipulador de erros completo que pode ser usado com o Flight. Possui várias abas que podem ajudá-lo a depurar sua aplicação. Também é muito fácil de estender e adicionar suas próprias abas.
+- [flightphp/tracy-extensions](/pt/awesome-plugins/tracy-extensions) - Usado com o manipulador de erros [Tracy](/pt/awesome-plugins/tracy), este plugin adiciona algumas abas extras para ajudar na depuração especificamente para projetos do Flight.
 
 ## Bancos de Dados
 
-Bancos de dados são essenciais para a maioria das aplicações. É assim que você armazena e recupera dados. Algumas bibliotecas de banco de dados são simplesmente envoltórios para escrever consultas e algumas são ORMs completos.
+Bancos de dados são essenciais para a maioria das aplicações. É assim que você armazena e recupera dados. Algumas bibliotecas de banco de dados são simplesmente wrappers para escrever consultas e outras são ORMs completos.
 
-- [flightphp/core PdoWrapper](/awesome-plugins/pdo-wrapper) - Envoltório PDO oficial do Flight que faz parte do núcleo. Este é um envoltório simples para ajudar a simplificar o processo de escrever consultas e executá-las. Não é um ORM.
-- [flightphp/active-record](/awesome-plugins/active-record) - ORM/Mapper ActiveRecord oficial do Flight. Ótima pequena biblioteca para recuperar e armazenar dados facilmente no seu banco de dados.
+- [flightphp/core PdoWrapper](/pt/awesome-plugins/pdo-wrapper) - Wrapper PDO oficial do Flight que faz parte do núcleo. Este é um wrapper simples para ajudar a simplificar o processo de escrever consultas e executá-las. Não é um ORM.
+- [flightphp/active-record](/pt/awesome-plugins/active-record) - ORM/Mapper Active Record oficial do Flight. Ótima biblioteca para recuperar e armazenar dados em seu banco de dados de forma fácil.
 
 ## Criptografia
 
-A criptografia é crucial para qualquer aplicação que armazena dados sensíveis. Criptografar e descriptografar os dados não é muito difícil, mas armazenar corretamente a chave de criptografia pode ser difícil. A coisa mais importante é nunca armazenar sua chave de criptografia em um diretório público ou enviá-la para o seu repositório de código.
+A criptografia é crucial para qualquer aplicação que armazena dados sensíveis. Criptografar e descriptografar os dados não é tão difícil, mas armazenar corretamente a chave de criptografia pode ser difícil. A coisa mais importante é nunca armazenar sua chave de criptografia em um diretório público ou incluí-la em seu repositório de código.
 
-- [defuse/php-encryption](/awesome-plugins/php-encryption) - Esta é uma biblioteca que pode ser usada para criptografar e descriptografar dados. Começar a usar é bastante simples para começar a criptografar e descriptografar dados.
+- [defuse/php-encryption](/pt/awesome-plugins/php-encryption) - Esta é uma biblioteca que pode ser usada para criptografar e descriptografar dados. Começar a usar é bastante simples para começar a criptografar e descriptografar dados.
 
 ## Sessão
 
-As sessões não são realmente úteis para APIs, mas para o desenvolvimento de uma aplicação web, podem ser cruciais para manter o estado e as informações de login.
+As sessões não são realmente úteis para APIs, mas para construir uma aplicação web, as sessões podem ser cruciais para manter o estado e as informações de login.
 
-- [Ghostff/Session](/awesome-plugins/session) - Gerenciador de Sessões em PHP (não bloqueante, flash, segmento, criptografia de sessão). Usa PHP open_ssl para criptografar/descriptografar opcionalmente os dados da sessão.
+- [Ghostff/Session](/pt/awesome-plugins/session) - Gerenciador de Sessões PHP (não bloqueador, flash, segmento, criptografia de sessão). Usa o open_ssl do PHP para criptografia/opcional decriptação de dados de sessão.
 
-## Modelagem
+## Templating
 
-A modelagem é fundamental para qualquer aplicação web com uma interface de usuário. Existem várias engines de modelagem que podem ser usadas com o Flight.
+A criação de modelos é fundamental para qualquer aplicação web com uma UI. Existem várias engines de templating que podem ser usadas com o Flight.
 
-- [flightphp/core View](/learn#views) - Esta é uma engine de modelagem muito básica que faz parte do núcleo. Não é recomendado seu uso se você tiver mais do que algumas páginas no seu projeto.
-- [latte/latte](/awesome-plugins/latte) - O Latte é uma engine de modelagem completa e muito fácil de usar, que se assemelha mais à sintaxe do PHP do que o Twig ou o Smarty. Também é muito fácil de estender e adicionar seus próprios filtros e funções.
+- [flightphp/core View](/pt/learn#views) - Esta é uma engine de templating muito básica que faz parte do núcleo. Não é recomendado usá-la se você tiver mais do que algumas páginas em seu projeto.
+- [latte/latte](/pt/awesome-plugins/latte) - Latte é uma engine de templating completa e muito fácil de usar, que se aproxima da sintaxe do PHP do que Twig ou Smarty. Também é muito fácil de estender e adicionar seus próprios filtros e funções.
 
-## Contribuindo
+## Contribuição
 
-Tem um plug-in que gostaria de compartilhar? Envie um pull request para adicioná-lo à lista!
+Tem um plugin que gostaria de compartilhar? Envie um pull request para adicioná-lo à lista!

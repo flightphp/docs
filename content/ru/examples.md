@@ -1,21 +1,25 @@
 # Нужен быстрый старт?
 
-Перейдите на [flightphp/skeleton](https://github.com/flightphp/skeleton) репозиторий, чтобы начать! Это проект, который включает в себя один файл страницы, содержащий все необходимое для запуска вашего приложения. Также включает более полноценный пример с контроллерами и представлениями.
+У вас есть два варианта для начала работы с Flight:
 
-## Нуждаетесь вдохновения?
+- [Однофайловый каркас](https://github.com/flightphp/skeleton-simple): Одиночный файл, включающий все необходимое для запуска вашего приложения в одном простом файле.
+- [Полноценный каркас](https://github.com/flightphp/skeleton): Более полноценный пример с контроллерами и представлениями.
 
-Хотя эти проекты не официально спонсируются командой Flight, они могут дать вам идеи о том, как организовать ваши собственные проекты, построенные с использованием Flight!
+## Нужна вдохновляющая идея?
 
-- [Commentable Paste Bin](https://github.com/n0nag0n/commie2)
-- [Basic Skeleton App](https://github.com/markhughes/flight-skeleton)
-- [Example Wiki](https://github.com/Skayo/FlightWiki)
-- [The IT-Innovator PHP Framework Application](https://github.com/itinnovator/myphp-app)
-- [LittleEducationalCMS (Spanish)](https://github.com/casgin/LittleEducationalCMS)
-- [Italian Yellow Pages API](https://github.com/chiccomagnus/PGAPI)
-- [Generic Content Management System (with....very little documentation)](https://github.com/recepuncu/cms)
-- [A tiny php framework based on Flight and medoo.](https://github.com/ycrao/tinyme)
-- [Example MVC Application](https://github.com/paddypei/Flight-MVC)
+Хотя эти примеры не являются официально поддерживаемыми командой Flight, они могут помочь вам с идеями о том, как организовать свои собственные проекты, построенные с использованием Flight!
+
+- [Система управления школой FlightPHP](https://github.com/krmu/FlightPHP_School) - Flight v3
+- [Паспорт для комментариев](https://github.com/n0nag0n/commie2) - Flight v3
+- [Базовое приложение-каркас](https://github.com/markhughes/flight-skeleton)
+- [Пример вики](https://github.com/Skayo/FlightWiki)
+- [Приложение PHP-фреймворка IT-Innovator](https://github.com/itinnovator/myphp-app)
+- [LittleEducationalCMS (испанский)](https://github.com/casgin/LittleEducationalCMS)
+- [Итальянский API желтых страниц](https://github.com/chiccomagnus/PGAPI)
+- [Общедоступная система управления контентом (с....очень небольшой документацией)](https://github.com/recepuncu/cms)
+- [Крошечный PHP-фреймворк на основе Flight и medoo.](https://github.com/ycrao/tinyme)
+- [Пример приложения MVC](https://github.com/paddypei/Flight-MVC)
 
 ## Хотите поделиться своим собственным примером?
 
-Если у вас есть проект, который вы хотите поделиться, пожалуйста, отправьте запрос на объединение (pull request), чтобы добавить его в этот список!
+Если у вас есть проект, который вы хотите поделиться, пожалуйста, отправьте запрос на добавление его в этот список пул-реквестом!

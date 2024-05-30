@@ -2,13 +2,13 @@
 
 ## Einführung
 
-Der Dependency Injection Container (DIC) ist ein leistungsstolles Werkzeug, das es Ihnen ermöglicht, die Abhängigkeiten Ihrer Anwendung zu verwalten. Es handelt sich um ein Schlüsselkonzept in modernen PHP-Frameworks und wird zur Verwaltung der Instanziierung und Konfiguration von Objekten verwendet. Einige Beispiele für DIC-Bibliotheken sind: [Dice](https://r.je/dice), [Pimple](https://pimple.symfony.com/), [PHP-DI](http://php-di.org/) und [league/container](https://container.thephpleague.com/).
+Der Dependency Injection Container (DIC) ist ein leistungsstolles Werkzeug, das es ermöglicht, die Abhängigkeiten Ihrer Anwendung zu verwalten. Es ist ein Schlüsselkonzept in modernen PHP-Frameworks und wird verwendet, um die Instanziierung und Konfiguration von Objekten zu verwalten. Einige Beispiele für DIC-Bibliotheken sind: [Dice](https://r.je/dice), [Pimple](https://pimple.symfony.com/), [PHP-DI](http://php-di.org/) und [league/container](https://container.thephpleague.com/).
 
-Ein DIC ist eine elegante Möglichkeit zu sagen, dass es Ihnen ermöglicht, Ihre Klassen an einem zentralen Ort zu erstellen und zu verwalten. Dies ist nützlich, wenn Sie dasselbe Objekt an mehrere Klassen (wie Ihre Controller) übergeben müssen. Ein einfaches Beispiel könnte dabei helfen, dies verständlicher zu machen.
+Ein DIC ist eine elegante Möglichkeit zu sagen, dass es Ihnen ermöglicht, Ihre Klassen an einem zentralen Ort zu erstellen und zu verwalten. Dies ist nützlich, wenn Sie dasselbe Objekt an mehrere Klassen übergeben müssen (wie Ihre Controller). Ein einfaches Beispiel könnte dies verständlicher machen.
 
-## Grundlegendes Beispiel
+## Grundbeispiel
 
-Der alte Weg, Dinge zu erledigen, könnte wie folgt aussehen:
+Der alte Weg, Dinge zu erledigen, könnte so aussehen:
 ```php
 
 require 'vendor/autoload.php';
@@ -36,9 +36,9 @@ Flight::route('/user/@id', [ $UserController, 'view' ]);
 Flight::start();
 ```
 
-Man kann aus dem obigen Code erkennen, dass wir ein neues `PDO`-Objekt erstellen und es unserer `UserController`-Klasse übergeben. Dies ist für eine kleine Anwendung in Ordnung, aber wenn Ihre Anwendung wächst, werden Sie feststellen, dass Sie das gleiche `PDO`-Objekt an mehreren Stellen erstellen. Hier kommt ein DIC zum Einsatz.
+Sie können im obigen Code sehen, dass wir ein neues `PDO`-Objekt erstellen und es an unsere `UserController`-Klasse übergeben. Dies ist in Ordnung für eine kleine Anwendung, aber wenn Ihre Anwendung wächst, werden Sie feststellen, dass Sie das gleiche `PDO`-Objekt an mehreren Stellen erstellen. Hier kommt ein DIC ins Spiel.
 
-Hier ist dasselbe Beispiel unter Verwendung eines DIC (mit Dice):
+Hier ist das gleiche Beispiel unter Verwendung eines DICs (unter Verwendung von Dice):
 ```php
 
 require 'vendor/autoload.php';
@@ -60,21 +60,21 @@ class UserController {
 	}
 }
 
-// einen neuen Container erstellen
+// erstelle einen neuen Container
 $container = new \Dice\Dice;
-// vergessen Sie nicht, es wie unten sich selbst neu zuzuweisen!
+// vergiss nicht, ihn wie unten erneut zuzuweisen!
 $container = $container->addRule('PDO', [
 	// shared bedeutet, dass jedes Mal dasselbe Objekt zurückgegeben wird
 	'shared' => true,
 	'constructParams' => ['mysql:host=localhost;dbname=test', 'user', 'pass' ]
 ]);
 
-// Hiermit wird der Container Handler registriert, sodass Flight weiß, dass er ihn verwenden soll.
+// Hiermit wird der Container-Handler registriert, damit Flight weiß, dass er ihn verwenden soll.
 Flight::registerContainerHandler(function($class, $params) use ($container) {
 	return $container->create($class, $params);
 });
 
-// Jetzt können wir den Container verwenden, um unseren UserController zu erstellen
+// jetzt können wir den Container verwenden, um unseren UserController zu erstellen
 Flight::route('/user/@id', [ 'UserController', 'view' ]);
 // oder alternativ können Sie die Route wie folgt definieren
 Flight::route('/user/@id', 'UserController->view');
@@ -84,24 +84,23 @@ Flight::route('/user/@id', 'UserController::view');
 Flight::start();
 ```
 
-Ich wette, Sie denken, es wurde viel zusätzlicher Code zum Beispiel hinzugefügt.
-Die Magie entsteht, wenn Sie einen weiteren Controller haben, der das `PDO`-Objekt benötigt.
+Sie denken vielleicht, dass viel zusätzlicher Code zum Beispiel hinzugefügt wurde. Die Magie entsteht, wenn Sie einen anderen Controller haben, der das `PDO`-Objekt benötigt.
 
 ```php
 
-// Wenn all Ihre Controller einen Konstruktor haben, der ein PDO-Objekt benötigt
-// werden jedem der unten stehenden Routen automatisch injiziert!!!
-Flight::route('/unternehmen/@id', 'Unternehmenscontroller->view');
-Flight::route('/organisation/@id', 'Organisationscontroller->view');
-Flight::route('/kategorie/@id', 'Kategoriescontroller->view');
-Flight::route('/einstellungen', 'Einstellungscontroller->view');
+// Wenn alle Ihre Controller einen Konstruktor haben, der ein PDO-Objekt benötigt
+// wird dies automatisch für jede der untenstehenden Routen eingefügt!!!
+Flight::route('/company/@id', 'CompanyController->view');
+Flight::route('/organization/@id', 'OrganizationController->view');
+Flight::route('/category/@id', 'CategoryController->view');
+Flight::route('/settings', 'SettingsController->view');
 ```
 
-Der zusätzliche Bonus bei der Verwendung eines DIC ist, dass das Unit Testing deutlich einfacher wird. Sie können ein Mock-Objekt erstellen und es Ihrer Klasse übergeben. Das ist ein großer Vorteil, wenn Sie Tests für Ihre Anwendung schreiben!
+Der zusätzliche Vorteil der Nutzung eines DICs besteht darin, dass Unittests wesentlich einfacher werden. Sie können ein Mock-Objekt erstellen und es an Ihre Klasse übergeben. Dies ist ein großer Vorteil, wenn Sie Tests für Ihre Anwendung schreiben!
 
 ## PSR-11
 
-Flight kann auch jeden Container verwenden, der mit PSR-11 kompatibel ist. Dies bedeutet, dass Sie jeden Container verwenden können, der das PSR-11-Interface implementiert. Hier ist ein Beispiel unter Verwendung des PSR-11-Containers von League:
+Flight kann auch jeden PSR-11-kompatiblen Container verwenden. Dies bedeutet, dass Sie jeden Container verwenden können, der das PSR-11-Interface implementiert. Hier ist ein Beispiel für die Verwendung des PSR-11-Containers von League:
 
 ```php
 
@@ -117,22 +116,22 @@ $container->add(PdoWrapper::class)
 	->addArgument('pass');
 Flight::registerContainerHandler($container);
 
-Flight::route('/benutzer', [ 'Benutzercontroller', 'view' ]);
+Flight::route('/user', [ 'UserController', 'view' ]);
 
 Flight::start();
 ```
 
-Dies kann etwas ausführlicher sein als das vorherige Dice-Beispiel, erledigt jedoch die gleiche Arbeit mit den gleichen Vorteilen!
+Obwohl dies etwas ausführlicher ist als das vorherige Dice-Beispiel, erledigt es dennoch die Aufgabe mit denselben Vorteilen!
 
 ## Eigener DIC-Handler
 
-Sie können auch Ihren eigenen DIC-Handler erstellen. Dies ist nützlich, wenn Sie einen benutzerdefinierten Container verwenden möchten, der nicht PSR-11-konform ist (Dice). Sehen Sie sich das [Grundbeispiel](#grundlegendes-beispiel) an, um herauszufinden, wie dies funktioniert.
+Sie können auch Ihren eigenen DIC-Handler erstellen. Dies ist nützlich, wenn Sie einen benutzerdefinierten Container haben, den Sie verwenden möchten, der nicht PSR-11 (Dice) ist. Sehen Sie sich das [Grundbeispiel](#basic-example) dafür an.
 
-Zusätzlich gibt es einige hilfreiche Standards, die Ihr Leben erleichtern, wenn Sie Flight verwenden.
+Darüber hinaus gibt es einige nützliche Standardeinstellungen, die Ihnen das Leben erleichtern, wenn Sie Flight verwenden.
 
 ### Engine-Instanz
 
-Wenn Sie die `Engine`-Instanz in Ihren Controllern/Middleware verwenden, erhalten Sie hier die Konfiguration:
+Wenn Sie die `Engine`-Instanz in Ihren Controllern/Middleware verwenden, so konfigurieren Sie diese:
 
 ```php
 
@@ -142,7 +141,7 @@ $engine = Flight::app();
 $container = new \Dice\Dice;
 $container = $container->addRule('*', [
 	'substitutions' => [
-		// Hier übergeben Sie die Instanz
+		// Hier geben Sie die Instanz ein
 		Engine::class => $engine
 	]
 ]);
@@ -151,9 +150,9 @@ $engine->registerContainerHandler(function($class, $params) use ($container) {
 	return $container->create($class, $params);
 });
 
-// Jetzt können Sie die Engine-Instanz in Ihren Controllern/Middleware verwenden
+// Nun können Sie die Engine-Instanz in Ihren Controllern/Middleware verwenden
 
-class MeinController {
+class MyController {
 	public function __construct(Engine $app) {
 		$this->app = $app;
 	}
@@ -164,26 +163,26 @@ class MeinController {
 }
 ```
 
-### Hinzufügen weiterer Klassen
+### Hinzufügen anderer Klassen
 
-Wenn Sie andere Klassen dem Container hinzufügen möchten, ist dies mit Dice einfach, da sie automatisch vom Container aufgelöst werden. Hier ist ein Beispiel:
+Wenn Sie andere Klassen in den Container aufnehmen möchten, ist dies mit Dice einfach, da sie automatisch vom Container aufgelöst werden. Hier ist ein Beispiel:
 
 ```php
 
 $container = new \Dice\Dice;
-// Wenn Sie nichts in Ihre Klasse einspeisen müssen
+// Wenn Sie nichts in Ihre Klasse injizieren müssen,
 // müssen Sie nichts definieren!
 Flight::registerContainerHandler(function($class, $params) use ($container) {
 	return $container->create($class, $params);
 });
 
-class MeineBenutzerdefinierteKlasse {
-	public function analyseThing() {
-		return 'Sache';
+class MyCustomClass {
+	public function parseThing() {
+		return 'thing';
 	}
 }
 
-class Benutzercontroller {
+class UserController {
 
 	protected MyCustomClass $MyCustomClass;
 
@@ -196,5 +195,5 @@ class Benutzercontroller {
 	}
 }
 
-Flight::route('/benutzer', 'Benutzercontroller->index');
-```
+Flight::route('/user', 'UserController->index');
+```  

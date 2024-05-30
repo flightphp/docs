@@ -1,85 +1,64 @@
-# 依存性注入コンテナ
+# 依存性の注入コンテナ
 
-## 導入
+## はじめに
 
-依存性注入コンテナ（DIC）は、アプリケーションの依存関係を管理する強力なツールです。これは、現代のPHPフレームワークにおける主要な概念であり、オブジェクトのインスタンス化と構成を管理するために使用されます。DICのライブラリの例には、[Dice](https://r.je/dice)、[Pimple](https://pimple.symfony.com/)、 [PHP-DI](http://php-di.org/)、および [league/container](https://container.thephpleague.com/) があります。
+依存性の注入コンテナ (DIC) は、アプリケーションの依存関係を管理する強力なツールであります。これは、現代のPHPフレームワークで重要な概念であり、オブジェクトのインスタンス化と構成を管理するために使用されます。DIC ライブラリの例には次のものがあります: [Dice](https://r.je/dice), [Pimple](https://pimple.symfony.com/),
+[PHP-DI](http://php-di.org/), および [league/container](https://container.thephpleague.com/)。
 
-DICは、クラスを中央集権的に作成および管理できるというファンシーな方法です。これは、同じオブジェクトを複数のクラス（たとえば、コントローラ）に渡す必要がある場合に便利です。単純な例がこれをより理解しやすくするかもしれません。
+DIC とは、クラスを中央集権的に作成および管理できるという洒落た方法です。これは、同じオブジェクトを複数のクラス (たとえば、コントローラー) に渡す必要がある場合に役立ちます。簡単な例は、この概念を理解するのに役立つでしょう。
 
 ## 基本的な例
 
-従来のやり方は次のように見えるかもしれません：  
+昔は以下のように行っていたかもしれません:
+
 ```php
-
-require 'vendor/autoload.php';
-
-// データベースからユーザーを管理するクラス
-class UserController {
-
-	protected PDO $pdo;
-
-	public function __construct(PDO $pdo) {
-		$this->pdo = $pdo;
-	}
-
-	public function view(int $id) {
-		$stmt = $this->pdo->prepare('SELECT * FROM users WHERE id = :id');
-		$stmt->execute(['id' => $id]);
-
-		print_r($stmt->fetch());
-	}
-}
-
-$User = new UserController(new PDO('mysql:host=localhost;dbname=test', 'user', 'pass'));
-Flight::route('/user/@id', [ $UserController, 'view' ]);
-
-Flight::start();
+// 以前の方法
 ```
 
-上記のコードからわかるように、新しい`PDO`オブジェクトを作成して`UserController`クラスに渡しています。これは小規模なアプリケーションでは問題ありませんが、アプリケーションが成長すると、複数の場所で同じ`PDO`オブジェクトを作成していることに気づくでしょう。ここでDICが役立ちます。
+以上のコードからわかるように、新しい `PDO` オブジェクトを作成して `UserController` クラスに渡しています。これは小規模なアプリケーションには適していますが、アプリケーションが成長すると、同じ `PDO` オブジェクトを複数箇所で作成していることがわかります。ここで DIC が役立ちます。
 
-以下は、DICを使用した同じ例（Diceを使用）です：  
+こちらは (Dice を使用した) DIC を使用して同じ例を示したものです:
+
 ```php
+// DIC を使用した同じ例
+```
 
-require 'vendor/autoload.php';
+もしかすると、この例には多くの余分なコードが追加されたと思っているかもしれません。その魔法は、`PDO` オブジェクトが必要な別のコントローラーを持っている場合に来ます。
 
-// 上記と同じクラス。何も変更されていません
-class UserController {
+```php
+// 他のコントローラーが PDO オブジェクトが必要な場合
+```
 
-	protected PDO $pdo;
+DIC を利用することの追加メリットは、ユニットテストがはるかに容易になることです。モックオブジェクトを作成してクラスに渡すことができます。これは、アプリケーションのテストを書く際に非常に有益です!
 
-	public function __construct(PDO $pdo) {
-		$this->pdo = $pdo;
-	}
+## PSR-11
 
-	public function view(int $id) {
-		$stmt = $this->pdo->prepare('SELECT * FROM users WHERE id = :id');
-		$stmt->execute(['id' => $id]);
+Flight は PSR-11 に準拠したコンテナも利用できます。これは、PSR-11 インターフェースを実装した任意のコンテナを使用できることを意味します。以下は、League の PSR-11 コンテナを使用した例です:
 
-		print_r($stmt->fetch());
-	}
-}
+```php
+// PSR-11 コンテナを使用した例
+```
 
-// 新しいコンテナを作成
-$container = new \Dice\Dice;
-// 以下のように再代入するのを忘れないでください！
-$container = $container->addRule('PDO', [
-	// shared は、同じオブジェクトが毎回返されることを意味します
-	'shared' => true,
-	'constructParams' => ['mysql:host=localhost;dbname=test', 'user', 'pass' ]
-]);
+この Dice の例よりも少し冗長かもしれませんが、同じ利点を持って問題なく機能します!
 
-// これにより、Flightがそれを使用することを知るようにコンテナハンドラが登録されます。
-Flight::registerContainerHandler(function($class, $params) use ($container) {
-	return $container->create($class, $params);
-});
+## カスタム DIC ハンドラ
 
-// これでコンテナを使用してUserControllerを作成できます
-Flight::route('/user/@id', [ 'UserController', 'view' ]);
-// または、次のようにルートを定義することもできます
-Flight::route('/user/@id', 'UserController->view');
-// または
-Flight::route('/user/@id', 'UserController::view');
+独自の DIC ハンドラも作成することができます。これは、PSR-11 ではないカスタムコンテナを使用したい場合に役立ちます。これを行う方法についての詳細については、[基本的な例](#基本的な例)を参照してください。
 
-Flight::start();
+さらに、Flight の使用時に生活をより簡単にするためのいくつかの便利なデフォルトがあります。
+
+### エンジンインスタンス
+
+コントローラー/ミドルウェアで `Engine` インスタンスを使用する場合、以下のように構成できます:
+
+```php
+// エンジンインスタンスを使用する方法
+```
+
+### 他のクラスの追加
+
+コンテナに追加したい他のクラスがある場合、Dice を使用すると自動的に解決されます。以下は例です:
+
+```php
+// 他のクラスの追加
 ```

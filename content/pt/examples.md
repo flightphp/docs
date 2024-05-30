@@ -1,21 +1,25 @@
-# Precisa de um início rápido?
+# Precisa de um começo rápido?
 
-Visite o repositório [flightphp/skeleton](https://github.com/flightphp/skeleton) para começar! Este é um projeto que inclui um arquivo de página única contendo tudo o que você precisa para executar seu aplicativo. Também inclui um exemplo mais completo com controladores e visualizações.
+Você tem duas opções para começar com o Flight:
 
-## Precisa de Inspiração?
+- [Boilerplate Esquelético de Arquivo Único](https://github.com/flightphp/skeleton-simple): Um arquivo único que inclui tudo que você precisa para executar seu aplicativo em um único arquivo simples.
+- [Boilerplate Esquelético Completo](https://github.com/flightphp/skeleton): Um exemplo mais abrangente com controladores e visualizações.
 
-Embora esses exemplos não sejam oficialmente patrocinados pela Equipe do Flight, podem lhe dar ideias sobre como estruturar seus próprios projetos construídos com o Flight!
+## Precisa de Alguma Inspiração?
 
-- [Paste Bin Comentável](https://github.com/n0nag0n/commie2)
-- [Aplicativo Esqueleto Básico](https://github.com/markhughes/flight-skeleton)
+Embora estes não sejam oficialmente patrocinados pela equipe do Flight, eles podem lhe dar ideias sobre como estruturar seus próprios projetos construídos com o Flight!
+
+- [Sistema de gerenciamento escolar FlightPHP](https://github.com/krmu/FlightPHP_School) - Flight v3
+- [Bin de Colagem Comentável](https://github.com/n0nag0n/commie2) - Flight v3
+- [Aplicativo Esquelético Básico](https://github.com/markhughes/flight-skeleton)
 - [Exemplo Wiki](https://github.com/Skayo/FlightWiki)
 - [O Aplicativo do Framework PHP IT-Innovator](https://github.com/itinnovator/myphp-app)
 - [LittleEducationalCMS (Espanhol)](https://github.com/casgin/LittleEducationalCMS)
-- [API Italiana de Páginas Amarelas](https://github.com/chiccomagnus/PGAPI)
-- [Sistema Genérico de Gerenciamento de Conteúdo (com....pouquíssima documentação)](https://github.com/recepuncu/cms)
+- [API de Páginas Amarelas Italianas](https://github.com/chiccomagnus/PGAPI)
+- [Sistema de Gerenciamento de Conteúdo Genérico (com....muito pouca documentação)](https://github.com/recepuncu/cms)
 - [Um pequeno framework php baseado no Flight e no medoo.](https://github.com/ycrao/tinyme)
-- [Exemplo de Aplicativo MVC](https://github.com/paddypei/Flight-MVC)
+- [Aplicativo MVC de Exemplo](https://github.com/paddypei/Flight-MVC)
 
-## Quer Compartilhar seu Próprio Exemplo?
+## Quer Compartilhar Seu Próprio Exemplo?
 
-Se você tem um projeto para compartilhar, por favor envie uma solicitação de pull request para adicioná-lo a esta lista!
+Se você tem um projeto que deseja compartilhar, por favor envie uma solicitação de pull request para adicioná-lo a esta lista!

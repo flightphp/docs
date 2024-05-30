@@ -1,22 +1,22 @@
-# Automātiska ielāde
+# Automašīnīšana
 
-Automātiskā ielāde ir koncepts PHP, kurā norādat direktoriju vai direktorijas, no kurām jāielādē klases. Tas ir daudz izdevīgāk nekā izmantot `require` vai `include`, lai ielādētu klases. Tas ir arī prasība, lai izmantotu Composer paketes.
+Automašīnīšana ir koncepts PHP valodā, kur norāda direktoriju vai direktorijas, no kurienes ielādēt klases. Tas ir daudz izdevīgāk nekā izmantojot `require` vai `include`, lai ielādētu klases. Tas arī ir prasība, lai izmantotu Composer pakotnes.
 
-Pēc noklusējuma jebkura `Flight` klase tiek automātiski ielādēta pateicoties komponistam. Tomēr, ja vēlaties automātiski ielādēt savas klases, varat izmantot `Flight::path` metodi, lai norādītu direktoriju, no kuras jāielādē klases.
+Pēc noklusējuma jebkura `Flight` klase tiek automātiski ielādēta pateicībā composer. Taču, ja vēlaties ielādēt savas klases automātiski, varat izmantot `Flight::path` metodi, lai norādītu direktoriju, no kuras ielādēt klases.
 
 ## Pamata piemērs
 
-Aplūkojam, ka mums ir direktoriju koks tāds kā zemāk:
+Pieņemsim, ka mums ir direktoriju koks kā tas sekojoši:
 
 ```text
 # Piemēra ceļš
-/home/lietotājs/projekts/mans-flight-projekts/
-├── app
+/mājas/lietotājs/projekts/mans-flight-projekts/
+├── lietotne
 │   ├── kešatmiņa
 │   ├── konfigurācija
 │   ├── vadītāji - satur šī projekta vadītājus
 │   ├── tulkojumi
-│   ├── UTILS - satur klases tikai šim lietojumprogrammai (tas ir ar lielajiem burtiem apzināti, kā piemēramā vēlāk)
+│   ├── UTILS - satur klases tikai šai lietojumprogrammai (tas visi lielas burtos nolūkā, kā vēlāk piemēram)
 │   └── skati
 └── publisks
     └── css
@@ -24,90 +24,117 @@ Aplūkojam, ka mums ir direktoriju koks tāds kā zemāk:
 	└── index.php
 ```
 
-Varbūt pievērsāties uzmanību, ka tas ir vienādas failu struktūras kā šī dokumentācijas vietne.
-
-Jūs varat norādīt katru direktoriju, no kuras jāielādē, šādi:
+Jūs varat norādīt katru no direktorijām, no kurienes ielādēt šādi:
 
 ```php
 
 /**
- * publisks/index.php
+ * public/index.php
  */
 
-// Pievienot ceļu automātiskajam ielādētājam
-Flight::path(__DIR__.'/../app/vadītāji/');
-Flight::path(__DIR__.'/../app/utils/');
+// Pievienot ceļu automātiski ielādētājam
+Flight::path(__DIR__.'/../lietotne/vadītāji/');
+Flight::path(__DIR__.'/../lietotne/utils/');
 
 
 /**
- * app/vadītāji/MyController.php
+ * lietotne/vadītāji/ManaisVadītājs.php
  */
 
-// nav obligāta nosaukumu telpošana
+// nav vajadzīgs nosaukuma telpojums
 
-// Visas automātiski ielādētās klases tiek ieteiktas būt Pascal Case (katrs vārds lielajiem burtiem, bez atstarpēm)
-// Ir prasība, ka jūs nevarat izmantot pasvītrojumus savās klases nosaukumā
-class MyController {
+// Visas automātiski ielādētās klases ir ieteicams rakstīt ar Pascal Lielajiem burtiem (katrs vārds lietots lielais burtos, bez atstarpēm)
+// Sākot ar 3.7.2 versiju, varat izmantot Pascal_Snake_Case saviem klases nosaukumiem, palaižot Loader::setV2ClassLoading(false);
+class ManaisVadītājs {
 
 	public function index() {
-		// kaut ko
+		// dari kaut ko
 	}
 }
 ```
 
-## Nosaukumtelpas
+## Nosaukumu telpas
 
-Ja jums ir nosaukumtelpas, ir ļoti viegli to ieviest. Jums vajadzētu izmantot `Flight::path()` metodi, lai norādītu aplikācijas saknes direktoriju (nevis dokumentu sakni vai `publisks/` mapes).
+Ja jums ir nosaukumu telpas, patiesībā tas kļūst ļoti viegli ieviest. Jums vajadzētu izmantot `Flight::path()` metodi, lai norādītu saknes direktoriju (nevis dokumenta saknes vai `public/` mapes) jūsu lietojumprogrammai.
 
 ```php
 
 /**
- * publisks/index.php
+ * public/index.php
  */
 
-// Pievienot ceļu automātiskajam ielādētājam
+// Pievienot ceļu automātiski ielādētājam
 Flight::path(__DIR__.'/../');
 ```
 
-Tagad šāda izskatās jūsu vadītāja varētu izskatīties. Apskatiet zemāk esošo piemēru, bet pievērsiet uzmanību komentāriem, lai iegūtu svarīgu informāciju.
+Tagad šis ir kā varētu izskatīties jūsu vadītājs. Apskatiet zemāk esošo piemēru, bet pievērsiet uzmanību komentāriem par svarīgu informāciju.
 
 ```php
 /**
- * app/vadītāji/MyController.php
+ * lietotne/vadītāji/ManaisVadītājs.php
  */
 
-// nosaukumtelpas ir obligātas
-// nosaukumtelpas ir vienādas ar direktoriju struktūru
-// nosaukumtelpām jāseko tādai pašai lietotnei kā direktoriju struktūrai
-// nosaukumtelpās un direktorijās nevar būt nekādu pasvītrojumu
+// nosaukumu telpas ir prasītas
+// nosaukumu telpas ir tādas pašas kā direktoriju struktūra
+// nosaukumu telpu ir jāievēro tāda pati lietu struktūra
+// nosaukumu telpām un direktorijām nedrīkst būt nekādu apakšsvītru (ja nav iestatīts Loader::setV2ClassLoading(false))
 namespace app\vadītāji;
 
-// Visas automātiski ielādētās klases tiek ieteiktas būt Pascal Case (katrs vārds lielajiem burtiem, bez atstarpēm)
-// Ir prasība, ka jūs nevarat izmantot pasvītrojumus savās klases nosaukumā
-class MyController {
+// Visas automātiski ielādētās klases ir ieteicams rakstīt ar Pascal Lielajiem burtiem (katrs vārds lietots lielais burtos, bez atstarpēm)
+// Sākot ar 3.7.2 versiju, varat izmantot Pascal_Snake_Case saviem klases nosaukumiem, palaižot Loader::setV2ClassLoading(false);
+class ManaisVadītājs {
 
 	public function index() {
-		// kaut ko
+		// dari kaut ko
 	}
 }
 ```
 
-Un ja vēlētos automātiski ielādēt klasi savā UTILS direktorijā, jūs darītu būtiski to pašu:
+Un ja vēlējāties automātiski ielādēt klasi savā UTILS direktorijā, jūs darītu būtiski to pašu:
 
 ```php
 
 /**
- * app/UTILS/ArrayHelperUtil.php
+ * lietotne/UTILS/ArrayHelperUtil.php
  */
 
-// nosaukumtelpai jāsakrīt ar direktoriju struktūru un režīmu (Ņemiet vērā, ka UTILS direktorijā ir visi burti ar lielajiem burtiem
-//     kā failu koks augšā)
+// nosaukuma telpai jāsaskan ar direktorijas struktūru un gadījumu (ņemot vērā UTILS direktoriju ir visas lielās burts
+//     kā failu koks augstāk)
 namespace app\UTILS;
 
 class ArrayHelperUtil {
 
 	public function changeArrayCase(array $array) {
-		// kaut ko
+		// dari kaut ko
+	}
+}
+```
+
+## Pasvītras klases nosaukumos
+
+Sākot ar 3.7.2 versiju, jūs varat izmantot Pascal_Snake_Case saviem klases nosaukumiem, palaižot `Loader::setV2ClassLoading(false);`. Tas ļaus jums izmantot pasvītras savos klases nosaukumos. Tas nav ieteicams, bet tas ir pieejams tiem, kuriem tas ir nepieciešams.
+
+```php
+
+/**
+ * public/index.php
+ */
+
+// Pievienot ceļu automātiski ielādētājam
+Flight::path(__DIR__.'/../lietotne/vadītāji/');
+Flight::path(__DIR__.'/../lietotne/utils/');
+Loader::setV2ClassLoading(false);
+
+/**
+ * apdraudējumi/Manais_Apdraudējums.php
+ */
+
+// nav vajadzīgs nosaukuma telpojums
+
+class Manais_Apdraudējums {
+
+	public function index() {
+		// dari kaut ko
 	}
 }
 ```

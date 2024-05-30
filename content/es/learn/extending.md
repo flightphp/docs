@@ -1,11 +1,11 @@
-# Extendiendo
+# Extensión
 
 Flight está diseñado para ser un marco extensible. El marco viene con un conjunto
 de métodos y componentes predeterminados, pero te permite mapear tus propios métodos,
-registrar tus propias clases o incluso anular clases y métodos existentes.
+registrar tus propias clases, o incluso anular clases y métodos existentes.
 
-Si buscas un DIC (Dependency Injection Container), dirígete a la página del
-[Dependency Injection Container](dependency-injection-container).
+Si buscas un DIC (Contenedor de Inyección de Dependencias), ve a la página de
+[Contenedor de Inyección de Dependencias](dependency-injection-container).
 
 ## Mapeo de Métodos
 
@@ -14,15 +14,15 @@ Para mapear tu propio método personalizado simple, utiliza la función `map`:
 ```php
 // Mapea tu método
 Flight::map('hello', function (string $name) {
-  echo "¡hola $name!";
+  echo "¡Hola $name!";
 });
 
 // Llama a tu método personalizado
 Flight::hello('Bob');
 ```
 
-Esto se usa más cuando necesitas pasar variables a tu método para obtener un valor esperado.
-Utilizar el método `register()` como se muestra a continuación es más para pasar configuración
+Esto se utiliza más cuando necesitas pasar variables a tu método para obtener un valor esperado.
+Usar el método `register()` como se detalla abajo es más para pasar configuraciones
 y luego llamar a tu clase preconfigurada.
 
 ## Registro de Clases
@@ -38,7 +38,7 @@ $user = Flight::user();
 ```
 
 El método de registro también te permite pasar parámetros al constructor de tu clase.
-Entonces, al cargar tu clase personalizada, vendrá preinicializada.
+Entonces cuando cargas tu clase personalizada, vendrá preinicializada.
 Puedes definir los parámetros del constructor pasando un array adicional.
 Aquí tienes un ejemplo de carga de una conexión de base de datos:
 
@@ -53,7 +53,7 @@ Flight::register('db', PDO::class, ['mysql:host=localhost;dbname=test', 'user', 
 //
 $db = Flight::db();
 
-// y si lo necesitas más tarde en tu código, simplemente llama al mismo método nuevamente
+// y si lo necesitas más tarde en tu código, simplemente llama al mismo método de nuevo
 class SomeController {
   public function __construct() {
 	$this->db = Flight::db();
@@ -61,12 +61,12 @@ class SomeController {
 }
 ```
 
-Si pasas un parámetro adicional de callback, se ejecutará inmediatamente
+Si pasas un parámetro de devolución de llamada adicional, se ejecutará inmediatamente
 después de la construcción de la clase. Esto te permite realizar cualquier procedimiento de configuración para tu
-nuevo objeto. La función de callback toma un parámetro, una instancia del nuevo objeto.
+nuevo objeto. La función de devolución de llamada recibe un parámetro, una instancia del nuevo objeto.
 
 ```php
-// Se pasará el objeto que se creó al callback
+// La devolución de llamada recibirá el objeto que se construyó
 Flight::register(
   'db',
   PDO::class,
@@ -85,37 +85,38 @@ Para obtener una nueva instancia de una clase, simplemente pasa `false` como par
 $compartido = Flight::db();
 
 // Nueva instancia de la clase
-$nueva = Flight::db(false);
+$nuevo = Flight::db(false);
 ```
 
-Ten en cuenta que los métodos mapeados tienen precedencia sobre las clases registradas. Si
-declaras ambos con el mismo nombre, solo se invocará el método mapeado.
+Ten en cuenta que los métodos mapeados tienen prioridad sobre las clases registradas. Si
+declaras ambos usando el mismo nombre, solo se invocará el método mapeado.
 
-## Anulando Métodos del Marco
+## Anulación de Métodos del Marco
 
-Flight te permite anular su funcionalidad predeterminada para adaptarse a tus propias necesidades,
+Flight te permite anular su funcionalidad predeterminada para adaptarla a tus necesidades,
 sin necesidad de modificar ningún código.
 
 Por ejemplo, cuando Flight no puede hacer coincidir una URL con una ruta, invoca el método `notFound`
 que envía una respuesta genérica de `HTTP 404`. Puedes anular este comportamiento
-utilizando el método `map`:
+usando el método `map`:
 
 ```php
 Flight::map('notFound', function() {
-  // Mostrar página personalizada de error 404
-  include 'errors/404.html';
+  // Mostrar página de error 404 personalizada
+  include 'errores/404.html';
 });
 ```
 
-Flight también te permite reemplazar componentes principales del marco.
-Por ejemplo, puedes reemplazar la clase de Router predeterminada con tu propia clase personalizada:
+Flight también te permite reemplazar componentes básicos del marco.
+Por ejemplo, puedes reemplazar la clase de Enrutador predeterminada con tu propia clase personalizada:
 
 ```php
 // Registra tu clase personalizada
 Flight::register('router', MyRouter::class);
 
-// Cuando Flight carga la instancia del enrutador, cargará tu clase
+// Cuando Flight carga la instancia de Enrutador, cargará tu clase
 $mienrutador = Flight::router();
 ```
 
-Sin embargo, los métodos del marco como `map` y `register` no se pueden anular. Obtendrás un error si intentas hacerlo.
+Sin embargo, los métodos del marco como `map` y `register` no pueden ser anulados. Obtendrás
+un error si intentas hacerlo.

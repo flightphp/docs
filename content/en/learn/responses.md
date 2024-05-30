@@ -143,6 +143,67 @@ pass some data to be JSON encoded:
 Flight::json(['id' => 123]);
 ```
 
+### JSON with Status Code
+
+You can also pass in a status code as the second argument:
+
+```php
+Flight::json(['id' => 123], 201);
+```
+
+### JSON with Pretty Print
+
+You can also pass in an argument to the last position to enable pretty printing:
+
+```php
+Flight::json(['id' => 123], 200, true, 'utf-8', JSON_PRETTY_PRINT);
+```
+
+If you are changing options passed into `Flight::json()` and want a simpler syntax, you can 
+just remap the JSON method:
+
+```php
+Flight::map('json', function($data, $code = 200, $options = 0) {
+	Flight::_json($data, $code, true, 'utf-8', $options);
+}
+
+// And now it can be used like this
+Flight::json(['id' => 123], 200, JSON_PRETTY_PRINT);
+```
+
+### JSON and Stop Execution (v3.10.0)
+
+If you want to send a JSON response and stop execution, you can use the `jsonHalt` method.
+This is useful for cases where you are checking for maybe some type of authorization and if
+the user is not authorized, you can send a JSON response immediately, clear the existing body
+content and stop execution.
+
+```php
+Flight::route('/users', function() {
+	$authorized = someAuthorizationCheck();
+	// Check if the user is authorized
+	if($authorized === false) {
+		Flight::jsonHalt(['error' => 'Unauthorized'], 401);
+	}
+
+	// Continue with the rest of the route
+});
+```
+
+Before v3.10.0, you would have to do something like this:
+
+```php
+Flight::route('/users', function() {
+	$authorized = someAuthorizationCheck();
+	// Check if the user is authorized
+	if($authorized === false) {
+		Flight::halt(401, json_encode(['error' => 'Unauthorized']));
+	}
+
+	// Continue with the rest of the route
+});
+```
+
 ### JSONP
 
 For JSONP requests you, can optionally pass in the query parameter name you are

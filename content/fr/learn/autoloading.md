@@ -1,12 +1,12 @@
 # Chargement automatique
 
-Le chargement automatique est un concept en PHP où vous spécifiez un répertoire ou des répertoires à charger des classes. Cela est bien plus bénéfique que d'utiliser `require` ou `include` pour charger des classes. C'est également une exigence pour utiliser les packages Composer.
+Le chargement automatique est un concept en PHP où vous spécifiez un répertoire ou des répertoires à partir desquels charger des classes. Cela est bien plus avantageux que d'utiliser `require` ou `include` pour charger des classes. C'est également une exigence pour utiliser des paquets Composer.
 
-Par défaut, toute classe `Flight` est chargée automatiquement grâce à Composer. Cependant, si vous souhaitez charger automatiquement vos propres classes, vous pouvez utiliser la méthode `Flight::path` pour spécifier un répertoire à partir duquel charger des classes.
+Par défaut, toute classe `Flight` est chargée automatiquement pour vous grâce à Composer. Cependant, si vous souhaitez charger automatiquement vos propres classes, vous pouvez utiliser la méthode `Flight::path` pour spécifier un répertoire à partir duquel charger des classes.
 
-## Exemple de base
+## Exemple Basique
 
-Supposons que nous ayons une arborescence de répertoires comme suit :
+Supposons que nous avons une arborescence de répertoires comme suit :
 
 ```text
 # Chemin d'exemple
@@ -14,7 +14,7 @@ Supposons que nous ayons une arborescence de répertoires comme suit :
 ├── app
 │   ├── cache
 │   ├── config
-│   ├── controllers - contient les contrôleurs pour ce projet
+│   ├── controllers - contient les contrôleurs de ce projet
 │   ├── translations
 │   ├── UTILS - contient des classes uniquement pour cette application (tout en majuscules à des fins d'exemple ultérieur)
 │   └── views
@@ -24,9 +24,9 @@ Supposons que nous ayons une arborescence de répertoires comme suit :
 	└── index.php
 ```
 
-Vous avez peut-être remarqué que cette structure de fichiers est similaire à celle de ce site de documentation.
+Vous avez peut-être remarqué que c'est la même structure de fichiers que ce site de documentation.
 
-Vous pouvez spécifier chaque répertoire à partir duquel charger comme ceci :
+Vous pouvez spécifier chaque répertoire à charger à partir de cette manière :
 
 ```php
 
@@ -34,7 +34,7 @@ Vous pouvez spécifier chaque répertoire à partir duquel charger comme ceci :
  * public/index.php
  */
 
-// Ajouter un chemin au chargeur automatique
+// Ajouter un chemin à l'autoloader
 Flight::path(__DIR__.'/../app/controllers/');
 Flight::path(__DIR__.'/../app/utils/');
 
@@ -45,8 +45,8 @@ Flight::path(__DIR__.'/../app/utils/');
 
 // pas de namespace requis
 
-// Il est recommandé que toutes les classes chargées automatiquement soient en Pascal Case (chaque mot en majuscule, sans espaces)
-// Il est obligatoire de ne pas avoir de trait de soulignement dans le nom de votre classe
+// Toutes les classes chargées automatiquement sont recommandées d'être en Pascal Case (chaque mot est en majuscule, pas d'espaces)
+// À partir de la version 3.7.2, vous pouvez utiliser Pascal_Snake_Case pour vos noms de classe en exécutant Loader::setV2ClassLoading(false);
 class MyController {
 
 	public function index() {
@@ -57,7 +57,7 @@ class MyController {
 
 ## Espaces de noms
 
-Si vous avez des espaces de noms, il devient en fait très facile de les implémenter. Vous devriez utiliser la méthode `Flight::path()` pour spécifier le répertoire racine (pas le répertoire du document ou le dossier `public/`) de votre application.
+Si vous avez des espaces de noms, il devient en fait très facile de les implémenter. Vous devriez utiliser la méthode `Flight::path()` pour spécifier le répertoire racine (pas le document root ou le dossier `public/`) de votre application.
 
 ```php
 
@@ -65,7 +65,7 @@ Si vous avez des espaces de noms, il devient en fait très facile de les implém
  * public/index.php
  */
 
-// Ajouter un chemin au chargeur automatique
+// Ajouter un chemin à l'autoloader
 Flight::path(__DIR__.'/../');
 ```
 
@@ -77,13 +77,13 @@ Maintenant, voici à quoi pourrait ressembler votre contrôleur. Regardez l'exem
  */
 
 // les espaces de noms sont requis
-// les espaces de noms sont identiques à la structure du répertoire
+// les espaces de noms sont les mêmes que la structure du répertoire
 // les espaces de noms doivent suivre la même casse que la structure du répertoire
-// les espaces de noms et les répertoires ne peuvent pas contenir de traits de soulignement
+// les espaces de noms et les répertoires ne peuvent pas avoir de traits de soulignement (sauf si Loader::setV2ClassLoading(false) est défini)
 namespace app\controllers;
 
-// Il est recommandé que toutes les classes chargées automatiquement soient en Pascal Case (chaque mot en majuscule, sans espaces)
-// Il est obligatoire de ne pas avoir de trait de soulignement dans le nom de votre classe
+// Toutes les classes chargées automatiquement sont recommandées d'être en Pascal Case (chaque mot est en majuscule, pas d'espaces)
+// À partir de la version 3.7.2, vous pouvez utiliser Pascal_Snake_Case pour vos noms de classe en exécutant Loader::setV2ClassLoading(false);
 class MyController {
 
 	public function index() {
@@ -92,7 +92,7 @@ class MyController {
 }
 ```
 
-Et si vous vouliez charger automatiquement une classe dans votre répertoire utils, vous feriez à peu près la même chose :
+Et si vous vouliez charger automatiquement une classe dans votre répertoire utils, vous feriez essentiellement la même chose :
 
 ```php
 
@@ -100,13 +100,42 @@ Et si vous vouliez charger automatiquement une classe dans votre répertoire uti
  * app/UTILS/ArrayHelperUtil.php
  */
 
-// l'espace de noms doit correspondre à la structure du répertoire et à la casse (notez que le répertoire UTILS est en majuscules
+// l'espace de noms doit correspondre à la structure du répertoire et à la casse (notez que le répertoire UTILS est tout en majuscules
 //     comme dans l'arborescence des fichiers ci-dessus)
 namespace app\UTILS;
 
 class ArrayHelperUtil {
 
 	public function changeArrayCase(array $array) {
+		// faire quelque chose
+	}
+}
+```
+
+## Traits de soulignement dans les Noms de Classe
+
+À partir de la version 3.7.2, vous pouvez utiliser Pascal_Snake_Case pour vos noms de classe en exécutant `Loader::setV2ClassLoading(false);`. Cela vous permettra d'utiliser des traits de soulignement dans vos noms de classe. Ce n'est pas recommandé, mais c'est disponible pour ceux qui en ont besoin.
+
+```php
+
+/**
+ * public/index.php
+ */
+
+// Ajouter un chemin à l'autoloader
+Flight::path(__DIR__.'/../app/controllers/');
+Flight::path(__DIR__.'/../app/utils/');
+Loader::setV2ClassLoading(false);
+
+/**
+ * app/controllers/My_Controller.php
+ */
+
+// pas de namespace requis
+
+class My_Controller {
+
+	public function index() {
 		// faire quelque chose
 	}
 }

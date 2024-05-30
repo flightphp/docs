@@ -1,21 +1,25 @@
 # ¿Necesitas un inicio rápido?
 
-¡Dirígete al repositorio [flightphp/skeleton](https://github.com/flightphp/skeleton) para comenzar! ¡Este es un proyecto que incluye un archivo de una sola página que contiene todo lo necesario para ejecutar tu aplicación. También incluye un ejemplo más completo con controladores y vistas.
+Tienes dos opciones para comenzar con Flight:
 
-## ¿Necesitas Algo de Inspiración?
+- [Esqueleto de Archivo Único](https://github.com/flightphp/skeleton-simple): Un solo archivo que incluye todo lo que necesitas para ejecutar tu aplicación en un solo archivo simple.
+- [Esqueleto Completo](https://github.com/flightphp/skeleton): Un ejemplo más completo con controladores y vistas.
 
-¡Si bien estos no están oficialmente patrocinados por el equipo de Flight, podrían darte ideas sobre cómo estructurar tus propios proyectos construidos con Flight!
+## ¿Necesitas Alguna Inspiración?
 
-- [Commentable Paste Bin](https://github.com/n0nag0n/commie2)
-- [Aplicación Esqueleto Básica](https://github.com/markhughes/flight-skeleton)
-- [Wiki de Ejemplo](https://github.com/Skayo/FlightWiki)
-- [La Aplicación del Marco PHP IT-Innovator](https://github.com/itinnovator/myphp-app)
-- [LittleEducationalCMS (Español)](https://github.com/casgin/LittleEducationalCMS)
+¡Aunque estos no están oficialmente patrocinados por el Equipo de Flight, podrían darte ideas sobre cómo estructurar tus propios proyectos construidos con Flight!
+
+- [Sistema de gestión escolar de FlightPHP](https://github.com/krmu/FlightPHP_School) - Flight v3
+- [Comentable Paste Bin](https://github.com/n0nag0n/commie2) - Flight v3
+- [Aplicación Básica de Esqueleto](https://github.com/markhughes/flight-skeleton)
+- [Ejemplo de Wiki](https://github.com/Skayo/FlightWiki)
+- [Aplicación del Marco de PHP IT-Innovator](https://github.com/itinnovator/myphp-app)
+- [LittleEducationalCMS (español)](https://github.com/casgin/LittleEducationalCMS)
 - [API de Páginas Amarillas Italianas](https://github.com/chiccomagnus/PGAPI)
 - [Sistema de Gestión de Contenidos Genérico (con... muy poca documentación)](https://github.com/recepuncu/cms)
-- [Un pequeño marco php basado en Flight y medoo.](https://github.com/ycrao/tinyme)
+- [Un pequeño marco de php basado en Flight y medoo.](https://github.com/ycrao/tinyme)
 - [Aplicación de Ejemplo MVC](https://github.com/paddypei/Flight-MVC)
 
 ## ¿Quieres Compartir Tu Propio Ejemplo?
 
-¡Si tienes un proyecto que deseas compartir, por favor envía una solicitud de extracción para agregarlo a esta lista!
+Si tienes un proyecto que deseas compartir, ¡envía una solicitud de extracción para agregarlo a esta lista!

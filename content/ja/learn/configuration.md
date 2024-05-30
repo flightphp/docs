@@ -1,6 +1,6 @@
 # 設定
 
-`set`メソッドを使用して、Flightの特定の振る舞いをカスタマイズすることができます。
+特定の動作をカスタマイズするには、`set` メソッドを使用して Flight の設定値を設定できます。
 
 ```php
 Flight::set('flight.log_errors', true);
@@ -8,26 +8,26 @@ Flight::set('flight.log_errors', true);
 
 ## 利用可能な設定
 
-以下は利用可能な設定のリストです:
+以下は利用可能なすべての設定のリストです:
 
-- **flight.base_url** `?string` - リクエストのベースURLをオーバーライドします。(デフォルト: null)
-- **flight.case_sensitive** `bool` - URLの大文字小文字を区別するかどうか。(デフォルト: false)
-- **flight.handle_errors** `bool` - Flightにすべてのエラーを内部で処理させるかどうか。(デフォルト: true)
-- **flight.log_errors** `bool` - エラーをWebサーバーのエラーログファイルに記録します。(デフォルト: false)
-- **flight.views.path** `string` - ビューテンプレートファイルが含まれるディレクトリです。(デフォルト: ./views)
-- **flight.views.extension** `string` - ビューテンプレートファイルの拡張子です。(デフォルト: .php)
-- **flight.content_length** `bool` - `Content-Length`ヘッダーを設定します。(デフォルト: true)
-- **flight.v2.output_buffering** `bool` - 旧バージョンの出力バッファリングを使用します。[v3への移行](migrating-to-v3)を参照してください。(デフォルト: false)
+- **flight.base_url** `?string` - リクエストのベースURLを上書きします。(デフォルト: null)
+- **flight.case_sensitive** `bool` - URLの大文字小文字を区別するかどうか。 (デフォルト: false)
+- **flight.handle_errors** `bool` - Flight がすべてのエラーを内部で処理するかどうか。 (デフォルト: true)
+- **flight.log_errors** `bool` - エラーをウェブサーバーのエラーログファイルに記録します。 (デフォルト: false)
+- **flight.views.path** `string` - ビューテンプレートファイルが含まれるディレクトリ。 (デフォルト: ./views)
+- **flight.views.extension** `string` - ビューテンプレートファイルの拡張子。 (デフォルト: .php)
+- **flight.content_length** `bool` - `Content-Length` ヘッダーを設定します。 (デフォルト: true)
+- **flight.v2.output_buffering** `bool` - 旧バージョンの出力バッファリングを使用します。[v3 への移行](migrating-to-v3) を参照してください。 (デフォルト: false)
 
 ## 変数
 
-Flightを使用して変数を保存し、アプリケーションのどこからでも使用できます。
+Flight では、変数を保存してアプリケーションのどこでも使用できるようにすることができます。
 
 ```php
 // 変数を保存する
 Flight::set('id', 123);
 
-// アプリケーションの別の場所で
+// アプリケーションの他の場所で
 $id = Flight::get('id');
 ```
 
@@ -35,11 +35,11 @@ $id = Flight::get('id');
 
 ```php
 if (Flight::has('id')) {
-  // 何かを実行する
+  // 何かを行う
 }
 ```
 
-次のようにして変数をクリアできます:
+変数をクリアするには、次のようにします:
 
 ```php
 // id変数をクリアする
@@ -49,7 +49,7 @@ Flight::clear('id');
 Flight::clear();
 ```
 
-Flightは設定目的で変数も使用します。
+Flight は設定目的で変数も使用します。
 
 ```php
 Flight::set('flight.log_errors', true);
@@ -59,10 +59,10 @@ Flight::set('flight.log_errors', true);
 
 ### エラーと例外
 
-すべてのエラーと例外はFlightによってキャッチされ、`error`メソッドに渡されます。
-デフォルトの動作は、一般的な`HTTP 500 Internal Server Error`応答といくつかのエラー情報を送信することです。
+すべてのエラーと例外は Flight によってキャッチされ、`error` メソッドに渡されます。
+デフォルトの動作は、一般的な `HTTP 500 Internal Server Error` 応答を送信し、一部のエラー情報を含めます。
 
-これを独自のニーズに合わせて上書きすることができます:
+これを独自のニーズに合わせて上書きできます:
 
 ```php
 Flight::map('error', function (Throwable $error) {
@@ -71,7 +71,8 @@ Flight::map('error', function (Throwable $error) {
 });
 ```
 
-デフォルトではエラーはWebサーバーに記録されません。これを有効にするには、設定を変更してください:
+デフォルトでは、エラーはウェブサーバーのエラーログに記録されません。これを有効にするには
+設定を変更します:
 
 ```php
 Flight::set('flight.log_errors', true);
@@ -79,9 +80,10 @@ Flight::set('flight.log_errors', true);
 
 ### 見つからない場合
 
-URLが見つからない場合、Flightは`notFound`メソッドを呼び出します。デフォルトの動作は、シンプルなメッセージ付きの`HTTP 404 Not Found`応答を送信することです。
+URL が見つからない場合、Flight は `notFound` メソッドを呼び出します。デフォルトの動作は、
+簡単なメッセージを含む `HTTP 404 Not Found` 応答を送信することです。
 
-これを独自のニーズに合わせて上書きすることができます:
+これを独自のニーズに合わせて上書きできます:
 
 ```php
 Flight::map('notFound', function () {

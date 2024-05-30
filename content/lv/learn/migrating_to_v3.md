@@ -1,16 +1,16 @@
-# Migrēšana uz v3
+# Migrācija uz v3
 
-Atgriezeniskā saderība lielākoties ir saglabāta, bet ir dažas izmaiņas, par kurām jums jāņem vērā, migrējot no v2 uz v3.
+Atkārtotā saderība lielākoties ir saglabāta, bet ir veiktas dažas izmaiņas, par kurām ir jābūt informētam, migrējot no v2 uz v3.
 
 ## Izvades buferēšanas uzvedība (3.5.0)
 
-[Izvades buferēšana](https://stackoverflow.com/questions/2832010/what-is-output-buffering-in-php) ir process, kurā PHP skripta ģenerētā izvade tiek saglabāta buferī (iekšējā PHP) pirms tā tiek nosūtīta klientam. Tas ļauj jums modificēt izvadi pirms tā tiek nosūtīta klientam.
+[Izvades buferēšana](https://stackoverflow.com/questions/2832010/what-is-output-buffering-in-php) ir process, kur izveidotā PHP skripta izvade tiek saglabāta buferī (iekšējā PHP) pirms tā tiek nosūtīta klientam. Tas ļauj jums modificēt izvadi pirms tā tiek nosūtīta klientam.
 
-MVC lietojumprogrammā Kļūdu izvadītājs ir "vadītājs" un tas vadīt to, ko skats dara. Izvade, kas tiek ģenerēta ārpus vadītāja (vai dažreiz Fly ietvars gadījumā anonīmā funkcija) pārkāpj MVC modeli. Šī izmaiņa ir veikta, lai iegūtu lielāku saderību ar MVC modeli un padarītu ietvaru paredzamāku un vieglāk lietojamu.
+MVC lietotnē Kontrolieris ir "vadītājs" un tas vadīs skatu darbības. Izvades ģenerēšana ārpus kontroliera (vai Flight gadījumā dažreiz anonīmā funkcija) pārkāpj MVC modeli. Šī izmaiņa ir paredzēta, lai labāk iekļautos MVC modelī un padarītu struktūru paredzamāku un vieglāk lietojamu.
 
-v2, izvades buferēšana tika apstrādāta tā, ka tā konsistenti neatvēra savu izvades buferi, kas padarīja [mērvienību testēšanu](https://github.com/flightphp/core/pull/545/files#diff-eb93da0a3473574fba94c3c4160ce68e20028e30b267875ab0792ade0b0539a0R42) un [straumēšanu](https://github.com/flightphp/core/issues/413) sarežģītāku. Lielākajai vairumu lietotāju šī izmaiņa varētu neietekmēt praktiski. Tomēr, ja jūs atgriežat saturu ārpusizsaucamajiem un vadītājiem (piemēram, āķī), iespējams, ka uz jums gaida problēmas. Uzskaitot saturu āķos un pirms ietvara faktiskā izpildes agrāk varēja darboties, bet nedarbosies turpmāk.
+v2 versijā izvades buferēšana tika apstrādāta veidā, kurā tā neatbilda vienmērīgi savam paša izvades buferim, kas padarīja [vienības testēšanu](https://github.com/flightphp/core/pull/545/files#diff-eb93da0a3473574fba94c3c4160ce68e20028e30b267875ab0792ade0b0539a0R42) un [strāvošanu](https://github.com/flightphp/core/issues/413) sarežģītāku. Lielai daļai lietotāju šī izmaiņa varētu nemainīt jūsu darbības. Tomēr, ja jūs izmantojat "echo" saturu ārpus izsaukamiem un kontrolieriem (piemēram, āķī), iespējams, ka jums radīsies problēmas. Satura izvadīšana āķos un pirms struktūra patiešām izpilda šo darbību, varēja darboties iepriekš, bet tas nedarbosies turpmāk.
 
-### Vietas, kur var būt problēmas
+### Vietas, kur jums varētu rasties problēmas
 ```php
 // index.php
 require 'vendor/autoload.php';
@@ -19,37 +19,37 @@ require 'vendor/autoload.php';
 define('START_TIME', microtime(true));
 
 function hello() {
-	echo 'Sveika pasaule';
+	echo 'Sveika, pasaule';
 }
 
 Flight::map('hello', 'hello');
 Flight::after('hello', function(){
-	// tas faktiski būs kārtībā
-	echo '<p>Šo Sveika pasaule frazi jums sagādā burti "S"</p>';
+	// tas faktiski ir kārtībā
+	echo '<p>Šis Sveika, pasaule teksts jums sniegts ar burtni "S"</p>';
 });
 
-Flight::before('sākums', function(){
-	// lietas, kas izskatās šādi, radīs kļūdu
-	echo '<html><head><title>Mana lapa</title></head><body>';
+Flight::before('start', function(){
+	// šīs lietas izraisīs kļūdu
+	echo '<html><head><title>Mana lapas nosaukums</title></head><body>';
 });
 
 Flight::route('/', function(){
-	// tas faktiski ir tikai labi
-	echo 'Sveika pasaule';
+	// tas faktiski ir kārtībā
+	echo 'Sveika, pasaule';
 
-	// Tas arī būtu tikai labi
+	// Tas arī vajadzētu būt kārtībā
 	Flight::hello();
 });
 
-Flight::after('sākums', function(){
-	// tas radīs kļūdu
-	echo '<div>Jūsu lapa ielādējās '.(microtime(true) - START_TIME).' sekundes</div></body></html>';
+Flight::after('start', function(){
+	// tas izraisīs kļūdu
+	echo '<div>Jūsu lapa ielādējās '.(microtime(true) - START_TIME).' sekundēs</div></body></html>';
 });
 ```
 
-### Ieslēgt v2 izvades buferēšanas uzvedību
+### Ieslēgt v2 izstrādes uzvedību
 
-Vai joprojām varat paturēt savu veco kodu tāpat kā tas ir, neveicot pārrakstīšanu, lai tas strādātu ar v3? Jā, jūs varat! Jūs varat ieslēgt v2 izvades buferēšanas uzvedību, iestatot konfigurācijas opciju `flight.v2.output_buffering` uz `true`. Tas ļaus jums turpināt izmantot veco renderēšanas uzvedību, bet ieteicams to labot turpmāk. v4 ietvarā tas tiks noņemts.
+Vai jūs vēl varat saglabāt savu veco kodu tādā formā, neveicot pārrakstīšanu, lai tas darbotos ar v3? Jā, var! Jūs varat ieslēgt v2 izstrādes uzvedību, iestatot `flight.v2.output_buffering` konfigurācijas opciju uz `true`. Tas ļaus jums turpināt izmantot veco izstrādes uzvedību, bet ieteicams to labot turpmāk. V4 versijā struktūrā tas tiks noņemts.
 
 ```php
 // index.php
@@ -57,9 +57,9 @@ require 'vendor/autoload.php';
 
 Flight::set('flight.v2.output_buffering', true);
 
-Flight::before('sākums', function(){
-	// Tagad tas būs tikai kārtībā
-	echo '<html><head><title>Mana lapa</title></head><body>';
+Flight::before('start', function(){
+	// Tagad tas būs kārtībā
+	echo '<html><head><title>Mana lapas nosaukums</title></head><body>';
 });
 
 // vairāk koda 
@@ -67,4 +67,4 @@ Flight::before('sākums', function(){
 
 ## Dispečera izmaiņas (3.7.0)
 
-Ja jūs tieši esat izsaukdami statiskās metodes `Dispatcher`, piemēram, `Dispatcher::invokeMetode()`, `Dispečera::execute()`, utt., jums būs jāatjaunina savs kods, lai neizsauktu šīs metodes tieši. `Dispatcher` ir pārveidots, lai būtu vairāk objektu orientēts, tādējādi Atkarību ieviešanas konteineri var tikt izmantoti vieglāk. Ja jums ir nepieciešams izsaukt metodi, līdzīgu tam, kā to darīja Dispečers, jūs varat manuāli izmantot kaut ko līdzīgu `$rezultāts = $klase->$metode(...$parametri);` vai `call_user_func_array()` vietā.
+Ja jūs tieši esat izsaukuši statiskās metodes "Dispatcher", piemēram, `Dispatcher::invokeMethod()`, `Dispatcher::execute()`, uc., jums būs jāatjauno jūsu kodu, lai šīs metodes netiktu tieši izsauktas. `Dispatcher` ir pārveidots, lai būtu vairāk objektu orientēts, lai atkarību ievietošanas konteineri varētu tikt izmantoti vieglāk. Ja jums ir nepieciešams izsaukt metodi līdzīgu tam, kā to darīja Dispečers, jūs varat manuāli izmantot kaut ko tādu kā `$result = $class->$method(...$params);` vai `call_user_func_array()` vietā.

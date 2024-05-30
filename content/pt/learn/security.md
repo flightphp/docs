@@ -1,10 +1,10 @@
 # Segurança
 
-A segurança é muito importante quando se trata de aplicações web. Você quer garantir que sua aplicação seja segura e que os dados de seus usuários estejam protegidos. O Flight fornece várias funcionalidades para ajudar a proteger suas aplicações web.
+Segurança é extremamente importante quando se trata de aplicações web. Você deseja garantir que sua aplicação seja segura e que os dados de seus usuários estejam protegidos. O Flight fornece uma série de recursos para ajudá-lo a proteger suas aplicações web.
 
 ## Cabeçalhos
 
-Os cabeçalhos HTTP são uma das maneiras mais fáceis de proteger suas aplicações web. Você pode usar cabeçalhos para evitar ataques de clickjacking, XSS e outros. Existem diversas maneiras de adicionar esses cabeçalhos à sua aplicação.
+Os cabeçalhos HTTP são uma das formas mais fáceis de proteger suas aplicações web. Você pode usar cabeçalhos para evitar clickjacking, XSS e outros ataques. Existem várias maneiras de adicionar esses cabeçalhos à sua aplicação.
 
 Dois ótimos sites para verificar a segurança de seus cabeçalhos são [securityheaders.com](https://securityheaders.com/) e [observatory.mozilla.org](https://observatory.mozilla.org/).
 
@@ -16,8 +16,8 @@ Você pode adicionar manualmente esses cabeçalhos usando o método `header` no 
 Flight::response()->header('X-Frame-Options', 'SAMEORIGIN');
 
 // Defina o cabeçalho Content-Security-Policy para evitar XSS
-// Observação: este cabeçalho pode ficar muito complexo, portanto é recomendável
-//  consultar exemplos na internet para a sua aplicação
+// Observação: esse cabeçalho pode ficar muito complexo, então você vai querer
+// consultar exemplos na internet para a sua aplicação
 Flight::response()->header("Content-Security-Policy", "default-src 'self'");
 
 // Defina o cabeçalho X-XSS-Protection para evitar XSS
@@ -26,21 +26,21 @@ Flight::response()->header('X-XSS-Protection', '1; mode=block');
 // Defina o cabeçalho X-Content-Type-Options para evitar sniffing MIME
 Flight::response()->header('X-Content-Type-Options', 'nosniff');
 
-// Defina o cabeçalho Referrer-Policy para controlar a quantidade de informações do referrer enviadas
+// Defina o cabeçalho Referrer-Policy para controlar quanto informações de referência são enviadas
 Flight::response()->header('Referrer-Policy', 'no-referrer-when-downgrade');
 
-// Defina o cabeçalho Strict-Transport-Security para forçar o HTTPS
+// Defina o cabeçalho Strict-Transport-Security para forçar HTTPS
 Flight::response()->header('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
 
-// Defina o cabeçalho Permissions-Policy para controlar quais recursos e APIs podem ser utilizados
+// Defina o cabeçalho Permissions-Policy para controlar quais recursos e APIs podem ser usados
 Flight::response()->header('Permissions-Policy', 'geolocation=()');
 ```
 
-Esses podem ser adicionados no início dos seus arquivos `bootstrap.php` ou `index.php`.
+Esses podem ser adicionados no início de seus arquivos `bootstrap.php` ou `index.php`.
 
 ### Adicionar como um Filtro
 
-Você também pode adicioná-los em um filtro/interceptador como o seguinte:
+Você também pode adicioná-los em um filtro/interceptador da seguinte maneira:
 
 ```php
 // Adicione os cabeçalhos em um filtro
@@ -55,9 +55,9 @@ Flight::before('start', function() {
 });
 ```
 
-### Adicionar como um Intermediário
+### Adicionar como um Middleware
 
-Você também pode adicioná-los como uma classe intermediária. Esta é uma boa maneira de manter seu código limpo e organizado.
+Você também pode adicioná-los como uma classe de middleware. Esta é uma boa maneira de manter seu código limpo e organizado.
 
 ```php
 // app/middleware/SecurityHeadersMiddleware.php
@@ -79,28 +79,29 @@ class SecurityHeadersMiddleware
 }
 
 // index.php ou onde quer que tenha suas rotas
-// FYI, este grupo de string vazia atua como um intermediário global para
-// todas as rotas. Claro, você também pode fazer o mesmo e adicionar
+// A propósito, este grupo de string vazia atua como um middleware global para
+// todas as rotas. Claro, você poderia fazer a mesma coisa e adicionar
 // isso apenas a rotas específicas.
 Flight::group('', function(Router $router) {
-	$router->get('/users', [ 'UserController', 'getUsers' ]);
+	$router->get('/usuarios', [ 'UserController', 'obterUsuarios' ]);
 	// mais rotas
 }, [ new SecurityHeadersMiddleware() ]);
 ```
 
-## Cross Site Request Forgery (CSRF)
 
-Cross Site Request Forgery (CSRF) é um tipo de ataque em que um site malicioso pode fazer o navegador de um usuário enviar uma solicitação para o seu site. Isso pode ser usado para executar ações no seu site sem o conhecimento do usuário. O Flight não fornece um mecanismo de proteção CSRF integrado, mas você pode facilmente implementar o seu próprio usando um intermediário.
+## Falsificação de Solicitação entre Sites (CSRF)
+
+Falsificação de Solicitação entre Sites (CSRF) é um tipo de ataque em que um site malicioso pode fazer o navegador de um usuário enviar uma solicitação para o seu site. Isso pode ser usado para realizar ações no seu site sem o conhecimento do usuário. O Flight não fornece um mecanismo integrado de proteção contra CSRF, mas você pode facilmente implementar o seu próprio usando um middleware.
 
 ### Configuração
 
-Primeiro, você precisa gerar um token CSRF e armazená-lo na sessão do usuário. Você pode então usar este token em seus formulários e verificá-lo quando o formulário for enviado.
+Primeiro, você precisa gerar um token CSRF e armazená-lo na sessão do usuário. Você pode então usar esse token em seus formulários e verificá-lo quando o formulário for enviado.
 
 ```php
 // Gerar um token CSRF e armazená-lo na sessão do usuário
-// (presumindo que você criou um objeto de sessão e o anexou ao Flight)
-// Você só precisa gerar um único token por sessão (para que funcione
-// em várias abas e solicitações para o mesmo usuário)
+// (supondo que você tenha criado um objeto de sessão e o tenha anexado ao Flight)
+// Você só precisa gerar um único token por sessão (para funcionar
+// em várias guias e solicitações para o mesmo usuário)
 if(Flight::session()->get('csrf_token') === null) {
 	Flight::session()->set('csrf_token', bin2hex(random_bytes(32)) );
 }
@@ -119,8 +120,8 @@ if(Flight::session()->get('csrf_token') === null) {
 Você também pode definir uma função personalizada para exibir o token CSRF em seus modelos Latte.
 
 ```php
-// Definir uma função personalizada para exibir o token CSRF
-// Observação: a visualização foi configurada com Latte como mecanismo de visualização
+// Defina uma função personalizada para exibir o token CSRF
+// Observação: View foi configurado com o Latte como engine de visualização
 Flight::view()->addFunction('csrf', function() {
 	$csrfToken = Flight::session()->get('csrf_token');
 	return new \Latte\Runtime\Html('<input type="hidden" name="csrf_token" value="' . $csrfToken . '">');
@@ -143,11 +144,11 @@ Curto e simples, não é?
 Você pode verificar o token CSRF usando filtros de evento:
 
 ```php
-// Este intermediário verifica se a solicitação é uma solicitação POST e, se for, verifica se o token CSRF é válido
+// Este middleware verifica se a solicitação é uma solicitação POST e, se for, verifica se o token CSRF é válido
 Flight::before('start', function() {
 	if(Flight::request()->method == 'POST') {
 
-		// captura o token csrf dos valores do formulário
+		// capturar o token csrf dos valores do formulário
 		$token = Flight::request()->data->csrf_token;
 		if($token !== Flight::session()->get('csrf_token')) {
 			Flight::halt(403, 'Token CSRF inválido');
@@ -156,7 +157,7 @@ Flight::before('start', function() {
 });
 ```
 
-Ou você pode usar uma classe intermediária:
+Ou você pode usar uma classe de middleware:
 
 ```php
 // app/middleware/CsrfMiddleware.php
@@ -178,47 +179,47 @@ class CsrfMiddleware
 
 // index.php ou onde quer que tenha suas rotas
 Flight::group('', function(Router $router) {
-	$router->get('/users', [ 'UserController', 'getUsers' ]);
+	$router->get('/usuarios', [ 'UserController', 'obterUsuarios' ]);
 	// mais rotas
 }, [ new CsrfMiddleware() ]);
 ```
 
 ## Cross Site Scripting (XSS)
 
-Cross Site Scripting (XSS) é um tipo de ataque em que um site malicioso pode injetar código no seu site. A maioria dessas oportunidades vem de valores de formulários que seus usuários preencherão. Você nunca deve confiar na saída dos seus usuários! Sempre assuma que todos são os melhores hackers do mundo. Eles podem injetar JavaScript ou HTML malicioso na sua página. Esse código pode ser usado para roubar informações dos seus usuários ou executar ações no seu site. Usando a classe de visualização do Flight, você pode escapar facilmente a saída para prevenir ataques XSS.
+Cross Site Scripting (XSS) é um tipo de ataque em que um site malicioso pode injetar código em seu site. A maioria dessas oportunidades vem de valores de formulários que seus usuários preencherão. Você nunca deve confiar na saída de seus usuários! Sempre assuma que todos são os melhores hackers do mundo. Eles podem injetar JavaScript ou HTML maliciosos em sua página. Esse código pode ser usado para roubar informações de seus usuários ou realizar ações em seu site. Usando a classe de visualização do Flight, você pode escapar facilmente a saída para evitar ataques XSS.
 
 ```php
-// Vamos supor que o usuário seja inteligente e tente usar isso como seu nome
+// Vamos assumir que o usuário é esperto e tenta usar isso como seu nome
 $nome = '<script>alert("XSS")</script>';
 
-// Isso irá escapar a saída
+// Isso escapará a saída
 Flight::view()->set('nome', $nome);
 // Isso irá gerar: &lt;script&gt;alert(&quot;XSS&quot;)&lt;/script&gt;
 
 // Se você usar algo como Latte registrado como sua classe de visualização, ele também escapará automaticamente isso.
-Flight::view()->render('template', ['nome' => $nome]);
+Flight::view()->render('modelo', ['nome' => $nome]);
 ```
 
 ## Injeção de SQL
 
-A injeção de SQL é um tipo de ataque em que um usuário malicioso pode injetar código SQL no seu banco de dados. Isso pode ser usado para roubar informações do seu banco de dados ou executar ações no seu banco de dados. Novamente, você nunca deve confiar na entrada dos seus usuários! Sempre assuma que eles estão ferrenhos. Você pode usar declarações preparadas nos seus objetos `PDO` para prevenir a injeção de SQL.
+Injeção de SQL é um tipo de ataque em que um usuário malicioso pode injetar código SQL em seu banco de dados. Isso pode ser usado para roubar informações de seu banco de dados ou realizar ações em seu banco de dados. Novamente, você nunca deve confiar na entrada de seus usuários! Sempre assuma que eles estão atrás de você. Você pode usar instruções preparadas em seus objetos `PDO` para prevenir a injeção de SQL.
 
 ```php
-// Supondo que você tenha o Flight::db() registrado como seu objeto PDO
-$declaração = Flight::db()->prepare('SELECT * FROM usuarios WHERE nome = :nome');
-$declaração->execute([':nome' => $nome]);
-$usuarios = $declaração->fetchAll();
+// Supondo que você tenha Flight::db() registrado como seu objeto PDO
+$statement = Flight::db()->prepare('SELECT * FROM usuarios WHERE nome = :nome');
+$statement->execute([':nome' => $nome]);
+$usuarios = $statement->fetchAll();
 
-// Se você usar a classe PdoWrapper, isso pode ser feito facilmente em uma linha
+// Se você usar a classe PdoWrapper, isso pode ser facilmente feito em uma linha
 $usuarios = Flight::db()->fetchAll('SELECT * FROM usuarios WHERE nome = :nome', [ 'nome' => $nome ]);
 
 // Você pode fazer a mesma coisa com um objeto PDO com espaços reservados ?
-$declaração = Flight::db()->fetchAll('SELECT * FROM usuarios WHERE nome = ?', [ $nome ]);
+$statement = Flight::db()->fetchAll('SELECT * FROM usuarios WHERE nome = ?', [ $nome ]);
 
-// Apenas prometa que nunca JAMAIS fará algo assim...
+// Apenas prometa que nunca fará algo assim...
 $usuarios = Flight::db()->fetchAll("SELECT * FROM usuarios WHERE nome = '{$nome}' LIMIT 5");
-// porque e se $nome = "' OU 1=1; -- "; 
-// Após a consulta ser montada, ela se parece com isso
+// porque e se $nome = "' OR 1=1; -- "; 
+// Depois que a consulta for construída, ela ficará assim
 // SELECT * FROM usuarios WHERE nome = '' OR 1=1; -- LIMIT 5
 // Parece estranho, mas é uma consulta válida que funcionará. Na verdade,
 // é um ataque de injeção de SQL muito comum que retornará todos os usuários.
@@ -226,44 +227,48 @@ $usuarios = Flight::db()->fetchAll("SELECT * FROM usuarios WHERE nome = '{$nome}
 
 ## CORS
 
-Cross-Origin Resource Sharing (CORS) é um mecanismo que permite solicitar muitos recursos (por exemplo, fontes, JavaScript, etc.) de uma página web a partir de outro domínio fora do domínio do qual o recurso se originou. O Flight não possui funcionalidade integrada, mas isso pode ser tratado facilmente com um intermediário ou filtros de evento semelhante ao CSRF.
+Compartilhamento de Recursos de Origem Cruzada (CORS) é um mecanismo que permite que muitos recursos (por exemplo, fontes, JavaScript, etc.) em uma página da web sejam solicitados de outro domínio fora do domínio de onde o recurso se originou. O Flight não possui funcionalidades incorporadas, mas isso pode ser facilmente tratado com um gancho para ser executado antes que o método `Flight::start()` seja chamado.
 
 ```php
-// app/middleware/CorsMiddleware.php
+// app/utils/CorsUtil.php
 
-namespace app\middleware;
+namespace app\utils;
 
-class CorsMiddleware
+class CorsUtil
 {
-	public function before(array $params): void
+	public function set(array $params): void
 	{
-		$resposta = Flight::response();
-		if (isset($_SERVER['HTTP_ORIGIN'])) {
-			$this->permitirOrigens();
-			$resposta->header('Access-Control-Allow-Credentials', true;
-			$resposta->header('Access-Control-Max-Age', 86400);
+		$request = Flight::request();
+		$response = Flight::response();
+		if ($request->getVar('HTTP_ORIGIN') !== '') {
+			$this->allowOrigins();
+			$response->header('Access-Control-Allow-Credentials', 'true');
+			$response->header('Access-Control-Max-Age', '86400');
 		}
 
-		if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
-			if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_METHOD'])) {
-				$resposta->header(
-					'Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS'
+		if ($request->method === 'OPTIONS') {
+			if ($request->getVar('HTTP_ACCESS_CONTROL_REQUEST_METHOD') !== '') {
+				$response->header(
+					'Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS, HEAD'
 				);
 			}
-			if (isset($_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS'])) {
-				$resposta->header(
-					"Access-Control-Allow-Headers", $_SERVER['HTTP_ACCESS_CONTROL_REQUEST_HEADERS']
+			if ($request->getVar('HTTP_ACCESS_CONTROL_REQUEST_HEADERS') !== '') {
+				$response->header(
+					"Access-Control-Allow-Headers",
+					$request->getVar('HTTP_ACCESS_CONTROL_REQUEST_HEADERS')
 				);
 			}
-			$resposta->send();
-			exit(0);
+
+			$response->status(200);
+			$response->send();
+			exit;
 		}
 	}
 
-	private function permitirOrigens(): void
+	private function allowOrigins(): void
 	{
-		// personalizar seus hosts permitidos aqui
-		$permitido = [
+		// personalize seus hosts permitidos aqui.
+		$permitidos = [
 			'capacitor://localhost',
 			'ionic://localhost',
 			'http://localhost',
@@ -272,20 +277,21 @@ class CorsMiddleware
 			'http://localhost:8100',
 		];
 
-		if (in_array($_SERVER['HTTP_ORIGIN'], $permitido)) {
+		$request = Flight::request();
+
+		if (in_array($request->getVar('HTTP_ORIGIN'), $permitidos, true) === true) {
 			$resposta = Flight::response();
-			$resposta->header("Access-Control-Allow-Origin", $_SERVER['HTTP_ORIGIN']);
+			$resposta->header("Access-Control-Allow-Origin", $request->getVar('HTTP_ORIGIN'));
 		}
 	}
 }
 
 // index.php ou onde quer que tenha suas rotas
-Flight::route('/usuarios', function() {
-	$usuarios = Flight::db()->fetchAll('SELECT * FROM usuarios');
-	Flight::json($usuarios);
-})->addMiddleware(new CorsMiddleware());
+$CorsUtil = new CorsUtil();
+Flight::before('start', [ $CorsUtil, 'setupCors' ]);
+
 ```
 
 ## Conclusão
 
-A segurança é muito importante e é fundamental garantir que suas aplicações web sejam seguras. O Flight fornece várias funcionalidades para ajudar a proteger suas aplicações web, mas é importante estar sempre vigilante e garantir que você está fazendo tudo o que pode para manter os dados de seus usuários seguros. Sempre assuma o pior e nunca confie na entrada dos seus usuários. Sempre escape a saída e use declarações preparadas para prevenir injeção de SQL. Sempre use intermediários para proteger suas rotas contra ataques de CSRF e CORS. Se você fizer todas essas coisas, estará bem encaminhado para construir aplicações web seguras.
+Segurança é muito importante e é fundamental garantir que suas aplicações web sejam seguras. O Flight fornece uma série de recursos para ajudá-lo a proteger suas aplicações web, mas é importante sempre estar vigilante e garantir que você esteja fazendo tudo o que pode para manter os dados de seus usuários seguros. Sempre assuma o pior e nunca confie na entrada de seus usuários. Sempre escape a saída e use instruções preparadas para evitar a injeção de SQL. Sempre use middleware para proteger suas rotas contra ataques de CSRF e CORS. Se você fizer todas essas coisas, estará bem encaminhado para construir aplicações web seguras.

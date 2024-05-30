@@ -2,18 +2,24 @@
 
 ## Introdução
 
-O Contêiner de Injeção de Dependência (DIC) é uma ferramenta poderosa que permite que você gerencie as dependências da sua aplicação. É um conceito-chave nos frameworks modernos de PHP e é usado para gerenciar a instanciação e configuração de objetos. Alguns exemplos de bibliotecas DIC são: [Dice](https://r.je/dice), [Pimple](https://pimple.symfony.com/), [PHP-DI](http://php-di.org/) e [league/container](https://container.thephpleague.com/).
+O Contentor de Injeção de Dependência (CID) é uma ferramenta poderosa que permite gerenciar
+as dependências de sua aplicação. É um conceito-chave nos frameworks PHP modernos e é
+usado para gerenciar a instanciação e configuração de objetos. Alguns exemplos de bibliotecas CID
+são: [Dice](https://r.je/dice), [Pimple](https://pimple.symfony.com/), 
+[PHP-DI](http://php-di.org/) e [league/container](https://container.thephpleague.com/).
 
-Um DIC é uma forma sofisticada de dizer que permite que você crie e gerencie suas classes em um local centralizado. Isso é útil quando você precisa passar o mesmo objeto para múltiplas classes (como seus controladores). Um exemplo simples pode ajudar a entender melhor isso.
+Um CID é uma forma sofisticada de dizer que permite criar e gerenciar suas classes em um
+local centralizado. Isso é útil quando você precisa passar o mesmo objeto para
+múltiplas classes (como seus controladores). Um exemplo simples pode ajudar a tornar isso mais claro.
 
 ## Exemplo Básico
 
-A forma antiga de fazer as coisas pode se parecer com isso:
+A maneira antiga de fazer as coisas poderia parecer assim:
 ```php
 
 require 'vendor/autoload.php';
 
-// classe para gerenciar usuários do banco de dados
+// classe para gerenciar usuários no banco de dados
 class UserController {
 
 	protected PDO $pdo;
@@ -36,9 +42,12 @@ Flight::route('/user/@id', [ $UserController, 'view' ]);
 Flight::start();
 ```
 
-Dá para ver no código acima que estamos criando um novo objeto `PDO` e passando para nossa classe `UserController`. Isso é bom para uma aplicação pequena, mas à medida que sua aplicação cresce, você verá que está criando o mesmo objeto `PDO` em vários lugares. Aqui é onde um DIC se torna útil.
+Você pode ver a partir do código acima que estamos criando um novo objeto `PDO` e passando-o
+para nossa classe `UserController`. Isso é bom para uma aplicação pequena, mas à medida que
+a aplicação cresce, você descobrirá que está criando o mesmo objeto `PDO` em múltiplos
+lugares. É aqui que um CID se torna útil.
 
-Aqui está o mesmo exemplo usando um DIC (usando Dice):
+Aqui está o mesmo exemplo usando um CID (usando Dice):
 ```php
 
 require 'vendor/autoload.php';
@@ -60,21 +69,21 @@ class UserController {
 	}
 }
 
-// criar um novo contêiner
+// criar um novo contentor
 $container = new \Dice\Dice;
-// não se esqueça de reatribuir a ele mesmo como abaixo!
+// não se esqueça de reatribuí-lo a si mesmo como abaixo!
 $container = $container->addRule('PDO', [
-	// shared significa que o mesmo objeto será retornado sempre
+	// shared significa que o mesmo objeto será retornado toda vez
 	'shared' => true,
 	'constructParams' => ['mysql:host=localhost;dbname=test', 'user', 'pass' ]
 ]);
 
-// Isso registra o manipulador do contêiner para que o Flight saiba utilizá-lo.
+// Isso registra o manipulador do contentor para que o Flight saiba usá-lo.
 Flight::registerContainerHandler(function($class, $params) use ($container) {
 	return $container->create($class, $params);
 });
 
-// agora podemos usar o contêiner para criar nosso UserController
+// agora podemos usar o contentor para criar nosso UserController
 Flight::route('/user/@id', [ 'UserController', 'view' ]);
 // ou alternativamente você pode definir a rota assim
 Flight::route('/user/@id', 'UserController->view');
@@ -84,7 +93,8 @@ Flight::route('/user/@id', 'UserController::view');
 Flight::start();
 ```
 
-Aposto que você pode estar pensando que foi adicionado muito código extra ao exemplo. A magia acontece quando você tem outro controlador que necessita do objeto `PDO`.
+Aposto que você pode estar pensando que houve muito código extra adicionado ao exemplo.
+A magia acontece quando você tem outro controlador que precisa do objeto `PDO`.
 
 ```php
 
@@ -96,17 +106,19 @@ Flight::route('/categoria/@id', 'CategoryController->view');
 Flight::route('/configuracoes', 'SettingsController->view');
 ```
 
-O benefício adicional de utilizar um DIC é que os testes de unidade se tornam muito mais fáceis. Você pode criar um objeto simulado e passá-lo para sua classe. Isso é um grande benefício ao escrever testes para sua aplicação!
+O benefício adicional de utilizar um CID é que os testes unitários se tornam muito mais fáceis. Você pode
+criar um objeto falso e passá-lo para sua classe. Isso é um grande benefício ao escrever testes para sua aplicação!
 
 ## PSR-11
 
-O Flight também pode utilizar qualquer contêiner compatível com PSR-11. Isso significa que você pode usar qualquer contêiner que implemente a interface PSR-11. Aqui está um exemplo usando o contêiner PSR-11 da League:
+O Flight também pode usar qualquer contentor compatível com o PSR-11. Isso significa que você pode usar qualquer
+contentor que implemente a interface PSR-11. Aqui está um exemplo usando o contentor PSR-11 da League:
 
 ```php
 
 require 'vendor/autoload.php';
 
-// mesma classe de UserController como acima
+// mesma classe UserController que acima
 
 $container = new \League\Container\Container();
 $container->add(UserController::class)->addArgument(PdoWrapper::class);
@@ -121,17 +133,21 @@ Flight::route('/user', [ 'UserController', 'view' ]);
 Flight::start();
 ```
 
-Apesar de ser um pouco mais verboso que o exemplo anterior com Dice, ainda assim faz o trabalho com os mesmos benefícios!
+Embora isso possa ser um pouco mais verboso do que o exemplo anterior com Dice,
+ainda faz o trabalho com os mesmos benefícios!
 
-## Manipulador de DIC Personalizado
+## Manipulador CID Personalizado
 
-Você também pode criar seu próprio manipulador DIC. Isso é útil se você tiver um contêiner personalizado que deseja usar que não seja PSR-11 (Dice). Veja o [exemplo básico](#exemplo-básico) para saber como fazer isso.
+Você também pode criar seu próprio manipulador CID. Isso é útil se você tiver um contentor personalizado
+que deseja usar que não seja PSR-11 (Dice). Veja o
+[exemplo básico](#basic-example) de como fazer isso.
 
-Adicionalmente, existem algumas configurações padrão que facilitarão sua vida ao usar o Flight.
+Além disso, existem alguns padrões úteis que facilitarão sua vida ao usar o Flight.
 
 ### Instância do Motor
 
-Se você estiver utilizando a instância do `Engine` em seus controladores/middlewares, aqui está como você configuraria:
+Se você estiver usando a instância `Engine` em seus controladores/funções intermediárias, aqui está
+como você configuraria:
 
 ```php
 
@@ -150,7 +166,7 @@ $engine->registerContainerHandler(function($class, $params) use ($container) {
 	return $container->create($class, $params);
 });
 
-// Agora você pode usar a instância do Engine em seus controladores/middlewares
+// Agora você pode usar a instância do Engine em seus controladores/funções intermediárias
 
 class MeuControlador {
 	public function __construct(Engine $app) {
@@ -161,24 +177,23 @@ class MeuControlador {
 		$this->app->render('index');
 	}
 }
-
 ```
 
 ### Adicionando Outras Classes
 
-Se você tiver outras classes que deseja adicionar ao contêiner, com Dice é fácil, pois serão resolvidas automaticamente pelo contêiner. Aqui está um exemplo:
+Se você tem outras classes que deseja adicionar ao contentor, com Dice é fácil, pois elas serão automaticamente resolvidas pelo contentor. Aqui está um exemplo:
 
 ```php
 
 $container = new \Dice\Dice;
-// Se você não precisa injetar nada na sua classe
+// Se você não precisa injetar nada em sua classe
 // você não precisa definir nada!
 Flight::registerContainerHandler(function($class, $params) use ($container) {
 	return $container->create($class, $params);
 });
 
 class MinhaClassePersonalizada {
-	public function parseThing() {
+	public function parseCoisa() {
 		return 'coisa';
 	}
 }

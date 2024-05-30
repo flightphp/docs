@@ -1,14 +1,14 @@
-# Aprenda Sobre o Flight
+# Aprenda sobre o Flight
 
-O Flight é um framework rápido, simples e extensível para PHP. É bastante versátil e pode ser usado para construir qualquer tipo de aplicativo web. É construído com simplicidade em mente e é escrito de uma forma que é fácil de entender e usar.
+O Flight é um framework rápido, simples e extensível para PHP. Ele é bastante versátil e pode ser usado para construir qualquer tipo de aplicação web. Ele é construído com simplicidade em mente e é escrito de uma forma que é fácil de entender e usar.
 
 ## Conceitos Importantes do Framework
 
-##### [Por Que um Framework?](/learn/why-frameworks)
+##### [Por que um Framework?](/learn/why-frameworks)
 
-Aqui está um artigo curto sobre por que você deve usar um framework. É uma boa ideia entender os benefícios de usar um framework antes de começar a usar um.
+Aqui está um pequeno artigo sobre por que você deve usar um framework. É uma boa ideia entender os benefícios de usar um framework antes de começar a usar um.
 
-Além disso, um excelente tutorial foi criado por [@lubiana](https://git.php.fail/lubiana). Embora não entre em grande detalhe sobre o Flight especificamente, este guia ajudará você a entender alguns dos principais conceitos em torno de um framework e por que eles são benéficos de usar. Você pode encontrar o tutorial [aqui](https://git.php.fail/lubiana/no-framework-tutorial/src/branch/master/README.md).
+Adicionalmente, um excelente tutorial foi criado por [@lubiana](https://git.php.fail/lubiana). Embora não entre em grandes detalhes sobre o Flight especificamente, este guia ajudará você a entender alguns dos principais conceitos envolvendo um framework e por que eles são benéficos de usar. Você pode encontrar o tutorial [aqui](https://git.php.fail/lubiana/no-framework-tutorial/src/branch/master/README.md).
 
 ## Tópicos Principais
 
@@ -16,9 +16,9 @@ Além disso, um excelente tutorial foi criado por [@lubiana](https://git.php.fai
 
 Aprenda como carregar automaticamente suas próprias classes em sua aplicação.
 
-##### [Roteamento](/learn/routing)
+##### [Rotas](/learn/routing)
 
-Aprenda como gerenciar rotas para o seu aplicativo web. Isso também inclui agrupamento de rotas, parâmetros de rota e middleware.
+Aprenda como gerenciar rotas para sua aplicação web. Isso também inclui agrupar rotas, parâmetros de rota e middleware.
 
 ##### [Middleware](/learn/middleware)
 
@@ -32,9 +32,9 @@ Aprenda como lidar com solicitações e respostas em sua aplicação.
 
 Aprenda como enviar respostas para seus usuários.
 
-##### [Modelos HTML](/learn/templates)
+##### [Templates HTML](/learn/templates)
 
-Aprenda como usar o mecanismo de visualização integrado para renderizar seus modelos HTML.
+Aprenda como usar o mecanismo de visualização integrado para renderizar seus templates HTML.
 
 ##### [Segurança](/learn/security)
 
@@ -61,4 +61,7 @@ Aprenda como usar contêineres de injeção de dependência (DIC) para gerenciar
 Saiba mais sobre os métodos principais do framework.
 
 ##### [Migrando para v3](/learn/migrating-to-v3)
-Em termos de retrocompatibilidade, em sua maioria, foi mantida, mas existem algumas alterações das quais você deve estar ciente ao migrar da v2 para a v3.
+A compatibilidade com versões anteriores foi mantida em grande parte, mas há algumas alterações das quais você deve estar ciente ao migrar da v2 para a v3.
+
+##### [Resolução de Problemas](/learn/troubleshooting)
+Há alguns problemas comuns que você pode encontrar ao usar o Flight. Esta página ajudará você a solucionar esses problemas.
