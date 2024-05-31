@@ -56,7 +56,38 @@ If you want to get the current status code, you can use the `status` method with
 Flight::response()->status(); // 200
 ```
 
-## Running a Callback on the Response Body
+## Setting a Response Body
+
+You can set the response body by using the `write` method, however, if you echo or print anything, 
+it will be captured and sent as the response body via output buffering.
+
+```php
+Flight::route('/', function() {
+	Flight::response()->write("Hello, World!");
+});
+
+// same as
+
+Flight::route('/', function() {
+	echo "Hello, World!";
+});
+```
+
+### Clearing a Response Body
+
+If you want to clear the response body, you can use the `clearBody` method:
+
+```php
+Flight::route('/', function() {
+	if($someCondition) {
+		Flight::response()->write("Hello, World!");
+	} else {
+		Flight::response()->clearBody();
+	}
+});
+```
+
+### Running a Callback on the Response Body
 
 You can run a callback on the response body by using the `addResponseBodyCallback` method:
 
@@ -130,6 +161,8 @@ You can set a header such as content type of the response by using the `header` 
 // This will send "Hello, World!" to the user's browser in plain text
 Flight::route('/', function() {
 	Flight::response()->header('Content-Type', 'text/plain');
+	// or
+	Flight::response()->setHeader('Content-Type', 'text/plain');
 	echo "Hello, World!";
 });
 ```
@@ -256,6 +289,24 @@ the framework and output the current response, use the `stop` method:
 
 ```php
 Flight::stop();
+```
+
+## Clearing Response Data
+
+You can clear the response body and headers by using the `clear()` method. This will clear
+any headers assigned to the response, clear the response body, and set the status code to `200`.
+
+```php
+Flight::response()->clear();
+```
+
+### Clearing Response Body Only
+
+If you only want to clear the response body, you can use the `clearBody()` method:
+
+```php
+// This will still keep any headers set on the response() object.
+Flight::response()->clearBody();
 ```
 
 ## HTTP Caching
