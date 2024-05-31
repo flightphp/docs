@@ -7,6 +7,36 @@ accessed by doing:
 $request = Flight::request();
 ```
 
+## Typical Use Cases
+
+When you are working with a request in a web application, typically you'll
+want to pull out a header, or a `$_GET` or `$_POST` parameter, or maybe
+even the raw request body. Flight provides a simple interface to do all of
+these things.
+
+Here's an example getting a query string parameter:
+
+```php
+Flight::route('/search', function(){
+	$keyword = Flight::request()->query['keyword'];
+	echo "You are searching for: $keyword";
+	// query a database or something else with the $keyword
+});
+```
+
+Here's an example of maybe a form with a POST method:
+
+```php
+Flight::route('POST /submit', function(){
+	$name = Flight::request()->data['name'];
+	$email = Flight::request()->data['email'];
+	echo "You submitted: $name, $email";
+	// save to a database or something else with the $name and $email
+});
+```
+
+## Request Object Properties
+
 The request object provides the following properties:
 
 - **body** - The raw HTTP request body
