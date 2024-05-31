@@ -102,14 +102,14 @@ You can also use middleware to apply the callback to all routes via middleware:
 // MinifyMiddleware.php
 class MinifyMiddleware {
 	public function before() {
+		// Apply the callback here on the response() object.
 		Flight::response()->addResponseBodyCallback(function($body) {
-			// This is a 
 			return $this->minify($body);
 		});
 	}
 
 	protected function minify(string $body): string {
-		// minify the body
+		// minify the body somehow
 		return $body;
 	}
 }
