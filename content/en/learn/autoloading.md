@@ -2,7 +2,7 @@
 
 Autoloading is a concept in PHP where you specific a directory or directories to load classes from. This is much more beneficial than using `require` or `include` to load classes. It is also a requirement for using Composer packages.
 
-By default any `Flight` class is autoloaded for your automatically thanks to composer. However, if you want to autoload your own classes, you can use the `Flight::path` method to specify a directory to load classes from.
+By default any `Flight` class is autoloaded for your automatically thanks to composer. However, if you want to autoload your own classes, you can use the `Flight::path()` method to specify a directory to load classes from.
 
 ## Basic Example
 

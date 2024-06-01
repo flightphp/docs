@@ -20,6 +20,17 @@ The following is a list of all the available configuration settings:
 - **flight.content_length** `bool` - Set the `Content-Length` header. (default: true)
 - **flight.v2.output_buffering** `bool` - Use legacy output buffering. See [migrating to v3](migrating-to-v3). (default: false)
 
+## Loader Configuration
+
+There is additionally another configuration setting for the loader. This will allow you 
+to autoload classes with `_` in the class name.
+
+```php
+// Enable class loading with underscores
+// Defaulted to true
+Loader::$v2ClassLoading = false;
+```
+
 ## Variables
 
 Flight allows you to save variables so that they can be used anywhere in your application.

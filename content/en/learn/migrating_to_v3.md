@@ -68,3 +68,7 @@ Flight::before('start', function(){
 ## Dispatcher Changes (3.7.0)
 
 If you have directly been calling static methods for `Dispatcher` such as `Dispatcher::invokeMethod()`, `Dispatcher::execute()`, etc. you will need to update your code to not directly call these methods. `Dispatcher` has been converted to be more object oriented so that Dependency Injection Containers can be used in a easier way. If you need to invoke a method similar to how Dispatcher did, you can manually use something like `$result = $class->$method(...$params);` or `call_user_func_array()` instead.
+
+## `halt()` `stop()` `redirect()` and `error()` Changes (3.10.0)
+
+Default behavior before 3.10.0 was to clear both the headers and the response body. This was changed to only clear the response body. If you need to clear the headers as well, you can use `Flight::response()->clear()`.

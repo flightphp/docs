@@ -16,7 +16,7 @@ Flight::route('/', function(){
 The callback can be any object that is callable. So you can use a regular function:
 
 ```php
-function hello(){
+function hello() {
     echo 'hello world!';
 }
 
@@ -59,6 +59,10 @@ Flight::route('/', [ $greeting, 'hello' ]);
 // You also can do this without creating the object first
 // Note: No args will be injected into the constructor
 Flight::route('/', [ 'Greeting', 'hello' ]);
+// Additionally you can use this shorter syntax
+Flight::route('/', 'Greeting->hello');
+// or
+Flight::route('/', Greeting::class.'->hello');
 ```
 
 #### Dependency Injection via DIC (Dependency Injection Container)

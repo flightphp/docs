@@ -93,6 +93,8 @@ class MyMiddleware {
 	public function before($params) {
 		$authorization = Flight::request()->headers['Authorization'];
 		if(empty($authorization)) {
+			Flight::jsonHalt(['error' => 'You must be logged in to access this page.'], 403);
+			// or
 			Flight::json(['error' => 'You must be logged in to access this page.'], 403);
 			exit;
 			// or

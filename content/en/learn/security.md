@@ -100,6 +100,9 @@ First you need to generate a CSRF token and store it in the user's session. You 
 ```php
 // Generate a CSRF token and store it in the user's session
 // (assuming you've created a session object at attached it to Flight)
+// see the session documentation for more information
+Flight::register('session', \Ghostff\Session\Session::class);
+
 // You only need to generate a single token per session (so it works 
 // across multiple tabs and requests for the same user)
 if(Flight::session()->get('csrf_token') === null) {
@@ -152,6 +155,8 @@ Flight::before('start', function() {
 		$token = Flight::request()->data->csrf_token;
 		if($token !== Flight::session()->get('csrf_token')) {
 			Flight::halt(403, 'Invalid CSRF token');
+			// or for a JSON response
+			Flight::jsonHalt(['error' => 'Invalid CSRF token'], 403);
 		}
 	}
 });
@@ -288,8 +293,9 @@ class CorsUtil
 
 // index.php or wherever you have your routes
 $CorsUtil = new CorsUtil();
-Flight::before('start', [ $CorsUtil, 'setupCors' ]);
 
+// This needs to be run before start runs.
+Flight::before('start', [ $CorsUtil, 'setupCors' ]);
 ```
 
 ## Conclusion

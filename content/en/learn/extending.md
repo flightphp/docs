@@ -21,6 +21,18 @@ Flight::map('hello', function (string $name) {
 Flight::hello('Bob');
 ```
 
+While it is possible to make simple custom methods, it is recommended to just create
+standard functions in PHP. This has autocomplete in IDE's and is easier to read.
+The equivalent of the above code would be:
+
+```php
+function hello(string $name) {
+  echo "hello $name!";
+}
+
+hello('Bob');
+```
+
 This is used more when you need to pass variables into your method to get an expected
 value. Using the `register()` method like below is more for passing in configuration
 and then calling your pre-configured class.
