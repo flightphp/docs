@@ -109,6 +109,8 @@ $pdo_connection = new PDO('sqlite:test.db'); // this is just for example, you'd 
 $User = new User($pdo_connection);
 ```
 
+> Don't want to always set your database connection in the constructor? See [Database Connection Management](#database-connection-management) for other ideas!
+
 ### Flight PHP Framework
 If you are using the Flight PHP Framework, you can register the ActiveRecord class as a service (but you honestly don't have to).
 
@@ -791,13 +793,37 @@ $user = new User();
 $user->setDatabaseConnection($pdo_connection);
 ```
 
+If you want to avoid always setting a `$database_connection` every time you call an active record, there are ways around that!
+
+```php
+// index.php or bootstrap.php
+// Set this as a registered class in Flight
+Flight::register('db', 'PDO', [ 'sqlite:test.db' ]);
+
+// User.php
+class User extends flight\ActiveRecord {
+	
+	public function __construct(array $config = [])
+	{
+		$database_connection = $config['connection'] ?? Flight::db();
+		parent::__construct($database_connection, 'users', $config);
+	}
+}
+
+// And now, no args required!
+$user = new User();
+```
+
+> **Note:** If you are planning on unit testing, doing it this way can add some challenges to unit testing, but overall because you can inject your 
+connection with `setDatabaseConnection()` or `$config['connection']` it's not too bad.
+
 If you need to refresh the database connection, for instance if you are running a long running CLI script and need to refresh the connection every so often, you can re-set the connection with `$your_record->setDatabaseConnection($pdo_connection)`.
 
 ## Contributing
 
 Please do. :D
 
-## Setup
+### Setup
 
 When you contribute, make sure you run `composer test-coverage` to maintain 100% test coverage (this isn't true unit test coverage, more like integration testing).
 
