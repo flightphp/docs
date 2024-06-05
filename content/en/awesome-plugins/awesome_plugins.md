@@ -2,6 +2,12 @@
 
 Flight is incredibly extensible. There are a number of plugins that can be used to add functionality to your Flight application. Some are officially supported by the Flight Team and others are micro/lite libraries to help you get started.
 
+## Authentication/Authorization
+
+Authentication and Authorization are crucial for any application that requires controls to be in place for who can access what. 
+
+- [flightphp/permissions](/awesome-plugins/permissions) - Official Flight Permissions library. This library is a simple way to add user and application level permissions to your application. 
+
 ## Caching
 
 Caching is a great way to speed up your application. There are a number of caching libraries that can be used with Flight.
