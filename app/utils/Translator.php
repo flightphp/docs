@@ -88,6 +88,10 @@ class Translator {
 			$markdownFile = $markdownFilePath . $language . DIRECTORY_SEPARATOR . $file;
 		}
 
+		if(file_exists($markdownFile) === false) {
+			Flight::notFound();
+		}
+
 		return file_get_contents($markdownFile);
 	}
 

@@ -39,7 +39,7 @@ class IndexController {
 		$this->Translator = new Translator($this->language);
 	}
 
-	protected function renderPage(string $latte_file, array $params = []) {
+	public function renderPage(string $latte_file, array $params = []) {
 		$request = $this->app->request();
 
 		$uri = $request->url;

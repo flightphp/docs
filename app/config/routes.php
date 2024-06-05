@@ -29,3 +29,12 @@ $app->group('', function(Router $router) use ($app) {
 	// Clever name for the github webhook
 	$router->post('/update-stuff', [ $IndexController, 'updateStuffPost' ], false, 'update_stuff');
 }, [ new HeaderSecurityMiddleware ]);
+
+$app->map('notFound', function() use ($app) {
+	$app->response()
+		->clearBody()
+		->status(404);
+	(new IndexController($app))->renderPage('not_found.latte');
+	$app->response()->send();
+	exit;
+});
