@@ -10,7 +10,6 @@ Usage
 -------
 First you need to setup your permissions, then you tell the your app what the permissions mean. Ultimately you will check your permissions with `$Permissions->has()`, `->can()`, or `is()`. `has()` and `can()` have the same functionality, but are named differently to make your code more readable.
 
-### Simple Usage
 ## Basic Example
 
 Let's assume you have a feature in your application that checks if a user is logged in. You can create a permissions object like this:
@@ -96,10 +95,10 @@ class PostController {
 }
 ```
 
-### Injecting dependencies
+## Injecting dependencies
 You can inject dependencies into the closure that defines the permissions. This is useful if you have some sort of toggle, id, or any other data point that you want to check against. The same works for Class->Method type calls, except you define the arguments in the method.
 
-#### Closures
+### Closures
 
 ```php
 $Permission->defineRule('order', function(string $current_role, MyDependency $MyDependency = null) {
@@ -118,7 +117,7 @@ public function createOrder() {
 }
 ```
 
-#### Classes
+### Classes
 
 ```php
 namespace MyApp;
@@ -131,7 +130,7 @@ class Permissions {
 }
 ```
 
-### Shortcut to set permissions with classes
+## Shortcut to set permissions with classes
 You can also use classes to define your permissions. This is useful if you have a lot of permissions and you want to keep your code clean. You can do something like this:
 ```php
 <?php
