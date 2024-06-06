@@ -163,9 +163,58 @@ class Permissions {
 	}
 }
 ```
-The cool part is that there is also a shortcut that you can use (that is also cached!!!) where you just tell the permissions class to map all methods in a class into permissions. So if you have a method named `order()` and a method named `company()`, these will automatically be mapped so you can just run `$Permissions->has('order.read')` or `$Permissions->has('company.read')` and it will work. Defining this is very difficult, so stay with me here. You just need to do this:
+The cool part is that there is also a shortcut that you can use (that can also be cached!!!) where you just tell the permissions class to map all methods in a class into permissions. So if you have a method named `order()` and a method named `company()`, these will automatically be mapped so you can just run `$Permissions->has('order.read')` or `$Permissions->has('company.read')` and it will work. Defining this is very difficult, so stay with me here. You just need to do this:
+
+Create the class of permissions you want to group together.
+```php
+class MyPermissions {
+	public function order(string $current_role, int $order_id = 0): array {
+		// code to determine permissions
+		return $permissions_array;
+	}
+
+	public function company(string $current_role, int $company_id): array {
+		// code to determine permissions
+		return $permissions_array;
+	}
+}
+```
+
+Then make the permissions discoverable using this library.
+
 ```php
 $Permissions = new \flight\Permission($current_role);
+$Permissions->defineRulesFromClassMethods(MyApp\Permissions::class);
+Flight::set('permissions', $Permissions);
+```
+
+Finally, call the permission in your codebase to check if the user is allowed to perform a given permission.
+
+```php
+class SomeController {
+	public function createOrder() {
+		if(Flight::get('permissions')->can('order.create') === false) {
+			die('You can\'t create an order. Sorry!');
+		}
+	}
+}
+```
+
+### Caching
+
+To enable caching, see the simple [wruczak/phpfilecache](https://docs.flightphp.com/awesome-plugins/php-file-cache) library. An example of enabling this is below.
+```php
+
+// this $app can be part of your code, or
+// you can just pass null and it will
+// pull from Flight::app() in the constructor
+$app = Flight::app();
+
+// For now it accepts this as a file cache. Others can easily
+// be added in the future. 
+$Cache = new Wruczek\PhpFileCache\PhpFileCache;
+
+$Permissions = new \flight\Permission($current_role, $app, $Cache);
 $Permissions->defineRulesFromClassMethods(MyApp\Permissions::class, 3600); // 3600 is how many seconds to cache this for. Leave this off to not use caching
 ```
 
