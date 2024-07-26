@@ -2,6 +2,8 @@
 
 An active record is mapping a database entity to a PHP object. Spoken plainly, if you have a users table in your database, you can "translate" a row in that table to a `User` class and a `$user` object in your codebase. See [basic example](#basic-example).
 
+Click [here](https://github.com/flightphp/active-record) for the repository in GitHub.
+
 ## Basic Example
 
 Let's assume you have the following table:
