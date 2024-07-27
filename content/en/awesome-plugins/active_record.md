@@ -113,8 +113,8 @@ $User = new User($pdo_connection);
 
 > Don't want to always set your database connection in the constructor? See [Database Connection Management](#database-connection-management) for other ideas!
 
-### Flight PHP Framework
-If you are using the Flight PHP Framework, you can register the ActiveRecord class as a service (but you honestly don't have to).
+### Register as a method in Flight
+If you are using the Flight PHP Framework, you can register the ActiveRecord class as a service, but you honestly don't have to.
 
 ```php
 Flight::register('user', 'User', [ $pdo_connection ]);
@@ -122,6 +122,58 @@ Flight::register('user', 'User', [ $pdo_connection ]);
 // then you can use it like this in a controller, a function, etc.
 
 Flight::user()->find(1);
+```
+
+## `runway` Methods
+
+[runway](https://docs.flightphp.com/awesome-plugins/runway) is a CLI tool for Flight that has a custom command for this library. 
+
+```bash
+# Usage
+php runway make:record database_table_name [class_name]
+
+# Example
+php runway make:record users
+```
+
+This will create a new class in the `app/records/` directory as `UserRecord.php` with the following content:
+
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace app\records;
+
+/**
+ * ActiveRecord class for the users table.
+ * @link https://docs.flightphp.com/awesome-plugins/active-record
+ *
+ * @property int $id
+ * @property string $username
+ * @property string $email
+ * @property string $password_hash
+ * @property string $created_dt
+ */
+class UserRecord extends \flight\ActiveRecord
+{
+    /**
+     * @var array $relations Set the relationships for the model
+     *   https://docs.flightphp.com/awesome-plugins/active-record#relationships
+     */
+    protected array $relations = [
+		// 'relation_name' => [ self::HAS_MANY, 'RelatedClass', 'foreign_key' ],
+	];
+
+    /**
+     * Constructor
+     * @param mixed $databaseConnection The connection to the database
+     */
+    public function __construct($databaseConnection)
+    {
+        parent::__construct($databaseConnection, 'users');
+    }
+}
 ```
 
 ## CRUD functions
