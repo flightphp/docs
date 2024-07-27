@@ -114,7 +114,9 @@ class ArrayHelperUtil {
 
 ## Underscores in Class Names
 
-As of 3.7.2, you can use Pascal_Snake_Case for your class names by running `Loader::setV2ClassLoading(false);`. This will allow you to use underscores in your class names. This is not recommended, but it is available for those who need it.
+As of 3.7.2, you can use Pascal_Snake_Case for your class names by running `Loader::setV2ClassLoading(false);`. 
+This will allow you to use underscores in your class names. 
+This is not recommended, but it is available for those who need it.
 
 ```php
 

@@ -106,7 +106,7 @@ declare both using the same name, only the mapped method will be invoked.
 ## Overriding Framework Methods
 
 Flight allows you to override its default functionality to suit your own needs,
-without having to modify any code.
+without having to modify any code. You can view all the methods you can override [here](/learn/api).
 
 For example, when Flight cannot match a URL to a route, it invokes the `notFound`
 method which sends a generic `HTTP 404` response. You can override this behavior

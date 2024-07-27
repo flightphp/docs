@@ -1,12 +1,13 @@
-# Views
+# HTML Views and Templates
 
 Flight provides some basic templating functionality by default. 
 
 If you need more complex templating needs, see the Smarty and Latte examples in the [Custom Views](#custom-views) section.
 
+## Default View Engine
+
 To display a view template call the `render` method with the name 
 of the template file and optional template data:
-
 
 ```php
 Flight::render('hello.php', ['name' => 'Bob']);
@@ -48,7 +49,7 @@ set an alternate path for your templates by setting the following config:
 Flight::set('flight.views.path', '/path/to/views');
 ```
 
-## Layouts
+### Layouts
 
 It is common for websites to have a single layout template file with interchanging
 content. To render content to be used in a layout, you can pass in an optional
@@ -107,7 +108,7 @@ The output would be:
 </html>
 ```
 
-## Custom Views
+## Custom View Engines
 
 Flight allows you to swap out the default view engine simply by registering your
 own view class. 

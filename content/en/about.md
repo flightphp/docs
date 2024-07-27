@@ -37,7 +37,7 @@ There is an example app that can help you get started with the Flight Framework.
 
 # Community
 
-We're on Matrix! Chat with us at [#flight-php-framework:matrix.org](https://matrix.to/#/#flight-php-framework:matrix.org).
+We're on Matrix Chat with us at [#flight-php-framework:matrix.org](https://matrix.to/#/#flight-php-framework:matrix.org).
 
 # Contributing
 

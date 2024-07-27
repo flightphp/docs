@@ -16,8 +16,8 @@ Flight::unregister(string $name) // Unregisters a class to a framework method.
 Flight::before(string $name, callable $callback) // Adds a filter before a framework method.
 Flight::after(string $name, callable $callback) // Adds a filter after a framework method.
 Flight::path(string $path) // Adds a path for autoloading classes.
-Flight::get(string $key) // Gets a variable.
-Flight::set(string $key, mixed $value) // Sets a variable.
+Flight::get(string $key) // Gets a variable set by Flight::set().
+Flight::set(string $key, mixed $value) // Sets a variable within the Flight engine.
 Flight::has(string $key) // Checks if a variable is set.
 Flight::clear(array|string $key = []) // Clears a variable.
 Flight::init() // Initializes the framework to its default settings.
@@ -42,6 +42,7 @@ Flight::delete(string $pattern, callable $callback, bool $pass_route = false, st
 Flight::group(string $pattern, callable $callback) // Creates grouping for urls, pattern must be a string.
 Flight::getUrl(string $name, array $params = []) // Generates a URL based on a route alias.
 Flight::redirect(string $url, int $code) // Redirects to another URL.
+Flight::download(string $filePath) // Downloads a file.
 Flight::render(string $file, array $data, ?string $key = null) // Renders a template file.
 Flight::error(Throwable $error) // Sends an HTTP 500 response.
 Flight::notFound() // Sends an HTTP 404 response.

@@ -30,6 +30,8 @@ $app->register('latte', LatteEngine::class, [], function(LatteEngine $latte) use
 	$latte->setTempDirectory(__DIR__ . '/../cache/');
 
 	// Tell Latte where the root directory for your views will be at.
+	// $app->get('flight.views.path') is set in the config.php file
+	//   You could also just do something like `__DIR__ . '/../views/'`
 	$latte->setLoader(new \Latte\Loaders\FileLoader($app->get('flight.views.path')));
 });
 ```

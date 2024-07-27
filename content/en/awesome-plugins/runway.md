@@ -63,6 +63,8 @@ namespace app\records;
  * @property string $email
  * @property string $created_at
  * @property string $updated_at
+ * // you could also add relationships here once you define them in the $relations array
+ * @property CompanyRecord $company Example of a relationship
  */
 class UserRecord extends \flight\ActiveRecord
 {

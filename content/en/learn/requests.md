@@ -167,7 +167,8 @@ $method = Flight::request()->method; // actually calls getMethod()
 $method = Flight::request()->getMethod();
 ```
 
-**Note:** The `getMethod()` method first pulls the method from `$_SERVER['REQUEST_METHOD']`, then it can be overwritten by `$_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE']` if it exists or `$_REQUEST['_method']` if it exists.
+**Note:** The `getMethod()` method first pulls the method from `$_SERVER['REQUEST_METHOD']`, then it can be overwritten 
+by `$_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE']` if it exists or `$_REQUEST['_method']` if it exists.
 
 ## Request URLs
 

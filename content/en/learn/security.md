@@ -1,12 +1,15 @@
 # Security
 
-Security is a big deal when it comes to web applications. You want to make sure that your application is secure and that your users' data is safe. Flight provides a number of features to help you secure your web applications.
+Security is a big deal when it comes to web applications. You want to make sure that your application is secure and that your users' data is 
+safe. Flight provides a number of features to help you secure your web applications.
 
 ## Headers
 
-HTTP headers are one of the easiest ways to secure your web applications. You can use headers to prevent clickjacking, XSS, and other attacks. There are several ways that you can add these headers to your application.
+HTTP headers are one of the easiest ways to secure your web applications. You can use headers to prevent clickjacking, XSS, and other attacks. 
+There are several ways that you can add these headers to your application.
 
-Two great websites to check for the security of your headers are [securityheaders.com](https://securityheaders.com/) and [observatory.mozilla.org](https://observatory.mozilla.org/).
+Two great websites to check for the security of your headers are [securityheaders.com](https://securityheaders.com/) and 
+[observatory.mozilla.org](https://observatory.mozilla.org/).
 
 ### Add By Hand
 
@@ -91,11 +94,14 @@ Flight::group('', function(Router $router) {
 
 ## Cross Site Request Forgery (CSRF)
 
-Cross Site Request Forgery (CSRF) is a type of attack where a malicious website can make a user's browser send a request to your website. This can be used to perform actions on your website without the user's knowledge. Flight does not provide a built-in CSRF protection mechanism, but you can easily implement your own by using middleware.
+Cross Site Request Forgery (CSRF) is a type of attack where a malicious website can make a user's browser send a request to your website. 
+This can be used to perform actions on your website without the user's knowledge. Flight does not provide a built-in CSRF protection 
+mechanism, but you can easily implement your own by using middleware.
 
 ### Setup
 
-First you need to generate a CSRF token and store it in the user's session. You can then use this token in your forms and check it when the form is submitted.
+First you need to generate a CSRF token and store it in the user's session. You can then use this token in your forms and check it when 
+the form is submitted.
 
 ```php
 // Generate a CSRF token and store it in the user's session
@@ -191,7 +197,10 @@ Flight::group('', function(Router $router) {
 
 ## Cross Site Scripting (XSS)
 
-Cross Site Scripting (XSS) is a type of attack where a malicious website can inject code into your website. Most of these opportunities come from form values that your end users will fill out. You should **never** trust output from your users! Always assume all of them are the best hackers in the world. They can inject malicious JavaScript or HTML into your page. This code can be used to steal information from your users or perform actions on your website. Using Flight's view class, you can easily escape output to prevent XSS attacks.
+Cross Site Scripting (XSS) is a type of attack where a malicious website can inject code into your website. Most of these opportunities come 
+from form values that your end users will fill out. You should **never** trust output from your users! Always assume all of them are the 
+best hackers in the world. They can inject malicious JavaScript or HTML into your page. This code can be used to steal information from your 
+users or perform actions on your website. Using Flight's view class, you can easily escape output to prevent XSS attacks.
 
 ```php
 // Let's assume the user is clever as tries to use this as their name
@@ -207,7 +216,9 @@ Flight::view()->render('template', ['name' => $name]);
 
 ## SQL Injection
 
-SQL Injection is a type of attack where a malicious user can inject SQL code into your database. This can be used to steal information from your database or perform actions on your database. Again you should **never** trust input from your users! Always assume they are out for blood. You can use prepared statements in your `PDO` objects will  prevent SQL injection.
+SQL Injection is a type of attack where a malicious user can inject SQL code into your database. This can be used to steal information 
+from your database or perform actions on your database. Again you should **never** trust input from your users! Always assume they are 
+out for blood. You can use prepared statements in your `PDO` objects will  prevent SQL injection.
 
 ```php
 // Assuming you have Flight::db() registered as your PDO object
@@ -232,7 +243,9 @@ $users = Flight::db()->fetchAll("SELECT * FROM users WHERE username = '{$usernam
 
 ## CORS
 
-Cross-Origin Resource Sharing (CORS) is a mechanism that allows many resources (e.g., fonts, JavaScript, etc.) on a web page to be requested from another domain outside the domain from which the resource originated. Flight does not have built in functionality, but this can easily be handled with a hook to run before the `Flight::start()` method is called.
+Cross-Origin Resource Sharing (CORS) is a mechanism that allows many resources (e.g., fonts, JavaScript, etc.) on a web page to be 
+requested from another domain outside the domain from which the resource originated. Flight does not have built in functionality, 
+but this can easily be handled with a hook to run before the `Flight::start()` method is called.
 
 ```php
 // app/utils/CorsUtil.php
@@ -300,4 +313,8 @@ Flight::before('start', [ $CorsUtil, 'setupCors' ]);
 
 ## Conclusion
 
-Security is a big deal and it's important to make sure your web applications are secure. Flight provides a number of features to help you secure your web applications, but it's important to always be vigilant and make sure you're doing everything you can to keep your users' data safe. Always assume the worst and never trust input from your users. Always escape output and use prepared statements to prevent SQL injection. Always use middleware to protect your routes from CSRF and CORS attacks. If you do all of these things, you'll be well on your way to building secure web applications.
+Security is a big deal and it's important to make sure your web applications are secure. Flight provides a number of features to help you 
+secure your web applications, but it's important to always be vigilant and make sure you're doing everything you can to keep your users' 
+data safe. Always assume the worst and never trust input from your users. Always escape output and use prepared statements to prevent SQL 
+injection. Always use middleware to protect your routes from CSRF and CORS attacks. If you do all of these things, you'll be well on your 
+way to building secure web applications.

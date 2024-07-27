@@ -1,6 +1,8 @@
 # Route Middleware
 
-Flight supports route and group route middleware. Middleware is a function that is executed before (or after) the route callback. This is a great way to add API authentication checks in your code, or to validate that the user has permission to access the route.
+Flight supports route and group route middleware. Middleware is a function that is executed before (or after) the route 
+callback. This is a great way to add API authentication checks in your code, or to validate that the user has permission 
+to access the route.
 
 ## Basic Middleware
 
@@ -50,7 +52,8 @@ Flight::start();
 
 ## Handling Middleware Errors
 
-Let's say you have an auth middleware and you want to redirect the user to a login page if they are not authenticated. You have a couple of options at your disposal:
+Let's say you have an auth middleware and you want to redirect the user to a login page if they are not 
+authenticated. You have a couple of options at your disposal:
 
 1. You can return false from the middleware function and Flight will automatically return a 403 Forbidden error, but have no customization.
 1. You can redirect the user to a login page using `Flight::redirect()`.
@@ -106,7 +109,8 @@ class MyMiddleware {
 
 ## Grouping Middleware
 
-You can add a route group, and then every route in that group will have the same middleware as well. This is useful if you need to group a bunch of routes by say an Auth middleware to check the API key in the header.
+You can add a route group, and then every route in that group will have the same middleware as well. This is 
+useful if you need to group a bunch of routes by say an Auth middleware to check the API key in the header.
 
 ```php
 
@@ -115,7 +119,9 @@ Flight::group('/api', function() {
 
 	// This "empty" looking route will actually match /api
 	Flight::route('', function() { echo 'api'; }, false, 'api');
+	// This will match /api/users
     Flight::route('/users', function() { echo 'users'; }, false, 'users');
+	// This will match /api/users/1234
 	Flight::route('/users/@id', function($id) { echo 'user:'.$id; }, false, 'user_view');
 }, [ new ApiAuthMiddleware() ]);
 ```
@@ -126,7 +132,10 @@ If you want to apply a global middleware to all your routes, you can add an "emp
 
 // added at the end of the group method
 Flight::group('', function() {
+
+	// This is still /users
 	Flight::route('/users', function() { echo 'users'; }, false, 'users');
+	// And this is still /users/1234
 	Flight::route('/users/@id', function($id) { echo 'user:'.$id; }, false, 'user_view');
 }, [ new ApiAuthMiddleware() ]);
 ```

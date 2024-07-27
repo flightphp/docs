@@ -9,6 +9,7 @@ You have two options to get started with Flight:
 
 While these are not officially sponsored by the Flight Team, these could give you ideas on how to structure your own projects that are built with Flight!
 
+- [FlightPHP Example Blog](https://github.com/n0nag0n/flightphp-blog) - Flight v3 with Middleware, Controllers, Active Record, and Latte.
 - [FlightPHP School Management System](https://github.com/krmu/FlightPHP_School) - Flight v3
 - [Paste Bin with Comments](https://github.com/n0nag0n/commie2) - Flight v3
 - [Basic Skeleton App](https://github.com/markhughes/flight-skeleton)
