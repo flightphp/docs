@@ -1,4 +1,4 @@
-# Migrating From Another Framework
+# Comparing Flight to Another Framework
 
 If you are migrating from another framework such as Laravel, Slim, Fat-Free, or Symfony to Flight, this page will help you understand the differences between the two.
 
