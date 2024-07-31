@@ -1,4 +1,4 @@
-# Migrating From Fat-Free
+# Flight vs Fat-Free
 
 ## What is Fat-Free?
 [Fat-Free](https://fatfreeframework.com) (affectionately known as **F3**) is a powerful yet easy-to-use PHP micro-framework designed to help you build dynamic and robust 

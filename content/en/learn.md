@@ -13,6 +13,9 @@ Additionally an excellent tutorial has been created by [@lubiana](https://git.ph
 this guide will help you understand some of the major concepts surrounding a framework and why they are beneficial to use. 
 You can find the tutorial [here](https://git.php.fail/lubiana/no-framework-tutorial/src/branch/master/README.md).
 
+##### [Flight Compared to Other Frameworks](/learn/flight-vs-another-framework)
+If you are migrating from another framework such as Laravel, Slim, Fat-Free, or Symfony to Flight, this page will help you understand the differences between the two.
+
 ## Core Topics
 
 ##### [Autoloading](/learn/autoloading)
@@ -65,9 +68,6 @@ Learn about the core methods of the framework.
 
 ##### [Migrating to v3](/learn/migrating-to-v3)
 Backwards compatibility has for the most part been maintained, but there are some changes that you should be aware of when migrating from v2 to v3.
-
-##### [Migrating From Another Framework](/learn/migrating-from-another-framework)
-If you are migrating from another framework such as Laravel, Slim, Fat-Free, or Symfony to Flight, this page will help you understand the differences between the two.
 
 ##### [Troubleshooting](/learn/troubleshooting)
 There are some common issues that you may run into when using Flight. This page will help you troubleshoot those issues.

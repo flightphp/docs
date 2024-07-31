@@ -1,4 +1,4 @@
-# Migrating From Symfony
+# Flight vs Symfony
 
 ## What is Symfony?
 [Symfony](https://symfony.com/) is a set of reusable PHP components and a PHP framework for web projects. 

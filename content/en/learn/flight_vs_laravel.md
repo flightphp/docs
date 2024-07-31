@@ -1,4 +1,4 @@
-# Migrating From Laravel
+# Flight vs Laravel
 
 ## What is Laravel?
 [Laravel](https://laravel.com) is a full-featured framework that has all the bells and whistles and an amazing developer focused ecosystem, 
