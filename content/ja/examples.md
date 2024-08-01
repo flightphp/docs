@@ -1,27 +1,26 @@
-# マルチ言語対応
+# スタートが必要ですか？
 
-Flightの始め方を知りたいですか？
+Flightで開始するための2つのオプションがあります：
 
-Flightで始めるための2つのオプションがあります：
+- [シングルファイルのスケルトンボイラープレート](https://github.com/flightphp/skeleton-simple): アプリを1つのシンプルなファイルで実行するために必要なすべてが含まれた単一のファイル。
+- [フルスケルトンボイラープレート](https://github.com/flightphp/skeleton): コントローラーやビューを備えたより充実した例。
 
-- [シングルファイルスケルトンボイラープレート](https://github.com/flightphp/skeleton-simple): すべてを1つのシンプルなファイルで実行するために必要なすべてが含まれている単一のファイルです。
-- [フルスケルトンボイラープレート](https://github.com/flightphp/skeleton): コントローラーとビューが含まれた、より充実した例です。
+## インスピレーションが必要ですか？
 
-## インスピレーションを得るには？
+これらはFlightチームによって公式にスポンサーされていませんが、Flightで構築された独自のプロジェクトの構造化方法についてのアイデアを提供することができます！
 
-これらはFlightチームによって公式にスポンサーされていませんが、Flightで構築されたプロジェクトの構造についてアイデアを提供することができます！
-
+- [FlightPHPのブログ例](https://github.com/n0nag0n/flightphp-blog) - Middleware、コントローラー、アクティブレコード、およびLatteを使用したFlight v3。
 - [FlightPHP学校管理システム](https://github.com/krmu/FlightPHP_School) - Flight v3
-- [コメント可能なペーストビン](https://github.com/n0nag0n/commie2) - Flight v3
+- [コメント付きペーストビン](https://github.com/n0nag0n/commie2) - Flight v3
 - [基本的なスケルトンアプリ](https://github.com/markhughes/flight-skeleton)
-- [例のWiki](https://github.com/Skayo/FlightWiki)
+- [ウィキの例](https://github.com/Skayo/FlightWiki)
 - [IT-Innovator PHPフレームワークアプリケーション](https://github.com/itinnovator/myphp-app)
 - [LittleEducationalCMS（スペイン語）](https://github.com/casgin/LittleEducationalCMS)
-- [イタリアンイエローページAPI](https://github.com/chiccomagnus/PGAPI)
-- [汎用コンテンツ管理システム（非常に少ないドキュメンテーション付き）](https://github.com/recepuncu/cms)
-- [Flightとmedooに基づく小さなPHPフレームワーク](https://github.com/ycrao/tinyme)
-- [例のMVCアプリケーション](https://github.com/paddypei/Flight-MVC)
+- [イタリア語のイエローページAPI](https://github.com/chiccomagnus/PGAPI)
+- [ジェネリックコンテンツ管理システム（ほとんどドキュメントがない...）](https://github.com/recepuncu/cms)
+- [Flightとmedooに基づいた小さなphpフレームワーク](https://github.com/ycrao/tinyme)
+- [MVCアプリケーションの例](https://github.com/paddypei/Flight-MVC)
 
-## 自分の例を共有したいですか？
+## 独自の例を共有したいですか？
 
 共有したいプロジェクトがある場合は、プルリクエストを送信してこのリストに追加してください！

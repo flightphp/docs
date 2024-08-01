@@ -1,22 +1,22 @@
-# 自动加载
+# 自動加載
 
-在PHP中，自动加载是一个概念，您可以指定要从中加载类的目录或目录。这比使用`require`或`include`加载类要更有益。这也是使用Composer软件包的要求。
+自動加載是 PHP 中的一個概念，在這裡您指定要從哪些目錄加載類。這比使用`require`或`include`來加載類要好得多。這也是使用 Composer 套件的要求。
 
-默认情况下，任何`Flight`类都会由composer自动加载。但是，如果您想要自动加载自己的类，则可以使用`Flight::path`方法指定要从中加载类的目录。
+默認情況下，任何`Flight`類都會由 Composer 自動加載。但是，如果您想要自動加載自己的類，可以使用`Flight::path()`方法來指定要從哪個目錄加載類。
 
 ## 基本示例
 
-假设我们有一个如下所示的目录树：
+假設我們有如下目錄樹：
 
 ```text
-# 示例路径
+# 示例路徑
 /home/user/project/my-flight-project/
 ├── app
 │   ├── cache
 │   ├── config
-│   ├── controllers - 包含此项目的控制器
+│   ├── controllers - 包含此項目的控制器
 │   ├── translations
-│   ├── UTILS - 仅包含此应用程序的类（这是为了稍后的示例而全部大写）
+│   ├── UTILS - 包含僅用於此應用程序的類（這是為了後面的示例故意全部大寫）
 │   └── views
 └── public
     └── css
@@ -24,9 +24,9 @@
 	└── index.php
 ```
 
-您可能已经注意到，这与此文档站点的文件结构相同。
+您可能已經注意到，這與此文檔站點的文件結構相同。
 
-您可以像这样指定要加载的每个目录：
+您可以像這樣指定要從每個目錄加載：
 
 ```php
 
@@ -34,7 +34,7 @@
  * public/index.php
  */
 
-// 向自动加载器添加路径
+// 添加一個路徑給自動加載程序
 Flight::path(__DIR__.'/../app/controllers/');
 Flight::path(__DIR__.'/../app/utils/');
 
@@ -43,10 +43,10 @@ Flight::path(__DIR__.'/../app/utils/');
  * app/controllers/MyController.php
  */
 
-// 无需命名空间
+// 不需要命名空間
 
-// 建议所有自动加载的类均为帕斯卡命名法（每个单词的首字母大写，没有空格）
-// 从3.7.2开始，您可以通过运行Loader::setV2ClassLoading(false);来使用Pascal_Snake_Case作为类名
+// 建議將所有自動加載的類命名為帕斯卡命名法（每個單詞首字母大寫，沒有空格）
+// 截至 3.7.2 版本，您可以通過運行 Loader::setV2ClassLoading(false); 來使用帕斯卡_蛇_命名法命名您的類
 class MyController {
 
 	public function index() {
@@ -55,9 +55,9 @@ class MyController {
 }
 ```
 
-## 命名空间
+## 命名空間
 
-如果您有命名空间，实际上实现这一点会变得非常容易。您应该使用`Flight::path()`方法指定应用程序的根目录（而不是文档根目录或`public/`文件夹）。
+如果您有命名空間，實際上實現這一點變得非常容易。您應該使用`Flight::path()`方法來指定應用程序的根目錄（而不是文檔根目錄或`public/`文件夾）。
 
 ```php
 
@@ -65,25 +65,25 @@ class MyController {
  * public/index.php
  */
 
-// 向自动加载器添加路径
+// 添加一個路徑給自動加載程序
 Flight::path(__DIR__.'/../');
 ```
 
-现在，您的控制器可能如下所示。查看下面的示例，但请留意重要信息的注释。
+現在您的控制器可能看起來像這樣。查看下面的示例，但請注意評注中的重要信息。
 
 ```php
 /**
  * app/controllers/MyController.php
  */
 
-// 必须使用命名空间
-// 命名空间与目录结构相同
-// 命名空间必须遵循与目录结构相同的大小写
-// 命名空间和目录不能有任何下划线（除非设置了Loader::setV2ClassLoading(false)）
+// 必須有命名空間
+// 命名空間與目錄結構相同
+// 命名空間必須遵循與目錄結構相同的大小寫
+// 命名空間和目錄不能有任何下劃線（除非 Loader::setV2ClassLoading(false) 已設置）
 namespace app\controllers;
 
-// 建议所有自动加载的类均为帕斯卡命名法（每个单词的首字母大写，没有空格）
-// 从3.7.2开始，您可以通过运行Loader::setV2ClassLoading(false);来使用Pascal_Snake_Case作为类名
+// 建議將所有自動加載的類命名為帕斯卡命名法（每個單詞首字母大寫，沒有空格）
+// 截至 3.7.2 版本，您可以通過運行 Loader::setV2ClassLoading(false); 來使用帕斯卡_蛇_命名法命名您的類
 class MyController {
 
 	public function index() {
@@ -92,7 +92,7 @@ class MyController {
 }
 ```
 
-如果您想要自动加载utils目录中的类，您将执行基本相同的操作：
+如果您希望自動加載 utils 目錄中的類，則基本上可以執行相同的操作：
 
 ```php
 
@@ -100,7 +100,8 @@ class MyController {
  * app/UTILS/ArrayHelperUtil.php
  */
 
-// 命名空间必须与目录结构和大小写匹配（注意UTILS目录全部大写，与上面的文件树相同）
+// 命名空間必須與目錄結構及大小寫相匹配（請注意 UTILS 目錄是全部大寫
+//     如上面的文件樹所示）
 namespace app\UTILS;
 
 class ArrayHelperUtil {
@@ -111,9 +112,9 @@ class ArrayHelperUtil {
 }
 ```
 
-## 类名中的下划线
+## 類名中的下劃線
 
-从3.7.2开始，您可以通过运行`Loader::setV2ClassLoading(false);`来使用Pascal_Snake_Case作为类名。这将允许您在类名中使用下划线。虽然不建议这样做，但对那些需要的人是可用的。
+截至 3.7.2 版本，您可以運行`Loader::setV2ClassLoading(false);`，來使用帕斯卡_蛇_命名法命名您的類。這將允許您在類名中使用下劃線。這不建議使用，但對於需要的用戶來說是可用的。
 
 ```php
 
@@ -121,7 +122,7 @@ class ArrayHelperUtil {
  * public/index.php
  */
 
-// 向自动加载器添加路径
+// 添加一個路徑給自動加載程序
 Flight::path(__DIR__.'/../app/controllers/');
 Flight::path(__DIR__.'/../app/utils/');
 Loader::setV2ClassLoading(false);
@@ -130,7 +131,7 @@ Loader::setV2ClassLoading(false);
  * app/controllers/My_Controller.php
  */
 
-// 无需命名空间
+// 不需要命名空間
 
 class My_Controller {
 

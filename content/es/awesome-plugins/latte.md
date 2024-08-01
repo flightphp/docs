@@ -1,10 +1,10 @@
 # Latte
 
-Latte es un motor de plantillas completo que es muy fácil de usar y se siente más cercano a una sintaxis de PHP que Twig o Smarty. También es muy fácil de extender y agregar tus propios filtros y funciones.
+Latte es un motor de plantillas completo que es muy fácil de usar y se siente más cercano a una sintaxis de PHP que Twig o Smarty. También es muy fácil de extender y agregar sus propios filtros y funciones.
 
 ## Instalación
 
-Instala con composer.
+Instalar con composer.
 
 ```bash
 composer require latte/latte
@@ -12,7 +12,7 @@ composer require latte/latte
 
 ## Configuración Básica
 
-Existen algunas opciones de configuración básicas para comenzar. Puedes leer más sobre ellas en la [Documentación de Latte](https://latte.nette.org/es/guia).
+Hay algunas opciones de configuración básicas para empezar. Puede leer más sobre ellas en la [Documentación de Latte](https://latte.nette.org/en/guide).
 
 ```php
 
@@ -24,19 +24,21 @@ $app = Flight::app();
 
 $app->register('latte', LatteEngine::class, [], function(LatteEngine $latte) use ($app) {
 
-	// Aquí es donde Latte almacenará en caché tus plantillas para acelerar las cosas
-	// ¡Una característica genial de Latte es que actualiza automáticamente tu
-	// caché cuando realizas cambios en tus plantillas!
+	// Aquí es donde Latte almacenará en caché sus plantillas para acelerar las cosas
+	// ¡Una cosa genial acerca de Latte es que actualiza automáticamente su caché
+	// cuando realiza cambios en sus plantillas!
 	$latte->setTempDirectory(__DIR__ . '/../cache/');
 
-	// Indica a Latte dónde estará el directorio raíz de tus vistas.
+	// Indique a Latte cuál será el directorio raíz para sus vistas.
+	// $app->get('flight.views.path') se establece en el archivo config.php
+	//   También podría simplemente hacer algo como `__DIR__ . '/../views/'`
 	$latte->setLoader(new \Latte\Loaders\FileLoader($app->get('flight.views.path')));
 });
 ```
 
 ## Ejemplo de Diseño Simple
 
-Aquí tienes un ejemplo simple de un archivo de diseño. Este es el archivo que se utilizará para envolver todas tus otras vistas.
+Aquí tienes un ejemplo simple de un archivo de diseño. Este es el archivo que se usará para envolver todas sus otras vistas.
 
 ```html
 <!-- app/views/layout.latte -->
@@ -63,7 +65,7 @@ Aquí tienes un ejemplo simple de un archivo de diseño. Este es el archivo que 
 </html>
 ```
 
-Y ahora tenemos tu archivo que se va a renderizar dentro de ese bloque de contenido:
+Y ahora tenemos su archivo que se va a renderizar dentro de ese bloque de contenido:
 
 ```html
 <!-- app/views/home.latte -->
@@ -77,7 +79,7 @@ Y ahora tenemos tu archivo que se va a renderizar dentro de ese bloque de conten
 {/block}
 ```
 
-Entonces, cuando vayas a renderizar esto en tu función o controlador, harías algo así:
+Entonces, cuando vaya a renderizar esto dentro de su función o controlador, haría algo así:
 
 ```php
 // ruta simple
@@ -87,7 +89,7 @@ Flight::route('/', function () {
 	]);
 });
 
-// o si estás usando un controlador
+// o si está utilizando un controlador
 Flight::route('/', [HomeController::class, 'index']);
 
 // HomeController.php
@@ -102,4 +104,4 @@ class HomeController
 }
 ```
 
-¡Consulta la [Documentación de Latte](https://latte.nette.org/es/guia) para obtener más información sobre cómo aprovechar al máximo Latte!
+¡Consulte la [Documentación de Latte](https://latte.nette.org/en/guide) para obtener más información sobre cómo utilizar Latte en su máximo potencial!

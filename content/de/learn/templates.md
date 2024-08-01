@@ -1,28 +1,30 @@
-# Ansichten
+# HTML-Ansichten und Vorlagen
 
-Flight bietet standardmäßig einige grundlegende Template-Funktionalitäten.
+Flight bietet standardmäßig einige grundlegende Vorlagenfunktionalitäten.
 
-Wenn Sie komplexere Template-Anforderungen haben, finden Sie Beispiele für Smarty und Latte im Abschnitt [Benutzerdefinierte Ansichten](#benutzerdefinierte-ansichten).
+Wenn Sie komplexere Vorlagenanforderungen haben, beachten Sie die Smarty- und Latte-Beispiele im Abschnitt [Benutzerdefinierte Ansichten](#custom-views).
 
-Um eine Ansichtsvorlage anzuzeigen, rufen Sie die `render` Methode mit dem Namen der Vorlagendatei und optionalen Vorlagedaten auf:
+## Standardansichtsmaschine
+
+Um eine Ansichtsvorlage anzuzeigen, rufen Sie die Methode `render` mit dem Namen der Vorlagendatei und optionalen Vorlagendaten auf:
 
 ```php
 Flight::render('hello.php', ['name' => 'Bob']);
 ```
 
-Die von Ihnen übergebenen Vorlagendaten werden automatisch in die Vorlage eingefügt und können wie eine lokale Variable referenziert werden. Vorlagendateien sind einfach PHP-Dateien. Wenn der Inhalt der `hello.php` Vorlagendatei folgendermaßen aussieht:
+Die von Ihnen übergebenen Vorlagendaten werden automatisch in die Vorlage eingefügt und können wie eine lokale Variable referenziert werden. Vorlagendateien sind einfach PHP-Dateien. Wenn der Inhalt der `hello.php`-Vorlagendatei folgendermaßen aussieht:
 
 ```php
 Hallo, <?= $name ?>!
 ```
 
-Das Ergebnis wäre:
+Die Ausgabe wäre:
 
 ```
 Hallo, Bob!
 ```
 
-Sie können auch manuell Ansichtsvariablen festlegen, indem Sie die `set` Methode verwenden:
+Sie können auch manuell Ansichtsvariablen festlegen, indem Sie die Methode `set` verwenden:
 
 ```php
 Flight::view()->set('name', 'Bob');
@@ -34,17 +36,17 @@ Die Variable `name` steht nun in allen Ihren Ansichten zur Verfügung. Sie könn
 Flight::render('hello');
 ```
 
-Beachten Sie, dass Sie bei der Angabe des Namens der Vorlage in der `render` Methode die Dateierweiterung `.php` weglassen können.
+Beachten Sie, dass Sie bei der Angabe des Namens der Vorlage in der `render`-Methode die `.php`-Erweiterung weglassen können.
 
-Standardmäßig sucht Flight nach einem `views`-Verzeichnis für Vorlagendateien. Sie können einen alternativen Pfad für Ihre Vorlagen festlegen, indem Sie die folgende Konfiguration setzen:
+Standardmäßig sucht Flight nach einem `views`-Verzeichnis für Vorlagendateien. Sie können einen alternativen Pfad für Ihre Vorlagen festlegen, indem Sie die folgende Konfiguration festlegen:
 
 ```php
 Flight::set('flight.views.path', '/pfad/zur/vorlagen');
 ```
 
-## Layouts
+### Layouts
 
-Es ist üblich, dass Websites eine einzelne Layout-Vorlagendatei mit wechselndem Inhalt haben. Um Inhalte zu rendern, die in einem Layout verwendet werden sollen, können Sie einen optionalen Parameter an die `render` Methode übergeben.
+Es ist üblich, dass Websites eine einzelne Layoutvorlagendatei mit austauschbarem Inhalt haben. Um Inhalt zu rendern, der in einem Layout verwendet werden soll, können Sie einen optionalen Parameter an die `render`-Methode übergeben.
 
 ```php
 Flight::render('header', ['heading' => 'Hallo'], 'headerContent');
@@ -85,8 +87,7 @@ Wenn die Vorlagendateien wie folgt aussehen:
 </html>
 ```
 
-Das Ergebnis wäre:
-
+Die Ausgabe wäre:
 ```html
 <html>
   <head>
@@ -99,20 +100,20 @@ Das Ergebnis wäre:
 </html>
 ```
 
-## Benutzerdefinierte Ansichten
+## Benutzerdefinierte Ansichtsmaschinen
 
-Flight ermöglicht es Ihnen, den Standard-View-Engine einfach zu ersetzen, indem Sie Ihre eigene View-Klasse registrieren.
+Flight ermöglicht es Ihnen, die Standardansichtsmaschine einfach durch Registrierung Ihrer eigenen Ansichtsklasse auszutauschen.
 
 ### Smarty
 
-So verwenden Sie den [Smarty](http://www.smarty.net/) Template-Motor für Ihre Ansichten:
+So verwenden Sie den [Smarty](http://www.smarty.net/) Vorlagenmotor für Ihre Ansichten:
 
 ```php
 // Smarty-Bibliothek laden
 require './Smarty/libs/Smarty.class.php';
 
-// Smarty als View-Klasse registrieren
-// Geben Sie auch eine Rückruffunktion zur Konfiguration von Smarty beim Laden an
+// Registrieren Sie Smarty als Ansichtsklasse
+// Übergeben Sie auch eine Rückruffunktion, um Smarty beim Laden zu konfigurieren
 Flight::register('view', Smarty::class, [], function (Smarty $smarty) {
   $smarty->setTemplateDir('./templates/');
   $smarty->setCompileDir('./templates_c/');
@@ -127,7 +128,7 @@ Flight::view()->assign('name', 'Bob');
 Flight::view()->display('hello.tpl');
 ```
 
-Für Vollständigkeit sollten Sie auch die Standard-`render` Methode von Flight überschreiben:
+Zu Vollständigkeit sollten Sie auch die Standard-`render`-Methode von Flight überschreiben:
 
 ```php
 Flight::map('render', function(string $template, array $data): void {
@@ -138,19 +139,19 @@ Flight::map('render', function(string $template, array $data): void {
 
 ### Latte
 
-So verwenden Sie den [Latte](https://latte.nette.org/) Template-Motor für Ihre Ansichten:
+So verwenden Sie den [Latte](https://latte.nette.org/) Vorlagenmotor für Ihre Ansichten:
 
 ```php
 
-// Latte als View-Klasse registrieren
-// Geben Sie auch eine Rückruffunktion zur Konfiguration von Latte beim Laden an
+// Registrieren Sie Latte als Ansichtsklasse
+// Übergeben Sie auch eine Rückruffunktion, um Latte beim Laden zu konfigurieren
 Flight::register('view', Latte\Engine::class, [], function (Latte\Engine $latte) {
-  // Hier werden die Latte Ihre Vorlagen zwischenspeichern, um die Geschwindigkeit zu erhöhen
-	// Eine nette Eigenschaft von Latte ist, dass es automatisch Ihren Zwischenspeicher aktualisiert
+  // Hier wird Latte Ihre Vorlagen zwischenspeichern, um die Dinge zu beschleunigen.
+	// Ein schöner Aspekt an Latte ist, dass es Ihren Cache automatisch aktualisiert,
 	// wenn Sie Änderungen an Ihren Vorlagen vornehmen!
 	$latte->setTempDirectory(__DIR__ . '/../cache/');
 
-	// Sagen Sie Latte, wo das Stammverzeichnis für Ihre Ansichten sein wird.
+	// Teilen Sie Latte mit, in welchem Stammverzeichnis sich Ihre Ansichten befinden werden.
 	$latte->setLoader(new \Latte\Loaders\FileLoader(__DIR__ . '/../views/'));
 });
 
@@ -159,4 +160,4 @@ Flight::map('render', function(string $template, array $data): void {
   // Dies entspricht $latte_engine->render($template, $data);
   echo Flight::view()->render($template, $data);
 });
-```  
+```

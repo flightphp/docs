@@ -1,6 +1,6 @@
 # Configuración
 
-Puedes personalizar ciertos comportamientos de Flight configurando los valores de configuración a través del método `set`.
+Puede personalizar ciertos comportamientos de Flight configurando valores de configuración a través del método 'set'.
 
 ```php
 Flight::set('flight.log_errors', true);
@@ -10,41 +10,52 @@ Flight::set('flight.log_errors', true);
 
 La siguiente es una lista de todas las configuraciones disponibles:
 
-- **flight.base_url** `?string` - Reemplaza la URL base de la solicitud. (predeterminado: null)
-- **flight.case_sensitive** `bool` - Coincidencia sensible a mayúsculas y minúsculas para las URL. (predeterminado: false)
-- **flight.handle_errors** `bool` - Permite a Flight manejar todos los errores internamente. (predeterminado: true)
-- **flight.log_errors** `bool` - Registra los errores en el archivo de registro de errores del servidor web. (predeterminado: false)
-- **flight.views.path** `string` - Directorio que contiene archivos de plantillas de vista. (predeterminado: ./views)
-- **flight.views.extension** `string` - Extensión del archivo de plantilla de vista. (predeterminado: .php)
-- **flight.content_length** `bool` - Establece el encabezado `Content-Length`. (predeterminado: true)
-- **flight.v2.output_buffering** `bool` - Utiliza el almacenamiento en búfer de salida heredado. Consulta [migrating to v3](migrating-to-v3). (predeterminado: false)
+- **flight.base_url** `?string` - Anular la URL base de la solicitud. (por defecto: null)
+- **flight.case_sensitive** `bool` - Coincidencia sensible a mayúsculas y minúsculas para las URL. (por defecto: false)
+- **flight.handle_errors** `bool` - Permitir que Flight maneje todos los errores internamente. (por defecto: true)
+- **flight.log_errors** `bool` - Registrar errores en el archivo de registro de errores del servidor web. (por defecto: false)
+- **flight.views.path** `string` - Directorio que contiene archivos de plantillas de vista. (por defecto: ./views)
+- **flight.views.extension** `string` - Extensión del archivo de plantilla de vista. (por defecto: .php)
+- **flight.content_length** `bool` - Establecer la cabecera `Content-Length`. (por defecto: true)
+- **flight.v2.output_buffering** `bool` - Usar el almacenamiento en búfer de salida heredado. Consulte [migrating to v3](migrating-to-v3). (por defecto: false)
+
+## Configuración del Loader
+
+Adicionalmente, hay otra configuración del cargador. Esto le permitirá cargar clases con `_` en el nombre de la clase.
+
+```php
+// Habilitar la carga de clase con guiones bajos
+// Predeterminado a true
+Loader::$v2ClassLoading = false;
+```
 
 ## Variables
 
-Flight te permite guardar variables para que puedan ser utilizadas en cualquier parte de tu aplicación.
+Flight le permite guardar variables para que puedan ser utilizadas en cualquier lugar de su aplicación.
 
 ```php
-// Guarda tu variable
+// Guarde su variable
 Flight::set('id', 123);
 
-// En otra parte de tu aplicación
+// En otro lugar de su aplicación
 $id = Flight::get('id');
 ```
-Para verificar si una variable ha sido establecida, puedes hacer:
+
+Para ver si una variable ha sido establecida, puede hacerlo así:
 
 ```php
 if (Flight::has('id')) {
-  // Haz algo
+  // Hacer algo
 }
 ```
 
-Puedes limpiar una variable haciendo:
+Puede borrar una variable haciendo:
 
 ```php
-// Limpia la variable id
+// Borra la variable id
 Flight::clear('id');
 
-// Limpia todas las variables
+// Borra todas las variables
 Flight::clear();
 ```
 
@@ -58,9 +69,10 @@ Flight::set('flight.log_errors', true);
 
 ### Errores y Excepciones
 
-Todos los errores y excepciones son capturados por Flight y pasados al método `error`. El comportamiento predeterminado es enviar una respuesta genérica de `HTTP 500 Internal Server Error` con algo de información sobre el error.
+Todos los errores y excepciones son capturados por Flight y pasados al método 'error'.
+El comportamiento predeterminado es enviar una respuesta genérica de 'HTTP 500 Internal Server Error' con alguna información de error.
 
-Puedes anular este comportamiento para tus propias necesidades:
+Puede anular este comportamiento según sus necesidades:
 
 ```php
 Flight::map('error', function (Throwable $error) {
@@ -69,7 +81,7 @@ Flight::map('error', function (Throwable $error) {
 });
 ```
 
-De forma predeterminada, los errores no se registran en el servidor web. Puedes habilitar esto cambiando la configuración:
+Por defecto, los errores no se registran en el servidor web. Puede habilitar esto cambiando la configuración:
 
 ```php
 Flight::set('flight.log_errors', true);
@@ -77,9 +89,9 @@ Flight::set('flight.log_errors', true);
 
 ### No Encontrado
 
-Cuando no se puede encontrar una URL, Flight llama al método `notFound`. El comportamiento predeterminado es enviar una respuesta de `HTTP 404 Not Found` con un mensaje simple.
+Cuando no se puede encontrar una URL, Flight llama al método 'notFound'. El comportamiento predeterminado es enviar una respuesta de 'HTTP 404 Not Found' con un mensaje simple.
 
-Puedes anular este comportamiento para tus propias necesidades:
+Puede anular este comportamiento según sus necesidades:
 
 ```php
 Flight::map('notFound', function () {

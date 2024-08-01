@@ -1,8 +1,8 @@
-# Autoloaden
+# Autoloading
 
-Autoloaden ist ein Konzept in PHP, bei dem Sie ein Verzeichnis oder Verzeichnisse zum Laden von Klassen angeben. Dies ist viel vorteilhafter als die Verwendung von `require` oder `include` zum Laden von Klassen. Es ist auch eine Anforderung für die Verwendung von Composer-Paketen.
+Autoloading ist ein Konzept in PHP, bei dem Sie ein Verzeichnis oder Verzeichnisse angeben, aus denen Klassen geladen werden sollen. Dies ist weitaus vorteilhafter als die Verwendung von `require` oder `include`, um Klassen zu laden. Es ist auch eine Voraussetzung für die Verwendung von Composer-Paketen.
 
-Standardmäßig wird jede `Flight`-Klasse dank Composer automatisch für Sie autoloadet. Wenn Sie jedoch Ihre eigenen Klassen autoloaden möchten, können Sie die Methode `Flight::path` verwenden, um ein Verzeichnis zum Laden von Klassen anzugeben.
+Standardmäßig wird jede `Flight`-Klasse automatisch dank Composer geladen. Wenn Sie jedoch Ihre eigenen Klassen automatisch laden möchten, können Sie die `Flight::path()`-Methode verwenden, um ein Verzeichnis zum Laden von Klassen anzugeben.
 
 ## Grundbeispiel
 
@@ -10,13 +10,13 @@ Angenommen, wir haben einen Verzeichnisbaum wie folgt:
 
 ```text
 # Beispiel-Pfad
-/home/user/projekt/mein-flight-projekt/
+/home/user/project/my-flight-project/
 ├── app
 │   ├── cache
 │   ├── config
 │   ├── controllers - enthält die Controller für dieses Projekt
 │   ├── translations
-│   ├── UTILS - enthält Klassen nur für diese Anwendung (das ist absichtlich alles in Großbuchstaben für ein späteres Beispiel)
+│   ├── UTILS - enthält Klassen nur für diese Anwendung (dies ist alles großgeschrieben, um später ein Beispiel zu geben)
 │   └── views
 └── public
     └── css
@@ -24,9 +24,9 @@ Angenommen, wir haben einen Verzeichnisbaum wie folgt:
 	└── index.php
 ```
 
-Sie haben vielleicht bemerkt, dass dies die gleiche Dateistruktur wie diese Dokumentationsseite ist.
+Sie haben möglicherweise festgestellt, dass dies die gleiche Dateistruktur wie diese Dokumentationsseite ist.
 
-Sie können jedes zu ladende Verzeichnis wie folgt angeben:
+Sie können jedes Verzeichnis wie folgt zum Laden angeben:
 
 ```php
 
@@ -43,21 +43,21 @@ Flight::path(__DIR__.'/../app/utils/');
  * app/controllers/MyController.php
  */
 
-// kein Namespacing erforderlich
+// keine Namensräume erforderlich
 
-// Alle autoloadeten Klassen sollten Pascal Case sein (jedes Wort großgeschrieben, keine Leerzeichen)
-// Ab Version 3.7.2 können Sie Pascal_Snake_Case für Ihre Klassennamen verwenden, indem Sie Loader::setV2ClassLoading(false); ausführen
+// Alle automatisch geladenen Klassen sollten Pascal-Fall sein (jedes Wort großgeschrieben, keine Leerzeichen)
+// Ab Version 3.7.2 können Sie Pascal_Snake_Case für Ihre Klassennamen verwenden, indem Sie Loader::setV2ClassLoading(false); ausführen;
 class MyController {
 
 	public function index() {
-		// etwas tun
+		// etwas machen
 	}
 }
 ```
 
 ## Namensräume
 
-Wenn Sie Namensräume haben, wird dies tatsächlich sehr einfach zu implementieren. Sie sollten die Methode `Flight::path()` verwenden, um das Stammverzeichnis (nicht das Dokument-Stammverzeichnis oder den `public/`-Ordner) Ihrer Anwendung anzugeben.
+Wenn Sie Namensräume haben, wird es tatsächlich sehr einfach, dies zu implementieren. Verwenden Sie die `Flight::path()`-Methode, um das Stammverzeichnis (nicht das Dokumentenstammverzeichnis oder den `public/`-Ordner) Ihrer Anwendung anzugeben.
 
 ```php
 
@@ -69,7 +69,7 @@ Wenn Sie Namensräume haben, wird dies tatsächlich sehr einfach zu implementier
 Flight::path(__DIR__.'/../');
 ```
 
-So könnte Ihr Controller aussehen. Werfen Sie einen Blick auf das folgende Beispiel, achten Sie jedoch auf die Kommentare für wichtige Informationen.
+So könnte Ihr Controller aussehen. Schauen Sie sich das folgende Beispiel an, aber achten Sie auf die Kommentare für wichtige Informationen.
 
 ```php
 /**
@@ -78,21 +78,21 @@ So könnte Ihr Controller aussehen. Werfen Sie einen Blick auf das folgende Beis
 
 // Namensräume sind erforderlich
 // Namensräume entsprechen der Verzeichnisstruktur
-// Namensräume müssen der Groß- und Kleinschreibung der Verzeichnisstruktur entsprechen
+// Namensräume müssen der gleichen Groß- und Kleinschreibung wie die Verzeichnisstruktur folgen
 // Namensräume und Verzeichnisse dürfen keine Unterstriche enthalten (sofern Loader::setV2ClassLoading(false) nicht festgelegt ist)
 namespace app\controllers;
 
-// Alle autoloadeten Klassen sollten Pascal Case sein (jedes Wort großgeschrieben, keine Leerzeichen)
-// Ab Version 3.7.2 können Sie Pascal_Snake_Case für Ihre Klassennamen verwenden, indem Sie Loader::setV2ClassLoading(false); ausführen
+// Alle automatisch geladenen Klassen sollten Pascal-Fall sein (jedes Wort großgeschrieben, keine Leerzeichen)
+// Ab Version 3.7.2 können Sie Pascal_Snake_Case für Ihre Klassennamen verwenden, indem Sie Loader::setV2ClassLoading(false); ausführen;
 class MyController {
 
 	public function index() {
-		// etwas tun
+		// etwas machen
 	}
 }
 ```
 
-Und wenn Sie eine Klasse in Ihrem utils-Verzeichnis autoloaden möchten, würden Sie im Grunde dasselbe tun:
+Und wenn Sie eine Klasse in Ihrem "utils"-Verzeichnis automatisch laden möchten, würden Sie im Grunde dasselbe tun:
 
 ```php
 
@@ -100,21 +100,23 @@ Und wenn Sie eine Klasse in Ihrem utils-Verzeichnis autoloaden möchten, würden
  * app/UTILS/ArrayHelperUtil.php
  */
 
-// Der Namensraum muss der Verzeichnisstruktur und der Groß- und Kleinschreibung entsprechen (beachten Sie das UTILS-Verzeichnis in Großbuchstaben
+// Der Namensraum muss der Verzeichnisstruktur und Groß- und Kleinschreibung entsprechen (beachten Sie, dass das UTILS-Verzeichnis alle großgeschrieben ist
 //     wie im obigen Dateibaum)
 namespace app\UTILS;
 
 class ArrayHelperUtil {
 
 	public function changeArrayCase(array $array) {
-		// etwas tun
+		// etwas machen
 	}
 }
 ```
 
 ## Unterstriche in Klassennamen
 
-Ab Version 3.7.2 können Sie Pascal_Snake_Case für Ihre Klassennamen verwenden, indem Sie `Loader::setV2ClassLoading(false);` ausführen. Dadurch können Sie Unterstriche in Ihren Klassennamen verwenden. Dies wird nicht empfohlen, steht aber für diejenigen zur Verfügung, die es benötigen.
+Ab Version 3.7.2 können Sie Pascal_Snake_Case für Ihre Klassennamen verwenden, indem Sie `Loader::setV2ClassLoading(false);` ausführen.
+Dadurch können Sie Unterstriche in Ihren Klassennamen verwenden.
+Dies wird nicht empfohlen, steht aber für diejenigen zur Verfügung, die es benötigen.
 
 ```php
 
@@ -131,12 +133,12 @@ Loader::setV2ClassLoading(false);
  * app/controllers/My_Controller.php
  */
 
-// kein Namespacing erforderlich
+// keine Namensräume erforderlich
 
 class My_Controller {
 
 	public function index() {
-		// etwas tun
+		// etwas machen
 	}
 }
 ```

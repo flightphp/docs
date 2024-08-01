@@ -1,28 +1,34 @@
-# Aprende Sobre Flight
+# Aprende Acerca de Flight
 
-Flight es un framework rápido, simple y ampliable para PHP. Es bastante versátil y se puede utilizar para construir cualquier tipo de aplicación web. Está construido con la simplicidad en mente y está escrito de una manera que es fácil de entender y usar.
+Flight es un marco rápido, simple y extensible para PHP. Es bastante versátil y se puede utilizar para construir cualquier tipo de aplicación web.
+Está diseñado con simplicidad en mente y está escrito de una manera que es fácil de entender y usar.
 
-## Conceptos Importantes del Framework
+## Conceptos Importantes del Marco
 
-##### [¿Por qué un Framework?](/learn/why-frameworks)
+##### [¿Por qué un Marco?](/learn/why-frameworks)
 
-Aquí tienes un breve artículo sobre por qué deberías usar un framework. Es una buena idea entender los beneficios de usar un framework antes de empezar a utilizar uno.
+Aquí tienes un breve artículo sobre por qué deberías usar un marco. Es una buena idea entender los beneficios de usar un marco antes de comenzar a usar uno.
 
-Además, se ha creado un excelente tutorial por [@lubiana](https://git.php.fail/lubiana). Si bien no entra en gran detalle sobre Flight específicamente, esta guía te ayudará a entender algunos de los principales conceptos en torno a un framework y por qué son beneficiosos de usar. Puedes encontrar el tutorial [aquí](https://git.php.fail/lubiana/no-framework-tutorial/src/branch/master/README.md).
+Además, se ha creado un excelente tutorial por [@lubiana](https://git.php.fail/lubiana). Aunque no entra en gran detalle sobre Flight específicamente, 
+esta guía te ayudará a comprender algunos de los conceptos principales que rodean a un marco y por qué son beneficiosos de usar. 
+Puedes encontrar el tutorial [aquí](https://git.php.fail/lubiana/no-framework-tutorial/src/branch/master/README.md).
+
+##### [Flight Comparado con Otros Marcos](/learn/flight-vs-another-framework)
+Si estás migrando desde otro marco como Laravel, Slim, Fat-Free o Symfony a Flight, esta página te ayudará a entender las diferencias entre los dos.
 
 ## Temas Principales
 
-##### [Autocarga](/learn/autoloading)
+##### [Carga Automática](/learn/autoloading)
 
-Aprende cómo autocomentar tus propias clases en tu aplicación.
+Aprende cómo cargar automáticamente tus propias clases en tu aplicación.
 
 ##### [Enrutamiento](/learn/routing)
 
-Aprende cómo gestionar rutas para tu aplicación web. Esto también incluye agrupar rutas, parámetros de ruta e intermediarios.
+Aprende cómo gestionar rutas para tu aplicación web. Esto también incluye grupos de rutas, parámetros de ruta e intermedios.
 
-##### [Intermediarios](/learn/middleware)
+##### [Intermedios](/learn/middleware)
 
-Aprende cómo usar intermediarios para filtrar las solicitudes y respuestas en tu aplicación.
+Aprende cómo utilizar intermedios para filtrar solicitudes y respuestas en tu aplicación.
 
 ##### [Solicitudes](/learn/requests)
 
@@ -34,34 +40,34 @@ Aprende cómo enviar respuestas a tus usuarios.
 
 ##### [Plantillas HTML](/learn/templates)
 
-Aprende cómo utilizar el motor de vista incorporado para renderizar tus plantillas HTML.
+Aprende cómo utilizar el motor de vistas incorporado para renderizar tus plantillas HTML.
 
 ##### [Seguridad](/learn/security)
 
-Aprende cómo asegurar tu aplicación de amenazas de seguridad comunes.
+Aprende cómo asegurar tu aplicación contra amenazas de seguridad comunes.
 
 ##### [Configuración](/learn/configuration)
 
-Aprende cómo configurar el framework para tu aplicación.
+Aprende cómo configurar el marco para tu aplicación.
 
-##### [Extender Flight](/learn/extending)
+##### [Extendiendo Flight](/learn/extending)
 
-Aprende cómo extender el framework agregando tus propios métodos y clases.
+Aprende cómo extender el marco agregando tus propios métodos y clases.
 
 ##### [Eventos y Filtrado](/learn/filtering)
 
-Aprende cómo utilizar el sistema de eventos para agregar ganchos a tus métodos y métodos internos del framework.
+Aprende cómo utilizar el sistema de eventos para añadir ganchos a tus métodos y métodos internos del marco.
 
 ##### [Contenedor de Inyección de Dependencias](/learn/dependency-injection-container)
 
-Aprende cómo utilizar contenedores de inyección de dependencias (DIC) para administrar las dependencias de tu aplicación.
+Aprende cómo usar contenedores de inyección de dependencias (DIC) para gestionar las dependencias de tu aplicación.
 
-##### [API del Framework](/learn/api)
+##### [API del Marco](/learn/api)
 
-Aprende sobre los métodos principales del framework.
+Aprende acerca de los métodos principales del marco.
 
-##### [Migración a v3](/learn/migrating-to-v3)
-La compatibilidad con versiones anteriores se ha mantenido en su mayor parte, pero hay algunos cambios de los que debes ser consciente al migrar de la v2 a la v3.
+##### [Migrando a v3](/learn/migrating-to-v3)
+La compatibilidad con versiones anteriores se ha mantenido en su mayor parte, pero hay algunos cambios de los que debes ser consciente al migrar de v2 a v3.
 
 ##### [Resolución de Problemas](/learn/troubleshooting)
-Existen algunos problemas comunes con los que te puedes encontrar al usar Flight. Esta página te ayudará a solucionar esos problemas.
+Hay algunos problemas comunes con los que te puedes encontrar al usar Flight. Esta página te ayudará a resolver esos problemas.

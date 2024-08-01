@@ -1,122 +1,119 @@
 # Paplašināšana
 
-Flight ir izstrādāts, lai būtu paplašināmais ietvars. Ietvars ir iekļauts ar noteiktu
-kopu noklusējuma metodēm un komponentēm, bet tas ļauj jums atkartot jūsu pašu metodes,
-reģistrēt savas klases vai pat pārrakstīt esošās klases un metodes.
+Flight ir izstrādāts kā paplašināms ietvars. Ietvars ir aprīkots ar iebūvētām metodēm un komponentēm, bet tas ļauj jums pievienot savas metodes, reģistrēt savas klases vai pat pārrakstīt esošās klases un metodes.
 
-Ja jums ir nepieciešams DIC (Atkarību ievades konteiners), pāriet uz
-[Dependency Injection Container](dependency-injection-container) lapu.
+Ja jums ir nepieciešams DIC (Dependency Injection Container), apmeklējiet [Dependency Injection Container](dependency-injection-container) lapu.
 
-## Metožu atskaitīšana
+## Kartēšanas Metodes
 
-Lai atkārtotu savu vienkāršo pielāgoto metodi, jums ir jāizmanto `map` funkcija:
+Lai kartētu savu vienkāršo pielāgoto metodi, izmantojiet funkciju `map`:
 
 ```php
-// Atkartot savu metodi
+// Norādiet savu metodi
 Flight::map('hello', function (string $name) {
   echo "sveiki $name!";
 });
 
 // Izsauciet savu pielāgoto metodi
-Flight::hello('Bob');
+Flight::hello('Bobs');
 ```
 
-Šis tiek izmantots vairāk, kad jums ir nepieciešams padot mainīgos savā metodē, lai iegūtu paredzēto
-vērtību. Lai iegūtu konfigurāciju un tad izsauktu jūsu iepriekš konfigurēto klasi, ir labāk izmantot
-`register()` metodi tālāk.
+Lai izveidotu vienkāršas pielāgotas metodes, ir iespējams veidot standarta funkcijas PHP. Tā ir ieteicamā prakse, jo tajā ir automātiskā pabeigšana IDE vidēs un ir vieglāk lasāma.
+Tas būtu ekvivalents augstāk redzamajam kodam:
 
-## Reģistrēšanas klases
+```php
+function hello(string $name) {
+  echo "sveiki $name!";
+}
 
-Lai reģistrētu savu klasi un konfigurētu to, jums ir jāizmanto `register` funkcija:
+hello('Bobs');
+```
+
+Šis tiek izmantots vairāk, kad jums ir nepieciešams nodot mainīgos savai metodē, lai iegūtu paredzamo vērtību. Izvietojot metodi `register()` kā zemāk, tas ir vairāk paredzēts, lai nodotu konfigurāciju un pēc tam izsauktu jūsu iepriekš konfigurēto klasi.
+
+## Reģistrēšanas Klases
+
+Lai reģistrētu savu klasi un konfigurētu to, izmantojiet funkciju `register`:
 
 ```php
 // Reģistrējiet savu klasi
-Flight::register('user', User::class);
+Flight::register('lietotājs', Lietotājs::class);
 
-// Iegūstiet savas klases instanci
-$user = Flight::user();
+// Iegūstiet sava objekta piemēru
+$manslietotājs = Flight::lietotājs();
 ```
 
-Reģistrēšanas metode ļauj jums arī padot parametrus savai klases
-konstruktoram. Tāpēc, kad jūs ielādējat savu pielāgoto klasi, tā būs iepriekš inicializēta.
-Jūs varat noteikt konstruktoru parametrus, padodot papildu masīvu.
-Šeit ir piemērs dabas savienojuma ielādei:
+Reģistrēšanas metode ļauj jums arī nodot parametrus jūsu klases konstruktoram. Tādējādi, ielādējot savu pielāgoto klasi, tā tiks iepriekš inicializēta. Konstruktoram varat definēt parametrus, padodot papildu masīvu.
+Šeit ir piemērs, kā ielādēt datu bāzes savienojumu:
 
 ```php
-// Reģistrējiet klasi ar konstruktora parametriem
-Flight::register('db', PDO::class, ['mysql:host=localhost;dbname=test', 'user', 'pass']);
+// Reģistrējiet klasi ar konstruktoram paredzētiem parametriem
+Flight::register('db', PDO::class, ['mysql:host=localhosts;dbname=test', 'lietotājs', 'parole']);
 
-// Iegūstiet savas klases instanci
+// Iegūstiet sava objekta piemēru
 // Tas izveidos objektu ar definētajiem parametriem
 //
-// new PDO('mysql:host=localhost;dbname=test','user','pass');
+// new PDO('mysql:host=localhosts;dbname=test','lietotājs','parole');
 //
 $db = Flight::db();
 
-// un ja jums to vēlāk vajadzētu savā kodā, jūs vienkārši atkārtoti izsaucat to pašu metodi
-class SomeController {
+// un ja vēlēsities to vēlāk izmantot savā kodā, vienkārši atkal izsauciet to pašu metodi
+class KādsKontrolieris {
   public function __construct() {
 	$this->db = Flight::db();
   }
 }
 ```
 
-Ja jūs padodat papildu atsauces parametru, tas tiks īstenots tūlīt
-pēc klases konstruēšanas. Tas ļauj jums veikt jebkādus iestatīšanas procedūras savam
-jaunajam objektam. Atsauces funkcija pieņem vienu parametru, jaunu objekta piemēru.
+Ja nododat papildu atsauksmes parametru, tas tiks izpildīts nekavējoties pēc klases izveides. Tas ļauj veikt jebkādas iestatīšanas procedūras jaunajam objektam. Atsauksmes funkcija ņem vienu parametru, jauna objekta piemēru.
 
 ```php
-// Atsauces funkcijai tiks padots konstruētais objekts
+// Objekts, kas tika izveidots, tiks nodots atsauksmei
 Flight::register(
   'db',
   PDO::class,
-  ['mysql:host=localhost;dbname=test', 'user', 'pass'],
+  ['mysql:host=localhost;dbname=test', 'lietotājs', 'parole'],
   function (PDO $db) {
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
   }
 );
 ```
 
-Pēc noklusējuma, ikreiz, kad ielādējat savu klasi, jūs saņemsiet kopīgu instanci.
-Lai iegūtu jaunu klases instanci, vienkārši padodiet `false` kā parametru:
+Pēc noklusējuma katru reizi, kad ielādējat savu klasi, jums tiks nodots koplietotā instance.
+Lai iegūtu jaunu klases piemēru, vienkārši nododiet `false` kā parametru:
 
 ```php
-// Kopīga klases instance
-$shared = Flight::db();
+// Klases koplietotais piemērs
+$koplietots = Flight::db();
 
-// Jauna klases instance
-$new = Flight::db(false);
+// Jauns klases piemērs
+$jauns = Flight::db(false);
 ```
 
-Jāņem vērā, ka atkārtotajām metodēm ir priekšrocība pāri reģistrētajām klasēm. Ja jūs
-deklarējat abus, izmantojot to pašu nosaukumu, tiks izsaukta tikai atkārtotā metode.
+Netaisni, ka kartētām metodēm ir priekšrocība pār reģistrētajām klasēm. Ja deklarējat abas, izmantojot to pašu nosaukumu, tiks izsaukta tikai kartētā metode.
 
-## Pārrakstīt ietvara metodes
+## Pārrakstīšanas Ietvara Metodes
 
-Flight ļauj jums pārrakstīt tā noklusējuma funkcionalitāti, lai atbilstu jūsu vajadzībām,
-neizmainot nevienu kodu.
+Flight ļauj jums pārrakstīt tās noklusētās funkcijas, lai piemērotu tās saviem mērķiem, neiemodificējot nekādu kodu. Jūs varat aplūkot visas metodes, ko varat pārrakstīt [šeit](/learn/api).
 
-Piemēram, kad Flight nevar sakrist URL ar maršrutu, tas izsauc `notFound`
-metodi, kas nosūta vispārīgu `HTTP 404` atbildi. Jūs varat pārrakstīt šo uzvedību
-izmantojot `map` metodi:
+Piemēram, kad Flight nevar sakrist URL ar maršrutu, tā izsauc metodi `notFound`, kas nosūta vispārīgu `HTTP 404` atbildi. Šo uzvedību var pārrakstīt, izmantojot metodi `map`:
 
 ```php
 Flight::map('notFound', function() {
-  // Parādīt pielāgoto 404 lapu
-  include 'errors/404.html';
+  // Parādiet pielāgoto 404 lapu
+  iekļaut 'kļūdas/404.html';
 });
 ```
 
-Flight ļauj arī aizstāt ietvara galvenās komponentes.
-Piemēram, jūs varat aizstāt noklusējuma Maršruta klasi ar savu pielāgoto klasi:
+Flight arī ļauj jums aizstāt ietvara pamata sastāvdaļas.
+Piemēram, jūs varat aizstāt noklusējuma maršrutētāja klasi ar savu pielāgoto klasi:
 
 ```php
 // Reģistrējiet savu pielāgoto klasi
-Flight::register('router', MyRouter::class);
+Flight::register('maršrutētājs', ManaMaršrutētāja::class);
 
-// Kad Flight ielādē Maršruta instanci, tas ielādēs jūsu klasi
-$myrouter = Flight::router();
+// Kad Flight ielādē Maršrutētāja piemēru, tas ielādēs jūsu klasi
+$manamaršrutētājs = Flight::maršrutētājs();
 ```
 
-Tomēr ietvara metodes, piemēram, `map` un `register`, nevar būt pārrakstītas. Jūs
-iegūsit kļūdu, ja mēģināsiet to darīt.
+Taču ietvara metodes, piemēram, `map` un `register`, nevar tikt pārrakstītas. Ja mēģināsit to izdarīt, saņemsiet kļūdu.

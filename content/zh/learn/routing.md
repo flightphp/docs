@@ -1,7 +1,6 @@
-```zh
 # 路由
 
-> **提示：** 想了解更多关于路由的内容吗？请查看["为什么选择框架?"](/learn/why-frameworks)页面，有更详尽的解释。
+> **注意:** 想了解更多关于路由的内容吗？查看更详细的解释，请访问["为什么要使用框架？"](/learn/why-frameworks)页面。
 
 Flight中的基本路由是通过将URL模式与回调函数或类和方法的数组进行匹配来完成的。
 
@@ -11,13 +10,13 @@ Flight::route('/', function(){
 });
 ```
 
-> 路由按照定义的顺序进行匹配。第一个匹配请求的路由将被调用。
+> 路由匹配的顺序是按照定义的顺序进行的。第一个匹配请求的路由将被调用。
 
-### 回调函数/函数
-回调函数可以是任何可调用的对象。因此，您可以使用常规函数：
+### 回调/函数
+回调可以是任何可调用的对象。所以你可以使用一个常规函数：
 
 ```php
-function hello(){
+function hello() {
     echo '你好，世界！';
 }
 
@@ -25,7 +24,7 @@ Flight::route('/', 'hello');
 ```
 
 ### 类
-您也可以使用类的静态方法：
+你也可以使用类的静态方法：
 
 ```php
 class Greeting {
@@ -37,7 +36,7 @@ class Greeting {
 Flight::route('/', [ 'Greeting','hello' ]);
 ```
 
-或者先创建一个对象，然后调用方法：
+或者首先创建一个对象，然后调用方法：
 
 ```php
 
@@ -49,7 +48,7 @@ class Greeting
     }
 
     public function hello() {
-        echo "你好，{$this->name}！";
+        echo "你好，{$this->name}!";
     }
 }
 
@@ -57,17 +56,21 @@ class Greeting
 $greeting = new Greeting();
 
 Flight::route('/', [ $greeting, 'hello' ]);
-// 您也可以在不先创建对象的情况下执行此操作
-// 提示：不会向构造函数注入参数
+// 你还可以在不先创建对象的情况下做到这一点
+// 注意：不会将参数注入到构造函数中
 Flight::route('/', [ 'Greeting', 'hello' ]);
+// 此外，你还可以使用这种更简洁的语法
+Flight::route('/', 'Greeting->hello');
+// 或者
+Flight::route('/', Greeting::class.'->hello');
 ```
 
-#### 通过DIC（Dependency Injection Container）进行依赖项注入
-如果您想要通过容器（PSR-11、PHP-DI、Dice等）进行依赖项注入，那么
-只有直接创建对象并使用容器创建对象的路由类型或者您可以使用字符串定义类和
-要调用的方法。您可以前往[Dependency Injection](/learn/extending)页面了解更多信息。 
+#### 通过DIC（依赖注入容器）进行依赖注入
+如果你想通过容器（PSR-11、PHP-DI、Dice等）进行依赖注入，
+那么唯一可用的类型就是直接创建对象自己并使用容器来创建你的对象，
+或者你可以使用字符串来定义要调用的类和方法。你可以查看[依赖注入](/learn/extending)页面获取更多信息。
 
-这里是一个简单示例：
+这里是一个快速示例：
 
 ```php
 
@@ -82,19 +85,19 @@ class Greeting
 	}
 
 	public function hello(int $id) {
-		// 使用$this->pdoWrapper做某事情
+		// 使用$this->pdoWrapper做一些事情
 		$name = $this->pdoWrapper->fetchField("SELECT name FROM users WHERE id = ?", [ $id ]);
-		echo "你好，世界！我的名字是{$name}！";
+		echo "你好，世界！我的名字是{$name}!";
 	}
 }
 
 // index.php
 
-// 使用任何您需要的参数设置容器
-// 请查看有关PSR-11的更多信息
+// 使用你需要的任何参数设置容器
+// 查看依赖注入页面以获取有关PSR-11的更多信息
 $dice = new \Dice\Dice();
 
-// 不要忘记重新分配变量'$dice = '!!!!!
+// 别忘记通过'$dice = '重新分配变量！！！！
 $dice = $dice->addRule('flight\database\PdoWrapper', [
 	'shared' => true,
 	'constructParams' => [ 
@@ -109,11 +112,11 @@ Flight::registerContainerHandler(function($class, $params) use ($dice) {
 	return $dice->create($class, $params);
 });
 
-// 像正常一样处理路由
+// 像正常一样设置路由
 Flight::route('/hello/@id', [ 'Greeting', 'hello' ]);
-// 或
+// 或者
 Flight::route('/hello/@id', 'Greeting->hello');
-// 或
+// 或者
 Flight::route('/hello/@id', 'Greeting::hello');
 
 Flight::start();
@@ -121,7 +124,7 @@ Flight::start();
 
 ## 方法路由
 
-默认情况下，路由模式将匹配所有请求方法。您可以通过在URL之前放置一个标识符来响应特定方法。
+默认情况下，路由模式将与所有请求方法进行匹配。你可以通过在URL之前放置一个标识符来响应特定方法。
 
 ```php
 Flight::route('GET /', function () {
@@ -132,22 +135,22 @@ Flight::route('POST /', function () {
   echo '我收到了一个POST请求。';
 });
 
-// 您无法对路由使用Flight::get()，因为那是一个用于获取变量的方法，而不是创建路由。
+// 你不能使用Flight::get()来设置路由，因为那是一个用于获取变量，而不是创建路由的方法。
 // Flight::post('/', function() { /* 代码 */ });
 // Flight::patch('/', function() { /* 代码 */ });
 // Flight::put('/', function() { /* 代码 */ });
 // Flight::delete('/', function() { /* 代码 */ });
 ```
 
-您还可以通过使用“|”分隔符将多个方法映射到单个回调函数：
+你还可以通过使用`|`分隔符将多个方法映射到单个回调函数：
 
 ```php
 Flight::route('GET|POST /', function () {
-  echo '我收到了一个GET或POST请求。';
+  echo '我接收到了GET或POST请求。';
 });
 ```
 
-此外，您可以获取路由器对象，该对象具有一些可供您使用的辅助方法：
+此外，你可以获得Router对象，该对象具有一些可供你使用的辅助方法：
 
 ```php
 
@@ -170,7 +173,7 @@ $router->get('/users', function() {
 
 ## 正则表达式
 
-您可以在路由中使用正则表达式：
+你可以在你的路由中使用正则表达式：
 
 ```php
 Flight::route('/user/[0-9]+', function () {
@@ -178,35 +181,32 @@ Flight::route('/user/[0-9]+', function () {
 });
 ```
 
-尽管这种方法可用，但建议使用命名参数或
-带正则表达式的命名参数，因为它们更易读且更易维护。
+虽然这种方法是可用的，但建议使用命名参数或带有正则表达式的命名参数，因为它们更易读和更易于维护。
 
 ## 命名参数
 
-您可以在路由中指定命名参数，这些参数将传递给
-您的回调函数。
+你可以在你的路由中指定具有命名参数，这些参数将传递给你的回调函数。
 
 ```php
 Flight::route('/@name/@id', function (string $name, string $id) {
-  echo "你好，$name ($id)！";
+  echo "你好，$name（$id）!";
 });
 ```
 
-您还可以使用命名参数与正则表达式结合使用
-使用“:”分隔符：
+你还可以通过使用`:`分隔符将带有命名参数的正则表达式与命名参数一起使用：
 
 ```php
 Flight::route('/@name/@id:[0-9]{3}', function (string $name, string $id) {
   // 这将匹配/bob/123
-  // 但不会匹配/bob/12345
+  // 但不匹配/bob/12345
 });
 ```
 
-> **提示：** 不支持在命名参数中匹配正则表达式组 `()`。\:(
+> **注意:** 不支持使用具有命名参数的正则表达式组`()`。: '\(
 
 ## 可选参数
 
-您可以通过将段落包装在括号中指定可选匹配的命名参数。
+你可以指定命名参数为匹配的可选参数，方法是将段包裹在括号中。
 
 ```php
 Flight::route(
@@ -221,37 +221,35 @@ Flight::route(
 );
 ```
 
-任何未匹配的可选参数将作为`NULL`传递。
+任何未匹配的可选参数都将作为`NULL`传递。
 
 ## 通配符
 
-匹配仅在各个URL段中进行。如果要匹配多个段
-您可以使用`*`通配符。
+匹配只会在单独的URL段上进行。如果你想匹配多个段，可以使用`*`通配符。
 
 ```php
 Flight::route('/blog/*', function () {
-  // 这将匹配 /blog/2000/02/01
+  // 这将匹配/blog/2000/02/01
 });
 ```
 
-要将所有请求路由到单个回调中，您可以这样做：
+要将所有请求路由到单个回调函数，可以这样做：
 
 ```php
 Flight::route('*', function () {
-  // 做点什么
+  // 做某事
 });
 ```
 
 ## 传递
 
-您可以通过从回调函数中返回`true`将执行传递给
-下一个匹配路由。
+你可以通过从回调函数中返回`true`将执行传递给下一个匹配的路由。
 
 ```php
 Flight::route('/user/@name', function (string $name) {
   // 检查一些条件
   if ($name !== "Bob") {
-    // 继续下一个路由
+    // 继续到下一个路由
     return true;
   }
 });
@@ -263,38 +261,37 @@ Flight::route('/user/*', function () {
 
 ## 路由别名
 
-您可以为路由分配别名，以便以后在代码中动态生成URL（例如在模板中）。
+你可以为路由分配一个别名，以便稍后可以在代码中动态生成URL（例如模板）。
 
 ```php
-Flight::route('/users/@id', function($id) { echo 'user:'.$id; }, false, 'user_view');
+Flight::route('/users/@id', function($id) { echo '用户:'.$id; }, false, 'user_view');
 
-// 稍后在代码中的某个地方
+// 稍后在代码中的某处
 Flight::getUrl('user_view', [ 'id' => 5 ]); // 将返回'/users/5'
 ```
 
-如果您的URL发生变化，这将非常有帮助。在上面的示例中，假设用户已移至`/admin/users/@id`。
-通过别名设置，您无需更改引用别名的任何位置，因为别名现在将像上面的示例一样返回`/admin/users/5`。
+如果你的URL可能会改变，这会特别有帮助。在上面的示例中，假设用户已经移动到`/admin/users/@id`。
+有了别名，你就不必更改任何引用别名的地方，因为别名现在将返回`/admin/users/5`，就像上面的示例一样。
 
 路由别名也适用于组：
 
 ```php
 Flight::group('/users', function() {
-    Flight::route('/@id', function($id) { echo 'user:'.$id; }, false, 'user_view');
+    Flight::route('/@id', function($id) { echo '用户:'.$id; }, false, 'user_view');
 });
 
 
-// 稍后在代码中的某个地方
+// 稍后在代码中的某处
 Flight::getUrl('user_view', [ 'id' => 5 ]); // 将返回'/users/5'
 ```
 
 ## 路由信息
 
-如果您希望检查匹配路由的信息，您可以请求将路由
-对象传递给回调，方法是在路由方法的第三个参数中传递`true`。路由对象将始终是传递给您的回调函数的最后一个参数。
+如果你想检查匹配的路由信息，你可以请求路由对象作为第三个参数传递给你的回调函数，通过将`true`作为路由方法的第三个参数传递。路由对象总是作为最后一个参数传递给回调函数。
 
 ```php
 Flight::route('/', function(\flight\net\Route $route) {
-  // 匹配的HTTP方法数组
+  // 与匹配的HTTP方法数组
   $route->methods;
 
   // 命名参数数组
@@ -303,13 +300,13 @@ Flight::route('/', function(\flight\net\Route $route) {
   // 匹配的正则表达式
   $route->regex;
 
-  // 包含URL模式中使用的任何'*'的内容
+  // 包含URL模式中使用的所有'*'的内容
   $route->splat;
 
-  // 显示URL路径，如果您确实需要的话
+  // 显示url路径...如果你真的需要它
   $route->pattern;
 
-  // 显示分配给此中间件的内容
+  // 显示为此路由分配的中间件
   $route->middleware;
 
   // 显示分配给此路由的别名
@@ -319,8 +316,7 @@ Flight::route('/', function(\flight\net\Route $route) {
 
 ## 路由分组
 
-有时您希望将相关路由分组在一起（例如`/api/v1`）。
-您可以通过使用`group`方法来实现这一点：
+有时你想将相关路由分组在一起（例如`/api/v1`）。你可以通过使用`group`方法来实现：
 
 ```php
 Flight::group('/api/v1', function () {
@@ -334,7 +330,7 @@ Flight::group('/api/v1', function () {
 });
 ```
 
-您甚至可以嵌套组的组：
+你甚至可以将组合的组合：
 
 ```php
 Flight::group('/api', function () {
@@ -354,7 +350,7 @@ Flight::group('/api', function () {
   });
   Flight::group('/v2', function () {
 
-	// Flight::get()获取变量，它不设置路由！查看下面的对象上下文
+	// Flight::get()获取变量，它不会设置路由！查看下面的对象上下文
 	Flight::route('GET /users', function () {
 	  // 匹配GET /api/v2/users
 	});
@@ -362,9 +358,9 @@ Flight::group('/api', function () {
 });
 ```
 
-### 使用对象上下文进行分组
+### 与对象上下文一起分组
 
-您仍然可以使用`Engine`对象在对象上下文中组合路由：
+你仍然可以在`Engine`对象中使用路由分组，方法如下：
 
 ```php
 $app = new \flight\Engine();
@@ -381,62 +377,58 @@ $app->group('/api/v1', function (Router $router) {
 });
 ```
 
-## 流式传输
+## 流
 
-现在您可以使用`streamWithHeaders()`方法将响应流式传输到客户端。 
-这对于发送大文件、长时间运行的进程或生成大型响应非常有用。 
-流式传输路由的处理方式与常规路由略有不同。
+现在你可以使用`streamWithHeaders()`方法向客户端流式传输响应。这对于发送大型文件、长时间运行的流程或生成大型响应非常有用。流式传输路由的处理方式与普通路由略有不同。
 
-> **提示：** 如果您的[`flight.v2.output_buffering`](/learn/migrating-to-v3#output_buffering)设置为false，则只有在该条件下才能使用流式响应。
+> **注意:** 仅当你将[`flight.v2.output_buffering`](/learn/migrating-to-v3#output_buffering)设置为false时才可以使用流式传输响应。
 
-### 带手动标头的流式传输
+### 带有手动标头的流
 
-您可以通过在路由上使用`stream()`方法将响应流式传输到客户端。 如果
-这样做，您必须在向客户端输出任何内容之前自行设置所有方法。
-这可以通过`header()` PHP函数或`Flight::response()->setRealHeader()`方法完成。
+你可以通过在路由上使用`stream()`方法将响应流式传输给客户端。如果你这样做，你必须在向客户端输出任何内容之前手动设置所有方法。这是通过`header()` php函数或`Flight::response()->setRealHeader()`方法来完成的。
 
 ```php
 Flight::route('/@filename', function($filename) {
 
-	// 显然，您应该对路径进行过滤等操作。
+	// 显然，你将清理路径等内容。
 	$fileNameSafe = basename($filename);
 
-	// 如果在路由执行后还有其他标头要设置
-	// 您必须在输出任何内容之前定义它们。
-	// 它们必须全部是对header()函数的原始调用或
-	// 调用Flight::response()->setRealHeader()
+	// 如果你在路由执行后还需要设置其他标头
+	// 你必须在输出任何内容之前定义它们。
+	// 它们必须全部是对header()函数的原始调用
+	// 或对Flight::response()->setRealHeader()的调用
 	header('Content-Disposition: attachment; filename="'.$fileNameSafe.'"');
-	// 或者
+	// 或
 	Flight::response()->setRealHeader('Content-Disposition', 'attachment; filename="'.$fileNameSafe.'"');
 
 	$fileData = file_get_contents('/some/path/to/files/'.$fileNameSafe);
 
-	// 错误处理等
+	// 错误捕获等
 	if(empty($fileData)) {
 		Flight::halt(404, '文件未找到');
 	}
 
-	// 如果需要，手动设置内容长度
+	// 如果愿意，也可手动设置内容长度
 	header('Content-Length: '.filesize($filename));
 
-	// 向客户端流式传输数据
+	// 将数据流式传输给客户端
 	echo $fileData;
 
-// 这就是“魔术”的行
+// 这就是这里的神奇之处
 })->stream();
 ```
 
-### 带头的流式传输
+### 带有标头的流
 
-您还可以使用`streamWithHeaders()`方法在开始流式传输之前设置标题。
+你还可以使用`streamWithHeaders()`方法在开始流式传输之前设置标头。
 
 ```php
 Flight::route('/stream-users', function() {
 
-	// 您可以在此添加任何其他标头
-	// 您必须使用header()或Flight::response()->setRealHeader()
+	// 你可以在这里添加任何其他标头
+	// 你只需使用header()或Flight::response()->setRealHeader()
 
-	// 无论您从何处获取数据，仅作为示例...
+	// 无论你如何获取数据，只是举例而已...
 	$users_stmt = Flight::db()->query("SELECT id, first_name, last_name FROM users");
 
 	echo '{';
@@ -447,16 +439,16 @@ Flight::route('/stream-users', function() {
 			echo ',';
 		}
 
-		// 发送数据到客户端的操作是必需的
+		// 这是必需的，将数据发送到客户端
 		ob_flush();
 	}
 	echo '}';
 
-// 这就是在开始流式传输之前如何设置标头。
+// 这是在开始流式传输之前设置标头的方法。
 })->streamWithHeaders([
 	'Content-Type' => 'application/json',
 	'Content-Disposition' => 'attachment; filename="users.json"',
-	// 可选状态码，默认为 200
+	// 可选状态码，默认为200
 	'status' => 200
 ]);
 ```

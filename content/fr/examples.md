@@ -1,25 +1,26 @@
-# Besoin d'un démarrage rapide?
+# Besoin d'un démarrage rapide ?
 
-Vous avez deux options pour commencer avec Flight:
+Vous avez deux options pour commencer avec Flight :
 
-- [Squelette de projet en un seul fichier](https://github.com/flightphp/skeleton-simple): Un seul fichier qui inclut tout ce dont vous avez besoin pour exécuter votre application dans un seul fichier simple.
-- [Squelette de projet complet](https://github.com/flightphp/skeleton): Un exemple plus complet avec des contrôleurs et des vues.
+- [Modèle de démarrage Skeleton à fichier unique](https://github.com/flightphp/skeleton-simple) : Un seul fichier qui inclut tout ce dont vous avez besoin pour exécuter votre application dans un seul fichier simple.
+- [Modèle de démarrage complet Skeleton](https://github.com/flightphp/skeleton) : Un exemple plus complet avec des contrôleurs et des vues.
 
-## Besoin d'Inspiration?
+## Besoin d'inspiration ?
 
-Bien que ceux-ci ne soient pas officiellement sponsorisés par l'équipe Flight, ils pourraient vous donner des idées sur la manière de structurer vos propres projets construits avec Flight!
+Bien que ceux-ci ne soient pas officiellement sponsorisés par l'équipe Flight, ils pourraient vous donner des idées sur la manière de structurer vos propres projets construits avec Flight !
 
+- [Exemple de blog FlightPHP](https://github.com/n0nag0n/flightphp-blog) - Flight v3 avec Middleware, Contrôleurs, Active Record et Latte.
 - [Système de gestion scolaire FlightPHP](https://github.com/krmu/FlightPHP_School) - Flight v3
-- [Banque de coller commentable](https://github.com/n0nag0n/commie2) - Flight v3
+- [Paste Bin avec commentaires](https://github.com/n0nag0n/commie2) - Flight v3
 - [Application squelette de base](https://github.com/markhughes/flight-skeleton)
-- [Exemple de Wiki](https://github.com/Skayo/FlightWiki)
-- [L'application cadre PHP IT-Innovator](https://github.com/itinnovator/myphp-app)
+- [Wiki d'exemple](https://github.com/Skayo/FlightWiki)
+- [L'application du cadre PHP IT-Innovator](https://github.com/itinnovator/myphp-app)
 - [LittleEducationalCMS (espagnol)](https://github.com/casgin/LittleEducationalCMS)
-- [API des Pages Jaunes Italiennes](https://github.com/chiccomagnus/PGAPI)
-- [Système de gestion de contenu générique (avec....très peu de documentation)](https://github.com/recepuncu/cms)
+- [API des Pages Jaunes italiennes](https://github.com/chiccomagnus/PGAPI)
+- [Système de gestion de contenu générique (avec... très peu de documentation)](https://github.com/recepuncu/cms)
 - [Un petit cadre php basé sur Flight et medoo.](https://github.com/ycrao/tinyme)
-- [Exemple d'Application MVC](https://github.com/paddypei/Flight-MVC)
+- [Application exemple MVC](https://github.com/paddypei/Flight-MVC)
 
-## Envie de Partager Votre Propre Exemple?
+## Vous voulez partager votre propre exemple ?
 
-Si vous avez un projet que vous souhaitez partager, veuillez soumettre une pull request pour l'ajouter à cette liste!
+Si vous avez un projet que vous voulez partager, veuillez soumettre une demande d'extraction pour l'ajouter à cette liste !

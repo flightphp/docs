@@ -1,14 +1,14 @@
 # Migração para v3
 
-A compatibilidade com versões anteriores foi em grande parte mantida, mas existem algumas alterações das quais você deve estar ciente ao migrar da v2 para a v3.
+A compatibilidade com versões anteriores foi em grande parte mantida, mas há algumas mudanças das quais você deve estar ciente ao fazer a migração da v2 para a v3.
 
-## Comportamento de Buffer de Saída (3.5.0)
+## Comportamento do Buffer de Saída (3.5.0)
 
-[Buffer de saída](https://stackoverflow.com/questions/2832010/what-is-output-buffering-in-php) é o processo em que a saída gerada por um script PHP é armazenada em um buffer (interno ao PHP) antes de ser enviada para o cliente. Isso permite que você modifique a saída antes de ser enviada para o cliente.
+[O buffering de saída](https://stackoverflow.com/questions/2832010/what-is-output-buffering-in-php) é o processo pelo qual a saída gerada por um script PHP é armazenada em um buffer (interno ao PHP) antes de ser enviada ao cliente. Isso permite que você modifique a saída antes de enviá-la ao cliente.
 
-Em uma aplicação MVC, o Controlador é o "gerente" e ele gerencia o que a visualização faz. Ter saída gerada fora do controlador (ou, no caso do Flight, às vezes em uma função anônima) quebra o padrão MVC. Essa alteração visa estar mais em conformidade com o padrão MVC e tornar o framework mais previsível e fácil de usar.
+Em uma aplicação MVC, o Controlador é o "gerente" e ele gerencia o que a visualização faz. Ter saída gerada fora do controlador (ou no caso do Flight, às vezes em uma função anônima) quebra o padrão MVC. Essa mudança visa estar mais alinhada com o padrão MVC e tornar o framework mais previsível e fácil de usar.
 
-Na v2, o buffer de saída era manipulado de forma que não fechava consistentemente seu próprio buffer de saída, o que tornava os [testes unitários](https://github.com/flightphp/core/pull/545/files#diff-eb93da0a3473574fba94c3c4160ce68e20028e30b267875ab0792ade0b0539a0R42) e o [streaming](https://github.com/flightphp/core/issues/413) mais difíceis. Para a maioria dos usuários, essa alteração pode não afetar realmente você. No entanto, se você estiver ecoando conteúdo fora de chamáveis e controladores (por exemplo, em um gancho), provavelmente terá problemas. Ecoar conteúdo em ganchos e antes do framework realmente ser executado pode ter funcionado no passado, mas não funcionará mais no futuro.
+Na v2, o buffering de saída era tratado de uma maneira em que não estava consistentemente fechando seu próprio buffer de saída, o que tornava os [testes unitários](https://github.com/flightphp/core/pull/545/files#diff-eb93da0a3473574fba94c3c4160ce68e20028e30b267875ab0792ade0b0539a0R42) e [streaming](https://github.com/flightphp/core/issues/413) mais difíceis. Para a maioria dos usuários, essa mudança pode não afetá-lo de fato. No entanto, se você estiver dando um echo no conteúdo fora de callables e controladores (por exemplo, em um hook), provavelmente terá problemas. Dar echo no conteúdo em hooks e antes do framework realmente executar pode ter funcionado no passado, mas não funcionará mais para frente.
 
 ### Onde você pode ter problemas
 ```php
@@ -24,20 +24,20 @@ function hello() {
 
 Flight::map('hello', 'hello');
 Flight::after('hello', function(){
-	// isso na verdade estará tudo bem
-	echo '<p>Esta frase Olá Mundo foi trazida a você pela letra "H"</p>';
+	// isso na verdade está bem
+	echo '<p>Esta frase de Olá Mundo foi trazida para você pela letra "H"</p>';
 });
 
 Flight::before('start', function(){
-	// coisas assim causarão um erro
+	// coisas como esta causarão um erro
 	echo '<html><head><title>Minha Página</title></head><body>';
 });
 
 Flight::route('/', function(){
-	// isso na verdade está tudo bem
+	// isso na verdade está ok
 	echo 'Olá Mundo';
 
-	// Isso também deverá estar tudo bem
+	// Isso também deve estar ok
 	Flight::hello();
 });
 
@@ -47,9 +47,9 @@ Flight::after('start', function(){
 });
 ```
 
-### Habilitando o Comportamento de Renderização da v2
+### Ativando o Comportamento de Renderização v2
 
-Você ainda pode manter o seu código antigo da maneira como está sem precisar reescrevê-lo para funcionar com a v3? Sim, pode! Você pode ativar o comportamento de renderização da v2 configurando a opção de configuração `flight.v2.output_buffering` para `true`. Isso permitirá que você continue a usar o comportamento de renderização antigo, mas é recomendado corrigi-lo seguindo em frente. Na v4 do framework, isso será removido.
+Ainda é possível manter o seu código antigo exatamente como está sem a necessidade de uma reescrita para fazê-lo funcionar com a v3? Sim, é possível! Você pode ativar o comportamento de renderização v2 definindo a opção de configuração `flight.v2.output_buffering` como `true`. Isso permitirá que você continue usando o antigo comportamento de renderização, mas é recomendado corrigi-lo para o futuro. Na v4 do framework, isso será removido.
 
 ```php
 // index.php
@@ -58,13 +58,17 @@ require 'vendor/autoload.php';
 Flight::set('flight.v2.output_buffering', true);
 
 Flight::before('start', function(){
-	// Agora isso estará tudo bem
+	// Agora isso estará bem
 	echo '<html><head><title>Minha Página</title></head><body>';
 });
 
-// mais código
+// mais código 
 ```
 
-## Alterações no Despachante (3.7.0)
+## Mudanças no Dispatcher (3.7.0)
 
-Se você tem chamado diretamente os métodos estáticos para `Dispatcher` como `Dispatcher::invokeMethod()`, `Dispatcher::execute()`, etc., você precisará atualizar seu código para não chamar diretamente esses métodos. `Dispatcher` foi convertido para ser mais orientado a objetos para que Contêineres de Injeção de Dependência possam ser usados de maneira mais fácil. Se você precisa invocar um método de forma semelhante ao que o Dispatcher fazia, você pode usar manualmente algo como `$result = $class->$method(...$params);` ou `call_user_func_array()` em vez disso.
+Se você estava chamando diretamente métodos estáticos para `Dispatcher` como `Dispatcher::invokeMethod()`, `Dispatcher::execute()`, etc., você precisará atualizar seu código para não chamar diretamente esses métodos. `Dispatcher` foi convertido para ser mais orientado a objeto, de modo que Contêineres de Injeção de Dependência possam ser usados de forma mais simples. Se você precisar invocar um método semelhante ao que o Dispatcher fazia, você pode usar manualmente algo como `$result = $class->$method(...$params);` ou `call_user_func_array()` em vez disso.
+
+## Mudanças em `halt()` `stop()` `redirect()` e `error()` (3.10.0)
+
+O comportamento padrão antes da versão 3.10.0 era limpar tanto os cabeçalhos quanto o corpo da resposta. Isso foi alterado para limpar apenas o corpo da resposta. Se você precisar limpar também os cabeçalhos, você pode usar `Flight::response()->clear()`.

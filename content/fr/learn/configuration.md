@@ -1,6 +1,6 @@
 # Configuration
 
-Vous pouvez personnaliser certains comportements de Flight en définissant des valeurs de configuration via la méthode `set`.
+Vous pouvez personnaliser certains comportements de Flight en définissant des valeurs de configuration à travers la méthode `set`.
 
 ```php
 Flight::set('flight.log_errors', true);
@@ -8,28 +8,39 @@ Flight::set('flight.log_errors', true);
 
 ## Paramètres de configuration disponibles
 
-Voici la liste de tous les paramètres de configuration disponibles :
+La liste suivante présente tous les paramètres de configuration disponibles :
 
 - **flight.base_url** `?string` - Remplace l'URL de base de la requête. (par défaut : null)
-- **flight.case_sensitive** `bool` - Correspondance sensible à la casse pour les URL. (par défaut : false)
-- **flight.handle_errors** `bool` - Permet à Flight de gérer toutes les erreurs en interne. (par défaut : true)
-- **flight.log_errors** `bool` - Enregistre les erreurs dans le fichier journal d'erreurs du serveur web. (par défaut : false)
-- **flight.views.path** `string` - Répertoire contenant les fichiers de modèles de vue. (par défaut : ./views)
+- **flight.case_sensitive** `bool` - Correspondance sensible à la casse pour les URLs. (par défaut : false)
+- **flight.handle_errors** `bool` - Autoriser Flight à gérer toutes les erreurs en interne. (par défaut : true)
+- **flight.log_errors** `bool` - Enregistrer les erreurs dans le fichier journal d'erreurs du serveur web. (par défaut : false)
+- **flight.views.path** `string` - Répertoire contenant les fichiers de modèle de vue. (par défaut : ./views)
 - **flight.views.extension** `string` - Extension du fichier de modèle de vue. (par défaut : .php)
-- **flight.content_length** `bool` - Définit l'en-tête `Content-Length`. (par défaut : true)
-- **flight.v2.output_buffering** `bool` - Utilise l'ancien tampon de sortie. Voir [migrating to v3](migrating-to-v3). (par défaut : false)
+- **flight.content_length** `bool` - Définir l'en-tête `Content-Length`. (par défaut : true)
+- **flight.v2.output_buffering** `bool` - Utiliser la mise en mémoire tampon de sortie héritée. Voir [migration vers v3](migration-to-v3). (par défaut : false)
+
+## Configuration du Chargeur
+
+Il y a également un autre paramètre de configuration pour le chargeur. Cela vous permettra de charger automatiquement les classes avec `_` dans le nom de la classe.
+
+```php
+// Activer le chargement de classe avec des tirets bas
+// Par défaut à true
+Loader::$v2ClassLoading = false;
+```
 
 ## Variables
 
 Flight vous permet de sauvegarder des variables afin qu'elles puissent être utilisées n'importe où dans votre application.
 
 ```php
-// Sauvegarde de votre variable
+// Sauvegardez votre variable
 Flight::set('id', 123);
 
 // Ailleurs dans votre application
 $id = Flight::get('id');
 ```
+
 Pour vérifier si une variable a été définie, vous pouvez faire :
 
 ```php
@@ -44,7 +55,7 @@ Vous pouvez effacer une variable en faisant :
 // Efface la variable id
 Flight::clear('id');
 
-// Efface toutes les variables
+// Effacer toutes les variables
 Flight::clear();
 ```
 
@@ -54,11 +65,12 @@ Flight utilise également des variables à des fins de configuration.
 Flight::set('flight.log_errors', true);
 ```
 
-## Gestion des erreurs
+## Gestion des Erreurs
 
 ### Erreurs et Exceptions
 
-Toutes les erreurs et exceptions sont capturées par Flight et transmises à la méthode `error`. Le comportement par défaut est d'envoyer une réponse générique `HTTP 500 Internal Server Error` avec des informations sur l'erreur.
+Toutes les erreurs et exceptions sont capturées par Flight et transmises à la méthode `error`.
+Le comportement par défaut est d'envoyer une réponse générique `HTTP 500 Erreur Interne du Serveur` avec des informations sur l'erreur.
 
 Vous pouvez remplacer ce comportement selon vos besoins :
 
@@ -75,14 +87,14 @@ Par défaut, les erreurs ne sont pas enregistrées dans le serveur web. Vous pou
 Flight::set('flight.log_errors', true);
 ```
 
-### Non trouvé
+### Introuvable
 
-Lorsqu'une URL ne peut pas être trouvée, Flight appelle la méthode `notFound`. Le comportement par défaut est d'envoyer une réponse `HTTP 404 Not Found` avec un message simple.
+Lorsqu'une URL est introuvable, Flight appelle la méthode `notFound`. Le comportement par défaut est d'envoyer une réponse `HTTP 404 Non Trouvé` avec un message simple.
 
 Vous pouvez remplacer ce comportement selon vos besoins :
 
 ```php
 Flight::map('notFound', function () {
-  // Gérer le non trouvé
+  // Gérer l'introuvable
 });
 ```

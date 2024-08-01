@@ -1,64 +1,63 @@
 # Middleware de Route
 
-Flight prend en charge le middleware de route et de groupe de route. Le middleware est une fonction qui est exécutée avant (ou après) le rappel de la route. C'est un excellent moyen d'ajouter des vérifications d'authentification API dans votre code, ou de valider si l'utilisateur a la permission d'accéder à la route.
+Flight prend en charge les middleware de route et de groupe de route. Un middleware est une fonction qui est exécutée avant (ou après) le rappel de la route. C'est un excellent moyen d'ajouter des vérifications d'authentification API dans votre code, ou de valider que l'utilisateur a la permission d'accéder à la route.
 
-## Middleware Basique
+## Middleware de Base
 
-Voici un exemple basique:
+Voici un exemple de base :
 
 ```php
-// Si vous fournissez uniquement une fonction anonyme, elle sera exécutée avant le rappel de la route.
-// Il n'y a pas de fonctions de middleware "après" sauf pour les classes (voir ci-dessous)
-Flight::route('/chemin', function() { echo 'Je suis là!'; })->addMiddleware(function() {
-	echo 'Middleware en premier!';
+// Si vous ne fournissez qu'une fonction anonyme, elle sera exécutée avant le rappel de la route. Il n'y a pas de fonctions middleware "après" à l'exception des classes (voir ci-dessous)
+Flight::route('/chemin', function() { echo 'Me voici !'; })->addMiddleware(function() {
+	echo 'Middleware en premier !';
 });
 
 Flight::start();
 
-// Cela affichera "Middleware en premier! Je suis là!"
+// Cela affichera "Middleware en premier ! Me voici !"
 ```
 
-Il y a quelques notes très importantes sur le middleware que vous devez connaître avant de les utiliser:
-- Les fonctions de middleware sont exécutées dans l'ordre où elles sont ajoutées à la route. L'exécution est similaire à celle de la façon dont [Slim Framework gère cela](https://www.slimframework.com/docs/v4/concepts/middleware.html#how-does-middleware-work).
-   - Les fonctions avant sont exécutées dans l'ordre ajouté, et les fonctions après sont exécutées dans l'ordre inverse.
-- Si votre fonction de middleware renvoie false, toute l'exécution s'arrête et une erreur 403 Forbidden est déclenchée. Vous voudrez probablement gérer cela de manière plus élégante avec un `Flight::redirect()` ou quelque chose de similaire.
-- Si vous avez besoin de paramètres de votre route, ils seront transmis sous forme d'un seul tableau à votre fonction de middleware (`function($params) { ... }` ou `public function before($params) {}`). La raison en est que vous pouvez structurer vos paramètres en groupes et que dans certains de ces groupes, vos paramètres peuvent apparaître dans un ordre différent, ce qui romprait la fonction de middleware en faisant référence au mauvais paramètre. De cette manière, vous pouvez y accéder par nom plutôt que par position.
-- Si vous transmettez uniquement le nom du middleware, il sera automatiquement exécuté par le [conteneur d'injection de dépendances](dependency-injection-container) et le middleware sera exécuté avec les paramètres dont il a besoin. Si vous n'avez pas de conteneur d'injection de dépendances enregistré, il transmettra l'instance `flight\Engine` dans le `__construct()`.
+Il est important de noter quelques points essentiels concernant les middleware avant de les utiliser :
+- Les fonctions middleware sont exécutées dans l'ordre où elles sont ajoutées à la route. L'exécution est similaire à [la manière dont Slim Framework gère cela](https://www.slimframework.com/docs/v4/concepts/middleware.html#how-does-middleware-work).
+   - Les "before" sont exécutés dans l'ordre ajouté, et les "after" sont exécutés dans l'ordre inverse.
+- Si votre fonction middleware renvoie false, toute l'exécution est arrêtée et une erreur 403 Forbidden est déclenchée. Vous voudrez probablement gérer cela de manière plus gracieuse avec un `Flight::redirect()` ou quelque chose de similaire.
+- Si vous avez besoin de paramètres de votre route, ils seront transmis dans un tableau unique à votre fonction middleware (`function($params) { ... }` ou `public function before($params) {}`). La raison en est que vous pouvez structurer vos paramètres en groupes et dans certains de ces groupes, vos paramètres peuvent en fait apparaître dans un ordre différent qui casserait la fonction middleware en faisant référence au mauvais paramètre. De cette manière, vous pouvez y accéder par nom au lieu de la position.
+- Si vous passez seulement le nom du middleware, il sera automatiquement exécuté par le [container d'injection de dépendance](dependency-injection-container) et le middleware sera exécuté avec les paramètres nécessaires. Si vous n'avez pas de container d'injection de dépendance enregistré, il passera l'instance `flight\Engine` dans le `__construct()`.
 
-## Classes de Middleware
+## Classes Middleware
 
-Le middleware peut également être enregistré en tant que classe. Si vous avez besoin de la fonctionnalité "après", vous **devez** utiliser une classe.
+Les middleware peuvent également être enregistrés sous forme de classe. Si vous avez besoin de la fonctionnalité "after", vous **devez** utiliser une classe.
 
 ```php
 class MyMiddleware {
 	public function before($params) {
-		echo 'Middleware en premier!';
+		echo 'Middleware en premier !';
 	}
 
 	public function after($params) {
-		echo 'Middleware en dernier!';
+		echo 'Middleware en dernier !';
 	}
 }
 
 $MyMiddleware = new MyMiddleware();
-Flight::route('/chemin', function() { echo 'Je suis là!'; })->addMiddleware($MyMiddleware); // également ->addMiddleware([ $MyMiddleware, $MyMiddleware2 ]);
+Flight::route('/chemin', function() { echo 'Me voici ! '; })->addMiddleware($MyMiddleware); // également ->addMiddleware([ $MyMiddleware, $MyMiddleware2 ]);
 
 Flight::start();
 
-// Cela affichera "Middleware en premier! Je suis là! Middleware en dernier!"
+// Cela affichera "Middleware en premier ! Me voici ! Middleware en dernier !"
 ```
 
 ## Gestion des Erreurs de Middleware
 
-Disons que vous avez un middleware d'authentification et que vous voulez rediriger l'utilisateur vers une page de connexion s'il n'est pas authentifié. Vous avez quelques options à votre disposition:
+Disons que vous avez un middleware d'authentification et que vous souhaitez rediriger l'utilisateur vers une page de connexion s'il n'est pas authentifié. Vous avez quelques options à votre disposition :
 
-1. Vous pouvez renvoyer false depuis la fonction de middleware et Flight renverra automatiquement une erreur 403 Forbidden, mais sans personnalisation.
+1. Vous pouvez renvoyer false depuis la fonction middleware et Flight renverra automatiquement une erreur 403 Forbidden, mais sans personnalisation.
 1. Vous pouvez rediriger l'utilisateur vers une page de connexion en utilisant `Flight::redirect()`.
-1. Vous pouvez créer une erreur personnalisée dans le middleware et arrêter l'exécution de la route.
+1. Vous pouvez créer une erreur personnalisée à l'intérieur du middleware et arrêter l'exécution de la route.
 
-### Exemple Basique
+### Exemple de Base
 
-Voici un exemple simple avec un return false;:
+Voici un exemple simple avec return false; :
 ```php
 class MyMiddleware {
 	public function before($params) {
@@ -66,14 +65,14 @@ class MyMiddleware {
 			return false;
 		}
 
-		// puisque c'est vrai, tout continue normalement
+		// comme c'est vrai, tout continue simplement
 	}
 }
 ```
 
 ### Exemple de Redirection
 
-Voici un exemple de redirection de l'utilisateur vers une page de connexion:
+Voici un exemple de redirection de l'utilisateur vers une page de connexion :
 ```php
 class MyMiddleware {
 	public function before($params) {
@@ -87,12 +86,14 @@ class MyMiddleware {
 
 ### Exemple d'Erreur Personnalisée
 
-Disons que vous devez renvoyer une erreur JSON car vous créez une API. Vous pouvez le faire comme ceci:
+Disons que vous devez déclencher une erreur JSON car vous construisez une API. Vous pouvez le faire de cette manière :
 ```php
 class MyMiddleware {
 	public function before($params) {
 		$authorization = Flight::request()->headers['Authorization'];
 		if(empty($authorization)) {
+			Flight::jsonHalt(['error' => 'Vous devez être connecté pour accéder à cette page.'], 403);
+			// ou
 			Flight::json(['error' => 'Vous devez être connecté pour accéder à cette page.'], 403);
 			exit;
 			// ou
@@ -102,29 +103,34 @@ class MyMiddleware {
 }
 ```
 
-## Groupement de Middleware
+## Regroupement de Middleware
 
-Vous pouvez ajouter un groupe de route, et alors chaque route de ce groupe aura également le même middleware. C'est utile si vous devez regrouper un ensemble de routes avec un middleware d'Auth pour vérifier la clé API dans l'en-tête.
+Vous pouvez ajouter un groupe de route, puis chaque route de ce groupe aura également le même middleware. C'est utile si vous devez regrouper un ensemble de routes par exemple avec un middleware d'Auth pour vérifier la clé API dans l'en-tête.
 
 ```php
 
-// ajouté à la fin de la méthode de groupe
+// ajouté à la fin de la méthode group
 Flight::group('/api', function() {
 
-	// Cette route en apparence "vide" correspondra en réalité à /api
+	// Cette route en apparence "vide" correspondra en fait à /api
 	Flight::route('', function() { echo 'api'; }, false, 'api');
+	// Cela correspondra à /api/utilisateurs
     Flight::route('/utilisateurs', function() { echo 'utilisateurs'; }, false, 'utilisateurs');
-	Flight::route('/utilisateurs/@id', function($id) { echo 'utilisateur:'.$id; }, false, 'vue_utilisateur');
+	// Cela correspondra à /api/utilisateurs/1234
+	Flight::route('/utilisateurs/@id', function($id) { echo 'utilisateur :'.$id; }, false, 'vue_utilisateur');
 }, [ new ApiAuthMiddleware() ]);
 ```
 
-Si vous souhaitez appliquer un middleware global à toutes vos routes, vous pouvez ajouter un groupe "vide":
+Si vous souhaitez appliquer un middleware global à toutes vos routes, vous pouvez ajouter un groupe "vide" :
 
 ```php
 
-// ajouté à la fin de la méthode de groupe
+// ajouté à la fin de la méthode group
 Flight::group('', function() {
+
+	// C'est toujours /utilisateurs
 	Flight::route('/utilisateurs', function() { echo 'utilisateurs'; }, false, 'utilisateurs');
-	Flight::route('/utilisateurs/@id', function($id) { echo 'utilisateur:'.$id; }, false, 'vue_utilisateur');
+	// Et c'est toujours /utilisateurs/1234
+	Flight::route('/utilisateurs/@id', function($id) { echo 'utilisateur :'.$id; }, false, 'vue_utilisateur');
 }, [ new ApiAuthMiddleware() ]);
 ```

@@ -1,51 +1,64 @@
-# Erweiterung
+# Erweitern
 
-Flight ist darauf ausgelegt, ein erweiterbares Framework zu sein. Das Framework wird mit einer Reihe von Standardmethoden und -komponenten geliefert, aber es ermöglicht Ihnen, Ihre eigenen Methoden zu mappen, Ihre eigenen Klassen zu registrieren oder sogar vorhandene Klassen und Methoden zu überschreiben.
+Flight ist so konzipiert, dass es sich um ein erweiterbares Framework handelt. Das Framework wird mit einer Reihe von Standardmethoden und -komponenten geliefert, jedoch können Sie Ihre eigenen Methoden zuordnen, Ihre eigenen Klassen registrieren oder sogar bestehende Klassen und Methoden überschreiben.
 
-Wenn Sie nach einem DIC (Dependency Injection Container) suchen, gehen Sie zur [Seite des Dependency Injection Containers](dependency-injection-container).
+Wenn Sie auf der Suche nach einem DIC (Dependency Injection Container) sind, wechseln Sie zur [Dependency Injection Container](dependency-injection-container) Seite.
 
-## Methoden Zuordnen
+## Methoden zuordnen
 
 Um Ihre eigene einfache benutzerdefinierte Methode zuzuordnen, verwenden Sie die `map` Funktion:
 
 ```php
-// Ordne deine Methode zu
+// Ordnen Sie Ihre Methode zu
 Flight::map('hello', function (string $name) {
-  echo "Hallo $name!";
+  echo "hallo $name!";
 });
 
 // Rufen Sie Ihre benutzerdefinierte Methode auf
 Flight::hello('Bob');
 ```
 
-Dies wird häufiger verwendet, wenn Sie Variablen in Ihre Methode passen müssen, um einen erwarteten Wert zu erhalten. Die Verwendung der `register()` Methode wie unten ist eher für das Übergeben von Konfigurationen und das Aufrufen Ihrer vorab konfigurierten Klasse.
+Obwohl es möglich ist, einfache benutzerdefinierte Methoden zu erstellen, wird empfohlen, einfach Standardfunktionen in PHP zu erstellen. Diese haben eine Autovervollständigung in IDEs und sind einfacher zu lesen.
+Das Äquivalent des obigen Codes wäre:
+
+```php
+function hello(string $name) {
+  echo "hallo $name!";
+}
+
+hello('Bob');
+```
+
+Dies wird eher verwendet, wenn Sie Variablen in Ihre Methode übergeben müssen, um einen erwarteten Wert zu erhalten. Die Verwendung der `register()` Methode wie unten gezeigt dient mehr dazu, Konfigurationsdaten zu übergeben und dann Ihre vorab konfigurierte Klasse aufzurufen.
 
 ## Klassen registrieren
 
 Um Ihre eigene Klasse zu registrieren und zu konfigurieren, verwenden Sie die `register` Funktion:
 
 ```php
-// Registriere deine Klasse
+// Registrieren Sie Ihre Klasse
 Flight::register('user', User::class);
 
-// Erhalte eine Instanz deiner Klasse
+// Erhalten Sie eine Instanz Ihrer Klasse
 $user = Flight::user();
 ```
 
-Die Registriermethode ermöglicht es Ihnen auch, Parameter an den Konstruktor Ihrer Klasse zu übergeben. Wenn Sie Ihre benutzerdefinierte Klasse laden, wird sie also vorinitialisiert. Sie können die Konstruktorparameter festlegen, indem Sie ein zusätzliches Array übergeben. Hier ist ein Beispiel zum Laden einer Datenbankverbindung:
+Die Registriermethode ermöglicht es Ihnen auch, Parameter an den Konstruktor Ihrer Klasse zu übergeben. Wenn Sie Ihre benutzerdefinierte Klasse laden, wird sie vorinitialisiert.
+Sie können die Konstruktorparameter definieren, indem Sie ein zusätzliches Array übergeben.
+Hier ist ein Beispiel zum Laden einer Datenbankverbindung:
 
 ```php
 // Klasse mit Konstruktorparametern registrieren
-Flight::register('db', PDO::class, ['mysql:host=localhost;dbname=test', 'user', 'pass']);
+Flight::register('db', PDO::class, ['mysql:host=localhost;dbname=test', 'benutzer', 'passwort']);
 
-// Erhalte eine Instanz deiner Klasse
-// Dies wird ein Objekt mit den definierten Parametern erstellen
+// Erhalten Sie eine Instanz Ihrer Klasse
+// Dies erstellt ein Objekt mit den definierten Parametern
 //
-// new PDO('mysql:host=localhost;dbname=test','user','pass');
+// new PDO('mysql:host=localhost;dbname=test','benutzer','passwort');
 //
 $db = Flight::db();
 
-// und wenn Sie es später in Ihrem Code benötigen, rufen Sie einfach die gleiche Methode erneut auf
+// und wenn Sie es später im Code benötigen, rufen Sie einfach die gleiche Methode erneut auf
 class SomeController {
   public function __construct() {
 	$this->db = Flight::db();
@@ -53,53 +66,55 @@ class SomeController {
 }
 ```
 
-Wenn Sie einen zusätzlichen Rückrufparameter übergeben, wird dieser sofort nach dem Klassenkonstruktor ausgeführt. Dies ermöglicht es Ihnen, alle Einrichtungsverfahren für Ihr neues Objekt durchzuführen. Die Rückruffunktion nimmt einen Parameter entgegen, eine Instanz des neuen Objekts.
+Wenn Sie einen zusätzlichen Rückrufparameter übergeben, wird er unmittelbar nach der Klassenkonstruktion ausgeführt. Dies ermöglicht es Ihnen, alle Einrichtungsvorgänge für Ihr neues Objekt durchzuführen. Die Rückruffunktion erhält einen Parameter, eine Instanz des neuen Objekts.
 
 ```php
 // Der Rückruf erhält das konstruierte Objekt
 Flight::register(
   'db',
   PDO::class,
-  ['mysql:host=localhost;dbname=test', 'user', 'pass'],
+  ['mysql:host=localhost;dbname=test', 'benutzer', 'passwort'],
   function (PDO $db) {
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
   }
 );
 ```
 
-Standardmäßig erhalten Sie jedes Mal, wenn Sie Ihre Klasse laden, eine gemeinsam genutzte Instanz. Um eine neue Instanz einer Klasse zu erhalten, geben Sie einfach `false` als Parameter ein:
+Standardmäßig erhalten Sie jedes Mal, wenn Sie Ihre Klasse laden, eine gemeinsam genutzte Instanz.
+Um eine neue Instanz einer Klasse zu erhalten, geben Sie einfach `false` als Parameter ein:
 
 ```php
 // Gemeinsam genutzte Instanz der Klasse
-$shared = Flight::db();
+$gemeinsam = Flight::db();
 
 // Neue Instanz der Klasse
-$new = Flight::db(false);
+$neu = Flight::db(false);
 ```
 
-Beachten Sie, dass gemappte Methoden Vorrang vor registrierten Klassen haben. Wenn Sie beide mit demselben Namen deklarieren, wird nur die gemappte Methode aufgerufen.
+Bitte beachten Sie, dass zugeordnete Methoden Vorrang vor registrierten Klassen haben. Wenn Sie beide unter demselben Namen deklarieren, wird nur die zugeordnete Methode aufgerufen.
 
-## Framework-Methoden überschreiben
+## Überschreiben von Framework-Methoden
 
-Flight ermöglicht es Ihnen, seine Standardfunktionalität anzupassen, um Ihren eigenen Anforderungen gerecht zu werden, ohne dass Sie dabei Code ändern müssen.
+Flight ermöglicht es Ihnen, seine Standardfunktionalität anzupassen, um Ihren eigenen Anforderungen gerecht zu werden, ohne dass Sie Code ändern müssen. Sie können alle Methoden, die Sie überschreiben können, [hier](/learn/api) einsehen.
 
-Wenn Flight beispielsweise keine URL mit einer Route übereinstimmen kann, ruft es die `notFound` Methode auf, die eine generische `HTTP 404` Antwort sendet. Sie können dieses Verhalten überschreiben, indem Sie die `map` Methode verwenden:
+Wenn Flight beispielsweise einer URL keine Route zuordnen kann, ruft es die `notFound` Methode auf, die eine generische `HTTP 404`-Antwort sendet. Sie können dieses Verhalten überschreiben, indem Sie die `map` Methode verwenden:
 
 ```php
 Flight::map('notFound', function() {
-  // Zeige benutzerdefinierte 404 Seite an
+  // Benutzerdefinierte 404-Seite anzeigen
   include 'errors/404.html';
 });
 ```
 
-Flight ermöglicht es auch, Kernkomponenten des Frameworks zu ersetzen. Zum Beispiel können Sie die Standard-Routerklasse durch Ihre eigene benutzerdefinierte Klasse ersetzen:
+Flight ermöglicht es auch, Kernkomponenten des Frameworks zu ersetzen.
+Sie können beispielsweise die Standard-Routerklasse durch Ihre eigene benutzerdefinierte Klasse ersetzen:
 
 ```php
-// Registriere deine benutzerdefinierte Klasse
-Flight::register('router', MyRouter::class);
+// Registrieren Sie Ihre benutzerdefinierte Klasse
+Flight::register('router', MeineRouter::class);
 
-// Wenn Flight die Router-Instanz lädt, lädt es Ihre Klasse
-$myrouter = Flight::router();
+// Wenn Flight die Router-Instanz lädt, wird Ihre Klasse geladen
+$meinerouter = Flight::router();
 ```
 
 Framework-Methoden wie `map` und `register` können jedoch nicht überschrieben werden. Sie erhalten einen Fehler, wenn Sie dies versuchen.

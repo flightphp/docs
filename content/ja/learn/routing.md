@@ -1,42 +1,42 @@
 # ルーティング
 
-> **Note:** ルーティングについてさらに理解したい場合は、["なぜフレームワークか？"](/learn/why-frameworks) ページをチェックして詳細な説明をご覧ください。
+> **Note:** ルーティングについてさらに理解したいですか？ より詳しい説明については、["なぜフレームワークを使うのか？"](learn/why-frameworks) ページを参照してください。
 
-Flightにおける基本的なルーティングは、URLパターンとコールバック関数、またはクラスとメソッドの配列を一致させることで行われます。
+Flight における基本的なルーティングは、URL パターンとコールバック関数またはクラスとメソッドの配列との一致によって行われます。
 
 ```php
 Flight::route('/', function(){
-    echo 'こんにちは、世界！';
+    echo 'hello world!';
 });
 ```
 
-> ルートは定義された順番に一致します。要求に最初に一致したルートが呼び出されます。
+> ルートは定義された順番で一致します。リクエストに一致する最初のルートが実行されます。
 
 ### コールバック/関数
-コールバックは呼び出し可能な任意のオブジェクトです。そのため、通常の関数を使用できます:
+コールバックは呼び出し可能な任意のオブジェクトを使用できます。よって、通常の関数を使用できます：
 
 ```php
-function hello(){
-    echo 'こんにちは、世界！';
+function hello() {
+    echo 'hello world!';
 }
 
 Flight::route('/', 'hello');
 ```
 
 ### クラス
-静的メソッドを使用することもできます:
+クラスの静的メソッドを使用することもできます：
 
 ```php
 class Greeting {
     public static function hello() {
-        echo 'こんにちは、世界！';
+        echo 'hello world!';
     }
 }
 
 Flight::route('/', [ 'Greeting','hello' ]);
 ```
 
-また、最初にオブジェクトを作成してからメソッドを呼び出すこともできます:
+また、最初にオブジェクトを作成してからメソッドを呼び出すこともできます：
 
 ```php
 
@@ -44,11 +44,11 @@ Flight::route('/', [ 'Greeting','hello' ]);
 class Greeting
 {
     public function __construct() {
-        $this->name = '山田 太郎';
+        $this->name = 'John Doe';
     }
 
     public function hello() {
-        echo "こんにちは、{$this->name}さん！";
+        echo "Hello, {$this->name}!";
     }
 }
 
@@ -56,18 +56,20 @@ class Greeting
 $greeting = new Greeting();
 
 Flight::route('/', [ $greeting, 'hello' ]);
-// オブジェクトを作成せずに行うこともできます
-// 注意: コンストラクタに引数は渡されません
+// オブジェクトを作成せずにこれを行うこともできます
+// 注意：引数はコンストラクタに注入されません
 Flight::route('/', [ 'Greeting', 'hello' ]);
+// さらに、この短縮構文を使用することもできます
+Flight::route('/', 'Greeting->hello');
+// または
+Flight::route('/', Greeting::class.'->hello');
 ```
 
 #### DIC（Dependency Injection Container）を介した依存性の注入
-依存性の注入をコンテナ（PSR-11、PHP-DI、Diceなど）を介して使用したい場合、
-オブジェクトを自分で作成してコンテナを使用してオブジェクトを作成するルートのタイプのみ、
-またはクラスとメソッドを呼び出すために文字列を使用できます。詳細については、
-[依存性の注入](/learn/extending)ページをご覧ください。
+コンテナ（PSR-11、PHP-DI、Dice など）を使った依存性の注入を行いたい場合、
+依存性の注入を使用できる唯一のタイプのルートは、オブジェクトを直接作成して自分自身でオブジェクトを作成するコンテナを使用するか、クラスとメソッドを呼び出すために文字列を使用するルートです。詳細については[Dependency Injection](/learn/extending) ページを参照してください。
 
-以下に簡単な例を示します:
+以下に簡単な例を示します：
 
 ```php
 
@@ -82,19 +84,19 @@ class Greeting
 	}
 
 	public function hello(int $id) {
-		// $this->pdoWrapperを使って何かを行う
+		// $this->pdoWrapper を使って何かをします
 		$name = $this->pdoWrapper->fetchField("SELECT name FROM users WHERE id = ?", [ $id ]);
-		echo "こんにちは、世界！私の名前は{$name}です！";
+		echo "こんにちは、世界！ 私の名前は {$name} です！";
 	}
 }
 
 // index.php
 
 // 必要なパラメータを使用してコンテナを設定します
-// PSR-11に関する詳細は、依存性の注入ページをご覧ください
+// PSR-11 の詳細については、Dependency Injection ページを参照してください
 $dice = new \Dice\Dice();
 
-// !! '$dice = 'で変数を再代入するのを忘れないでください!!!!
+// 忘れずに変数を `$dice= ` で再割り当てしてください！！！！
 $dice = $dice->addRule('flight\database\PdoWrapper', [
 	'shared' => true,
 	'constructParams' => [ 
@@ -109,11 +111,11 @@ Flight::registerContainerHandler(function($class, $params) use ($dice) {
 	return $dice->create($class, $params);
 });
 
-// 通常のようにルートを設定します
+// 通常通りルートを設定します
 Flight::route('/hello/@id', [ 'Greeting', 'hello' ]);
 // または
 Flight::route('/hello/@id', 'Greeting->hello');
-// or
+// または
 Flight::route('/hello/@id', 'Greeting::hello');
 
 Flight::start();
@@ -121,34 +123,35 @@ Flight::start();
 
 ## メソッドルーティング
 
-デフォルトでは、ルートパターンはすべてのリクエストメソッドと一致します。あるメソッドに
-応答するようにするためには、URLの前に識別子を配置します。
+デフォルトでは、ルートパターンはすべてのリクエストメソッドと一致します。特定のメソッドに応答することができます
+リクエストを URL の前に識別子を置くことで。
 
 ```php
 Flight::route('GET /', function () {
-  echo 'GETリクエストを受信しました。';
+  echo 'GET リクエストを受け取りました。';
 });
 
 Flight::route('POST /', function () {
-  echo 'POSTリクエストを受信しました。';
+  echo 'POST リクエストを受け取りました。';
 });
 
-// Flight::get()は変数を取得するメソッドであり、ルートを設定するためのメソッドではありません。
+// ルートを作成するために Flight::get() を使用することはできません
+//    これはルートを作成するのではなく、変数を取得するためのメソッドです。
 // Flight::post('/', function() { /* コード */ });
 // Flight::patch('/', function() { /* コード */ });
 // Flight::put('/', function() { /* コード */ });
 // Flight::delete('/', function() { /* コード */ });
 ```
 
-`|` デリミタを使用して、1つのコールバックに複数のメソッドをマップすることもできます:
+`|` デリミタを使用して複数のメソッドを単一のコールバックにマップすることもできます：
 
 ```php
 Flight::route('GET|POST /', function () {
-  echo 'GETまたはPOSTリクエストのいずれかを受信しました。';
+  echo 'GET または POST リクエストを受け取りました。';
 });
 ```
 
-さらに、利用可能なヘルパーメソッドを持つ`Router`オブジェクトを取得することもできます:
+さらに、使用するヘルパーメソッドがいくつか含まれている Router オブジェクトを取得できます：
 
 ```php
 
@@ -156,12 +159,12 @@ $router = Flight::router();
 
 // すべてのメソッドにマップします
 $router->map('/', function() {
-	echo 'こんにちは、世界！';
+	echo 'hello world!';
 });
 
-// GETリクエスト
+// GET リクエスト
 $router->get('/users', function() {
-	echo 'ユーザー';
+	echo 'users';
 });
 // $router->post();
 // $router->put();
@@ -171,7 +174,7 @@ $router->get('/users', function() {
 
 ## 正規表現
 
-ルートに正規表現を使用することができます:
+ルートで正規表現を使用できます：
 
 ```php
 Flight::route('/user/[0-9]+', function () {
@@ -179,448 +182,38 @@ Flight::route('/user/[0-9]+', function () {
 });
 ```
 
-この方法は利用できますが、名前付きパラメータや名前付きパラメータと正規表現を使用することが推奨されます。
-可読性が高く、メンテナンスがしやすいです。
+このメソッドは利用可能ですが、名前付きパラメータまたは正規表現付きの名前付きパラメータを使用することが推奨されています。それらはより読みやすく維持しやすいです。
 
 ## 名前付きパラメータ
 
-コールバック関数に渡される名前付きパラメータを指定することができます。
+コールバック関数で使用する名前付きパラメータを指定できます。
 
 ```php
 Flight::route('/@name/@id', function (string $name, string $id) {
-  echo "こんにちは、$nameさん（$id）！";
+  echo "$name ($id) さん、こんにちは！";
 });
 ```
 
-`:` デリミタを使用して名前付きパラメータに正規表現を含めることもできます:
+`:` デリミタを使用して名前付きパラメータに正規表現を含めることもできます：
 
 ```php
 Flight::route('/@name/@id:[0-9]{3}', function (string $name, string $id) {
-  // /bob/123 に一致します
-  // ただし、/bob/12345 には一致しません
+  // これは /bob/123 に一致します
+  // ただし /bob/12345 には一致しません
 });
 ```
 
-> **Note:** 名前付きパラメータと一致する正規表現グループ `()` はサポートされていません。 :'\(
-
-## オプションパラメータ
-
-マッチングがオプションであることを明示するために、セグメントをカッコで括り、名前付きパラメータを指定できます。
-
-```php
-Flight::route(
-  '/blog(/@year(/@month(/@day)))',
-  function(?string $year, ?string $month, ?string $day) {
-    // 次のURLに一致します:
-    // /blog/2012/12/10
-    // /blog/2012/12
-    // /blog/2012
-    // /blog
-  }
-);
-```
-
-一致しなかったオプションパラメータは `NULL` として渡されます。
-
-## ワイルドカード
-
-マッチングは個々のURLセグメントでのみ行われます。複数のセグメントにマッチさせたい場合は `*` ワイルドカードを使用できます。
-
-```php
-Flight::route('/blog/*', function () {
-  // これは /blog/2000/02/01 に一致します
-});
-```
-
-すべてのリクエストを単一のコールバックにルーティングするには、次のようにします:
-
-```php
-Flight::route('*', function () {
-  // 何かを実行します
-});
-```
-
-## パススルー
-
-コールバック関数から `true` を返すことで、次の一致するルートに実行を移すことができます。
-
-```php
-Flight::route('/user/@name', function (string $name) {
-  // ある条件をチェック
-  if ($name !== "太郎") {
-    // 次のルートに続行
-    return true;
-  }
-});
-
-Flight::route('/user/*', function () {
-  // これが呼び出されます
-});
-```
-
-## ルートのエイリアス
-
-ルートにエイリアスを割り当てて、後でコード内で動的にURLを生成できるようにすることができます（例: テンプレートなど）。
-
-```php
-Flight::route('/users/@id', function($id) { echo 'user:'.$id; }, false, 'user_view');
-
-// あとでコードのある場所で
-Flight::getUrl('user_view', [ 'id' => 5 ]); // '/users/5' を返します
-```
-
-URLが変更される可能性がある場合に特に便利です。上記の例では、ユーザーが `/admin/users/@id` に移動した場合でも、
-エイリアスを参照している場所を変更する必要がないため、エイリアスは便利です。
-
-グループ内でもルートエイリアスは動作します:
-
-```php
-Flight::group('/users', function() {
-    Flight::route('/@id', function($id) { echo 'user:'.$id; }, false, 'user_view');
-});
-
-
-// あとでコードのある場所で
-Flight::getUrl('user_view', [ 'id' => 5 ]); // '/users/5' を返します
-```
-
-## ルート情報
-
-一致するルート情報を調査したい場合、ルートメソッドの第3引数として `true` を渡すことで、
-ルートオブジェクトをコールバックに渡すように要求できます。ルートオブジェクトは、常にコールバック関数に渡される最後の引数です。
-
-```php
-Flight::route('/', function(\flight\net\Route $route) {
-  // 一致したHTTPメソッドの配列
-  $route->methods;
-
-  // 名前付きパラメータの配列
-  $route->params;
-
-  // 一致する正規表現
-  $route->regex;
-
-  // URLパターンで '*' が使用されているコンテンツ
-  $route->splat;
-
-  // サイトのパスを表示します....本当に必要があれば
-  $route->pattern;
-
-  // このルートに割り当てられたミドルウェアを表示します
-  $route->middleware;
-
-  // このルートに割り当てられたエイリアスを表示します
-  $route->alias;
-}, true);
-```
-
-## ルートグループ化
-
-関連するルートをまとめたい場合（たとえば `/api/v1` など）、`group` メソッドを使用できます:
-
-```php
-Flight::group('/api/v1', function () {
-  Flight::route('/users', function () {
-	// /api/v1/users に一致します
-  });
-
-  Flight::route('/posts', function () {
-	// /api/v1/posts に一致します
-  });
-});
-```
-
-ネストされたグループを作成することもできます:
-
-```php
-Flight::group('/api', function () {
-  Flight::group('/v1', function () {
-	// Flight::get()は変数を取得するメソッドであり、ルートを設定するメソッドではありません。オブジェクトコンテキストを参照してください
-	Flight::route('GET /users', function () {
-	  // GET /api/v1/users に一致します
-	});
-
-	Flight::post('/posts', function () {
-	  // POST /api/v1/posts に一致します
-	});
-
-	Flight::put('/posts/1', function () {
-	  // PUT /api/v1/posts に一致します
-	});
-  });
-  Flight::group('/v2', function () {
-
-	// Flight::get()は変数を取得するメソッドであり、ルートを設定するメソッドではありません。オブジェクトコンテキストを参照してください
-	Flight::route('GET /users', function () {
-	  // GET /api/v2/users に一致します
-	});
-  });
-});
-```
-
-### オブジェクトコンテキストを使用したグループ化
-
-以下のように `Engine` オブジェクトでルートグループ化を使用することもできます:
-
-```php
-$app = new \flight\Engine();
-$app->group('/api/v1', function (Router $router) {
-
-  // $router変数を使用します
-  $router->get('/users', function () {
-	// GET /api/v1/users に一致します
-  });
-
-  $router->post('/posts', function () {
-	// POST /api/v1/posts に一致します
-  });
-});
-```
-
-## ストリーミング
-
-`streamWithHeaders()` メソッドを使用して、クライアントに対して応答をストリーミングできます。
-大きなファイルの送信、長時間実行されるプロセス、または大きな応答の生成に役立ちます。
-ルートのストリーミングは、通常のルートとは少し異なる方法で処理されます。
-
-> **注意:** [`flight.v2.output_buffering`](/learn/migrating-to-v3#output_buffering) が false に設定されている場合に限り、ストリーミング応答を使用できます。
-
-### 手動ヘッダー付きのストリーム
-
-コールバック関数で `stream()` メソッドを使用してクライアントに応答をストリーミングできます。 
-これを行う場合、クライアントに何かを出力する前にすべてのメソッドを手動で設定する必要があります。
-これは、`header()` php 関数または `Flight::response()->setRealHeader()` メソッドで行います。
-
-```php
-Flight::route('/@filename', function($filename) {
-
-	// パスなどを適切に検証します。
-	$fileNameSafe = basename($filename);
-
-	// ルートが実行された後に追加のヘッダーを設定する場合、
-	// エコーされる前にそれらを定義する必要があります。
-	// すべて、'header()' 関数の生の呼び出しまたは
-	// 'Flight::response()->setRealHeader()' の呼び出しで行わなければなりません。
-	header('Content-Disposition: attachment; filename="'.$fileNameSafe.'"');
-	// または
-	Flight::response()->setRealHeader('Content-Disposition', 'attachment; filename="'.$fileNameSafe.'"');
-
-	$fileData```markdown
-# ルーティング
-
-> **注意:** ルーティングについて詳しく知りたい場合は、より詳細な説明のために["フレームワークの必要性は？"](/learn/why-frameworks)ページをご覧ください。
-
-Flightでの基本的なルーティングは、URLパターンをコールバック関数またはクラスとメソッドの配列と一致させることによって行われます。
-
-```php
-Flight::route('/', function(){
-    echo 'こんにちは、世界！';
-});
-```
-
-> ルートは定義された順に一致します。リクエストに最初に一致したルートが呼び出されます。
-
-### コールバック/関数
-コールバックは呼び出し可能な任意のオブジェクトです。通常の関数を使用できます:
-
-```php
-function hello(){
-    echo 'こんにちは、世界！';
-}
-
-Flight::route('/', 'hello');
-```
-
-### クラス
-静的メソッドを使用することもできます:
-
-```php
-class Greeting {
-    public static function hello() {
-        echo 'こんにちは、世界！';
-    }
-}
-
-Flight::route('/', [ 'Greeting','hello' ]);
-```
-
-または、最初にオブジェクトを作成してからメソッドを呼び出すこともできます:
-
-```php
-
-// Greeting.php
-class Greeting
-{
-    public function __construct() {
-        $this->name = '山田 太郎';
-    }
-
-    public function hello() {
-        echo "こんにちは、{$this->name}さん！";
-    }
-}
-
-// index.php
-$greeting = new Greeting();
-
-Flight::route('/', [ $greeting, 'hello' ]);
-// オブジェクトを作成せずに行うこともできます
-// 注意: 引数はコンストラクタにインジェクトされません
-Flight::route('/', [ 'Greeting', 'hello' ]);
-```
-
-#### DIC（Dependency Injection Container）を介した依存関係の注入
-コンテナ（PSR-11、PHP-DI、Diceなど）を介した依存性の注入を使用する場合、
-オブジェクトを直接作成してコンテナを使用してオブジェクトを作成するタイプのルートだけで使用できます
-または、クラスとメソッドを呼び出すために文字列を使用することができます。詳細については、
-[依存性の注入](/learn/extending)ページをご覧ください。
-
-以下に簡単な例を示します:
-
-```php
-
-use flight\database\PdoWrapper;
-
-// Greeting.php
-class Greeting
-{
-	protected PdoWrapper $pdoWrapper;
-	public function __construct(PdoWrapper $pdoWrapper) {
-		$this->pdoWrapper = $pdoWrapper;
-	}
-
-	public function hello(int $id) {
-		// $this->pdoWrapperを使用して何かをする
-		$name = $this->pdoWrapper->fetchField("SELECT name FROM users WHERE id = ?", [ $id ]);
-		echo "こんにちは、世界！私の名前は{$name}です！";
-	}
-}
-
-// index.php
-
-// 必要なパラメータを使用してコンテナを設定します
-// PSR-11に関する詳細は、依存性の注入ページをご覧ください
-$dice = new \Dice\Dice();
-
-// !! '$dice = 'で変数を再代入するのを忘れないでください!!!!
-$dice = $dice->addRule('flight\database\PdoWrapper', [
-	'shared' => true,
-	'constructParams' => [ 
-		'mysql:host=localhost;dbname=test', 
-		'root',
-		'password'
-	]
-]);
-
-// コンテナハンドラを登録します
-Flight::registerContainerHandler(function($class, $params) use ($dice) {
-	return $dice->create($class, $params);
-});
-
-// 通常のようにルートを設定します
-Flight::route('/hello/@id', [ 'Greeting', 'hello' ]);
-// または
-Flight::route('/hello/@id', 'Greeting->hello');
-// or
-Flight::route('/hello/@id', 'Greeting::hello');
-
-Flight::start();
-```
-
-## メソッドルーティング
-
-デフォルトでは、ルートパターンはすべてのリクエストメソッドと一致します。特定のメソッドに応答するためには、
-URLの前に識別子を配置します。
-
-```php
-Flight::route('GET /', function () {
-  echo 'GETリクエストを受信しました。';
-});
-
-Flight::route('POST /', function () {
-  echo 'POSTリクエストを受信しました。';
-});
-
-// Flight::get()は変数を取得するメソッドであり、ルートを設定するメソッドではありません。
-// Flight::post('/', function() { /* コード */ });
-// Flight::patch('/', function() { /* コード */ });
-// Flight::put('/', function() { /* コード */ });
-// Flight::delete('/', function() { /* コード */ });
-```
-
-`|` デリミタを使用して、1つのコールバックに複数のメソッドをマップすることもできます:
-
-```php
-Flight::route('GET|POST /', function () {
-  echo 'GETまたはPOSTリクエストのいずれかを受信しました。';
-});
-```
-
-さらに、ヘルパーメソッドを使用するためのいくつかのヘルパーメソッドがある`Router`オブジェクトにアクセスすることもできます:
-
-```php
-
-$router = Flight::router();
-
-// すべてのメソッドにマップします
-$router->map('/', function() {
-	echo 'こんにちは、世界！';
-});
-
-// GETリクエスト
-$router->get('/users', function() {
-	echo 'ユーザー';
-});
-// $router->post();
-// $router->put();
-// $router->delete();
-// $router->patch();
-```
-
-## 正規表現
-
-ルートに正規表現を使用することができます:
-
-```php
-Flight::route('/user/[0-9]+', function () {
-  // これは /user/1234 に一致します
-});
-```
-
-この方法は利用できますが、名前付きパラメータや名前付きパラメータと正規表現を使用することが推奨されます。
-可読性が高く、メンテナンスがしやすいです。
-
-## 名前付きパラメータ
-
-コールバック関数に渡される名前付きパラメータを指定できます。
-
-```php
-Flight::route('/@name/@id', function (string $name, string $id) {
-  echo "こんにちは、$name ($id)!";
-});
-```
-
-`:` デリミタを使用して名前付きパラメータに正規表現を含めることもできます:
-
-```php
-Flight::route('/@name/@id:[0-9]{3}', function (string $name, string $id) {
-  // /bob/123 に一致します
-  // ただし、/bob/12345 には一致しません
-});
-```
-
-> **注意:** 名前付きパラメータと一致する正規表現グループ `()`はサポートされていません。 :'\(
+> **Note:** 名前付きパラメータで正規表現のグループ `()` に一致させることはサポートされていません。 :'(
 
 ## オプションのパラメータ
 
-オプションでマッチする名前付きパラメータを指定できます。
-セグメントを括弧で囲むことでオプションのパラメータを指定します。
+一致させるためにオプションの名前付きパラメータを指定できます。一致しないオプションのパラメータは `NULL` として渡されます。
 
 ```php
 Flight::route(
   '/blog(/@year(/@month(/@day)))',
   function(?string $year, ?string $month, ?string $day) {
-    // 次のURLに一致します:
+    // 以下の URL に一致します:
     // /blog/2012/12/10
     // /blog/2012/12
     // /blog/2012
@@ -629,11 +222,9 @@ Flight::route(
 );
 ```
 
-一致しなかったオプションのパラメータは `NULL` として渡されます。
-
 ## ワイルドカード
 
-マッチングは個々のURLセグメントでのみ行われます。複数のセグメントにマッチさせたい場合は、`*` ワイルドカードを使用できます。
+一致は個々の URL セグメントでのみ行われます。複数のセグメントに一致させたい場合は、`*` ワイルドカードを使用できます。
 
 ```php
 Flight::route('/blog/*', function () {
@@ -641,21 +232,21 @@ Flight::route('/blog/*', function () {
 });
 ```
 
-すべてのリクエストを単一のコールバックにルーティングするには、次のようにします:
+すべてのリクエストを単一のコールバックにルーティングする場合は、次のようにします：
 
 ```php
 Flight::route('*', function () {
-  // 何かを実行します
+  // 何かをします
 });
 ```
 
-## パススルー
+## パッシング
 
-コールバック関数から `true` を返すことで、次の一致するルートに実行を移すことができます。
+コールバック関数から `true` を返すことで、次に一致するルートに実行を渡すことができます。
 
 ```php
 Flight::route('/user/@name', function (string $name) {
-  // ある条件をチェック
+  // ある条件を確認
   if ($name !== "Bob") {
     // 次のルートに続行
     return true;
@@ -663,25 +254,25 @@ Flight::route('/user/@name', function (string $name) {
 });
 
 Flight::route('/user/*', function () {
-  // これが呼び出されます
+  // これが呼ばれます
 });
 ```
 
 ## ルートのエイリアス
 
-ルートにエイリアスを割り当てて、後でコード内で動的にURLを生成できるようにすることができます（例: テンプレートなど）。
+ルートにエイリアスを割り当てることで、URL を後で動的に生成できます（たとえば、テンプレートなど）。
 
 ```php
 Flight::route('/users/@id', function($id) { echo 'user:'.$id; }, false, 'user_view');
 
-// 後でコードのある場所で
+// あとでどこかのコードで
 Flight::getUrl('user_view', [ 'id' => 5 ]); // '/users/5' を返します
 ```
 
-URLが変更される可能性がある場合に特に便利です。上記の例では、ユーザーが `/admin/users/@id` に移動した場合でも、
-エイリアスを参照している場所を変更する必要がないため、エイリアスは便利です。
+あなたの URL が変更された場合、ルートエイリアスを使用すると、エイリアスを参照している場所全てを変更する必要がありません。
+上記の例のように、ユーザーが `/admin/users/@id` に移動した場合、エイリアスを使用している場所全てを変更する必要はないため、エイリアスが非常に役立ちます。
 
-ルートエイリアスはグループ内でも機能します:
+ルートのエイリアスはグループ内でも機能します：
 
 ```php
 Flight::group('/users', function() {
@@ -689,30 +280,29 @@ Flight::group('/users', function() {
 });
 
 
-// 後でコードのある場所で
+// あとでどこかのコードで
 Flight::getUrl('user_view', [ 'id' => 5 ]); // '/users/5' を返します
 ```
 
 ## ルート情報
 
-マッチするルート情報を調査したい場合、ルートメソッドの第3引数として `true` を渡すことで、
-ルートオブジェクトをコールバックに渡すように要求できます。ルートオブジェクトは、常にコールバック関数に渡される最後の引数です。
+一致するルート情報を検査したい場合は、ルートメソッドの第三引数として `true` を渡すことで、ルートオブジェクトをコールバック関数に渡すように要求することができます。 ルートオブジェクトはいつもコールバック関数に渡される最後のパラメータになります。
 
 ```php
 Flight::route('/', function(\flight\net\Route $route) {
-  // 一致したHTTPメソッドの配列
+  // 一致した HTTP メソッドの配列
   $route->methods;
 
   // 名前付きパラメータの配列
   $route->params;
 
-  // 一致する正規表現
+  // 一致した正規表現
   $route->regex;
 
-  // URLパターンで '*' が使用されているコンテンツ
+  // URL パターン内で使用されている '*' の内容
   $route->splat;
 
-  // サイトのパスを表示します....本当に必要があれば
+  // URL パターンを表示します... 必要な場合は...
   $route->pattern;
 
   // このルートに割り当てられたミドルウェアを表示します
@@ -725,43 +315,43 @@ Flight::route('/', function(\flight\net\Route $route) {
 
 ## ルートグループ化
 
-関連するルートをまとめたい場合（たとえば `/api/v1` など）、`group` メソッドを使用できます:
+関連するルートをまとめたい場合（たとえば、`/api/v1` など）、`group` メソッドを使用できます：
 
 ```php
 Flight::group('/api/v1', function () {
   Flight::route('/users', function () {
-	// /api/v1/users に一致します
+	// /api/v1/users に一致
   });
 
   Flight::route('/posts', function () {
-	// /api/v1/posts に一致します
+	// /api/v1/posts に一致
   });
 });
 ```
 
-ネストされたグループを作成することもできます:
+グループのグループをネストさせることもできます：
 
 ```php
 Flight::group('/api', function () {
   Flight::group('/v1', function () {
-	// Flight::get()は変数を取得するメソッドであり、ルートを設定するメソッドではありません。オブジェクトコンテキストを参照してください
+	// Flight::get() は変数を取得しますが、ルートを設定するわけではありません！ オブジェクトコンテキストを参照してください
 	Flight::route('GET /users', function () {
-	  // GET /api/v1/users に一致します
+	  // GET /api/v1/users に一致
 	});
 
 	Flight::post('/posts', function () {
-	  // POST /api/v1/posts に一致します
+	  // POST /api/v1/posts に一致
 	});
 
 	Flight::put('/posts/1', function () {
-	  // PUT /api/v1/posts に一致します
+	  // PUT /api/v1/posts に一致
 	});
   });
   Flight::group('/v2', function () {
 
-	// Flight::get()は変数を取得するメソッドであり、ルートを設定するメソッドではありません。オブジェクトコンテキストを参照してください
+	// Flight::get() は変数を取得しますが、ルートを設定するわけではありません！ オブジェクトコンテキストを参照してください
 	Flight::route('GET /users', function () {
-	  // GET /api/v2/users に一致します
+	  // GET /api/v2/users に一致
 	});
   });
 });
@@ -769,46 +359,488 @@ Flight::group('/api', function () {
 
 ### オブジェクトコンテキストを使用したグループ化
 
-`Engine` オブジェクト内の `Router` 変数を使用して、`group` メソッドを使用することもできます:
+次のように、`Engine` オブジェクトを使用してルートグループ化を行うことができます：
 
 ```php
 $app = new \flight\Engine();
 $app->group('/api/v1', function (Router $router) {
 
-  // $router変数を使用します
+  // $router 変数を使用してください
   $router->get('/users', function () {
-	// GET /api/v1/users に一致します
+	// GET /api/v1/users に一致
   });
 
   $router->post('/posts', function () {
-	// POST /api/v1/posts に一致します
+	// POST /api/v1/posts に一致
   });
 });
 ```
 
 ## ストリーミング
 
-`streamWithHeaders()` メソッドを使用して、クライアントへ応答をストリーミングすることができます。
-大きなファイル、長時間実行プロセス、または大きな応答を送信する際に有効です。
-ルートのストリーミングは通常のルートとは少し異なる方法で処理されます。
+`streamWithHeaders()` メソッドを使用して、クライアントに対して応答をストリーミングで送信することができます。
+これは大きなファイル、長時間実行されるプロセス、または大規模な応答を生成する場合に役立ちます。
+ルートをストリーミングする場合、通常のルートよりもやや異なる方法で処理されます。
 
-> **注意:** [`flight.v2.output_buffering`](/learn/migrating-to-v3#output_buffering) が false に設定されている場合のみ、ストリーミング応答が可能です。
+> **注意:** [`flight.v2.output_buffering`](/learn/migrating-to-v3#output_buffering) が false に設定されている場合のみ、ストリーミング応答を使用できます。
 
-### ヘッダー付きストリーミング
+### マニュアルヘッダー付きストリーミング
 
-コールバック関数内で、`stream()` メソッドを使用してクライアントに応答をストリーミングすることができます。 
-この場合、クライアントに何かを出力する前にすべてのヘッダーを手動で設定する必要があります。
-これは、`header()` php 関数または `Flight::response()->setRealHeader()` メソッドを使用して行います。
+ルートで `stream()` メソッドを使用することで、クライアントに対して応答をストリーミングすることができます。これを行う場合は、クライアントに何かを出力する前に全てのメソッドを手動で設定する必要があります。 これは `header()` php 関数または `Flight::response()->setRealHeader()` メソッドで行います。
 
 ```php
 Flight::route('/@filename', function($filename) {
 
-	// パスなどを適切に検証します。
+	// パスをサニタイズする必要があります
 	$fileNameSafe = basename($filename);
 
-	// ルートが実行された後に追加のヘッダーを設定する場合、
-	// エコーされる前にそれらを定義する必要があります。
-	// すべて、'header()' 関数の生の呼び出しまたは 
-	// 'Flight::response()->setRealHeader()' の呼び出しで行わなければなりません。
-	header('Content-Disposition: attachment; filename="'.$fileNameSafe.'");
+	// ルートの実行後にここに追加する追加ヘッダがある場合
+	// 何かをエコーする前にそれ```md
+# ルーティング
+
+> **注意:** ルーティングについてさらに理解したいですか？ より詳しい説明については、["なぜフレームワークを使うのか？"](learn/why-frameworks) ページを参照してください。
+
+Flight における基本的なルーティングは、URL パターンとコールバック関数またはクラスとメソッドの配列との一致によって行われます。
+
+```php
+Flight::route('/', function(){
+    echo 'hello world!';
+});
+```
+
+> ルートは定義された順番で一致します。リクエストに一致する最初のルートが実行されます。
+
+### コールバック/関数
+コールバックは呼び出し可能な任意のオブジェクトを使用できます。よって、通常の関数を使用できます：
+
+```php
+function hello() {
+    echo 'hello world!';
+}
+
+Flight::route('/', 'hello');
+```
+
+### クラス
+クラスの静的メソッドを使用することもできます：
+
+```php
+class Greeting {
+    public static function hello() {
+        echo 'hello world!';
+    }
+}
+
+Flight::route('/', [ 'Greeting','hello' ]);
+```
+
+また、最初にオブジェクトを作成してからメソッドを呼び出すこともできます：
+
+```php
+
+// Greeting.php
+class Greeting
+{
+    public function __construct() {
+        $this->name = 'John Doe';
+    }
+
+    public function hello() {
+        echo "こんにちは、{$this->name}さん！";
+    }
+}
+
+// index.php
+$greeting = new Greeting();
+
+Flight::route('/', [ $greeting, 'hello' ]);
+// オブジェクトを作成せずにこれを行うこともできます
+// 注意：引数はコンストラクタに注入されません
+Flight::route('/', [ 'Greeting', 'hello' ]);
+// さらに、この短縮構文を使用することもできます
+Flight::route('/', 'Greeting->hello');
+// または
+Flight::route('/', Greeting::class.'->hello');
+```
+
+#### DIC（Dependency Injection Container）を介した依存性の注入
+コンテナ（PSR-11、PHP-DI、Dice など）を使った依存性の注入を行いたい場合、
+依存性の注入を使用できる唯一のタイプのルートは、オブジェクトを直接作成して自分自身でオブジェクトを作成するコンテナを使用するか、クラスとメソッドを呼び出すために文字列を使用するルートです。詳細については[Dependency Injection](/learn/extending) ページを参照してください。
+
+以下に簡単な例を示します：
+
+```php
+
+use flight\database\PdoWrapper;
+
+// Greeting.php
+class Greeting
+{
+	protected PdoWrapper $pdoWrapper;
+	public function __construct(PdoWrapper $pdoWrapper) {
+		$this->pdoWrapper = $pdoWrapper;
+	}
+
+	public function hello(int $id) {
+		// $this->pdoWrapper を使って何かをします
+		$name = $this->pdoWrapper->fetchField("SELECT name FROM users WHERE id = ?", [ $id ]);
+		echo "こんにちは、世界！ 私の名前は {$name} です！";
+	}
+}
+
+// index.php
+
+// 必要なパラメータを使用してコンテナを設定します
+// PSR-11 の詳細については、Dependency Injection ページを参照してください
+$dice = new \Dice\Dice();
+
+// 忘れずに変数を `$dice= ` で再割り当てしてください！！！！
+$dice = $dice->addRule('flight\database\PdoWrapper', [
+	'shared' => true,
+	'constructParams' => [ 
+		'mysql:host=localhost;dbname=test', 
+		'root',
+		'password'
+	]
+]);
+
+// コンテナハンドラを登録します
+Flight::registerContainerHandler(function($class, $params) use ($dice) {
+	return $dice->create($class, $params);
+});
+
+// 通常通りルートを設定します
+Flight::route('/hello/@id', [ 'Greeting', 'hello' ]);
+// または
+Flight::route('/hello/@id', 'Greeting->hello');
+// または
+Flight::route('/hello/@id', 'Greeting::hello');
+
+Flight::start();
+```
+
+## メソッドルーティング
+
+デフォルトでは、ルートパターンはすべてのリクエストメソッドと一致します。特定のメソッドに応答することができます
+リクエストを URL の前に識別子を置くことで。
+
+```php
+Flight::route('GET /', function () {
+  echo 'GET リクエストを受け取りました。';
+});
+
+Flight::route('POST /', function () {
+  echo 'POST リクエストを受け取りました。';
+});
+
+// ルートを作成するために Flight::get() を使用することはできません
+//    これはルートを作成するのではなく、変数を取得するためのメソッドです。
+// Flight::post('/', function() { /* コード */ });
+// Flight::patch('/', function() { /* コード */ });
+// Flight::put('/', function() { /* コード */ });
+// Flight::delete('/', function() { /* コード */ });
+```
+
+`|` デリミタを使用して複数のメソッドを単一のコールバックにマップすることもできます：
+
+```php
+Flight::route('GET|POST /', function () {
+  echo 'GET または POST リクエストを受け取りました。';
+});
+```
+
+さらに、使用するヘルパーメソッドがいくつか含まれている Router オブジェクトを取得できます：
+
+```php
+
+$router = Flight::router();
+
+// すべてのメソッドにマップします
+$router->map('/', function() {
+	echo 'hello world!';
+});
+
+// GET リクエスト
+$router->get('/users', function() {
+	echo 'users';
+});
+// $router->post();
+// $router->put();
+// $router->delete();
+// $router->patch();
+```
+
+## 正規表現
+
+ルートで正規表現を使用できます：
+
+```php
+Flight::route('/user/[0-9]+', function () {
+  // これは /user/1234 に一致します
+});
+```
+
+このメソッドは利用可能ですが、名前付きパラメータまたは正規表現付きの名前付きパラメータを使用することが推奨されています。それらはより読みやすく維持しやすいです。
+
+## 名前付きパラメータ
+
+コールバック関数で使用する名前付きパラメータを指定できます。
+
+```php
+Flight::route('/@name/@id', function (string $name, string $id) {
+  echo "$name ($id) さん、こんにちは！";
+});
+```
+
+`:` デリミタを使用して名前付きパラメータに正規表現を含めることもできます：
+
+```php
+Flight::route('/@name/@id:[0-9]{3}', function (string $name, string $id) {
+  // これは /bob/123 に一致します
+  // ただし /bob/12345 には一致しません
+});
+```
+
+> **注意:** 名前付きパラメータで正規表現のグループ `()` に一致させることはサポートされていません。 :'(
+
+## オプションのパラメータ
+
+一致させるためにオプションの名前付きパラメータを指定できます。一致しないオプションのパラメータは `NULL` として渡されます。
+
+```php
+Flight::route(
+  '/blog(/@year(/@month(/@day)))',
+  function(?string $year, ?string $month, ?string $day) {
+    // 以下の URL に一致します:
+    // /blog/2012/12/10
+    // /blog/2012/12
+    // /blog/2012
+    // /blog
+  }
+);
+```
+
+## ワイルドカード
+
+一致は個々の URL セグメントでのみ行われます。複数のセグメントに一致させたい場合は、`*` ワイルドカードを使用できます。
+
+```php
+Flight::route('/blog/*', function () {
+  // これは /blog/2000/02/01 に一致します
+});
+```
+
+すべてのリクエストを単一のコールバックにルーティングする場合は、次のようにします：
+
+```php
+Flight::route('*', function () {
+  // 何かをします
+});
+```
+
+## パッシング
+
+コールバック関数から `true` を返すことで、次に一致するルートに実行を渡すことができます。
+
+```php
+Flight::route('/user/@name', function (string $name) {
+  // ある条件を確認
+  if ($name !== "Bob") {
+    // 次のルートに続行
+    return true;
+  }
+});
+
+Flight::route('/user/*', function () {
+  // これが呼ばれます
+});
+```
+
+## ルートのエイリアス
+
+ルートにエイリアスを割り当てることで、URL を後で動的に生成できます（たとえば、テンプレートなど）。
+
+```php
+Flight::route('/users/@id', function($id) { echo 'user:'.$id; }, false, 'user_view');
+
+// あとでどこかのコードで
+Flight::getUrl('user_view', [ 'id' => 5 ]); // '/users/5' を返します
+```
+
+あなたの URL が変更された場合、ルートエイリアスを使用すると、エイリアスを参照している場所全てを変更する必要がありません。
+上記の例のように、ユーザーが `/admin/users/@id` に移動した場合、エイリアスを使用している場所全てを変更する必要はないため、エイリアスが非常に役立ちます。
+
+ルートエイリアスはグループ内でも機能します：
+
+```php
+Flight::group('/users', function() {
+    Flight::route('/@id', function($id) { echo 'user:'.$id; }, false, 'user_view');
+});
+
+
+// あとでどこかのコードで
+Flight::getUrl('user_view', [ 'id' => 5 ]); // '/users/5' を返します
+```
+
+## ルート情報
+
+一致するルート情報を検査したい場合は、ルートメソッドの第三引数として `true` を渡すことで、ルートオブジェクトをコールバック関数に渡すように要求することができます。 ルートオブジェクトはいつもコールバック関数に渡される最後のパラメータになります。
+
+```php
+Flight::route('/', function(\flight\net\Route $route) {
+  // 一致した HTTP メソッドの配列
+  $route->methods;
+
+  // 名前付きパラメータの配列
+  $route->params;
+
+  // 一致した正規表現
+  $route->regex;
+
+  // URL パターン内で使用されている '*' の内容
+  $route->splat;
+
+  // URL パターンを表示します... 必要な場合は...
+  $route->pattern;
+
+  // このルートに割り当てられたミドルウェアを表示します
+  $route->middleware;
+
+  // このルートに割り当てられたエイリアスを表示します
+  $route->alias;
+}, true);
+```
+
+## ルートグループ化
+
+関連するルートをまとめたい場合（たとえば、`/api/v1` など）、`group` メソッドを使用できます：
+
+```php
+Flight::group('/api/v1', function () {
+  Flight::route('/users', function () {
+	// /api/v1/users に一致
+  });
+
+  Flight::route('/posts', function () {
+	// /api/v1/posts に一致
+  });
+});
+```
+
+グループのグループをネストさせることもできます：
+
+```php
+Flight::group('/api', function () {
+  Flight::group('/v1', function () {
+	// Flight::get() は変数を取得しますが、ルートを設定するわけではありません！ オブジェクトコンテキストを参照してください
+	Flight::route('GET /users', function () {
+	  // GET /api/v1/users に一致
+	});
+
+	Flight::post('/posts', function () {
+	  // POST /api/v1/posts に一致
+	});
+
+	Flight::put('/posts/1', function () {
+	  // PUT /api/v1/posts に一致
+	});
+  });
+  Flight::group('/v2', function () {
+
+	// Flight::get() は変数を取得しますが、ルートを設定するわけではありません！ オブジェクトコンテキストを参照してください
+	Flight::route('GET /users', function () {
+	  // GET /api/v2/users に一致
+	});
+  });
+});
+```
+
+### オブジェクトコンテキストを使用したグループ化
+
+次のように、`Engine` オブジェクトを使用してルートグループ化を行うことができます：
+
+```php
+$app = new \flight\Engine();
+$app->group('/api/v1', function (Router $router) {
+
+  // $router 変数を使用してください
+  $router->get('/users', function () {
+	// GET /api/v1/users に一致
+  });
+
+  $router->post('/posts', function () {
+	// POST /api/v1/posts に一致
+  });
+});
+```
+
+## ストリーミング
+
+`streamWithHeaders()` メソッドを使用して、クライアントに対して応答をストリーミングで送信することができます。
+これは大きなファイル、長時間実行されるプロセス、または大規模な応答を生成する場合に役立ちます。
+ルートをストリーミングする場合、通常のルートよりもやや異なる方法で処理されます。
+
+> **注意:** [`flight.v2.output_buffering`](/learn/migrating-to-v3#output_buffering) が false に設定されている場合のみ、ストリーミング応答を使用できます。
+
+### マニュアルヘッダー付きストリーミング
+
+ルートで `stream()` メソッドを使用することで、クライアントに対して応答をストリーミングすることができます。これを行う場合は、クライアントに何かを出力する前に全てのメソッドを手動で設定する必要があります。 これは `header()` php 関数または `Flight::response()->setRealHeader()` メソッドで行います。
+
+```php
+Flight::route('/@filename', function($filename) {
+
+	// パスをサニタイズする必要があります
+	$fileNameSafe = basename($filename);
+
+	// ルートの実行後にここに追加する追加ヘッダがある場合
+	// 何かをエコーする必要があります。
+
+   ファイルのデータを取得します
+   if(empty($fileData)) {
+       Flight::halt(404, 'ファイルが見つかりません');
+   }
+
+   // 必要に応じてコンテンツの長さを手動で設定します
+   header('Content-Length: '.filesize($filename));
+
+   // データをクライアントにストリーミングします
+   echo $fileData;
+
+// こちらが魔法の行です
+})->stream();
+```
+
+### ヘッダー付きストリーミング
+
+`streamWithHeaders()` メソッドを使用することで、ストリーミングを開始する前にヘッダーを設定することができます。
+
+```php
+Flight::route('/stream-users', function() {
+
+	// ここで好きな追加ヘッダを追加できます
+	// header() または Flight::response()->setRealHeader() を使用する必要があります
+
+	// データの取得方法は問いません、とりあえずの例...
+	$users_stmt = Flight::db()->query("SELECT id, first_name, last_name FROM users");
+
+	echo '{';
+	$user_count = count($users);
+	while($user = $users_stmt->fetch(PDO::FETCH_ASSOC)) {
+		echo json_encode($user);
+		if(--$user_count > 0) {
+			echo ',';
+		}
+
+		// クライアントにデータを送信するために必要です
+		ob_flush();
+	}
+	echo '}';
+
+// ストリーミングを開始する前にヘッダーを設定する方法
+})->streamWithHeaders([
+	'Content-Type' => 'application/json',
+	'Content-Disposition' => 'attachment; filename="users.json"',
+	// オプショナルなステータスコード、デフォルトは 200
+	'status' => 200
+]);
 ```

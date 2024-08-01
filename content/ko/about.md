@@ -1,8 +1,8 @@
-# 비행이란 무엇인가?
+# 플라이트가 무엇인가요?
 
-비행은 PHP용 빠르고 간단하며 확장 가능한 프레임워크입니다. 매우 다양하며 어떤 종류의 웹 애플리케이션을 구축하는 데 사용할 수 있습니다. 이는 간결함을 염두에 두고 작성되어 이해하고 사용하기 쉬운 방식으로 작성되었습니다.
+플라이트는 PHP를 위한 빠르고 간단하며 확장 가능한 프레임워크입니다. 매우 다재다능하며 모든 종류의 웹 애플리케이션을 구축하는 데 사용할 수 있습니다. 이는 간소함을 염두에 두고 작성되어 이해하고 사용하기 쉬운 방식으로 작성되었습니다.
 
-비행은 PHP에 익숙하지 않고 웹 애플리케이션을 구축하는 방법을 배우려는 초보자들에게 좋은 프레임워크입니다. 웹 애플리케이션에 대해 더 많은 제어를 원하는 경험 많은 개발자들에게도 좋은 프레임워크입니다. 이것은 RESTful API, 간단한 웹 애플리케이션 또는 복잡한 웹 애플리케이션을 쉽게 구축하기 위해 만들어졌습니다.
+플라이트는 PHP에 익숙하지 않은 초보자들을 위한 훌륭한 프레임워크이며 웹 애플리케이션을 구축하는 방법을 배우고 싶어하는 사람들에게 적합합니다. 또한 웹 애플리케이션에 대한 더 많은 제어를 원하는 경험 많은 개발자들에게 좋은 프레임워크입니다. 이는 RESTful API, 간단한 웹 애플리케이션 또는 복잡한 웹 애플리케이션을 쉽게 구축할 수 있도록 설계되었습니다.
 
 ## 빠른 시작
 
@@ -15,43 +15,43 @@ require 'vendor/autoload.php';
 // require 'flight/Flight.php';
 
 Flight::route('/', function() {
-  echo '안녕, 세계!';
+  echo '안녕, 세상!';
 });
 
 Flight::route('/json', function() {
-  Flight::json(['안녕' => '세계']);
+  Flight::json(['안녕' => '세상']);
 });
 
 Flight::start();
 ```
 
 <div class="video-container">
-	<iframe width="100vw" height="315" src="https://www.youtube.com/embed/VCztp1QLC2c?si=W3fSWEKmoCIlC7Z5" title="YouTube 비디오 플레이어" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+	<iframe width="100vw" height="315" src="https://www.youtube.com/embed/VCztp1QLC2c?si=W3fSWEKmoCIlC7Z5" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 </div>
 
-단순하죠? [Flight에 대해 더 알아보세요!](learn)
+간단하죠? [문서에서 플라이트에 대해 더 알아보기!](learn)
 
 ### 스켈레톤/보일러플레이트 앱
 
-비행 프레임워크로 시작할 수 있는 예제 앱이 있습니다. 시작하는 방법에 대한 지침은 [flightphp/skeleton](https://github.com/flightphp/skeleton)에서 확인할 수 있습니다! 또한 [examples](examples) 페이지를 방문하여 Flight로 수행할 수 있는 몇 가지 기능에 대한 영감을 얻을 수 있습니다.
+플라이트 프레임워크로 시작하는 데 도움이 되는 예제 앱이 있습니다. 시작 방법에 대한 지침은 [flightphp/skeleton](https://github.com/flightphp/skeleton)에서 확인할 수 있습니다! 또한 플라이트로 수행할 수 있는 일부 작업에 대한 영감을 얻을 수 있는 [예제](examples) 페이지를 방문할 수도 있습니다.
 
 # 커뮤니티
 
-우리는 Matrix에 있습니다! [#flight-php-framework:matrix.org](https://matrix.to/#/#flight-php-framework:matrix.org)에서 채팅해보세요.
+[#flight-php-framework:matrix.org](https://matrix.to/#/#flight-php-framework:matrix.org)에서 Matrix 채팅을 통해 교류할 수 있습니다.
 
 # 기여
 
-Flight에 기여할 수 있는 두 가지 방법이 있습니다:
+플라이트에 기여하는 두 가지 방법이 있습니다:
 
-1. [핵심 저장소](https://github.com/flightphp/core)를 방문하여 핵심 프레임워크에 기여할 수 있습니다.
-1. 문서에 기여할 수 있습니다. 이 문서 웹사이트는 [Github](https://github.com/flightphp/docs)에 호스팅되어 있습니다. 오류를 발견하거나 더 나은 내용을 구체화하고 싶다면 자유롭게 수정하여 풀 리퀘스트를 제출해주세요! 우리는 최신 정보를 유지하려 노력하지만 업데이트 및 언어 번역은 환영합니다.
+1. [코어 레포지토리](https://github.com/flightphp/core)를 방문하여 핵심 프레임워크에 기여할 수 있습니다.
+1. 문서에 기여할 수 있습니다. 이 문서 웹사이트는 [Github](https://github.com/flightphp/docs)에 호스팅되어 있습니다. 오류를 발견하거나 더 나은 내용을 작성하고 싶다면 자유롭게 수정하여 풀 리퀘스트를 제출해 주세요! 우리는 업데이트와 언어 번역을 환영합니다.
 
 # 요구 사항
 
-Flight는 PHP 7.4 이상을 필요로 합니다.
+플라이트는 PHP 7.4 이상을 필요로 합니다.
 
-**참고:** PHP 7.4는 현재 작성 시점(2024년)에 일부 LTS Linux 배포판의 기본 버전이기 때문에 지원됩니다. PHP >8로 이동을 강제하면 해당 사용자들에게 많은 불편을 끼칠 것입니다. 이 프레임워크는 또한 PHP >8을 지원합니다.
+**참고:** PHP 7.4는 현재 작성 시점(2024년)에 일부 LTS Linux 배포판에서 기본 버전으로 지원되기 때문에 지원됩니다. PHP >8로 강제 이전하면 이러한 사용자들에게 많은 어려움을 야기할 수 있습니다. 프레임워크는 또한 PHP >8을 지원합니다.
 
-# 라이선스
+# 라이센스
 
-비행은 [MIT](https://github.com/flightphp/core/blob/master/LICENSE) 라이선스에 따라 공개됩니다.
+플라이트는 [MIT](https://github.com/flightphp/core/blob/master/LICENSE) 라이센스에 따라 출시됩니다.

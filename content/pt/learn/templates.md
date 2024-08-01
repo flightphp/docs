@@ -1,70 +1,72 @@
+# Vistas HTML y Plantillas
 
-# Visualizações
+Flight proporciona por defecto alguna funcionalidad básica de plantillas.
 
-O Flight fornece alguma funcionalidade básica de modelagem por padrão.
+Si necesita necesidades de plantillas más complejas, consulte los ejemplos de Smarty y Latte en la sección de [Vistas Personalizadas](#custom-views).
 
-Se você precisar de necessidades de modelagem mais complexas, consulte exemplos do Smarty e Latte na seção [Visualizações Personalizadas](#custom-views).
+## Motor de Vistas por Defecto
 
-Para exibir um modelo de visualização, chame o método `render` com o nome
-do arquivo de modelo e dados de modelo opcionais:
+Para mostrar una plantilla de vista, llame al método `render` con el nombre
+del archivo de la plantilla y datos de plantilla opcionales:
 
 ```php
 Flight::render('hello.php', ['name' => 'Bob']);
 ```
 
-Os dados do modelo que você passa são automaticamente injetados no modelo e podem
-ser referenciados como uma variável local. Os arquivos de modelo são simplesmente arquivos PHP. Se o
-conteúdo do arquivo de modelo `hello.php` for:
+Los datos de plantilla que pasa se inyectan automáticamente en la plantilla y se pueden
+hacer referencia como una variable local. Los archivos de plantilla son simplemente archivos PHP. Si el
+contenido del archivo de plantilla `hello.php` es:
 
 ```php
-Olá, <?= $name ?>!
+¡Hola, <?= $name ?>!
 ```
 
-A saída seria:
+La salida sería:
 
 ```
-Olá, Bob!
+¡Hola, Bob!
 ```
 
-Você também pode definir manualmente variáveis de visualização usando o método set:
+También puede establecer manualmente las variables de vista utilizando el método set:
 
 ```php
 Flight::view()->set('name', 'Bob');
 ```
 
-A variável `name` agora está disponível em todas as suas visualizações. Portanto, você pode simplesmente fazer:
+La variable `name` ahora está disponible en todas sus vistas. Entonces simplemente puede hacer:
 
 ```php
 Flight::render('hello');
 ```
 
-Observe que ao especificar o nome do modelo no método de renderização, você pode
-omitir a extensão `.php`.
+Tenga en cuenta que al especificar el nombre de la plantilla en el método de representación, puede
+omitir la extensión `.php`.
 
-Por padrão, o Flight procurará um diretório `views` para arquivos de modelo. Você pode
-definir um caminho alternativo para seus modelos configurando o seguinte:
+De forma predeterminada, Flight buscará un directorio `views` para archivos de plantilla. Puede
+establecer una ruta alternativa para sus plantillas configurando lo siguiente:
 
 ```php
-Flight::set('flight.views.path', '/caminho/para/views');
+Flight::set('flight.views.path', '/ruta/a/views');
 ```
 
-## Layouts
+### Diseños
 
-É comum que os sites tenham um único arquivo de modelo de layout com conteúdo alternante. Para renderizar conteúdo a ser usado em um layout, você pode passar um parâmetro opcional para o método `render`.
+Es común que los sitios web tengan un solo archivo de plantilla de diseño con contenido intercambiable.
+Para renderizar contenido que se utilizará en un diseño, puede pasar un parámetro opcional al método `render`.
 
 ```php
-Flight::render('header', ['heading' => 'Olá'], 'headerContent');
+Flight::render('header', ['heading' => 'Hola'], 'headerContent');
 Flight::render('body', ['body' => 'Mundo'], 'bodyContent');
 ```
 
-Sua visualização terá então variáveis salvas chamadas `headerContent` e `bodyContent`.
-Você pode então renderizar seu layout fazendo:
+Entonces su vista tendrá variables guardadas llamadas `headerContent` y `bodyContent`.
+Luego puede renderizar su diseño haciendo:
 
 ```php
-Flight::render('layout', ['title' => 'Página Inicial']);
+Flight::render('layout', ['title' => 'Página de inicio']);
 ```
 
-Se os arquivos de modelo forem assim:
+Si los archivos de plantilla se ven así:
 
 `header.php`:
 
@@ -86,58 +88,58 @@ Se os arquivos de modelo forem assim:
     <title><?= $title ?></title>
   </head>
   <body>
-    <?= $headerContent ?>
+    <?= $heaterContent ?>
     <?= $bodyContent ?>
   </body>
 </html>
 ```
 
-A saída seria:
+La salida sería:
 ```html
 <html>
   <head>
-    <title>Página Inicial</title>
+    <title>Página de inicio</title>
   </head>
   <body>
-    <h1>Olá</h1>
+    <h1>Hola</h1>
     <div>Mundo</div>
   </body>
 </html>
 ```
 
-## Visualizações Personalizadas
+## Motores de Vistas Personalizadas
 
-O Flight permite que você substitua o mecanismo de visualização padrão simplesmente registrando sua
-própria classe de visualização.
+Flight le permite cambiar el motor de vista predeterminado simplemente registrando su
+propia clase de vista.
 
 ### Smarty
 
-Veja como você usaria o [Smarty](http://www.smarty.net/)
-mecanismo de modelo para suas visualizações:
+Así es como usaría el [Smarty](http://www.smarty.net/)
+motor de plantillas para sus vistas:
 
 ```php
-// Carregar biblioteca Smarty
-requerer './Smarty/libs/Smarty.class.php';
+// Cargar biblioteca de Smarty
+require './Smarty/libs/Smarty.class.php';
 
-// Registrar o Smarty como a classe de visualização
-// Passe também uma função de retorno de chamada para configurar o Smarty ao carregar
+// Registrar Smarty como la clase de vista
+// También pase una función de devolución de llamada para configurar Smarty al cargar
 Flight::register('view', Smarty::class, [], function (Smarty $smarty) {
   $smarty->setTemplateDir('./templates/');
   $smarty->setCompileDir('./templates_c/');
   $smarty->setConfigDir('./config/');
 });
 
-// Atribuir dados de modelo
+// Asignar datos de plantilla
 Flight::view()->assign('name', 'Bob');
 
-// Exibir o modelo
+// Mostrar la plantilla
 Flight::view()->display('hello.tpl');
 ```
 
-Para completude, você também deve substituir o método de renderização padrão do Flight:
+Para completar, también debe anular el método de representación predeterminado de Flight:
 
 ```php
-Flight::map('render', função (string $template, array $data): vazio {
+Flight::map('render', function(string $template, array $data): void {
   Flight::view()->assign($data);
   Flight::view()->display($template);
 });
@@ -145,26 +147,26 @@ Flight::map('render', função (string $template, array $data): vazio {
 
 ### Latte
 
-Veja como você usaria o [Latte](https://latte.nette.org/)
-mecanismo de modelo para suas visualizações:
+Así es como usaría el [Latte](https://latte.nette.org/)
+motor de plantillas para sus vistas:
 
 ```php
 
-// Registrar o Latte como a classe de visualização
-// Passe também uma função de retorno de chamada para configurar o Latte ao carregar
+// Registrar Latte como la clase de vista
+// También pase una función de devolución de llamada para configurar Latte al cargar
 Flight::register('view', Latte\Engine::class, [], function (Latte\Engine $latte) {
-  // Aqui é onde o Latte irá armazenar em cache seus modelos para acelerar as coisas
-  // Uma coisa legal sobre o Latte é que ele atualiza automaticamente seu
-  // cache quando você faz alterações em seus modelos!
+  // Aquí es donde Latte almacenará en caché sus plantillas para acelerar las cosas
+  // ¡Una característica interesante de Latte es que actualiza automáticamente su
+  // caché cuando realiza cambios en sus plantillas!
   $latte->setTempDirectory(__DIR__ . '/../cache/');
 
-  // Diga ao Latte onde o diretório raiz de suas visualizações estará.
+  // Indique a Latte dónde estará el directorio raíz de sus vistas.
   $latte->setLoader(new \Latte\Loaders\FileLoader(__DIR__ . '/../views/'));
 });
 
-// E envolva-o para que você possa usar Flight::render() corretamente
-Flight::map('render', função (string $template, array $data): vazio {
-  // Isso é como $latte_engine->render($template, $data);
+// Y envuélvalo para que pueda usar Flight::render() correctamente
+Flight::map('render', function(string $template, array $data): void {
+  // Esto es como $latte_engine->render($template, $data);
   echo Flight::view()->render($template, $data);
 });
 ```

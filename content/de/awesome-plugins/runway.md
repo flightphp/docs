@@ -1,6 +1,6 @@
 # Startbahn
 
-Startbahn ist eine CLI-Anwendung, die Ihnen hilft, Ihre Flight-Anwendungen zu verwalten. Sie kann Controller generieren, alle Routen anzeigen und mehr. Basierend auf der ausgezeichneten [adhocore/php-cli](https://github.com/adhocore/php-cli) Bibliothek.
+Die Startbahn ist eine CLI-Anwendung, die Ihnen hilft, Ihre Flight-Anwendungen zu verwalten. Es kann Controller generieren, alle Routen anzeigen und mehr. Es basiert auf der ausgezeichneten [adhocore/php-cli](https://github.com/adhocore/php-cli) Bibliothek.
 
 ## Installation
 
@@ -10,18 +10,18 @@ Installieren Sie es mit Composer.
 composer require flightphp/runway
 ```
 
-## Grundlegende Konfiguration
+## Grundkonfiguration
 
-Beim ersten Start von Startbahn wird es Sie durch einen Einrichtungsprozess führen und eine `.runway.json` Konfigurationsdatei im Stammverzeichnis Ihres Projekts erstellen. Diese Datei enthält einige notwendige Konfigurationen, damit Startbahn ordnungsgemäß funktioniert.
+Wenn Sie die Startbahn zum ersten Mal ausführen, führt sie Sie durch einen Setup-Prozess und erstellt eine `.runway.json` Konfigurationsdatei im Stammverzeichnis Ihres Projekts. Diese Datei wird einige notwendige Konfigurationen enthalten, damit die Startbahn ordnungsgemäß funktioniert.
 
 ## Verwendung
 
-Startbahn verfügt über mehrere Befehle, die Sie verwenden können, um Ihre Flight-Anwendung zu verwalten. Es gibt zwei einfache Möglichkeiten, Startbahn zu verwenden.
+Die Startbahn verfügt über eine Reihe von Befehlen, die Sie verwenden können, um Ihre Flight-Anwendung zu verwalten. Es gibt zwei einfache Möglichkeiten, die Startbahn zu verwenden.
 
-1. Wenn Sie das Grundgerüstprojekt verwenden, können Sie `php runway [Befehl]` im Stammverzeichnis Ihres Projekts ausführen.
-1. Wenn Sie Startbahn als Paket installiert haben, können Sie `vendor/bin/runway [Befehl]` im Stammverzeichnis Ihres Projekts ausführen.
+1. Wenn Sie das Skelettprojekt verwenden, können Sie `php runway [Befehl]` aus dem Stammverzeichnis Ihres Projekts ausführen.
+1. Wenn Sie die Startbahn als Paket installiert haben, können Sie `vendor/bin/runway [Befehl]` aus dem Stammverzeichnis Ihres Projekts ausführen.
 
-Für jeden Befehl können Sie die `--help`-Flagge angeben, um weitere Informationen zur Verwendung des Befehls zu erhalten.
+Für jeden Befehl können Sie die `--help` Flagge übergeben, um weitere Informationen zur Verwendung des Befehls zu erhalten.
 
 ```bash
 php runway routes --help
@@ -31,21 +31,21 @@ Hier sind ein paar Beispiele:
 
 ### Einen Controller generieren
 
-Basierend auf der Konfiguration in Ihrer `.runway.json` Datei wird standardmäßig ein Controller für Sie im Verzeichnis `app/controllers/` generiert.
+Basierend auf der Konfiguration in Ihrer `.runway.json` Datei wird standardmäßig ein Controller für Sie im `app/controllers/` Verzeichnis generiert.
 
 ```bash
 php runway make:controller MeinController
 ```
 
-### Ein Active Record Model generieren
+### Ein Active Record-Modell generieren
 
-Basierend auf der Konfiguration in Ihrer `.runway.json` Datei wird standardmäßig ein Active Record Model für Sie im Verzeichnis `app/records/` generiert.
+Basierend auf der Konfiguration in Ihrer `.runway.json` Datei wird standardmäßig ein Controller für Sie im `app/records/` Verzeichnis generiert.
 
 ```bash
 php runway make:record benutzer
 ```
 
-Wenn Sie beispielsweise die `benutzer` Tabelle mit dem folgenden Schema haben: `id`, `name`, `email`, `erstellt_am`, `aktualisiert_am`, wird eine Datei ähnlich der folgenden im `app/records/BenutzerRecord.php` erstellt:
+Wenn Sie beispielsweise die Tabelle `benutzer` mit dem folgenden Schema haben: `id`, `name`, `email`, `created_at`, `updated_at`, wird eine Datei ähnlich der folgenden in der `app/records/UserRecord.php` Datei erstellt:
 
 ```php
 <?php
@@ -55,7 +55,7 @@ declare(strict_types=1);
 namespace app\records;
 
 /**
- * ActiveRecord-Klasse für die Benutzertabelle.
+ * Aktivdatenklasse für die Benutzertabelle.
  * @link https://docs.flightphp.com/awesome-plugins/active-record
  * 
  * @property int $id
@@ -63,11 +63,13 @@ namespace app\records;
  * @property string $email
  * @property string $created_at
  * @property string $updated_at
+ * // Hier können Sie auch Beziehungen hinzufügen, sobald Sie sie im $relations-Array definieren
+ * @property CompanyRecord $company Beispiel für eine Beziehung
  */
-class BenutzerRecord extends \flight\ActiveRecord
+class UserRecord extends \flight\ActiveRecord
 {
     /**
-     * @var array $relations Legt die Beziehungen für das Modell fest
+     * @var array $relations Legen Sie die Beziehungen für das Modell fest
      *   https://docs.flightphp.com/awesome-plugins/active-record#relationships
      */
     protected array $relations = [];
@@ -91,7 +93,7 @@ Dies zeigt alle Routen an, die derzeit bei Flight registriert sind.
 php runway routes
 ```
 
-Wenn Sie nur bestimmte Routen anzeigen möchten, können Sie eine Flagge angeben, um die Routen zu filtern.
+Wenn Sie nur bestimmte Routen anzeigen möchten, können Sie eine Flagge übergeben, um die Routen zu filtern.
 
 ```bash
 # Zeige nur GET-Routen an
@@ -103,11 +105,11 @@ php runway routes --post
 # usw.
 ```
 
-## Anpassen von Startbahn
+## Anpassung der Startbahn
 
-Wenn Sie ein Paket für Flight erstellen oder Ihre eigenen benutzerdefinierten Befehle in Ihr Projekt aufnehmen möchten, können Sie ein `src/commands/`, `flight/commands/`, `app/commands/` oder `commands/` Verzeichnis für Ihr Projekt/Paket erstellen.
+Wenn Sie ein Paket für Flight erstellen oder eigene benutzerdefinierte Befehle in Ihr Projekt aufnehmen möchten, können Sie dies tun, indem Sie ein `src/commands/`, `flight/commands/`, `app/commands/` oder `commands/` Verzeichnis für Ihr Projekt/Paket erstellen.
 
-Um einen Befehl zu erstellen, erweitern Sie einfach die Klasse `AbstractBaseCommand` und implementieren Sie mindestens eine `__construct`-Methode und eine `execute`-Methode.
+Um einen Befehl zu erstellen, erweitern Sie einfach die `AbstractBaseCommand`-Klasse und implementieren Sie mindestens eine `__construct`-Methode und eine `execute`-Methode.
 
 ```php
 <?php
@@ -116,17 +118,17 @@ declare(strict_types=1);
 
 namespace flight\commands;
 
-class BeispielBefehl extends AbstractBaseCommand
+class BeispielBefehl erstreckt sich von AbstractBaseCommand
 {
 	/**
-     * Konstruieren
+     * Konstrukt
      *
-     * @param array<string,mixed> $config JSON-Konfiguration aus .runway-config.json
+     * @param array<string,mixed> $config JSON-Konfiguration von .runway-config.json
      */
     public function __construct(array $config)
     {
-        parent::__construct('make:beispiel', 'Erstellt ein Beispiel für die Dokumentation', $config);
-        $this->argument('<lustiges-gif>', 'Der Name des lustigen Gifs');
+        parent::__construct('make:example', 'Erstellen eines Beispiels für die Dokumentation', $config);
+        $this->argument('<funny-gif>', 'Der Name des lustigen Gifs');
     }
 
 	/**
@@ -147,4 +149,4 @@ class BeispielBefehl extends AbstractBaseCommand
 }
 ```
 
-Siehe die [adhocore/php-cli Dokumentation](https://github.com/adhocore/php-cli) für weitere Informationen darüber, wie Sie Ihre eigenen benutzerdefinierten Befehle in Ihre Flight-Anwendung integrieren können!
+Sehen Sie die [adhocore/php-cli-Dokumentation](https://github.com/adhocore/php-cli) für weitere Informationen darüber, wie Sie Ihre eigenen benutzerdefinierten Befehle in Ihre Flight-Anwendung integrieren können!

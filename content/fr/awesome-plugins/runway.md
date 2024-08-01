@@ -1,6 +1,6 @@
-# Piste
+## Allée
 
-Piste est une application CLI qui vous aide à gérer vos applications Flight. Il peut générer des contrôleurs, afficher toutes les routes, et plus encore. Il est basé sur l'excellente bibliothèque [adhocore/php-cli](https://github.com/adhocore/php-cli).
+Allée est une application CLI qui vous aide à gérer vos applications Flight. Il peut générer des contrôleurs, afficher toutes les routes et plus encore. Il est basé sur l'excellente bibliothèque [adhocore/php-cli](https://github.com/adhocore/php-cli).
 
 ## Installation
 
@@ -10,18 +10,18 @@ Installer avec composer.
 composer require flightphp/runway
 ```
 
-## Configuration de base
+## Configuration de Base
 
-La première fois que vous exécutez Piste, il vous guidera à travers un processus de configuration et créera un fichier de configuration `.runway.json` à la racine de votre projet. Ce fichier contiendra quelques configurations nécessaires pour que Piste fonctionne correctement.
+La première fois que vous exécutez Allée, il vous guidera à travers un processus de configuration et créera un fichier de configuration `.runway.json` à la racine de votre projet. Ce fichier contiendra certaines configurations nécessaires pour qu'Allée fonctionne correctement.
 
 ## Utilisation
 
-Piste possède un certain nombre de commandes que vous pouvez utiliser pour gérer votre application Flight. Il existe deux façons faciles d'utiliser Piste.
+Allée a plusieurs commandes que vous pouvez utiliser pour gérer votre application Flight. Il y a deux façons faciles d'utiliser Allée.
 
 1. Si vous utilisez le projet squelette, vous pouvez exécuter `php runway [commande]` depuis la racine de votre projet.
-1. Si vous utilisez Piste en tant que package installé via composer, vous pouvez exécuter `vendor/bin/runway [commande]` depuis la racine de votre projet.
+1. Si vous utilisez Allée en tant que package installé via composer, vous pouvez exécuter `vendor/bin/runway [commande]` depuis la racine de votre projet.
 
-Pour n'importe quelle commande, vous pouvez passer le drapeau `--help` pour obtenir plus d'informations sur comment utiliser la commande.
+Pour n'importe quelle commande, vous pouvez ajouter le drapeau `--help` pour obtenir plus d'informations sur comment utiliser la commande.
 
 ```bash
 php runway routes --help
@@ -29,23 +29,23 @@ php runway routes --help
 
 Voici quelques exemples :
 
-### Générer un contrôleur
+### Générer un Contrôleur
 
-Basé sur la configuration dans votre fichier `.runway.json`, l'emplacement par défaut générera un contrôleur pour vous dans le répertoire `app/controllers/`.
+En fonction de la configuration dans votre fichier `.runway.json`, l'emplacement par défaut générera un contrôleur pour vous dans le répertoire `app/controllers/`.
 
 ```bash
-php runway make:controller MonControleur
+php runway make:controller MonContrôleur
 ```
 
-### Générer un modèle Active Record
+### Générer un Modèle de Record Actif
 
-Basé sur la configuration dans votre fichier `.runway.json`, l'emplacement par défaut générera un contrôleur pour vous dans le répertoire `app/records/`.
+En fonction de la configuration dans votre fichier `.runway.json`, l'emplacement par défaut générera un contrôleur pour vous dans le répertoire `app/records/`.
 
 ```bash
 php runway make:record utilisateurs
 ```
 
-Si par exemple vous avez la table `users` avec le schéma suivant : `id`, `nom`, `email`, `créé_le`, `mis_à_jour_le`, un fichier similaire au suivant sera créé dans le fichier `app/records/UtilisateurRecord.php` :
+Si par exemple vous avez la table `utilisateurs` avec le schéma suivant : `id`, `nom`, `email`, `créé à`, `mis à jour à`, un fichier similaire au suivant sera créé dans le fichier `app/records/RecordUtilisateur.php` :
 
 ```php
 <?php
@@ -55,35 +55,37 @@ declare(strict_types=1);
 namespace app\records;
 
 /**
- * Classe Active Record pour la table des utilisateurs.
+ * Classe ActiveRecord pour la table utilisateurs.
  * @link https://docs.flightphp.com/awesome-plugins/active-record
  * 
  * @property int $id
  * @property string $nom
  * @property string $email
- * @property string $créé_le
- * @property string $mis_à_jour_le
+ * @property string $créé à
+ * @property string $mis à jour à
+ * // vous pourriez également ajouter des relations ici une fois que vous les définissez dans le tableau $relations
+ * @property RecordSociété $société Exemple d'une relation
  */
-class UtilisateurRecord extends \flight\ActiveRecord
+class RecordUtilisateur extends \flight\ActiveRecord
 {
     /**
-     * @var array $relations Définit les relations pour le modèle
+     * @var array $relations Définir les relations pour le modèle
      *   https://docs.flightphp.com/awesome-plugins/active-record#relationships
      */
     protected array $relations = [];
 
     /**
      * Constructeur
-     * @param mixed $connexionBaseDeDonnées La connexion à la base de données
+     * @param mixed $connexionBaseDonnées La connexion à la base de données
      */
-    public function __construct($connexionBaseDeDonnées)
+    public function __construct($connexionBaseDonnées)
     {
-        parent::__construct($connexionBaseDeDonnées, 'users');
+        parent::__construct($connexionBaseDonnées, 'utilisateurs');
     }
 }
 ```
 
-### Afficher toutes les routes
+### Afficher Toutes les Routes
 
 Cela affichera toutes les routes actuellement enregistrées avec Flight.
 
@@ -91,7 +93,7 @@ Cela affichera toutes les routes actuellement enregistrées avec Flight.
 php runway routes
 ```
 
-Si vous souhaitez uniquement voir des routes spécifiques, vous pouvez passer un drapeau pour filtrer les routes.
+Si vous souhaitez uniquement voir des routes spécifiques, vous pouvez ajouter un drapeau pour filtrer les routes.
 
 ```bash
 # Afficher uniquement les routes GET
@@ -103,11 +105,11 @@ php runway routes --post
 # etc.
 ```
 
-## Personnalisation de Piste
+## Personnalisation d'Allée
 
-Si vous créez un package pour Flight, ou si vous souhaitez ajouter vos propres commandes personnalisées dans votre projet, vous pouvez le faire en créant un répertoire `src/commands/`, `flight/commands/`, `app/commands/` ou `commands/` pour votre projet/package.
+Si vous créez un package pour Flight, ou si vous souhaitez ajouter vos propres commandes personnalisées dans votre projet, vous pouvez le faire en créant un répertoire `src/commands/`, `flight/commands/`, `app/commands/`, ou `commands/` pour votre projet/package.
 
-Pour créer une commande, vous étendez simplement la classe `AbstractBaseCommand`, et implémentez au minimum une méthode `__construct` et une méthode `execute`.
+Pour créer une commande, il vous suffit d'étendre la classe `AbstractBaseCommand`, et implémenter au minimum une méthode `__construct` et une méthode `execute`.
 
 ```php
 <?php
@@ -118,14 +120,14 @@ namespace flight\commands;
 
 class CommandeExemple extends AbstractBaseCommand
 {
-	/**
-     * Construire
+    /**
+     * Constructeur
      *
      * @param array<string,mixed> $config Configuration JSON de .runway-config.json
      */
     public function __construct(array $config)
     {
-        parent::__construct('make:example', 'Créer un exemple pour la documentation', $config);
+        parent::__construct('make:exemple', 'Créer un exemple pour la documentation', $config);
         $this->argument('<gif-amusant>', 'Le nom du gif amusant');
     }
 
@@ -138,13 +140,13 @@ class CommandeExemple extends AbstractBaseCommand
     {
         $io = $this->app()->io();
 
-		$io->info('Création de l\'exemple...');
+		$io->info('Création de l'exemple...');
 
-		// Faire quelque chose ici
+		// Faites quelque chose ici
 
 		$io->ok('Exemple créé !');
 	}
 }
 ```
 
-Consultez la [Documentation adhocore/php-cli](https://github.com/adhocore/php-cli) pour plus d'informations sur la façon de créer vos propres commandes personnalisées dans votre application Flight !
+Consultez la [Documentation adhocore/php-cli](https://github.com/adhocore/php-cli) pour plus d'informations sur comment intégrer vos propres commandes personnalisées dans votre application Flight !

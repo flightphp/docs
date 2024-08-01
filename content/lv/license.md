@@ -1,31 +1,27 @@
-```
-MIT License (MIT)
-=================
+## MIT licences (MIT)
+=====================
 
-Autortiesības © `2023` `@mikecao, @n0nag0n`
+Autortiesības © `2024` `@mikecao, @n0nag0n`
 
-Atļauja tiek piešķirta bez maksas jebkurai personai,
-kas iegūst šīs programmatūras kopiju un saistītos
-dokumentus (turpmāk - “Programmatūra”), lai varētu
-izmantot Programmatūru bez ierobežojumiem, ieskaitot,
-bet neaprobežojoties ar, tiesības izmantot, kopēt,
-modificēt, apvienot, publicēt, izplatīt, sublicencēt
-un/vai pārdot Programmatūras kopijas, kā arī atļaut
-personām, kurām Programmatūra tiek nodrošināta, to darīt,
-ievērojot sekojošos nosacījumus:
+Atļauja tiek piešķirta bez maksas jebkuram
+personai, kas iegūst šīs programmatūras
+kopiju un saistītos dokumentus (turpmāk - "Programmatūra"),
+izmantot Programmatūru jebkurā veidā
+bez ierobežojumiem, ieskaitot tiesības izmantot,
+kopēt, modificēt, apvienot, publicēt, izplatīt, licencēt un/vai pārdot
+Programmatūras kopijas, un atļaut personas,
+kam Programmatūra tiek nodrošināta to darīt, pakļautas
+zemāk minētajām nosacījumiem:
 
-Piemērotie autortiesību paziņojumi un šī atļauja
-paziņojums obligāti jāiekļauj visos kopiju vai
-īpaši lielos Programmatūras daļās.
+Minētās autortiesību paziņojums un šī atļaujas paziņojums ir jāiekļauj
+visās kopijās vai būtiskajos Programmatūras daļās.
 
-Programmatūra tiek nodrošināta “kā ir”, bez
-jebkādām garantijām, izteiktām vai pieļaujamām,
-ieskaitot, bet neaprobežojoties ar, komerciālo
-kvalitāti, piemērotību konkrētai vajadzībai un
-nepārkāpšanu. Autori vai autortiesību turētāji
-nav atbildīgi par nekādiem prasījumiem, zaudējumiem
-vai citiem pienākumiem, vai nu, līgumtiesiski,
-deliktiski vai citādi, ko rada, izriet no vai saistīti
-ar Programmatūru vai tās izmantošanu vai citiem darījumiem
-ar Programmatūru.
-```
+PROGRAMMATŪRA TIEK NODROŠINĀTA "KĀ TĀDA", BEZ JEBKĀDAS GARANTIJAS
+IZTEIKTAS VAI IMPLICITAS, IETVEROT, BET NEIEROBEŽOTI,
+MERCHANTĀLĀS KVALITĀTES UN 
+PIEMĒROTĪBAS KONKRĒTIEM MĒRĶIEM
+UN NEPĀRKĀPJUMS. NEVIENĀ GADĪJUMĀ AUTORI VAI AUTORTIESĪBU
+IEDZĪVOTĀJI NAV ATBILDĪGI PAR JEBKURU PRASĪBU, KAITĒJUMU VAI CITĀM SAISTĪBĀM,
+NEATKARĪGI NO TĀ, VAI TĀS IERAKSTS, IAUCIENS VAI CITĀDI
+RADIES SAISTĪBĀ AR PROGRAMMATŪRU VAI LIETOŠANU VAI
+CITĀDĀM DARĪBĀM AR PROGRAMMATŪRU.

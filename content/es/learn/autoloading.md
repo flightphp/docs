@@ -2,29 +2,31 @@
 
 La carga automática es un concepto en PHP donde especificas un directorio o directorios para cargar clases desde. Esto es mucho más beneficioso que usar `require` o `include` para cargar clases. También es un requisito para usar paquetes de Composer.
 
-Por defecto, cualquier clase de `Flight` se carga automáticamente gracias a Composer. Sin embargo, si deseas cargar tus propias clases, puedes usar el método `Flight::path` para especificar un directorio desde el cual cargar las clases.
+Por defecto, cualquier clase de `Flight` se carga automáticamente gracias a composer. Sin embargo, si deseas cargar automáticamente tus propias clases, puedes usar el método `Flight::path()` para especificar un directorio desde el cual cargar clases.
 
 ## Ejemplo básico
 
-Supongamos que tenemos un árbol de directorios como el siguiente:
+Supongamos que tenemos una estructura de directorios como la siguiente:
 
 ```text
-# Ejemplo de ruta
-/home/usuario/proyecto/mi-proyecto-de-flight/
+# Ruta de ejemplo
+/home/user/project/my-flight-project/
 ├── app
 │   ├── cache
 │   ├── config
 │   ├── controllers - contiene los controladores para este proyecto
 │   ├── translations
 │   ├── UTILS - contiene clases solo para esta aplicación (esto está en mayúsculas a propósito para un ejemplo posterior)
-│   └── vistas
-└── público
+│   └── views
+└── public
     └── css
 	└── js
 	└── index.php
 ```
 
-Puedes especificar cada directorio desde el cual cargar de la siguiente manera:
+Puede haber notado que esta es la misma estructura de archivos que este sitio de documentación.
+
+Puedes especificar cada directorio para cargar desde así:
 
 ```php
 
@@ -43,7 +45,7 @@ Flight::path(__DIR__.'/../app/utils/');
 
 // no se requiere espacio de nombres
 
-// Se recomienda que todas las clases cargadas automáticamente sean de tipo Pascal Case (cada palabra en mayúscula, sin espacios)
+// Se recomienda que todas las clases cargadas automáticamente estén en Pascal Case (cada palabra en mayúscula, sin espacios)
 // A partir de la versión 3.7.2, puedes utilizar Pascal_Snake_Case para los nombres de tus clases ejecutando Loader::setV2ClassLoading(false);
 class MyController {
 
@@ -55,7 +57,7 @@ class MyController {
 
 ## Espacios de nombres
 
-Si tienes espacios de nombres, en realidad se vuelve muy fácil de implementar. Debes usar el método `Flight::path()` para especificar el directorio raíz (no el directorio de documentos raíz o la carpeta `público/`) de tu aplicación.
+Si tienes espacios de nombres, en realidad se vuelve muy fácil de implementar. Deberías usar el método `Flight::path()` para especificar el directorio raíz (no el directorio de documentos o la carpeta `public/`) de tu aplicación.
 
 ```php
 
@@ -76,11 +78,11 @@ Así es como podría verse tu controlador. Observa el ejemplo a continuación, p
 
 // se requieren espacios de nombres
 // los espacios de nombres son iguales a la estructura de directorios
-// los espacios de nombres deben seguir la misma estructura de mayúsculas y minúsculas que la de los directorios
+// los espacios de nombres deben seguir el mismo caso que la estructura de directorios
 // los espacios de nombres y directorios no pueden tener guiones bajos (a menos que se establezca Loader::setV2ClassLoading(false))
 namespace app\controllers;
 
-// Se recomienda que todas las clases cargadas automáticamente sean de tipo Pascal Case (cada palabra en mayúscula, sin espacios)
+// Se recomienda que todas las clases cargadas automáticamente estén en Pascal Case (cada palabra en mayúscula, sin espacios)
 // A partir de la versión 3.7.2, puedes utilizar Pascal_Snake_Case para los nombres de tus clases ejecutando Loader::setV2ClassLoading(false);
 class MyController {
 
@@ -90,7 +92,7 @@ class MyController {
 }
 ```
 
-Y si deseas cargar automáticamente una clase en tu directorio `utils`, harías básicamente lo mismo:
+Y si quisieras cargar automáticamente una clase en tu directorio de utilidades, harías básicamente lo mismo:
 
 ```php
 
@@ -98,7 +100,7 @@ Y si deseas cargar automáticamente una clase en tu directorio `utils`, harías 
  * app/UTILS/ArrayHelperUtil.php
  */
 
-// el espacio de nombres debe coincidir con la estructura y mayúsculas/minúsculas del directorio (nota que el directorio UTILS está todo en mayúsculas
+// el espacio de nombres debe coincidir con la estructura de directorios y el caso (nota que el directorio UTILS está en mayúsculas
 //     como en el árbol de archivos anterior)
 namespace app\UTILS;
 
@@ -112,7 +114,9 @@ class ArrayHelperUtil {
 
 ## Guiones bajos en los nombres de las clases
 
-A partir de la versión 3.7.2, puedes usar Pascal_Snake_Case para los nombres de tus clases ejecutando `Loader::setV2ClassLoading(false);`. Esto te permitirá usar guiones bajos en los nombres de tus clases. Esto no se recomienda, pero está disponible para aquellos que lo necesiten.
+A partir de la versión 3.7.2, puedes utilizar Pascal_Snake_Case para tus nombres de clases ejecutando `Loader::setV2ClassLoading(false);`.
+Esto te permitirá utilizar guiones bajos en los nombres de tus clases.
+Esto no se recomienda, pero está disponible para aquellos que lo necesiten.
 
 ```php
 
