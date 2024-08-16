@@ -1,6 +1,6 @@
 # Latte
 
-Latte is a full featured templating engine that is very easy to use and feels closer to a PHP syntax than Twig or Smarty. It's also very easy to extend and add your own filters and functions.
+[Latte](https://latte.nette.org/en/guide) is a full featured templating engine that is very easy to use and feels closer to a PHP syntax than Twig or Smarty. It's also very easy to extend and add your own filters and functions.
 
 ## Installation
 

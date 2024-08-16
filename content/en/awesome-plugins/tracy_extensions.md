@@ -18,6 +18,8 @@ And each panel displays very helpful information about your application!
 ![Flight Database](https://raw.githubusercontent.com/flightphp/tracy-extensions/master/flight-db.png)
 ![Flight Request](https://raw.githubusercontent.com/flightphp/tracy-extensions/master/flight-request.png)
 
+Click [here](https://github.com/flightphp/tracy-extensions) to view the code.
+
 Installation
 -------
 Run `composer require flightphp/tracy-extensions --dev` and you're on your way!

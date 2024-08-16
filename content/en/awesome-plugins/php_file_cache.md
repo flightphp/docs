@@ -11,6 +11,8 @@ Light, simple and standalone PHP in-file caching class
 - Supports PHP 5.4.0 - 7.1+
 - Free under a MIT license
 
+Click [here](https://github.com/Wruczek/PHP-File-Cache) to view the code.
+
 ## Installation
 
 Install via composer:

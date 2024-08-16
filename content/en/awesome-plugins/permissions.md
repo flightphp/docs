@@ -2,6 +2,8 @@
 
 This is a permissions module that can be used in your projects if you have multiple roles in your app and each role has a little bit different functionality. This module allows you to define permissions for each role and then check if the current user has the permission to access a certain page or perform a certain action. 
 
+Click [here](https://github.com/flightphp/permissions) for the repository in GitHub.
+
 Installation
 -------
 Run `composer require flightphp/permissions` and you're on your way!

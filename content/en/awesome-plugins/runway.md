@@ -2,6 +2,8 @@
 
 Runway is a CLI application that helps you manage your Flight applications. It can generate controllers, display all routes, and more. It is based on the excellent [adhocore/php-cli](https://github.com/adhocore/php-cli) library.
 
+Click [here](https://github.com/flightphp/runway) to view the code.
+
 ## Installation
 
 Install with composer.

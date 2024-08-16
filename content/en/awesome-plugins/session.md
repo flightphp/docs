@@ -2,6 +2,8 @@
 
 PHP Session Manager (non-blocking, flash, segment, session encryption). Uses PHP open_ssl for optional encrypt/decryption of session data. Supports File, MySQL, Redis, and Memcached.
 
+Click [here](https://github.com/Ghostff/Session) to view the code.
+
 ## Installation
 
 Install with composer.
