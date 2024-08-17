@@ -107,7 +107,7 @@ class IndexController {
 	}
 
 	public function installGet() {
-		$this->compileSinglePage('install');
+		$this->compileScrollspyPage('install', 'install');
 	}
 
 	public function learnGet() {

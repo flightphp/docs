@@ -1,65 +1,67 @@
 # FlightPHP/Permissions
 
-これは、複数の役割があり、各役割ごとに異なる機能がある場合にプロジェクトで使用できる権限モジュールです。このモジュールを使用すると、各役割に対する権限を定義し、現在のユーザーが特定のページにアクセスしたり特定のアクションを実行する権限があるかどうかをチェックすることができます。
+これは、アプリケーション内に複数のロールがあり、各ロールに少しずつ異なる機能がある場合にプロジェクトで使用できる権限モジュールです。このモジュールは、各ロールに対して権限を定義し、その後現在のユーザーが特定のページにアクセスする権限があるか、または特定のアクションを実行する権限があるかを確認できます。
+
+[こちら](https://github.com/flightphp/permissions)をクリックしてGitHubのリポジトリを確認してください。
 
 インストール
 -------
-`composer require flightphp/permissions` を実行すると、すぐに始められます！
+`composer require flightphp/permissions` を実行して、準備完了です！
 
-使用法
+使用方法
 -------
-まず、権限を設定し、その後アプリにその権限が何を意味するかを伝える必要があります。最終的には、`$Permissions->has()`、`->can()`、または`is()`で権限をチェックします。`has()` と`can()` は同機能ですが、コードを読みやすくするために異なる名前が付けられています。
+まず、権限を設定し、その後アプリケーションに権限がどういう意味なのかを伝える必要があります。最終的には、`$Permissions->has()`、`->can()`、または`is()` で権限を確認します。`has()` と `can()` には同じ機能があるため、コードをより読みやすくするために名前が異なります。
 
-## 基本的な例
+## 基本例
 
-アプリケーションにログインしているユーザーかどうかをチェックする機能があるとします。次のように権限オブジェクトを作成できます：
+アプリケーションに、ユーザーがログインしているかどうかをチェックする機能があると仮定してください。次のように権限オブジェクトを作成できます：
 
 ```php
 // index.php
 require 'vendor/autoload.php';
 
-// いくつかのコード
+// 一部のコード 
 
-// おそらく、現在の役割を教えてくれる何かがあるでしょう
-// おそらく、現在の役割を定義するセッション変数から現在の役割を取得する何かがあるでしょう
-// ログインした後、さもなければ 'guest' または 'public' の役割になります。
+// おそらく誰が現在の役割であるかを示すものがあるでしょう
+// 多分現在の役割を定義するセッション変数から現在の役割を取得する何かがあるでしょう、
+// これはログイン後に、そうでない場合は「guest」または「public」のロールを持っています。
 $current_role = 'admin';
 
-// 権限を設定
+// 権限の設定
 $permission = new \flight\Permission($current_role);
 $permission->defineRule('loggedIn', function($current_role) {
 	return $current_role !== 'guest';
 });
 
-// おそらくこのオブジェクトをどこかのFlight内に永続化したいと思うでしょう
+// おそらくこのオブジェクトを Flight にある場所に持たせたいと思うでしょう
 Flight::set('permission', $permission);
 ```
 
-その後、どこかのコントローラーに次のようなものがあるかもしれません。
+次に、どこかのコントローラーには、次のようなものがあるかもしれません。
 
 ```php
 <?php
 
-// いくつかのコントローラー
+// 一部のコントローラー
 class SomeController {
 	public function someAction() {
 		$permission = Flight::get('permission');
 		if ($permission->has('loggedIn')) {
-			// 何かをする
+			// 何かを実行
 		} else {
-			// 他の何かをする
+			// 他の処理を実行
 		}
 	}
 }
 ```
 
-また、アプリケーション内で特定のことを行う権限があるかどうかを追跡するのにも使用できます。
-たとえば、ユーザーがソフトウェア上で投稿とやりとりできる方法がある場合、特定のアクションを実行する権限があるかどうかをチェックできます。
+また、この機能を使用して、アプリケーション内で何かを行う権限があるかどうかを追跡することもできます。
+たとえば、ソフトウェア上で投稿とやり取りできる方法がある場合、特定のアクションを実行できる権限を持っているかどうかを確認できます。
 
 ```php
 $current_role = 'admin';
 
-// 権限を設定
+// 権限の設定
 $permission = new \flight\Permission($current_role);
 $permission->defineRule('post', function($current_role) {
 	if($current_role === 'admin') {
@@ -78,23 +80,23 @@ $permission->defineRule('post', function($current_role) {
 Flight::set('permission', $permission);
 ```
 
-その後、どこかのコントローラーで...
+次に、どこかのコントローラーには...
 
 ```php
 class PostController {
 	public function create() {
 		$permission = Flight::get('permission');
 		if ($permission->can('post.create')) {
-			// 何かをする
+			// 何かを実行
 		} else {
-			// 他の何かをする
+			// 他の処理を実行
 		}
 	}
 }
 ```
 
 ## 依存関係の注入
-権限を定義するクロージャに依存関係を注入することができます。これは、チェックしたいトグル、ID、またはその他のデータポイントがある場合に便利です。同様に、Class->Method 型の呼び出しにも適用されますが、メソッド内で引数を定義します。
+権限を定義するクロージャに依存関係を注入することができます。これは、チェックするデータポイントとしてトグル、ID、その他のデータポイントを持っている場合に便利です。同じことが Class->Method 型の呼び出しでも機能しますが、引数はメソッド内で定義します。
 
 ### クロージャ
 
@@ -108,9 +110,9 @@ public function createOrder() {
 	$MyDependency = Flight::myDependency();
 	$permission = Flight::get('permission');
 	if ($permission->can('order.create', $MyDependency)) {
-		// 何かをする
+		// 何かを実行
 	} else {
-		// 他の何かをする
+		// 他の処理を実行
 	}
 }
 ```
@@ -128,9 +130,8 @@ class Permissions {
 }
 ```
 
-## クラスを使用して権限を設定するショートカット
-クラスを使用して権限を定義することもできます。コードを整理したい場合に便利です。次のように行うことができます：
-
+## クラスを使用して権限をセットするショートカット
+クラスを使用して権限を定義することもできます。コードをきれいに保ちたい場合に便利です。次のように行うことができます：
 ```php
 <?php
 
@@ -144,44 +145,42 @@ namespace MyApp;
 class Permissions {
 
 	public function order(string $current_role, int $user_id) {
-		// 事前に設定したと仮定
-	/** @var \flight\database\PdoWrapper $db */
-	$db = Flight::db();
-	$allowed_permissions = [ 'read' ]; // すべての人が注文を表示できる
-	if($current_role === 'manager') {
-		$allowed_permissions[] = 'create'; // マネージャーは注文を作成できる
+		// 事前に設定したと仮定します
+		/** @var \flight\database\PdoWrapper $db */
+		$db = Flight::db();
+		$allowed_permissions = [ 'read' ]; // 誰でも注文を表示できます
+		if($current_role === 'manager') {
+			$allowed_permissions[] = 'create'; // マネージャーは注文を作成できます
+		}
+		$some_special_toggle_from_db = $db->fetchField('SELECT some_special_toggle FROM settings WHERE id = ?', [ $user_id ]);
+		if($some_special_toggle_from_db) {
+			$allowed_permissions[] = 'update'; // ユーザーが特別なトグルを持っている場合、注文を更新できます
+		}
+		if($current_role === 'admin') {
+			$allowed_permissions[] = 'delete'; // 管理者は注文を削除できます
+		}
+		return $allowed_permissions;
 	}
-	$some_special_toggle_from_db = $db->fetchField('SELECT some_special_toggle FROM settings WHERE id = ?', [ $user_id ]);
-	if($some_special_toggle_from_db) {
-		$allowed_permissions[] = 'update'; // ユーザーが特別なトグルを持っている場合、注文を更新できる
-	}
-	if($current_role === 'admin') {
-		$allowed_permissions[] = 'delete'; // 管理者は注文を削除できる
-	}
-	return $allowed_permissions;
-}
 }
 ```
+クールな部分は、メソッドのすべての権限を自動的にマップするショートカットもあることです（これもキャッシュされる可能性があります!!!）。したがって、`order()` と `company()` というメソッドがある場合、`$Permissions->has('order.read')` や `$Permissions->has('company.read')` を実行することができます。これらを定義することは非常に難しいので、ここで一緒にとどまります。これを行うには、次の手順を行う必要があります：
 
-Coolな部分は、クラス内のすべてのメソッドを権限にマップできるショートカットもあることです（キャッシュも可能！）。`order()` や `company()` などというメソッド名がある場合、これらは自動的にマップされるため、`$Permissions->has('order.read')` や `$Permissions->has('company.read')` を実行できます。これを定義することは非常に難しいので、ここで一緒に行動しましょう。以下のようにします：
-
-グループ化する権限クラスを作成します。
-
+グループ化したい権限クラスを作成します。
 ```php
 class MyPermissions {
 	public function order(string $current_role, int $order_id = 0): array {
-		// 権限を決定するコード
+		// 権限を決定するためのコード
 		return $permissions_array;
 	}
 
 	public function company(string $current_role, int $company_id): array {
-		// 権限を決定するコード
+		// 権限を決定するためのコード
 		return $permissions_array;
 	}
 }
 ```
 
-次に、このライブラリを使用して権限を見つけられるようにします。
+次に、このライブラリを使用して権限を検出できるようにします。
 
 ```php
 $Permissions = new \flight\Permission($current_role);
@@ -189,13 +188,13 @@ $Permissions->defineRulesFromClassMethods(MyApp\Permissions::class);
 Flight::set('permissions', $Permissions);
 ```
 
-最後に、コードベースで権限を呼び出してユーザーが与えられた権限を実行できるかどうかをチェックします。
+最後に、コードベースで権限を呼び出して、ユーザーが与えられた権限を実行できるかどうかを確認します。
 
 ```php
 class SomeController {
 	public function createOrder() {
 		if(Flight::get('permissions')->can('order.create') === false) {
-			die('注文を作成できません。申し訳ありません！');
+			die('You can\'t create an order. Sorry!');
 		}
 	}
 }
@@ -203,19 +202,17 @@ class SomeController {
 
 ### キャッシュ
 
-キャッシュを有効にするには、簡単な[wruczak/phpfilecache](https://docs.flightphp.com/awesome-plugins/php-file-cache) ライブラリを参照してください。以下に、これを有効にする例を示します。
-
+キャッシュを有効にするには、単純な[wruczak/phpfilecache](https://docs.flightphp.com/awesome-plugins/php-file-cache)ライブラリを参照してください。これを有効にする例は以下の通りです。
 ```php
 
-// この $app はあなたのコードの一部である可能性があります。または
-// null を渡すことができ、コンストラクタでFlight::app() から取得します
+// この $app はあなたのコードの一部である可能性があり、
+// コンストラクター内で Flight::app() から取得されるか
+// null を渡すと、それがコンストラクター内で取得されます
 $app = Flight::app();
 
-// 現時点では、ファイルキャッシュとしてこれを受け入れます。他のものも将来簡単に追加できます
+// 現時点では、ファイルキャッシュとしてこれを受け入れます。今後他のものも簡単に追加できます。
 $Cache = new Wruczek\PhpFileCache\PhpFileCache;
 
 $Permissions = new \flight\Permission($current_role, $app, $Cache);
-$Permissions->defineRulesFromClassMethods(MyApp\Permissions::class, 3600); // 3600 はこれをキャッシュする秒数です。キャッシュを使用しない場合はこれを省略してください
+$Permissions->defineRulesFromClassMethods(MyApp\Permissions::class, 3600); // キャッシュする秒数。キャッシュを使用しない場合はこれをオフにしてください
 ```
-
-以上です！

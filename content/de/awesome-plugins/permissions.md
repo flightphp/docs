@@ -1,7 +1,8 @@
-```de
 # FlightPHP/Berechtigungen
 
 Dies ist ein Berechtigungsmodul, das in Ihren Projekten verwendet werden kann, wenn Sie mehrere Rollen in Ihrer App haben und jede Rolle eine etwas andere Funktionalität hat. Mit diesem Modul können Sie Berechtigungen für jede Rolle definieren und dann überprüfen, ob der aktuelle Benutzer die Berechtigung hat, auf eine bestimmte Seite zuzugreifen oder eine bestimmte Aktion auszuführen.
+
+Klicken Sie [hier](https://github.com/flightphp/permissions) für das Repository auf GitHub.
 
 Installation
 -------
@@ -9,11 +10,11 @@ Führen Sie `composer require flightphp/permissions` aus und los geht's!
 
 Verwendung
 -------
-Zuerst müssen Sie Ihre Berechtigungen einrichten und dann Ihrer App mitteilen, was die Berechtigungen bedeuten. Letztendlich überprüfen Sie Ihre Berechtigungen mit `$Permissions->has()`, `->can()` oder `is()`. `has()` und `can()` haben die gleiche Funktionalität, sind jedoch unterschiedlich benannt, um Ihren Code besser lesbar zu machen.
+Zuerst müssen Sie Ihre Berechtigungen einrichten, dann teilen Sie Ihrer App mit, was die Berechtigungen bedeuten. Letztendlich prüfen Sie Ihre Berechtigungen mit `$Permissions->has()`, `->can()` oder `is()`. `has()` und `can()` haben die gleiche Funktionalität, sind jedoch unterschiedlich benannt, um Ihren Code leichter lesbar zu machen.
 
 ## Grundbeispiel
 
-Nehmen wir an, Sie haben in Ihrer Anwendung eine Funktion, die überprüft, ob ein Benutzer angemeldet ist. Sie können ein Berechtigungsobjekt wie folgt erstellen:
+Angenommen, Sie haben in Ihrer Anwendung eine Funktion, die überprüft, ob ein Benutzer angemeldet ist. Sie können ein Berechtigungsobjekt wie folgt erstellen:
 
 ```php
 // index.php
@@ -21,82 +22,82 @@ require 'vendor/autoload.php';
 
 // etwas Code
 
-// dann haben Sie wahrscheinlich etwas, das Ihnen sagt, welche die aktuelle Rolle der Person ist
-// wahrscheinlich haben Sie etwas, wo Sie die aktuelle Rolle abrufen
-// von einer Session-Variablen, die dies definiert
-// nachdem sich jemand angemeldet hat, sonst haben sie eine "Gast" oder "öffentliche" Rolle.
+// dann haben Sie wahrscheinlich etwas, das Ihnen mitteilt, was die aktuelle Rolle der Person ist
+// wahrscheinlich haben Sie etwas, bei dem Sie die aktuelle Rolle abrufen
+// aus einer Session-Variablen, die dies definiert
+// nachdem sich jemand angemeldet hat, andernfalls haben sie die Rolle 'Gast' oder 'Öffentlich'.
 $current_role = 'admin';
 
 // Berechtigungen einrichten
 $permission = new \flight\Permission($current_role);
-$permission->defineRule('angemeldet', function($current_role) {
-	return $current_role !== 'guest';
+$permission->defineRule('eingeloggt', function($current_role) {
+	return $current_role !== 'gast';
 });
 
-// Sie möchten dieses Objekt wahrscheinlich irgendwo in Flight behalten
-Flight::set('permission', $permission);
+// Sie werden dieses Objekt wahrscheinlich in Flight persistieren wollen
+Flight::set('berechtigung', $permission);
 ```
 
-Dann in einem Controller irgendwo, könnten Sie so etwas haben.
+Dann in einem Controller irgendwo haben Sie möglicherweise so etwas.
 
 ```php
 <?php
 
-// etwas Controller
-class SomeController {
-	public function someAction() {
-		$permission = Flight::get('permission');
-		if ($permission->has('angemeldet')) {
-			// etwas tun
+// irgendein Controller
+class EinController {
+	public function eineAktion() {
+		$permission = Flight::get('berechtigung');
+		if ($permission->has('eingeloggt')) {
+			// etwas machen
 		} else {
-			// etwas anderes tun
+			// etwas anderes machen
 		}
 	}
 }
 ```
 
-Sie können dies auch verwenden, um zu überprüfen, ob sie die Berechtigung haben, in Ihrer Anwendung etwas zu tun.
-Beispielsweise, wenn Sie eine Möglichkeit haben, dass Benutzer mit dem Posten in Ihrer Software interagieren können, können Sie überprüfen, ob sie die Berechtigung haben, bestimmte Aktionen auszuführen.
+Sie können dies auch verwenden, um zu verfolgen, ob sie Berechtigungen haben, um in Ihrer Anwendung etwas zu tun.
+Zum Beispiel, wenn Sie eine Möglichkeit haben, dass Benutzer Beiträge in Ihrer Software interagieren können, können Sie überprüfen, ob sie Berechtigungen haben, bestimmte Aktionen auszuführen.
 
 ```php
 $current_role = 'admin';
 
 // Berechtigungen einrichten
 $permission = new \flight\Permission($current_role);
-$permission->defineRule('post', function($current_role) {
+$permission->defineRule('beitrag', function($current_role) {
 	if($current_role === 'admin') {
 		$permissions = ['erstellen', 'lesen', 'aktualisieren', 'löschen'];
 	} else if($current_role === 'editor') {
 		$permissions = ['erstellen', 'lesen', 'aktualisieren'];
 	} else if($current_role === 'autor') {
 		$permissions = ['erstellen', 'lesen'];
-	} else if($current_role === 'beitragender') {
+	} else if($current_role === 'mitwirkender') {
 		$permissions = ['erstellen'];
 	} else {
 		$permissions = [];
 	}
 	return $permissions;
 });
-Flight::set('permission', $permission);
+Flight::set('berechtigung', $permission);
 ```
 
-Dann in einem Controller irgendwo...
+Dann irgendwo in einem Controller...
 
 ```php
-class PostController {
-	public function create() {
-		$permission = Flight::get('permission');
-		if ($permission->can('post.erstellen')) {
-			// etwas tun
+class BeitragController {
+	public function erstellen() {
+		$permission = Flight::get('berechtigung');
+		if ($permission->can('beitrag.erstellen')) {
+			// etwas machen
 		} else {
-			// etwas anderes tun
+			// etwas anderes machen
 		}
 	}
 }
 ```
 
-## Abhängigkeiten einspritzen
-Sie können Abhängigkeiten in den Closure einspritzen, die die Berechtigungen definieren. Dies ist nützlich, wenn Sie einen Schalter, eine ID oder einen anderen Datenpunkt haben, gegen den Sie prüfen möchten. Das Gleiche funktioniert auch für Klassen->Methoden-Aufrufe, außer dass Sie die Argumente in der Methode definieren.
+## Abhängigkeiten injizieren
+Sie können Abhängigkeiten in den Closure einfügen, die die Berechtigungen definieren. Dies ist nützlich, wenn Sie eine Art Schalter, ID oder einen anderen Datenpunkt haben, gegen den Sie prüfen möchten. Das Gleiche gilt für Klassen->Methoden-Aufrufe, außer dass Sie die Argumente in der Methode definieren.
 
 ### Closures
 
@@ -106,13 +107,13 @@ $Permission->defineRule('bestellung', function(string $current_role, MyDependenc
 });
 
 // in Ihrer Controllerdatei
-public function createOrder() {
+public function bestellungErstellen() {
 	$MyDependency = Flight::myDependency();
-	$permission = Flight::get('permission');
-	if ($permission->can('order.erstellen', $MyDependency)) {
-		// etwas tun
+	$permission = Flight::get('berechtigung');
+	if ($permission->can('bestellung.erstellen', $MyDependency)) {
+		// etwas machen
 	} else {
-		// etwas anderes tun
+		// etwas anderes machen
 	}
 }
 ```
@@ -120,104 +121,99 @@ public function createOrder() {
 ### Klassen
 
 ```php
-namespace MyApp;
+namespace MeinApp;
 
-class Permissions {
+class Berechtigungen {
 
-	public function order(string $current_role, MyDependency $MyDependency = null) {
+	public function bestellung(string $current_role, MyDependency $MyDependency = null) {
 		// ... code
 	}
 }
 ```
 
-## Abkürzung zur Festlegung von Berechtigungen mit Klassen
-Sie können auch Klassen verwenden, um Ihre Berechtigungen zu definieren. Dies ist nützlich, wenn Sie viele Berechtigungen haben und Ihren Code sauber halten möchten. Sie können so etwas tun wie:
-
+## Verknüpfung zum Setzen von Berechtigungen mit Klassen
+Sie können auch Klassen verwenden, um Ihre Berechtigungen zu definieren. Dies ist nützlich, wenn Sie viele Berechtigungen haben und Ihren Code sauber halten möchten. Sie können etwas Ähnliches wie folgt tun:
 ```php
 <?php
 
-// Bootstrap-Code
-$Permissions = new \flight\Permission($current_role);
-$Permissions->defineRule('bestellung', 'MyApp\Permissions->order');
+// Startcode
+$Berechtigungen = new \flight\Permission($current_role);
+$Berechtigungen->defineRule('bestellung', 'MeinApp\Berechtigungen->bestellung');
 
-// myapp/Permissions.php
-namespace MyApp;
+// myapp/Berechtigungen.php
+namespace MeinApp;
 
-class Permissions {
+class Berechtigungen {
 
-	public function order(string $current_role, int $user_id) {
-		// Angenommen, Sie haben dies zuvor eingerichtet
+	public function bestellung(string $current_role, int $benutzer_id) {
+		// Annehmen, dass Sie dies im Voraus eingerichtet haben
 		/** @var \flight\database\PdoWrapper $db */
 		$db = Flight::db();
-		$allowed_permissions = [ 'lesen' ]; // jeder kann eine Bestellung anzeigen
+		$erlaubte_berechtigungen = [ 'lesen' ]; // jeder kann eine Bestellung einsehen
 		if($current_role === 'manager') {
-			$allowed_permissions[] = 'erstellen'; // Manager können Bestellungen erstellen
+			$erlaubte_berechtigungen[] = 'erstellen'; // Manager können Bestellungen erstellen
 		}
-		$some_special_toggle_from_db = $db->fetchField('SELECT some_special_toggle FROM settings WHERE id = ?', [ $user_id ]);
-		if($some_special_toggle_from_db) {
-			$allowed_permissions[] = 'aktualisieren'; // Wenn der Benutzer einen speziellen Schalter hat, kann er Bestellungen aktualisieren
+		$ein_anderer_spezieller_schalter_aus_db = $db->fetchField('SELECT ein_anderer_spezieller_schalter FROM einstellungen WHERE id = ?', [ $benutzer_id ]);
+		if($ein_anderer_spezieller_schalter_aus_db) {
+			$erlaubte_berechtigungen[] = 'aktualisieren'; // Wenn der Benutzer einen speziellen Schalter hat, kann er Bestellungen aktualisieren
 		}
 		if($current_role === 'admin') {
-			$allowed_permissions[] = 'löschen'; // Admins können Bestellungen löschen
+			$erlaubte_berechtigungen[] = 'löschen'; // Admins können Bestellungen löschen
 		}
-		return $allowed_permissions;
+		return $erlaubte_berechtigungen;
 	}
 }
 ```
-Der coole Teil ist, dass es auch eine Abkürzung gibt, die Sie verwenden können (die auch gecached werden kann!!!), bei der Sie der Berechtigungsklasse einfach mitteilen, alle Methoden in einer Klasse in Berechtigungen zu überführen. Wenn Sie also eine Methode mit dem Namen `bestellung()` und eine Methode mit dem Namen `firma()` haben, werden diese automatisch zugeordnet, sodass Sie einfach `$Permissions->has('bestellung.lesen')` oder `$Permissions->has('firma.lesen')` ausführen können und es funktioniert. Die Definition davon ist sehr kompliziert, also bleiben Sie dran. Sie müssen einfach Folgendes tun:
+Der interessante Teil ist, dass es auch eine Abkürzung gibt, die Sie verwenden können (die auch zwischengespeichert werden kann!!!), bei der Sie der Berechtigungsklasse einfach sagen, alle Methoden in einer Klasse in Berechtigungen zu kartieren. Also, wenn Sie eine Methode namens `bestellung()` und eine Methode namens `unternehmen()` haben, werden diese automatisch zugeordnet, sodass Sie einfach `$Berechtigungen->has('bestellung.lesen')` oder `$Berechtigungen->has('unternehmen.lesen')` ausführen können und es funktioniert. Das Definieren davon ist sehr schwierig, bleiben Sie also bei mir hier. Sie müssen nur dies tun:
 
 Erstellen Sie die Berechtigungsklasse, die Sie zusammenfassen möchten.
 ```php
-class MyPermissions {
-	public function order(string $current_role, int $order_id = 0): array {
+class MeineBerechtigungen {
+	public function bestellung(string $current_role, int $bestellungs_id = 0): array {
 		// Code zur Bestimmung von Berechtigungen
-		return $permissions_array;
+		return $berechtigungen_array;
 	}
 
-	public function company(string $current_role, int $company_id): array {
+	public function unternehmen(string $current_role, int $unternehmen_id): array {
 		// Code zur Bestimmung von Berechtigungen
-		return $permissions_array;
+		return $berechtigungen_array;
 	}
 }
 ```
 
-Machen Sie dann die Berechtigungen mithilfe dieser Bibliothek auffindbar.
+Dann machen Sie die Berechtigungen mit Hilfe dieser Bibliothek auffindbar.
 
 ```php
-$Permissions = new \flight\Permission($current_role);
-$Permissions->defineRulesFromClassMethods(MyApp\Permissions::class);
-Flight::set('permissions', $Permissions);
+$Berechtigungen = new \flight\Permission($current_role);
+$Berechtigungen->defineRulesFromClassMethods(MeineApp\Berechtigungen::class);
+Flight::set('berechtigungen', $Berechtigungen);
 ```
 
 Rufen Sie schließlich die Berechtigung in Ihrem Code auf, um zu überprüfen, ob der Benutzer berechtigt ist, eine bestimmte Berechtigung auszuführen.
 
 ```php
-class SomeController {
-	public function createOrder() {
-		if(Flight::get('permissions')->can('order.erstellen') === false) {
+class EinController {
+	public function bestellungErstellen() {
+		if(Flight::get('berechtigungen')->can('bestellung.erstellen') === false) {
 			die('Sie können keine Bestellung erstellen. Entschuldigung!');
 		}
 	}
 }
 ```
 
-### Caching
+### Zwischenspeicherung
 
-Um das Caching zu aktivieren, sehen Sie sich die einfache [wruczak/phpfilecache](https://docs.flightphp.com/awesome-plugins/php-file-cache) Bibliothek an. Ein Beispiel zur Aktivierung finden Sie unten.
+Um die Zwischenspeicherung zu aktivieren, sehen Sie sich die einfache [wruczak/phpfilecache](https://docs.flightphp.com/awesome-plugins/php-file-cache) Bibliothek an. Ein Beispiel zur Aktivierung finden Sie unten.
 ```php
 
-// dieses $app kann Teil Ihres Codes sein, oder
+// dieses $app kann Teil Ihres Codes sein oder
 // Sie können einfach null übergeben und es wird
 // aus Flight::app() im Konstruktor abgerufen
 $app = Flight::app();
 
-// Derzeit akzeptiert dies dies als File-Cache. Andere können in Zukunft
-// leicht hinzugefügt werden.
+// Derzeit akzeptiert es dies als Dateipuffer. Andere können in Zukunft leicht hinzugefügt werden.
 $Cache = new Wruczek\PhpFileCache\PhpFileCache;
 
-$Permissions = new \flight\Permission($current_role, $app, $Cache);
-$Permissions->defineRulesFromClassMethods(MyApp\Permissions::class, 3600); // 3600 ist die Anzahl der Sekunden, für die dies zwischengespeichert wird. Lassen Sie dies aus, um kein Caching zu verwenden
-```
-
-Und los geht's!
+$Berechtigungen = new \flight\Permission($current_role, $app, $Cache);
+$Berechtigungen->defineRulesFromClassMethods(MeineApp\Berechtigungen::class, 3600); // 3600 gibt an, wie viele Sekunden diese Zwischenspeicherung gültig ist. Lassen Sie dies weg, um die Zwischenspeicherung nicht zu verwenden
 ```

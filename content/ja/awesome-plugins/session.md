@@ -1,10 +1,12 @@
 # Ghostff/Session
 
-PHP セッションマネージャー（ノンブロッキング、フラッシュ、セグメント、セッション暗号化）。セッションデータのオプションの暗号化/復号化に PHP open_ssl を使用します。File、MySQL、Redis、および Memcached をサポートしています。
+PHPセッションマネージャー（非同期、フラッシュ、セグメント、セッション暗号化）。セッションデータのオプションの暗号化/復号にPHP open_sslを使用します。ファイル、MySQL、Redis、およびMemcachedをサポートしています。
+
+[こちら](https://github.com/Ghostff/Session)をクリックしてコードを表示してください。
 
 ## インストール
 
-Composer を使用してインストールします。
+Composerを使用してインストールしてください。
 
 ```bash
 composer require ghostff/session
@@ -12,7 +14,7 @@ composer require ghostff/session
 
 ## 基本的な設定
 
-セッションを使用するためにデフォルト設定を渡す必要はありません。詳細な設定については [Github Readme](https://github.com/Ghostff/Session) を参照してください。
+デフォルトの設定を使用するには何も渡す必要はありません。詳細な設定については、[Github Readme](https://github.com/Ghostff/Session)を参照してください。
 
 ```php
 
@@ -24,22 +26,22 @@ $app = Flight::app();
 
 $app->register('session', Session::class);
 
-// 各ページロードでセッションをコミットする必要があることを覚えておく必要があります
-// または構成で auto_commit を実行する必要があります。
+// 1つ覚えておくべきことは、各ページの読み込みごとにセッションをコミットする必要があることです
+// または構成でauto_commitを実行する必要があります。
 ```
 
 ## シンプルな例
 
-これはこのように使用する可能性のあるシンプルな例です。
+以下は、この方法を使用する例です。
 
 ```php
 Flight::route('POST /login', function() {
 	$session = Flight::session();
 
-	// ここでログインロジックを実行します
-	// パスワードの検証など
+	// ここにログインロジックなどを記述します
+	// パスワードの検証などを行います
 
-	// ログインが成功した場合
+	// ログインに成功した場合
 	$session->set('is_logged_in', true);
 	$session->set('user', $user);
 
@@ -47,7 +49,7 @@ Flight::route('POST /login', function() {
 	$session->commit();
 });
 
-// このチェックは、制限されたページロジック内にあるか、ミドルウェアでラップされているかもしれません。
+// このチェックは制限されたページのロジック内にあるか、ミドルウェアでラップされています。
 Flight::route('/some-restricted-page', function() {
 	$session = Flight::session();
 
@@ -55,7 +57,7 @@ Flight::route('/some-restricted-page', function() {
 		Flight::redirect('/login');
 	}
 
-	// 制限されたページロジックをここで実行します
+	// ここに制限されたページのロジックを記述します
 });
 
 // ミドルウェアバージョン
@@ -72,7 +74,7 @@ Flight::route('/some-restricted-page', function() {
 
 ## より複雑な例
 
-これはこのように使用する可能性のあるより複雑な例です。
+以下は、この方法を使用するより複雑な例です。
 
 ```php
 
@@ -82,24 +84,24 @@ require 'vendor/autoload.php';
 
 $app = Flight::app();
 
-// カスタムパスをセッション構成ファイルに設定し、セッション ID にランダムな文字列を指定します
+// カスタムパスをセッション構成ファイルに設定し、セッションIDにランダムな文字列を指定します
 $app->register('session', Session::class, [ 'path/to/session_config.php', bin2hex(random_bytes(32)) ], function(Session $session) {
 		// または手動で構成オプションをオーバーライドできます
 		$session->updateConfiguration([
-			// セッションデータをデータベースに保存する場合（「すべてのデバイスからログアウトする」などの機能が必要な場合に適しています）
+			// セッションデータをデータベースに格納する場合（「すべてのデバイスからログアウト」のような機能が必要な場合に適しています）
 			Session::CONFIG_DRIVER        => Ghostff\Session\Drivers\MySql::class,
 			Session::CONFIG_ENCRYPT_DATA  => true,
-			Session::CONFIG_SALT_KEY      => hash('sha256', 'my-super-S3CR3T-salt'), // これを別のものに変更してください
-			Session::CONFIG_AUTO_COMMIT   => true, // 必要であればこれを実行するか、session を commit() するのが難しい場合にのみ実行します。
-												   // さらに Flight::after('start', function() { Flight::session()->commit(); }); を行うこともできます。
+			Session::CONFIG_SALT_KEY      => hash('sha256', 'my-super-S3CR3T-salt'), // これを他のものに変更してください
+			Session::CONFIG_AUTO_COMMIT   => true, // 必要に応じておよび/またはセッションのコミットが難しい場合にのみ行います。
+												   // さらにFlight::after('start', function() { Flight::session()->commit(); });を実行できます。
 			Session::CONFIG_MYSQL_DS         => [
-				'driver'    => 'mysql',             # PDO の DNS 用のデータベースドライバー 例(mysql:host=...;dbname=...)
+				'driver'    => 'mysql',             # PDO dns用のデータベースドライバー 例(mysql:host=...;dbname=...)
 				'host'      => '127.0.0.1',         # データベースホスト
 				'db_name'   => 'my_app_database',   # データベース名
-				'db_table'  => 'sessions',          # データベーステーブル
-				'db_user'   => 'root',              # データベースユーザー名
-				'db_pass'   => '',                  # データベースパスワード
-				'persistent_conn'=> false,          # スクリプトがデータベースと通信するたびに新しい接続を確立するオーバーヘッドを避け、より速い Web アプリケーションを実現します。バックサイドを自分で見つけなさい
+				'db_table'  => 'sessions',          # データベースのテーブル
+				'db_user'   => 'root',              # データベースのユーザー名
+				'db_pass'   => '',                  # データベースのパスワード
+				'persistent_conn'=> false,          # スクリプトがデータベースに話すたびに新しい接続を確立するオーバーヘッドを避けるため、ウェブアプリケーションが高速になります。バックサイドを見つけてください
 			]
 		]);
 	}
@@ -108,16 +110,16 @@ $app->register('session', Session::class, [ 'path/to/session_config.php', bin2he
 
 ## ヘルプ！セッションデータが保持されません！
 
-セッションデータを設定してもリクエスト間で保持されない場合は、セッションデータをコミットするのを忘れた可能性があります。セッションデータを設定した後に `$session->commit()` を呼び出すことで行えます。
+セッションデータを設定しており、リクエスト間で保持されていない場合は、セッションデータをコミットするのを忘れている可能性があります。これは、セッションデータを設定した後に`$session->commit()`を呼び出すことで行えます。
 
 ```php
 Flight::route('POST /login', function() {
 	$session = Flight::session();
 
-	// ここでログインロジックを実行します
-	// パスワードの検証など
+	// ここにログインロジックなどを記述します
+	// パスワードの検証などを行います
 
-	// ログインが成功した場合
+	// ログインに成功した場合
 	$session->set('is_logged_in', true);
 	$session->set('user', $user);
 
@@ -126,7 +128,7 @@ Flight::route('POST /login', function() {
 });
 ```
 
-これの回避策は、セッションサービスを設定するときに、構成で `auto_commit` を `true` に設定する必要があるということです。これにより、各リクエスト後にセッションデータが自動的にコミットされます。
+別の方法は、セッションサービスを設定する際に、構成で`auto_commit`を`true`に設定することです。これにより、各リクエスト後に自動的にセッションデータがコミットされます。
 
 ```php
 
@@ -138,8 +140,8 @@ $app->register('session', Session::class, [ 'path/to/session_config.php', bin2he
 );
 ```
 
-また、各リクエスト後にセッションデータをコミットするようにするには、`Flight::after('start', function() { Flight::session()->commit(); });` を行うこともできます。
+さらに、`Flight::after('start', function() { Flight::session()->commit(); });`を使用して、各リクエスト後にセッションデータをコミットできます。
 
 ## ドキュメント
 
-詳細なドキュメントについては、[Github Readme](https://github.com/Ghostff/Session) を参照してください。構成オプションは [default_config.php](https://github.com/Ghostff/Session/blob/master/src/default_config.php) ファイルにて詳細に説明されています。パッケージを自分で調べる場合は、コードは理解しやすいです。
+詳細なドキュメントについては、[Github Readme](https://github.com/Ghostff/Session)をご覧ください。構成オプションは、[default_config.php](https://github.com/Ghostff/Session/blob/master/src/default_config.php)ファイル自体で詳細に説明されています。パッケージ自体を調査したい場合は、コードが理解しやすいです。

@@ -1,14 +1,16 @@
-# FlightPHP/权限
+# FlightPHP/Permissions
 
-这是一个权限模块，如果您的应用程序具有多个角色，并且每个角色具有略有不同的功能，则可以在项目中使用该模块。此模块允许您为每个角色定义权限，然后检查当前用户是否具有访问特定页面或执行特定操作的权限。
+这是一个权限模块，可以在您的项目中使用，如果您的应用程序中有多个角色，并且每个角色有稍微不同的功能。此模块允许您为每个角色定义权限，然后检查当前用户是否具有权限访问某个页面或执行某个操作。
+
+单击[此处](https://github.com/flightphp/permissions)查看 GitHub 上的存储库。
 
 安装
 -------
-运行`composer require flightphp/permissions`，然后你就可以开始了！
+运行 `composer require flightphp/permissions`，您就可以开始了！
 
 用法
 -------
-首先，您需要设置您的权限，然后告诉您的应用程序这些权限的含义。最终，您将使用`$Permissions->has()`，`->can()`或`is()`检查您的权限。`has()`和`can()`具有相同的功能，但命名不同以使您的代码更易读。
+首先，您需要设置权限，然后告诉您的应用程序这些权限的含义。最终，您将使用 `$Permissions->has()`、`->can()` 或 `is()` 检查权限。`has()` 和 `can()` 具有相同的功能，但命名不同，以使您的代码更易读。
 
 ## 基本示例
 
@@ -20,10 +22,10 @@ require 'vendor/autoload.php';
 
 // 一些代码
 
-// 然后您可能有某些告诉您当前角色是谁的东西
-// 可能会有一些地方拉取当前角色的当前角色
-// 从一个定义此内容的会话变量中
-// 某人登录后，否则他们将有一个'guest'或'public'角色。
+// 然后您可能有一些内容告诉您当前角色是谁
+// 可能您有一些内容从会话变量中提取当前角色
+// 以定义此内容
+// 在某人登录后，否则他们将拥有 'guest' 或 'public' 角色。
 $current_role = 'admin';
 
 // 设置权限
@@ -32,30 +34,30 @@ $permission->defineRule('loggedIn', function($current_role) {
 	return $current_role !== 'guest';
 });
 
-// 您可能希望在Flight的某个地方持久化此对象
+// 您可能希望在 Flight 中某处持久化此对象
 Flight::set('permission', $permission);
 ```
 
-然后在某个控制器中，您可能会有以下内容。
+然后在某个控制器中，您可能会有如下代码。
 
 ```php
 <?php
 
-// 一些控制器
+// 某个控制器
 class SomeController {
 	public function someAction() {
 		$permission = Flight::get('permission');
 		if ($permission->has('loggedIn')) {
 			// 做某事
 		} else {
-			// 做其他事情
+			// 做其他事
 		}
 	}
 }
 ```
 
-您还可以使用此来追踪他们是否有权限在您的应用程序中执行某些操作。
-例如，如果您有一种用户可以与软件上的帖子交互的方式，您可以
+您还可以使用此功能跟踪用户在应用程序中是否具有执行某些操作的权限。
+例如，如果您的应用程序允许用户与软件上的帖子进行交互，您可以
 检查他们是否有权限执行某些操作。
 
 ```php
@@ -89,14 +91,14 @@ class PostController {
 		if ($permission->can('post.create')) {
 			// 做某事
 		} else {
-			// 做其他事情
+			// 做其他事
 		}
 	}
 }
 ```
 
 ## 注入依赖项
-您可以将依赖项注入到定义权限的闭包中。如果您有一些您想要根据检查的开关、ID或任何其他数据点，这很有用。类->方法类型的调用也适用，不同之处在于您在方法中定义参数。
+您可以将依赖项注入定义权限的闭包中。如果您有某种切换、ID 或任何其他要检查的数据点，这很有用。对于 Class->Method 类型的调用同样适用，只是您需要在方法中定义参数。
 
 ### 闭包
 
@@ -112,7 +114,7 @@ public function createOrder() {
 	if ($permission->can('order.create', $MyDependency)) {
 		// 做某事
 	} else {
-		// 做其他事情
+		// 做其他事
 	}
 }
 ```
@@ -130,8 +132,8 @@ class Permissions {
 }
 ```
 
-## 使用类快捷设置权限
-您还可以使用类来定义您的权限。如果您有很多权限并且希望保持代码清晰，这很有用。您可以这样做：
+## 使用类设置权限的快捷方式
+您还可以使用类来定义您的权限。如果您有很多权限要保持代码整洁，这很有用。您可以这样做：
 ```php
 <?php
 
@@ -145,7 +147,7 @@ namespace MyApp;
 class Permissions {
 
 	public function order(string $current_role, int $user_id) {
-		// 假设您事先设置了这个
+		// 假设您先前设置好了这一点
 		/** @var \flight\database\PdoWrapper $db */
 		$db = Flight::db();
 		$allowed_permissions = [ 'read' ]; // 每个人都可以查看订单
@@ -163,18 +165,18 @@ class Permissions {
 	}
 }
 ```
-有趣的地方是，您还可以使用一个快捷方式（也可以缓存!!!），只需告诉权限类将类中的所有方法映射到权限中。因此，如果您有一个命名为`order()`和一个命名为`company()`的方法，这些将自动映射，因此您只需运行`$Permissions->has('order.read')`或`$Permissions->has('company.read')`，它将起作用。定义这个非常困难，所以请跟随我。
+很酷的部分是，还有一个简便方法可以使用（也可以被缓存！），您只需告诉权限类将类中的所有方法映射到权限中。因此，如果您有一个名为 `order()` 和一个名为 `company()` 的方法，这些将自动映射，因此您只需运行 `$Permissions->has('order.read')` 或 `$Permissions->has('company.read')` 即可正常工作。定义这些非常困难，所以请跟着我学习。您只需要执行以下操作：
 
-创建要组合在一起的权限类。
+创建要分组的权限类。
 ```php
 class MyPermissions {
 	public function order(string $current_role, int $order_id = 0): array {
-		// 确定权限的代码
+		// 决定权限的代码
 		return $permissions_array;
 	}
 
 	public function company(string $current_role, int $company_id): array {
-		// 确定权限的代码
+		// 决定权限的代码
 		return $permissions_array;
 	}
 }
@@ -198,24 +200,24 @@ class SomeController {
 		}
 	}
 }
+```
 
 ### 缓存
 
-要启用缓存，请参见简单的 [wruczak/phpfilecache](https://docs.flightphp.com/awesome-plugins/php-file-cache) 库。下面是启用此功能的示例。
+要启用缓存，请参阅简单的 [wruczak/phpfilecache](https://docs.flightphp.com/awesome-plugins/php-file-cache) 库。以下是启用此功能的示例。
 ```php
 
-// 此$ app可以是您代码的一部分，也可以
-// 您只需传递null，它将
-// 在构造函数中从Flight::app()中获取
+// 此 $app 可以是您代码的一部分，
+// 或者您可以只传递 null，并在构造函数中
+// 从 Flight::app() 获取
 $app = Flight::app();
 
-// 现在它接受此作为文件缓存。其他缓存可以很容易地
-// 在将来添加。
+// 现在它接受此文件缓存。将来可以轻松添加其他缓存。
 $Cache = new Wruczek\PhpFileCache\PhpFileCache;
 
 $Permissions = new \flight\Permission($current_role, $app, $Cache);
-$Permissions->defineRulesFromClassMethods(MyApp\Permissions::class, 3600); // 3600 是要将此缓存几秒钟。省略此项以不使用缓存
+$Permissions->defineRulesFromClassMethods(MyApp\Permissions::class, 3600); // 3600 是要将其缓存多少秒。如果不使用缓存，请勿包含此选项
 ```
 
-然后您就可以开始了！
+然后开启吧！
 

@@ -1,15 +1,17 @@
 # Wruczek/PHP-File-Cache
 
-Clase de almacenamiento en caché de PHP en archivo ligera, simple y independiente
+Clase PHP de almacenamiento en archivo ligera, simple y autónoma
 
 **Ventajas**
-- Ligero, independiente y simple
-- Todo el código en un solo archivo, sin controladores innecesarios.
-- Seguro, cada archivo de caché generado tiene una cabecera de php con die, lo que hace que el acceso directo sea imposible incluso si alguien conoce la ruta y su servidor no está configurado correctamente
+- Ligera, autónoma y simple
+- Todo el código en un archivo - no hay controladores innecesarios.
+- Seguro - cada archivo de caché generado tiene un encabezado php con die, lo que hace que el acceso directo sea imposible incluso si alguien conoce la ruta y su servidor no está configurado correctamente
 - Bien documentado y probado
 - Maneja la concurrencia correctamente a través de flock
 - Compatible con PHP 5.4.0 - 7.1+
-- Gratuito bajo una licencia MIT
+- Gratis bajo una licencia MIT
+
+Haga clic [aquí](https://github.com/Wruczek/PHP-File-Cache) para ver el código.
 
 ## Instalación
 
@@ -28,23 +30,23 @@ use Wruczek\PhpFileCache\PhpFileCache;
 
 $app = Flight::app();
 
-// Pasa el directorio en el que se almacenará la caché al constructor
+// Pasa el directorio en el que se almacenará el caché al constructor
 $app->register('cache', PhpFileCache::class, [ __DIR__ . '/../cache/' ], function(PhpFileCache $cache) {
 
-	// Esto asegura que la caché solo se use en modo de producción
-	// ENVIRONMENT es una constante que se establece en tu archivo de inicio o en otro lugar de tu aplicación
+	// Esto asegura que el caché solo se utilice en modo de producción
+	// ENVIRONMENT es una constante que se establece en tu archivo de inicio (bootstrap) o en otro lugar de tu aplicación
 	$cache->setDevMode(ENVIRONMENT === 'development');
 });
 ```
 
-Luego puedes usarlo en tu código de la siguiente manera:
+Entonces puedes usarlo en tu código así:
 
 ```php
 
 // Obtener instancia de caché
 $cache = Flight::cache();
 $data = $cache->refreshIfExpired('simple-cache-test', function () {
-    return date("H:i:s"); // devolver datos para ser almacenados en caché
+    return date("H:i:s"); // devuelve los datos a cachear
 }, 10); // 10 segundos
 
 // o

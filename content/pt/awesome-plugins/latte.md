@@ -1,6 +1,6 @@
 # Latte
 
-Latte é um mecanismo de modelagem completo que é muito fácil de usar e parece mais próximo da sintaxe do PHP do que Twig ou Smarty. Também é muito fácil de estender e adicionar seus próprios filtros e funções.
+[Latte](https://latte.nette.org/en/guide) é um mecanismo de modelo completo que é muito fácil de usar e se sente mais próximo de uma sintaxe PHP do que Twig ou Smarty. Também é muito fácil de estender e adicionar seus próprios filtros e funções.
 
 ## Instalação
 
@@ -24,14 +24,14 @@ $app = Flight::app();
 
 $app->register('latte', LatteEngine::class, [], function(LatteEngine $latte) use ($app) {
 
-	// Aqui é onde Latte irá armazenar em cache seus modelos para acelerar as coisas
-	// Uma coisa legal sobre o Latte é que ele atualiza automaticamente o
-	// cache quando você faz alterações em seus modelos!
+	// Aqui é onde o Latte irá armazenar em cache seus modelos para acelerar as coisas
+	// Uma coisa legal sobre o Latte é que ele atualiza automaticamente seu
+	// cache quando você faz alterações nos seus modelos!
 	$latte->setTempDirectory(__DIR__ . '/../cache/');
 
-	// Informe ao Latte qual será o diretório raiz para suas visualizações.
-	// $app->get('flight.views.path') é configurado no arquivo config.php
-	//   Você também poderia simplesmente fazer algo como `__DIR__ . '/../views/'`
+	// Diga ao Latte onde o diretório raiz para suas visualizações estará
+	// $app->get('flight.views.path') é definido no arquivo config.php
+	//   Você também pode fazer algo como `__DIR__ . '/../views/'`
 	$latte->setLoader(new \Latte\Loaders\FileLoader($app->get('flight.views.path')));
 });
 ```
@@ -55,17 +55,17 @@ Aqui está um exemplo simples de um arquivo de layout. Este é o arquivo que ser
 			</nav>
 		</header>
 		<div id="content">
-			<!-- Aqui está a magia -->
+			<!-- Aqui está a mágica -->
 			{block content}{/block}
 		</div>
 		<div id="footer">
-			&copy; Direitos Autorais
+			&copy; Direitos autorais
 		</div>
 	</body>
 </html>
 ```
 
-Agora temos seu arquivo que será renderizado dentro desse bloco de conteúdo:
+E agora temos seu arquivo que será renderizado dentro desse bloco de conteúdo:
 
 ```html
 <!-- app/views/home.latte -->
@@ -79,7 +79,7 @@ Agora temos seu arquivo que será renderizado dentro desse bloco de conteúdo:
 {/block}
 ```
 
-Depois, ao renderizar isso dentro de sua função ou controlador, você faria algo assim:
+Então, quando você for renderizar isso dentro da sua função ou controlador, você faria algo assim:
 
 ```php
 // rota simples
@@ -104,4 +104,4 @@ class HomeController
 }
 ```
 
-Veja a [Documentação do Latte](https://latte.nette.org/en/guide) para obter mais informações sobre como usar o Latte em seu potencial máximo!
+Veja a [Documentação do Latte](https://latte.nette.org/en/guide) para mais informações sobre como usar o Latte em todo o seu potencial!

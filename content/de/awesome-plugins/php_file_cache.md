@@ -5,15 +5,17 @@ Leichte, einfache und eigenständige PHP-In-File-Caching-Klasse
 **Vorteile**
 - Leicht, eigenständig und einfach
 - Der gesamte Code in einer Datei - keine sinnlosen Treiber.
-- Sicher - jede generierte Cache-Datei enthält einen PHP-Header mit die, wodurch ein direkter Zugriff auch dann unmöglich ist, wenn jemand den Pfad kennt und Ihr Server nicht ordnungsgemäß konfiguriert ist.
+- Sicher - jede generierte Cache-Datei hat einen PHP-Header mit "die", was direkten Zugriff unmöglich macht, selbst wenn jemand den Pfad kennt und Ihr Server nicht ordnungsgemäß konfiguriert ist.
 - Gut dokumentiert und getestet
-- Behandelt Parallelität korrekt über flock
+- Behandelt Konkurrenz richtig über flock
 - Unterstützt PHP 5.4.0 - 7.1+
 - Kostenlos unter einer MIT-Lizenz
 
+Klicken Sie [hier](https://github.com/Wruczek/PHP-File-Cache), um den Code anzuzeigen.
+
 ## Installation
 
-Installiere über Composer:
+Installation über Composer:
 
 ```bash
 composer require wruczek/php-file-cache
@@ -28,11 +30,11 @@ use Wruczek\PhpFileCache\PhpFileCache;
 
 $app = Flight::app();
 
-// Sie geben das Verzeichnis, in dem der Cache gespeichert wird, dem Konstruktor an
+// Sie geben das Verzeichnis, in dem der Cache gespeichert wird, dem Konstruktor weiter
 $app->register('cache', PhpFileCache::class, [ __DIR__ . '/../cache/' ], function(PhpFileCache $cache) {
 
-	// Dies stellt sicher, dass der Cache nur im Produktionsmodus verwendet wird
-	// UMGEBUNG ist eine Konstante, die in Ihrer Startdatei oder an anderer Stelle in Ihrer App festgelegt ist
+	// Dies stellt sicher, dass der Cache nur verwendet wird, wenn sich die Anwendung im Produktionsmodus befindet
+	// ENVIRONMENT ist eine Konstante, die in Ihrer Bootstrap-Datei oder anderswo in Ihrer Anwendung festgelegt ist
 	$cache->setDevMode(ENVIRONMENT === 'development');
 });
 ```
@@ -44,7 +46,7 @@ Dann können Sie es in Ihrem Code wie folgt verwenden:
 // Cache-Instanz abrufen
 $cache = Flight::cache();
 $data = $cache->refreshIfExpired('simple-cache-test', function () {
-    return date("H:i:s"); // Daten zurückgeben, die zwischengespeichert werden sollen
+    return date("H:i:s"); // Daten zur Zwischenspeicherung zurückgeben
 }, 10); // 10 Sekunden
 
 // oder
@@ -57,4 +59,4 @@ if(empty($data)) {
 
 ## Dokumentation
 
-Besuchen Sie [https://github.com/Wruczek/PHP-File-Cache](https://github.com/Wruczek/PHP-File-Cache) für die vollständige Dokumentation und stellen Sie sicher, dass Sie den [Beispiele](https://github.com/Wruczek/PHP-File-Cache/tree/master/examples) Ordner ansehen.
+Besuchen Sie [https://github.com/Wruczek/PHP-File-Cache](https://github.com/Wruczek/PHP-File-Cache) für die vollständige Dokumentation und stellen Sie sicher, dass Sie den [Beispiele](https://github.com/Wruczek/PHP-File-Cache/tree/master/examples)-Ordner sehen.

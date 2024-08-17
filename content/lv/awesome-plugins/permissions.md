@@ -1,18 +1,20 @@
-# FlightPHP/Permissions
+# FlightPHP/Atļaujas
 
-Tas ir atļauju modulis, ko var izmantot jūsu projektos, ja jums ir vairāki lomas jūsu lietotnē, un katrai rolai ir mazliet atšķirīga funkcionalitāte. Šis modulis ļauj definēt atļaujas katrai rolei un pēc tam pārbaudīt, vai pašreizējam lietotājam ir atļauja piekļūt konkrētai lapai vai veikt konkrētu darbību.
+Tas ir atļauju modulis, ko var izmantot jūsu projektos, ja jums ir vairākas lomas jūsu lietotnē, un katram no tiem ir nedaudz atšķirīga funkcionalitāte. Šis modulis ļauj definēt atļaujas katrai rolei un pēc tam pārbaudīt, vai pašreizējam lietotājam ir atļauja piekļūt konkrētai lapai vai veikt konkrētu darbību.
+
+Noklikšķiniet [šeit](https://github.com/flightphp/permissions) GitHub repozitorijai.
 
 Uzstādīšana
 -------
-Palaist `composer require flightphp/permissions` un jūs esat gatavs darbam!
+Izpildiet `composer require flightphp/permissions`, un esat gatavs darbam!
 
 Lietošana
 -------
-Vispirms jums ir jāiestata savas atļaujas, pēc tam jums jāpaskaidro, ko nozīmē šīs atļaujas jūsu lietotnē. Galu galā jūs pārbaudīsiet savas atļaujas ar `$Permissions->has()`, `->can()` vai `is()`. `has()` un `can()` ir vienādas funkcionalitātes, bet tām ir dažādi nosaukumi, lai jūsu kods būtu vieglāk lasāms.
+Vispirms jums ir jāiestata savas atļaujas, tad jums jāpasaka savai lietotnei, ko šīs atļaujas nozīmē. Galu galā jūs pārbaudīsiet savas atļaujas ar `$Permissions->has()`, `->can()` vai `is()`. `has()` un `can()` ir vienādas funkcijas, bet sauktas atšķirīgi, lai jūsu kods būtu lasāmāks.
 
-## Pamata paraugs
+## Pamata piemērs
 
-Iedomāsimies, ka jums ir iespēja jūsu lietotnē, kas pārbauda, vai lietotājs ir pierakstījies. Jūs varat izveidot atļauju objektu šādi:
+Iedomāsimies, ka jums ir funkcija jūsu lietotnē, kas pārbauda, vai lietotājs ir pierakstījies. Jūs varat izveidot atļauju objektu šādi:
 
 ```php
 // index.php
@@ -20,99 +22,99 @@ require 'vendor/autoload.php';
 
 // kods
 
-// tad, visticamāk, jums ir kaut kas, kas paziņo, kāda ir personas pašreizējā loma
-// iespējams, jums ir kaut kas, kas izvelk pašreizējo lomu
+// pēc tam, iespējams, jums ir kaut kas, kas jums paziņo, kāda ir pašreizējā lietotāja loma
+// visticamāk, jums ir kaut kas, kas nosaka pašreizējo lomu
 // no sesijas mainīgā, kas to definē
-// pēc tam, kad kāds pierakstās, pretējā gadījumā viņiem būs "viesis" vai "publisks" loma.
-$current_role = 'admin';
+// pēc reģistrēšanās, pretējā gadījumā viņiem būs "viesis" vai "publiska" loma.
+$current_role = 'admins';
 
 // iestatīt atļaujas
-$permission = new \flight\Permission($current_role);
-$permission->defineRule('loggedIn', function($current_role) {
-	return $current_role !== 'guest';
+$permission = new \flight\Permissions($current_role);
+$permission->defineRule('pieslēdzies', function($current_role) {
+	return $current_role !== 'viesis';
 });
 
-// Jums drošamākērt būs šo objektu saglabāt Flight kaut kur
+// Iespējams, ka vēlēsieties šo objektu noturētiegavēkur visur
 Flight::set('permission', $permission);
 ```
 
-Tad kontrolētājā, iespējams, būs kaut kas līdzīgs tam.
+Tad kādā kontrolierī varētu būt kaut kas tāds.
 
 ```php
 <?php
 
-// kāds kontrolētājs
-class SomeController {
-	public function someAction() {
-		$permission = Flight::get('permission');
-		if ($permission->has('loggedIn')) {
-			// darīt kaut ko
+// dažs kontrolieris
+class DaļasKontrolieris {
+	public function daļasDarbība() {
+		$atļauja = Flight::get('permission');
+		if ($atļauja->has('pieslēdzies')) {
+			// dari kaut ko
 		} else {
-			// darīt kaut ko citu
+			// dari ko citu
 		}
 	}
 }
 ```
 
-Jūs to varat izmantot arī, lai sekotu, vai viņiem ir atļauja veikt kaut ko jūsu lietotnē.
-Piemēram, ja ir iespējams, ka lietotāji var mijiedarboties, veicot ierakstus jūsu programmatūrā, jūs varat
-pārbaudiet, vai viņiem ir atļauja veikt kādas darbības.
+Jūs varat izmantot arī to, lai sekotu, vai tiem ir atļauja kaut ko darīt jūsu lietotnē.
+Piemēram, ja jums ir veids, kā lietotāji var mijiedarboties ar saviem ierakstiem jūsu programmā, jūs varat
+pārbaudiet, vai viņiem ir atļauja veikt konkrētas darbības.
 
 ```php
-$current_role = 'admin';
+$current_role = 'admins';
 
 // iestatīt atļaujas
 $permission = new \flight\Permission($current_role);
-$permission->defineRule('post', function($current_role) {
-	if($current_role === 'admin') {
-		$permissions = ['create', 'read', 'update', 'delete'];
-	} else if($current_role === 'editor') {
-		$permissions = ['create', 'read', 'update'];
-	} else if($current_role === 'author') {
-		$permissions = ['create', 'read'];
-	} else if($current_role === 'contributor') {
-		$permissions = ['create'];
+$permission->defineRule('ieraksts', function($current_role) {
+	if($current_role === 'admins') {
+		$atļaujas = ['izveidot', 'lasīt', 'labot', 'dzēst'];
+	} else if($current_role === 'redaktors') {
+		$atļaujas = ['izveidot', 'lasīt', 'labot'];
+	} else if($current_role === 'autors') {
+		$atļaujas = ['izveidot', 'lasīt'];
+	} else if($current_role === 'līdzstrādnieks') {
+		$atļaujas = ['izveidot'];
 	} else {
-		$permissions = [];
+		$atļaujas = [];
 	}
-	return $permissions;
+	return $atļaujas;
 });
 Flight::set('permission', $permission);
 ```
 
-Tad kaut kur kontrolētājā...
+Tad kaut kur kontrolierī...
 
 ```php
-class PostController {
-	public function create() {
-		$permission = Flight::get('permission');
-		if ($permission->can('post.create')) {
-			// darīt kaut ko
+class IerakstaKontrolieris {
+	public function izveidot() {
+		$atļauja = Flight::get('permission');
+		if ($atļauja->can('ieraksts.izveidot')) {
+			// dari kaut ko
 		} else {
-			// darīt kaut ko citu
+			// dari ko citu
 		}
 	}
 }
 ```
 
-## Piesaistīšanas atkarības
-Jūs varat piesaistīt atkarības cietumā, kas nosaka atļaujas. Tas ir noderīgi, ja jums ir kāda tumbiņa, id vai jebkura cita datu punkta, pret kuru vēlaties pārbaudīt. Tas pats darbojas ar Klas->Metode calls, izņemot to, ka argumentus definējat metode.
+## Injicēt atkarības
+Jūs varat injicēt atkarības closure, kas definē atļaujas. Tas ir noderīgi, ja jums ir kāda veida pārslēgšana, ID vai jebkura cita dati, pret kuriem vēlaties pārbaudīt. Tas pats attiecas uz Klases->Metodes zvana veidiem, izņemot to, ka argumentus definējat metodē.
 
-### Tumbiņas
+### Closure
 
 ```php
-$Permission->defineRule('order', function(string $current_role, MyDependency $MyDependency = null) {
+$Permission->defineRule('pasūtījums', function(string $current_role, MyDependency $MyDependency = null) {
 	// ... kods
 });
 
-// jūsu kontrolētāja failā
-public function createOrder() {
+// jūsu kontroliera failā
+public function izveidotPasūtījumu() {
 	$MyDependency = Flight::myDependency();
-	$permission = Flight::get('permission');
-	if ($permission->can('order.create', $MyDependency)) {
-		// darīt kaut ko
+	$atļauja = Flight::get('permission');
+	if ($atļauja->can('pasūtījums.izveidot', $MyDependency)) {
+		// dari kaut ko
 	} else {
-		// darīt kaut ko citu
+		// dari ko citu
 	}
 }
 ```
@@ -120,81 +122,80 @@ public function createOrder() {
 ### Klases
 
 ```php
-namespace MyApp;
+namespace ManLietotne;
 
-class Permissions {
+class Atļaujas {
 
-	public function order(string $current_role, MyDependency $MyDependency = null) {
+	public function pasūtījums(string $current_role, MyDependency $MyDependency = null) {
 		// ... kods
 	}
 }
 ```
 
-## Saīsinājums lai iestatītu atļaujas ar klasēm
-Jūs varat izmantot arī klases, lai definētu savas atļaujas. Tas ir noderīgi, ja jums ir daudz atļauju, un jūs vēlaties saglabāt savu kodu tīru. Jūs varat darīt kaut ko līdzīgu:
-
+## Saīsinājums, lai iestatītu atļaujas ar klasēm
+Jūs varat izmantot arī klases, lai definētu savas atļaujas. Tas ir noderīgi, ja jums ir daudz atļauju, un vēlaties uzturēt savu kodu tīru. Jūs varat darīt kaut ko tādu kā šis:
 ```php
 <?php
 
-// starta kods
+// palaistāmais kods
 $Permissions = new \flight\Permission($current_role);
-$Permissions->defineRule('order', 'MyApp\Permissions->order');
+$Permissions->defineRule('pasūtījums', 'ManLietotne\Atļaujas->pasūtījums');
 
 // myapp/Permissions.php
-namespace MyApp;
+namespace ManLietotne;
 
-class Permissions {
+class Atļaujas {
 
-	public function order(string $current_role, int $user_id) {
-		// Pieņemsim, ka esat to uzstādījuši iepriekš
+	public function pasūtījums(string $current_role, int $lietotāja_id) {
+		// Asumējot, ka šis ir iestatīts iepriekš
 		/** @var \flight\database\PdoWrapper $db */
 		$db = Flight::db();
-		$allowed_permissions = [ 'read' ]; // ikviens var apskatīt pasūtījumu
-		if($current_role === 'manager') {
-			$allowed_permissions[] = 'create'; // vadītāji var veidot pasūtījumus
+		$atļautās_atļaujas = [ 'lasīt' ]; // ikviens var skatīties pasūtījumu
+		if($current_role === 'menedžeris') {
+			$atļautās_atļaujas[] = 'izveidot'; // vadītāji var izveidot pasūtījumus
 		}
-		$some_special_toggle_from_db = $db->fetchField('SELECT some_special_toggle FROM settings WHERE id = ?', [ $user_id ]);
-		if($some_special_toggle_from_db) {
-			$allowed_permissions[] = 'update'; // ja lietotājam ir īpaša slīdera, viņi var atjaunināt pasūtījumus
+		$dažs īpašs_tētis_no_db = $db->fetchField('SELECT dažs_īpašs_tētis FROM iestatījumi WHERE id = ?', [ $lietotāja_id ]);
+		if($dažs_īpašs_tētis_no_db) {
+			$atļautās_atļaujas[] = 'labot'; // Ja lietotājam ir īpaša tētis, viņi var atjaunināt pasūtījumus
 		}
-		if($current_role === 'admin') {
-			$allowed_permissions[] = 'delete'; // administratori var dzēst pasūtījumus
+		if($current_role === 'admins') {
+			$atļautās_atļaujas[] = 'dzēst'; // administratori var dzēst pasūtījumus
 		}
-		return $allowed_permissions;
+		return $atļautās_atļaujas;
 	}
 }
 ```
-Lieliskā daļa ir tā, ka ir arī saīsinājums, ko varat izmantot (kas var tikt kešota!), kur jūs tikai sakāt atļauju klasei atspoguļot visus metodus klasē par atļaujām. Tāpēc, ja jums ir metode ar nosaukumu `order()` un metode ar nosaukumu `company()`, šie automātiski tiks atspoguļoti, tāpēc jūs varat vienkārši izpildīt `$Permissions->has('order.read')` vai `$Permissions->has('company.read')` tas strādās. Definēšana šī ir ļoti sarežģīta, tāpēc palieciet līdzi šeit. Jums vienkārši jāizdara šādi:
+Cool daļa ir tāda, ka ir arī saīsinājums, ko varat izmantot (kas var būt arī kešēta!!!), kur vienkārši pateiksit atļauju klasei atkartot visus metodus klasē. Tāpēc, ja ir metode ar nosaukumu `pasūtījums()` un metode ar nosaukumu `uzņēmums()`, šīs automātiski tiks atkartotas, lai jūs varētu vienkārši izpildīt `$Permissions->has('pasūtījums.lasīt')` vai `$Permissions->has('uzņēmums.lasīt')` un tas strādās. To definēt ir ārkārtīgi grūti, tāpēc palieciet šeit kopā ar mani. Jums vienkārši jāizdara šādi:
 
-Izveidojiet atļauju klasi, kuru vēlaties grupēt kopā.
+Izveidojiet atļauju klases grupēšanai.
 ```php
-class MyPermissions {
-	public function order(string $current_role, int $order_id = 0): array {
+class ManasAtļaujas {
+	public function pasūtījums(string $current_role, int $pasūtījuma_id = 0): array {
 		// kods, lai noteiktu atļaujas
-		return $permissions_array;
+		return $atļaujas_masīvs;
 	}
 
-	public function company(string $current_role, int $company_id): array {
+	public function uzņēmums(string $current_role, int $uzņēmuma_id): array {
 		// kods, lai noteiktu atļaujas
-		return $permissions_array;
+		return $atļaujas_masīvs;
 	}
 }
 ```
 
-Tad padariet atļaujas atpazīstamas, izmantojot šo bibliotēku.
+Tad padarīt atļaujas atrodamas, izmantojot šo bibliotēku.
 
 ```php
-$Permissions = new \flight\Permission($current_role);
-$Permissions->defineRulesFromClassMethods(MyApp\Permissions::class);
-Flight::set('permissions', $Permissions);
+$Atļaujas = new \flight\Permission($current_role);
+$Atļaujas->defineRulesFromClassMethods(ManasAtļaujas::class);
+Flight::set('permissions', $Atļaujas);
 ```
 
-Visbeidzot, izsauciet atļauju savā kodolā, lai pārbaudītu, vai lietotājam ir atļauts veikt noteiktu atļauju.
+Visbeidzot, zvaniet atļaujai savā kodā, lai pārbaudītu, vai lietotājam ir atļauts veikt noteiktu atļauju.
 
 ```php
-class SomeController {
-	public function createOrder() {
-		if(Flight::get('permissions')->can('order.create') === false) {
+class DažsKontrolieris {
+	public function izveidotPasūtījumu() {
+		if(Flight::get('permissions')->can('pasūtījums.izveidot') === false) {
 			die('Jums nav atļauts izveidot pasūtījumu. Atvainojiet!');
 		}
 	}
@@ -203,20 +204,21 @@ class SomeController {
 
 ### Kešošana
 
-Lai iespējotu kešošanu, skatiet vienkāršo [wruczak/phpfilecache](https://docs.flightphp.com/awesome-plugins/php-file-cache) bibliotēku. Piemērs, kā to iespējot, ir tālāk.
+Lai iespējotu kešošanu, skatiet vienkāršo [wruczak/phpfilecache](https://docs.flightphp.com/awesome-plugins/php-file-cache) bibliotēku. Zemāk ir piemērs, kā iespējot to.
 ```php
 
-// šis $app var būt jūsu koda daļa vai
-// jūs vienkārši varat padot null, un tas 
-// izvilkts no Flight::app() konstruktorā
+// šis $app var būt daļa no jūsu koda vai
+// varat vienkārši padot null, un tas tiks iegūts
+// no Flight::app() konstruktorā
 $app = Flight::app();
 
-// Pašreiz tas akceptē tikai faila kešu. Turpmāk var viegli
-// pievienot citus
-$Cache = new Wruczek\PhpFileCache\PhpFileCache;
+// Pašlaik tas pieņem šo vienumu kā failu kešu. Citus var viegli
+// pievienot nākotnē. 
+$Kešatmiņa = new Wruczek\PhpFailaKešatmiņa\PhpFailaKešatmiņa;
 
-$Permissions = new \flight\Permission($current_role, $app, $Cache);
-$Permissions->defineRulesFromClassMethods(MyApp\Permissions::class, 3600); // 3600 ir cik daudz sekunžu kešot tam. Atstājiet to atslēgtu, ja nevēlaties lietot kešošanu
+$Atļaujas = new \flight\Permission($current_role, $app, $Kešatmiņa);
+$Atļaujas->defineRulesFromClassMethods(ManasAtļaujas::class, 3600); // 3600 ir cik daudz sekundes to kešot. Atstājiet to uz neatcelšanu
 ```
 
-Un jūs esat gatavi!
+Un dodieties!
+

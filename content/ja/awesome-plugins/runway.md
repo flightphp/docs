@@ -1,51 +1,53 @@
 # ランウェイ
 
-ランウェイは、Flightアプリケーションを管理するのに役立つCLIアプリケーションです。コントローラを生成したり、すべてのルートを表示したりすることができます。このライブラリは優れた[adhocore/php-cli](https://github.com/adhocore/php-cli)ライブラリに基づいています。
+ランウェイはCLIアプリケーションで、Flightアプリケーションの管理を支援します。コントローラを生成したり、すべてのルートを表示したりすることができます。優れた[adhocore/php-cli](https://github.com/adhocore/php-cli)ライブラリに基づいています。
+
+[こちらをクリック](https://github.com/flightphp/runway)して、コードを表示してください。
 
 ## インストール
 
-Composerでインストールしてください。
+Composerを使用してインストールしてください。
 
 ```bash
 composer require flightphp/runway
 ```
 
-## 基本的な設定
+## 基本設定
 
-ランウェイを初めて実行すると、セットアッププロセスを実行し、プロジェクトのルートに`.runway.json`設定ファイルを作成します。このファイルには、ランウェイが正しく動作するために必要ないくつかの設定が含まれます。
+ランウェイを実行する最初の回は、セットアッププロセスを進め、プロジェクトのルートに`.runway.json`構成ファイルを作成します。このファイルには、ランウェイが正しく動作するために必要ないくつかの構成が含まれています。
 
 ## 使用法
 
-ランウェイには、Flightアプリケーションを管理するためのいくつかのコマンドがあります。ランウェイの使用方法には簡単な2つの方法があります。
+ランウェイには、Flightアプリケーションを管理するために使用できる複数のコマンドがあります。ランウェイを使用する方法は2つあります。
 
 1. スケルトンプロジェクトを使用している場合、プロジェクトのルートから `php runway [command]` を実行できます。
-1. Composer経由でインストールされたパッケージとしてRunwayを使用している場合、プロジェクトのルートから `vendor/bin/runway [command]` を実行できます。
+1. Composerを介してインストールされたパッケージとしてRunwayを使用している場合、プロジェクトのルートから `vendor/bin/runway [command]` を実行できます。
 
-どんなコマンドに対しても、`--help`フラグを渡すとコマンドの使用方法についての詳細情報を取得できます。
+任意のコマンドに対して、`--help`フラグを渡すと、そのコマンドの使用方法に関するより詳細な情報を取得できます。
 
 ```bash
 php runway routes --help
 ```
 
-以下にいくつかの例を示します:
+以下はいくつかの例です。
 
-### コントローラの生成
+### コントローラを生成する
 
-`.runway.json`ファイルの設定に基づいて、デフォルトの場所にコントローラを `app/controllers/`ディレクトリに生成します。
+`.runway.json`ファイルの構成に基づいて、デフォルトの場所は `app/controllers/` ディレクトリにコントローラを生成します。
 
 ```bash
 php runway make:controller MyController
 ```
 
-### Active Recordモデルの生成
+### アクティブレコードモデルを生成する
 
-`.runway.json`ファイルの設定に基づいて、デフォルトの場所にコントローラを `app/records/`ディレクトリに生成します。
+`.runway.json`ファイルの構成に基づいて、デフォルトの場所は `app/records/` ディレクトリにコントローラを生成します。
 
 ```bash
 php runway make:record users
 ```
 
-たとえば、`users`テーブルが次のスキーマを持っている場合: `id`, `name`, `email`, `created_at`, `updated_at`、次のようなファイルが`app/records/UserRecord.php`に作成されます:
+たとえば、次のスキーマを持つ `users` テーブルがある場合：`id`、`name`、`email`、`created_at`、`updated_at`、`app/records/UserRecord.php` ファイルに類似したファイルが作成されます：
 
 ```php
 <?php
@@ -55,7 +57,7 @@ declare(strict_types=1);
 namespace app\records;
 
 /**
- * ユーザーテーブル用のActiveRecordクラス.
+ * ユーザーテーブルのアクティブレコードクラス。
  * @link https://docs.flightphp.com/awesome-plugins/active-record
  * 
  * @property int $id
@@ -63,13 +65,13 @@ namespace app\records;
  * @property string $email
  * @property string $created_at
  * @property string $updated_at
- * // リレーションシップが定義されたら、ここに関係を追加することもできます
- * @property CompanyRecord $company リレーションシップの例
+ * // 関係を定義した場合、ここに関係を追加できます
+ * @property CompanyRecord $company 関係の例
  */
 class UserRecord extends \flight\ActiveRecord
 {
     /**
-     * @var array $relations モデルの関係性を設定します
+     * @var array $relations モデルの関係を設定します
      *   https://docs.flightphp.com/awesome-plugins/active-record#relationships
      */
     protected array $relations = [];
@@ -85,31 +87,31 @@ class UserRecord extends \flight\ActiveRecord
 }
 ```
 
-### すべてのルートを表示
+### すべてのルートを表示する
 
-Flightに現在登録されているすべてのルートを表示します。
+登録されているすべてのFlightのルートを表示します。
 
 ```bash
 php runway routes
 ```
 
-特定のルートのみ表示したい場合は、フラグを渡してルートをフィルタリングできます。
+特定のルートのみを表示したい場合、フラグを渡してルートをフィルタリングできます。
 
 ```bash
-# GETリクエストのみ表示
+# GETルートのみを表示
 php runway routes --get
 
-# POSTリクエストのみ表示
+# POSTルートのみを表示
 php runway routes --post
 
-# その他
+# など
 ```
 
 ## ランウェイのカスタマイズ
 
-Flight向けのパッケージを作成するか、プロジェクトに独自のカスタムコマンドを追加したい場合は、プロジェクト/パッケージ用に `src/commands/`、 `flight/commands/`、 `app/commands/`、または `commands/` ディレクトリを作成してください。
+Flight向けのパッケージを作成しているか、プロジェクトに独自のカスタムコマンドを追加したい場合は、プロジェクト/パッケージ向けに `src/commands/`、`flight/commands/`、`app/commands/`、または `commands/` ディレクトリを作成してください。
 
-コマンドを作成するには、 `AbstractBaseCommand`クラスを拡張し、`__construct`メソッドと最低限`execute`メソッドを実装します。
+コマンドを作成するには、`AbstractBaseCommand`クラスを拡張し、`__construct`メソッドと`execute`メソッドを最低限実装します。
 
 ```php
 <?php
@@ -123,16 +125,16 @@ class ExampleCommand extends AbstractBaseCommand
 	/**
      * コンストラクタ
      *
-     * @param array<string,mixed> $config .runway-config.jsonからのJSON設定
+     * @param array<string,mixed> $config .runway-config.jsonからのJSON構成
      */
     public function __construct(array $config)
     {
-        parent::__construct('make:example', 'ドキュメントの例を作成します', $config);
+        parent::__construct('make:example', 'ドキュメントの例を作成', $config);
         $this->argument('<funny-gif>', '面白いGIFの名前');
     }
 
 	/**
-     * 関数の実行
+     * 関数を実行
      *
      * @return void
      */
@@ -140,7 +142,7 @@ class ExampleCommand extends AbstractBaseCommand
     {
         $io = $this->app()->io();
 
-		$io->info('例を作成中...');
+		$io->info('例を作成します...');
 
 		// ここで何かを実行
 

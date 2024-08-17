@@ -1,10 +1,10 @@
 # ラッテ
 
-ラッテは非常に使いやすく、TwigやSmartyよりもPHPの構文に近いフル機能のテンプレーティングエンジンです。また、独自のフィルタや関数を追加することも非常に簡単です。
+[ラッテ](https://latte.nette.org/en/guide) は、非常に使いやすく、Twig や Smarty よりも PHP 構文に近いテンプレートエンジンです。フル機能を備えており、独自のフィルタや関数を追加することも非常に簡単です。
 
 ## インストール
 
-Composerを使用してインストールしてください。
+Composer を使用してインストールします。
 
 ```bash
 composer require latte/latte
@@ -12,7 +12,7 @@ composer require latte/latte
 
 ## 基本的な設定
 
-始めるためのいくつかの基本的な設定オプションがあります。詳細については、[ラッテのドキュメント](https://latte.nette.org/en/guide)をご覧ください。
+始めるための基本的な設定オプションがあります。[ラッテドキュメント](https://latte.nette.org/en/guide) で詳細を確認できます。
 
 ```php
 
@@ -24,21 +24,20 @@ $app = Flight::app();
 
 $app->register('latte', LatteEngine::class, [], function(LatteEngine $latte) use ($app) {
 
-	// ここは、Latteがテンプレートをキャッシュして処理を高速化する場所です
-	// Latteの素晴らしい点の1つは、テンプレートを変更したときに
-	// キャッシュを自動的にリフレッシュするということです！
+	// ここがラッテがテンプレートをキャッシュして処理を高速化する場所です
+	// ラッテの素晴らしい点の1つは、テンプレートを変更すると自動的にキャッシュを更新します！
 	$latte->setTempDirectory(__DIR__ . '/../cache/');
 
-	// Latteに、ビューのルートディレクトリがどこにあるかを伝えます。
-	// $app->get('flight.views.path')はconfig.phpファイルで設定されています
-	//   または単純に次のようにすることもできます `__DIR__ . '/../views/'`
+	// ビューのルートディレクトリを示す Latte の設定
+	// $app->get('flight.views.path') は config.php ファイルで設定されています
+	//   または `__DIR__ . '/../views/'` のようなものも行えます
 	$latte->setLoader(new \Latte\Loaders\FileLoader($app->get('flight.views.path')));
 });
 ```
 
-## シンプルなレイアウト例
+## シンプルなレイアウトの例
 
-こちらはレイアウトファイルの簡単な例です。これは他のすべてのビューを包むために使用されるファイルです。
+以下はレイアウトファイルのシンプルな例です。このファイルは他のすべてのビューを囲むために使用されます。
 
 ```html
 <!-- app/views/layout.latte -->
@@ -51,11 +50,11 @@ $app->register('latte', LatteEngine::class, [], function(LatteEngine $latte) use
 	<body>
 		<header>
 			<nav>
-				<!-- ここにあなたのナビゲーション要素を追加 -->
+				<!-- ここにナビゲーション要素が入ります -->
 			</nav>
 		</header>
 		<div id="content">
-			<!-- これが魔法の部分です -->
+			<!-- これが魔法です -->
 			{block content}{/block}
 		</div>
 		<div id="footer">
@@ -65,21 +64,21 @@ $app->register('latte', LatteEngine::class, [], function(LatteEngine $latte) use
 </html>
 ```
 
-そして、このコンテンツブロック内にレンダリングされるファイルがあるとします:
+そして、コンテンツブロック内でレンダリングされるファイルがあります:
 
 ```html
 <!-- app/views/home.latte -->
-<!-- これはこのファイルが layout.latte ファイルの "内部"であることをラッテに伝えます -->
+<!-- このファイルが layout.latte ファイル内にあることを Latte に伝えます -->
 {extends layout.latte}
 
-<!-- これは、レイアウト内のコンテンツブロック内にレンダリングされるコンテンツです -->
+<!-- レイアウト内のコンテンツブロック内に表示されるコンテンツです -->
 {block content}
 	<h1>ホームページ</h1>
-	<p>私のアプリへようこそ！</p>
+	<p>アプリへようこそ！</p>
 {/block}
 ```
 
-その後、この機能やコントローラー内でこれをレンダリングする場合、次のように行います:
+次に、この内容を関数またはコントローラ内でレンダリングする際には、次のように行います:
 
 ```php
 // シンプルなルート
@@ -89,7 +88,7 @@ Flight::route('/', function () {
 	]);
 });
 
-// またはコントローラーを使用している場合
+// もしくはコントローラを使用している場合
 Flight::route('/', [HomeController::class, 'index']);
 
 // HomeController.php
@@ -104,4 +103,4 @@ class HomeController
 }
 ```
 
-ラッテを最大限に活用する方法の詳細については、[ラッテのドキュメント](https://latte.nette.org/en/guide)をご覧ください!
+ラッテを最大限に活用するための詳細については、[Latte Documentation](https://latte.nette.org/en/guide) を参照してください。

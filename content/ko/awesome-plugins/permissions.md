@@ -1,28 +1,31 @@
-# FlightPHP/권한
+# 플라이트PHP/권한
 
-앱 내에 여러 역할이 있고 각 역할마다 약간 다른 기능이 있는 경우에 사용할 수 있는 권한 모듈입니다. 이 모듈을 사용하면 각 역할에 대한 권한을 정의한 다음 현재 사용자가 특정 페이지에 액세스하거나 특정 작업을 수행할 수 있는지 확인할 수 있습니다.
+이것은 여러 역할이 있는 앱에서 사용할 수있는 권한 모듈입니다. 각 역할마다 약간 다른 기능이 있는 경우 사용할 수 있습니다. 이 모듈을 사용하면 각 역할에 대한 권한을 정의한 다음 현재 사용자가 특정 페이지에 액세스하거나 특정 작업을 수행할 수 있는 권한이 있는지 확인할 수 있습니다.
+
+[여기](https://github.com/flightphp/permissions)를 클릭하여 GitHub의 저장소를 확인하십시오.
 
 설치
 -------
-`composer require flightphp/permissions`를 실행하고 시작하세요!
+`composer require flightphp/permissions`를 실행하면 됩니다!
 
 사용법
 -------
-먼저 권한을 설정해야 하며, 앱에 권한이 무엇을 의미하는지 알려주어야 합니다. 최종적으로 `$Permissions->has()`, `->can()`, 또는 `is()`를 사용하여 권한을 확인할 수 있습니다. `has()`와 `can()`은 기능이 동일하지만 코드를 보다 읽기 쉽게 만들기 위해 다르게 명명되었습니다.
+먼저 권한을 설정해야하고, 앱에 권한이 무엇을 의미하는지 알려야합니다. 최종적으로 `$Permissions->has()`, `->can()`, 또는 `is()`를 사용하여 권한을 확인할 수 있습니다. `has()`와 `can()`은 기능적으로 동일하지만 코드를 더 읽기 쉽게 만들기 위해 이름을 다르게 지었습니다.
 
 ## 기본 예제
 
-앱 내에서 사용자가 로그인되어 있는지 확인하는 기능이 있다고 가정해 보겠습니다. 다음과 같이 권한 오브젝트를 생성할 수 있습니다:
+앱에서 사용자가 로그인되어 있는지 확인하는 기능이있는 경우를 가정해 보겠습니다. 다음과 같이 권한 개체를 생성할 수 있습니다.
 
 ```php
 // index.php
 require 'vendor/autoload.php';
 
-// 어떤 코드
+// 일부 코드
 
-// 아마도 현재 역할을 나타내는 사람의 현재 역할이 무엇인지 알려주는 코드가 있을 것입니다.
-// 아마도 세션 변수에서 현재 역할을 가져오는 코드가 있을 것입니다.
-// 누군가 로그인한 후에 세션에 정의되므로 그렇지 않으면 'guest' 또는 'public' 역할을 가질 것입니다.
+// 그런 다음 현재 사용자의 현재 역할을 알려주는 코드가 있을 것입니다.
+// 아마도 현재 역할을 가져오는 코드가 있을 것입니다.
+// 현재 역할을 정의하는 세션 변수에서 현재 역할을 가져오는 경우가 일반적일 것입니다.
+// 그렇게하면 누군가 로그인한 후가 아니면 'guest' 또는 'public' 역할이있을 것입니다.
 $current_role = 'admin';
 
 // 권한 설정
@@ -31,21 +34,21 @@ $permission->defineRule('loggedIn', function($current_role) {
 	return $current_role !== 'guest';
 });
 
-// 이 객체를 어딘가에 올바르게 유지하는 것이 좋습니다.
+// 이 개체를 Flight 어딘가에 지속적으로 저장하는 것이 좋습니다
 Flight::set('permission', $permission);
 ```
 
-그런 다음, 컨트롤러 어딘가에 다음과 같은 코드가 있을 수 있습니다.
+그런 다음 컨트롤러 어딘가에 다음과 같은 것이있을 수 있습니다.
 
 ```php
 <?php
 
-// 어떤 컨트롤러
+// 일부 컨트롤러
 class SomeController {
 	public function someAction() {
 		$permission = Flight::get('permission');
 		if ($permission->has('loggedIn')) {
-			// 무언가 수행
+			// 어떤 작업 수행
 		} else {
 			// 다른 작업 수행
 		}
@@ -53,8 +56,8 @@ class SomeController {
 }
 ```
 
-또한 이를 사용하여 앱에서 특정 작업을 수행할 수 있는지 확인할 수도 있습니다.
-예를 들어, 사용자가 소프트웨어에서 게시물을 상호작용할 수 있는 방법이 있는 경우 특정 작업을 수행할 수 있는지 확인할 수 있습니다.
+또한이를 사용하여 응용 프로그램에서 작업을 수행할 수 있는 권한이 있는지 추적할 수도 있습니다.
+예를 들어, 소프트웨어에서 게시물 작성과 상호 작용할 수있는 방법이있는 경우 특정 작업을 수행할 수 있는지 확인할 수 있습니다.
 
 ```php
 $current_role = 'admin';
@@ -78,14 +81,14 @@ $permission->defineRule('post', function($current_role) {
 Flight::set('permission', $permission);
 ```
 
-그런 다음, 컨트롤러 어딘가에...
+그런 다음 컨트롤러 어딘가에...
 
 ```php
 class PostController {
 	public function create() {
 		$permission = Flight::get('permission');
 		if ($permission->can('post.create')) {
-			// 무언가 수행
+			// 어떤 작업 수행
 		} else {
 			// 다른 작업 수행
 		}
@@ -94,7 +97,7 @@ class PostController {
 ```
 
 ## 의존성 주입
-권한을 정의하는 클로저에 의존성을 주입할 수 있습니다. 이는 토글, ID 또는 확인할 데이터 등이 있는 경우 유용합니다. Class->Method 타입의 호출에 대해서도 동일하게 작동하며, 메소드에서 인수를 정의합니다.
+권한을 정의하는 클로저에 의존성을 주입할 수 있습니다. 확인하려는 일부 토글, ID 또는 기타 데이터 지점이 있는 경우 유용합니다. Class->Method 유형 호출의 경우 메서드에서 인수를 정의해야합니다.
 
 ### 클로저
 
@@ -103,12 +106,12 @@ $Permission->defineRule('order', function(string $current_role, MyDependency $My
 	// ... 코드
 });
 
-// 컨트롤러 파일에
+// 컨트롤러 파일에서
 public function createOrder() {
 	$MyDependency = Flight::myDependency();
 	$permission = Flight::get('permission');
 	if ($permission->can('order.create', $MyDependency)) {
-		// 무언가 수행
+		// 어떤 작업 수행
 	} else {
 		// 다른 작업 수행
 	}
@@ -128,9 +131,8 @@ class Permissions {
 }
 ```
 
-## 클래스로 권한 설정에 대한 바로 가기
-클래스를 사용하여 권한을 정의할 수도 있습니다. 많은 권한이 있는 경우 코드를 깔끔하게 유지하려면 유용합니다. 다음과 같이 수행할 수 있습니다:
-
+## 클래스로 권한 설정하는 바로 가기
+클래스를 사용하여 권한을 정의할 수도 있습니다. 많은 권한이있고 코드를 깔끔하게 유지하려는 경우 유용합니다. 다음과 같이 할 수 있습니다:
 ```php
 <?php
 
@@ -144,7 +146,7 @@ namespace MyApp;
 class Permissions {
 
 	public function order(string $current_role, int $user_id) {
-		// 미리 설정한 값을 가정합니다.
+		// 미리 설정한 것으로 가정합니다
 		/** @var \flight\database\PdoWrapper $db */
 		$db = Flight::db();
 		$allowed_permissions = [ 'read' ]; // 누구나 주문을 볼 수 있음
@@ -153,33 +155,33 @@ class Permissions {
 		}
 		$some_special_toggle_from_db = $db->fetchField('SELECT some_special_toggle FROM settings WHERE id = ?', [ $user_id ]);
 		if($some_special_toggle_from_db) {
-			$allowed_permissions[] = 'update'; // 사용자에게 특별 토글이 있으면 주문을 업데이트할 수 있음
+			$allowed_permissions[] = 'update'; // 사용자가 특별 토글을 가지고있으면 주문을 업데이트 할 수 있음
 		}
 		if($current_role === 'admin') {
-			$allowed_permissions[] = 'delete'; // 관리자는 주문을 삭제할 수 있음
+			$allowed_permissions[] = 'delete'; // 관리자는 주문을 삭제 할 수 있음
 		}
 		return $allowed_permissions;
 	}
 }
 ```
-위의 방법은 권한을 자동으로 매핑할 수 있는 바로 가기도 제공합니다(캐시도 가능합니다!). 따라서 `order()`와 `company()`와 같은 이름의 메소드가 있고, `$Permissions->has('order.read')` 또는 `$Permissions->has('company.read')`와 같이 실행할 수 있습니다. 이를 정의하는 것은 매우 어렵습니다, 그러므로 이 부분을 주목하세요. 이렇게 수행하는 것이 좋습니다:
+멋진 부분은 클래스에 대해 모든 메서드를 권한에 매핑하는 바로 가기가 있으며 (캐시 가능함!!!), 이렇게하면 `$Permissions->has('order.read')` 또는 `$Permissions->has('company.read')`를 실행하여 작동됩니다. 이를 정의하는 것은 매우 어렵기 때문에 여기에 머무르십시오. 그냥 이렇게하면됩니다:
 
-그룹화하고자 하는 권한 클래스를 생성합니다.
+그룹화하려는 권한 클래스를 작성합니다.
 ```php
 class MyPermissions {
 	public function order(string $current_role, int $order_id = 0): array {
-		// 권한을 결정하는 코드
+		// 권한을 확인하는 코드
 		return $permissions_array;
 	}
 
 	public function company(string $current_role, int $company_id): array {
-		// 권한을 결정하는 코드
+		// 권한을 확인하는 코드
 		return $permissions_array;
 	}
 }
 ```
 
-그런 다음, 이 라이브러리를 사용하여 권한을 찾을 수 있도록 만듭니다.
+그런 다음이 라이브러리를 사용하여 권한을 발견할 수 있도록 합니다.
 
 ```php
 $Permissions = new \flight\Permission($current_role);
@@ -187,7 +189,7 @@ $Permissions->defineRulesFromClassMethods(MyApp\Permissions::class);
 Flight::set('permissions', $Permissions);
 ```
 
-마지막으로, 코드베이스에서 사용자가 지정된 권한을 수행할 수 있는지 확인하려면 권한을 호출하세요.
+마지막으로 코드베이스에서 사용자가 특정 권한을 수행할 수 있는지 확인하려면 권한을 호출하십시오.
 
 ```php
 class SomeController {
@@ -201,19 +203,16 @@ class SomeController {
 
 ### 캐싱
 
-캐싱을 활성화하려면 간단한 [wruczak/phpfilecache](https://docs.flightphp.com/awesome-plugins/php-file-cache) 라이브러리를 참조하십시오. 이를 활성화하는 예시는 다음과 같습니다.
+캐싱을 활성화하려면 간단한 [wruczak/phpfilecache](https://docs.flightphp.com/awesome-plugins/php-file-cache) 라이브러리를 참조하십시오. 아래에 캐싱을 활성화하는 예제가 있습니다.
 ```php
 
-// 이 $app은 귀하의 코드의 일부가 될 수도 있으며
-// null을 전달하고 생성자에서 Flight::app()을 가져올 수도 있습니다.
+// 이 $app은 귀하의 코드의 일부일 수 있거나
+// null을 전달하여 클래스 외부에서 가져올 수 있습니다.
 $app = Flight::app();
 
-// 현재는 이 파일 캐시 설정을 수락합니다. 나중에 다른 것을 손쉽게
-// 추가할 수 있습니다. 
+// 현재는이 파일 캐시를 사용합니다. 나중에 다른 캐시를 쉽게 추가할 수 있습니다.
 $Cache = new Wruczek\PhpFileCache\PhpFileCache;
 
 $Permissions = new \flight\Permission($current_role, $app, $Cache);
-$Permissions->defineRulesFromClassMethods(MyApp\Permissions::class, 3600); // 이것은 이를 얼마나 오랫동안 캐시할지를 나타냅니다. 캐싱을 사용하지 않으려면 이 부분을 제거하세요
+$Permissions->defineRulesFromClassMethods(MyApp\Permissions::class, 3600); // 3600은 캐시로 저장되는 시간(초)입니다. 캐시를 사용하지 않으려면 이것을 뺍니다
 ```
-
-그리고 시작하세요!

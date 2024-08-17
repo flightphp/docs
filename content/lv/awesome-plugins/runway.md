@@ -1,10 +1,12 @@
-# Lidmašīna
+# Lidmašīnas
 
-Lidmašīna ir CLI lietojumprogramma, kas palīdz pārvaldīt jūsu Flight lietojumprogrammas. Tā var ģenerēt kontrolierus, parādīt visus maršrutus un daudz ko citu. Tā balstās uz lielisko [adhocore/php-cli](https://github.com/adhocore/php-cli) bibliotēku.
+Lidmašīnas ir CLI lietotne, kas palīdz pārvaldīt jūsu Flight lietojumprogrammas. Tā var ģenerēt kontrolierus, parādīt visus maršrutus un vairāk. Tā balstīta uz lielisko [adhocore/php-cli](https://github.com/adhocore/php-cli) bibliotēku.
+
+Uzklikšķiniet [šeit](https://github.com/flightphp/runway), lai skatītu kodu.
 
 ## Instalēšana
 
-Instalējiet ar komponistu.
+Instalējiet to ar komponistu.
 
 ```bash
 composer require flightphp/runway
@@ -12,16 +14,16 @@ composer require flightphp/runway
 
 ## Pamata konfigurācija
 
-Pirmo reizi palaistot Lidmašīnu, tā pavadīs jūs cauri uzstādīšanas procesam un izveidos `.runway.json` konfigurācijas failu jūsu projekta saknē. Šajā failā būs iekļautas dažas nepieciešamās konfigurācijas, lai Lidmašīna varētu pareizi darboties.
+Pirmo reizi palaižot Lidmašīnas, tā vadīs jūs caur iestatīšanas procesu un izveidos `.runway.json` konfigurācijas failu jūsu projekta saknē. Šajā failā būs dažas nepieciešamās konfigurācijas, lai Lidmašīnas pareizi darbotos.
 
-## Lietošana
+## Lietojums
 
-Lidmašīnai ir vairākas komandas, ar kurām varat pārvaldīt savu Flight lietojumprogrammu. Ir divi vienkārši veidi, kā izmantot Lidmašīnu.
+Lidmašīnā ir vairākas komandas, ar kurām varat pārvaldīt savu Flight lietojumprogrammu. Ir divi viegli veidi, kā izmantot Lidmašīnas.
 
-1. Ja izmantojat skeleta projektu, jūs varat palaist `php runway [komanda]` no projekta saknes.
-1. Ja izmantojat Lidmašīnu kā pakotni, ko instalējat ar komponistu, jūs varat palaist `vendor/bin/runway [komanda]` no projekta saknes.
+1. Ja izmantojat ietvaru projektu, varat izpildīt `php runway [komanda]` no savu projekta saknes.
+1. Ja izmantojat Lidmašīnas kā paketi, kas instalēts ar komponistu, varat izpildīt `vendor/bin/runway [komanda]` no savu projekta saknes.
 
-Jebkurai komandai varat norādīt `--help` karodziņu, lai iegūtu vairāk informācijas par komandas lietošanu.
+Lai iegūtu papildinformāciju par jebkuru komandu, jūs varat padot `--help` karodziņa.
 
 ```bash
 php runway routes --help
@@ -31,21 +33,21 @@ php runway routes --help
 
 ### Ģenerēt kontrolieri
 
-Pamatojoties uz konfigurāciju jūsu `.runway.json` failā, noklusējuma atrašanās vieta jums ģenerēs kontrolieri `app/controllers/` direktorijā.
+Balstoties uz konfigurāciju jūsu `.runway.json` failā, noklusējuma atrašanās vieta jums ģenerēs kontrolieri `app/controllers/` direktorijā.
 
 ```bash
-php runway make:controller MansKontrolieris
+php runway make:controller MyController
 ```
 
-### Ģenerēt aktīvās ieraksta modeļus
+### Ģenerēt aktīvās ierakstu modeles
 
-Pamatojoties uz konfigurāciju jūsu `.runway.json` failā, noklusējuma atrašanās vieta jums ģenerēs ierakstu modeļi `app/records/` direktorijā.
+Balstoties uz konfigurāciju jūsu `.runway.json` failā, noklusējuma atrašanās vieta jums ģenerēs kontrolieri `app/records/` direktorijā.
 
 ```bash
-php runway make:record lietotaji
+php runway make:record users
 ```
 
-Ja piemēram, jums ir `lietotaji` tabula ar šādu shēmu: `id`, `vārds`, `e-pasts`, `izveidots_pie`, `atjaunināts_pie`, fails līdzīgs sekojošajam tiks izveidots `app/records/UserRecord.php` failā:
+Ja, piemēram, ir `users` tabula ar sekojošu shēmu: `id`, `name`, `email`, `created_at`, `updated_at`, fails līdzīgs sekojošajam tiks izveidots `app/records/UserRecord.php` failā:
 
 ```php
 <?php
@@ -55,7 +57,7 @@ declare(strict_types=1);
 namespace app\records;
 
 /**
- * Aktīvā ieraksta klase lietotāju tabulai.
+ * ActiveRecord klase lietotāju tabulai.
  * @link https://docs.flightphp.com/awesome-plugins/active-record
  * 
  * @property int $id
@@ -63,20 +65,20 @@ namespace app\records;
  * @property string $email
  * @property string $created_at
  * @property string $updated_at
- * // šeit jūs varat pievienot attiecības, kad tās definē tas būs $relations masīvā
- * @property CompanyRecord $company Piemērs attiecībām
+ * // šeit jūs varat pievienot attiecības, kad tās definētas $relations masīvā
+ * @property CompanyRecord $company Attēlots attiecību piemērs
  */
 class UserRecord extends \flight\ActiveRecord
 {
     /**
-     * @var array $relations Iestatiet attiecības modelim
+     * @var array $relations Uzstādiet attiecības modeļim
      *   https://docs.flightphp.com/awesome-plugins/active-record#relationships
      */
     protected array $relations = [];
 
     /**
      * Konstruktors
-     * @param mixed $databaseConnection Datubāzes pieslēgums
+     * @param mixed $databaseConnection Datu bāzes savienojums
      */
     public function __construct($databaseConnection)
     {
@@ -93,7 +95,7 @@ Tas parādīs visus maršrutus, kas pašlaik ir reģistrēti ar Flight.
 php runway routes
 ```
 
-Ja vēlaties aplūkot tikai konkrētus maršrutus, jūs varat norādīt karodziņu, lai filtrētu maršrutus.
+Ja vēlaties skatīt tikai konkrētus maršrutus, jūs varat padot karodziņu, lai filtrētu maršrutus.
 
 ```bash
 # Parādīt tikai GET maršrutus
@@ -102,33 +104,33 @@ php runway routes --get
 # Parādīt tikai POST maršrutus
 php runway routes --post
 
-# utt.
+# u.c.
 ```
 
 ## Lidmašīnas pielāgošana
 
-Ja jūs veidojat pakotni Flight, vai vēlaties pievienot savas pielāgotās komandas savā projektā, to varat izdarīt, izveidojot `src/commands/`, `flight/commands/`, `app/commands/` vai `commands/` direktoriju savam projektam/pakotnei.
+Ja jūs izveidojat paketi Flight, vai vēlaties pievienot savas pielāgotas komandas savā projektā, to varat izdarīt, izveidojot `src/commands/`, `flight/commands/`, `app/commands/` vai `commands/` direktoriju savam projektam/paketei.
 
-Lai izveidotu komandu, vienkārši paplašiniet `AbstractBaseCommand` klasi un implementējiet vismaz `__construct` metodi un `execute` metodi.
+Lai izveidotu komandu, jums vienkārši jāpaplašina `AbstractBaseCommand` klase un jāimplementē vismaz `__construct` metode un `execute` metode.
 
 ```php
 <?php
 
 declare(strict_types=1);
 
-namespace lidosta\komandas;
+namespace flight\commands;
 
-class PiemēraKomanda paplašina AbstractBaseCommand
+class ExampleCommand extends AbstractBaseCommand
 {
-	/**
+    /**
      * Konstruktors
      *
      * @param array<string,mixed> $config JSON konfigurācija no .runway-config.json
      */
     public function __construct(array $config)
     {
-        parent::__construct('make:piemērs', 'Izveidot piemēru dokumentācijai', $config);
-        $this->argument('<jociņš-ar-jokiem>', 'Smejīgā gif attēla nosaukums');
+        parent::__construct('make:example', 'Izveidot piemēru dokumentācijai', $config);
+        $this->argument('<funny-gif>', 'Smaida GIF nosaukums');
     }
 
 	/**
@@ -136,17 +138,17 @@ class PiemēraKomanda paplašina AbstractBaseCommand
      *
      * @return void
      */
-    public function execute(string $kontrolieris)
+    public function execute(string $controller)
     {
         $io = $this->app()->io();
 
-		$io->info('Veido piemēru...');
+		$io->info('Izveido piemēru...');
 
-		// Dariet kaut ko šeit
-          		
+		// Kaut ko dariet šeit
+
 		$io->ok('Piemērs izveidots!');
 	}
 }
 ```
 
-Skatiet [adhocore/php-cli dokumentāciju](https://github.com/adhocore/php-cli), lai iegūtu vairāk informācijas par to, kā izveidot savas pielāgotas komandas savā Flight lietojumprogrammā!
+Skatiet [adhocore/php-cli Dokumentāciju](https://github.com/adhocore/php-cli), lai iegūtu vairāk informācijas par to, kā izveidot savas pielāgotas komandas savā Flight lietojumprogrammā!

@@ -1,19 +1,21 @@
 # Wruczek/PHP-File-Cache
 
-轻量、简单且独立的PHP内部文件缓存类
+輕巧，簡單且獨立的PHP文件緩存類
 
-**优势**
-- 轻巧、独立且简单
-- 所有代码都在一个文件中 - 没有多余的驱动程序。
-- 安全性 - 每个生成的缓存文件都有一个带有die的php头部，即使有人知道路径并且您的服务器配置不正确，也无法直接访问
-- 文档完善，经过测试
-- 通过flock正确处理并发
-- 支持PHP 5.4.0 - 7.1+
-- 在MIT许可下免费
+**優勢**
+- 輕巧，獨立且簡單
+- 所有代碼在一個文件中 - 沒有多餘的驅動程序。
+- 安全 - 每個生成的緩存文件都帶有帶有 die 的php頭部，即使有人知道路徑且您的服務器未正確配置，也無法直接訪問
+- 良好的文檔和測試
+- 通過 flock 正確處理並發
+- 支持 PHP 5.4.0 - 7.1+
+- 在 MIT 許可證下免費
 
-## 安装
+點擊[這裡](https://github.com/Wruczek/PHP-File-Cache)查看代碼。
 
-通过composer安装：
+## 安裝
+
+通過 composer 安裝：
 
 ```bash
 composer require wruczek/php-file-cache
@@ -21,40 +23,40 @@ composer require wruczek/php-file-cache
 
 ## 用法
 
-使用非常简单。
+使用非常簡單。
 
 ```php
 use Wruczek\PhpFileCache\PhpFileCache;
 
 $app = Flight::app();
 
-// 将存储缓存的目录传递给构造函数
+// 將緩存存儲的目錄傳遞給構造函數
 $app->register('cache', PhpFileCache::class, [ __DIR__ . '/../cache/' ], function(PhpFileCache $cache) {
 
-	// 确保只在生产模式下使用缓存
-	// ENVIRONMENT是在您的引导文件或应用程序其他位置设置的常量
+	// 這可以確保僅在生產模式下使用緩存
+	// ENVIRONMENT 是在您的啟動文件或應用程序的其他地方設置的常數
 	$cache->setDevMode(ENVIRONMENT === 'development');
 });
 ```
 
-然后您可以像这样在代码中使用：
+然后您可以像這樣在代碼中使用它：
 
 ```php
 
-// 获取缓存实例
+// 獲取緩存實例
 $cache = Flight::cache();
 $data = $cache->refreshIfExpired('simple-cache-test', function () {
-    return date("H:i:s"); // 返回要缓存的数据
-}, 10); // 10秒
+    return date("H:i:s"); // 返回要緩存的數據
+}, 10); // 10 秒
 
 // 或者
 $data = $cache->retrieve('simple-cache-test');
 if(empty($data)) {
 	$data = date("H:i:s");
-	$cache->store('simple-cache-test', $data, 10); // 10秒
+	$cache->store('simple-cache-test', $data, 10); // 10 秒
 }
 ```
 
-## 文档
+## 文檔
 
-访问[https://github.com/Wruczek/PHP-File-Cache](https://github.com/Wruczek/PHP-File-Cache) 获取完整文档，并确保查看[examples](https://github.com/Wruczek/PHP-File-Cache/tree/master/examples)文件夹。
+訪問[https://github.com/Wruczek/PHP-File-Cache](https://github.com/Wruczek/PHP-File-Cache)查看完整文檔，並確保您查看[examples](https://github.com/Wruczek/PHP-File-Cache/tree/master/examples)文件夾。

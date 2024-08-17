@@ -1,42 +1,44 @@
 # FlightPHP/Permisos
 
-Este es un módulo de permisos que se puede utilizar en tus proyectos si tienes múltiples roles en tu aplicación y cada rol tiene una funcionalidad un poco diferente. Este módulo te permite definir permisos para cada rol y luego verificar si el usuario actual tiene el permiso para acceder a una página específica o realizar una acción determinada.
+Se trata de un módulo de permisos que se puede utilizar en tus proyectos si tienes múltiples roles en tu aplicación y cada rol tiene una funcionalidad un poco diferente. Este módulo te permite definir permisos para cada rol y luego verificar si el usuario actual tiene el permiso para acceder a una página específica o realizar una acción determinada.
+
+Haz clic [aquí](https://github.com/flightphp/permissions) para acceder al repositorio en GitHub.
 
 Instalación
 -------
-¡Ejecuta `composer require flightphp/permissions` y estás listo para empezar!
+¡Ejecuta `composer require flightphp/permissions` y estás listo/a!
 
 Uso
 -------
-Primero necesitas configurar tus permisos, luego le indicas a tu aplicación qué significan los permisos. En última instancia, verificarás tus permisos con `$Permissions->has()`, `->can()` o `is()`. `has()` y `can()` tienen la misma funcionalidad, pero tienen nombres diferentes para que tu código sea más legible.
+Primero necesitas configurar tus permisos, luego le indicas a tu aplicación lo que significan los permisos. Finalmente verificarás tus permisos con `$Permissions->has()`, `->can()`, o `is()`. `has()` y `can()` tienen la misma funcionalidad, pero están nombrados de manera diferente para que tu código sea más legible.
 
 ## Ejemplo Básico
 
-Imaginemos que tienes una funcionalidad en tu aplicación que verifica si un usuario ha iniciado sesión. Puedes crear un objeto de permisos así:
+Imaginemos que tienes una función en tu aplicación que verifica si un usuario ha iniciado sesión. Puedes crear un objeto de permisos de esta manera:
 
 ```php
 // index.php
 require 'vendor/autoload.php';
 
-// algo de código
+// algún código
 
-// luego probablemente tienes algo que te dice cuál es el rol actual de la persona
-// probablemente tienes algo donde recuperas el rol actual
+// luego probablemente tengas algo que te diga cuál es el rol actual de la persona
+// probablemente tengas algo donde obtienes el rol actual
 // de una variable de sesión que lo define
-// después de que alguien inicie sesión, de lo contrario tendrán un rol 'invitado' o 'público'.
-$rol_actual = 'admin';
+// después de que alguien inicie sesión, de lo contrario tendrán un rol de 'invitado' o 'público'.
+$current_role = 'admin';
 
 // configurar permisos
-$permiso = new \flight\Permission($rol_actual);
-$permiso->defineRule('iniciadoSesion', function($rol_actual) {
-	return $rol_actual !== 'invitado';
+$permiso = new \flight\Permiso($current_role);
+$permiso->defineRegla('iniciadoSesion', function($current_role) {
+	return $current_role !== 'invitado';
 });
 
 // Probablemente querrás persistir este objeto en Flight en algún lugar
 Flight::set('permiso', $permiso);
 ```
 
-Luego en algún controlador, podrías tener algo como esto.
+Luego en un controlador en algún lugar, podrías tener algo como esto.
 
 ```php
 <?php
@@ -55,21 +57,22 @@ class AlgunControlador {
 ```
 
 También puedes usar esto para rastrear si tienen permiso para hacer algo en tu aplicación.
-Por ejemplo, si tienes una forma en la que los usuarios pueden interactuar con publicaciones en tu software, puedes verificar si tienen permiso para realizar ciertas acciones.
+Por ejemplo, si tienes una forma en la que los usuarios pueden interactuar con la publicación en tu software, puedes
+verificar si tienen permiso para realizar ciertas acciones.
 
 ```php
-$rol_actual = 'admin';
+$current_role = 'admin';
 
 // configurar permisos
-$permiso = new \flight\Permission($rol_actual);
-$permiso->defineRule('publicación', function($rol_actual) {
-	if($rol_actual === 'admin') {
+$permiso = new \flight\Permiso($current_role);
+$permiso->defineRegla('publicación', function($current_role) {
+	if($current_role === 'admin') {
 		$permisos = ['crear', 'leer', 'actualizar', 'eliminar'];
-	} else if($rol_actual === 'editor') {
+	} else if($current_role === 'editor') {
 		$permisos = ['crear', 'leer', 'actualizar'];
-	} else if($rol_actual === 'autor') {
+	} else if($current_role === 'autor') {
 		$permisos = ['crear', 'leer'];
-	} else if($rol_actual === 'colaborador') {
+	} else if($current_role === 'colaborador') {
 		$permisos = ['crear'];
 	} else {
 		$permisos = [];
@@ -79,7 +82,7 @@ $permiso->defineRule('publicación', function($rol_actual) {
 Flight::set('permiso', $permiso);
 ```
 
-Luego en algún controlador...
+Luego en un controlador en algún lugar...
 
 ```php
 class ControladorPublicación {
@@ -94,21 +97,21 @@ class ControladorPublicación {
 }
 ```
 
-## Inyección de dependencias
-Puedes inyectar dependencias en el cierre que define los permisos. Esto es útil si tienes algún tipo de interruptor, id o cualquier otro punto de datos que desees verificar. Lo mismo funciona para llamadas de tipo Clase->Método, excepto que defines los argumentos en el método.
+## Inyectar dependencias
+Puedes inyectar dependencias en el cierre que define los permisos. Esto es útil si tienes algún tipo de interruptor, identificación, u otro punto de datos que deseas verificar. Lo mismo funciona para llamadas de tipo Clase->Método, excepto que defines los argumentos en el método.
 
 ### Cierres
 
 ```php
-$Permission->defineRule('orden', function(string $rol_actual, MyDependency $MyDependency = null) {
+$Permiso->defineRegla('orden', function(string $current_role, MiDependencia $MiDependencia = null) {
 	// ... código
 });
 
 // en tu archivo de controlador
 public function crearOrden() {
-	$MyDependency = Flight::myDependency();
+	$MiDependencia = Flight::miDependencia();
 	$permiso = Flight::get('permiso');
-	if ($permiso->can('orden.crear', $MyDependency)) {
+	if ($permiso->can('orden.crear', $MiDependencia)) {
 		// hacer algo
 	} else {
 		// hacer algo más
@@ -123,58 +126,58 @@ namespace MiApp;
 
 class Permisos {
 
-	public function orden(string $rol_actual, MyDependency $MyDependency = null) {
+	public function orden(string $current_role, MiDependencia $MiDependencia = null) {
 		// ... código
 	}
 }
 ```
 
 ## Atajo para establecer permisos con clases
-También puedes usar clases para definir tus permisos. Esto es útil si tienes muchos permisos y deseas mantener tu código limpio. Puedes hacer algo así:
+También puedes usar clases para definir tus permisos. Esto es útil si tienes muchos permisos y deseas mantener tu código limpio. Puedes hacer algo como esto:
 ```php
 <?php
 
-// código de arranque
-$Permisos = new \flight\Permission($rol_actual);
-$Permisos->defineRule('orden', 'MiApp\Permisos->orden');
+// código de inicio
+$Permisos = new \flight\Permiso($current_role);
+$Permisos->defineRegla('orden', 'MiApp\Permisos->orden');
 
-// miapp/Permisos.php
+// myapp/Permisos.php
 namespace MiApp;
 
 class Permisos {
 
-	public function orden(string $rol_actual, int $id_usuario) {
+	public function orden(string $current_role, int $user_id) {
 		// Suponiendo que configuraste esto de antemano
 		/** @var \flight\database\PdoWrapper $db */
 		$db = Flight::db();
-		$permisos_permitidos = ['leer']; // todos pueden ver una orden
-		if($rol_actual === 'gerente') {
+		$permisos_permitidos = [ 'leer' ]; // todos pueden ver una orden
+		if($current_role === 'gerente') {
 			$permisos_permitidos[] = 'crear'; // los gerentes pueden crear órdenes
 		}
-		$algún_interruptor_especial_de_db = $db->fetchField('SELECT algún_interruptor_especial FROM configuraciones WHERE id = ?', [ $id_usuario ]);
+		$algún_interruptor_especial_de_db = $db->fetchField('SELECT algún_interruptor_especial FROM ajustes WHERE id = ?', [ $user_id ]);
 		if($algún_interruptor_especial_de_db) {
-			$permisos_permitidos[] = 'actualizar'; // si el usuario tiene un interruptor especial, puede actualizar órdenes
+			$permisos_permitidos[] = 'actualizar'; // si el usuario tiene un interruptor especial, pueden actualizar órdenes
 		}
-		if($rol_actual === 'admin') {
+		if($current_role === 'admin') {
 			$permisos_permitidos[] = 'eliminar'; // los administradores pueden eliminar órdenes
 		}
 		return $permisos_permitidos;
 	}
 }
 ```
-Lo interesante es que también hay un atajo que puedes usar (¡que también se puede cachear!) donde solo le indicas a la clase de permisos que mapee todos los métodos de una clase en permisos. Entonces, si tienes un método llamado `orden()` y un método llamado `empresa()`, estos se mapearán automáticamente para que puedas ejecutar `$Permisos->has('orden.leer')` o `$Permisos->has('empresa.leer')` y funcionará. Definir esto es muy difícil, así que quédate conmigo aquí. Solo necesitas hacer esto:
+La parte genial es que también hay un atajo que puedes usar (¡también puede ser almacenado en caché!) donde simplemente indicas a la clase de permisos que mapee todos los métodos de una clase en permisos. Por lo tanto, si tienes un método llamado `orden()` y un método llamado `empresa()`, se mapearán automáticamente para que puedas simplemente ejecutar `$Permisos->has('orden.leer')` o `$Permisos->has('empresa.leer')` y funcionará. Definir esto es muy complejo, así que quédate conmigo aquí. Solo necesitas hacer esto:
 
-Crear la clase de permisos que deseas agrupar.
+Crea la clase de permisos que deseas agrupar.
 ```php
 class MisPermisos {
-	public function orden(string $rol_actual, int $id_orden = 0): array {
+	public function orden(string $current_role, int $orden_id = 0): array {
 		// código para determinar permisos
-		return $array_permisos;
+		return $arreglo_permisos;
 	}
 
-	public function empresa(string $rol_actual, int $id_empresa): array {
+	public function empresa(string $current_role, int $empresa_id): array {
 		// código para determinar permisos
-		return $array_permisos;
+		return $arreglo_permisos;
 	}
 }
 ```
@@ -182,12 +185,12 @@ class MisPermisos {
 Luego haz que los permisos sean descubribles usando esta biblioteca.
 
 ```php
-$Permisos = new \flight\Permission($rol_actual);
-$Permisos->defineRulesFromClassMethods(MiApp\Permisos::class);
+$Permisos = new \flight\Permiso($current_role);
+$Permisos->defineReglasDesdeMétodosDeClase(MiApp\Permisos::class);
 Flight::set('permisos', $Permisos);
 ```
 
-Finalmente, llama al permiso en tu base de código para verificar si el usuario tiene permitido realizar un permiso dado.
+Finalmente, llama al permiso en tu base de código para verificar si el usuario tiene permiso para realizar un permiso dado.
 
 ```php
 class AlgunControlador {
@@ -201,19 +204,19 @@ class AlgunControlador {
 
 ### Caché
 
-Para habilitar la caché, consulta la sencilla [librería wruczak/phpfilecache](https://docs.flightphp.com/awesome-plugins/php-file-cache). Un ejemplo de cómo habilitarlo se muestra a continuación.
+Para habilitar la caché, consulta la sencilla biblioteca [wruczak/phpfilecache](https://docs.flightphp.com/awesome-plugins/php-file-cache). Un ejemplo de cómo habilitar esto se muestra a continuación.
 ```php
 
-// esta $app puede ser parte de tu código, o
-// simplemente puedes pasar null y
-// se obtendrá de Flight::app() en el constructor
+// esta variable $app puede ser parte de tu código, o
+// simplemente puedes pasar null y se
+// obtendrá de Flight::app() en el constructor
 $app = Flight::app();
 
-// Por ahora acepta esto como una caché de archivos. Otros pueden agregarse fácilmente en el futuro.
-$Caché = new Wruczek\PhpFileCache\PhpFileCache;
+// Por ahora solo acepta esto como una caché de archivos. Otros pueden agregarse fácilmente en el futuro.
+$Caché = new Wruczek\PhpFileCaché\PhpFileCaché;
 
-$Permisos = new \flight\Permission($rol_actual, $app, $Caché);
-$Permisos->defineRulesFromClassMethods(MiApp\Permisos::class, 3600); // 3600 es cuántos segundos almacenar en caché esto. Déjalo fuera para no usar caché
-``` 
+$Permisos = new \flight\Permiso($current_role, $app, $Caché);
+$Permisos->defineReglasDesdeMétodosDeClase(MiApp\Permisos::class, 3600); // 3600 indica cuántos segundos almacenar en caché. Omite esto para no usar la caché
+```
 
 ¡Y listo!

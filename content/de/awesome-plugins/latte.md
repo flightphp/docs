@@ -1,10 +1,10 @@
 # Latte
 
-Latte is a full featured templating engine that is very easy to use and feels closer to a PHP syntax than Twig or Smarty. It's also very easy to extend and add your own filters and functions.
+[Latte](https://latte.nette.org/en/guide) ist ein voll ausgestatteter Template-Engine, der sehr einfach zu bedienen ist und sich näher an einer PHP-Syntax anfühlt als Twig oder Smarty. Es ist auch sehr einfach zu erweitern und eigene Filter und Funktionen hinzuzufügen.
 
 ## Installation
 
-Install with composer.
+Installieren Sie mit Composer.
 
 ```bash
 composer require latte/latte
@@ -12,7 +12,7 @@ composer require latte/latte
 
 ## Grundkonfiguration
 
-Es gibt einige grundlegende Konfigurationsoptionen, um zu beginnen. Sie können mehr darüber in der [Latte-Dokumentation](https://latte.nette.org/en/guide) lesen.
+Es gibt einige grundlegende Konfigurationsoptionen, um loszulegen. Weitere Informationen dazu finden Sie in der [Latte-Dokumentation](https://latte.nette.org/en/guide).
 
 ```php
 
@@ -24,27 +24,28 @@ $app = Flight::app();
 
 $app->register('latte', LatteEngine::class, [], function(LatteEngine $latte) use ($app) {
 
-	// Hier wird Latte Ihren Vorlagen-Cache speichern, um die Dinge zu beschleunigen
-	// Eine coole Sache an Latte ist, dass es automatisch Ihren Cache aktualisiert, wenn Sie Änderungen an Ihren Vorlagen vornehmen!
+	// Hier speichert Latte Ihre Templates, um die Geschwindigkeit zu erhöhen
+	// Eine interessante Sache an Latte ist, dass es automatisch Ihren Cache aktualisiert,
+	// wenn Sie Änderungen an Ihren Templates vornehmen!
 	$latte->setTempDirectory(__DIR__ . '/../cache/');
 
-	// Sagen Sie Latte, wo das Stammverzeichnis für Ihre Ansichten sein wird.
-	// $app->get('flight.views.path') wird in der config.php-Datei festgelegt
-	//   Sie könnten auch einfach etwas wie `__DIR__ . '/../views/'` machen
+	// Geben Sie Latte an, wo sich das Stammverzeichnis für Ihre Ansichten befinden wird.
+	// $app->get('flight.views.path') ist in der config.php-Datei festgelegt
+	//   Sie könnten auch einfach etwas wie `__DIR__ . '/../views/'` tun
 	$latte->setLoader(new \Latte\Loaders\FileLoader($app->get('flight.views.path')));
 });
 ```
 
-## Einfaches Layout-Beispiel
+## Einfaches Layoutbeispiel
 
-Hier ist ein einfaches Beispiel für eine Layout-Datei. Diese Datei wird verwendet, um alle anderen Ansichten zu umschließen.
+Hier ist ein einfaches Beispiel für eine Layoutdatei. Diese Datei wird verwendet, um alle Ihre anderen Ansichten zu umschließen.
 
 ```html
 <!-- app/views/layout.latte -->
 <!doctype html>
-<html lang="en">
+<html lang="de">
 	<head>
-		<title>{$title ? $title . ' - '}My App</title>
+		<title>{$title ? $title . ' - '}Meine App</title>
 		<link rel="stylesheet" href="style.css">
 	</head>
 	<body>
@@ -54,7 +55,7 @@ Hier ist ein einfaches Beispiel für eine Layout-Datei. Diese Datei wird verwend
 			</nav>
 		</header>
 		<div id="content">
-			<!-- Hier ist die Magie -->
+			<!-- Hier liegt die Magie -->
 			{block content}{/block}
 		</div>
 		<div id="footer">
@@ -64,11 +65,11 @@ Hier ist ein einfaches Beispiel für eine Layout-Datei. Diese Datei wird verwend
 </html>
 ```
 
-Und jetzt haben wir Ihre Datei, die innerhalb dieses Inhaltsblocks gerendert wird:
+Und jetzt haben wir Ihre Datei, die in diesem Inhaltsblock gerendert werden soll:
 
 ```html
 <!-- app/views/home.latte -->
-<!-- Dies teilt Latte mit, dass diese Datei "innerhalb" der layout.latte-Datei ist -->
+<!-- Dies sagt Latte, dass diese Datei "innerhalb" der layout.latte-Datei ist -->
 {extends layout.latte}
 
 <!-- Dies ist der Inhalt, der innerhalb des Layouts im Inhaltsblock gerendert wird -->
@@ -78,7 +79,7 @@ Und jetzt haben wir Ihre Datei, die innerhalb dieses Inhaltsblocks gerendert wir
 {/block}
 ```
 
-Dann, wenn Sie dies in Ihrer Funktion oder Ihrem Controller rendern möchten, würden Sie etwas Ähnliches wie folgt tun:
+Dann, wenn Sie dies in Ihrer Funktion oder Ihrem Controller rendern möchten, würden Sie etwas Ähnliches tun:
 
 ```php
 // einfache Route
@@ -103,4 +104,4 @@ class HomeController
 }
 ```
 
-Weitere Informationen zur Verwendung von Latte in ihrem vollen Potenzial finden Sie in der [Latte-Dokumentation](https://latte.nette.org/en/guide)!
+Schauen Sie in der [Latte-Dokumentation](https://latte.nette.org/en/guide) nach weiteren Informationen darüber, wie Sie Latte optimal nutzen können!

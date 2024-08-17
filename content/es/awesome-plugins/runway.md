@@ -1,6 +1,8 @@
 # Pista
 
-La pista es una aplicación CLI que te ayuda a gestionar tus aplicaciones Flight. Puede generar controladores, mostrar todas las rutas y más. Está basado en la excelente biblioteca [adhocore/php-cli](https://github.com/adhocore/php-cli).
+Pista es una aplicación CLI que te ayuda a gestionar tus aplicaciones Flight. Puede generar controladores, mostrar todas las rutas y más. Está basado en la excelente biblioteca [adhocore/php-cli](https://github.com/adhocore/php-cli).
+
+Haz clic [aquí](https://github.com/flightphp/runway) para ver el código.
 
 ## Instalación
 
@@ -12,123 +14,123 @@ composer require flightphp/runway
 
 ## Configuración Básica
 
-La primera vez que ejecutas Runway, te guiará a través de un proceso de configuración y creará un archivo de configuración `.runway.json` en la raíz de tu proyecto. Este archivo contendrá algunas configuraciones necesarias para que Runway funcione correctamente.
+La primera vez que ejecutes Pista, te guiará a través de un proceso de configuración y creará un archivo de configuración `.runway.json` en la raíz de tu proyecto. Este archivo contendrá algunas configuraciones necesarias para que Pista funcione correctamente.
 
 ## Uso
 
-Runway tiene varios comandos que puedes usar para gestionar tu aplicación Flight. Hay dos formas sencillas de utilizar Runway.
+Pista tiene varios comandos que puedes usar para gestionar tu aplicación Flight. Hay dos formas fáciles de usar Pista.
 
-1. Si estás utilizando el proyecto esqueleto, puedes ejecutar `php runway [comando]` desde la raíz de tu proyecto.
-1. Si estás utilizando Runway como un paquete instalado a través de composer, puedes ejecutar `vendor/bin/runway [comando]` desde la raíz de tu proyecto.
+1. Si estás usando el proyecto esqueleto, puedes ejecutar `php runway [comando]` desde la raíz de tu proyecto.
+1. Si estás usando Pista como un paquete instalado a través de composer, puedes ejecutar `vendor/bin/runway [comando]` desde la raíz de tu proyecto.
 
-Para cualquier comando, puedes pasar la bandera `--help` para obtener más información sobre cómo usar el comando.
+Para cualquier comando, puedes agregar la bandera `--help` para obtener más información sobre cómo usar el comando.
 
 ```bash
-php runway rutas --help
+php runway routes --help
 ```
 
-Aquí hay algunos ejemplos:
+Aquí tienes algunos ejemplos:
 
 ### Generar un Controlador
 
-Según la configuración en tu archivo `.runway.json`, la ubicación predeterminada generará un controlador para ti en el directorio `app/controladores/`.
+Basado en la configuración en tu archivo `.runway.json`, la ubicación predeterminada generará un controlador para ti en el directorio `app/controllers/`.
 
 ```bash
 php runway make:controller MiControlador
 ```
 
-### Generar un Modelo de Registro Activo
+### Generar un Modelo de Active Record
 
-Según la configuración en tu archivo `.runway.json`, la ubicación predeterminada generará un controlador para ti en el directorio `app/registros/`.
+Basado en la configuración en tu archivo `.runway.json`, la ubicación predeterminada generará un modelo de Active Record para ti en el directorio `app/records/`.
 
 ```bash
 php runway make:record usuarios
 ```
 
-Si, por ejemplo, tienes la tabla `usuarios` con el siguiente esquema: `id`, `nombre`, `correo electrónico`, `creado en`, `actualizado en`, se creará un archivo similar al siguiente en el archivo `app/registros/RegistroUsuario.php`:
+Si por ejemplo tienes la tabla `usuarios` con el siguiente esquema: `id`, `nombre`, `correo`, `creado_en`, `actualizado_en`, se creará un archivo similar al siguiente en el archivo `app/records/UserRecord.php`:
 
 ```php
 <?php
 
-declara(tipos estrictos = 1);
+declare(strict_types=1);
 
-namespace app\registros;
+namespace app\records;
 
 /**
- * Clase de registro activo para la tabla de usuarios.
+ * Clase ActiveRecord para la tabla de usuarios.
  * @link https://docs.flightphp.com/awesome-plugins/active-record
  * 
  * @property int $id
- * @property string $name
- * @property string $email
- * @property string $created_at
- * @property string $updated_at
- * // también podrías agregar relaciones aquí una vez que las definas en la matriz $relations
- * @property RegistroCompañía $company Ejemplo de una relación
+ * @property string $nombre
+ * @property string $correo
+ * @property string $creado_en
+ * @property string $actualizado_en
+ * // también puedes añadir relaciones aquí una vez las definas en el array $relations
+ * @property CompanyRecord $company Ejemplo de una relación
  */
-clase RegistroUsuario extendida \flight\ActiveRecord
+class UserRecord extends \flight\ActiveRecord
 {
     /**
      * @var array $relations Establece las relaciones para el modelo
      *   https://docs.flightphp.com/awesome-plugins/active-record#relationships
      */
-    protegido conjunto de matrices $relations = [];
+    protected array $relations = [];
 
     /**
      * Constructor
-     * @param mixed $databaseConnection La conexión a la base de datos
+     * @param mixed $conexionBaseDeDatos La conexión a la base de datos
      */
-    public function __construct($databaseConnection)
+    public function __construct($conexionBaseDeDatos)
     {
-        padre::__construct($databaseConnection, 'usuarios');
+        parent::__construct($conexionBaseDeDatos, 'usuarios');
     }
 }
 ```
 
 ### Mostrar Todas las Rutas
 
-Esto mostrará todas las rutas que están actualmente registradas con Flight.
+Esto mostrará todas las rutas que están actualmente registradas en Flight.
 
 ```bash
-php runway rutas
+php runway routes
 ```
 
-Si deseas ver solo rutas específicas, puedes pasar una bandera para filtrar las rutas.
+Si deseas ver solo rutas específicas, puedes agregar una bandera para filtrar las rutas.
 
 ```bash
 # Mostrar solo rutas GET
-php runway rutas --get
+php runway routes --get
 
 # Mostrar solo rutas POST
-php runway rutas --post
+php runway routes --post
 
 # etc.
 ```
 
-## Personalización de Runway
+## Personalización de Pista
 
-Si estás creando un paquete para Flight o deseas agregar tus propios comandos personalizados en tu proyecto, puedes hacerlo creando un directorio `src/comandos/`, `flight/comandos/`, `app/comandos/` o `comandos/` para tu proyecto/paquete.
+Si estás creando un paquete para Flight, o deseas añadir tus propios comandos personalizados a tu proyecto, puedes hacerlo creando un directorio `src/commands/`, `flight/commands/`, `app/commands/` o `commands/` para tu proyecto/paquete.
 
-Para crear un comando, simplemente extiende la clase `AbstractBaseComando` e implementa como mínimo un método `__construct` y un método `execute`.
+Para crear un comando, simplemente extiende la clase `AbstractBaseCommand` e implementa como mínimo un método `__construct` y un método `execute`.
 
 ```php
 <?php
 
-declara(tipos estrictos = 1);
+declare(strict_types=1);
 
-namespace flight\comandos;
+namespace flight\commands;
 
-clase ComandoEjemplo extiende AbstractBaseCommand
+class ExampleCommand extends AbstractBaseCommand
 {
 	/**
-     * Construct
+     * Constructor
      *
-     * @param array<string,mixed> $config Configuración JSON de .runway-config.json
+     * @param array<string,mixed> $config JSON config de .runway-config.json
      */
     public function __construct(array $config)
     {
-        padre::__construct('make:example', 'Crear un ejemplo para la documentación', $config);
-        $this->argumento('<gif-divertido>', 'El nombre del gif divertido');
+        parent::__construct('make:example', 'Crear un ejemplo para la documentación', $config);
+        $this->argument('<gif-divertido>', 'El nombre del gif divertido');
     }
 
 	/**
@@ -149,4 +151,4 @@ clase ComandoEjemplo extiende AbstractBaseCommand
 }
 ```
 
-Consulta la [Documentación de adhocore/php-cli](https://github.com/adhocore/php-cli) para obtener más información sobre cómo incorporar tus propios comandos personalizados en tu aplicación Flight!
+Consulta la [Documentación de adhocore/php-cli](https://github.com/adhocore/php-cli) para obtener más información sobre cómo crear tus propios comandos personalizados en tu aplicación Flight.
