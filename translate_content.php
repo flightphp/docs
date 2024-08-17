@@ -61,7 +61,7 @@ foreach($files as $file) {
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 			curl_setopt($ch, CURLOPT_POST, true);
 			curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
-				"model" => "gpt-3.5-turbo-0125",
+				"model" => "gpt-4o-mini",
 				"messages" => $messages
 			]));
 			curl_setopt($ch, CURLOPT_HTTPHEADER, [
