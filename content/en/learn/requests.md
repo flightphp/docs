@@ -125,13 +125,41 @@ There is a shortcut available to access the `$_SERVER` array via the `getVar()` 
 $host = Flight::request()->getVar['HTTP_HOST'];
 ```
 
-## Uploaded Files via `$_FILES`
+## Accessing Uploaded Files via `$_FILES`
 
 You can access uploaded files via the `files` property:
 
 ```php
 $uploadedFile = Flight::request()->files['myFile'];
 ```
+
+## Processing File Uploads
+
+You can process file uploads using the framework with some helper methods. It basically 
+boils down to pulling the file data from the request, and moving it to a new location.
+
+```php
+Flight::route('POST /upload', function(){
+	// If you had an input field like <input type="file" name="myFile">
+	$uploadedFileData = Flight::request()->getUploadedFiles();
+	$uploadedFile = $uploadedFileData['myFile'];
+	$uploadedFile->moveTo('/path/to/uploads/' . $uploadedFile->getClientFilename());
+});
+```
+
+If you have multiple files uploaded, you can loop through them:
+
+```php
+Flight::route('POST /upload', function(){
+	// If you had an input field like <input type="file" name="myFiles[]">
+	$uploadedFiles = Flight::request()->getUploadedFiles()['myFiles'];
+	foreach ($uploadedFiles as $uploadedFile) {
+		$uploadedFile->moveTo('/path/to/uploads/' . $uploadedFile->getClientFilename());
+	}
+});
+```
+
+> **Security Note:** Always validate and sanitize user input, especially when dealing with file uploads. Always validate the type of extensions you'll allow to be uploaded, but you should also validate the "magic bytes" of the file to ensure it's actually the type of file the user claims it is. There are [articles](https://dev.to/yasuie/php-file-upload-check-uploaded-files-with-magic-bytes-54oe) [and](https://amazingalgorithms.com/snippets/php/detecting-the-mime-type-of-an-uploaded-file-using-magic-bytes/) [libraries](https://github.com/RikudouSage/MimeTypeDetector) available to help with this.
 
 ## Request Headers
 

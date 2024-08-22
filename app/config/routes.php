@@ -14,6 +14,8 @@ $app->group('', function(Router $router) use ($app) {
 	$router->get('/single-page', [ $IndexController, 'singlePageGet' ], false, 'single_page');
 	$router->get('/about', [ $IndexController, 'aboutGet' ]);
 	$router->get('/install', [ $IndexController, 'installGet' ], false, 'install');
+	// Unique URL workaround because this is the only 'single page' with a scrollspy for the time being.
+	$router->get('/install/install', function() use ($app) { $app->redirect($app->getUrl('install')); });
 	$router->get('/license', [ $IndexController, 'licenseGet' ], false, 'license');
 	$router->get('/examples', [ $IndexController, 'examplesGet' ], false, 'examples');
 	$router->get('/search', [ $IndexController, 'searchGet' ], false, 'search');
