@@ -133,7 +133,7 @@ You can access uploaded files via the `files` property:
 $uploadedFile = Flight::request()->files['myFile'];
 ```
 
-## Processing File Uploads
+## Processing File Uploads (v3.12.0)
 
 You can process file uploads using the framework with some helper methods. It basically 
 boils down to pulling the file data from the request, and moving it to a new location.

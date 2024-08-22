@@ -365,7 +365,7 @@ Keep in mind that calling either `lastModified` or `etag` will both set and chec
 cache value. If the cache value is the same between requests, Flight will immediately
 send an `HTTP 304` response and stop processing.
 
-### Download a File
+### Download a File (v3.12.0)
 
 There is a helper method to download a file. You can use the `download` method and pass in the path.
 
