@@ -16,5 +16,6 @@ return [
 	'missing_documentation' => '文档缺失？<a href="https://github.com/flightphp/docs" target="_blank">分支并帮助改进！</a>',
 	'single_page_documentation' => '单页文档',
 	'click_here' => '点击这里',
-	'need_to_view_single_page' => '需要查看单页？'
+	'need_to_view_single_page' => '需要查看单页？',
+	'media' => '媒体',
 ];

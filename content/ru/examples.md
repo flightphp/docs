@@ -2,25 +2,26 @@
 
 У вас есть два варианта, чтобы начать работу с Flight:
 
-- [Однофайловый каркас Boilerplate](https://github.com/flightphp/skeleton-simple): Один файл, включающий всё необходимое для запуска вашего приложения в одном простом файле.
-- [Полный каркас Boilerplate](https://github.com/flightphp/skeleton): Более полноценный пример с контроллерами и представлениями.
+- [Однофайловый каркасный шаблон](https://github.com/flightphp/skeleton-simple): Один файл, который включает все необходимое для запуска вашего приложения в одном простом файле.
+- [Полный каркасный шаблон](https://github.com/flightphp/skeleton): Более полный пример с контроллерами и представлениями.
 
-## Нуждаетесь во вдохновении?
+## Нужна вдохновение?
 
-Хотя эти проекты официально не поддерживаются командой Flight, они могут вдохновить вас на то, как структурировать ваши собственные проекты, созданные с использованием Flight!
+Хотя они не являются официально поддерживаемыми командой Flight, они могут дать вам идеи о том, как структурировать ваши собственные проекты, построенные с помощью Flight!
 
-- [Пример блога FlightPHP](https://github.com/n0nag0n/flightphp-blog) - Flight v3 с промежуточным ПО, контроллерами, активной записью и Latte.
-- [Система управления учебным заведением FlightPHP](https://github.com/krmu/FlightPHP_School) - Flight v3
-- [Paste Bin c Комментариями](https://github.com/n0nag0n/commie2) - Flight v3
-- [Базовое приложение-каркас](https://github.com/markhughes/flight-skeleton)
+- [Пример блога Flight](https://github.com/n0nag0n/flightphp-blog) - Flight v3 с посредниками, контроллерами, активной записью и Latte.
+- [Flight CRUD RESTful API](https://github.com/soheilkhaledabdi/php-crud-api-flight) - Простой проект CRUD API, используя фреймворк Flight, который предоставляет базовую структуру для новых пользователей, чтобы быстро настроить PHP-приложение с операциями CRUD и подключением к базе данных. Проект демонстрирует, как использовать Flight для разработки RESTful API, что делает его идеальным инструментом обучения для начинающих и полезным стартовым набором для более опытных разработчиков.
+- [Система управления школой Flight](https://github.com/krmu/FlightPHP_School) - Flight v3
+- [Paste Bin с комментариями](https://github.com/n0nag0n/commie2) - Flight v3
+- [Базовое каркасное приложение](https://github.com/markhughes/flight-skeleton)
 - [Пример вики](https://github.com/Skayo/FlightWiki)
 - [Приложение PHP-фреймворка IT-Innovator](https://github.com/itinnovator/myphp-app)
 - [LittleEducationalCMS (испанский)](https://github.com/casgin/LittleEducationalCMS)
 - [API итальянских желтых страниц](https://github.com/chiccomagnus/PGAPI)
-- [Общая система управления контентом (с....очень маленькой документацией)](https://github.com/recepuncu/cms)
-- [Миниатюрный php-фреймворк на основе Flight и medoo.](https://github.com/ycrao/tinyme)
-- [Пример приложения MVC](https://github.com/paddypei/Flight-MVC)
+- [Универсальная система управления контентом (с очень малой документацией)](https://github.com/recepuncu/cms)
+- [Крошечный php-фреймворк на основе Flight и medoo.](https://github.com/ycrao/tinyme)
+- [Пример MVC приложения](https://github.com/paddypei/Flight-MVC)
 
-## Хотите поделиться своим собственным примером?
+## Хотите поделиться своим примером?
 
-Если у вас есть проект, который вы хотите поделиться, пожалуйста, отправьте запрос на включение его в этот список!
+Если у вас есть проект, которым вы хотите поделиться, пожалуйста, отправьте запрос на добавление его в этот список!

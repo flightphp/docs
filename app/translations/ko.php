@@ -16,5 +16,6 @@ return [
     'missing_documentation' => '문서가 부족하신가요? <a href="https://github.com/flightphp/docs" target="_blank">분기 및 개선에 기여하세요!</a>',
 	'single_page_documentation' => '단일 페이지 문서',
 	'click_here' => '여기를 클릭하세요',
-	'need_to_view_single_page' => '단일 페이지로 보려?'
+	'need_to_view_single_page' => '단일 페이지로 보려?',
+	'media' => '미디어',
 ];

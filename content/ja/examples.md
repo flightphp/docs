@@ -1,26 +1,27 @@
-# スタートが必要ですか？
+# クイックスタートが必要ですか？
 
-Flightで開始するための2つのオプションがあります：
+Flightを始めるには2つのオプションがあります：
 
-- [シングルファイルのスケルトンボイラープレート](https://github.com/flightphp/skeleton-simple): アプリを1つのシンプルなファイルで実行するために必要なすべてが含まれた単一のファイル。
-- [フルスケルトンボイラープレート](https://github.com/flightphp/skeleton): コントローラーやビューを備えたより充実した例。
+- [単一ファイルスケルトンボイラープレート](https://github.com/flightphp/skeleton-simple)：アプリを単一のシンプルなファイルで実行するために必要なすべてを含む単一ファイル。
+- [フルスケルトンボイラープレート](https://github.com/flightphp/skeleton)：コントローラーやビューを備えたより充実した例。
 
 ## インスピレーションが必要ですか？
 
-これらはFlightチームによって公式にスポンサーされていませんが、Flightで構築された独自のプロジェクトの構造化方法についてのアイデアを提供することができます！
+これらはFlightチームによって公式にスポンサーされているわけではありませんが、Flightで構築された自分のプロジェクトを構造化する方法についてアイデアを与えるかもしれません！
 
-- [FlightPHPのブログ例](https://github.com/n0nag0n/flightphp-blog) - Middleware、コントローラー、アクティブレコード、およびLatteを使用したFlight v3。
-- [FlightPHP学校管理システム](https://github.com/krmu/FlightPHP_School) - Flight v3
+- [Flightサンプルブログ](https://github.com/n0nag0n/flightphp-blog) - ミドルウェア、コントローラー、アクティブレコード、ラテを使用したFlight v3。
+- [Flight CRUD RESTful API](https://github.com/soheilkhaledabdi/php-crud-api-flight) - Flightフレームワークを使用したシンプルなCRUD APIプロジェクトで、新しいユーザーがCRUD操作とデータベース接続を迅速にセットアップできる基本的な構造を提供します。このプロジェクトは、RESTful API開発のためにFlightをどのように使用するかを示しており、初心者にとって理想的な学習ツールであり、より経験豊富な開発者にとって便利なスターターキットです。
+- [Flight学校管理システム](https://github.com/krmu/FlightPHP_School) - Flight v3
 - [コメント付きペーストビン](https://github.com/n0nag0n/commie2) - Flight v3
-- [基本的なスケルトンアプリ](https://github.com/markhughes/flight-skeleton)
-- [ウィキの例](https://github.com/Skayo/FlightWiki)
-- [IT-Innovator PHPフレームワークアプリケーション](https://github.com/itinnovator/myphp-app)
+- [基本スケルトンアプリ](https://github.com/markhughes/flight-skeleton)
+- [サンプルウィキ](https://github.com/Skayo/FlightWiki)
+- [ITイノベーターPHPフレームワークアプリケーション](https://github.com/itinnovator/myphp-app)
 - [LittleEducationalCMS（スペイン語）](https://github.com/casgin/LittleEducationalCMS)
-- [イタリア語のイエローページAPI](https://github.com/chiccomagnus/PGAPI)
-- [ジェネリックコンテンツ管理システム（ほとんどドキュメントがない...）](https://github.com/recepuncu/cms)
-- [Flightとmedooに基づいた小さなphpフレームワーク](https://github.com/ycrao/tinyme)
-- [MVCアプリケーションの例](https://github.com/paddypei/Flight-MVC)
+- [イタリアンイエローページAPI](https://github.com/chiccomagnus/PGAPI)
+- [汎用コンテンツ管理システム（文書が...非常に少ない）](https://github.com/recepuncu/cms)
+- [Flightとmedooに基づく小さなPHPフレームワーク。](https://github.com/ycrao/tinyme)
+- [サンプルMVCアプリケーション](https://github.com/paddypei/Flight-MVC)
 
-## 独自の例を共有したいですか？
+## 自分の例を共有したいですか？
 
-共有したいプロジェクトがある場合は、プルリクエストを送信してこのリストに追加してください！
+共有したいプロジェクトがある場合は、このリストに追加するためのプルリクエストを送信してください！

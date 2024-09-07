@@ -17,4 +17,5 @@ return [
     'single_page_documentation' => 'Documentación de una sola página',
 	'click_here' => 'Haz clic aquí',
 	'need_to_view_single_page' => '¿Necesitas ver la documentación de una sola página?',
+	'media' => 'Medios',
 ];

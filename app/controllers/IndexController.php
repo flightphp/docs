@@ -114,6 +114,10 @@ class IndexController {
 		$this->compileSinglePage('learn');
 	}
 
+	public function mediaGet() {
+		$this->compileSinglePage('media');
+	}
+
 	public function learnSectionsGet(string $section_name) {
 		$this->compileScrollspyPage('learn', $section_name);
 	}

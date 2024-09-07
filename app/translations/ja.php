@@ -16,5 +16,6 @@ return [
     'missing_documentation' => 'ドキュメントがありませんか？ <a href="https://github.com/flightphp/docs" target="_blank">フォークして改善に役立ててください!</a>',
 	'single_page_documentation' => '単一ページのドキュメント',
 	'click_here' => 'ここをクリック',
-	'need_to_view_single_page' => '単一ページで表示する必要がありますか？'
+	'need_to_view_single_page' => '単一ページで表示する必要がありますか？',
+	'media' => 'メディア',
 ];

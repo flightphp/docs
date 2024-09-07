@@ -16,5 +16,6 @@ return [
     'missing_documentation' => 'Trūkst dokumentācija? <a href="https://github.com/flightphp/docs" target="_blank">Fork un palīdzi ar uzlabojumiem!</a>',
 	'single_page_documentation' => 'Vienas lapas dokumentācija',
 	'click_here' => 'Spied šeit',
-	'need_to_view_single_page' => 'Vai nepieciešams skatīt vienas lapas dokumentāciju?'
+	'need_to_view_single_page' => 'Vai nepieciešams skatīt vienas lapas dokumentāciju?',
+	'media' => 'Mediji',
 ];

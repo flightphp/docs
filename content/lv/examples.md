@@ -1,26 +1,27 @@
-# Vai uz sākumu?
+# Vai nepieciešams ātri uzsākt?
 
-Jums ir divas iespējas sākt darbu ar Flight:
+Jums ir divas iespējas, kā uzsākt darbu ar Flight:
 
-- [Viena faila skelets pamatne](https://github.com/flightphp/skeleton-simple): Viens fails, kas ietver visu nepieciešamo, lai palaidtu savu lietotni vienā vienkāršā failā.
-- [Pilna skeleta pamatne](https://github.com/flightphp/skeleton): Piemērs ar kontroleriem un skatiem.
+- [Vienas faila skeleta pamatne](https://github.com/flightphp/skeleton-simple): Viena faila, kas ietver visu, kas nepieciešams, lai palaistu jūsu lietotni vienā vienkāršā failā.
+- [Pilna skeleta pamatne](https://github.com/flightphp/skeleton): Vairāk pilnīga piemēra ar kontrolieriem un skatījumiem.
 
-## Vai Jums Nepieciešama Iedvesma?
+## Vai nepieciešama iedvesma?
 
-Lai arī šie nav oficiāli atbalstīti ar Flight komandas palīdzību, tie jums var sniegt idejas, kā strukturēt savus projektus, kas izveidoti ar Flight!
+Lai arī tie oficiāli nav atbalstīti no Flight komandas, tie var dot jums idejas par to, kā strukturēt savus projektus, kas veidoti ar Flight!
 
-- [FlightPHP piemēra blogs](https://github.com/n0nag0n/flightphp-blog) - Flight v3 ar starpdaļu, kontroloriem, aktīvo ierakstu un Latte.
-- [FlightPHP skolas pārvaldības sistēma](https://github.com/krmu/FlightPHP_School) - Flight v3
-- [Pasta kastes ar komentāriem](https://github.com/n0nag0n/commie2) - Flight v3
+- [Flight piemēra blogs](https://github.com/n0nag0n/flightphp-blog) - Flight v3 ar Middleware, kontrolieriem, Active Record un Latte.
+- [Flight CRUD RESTful API](https://github.com/soheilkhaledabdi/php-crud-api-flight) - Vienkāršs CRUD API projekts, izmantojot Flight ietvaru, kas nodrošina pamata struktūru jauniem lietotājiem, lai ātri uzstādītu PHP lietotni ar CRUD operācijām un datu bāzes savienojamību. Projekts demonstrē, kā izmantot Flight RESTful API izstrādei, padarot to par ideālu mācību rīku iesācējiem un noderīgu sākuma komplektu pieredzējušākiem izstrādātājiem.
+- [Flight skolas vadības sistēma](https://github.com/krmu/FlightPHP_School) - Flight v3
+- [Paste Bin ar komentāriem](https://github.com/n0nag0n/commie2) - Flight v3
 - [Pamata skeleta lietotne](https://github.com/markhughes/flight-skeleton)
-- [Piemēra Wiki](https://github.com/Skayo/FlightWiki)
-- [The IT-Innovator PHP Framework Application](https://github.com/itinnovator/myphp-app)
+- [Piemēru Wiki](https://github.com/Skayo/FlightWiki)
+- [IT-Innovator PHP ietvara lietotne](https://github.com/itinnovator/myphp-app)
 - [Mazais izglītojošais CMS (spāņu valodā)](https://github.com/casgin/LittleEducationalCMS)
 - [Itāļu dzelteno lapu API](https://github.com/chiccomagnus/PGAPI)
-- [Ģeneriskā satura pārvaldības sistēma (ar.... ļoti nedaudz dokumentācijas)](https://github.com/recepuncu/cms)
-- [Mazs php pamata struktūra, balstīta uz Flight un medoo.](https://github.com/ycrao/tinyme)
+- [Vispārīgs satura pārvaldības sistēma (ar....ļoti maz dokumentācijas)](https://github.com/recepuncu/cms)
+- [Mazs php ietvars, kas balstīts uz Flight un medoo.](https://github.com/ycrao/tinyme)
 - [Piemēra MVC lietotne](https://github.com/paddypei/Flight-MVC)
 
-## Vai Vēlaties Koplietot Savu Pašu Piemēru?
+## Vai vēlaties dalīties ar savu piemēru?
 
-Ja Jums ir projekts, ko vēlaties koplietot, lūdzu iesniedziet pull pieprasījumu, lai to pievienotu šajā sarakstā!
+Ja jums ir projekts, ko vēlaties dalīties, lūdzu, iesniedziet pieprasījumu par izmaiņām, lai pievienotu to šai sarakstam!

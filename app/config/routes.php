@@ -18,6 +18,7 @@ $app->group('', function(Router $router) use ($app) {
 	$router->get('/install/install', function() use ($app) { $app->redirect($app->getUrl('install')); });
 	$router->get('/license', [ $IndexController, 'licenseGet' ], false, 'license');
 	$router->get('/examples', [ $IndexController, 'examplesGet' ], false, 'examples');
+	$router->get('/media', [ $IndexController, 'mediaGet' ], false, 'media');
 	$router->get('/search', [ $IndexController, 'searchGet' ], false, 'search');
 	$router->group('/learn', function(Router $router) use ($IndexController) {
 		$router->get('', [ $IndexController, 'learnGet' ], false, 'learn');
