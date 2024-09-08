@@ -19,7 +19,8 @@ $languages = [
 	'ru',
 	'zh',
 	'ja',
-	'ko'
+	'ko',
+	'uk'
 ];
 
 // pull from-date from cli args
