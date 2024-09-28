@@ -109,7 +109,7 @@ php runway routes --post
 
 ## Customizing Runway
 
-If you are either creating a package for Flight, or want to add your own custom commands into your project, you can do so by creating a `src/commands/`, `flight/commands/`, `app/commands/`, or `commands/` directory for your project/package. 
+If you are either creating a package for Flight, or want to add your own custom commands into your project, you can do so by creating a `src/commands/`, `flight/commands/`, `app/commands/`, or `commands/` directory for your project/package. If you need further customization, see the section below on Configuration.
 
 To create a command, you simple extend the `AbstractBaseCommand` class, and implement at a minimum a `__construct` method and an `execute` method.
 
@@ -152,3 +152,42 @@ class ExampleCommand extends AbstractBaseCommand
 ```
 
 See the [adhocore/php-cli Documentation](https://github.com/adhocore/php-cli) for more information on how to build your own custom commands into your Flight application!
+
+### Configuration
+
+If you need to customize the configuration for Runway, you can create a `.runway-config.json` file in the root of your project. Below are some additional configurations that you can set:
+
+```js
+{
+
+	// This is where your application directory is located
+	"app_root": "app/",
+
+	// This is the directory where your root index file is located
+	"index_root": "public/",
+
+	// These are the paths to the roots of other projects
+	"root_paths": [
+		"/home/user/different-project",
+		"/var/www/another-project"
+	],
+
+	// Base paths most likely don't need to be configured, but it's here if you want it
+	"base_paths": {
+		"/includes/libs/vendor", // if you have a really unique path for your vendor directory or something
+	},
+
+	// Final paths are locations within a project to search for the command files
+	"final_paths": {
+		"src/diff-path/commands",
+		"app/module/admin/commands",
+	},
+
+	// If you want to just add the full path, go right ahead (absolute or relative to project root)
+	"paths": [
+		"/home/user/different-project/src/diff-path/commands",
+		"/var/www/another-project/app/module/admin/commands",
+		"app/my-unique-commands"
+	]
+}
+```
