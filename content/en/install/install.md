@@ -95,8 +95,6 @@ Flight::start();
 
 If you already have `php` installed on your system, go ahead and skip these instructions and move to [the download section](#download-the-files)
 
-Sure! Here are the instructions for installing PHP on macOS, Windows 10/11, Ubuntu, and Rocky Linux. I'll also include details on how to install different versions of PHP.
-
 ### **macOS**
 
 #### **Installing PHP using Homebrew**
