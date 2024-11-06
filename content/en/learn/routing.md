@@ -392,6 +392,105 @@ $app->group('/api/v1', function (Router $router) {
 });
 ```
 
+## Resource Routing
+
+You can create a set of routes for a resource using the `resource` method. This will create
+a set of routes for a resource that follows the RESTful conventions.
+
+To create a resource, do the following:
+
+```php
+Flight::resource('/users', UsersController::class);
+```
+
+And what will happen in the background is it will create the following routes:
+
+```php
+[
+      'index' => 'GET ',
+      'create' => 'GET /create',
+      'store' => 'POST ',
+      'show' => 'GET /@id',
+      'edit' => 'GET /@id/edit',
+      'update' => 'PUT /@id',
+      'destroy' => 'DELETE /@id'
+]
+```
+
+And your controller will look like this:
+
+```php
+class UsersController
+{
+    public function index(): void
+    {
+    }
+
+    public function show(string $id): void
+    {
+    }
+
+    public function create(): void
+    {
+    }
+
+    public function store(): void
+    {
+    }
+
+    public function edit(string $id): void
+    {
+    }
+
+    public function update(string $id): void
+    {
+    }
+
+    public function destroy(string $id): void
+    {
+    }
+}
+```
+
+> **Note**: You can view the newly added routes with `runway` by running `php runway routes`.
+
+### Customizing Resource Routes
+
+There are a few options to configure the resource routes.
+
+#### Alias Base
+
+You can configure the `aliasBase`. By default the alias is the last part of the URL specified.
+For example `/users/` would result in an `aliasBase` of `users`. When these routes are created,
+the aliases are `users.index`, `users.create`, etc. If you want to change the alias, set the `aliasBase`
+to the value you want.
+
+```php
+Flight::resource('/users', UsersController::class, [ 'aliasBase' => 'user' ]);
+```
+
+#### Only and Except
+
+You can also specify which routes you want to create by using the `only` and `except` options.
+
+```php
+Flight::resource('/users', UsersController::class, [ 'only' => [ 'index', 'show' ] ]);
+```
+
+```php
+Flight::resource('/users', UsersController::class, [ 'except' => [ 'create', 'store', 'edit', 'update', 'destroy' ] ]);
+```
+
+These are basically whitelisting and blacklisting options so you can specify which routes you want to create.
+
+#### Middleware
+
+You can also specify middleware to be run on each of the routes created by the `resource` method.
+
+```php
+Flight::resource('/users', UsersController::class, [ 'middleware' => [ MyAuthMiddleware::class ] ]);
+```
+
 ## Streaming
 
 You can now stream responses to the client using the `streamWithHeaders()` method. 
