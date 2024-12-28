@@ -191,7 +191,8 @@ named parameters with regular expressions, as they are more readable and easier 
 ## Named Parameters
 
 You can specify named parameters in your routes which will be passed along to
-your callback function.
+your callback function. **This is more for readability of the route than anything
+else. Please see the section below on important caveat.**
 
 ```php
 Flight::route('/@name/@id', function (string $name, string $id) {
@@ -209,7 +210,20 @@ Flight::route('/@name/@id:[0-9]{3}', function (string $name, string $id) {
 });
 ```
 
-> **Note:** Matching regex groups `()` with named parameters isn't supported. :'\(
+> **Note:** Matching regex groups `()` with positional parameters isn't supported. :'\(
+
+### Important Caveat
+
+While in the example above, it appears as that `@name` is directly tied to the variable `$name`, it is not. The order of the parameters in the callback function is what determines what is passed to it. So if you were to switch the order of the parameters in the callback function, the variables would be switched as well. Here is an example:
+
+```php
+Flight::route('/@name/@id', function (string $id, string $name) {
+  echo "hello, $name ($id)!";
+});
+```
+
+And if you went to the following URL: `/bob/123`, the output would be `hello, 123 (bob)!`. 
+Please be careful when you are setting up your routes and your callback functions.
 
 ## Optional Parameters
 
