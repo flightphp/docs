@@ -6,8 +6,9 @@ use app\middleware\HeaderSecurityMiddleware;
 use app\utils\Text;
 use app\utils\Translator;
 use Exception;
-use Flight;
 use flight\Engine;
+use DOMDocument;
+use DOMXPath;
 
 class IndexController {
 
@@ -57,6 +58,9 @@ class IndexController {
 		$markdown_html = $app->cache()->refreshIfExpired($section.'_html_'.$this->language, function() use ($app, $section)  {
 			return $app->parsedown()->text($this->Translator->getMarkdownLanguageFile($section . '.md'));
 		}, 86400); // 1 day
+
+		$markdown_html = $this->wrapContentInDiv($markdown_html);
+
 		$this->renderPage('single_page.latte', [
 			'page_title' => $section,
 			'markdown' => $markdown_html,
@@ -87,11 +91,83 @@ class IndexController {
 
 		$Translator = new Translator($this->language);
 
+		$markdown_html = $this->wrapContentInDiv($markdown_html);
+
 		$this->renderPage('single_page_scrollspy.latte', [
 			'custom_page_title' => ($page_title ? $page_title.' - ' : '').$Translator->translate($section),
 			'markdown' => $markdown_html,
 			'heading_data' => $heading_data,
 		]);
+	}
+
+	/**
+	 * This is necessary to encapsulate contents (<p>, <pre>, <ol>, <ul>)
+	 * in a div which can be then styled with CSS thanks to the class name `flight-block`
+	 */
+	private function wrapContentInDiv(string $html): string {
+
+		$dom = new DOMDocument();
+		$dom->loadHTML('<?xml encoding="utf-8" ?>' . $html);
+		$xpath = new DOMXPath($dom);
+
+		$elements = $xpath->query('//body/*');
+
+		$d = '';
+		$div = null;
+
+		foreach ($elements as $element) {
+			$elt_html = $element->C14N();
+
+			if (
+				$element->parentNode->nodeName === 'body'
+				&& (
+					$element->nodeName === 'p'
+					|| $element->nodeName === 'pre'
+				)
+			) {
+				if (is_null($div)) {
+					$d .= '<div class="flight-block">';
+					$div = true;
+				}
+			} else if (
+				$element->parentNode->nodeName === 'body'
+				&& $element->nodeName === 'h3'
+			) {
+				if (is_null($div)) {
+					$d .= '<div class="flight-block">';
+					$div = true;
+				} else {
+					$d .= '</div>';
+					$d .= '<div class="flight-block">';
+					$div = true;
+				}
+			}
+
+			if (
+				$element->nodeName !== 'p'
+				&& $element->nodeName !== 'pre'
+				&& $element->nodeName !== 'h3'
+				&& $element->nodeName !== 'h4'
+				&& $element->nodeName !== 'ol'
+				&& $element->nodeName !== 'ul'
+				&& $element->nodeName !== 'blockquote'
+				&& is_null($div) === false
+			) {
+				$d .= '</div>';
+				$div = null;
+			}
+
+
+			if ($element->parentNode->nodeName === 'body') {
+				$d .= $elt_html;
+			}
+		}
+
+		if (!is_null($div)) {
+			$d .= '</div>';
+		}
+
+		return $d;
 	}
 
 	public function licenseGet() {

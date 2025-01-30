@@ -53,15 +53,14 @@
 	<body>
 		<div id="container" class="container">
 			<header id="header" class="row justify-content-center">
-				<div class="title col-12">Flight</div>
-				<div class="subtitle col-12">{_'subtitle'}</div>
-				<input class="m-2 col-xs-4 col-md-6" id="autocomplete">
 				<nav class="navbar navbar-expand-lg navbar-light">
   					<div class="container-fluid">
 					<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main_navBarFlight" aria-controls="main_navBarFlight" aria-expanded="false" aria-label="Toggle navigation">
 						<span class="navbar-toggler-icon"></span>Toggle navigation
 					</button>
 					<div class="collapse navbar-collapse" id="main_navBarFlight">
+						<img class="flight-logo flight-light-image" src="css/images/logo-flight.png" alt="" height="30" />
+						<img class="flight-logo flight-dark-image" src="css/images/logo-flight-dark.png" alt="" height="30" />
       					<ul class="navbar-nav me-auto mb-2 mb-lg-0 mx-auto h5" id="nav">
 							<li class="nav-item"><a class="nav-link" href="{Flight::getUrl('about')}">{_'about'}</a></li>
 							<li class="nav-item"><a class="nav-link" href="{Flight::getUrl('install')}">{_'install'}</a></li>
@@ -85,6 +84,20 @@
 					</div>
 				</nav>
 			</header>
+			<div class="row flight-container-search">
+				<div class="col-4 text-right">
+					<img class="flight-light-image" src="css/images/left.png" alt="" />
+					<img class="flight-dark-image" src="css/images/left-dark.png" alt="" />
+				</div>
+				<div class="col-4 text-center">
+					<span class="flight-container-search-title">An <span class="flight-blue">extensible</span> microframework for PHP</span>
+					<input class="m-2 col-xs-4 col-md-6" id="autocomplete">
+				</div>
+				<div class="col-4">
+					<img class="flight-light-image" src="css/images/right.png" alt="" />
+					<img class="flight-dark-image" src="css/images/right-dark.png" alt="" />
+				</div>
+			</div>
 			<main role="main">
 				{block content}{/block}
 			</main>
