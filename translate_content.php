@@ -20,7 +20,8 @@ $languages = [
 	'zh',
 	'ja',
 	'ko',
-	'uk'
+	'uk',
+	'id'
 ];
 
 // pull from-date from cli args

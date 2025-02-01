@@ -27,10 +27,10 @@ Flight::start();
 
 <div class="flight-block-video">
   <div class="row">
-    <div class="col position-relative video-wrapper">
+    <div class="col-12 col-md-6 position-relative video-wrapper">
       <iframe class="video-bg" width="100vw" height="315" src="https://www.youtube.com/embed/VCztp1QLC2c?si=W3fSWEKmoCIlC7Z5" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
     </div>
-    <div class="col text-center mt-5 pt-5">
+    <div class="col-12 col-md-6 text-center mt-5 pt-5">
       <span class="fligth-title-video">Simple enough right?</span>
       <br>
       <a href="https://docs.flightphp.com/learn">Learn more about Flight in the documentation!</a>

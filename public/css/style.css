@@ -315,8 +315,7 @@ nav.navbar {
 }
 
 div.flight-container-search {
-  height: 250px;
-  padding-top: 60px;
+  max-height: 250px;
   background-color: #e8ecf2;
 
   .text-right {
@@ -334,10 +333,6 @@ div.flight-container-search {
   input:focus::placeholder,
   input:hover::placeholder {
     color: #848484;
-  }
-
-  span.flight-container-search-title {
-    font-size: 32px;
   }
 
   .autoComplete_wrapper mark {

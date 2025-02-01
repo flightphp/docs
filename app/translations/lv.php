@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'subtitle' => 'Paplašināms mikro-frameworkis PHP',
+    'subtitle' => '<span class="flight-blue">Paplašināms</span> mikro-frameworkis PHP',
     'search_the_docs' => 'Meklēt dokumentāciju',
     'about' => 'Par',
     'install' => 'Instalēt',

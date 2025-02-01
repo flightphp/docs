@@ -22,6 +22,7 @@
 		<link rel="alternate" hreflang="ja" href="{$url}?lang=ja" />
 		<link rel="alternate" hreflang="ko" href="{$url}?lang=ko" />
 		<link rel="alternate" hreflang="uk" href="{$url}?lang=uk" />
+		<link rel="alternate" hreflang="id" href="{$url}?lang=id" />
 		<link rel="icon" href="/favicon.png" type="image/png" />
 		<title>
 			{if isset($page_title)}
@@ -55,11 +56,11 @@
 				<nav class="navbar navbar-expand-lg navbar-light">
   					<div class="container-fluid">
 					<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main_navBarFlight" aria-controls="main_navBarFlight" aria-expanded="false" aria-label="Toggle navigation">
-						<span class="navbar-toggler-icon"></span>Toggle navigation
+						<span class="navbar-toggler-icon"></span><span class="visually-hidden">Toggle navigation</span>
 					</button>
+					<img class="flight-logo flight-light-image" src="/css/images/logo-flight.png" alt="" height="30" />
+					<img class="flight-logo flight-dark-image" src="/css/images/logo-flight-dark.png" alt="" height="30" />
 					<div class="collapse navbar-collapse" id="main_navBarFlight">
-						<img class="flight-logo flight-light-image" src="/css/images/logo-flight.png" alt="" height="30" />
-						<img class="flight-logo flight-dark-image" src="/css/images/logo-flight-dark.png" alt="" height="30" />
       					<ul class="navbar-nav me-auto mb-2 mb-lg-0 mx-auto h5" id="nav">
 							<li class="nav-item"><a n:class="in_array(Flight::request()->url, ['', '/']) ? 'active', nav-link" href="{Flight::getUrl('about')}">{_'about'}</a></li>
 							<li class="nav-item"><a n:class="strpos(Flight::request()->url, '/install') !== false ? 'active', nav-link" href="{Flight::getUrl('install')}">{_'install'}</a></li>
@@ -83,20 +84,22 @@
 					</div>
 				</nav>
 			</header>
-			<div class="row flight-container-search">
-				<div class="col-4 text-right">
-					<img class="flight-light-image" src="/css/images/left.png" alt="" />
-					<img class="flight-dark-image" src="/css/images/left-dark.png" alt="" />
+			<div class="row flight-container-search pt-2 py-md-5">
+				<div class="d-none d-md-block col-md-4 text-right">
+					<img class="flight-light-image img-fluid" src="/css/images/left.png" alt="" />
+					<img class="flight-dark-image img-fluid" src="/css/images/left-dark.png" alt="" />
 				</div>
-				<div class="col-4 text-center">
-					<span class="flight-container-search-title">An <span class="flight-blue">extensible</span> microframework for PHP</span>
-					<input class="m-2 col-xs-4 col-md-6" id="autocomplete">
+				<div class="col-md-4 col-12 text-center">
+					<span class="fs-5 d-block d-md-none">{_'subtitle'|noescape}</span>
+					<span class="fs-1 d-none d-md-block">{_'subtitle'|noescape}</span>
+					<input class="m-2" id="autocomplete">
 				</div>
-				<div class="col-4">
-					<img class="flight-light-image" src="/css/images/right.png" alt="" />
-					<img class="flight-dark-image" src="/css/images/right-dark.png" alt="" />
+				<div class="col-md-4 d-none d-md-block">
+					<img class="flight-light-image img-fluid" src="/css/images/right.png" alt="" />
+					<img class="flight-dark-image img-fluid" src="/css/images/right-dark.png" alt="" />
 				</div>
 			</div>
+			
 			<main role="main">
 				{block content}{/block}
 			</main>
@@ -116,6 +119,7 @@
 						<a href="{$url}?lang=pt">Português</a> -
 						<a href="{$url}?lang=lv">Latviešu</a> -
 						<a href="{$url}?lang=de">Deutsch</a> - 
+						<a href="{$url}?lang=id">Indonesia</a> - 
 						<a href="{$url}?lang=ru">Русский</a> - 
 						<a href="{$url}?lang=uk">українська</a> - 
 						<a href="{$url}?lang=zh">中文</a> - 

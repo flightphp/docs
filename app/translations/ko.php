@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'subtitle' => 'PHP의 확장 가능한 마이크로 프레임워크',
+    'subtitle' => 'PHP의 <span class="flight-blue">확장 가능한</span> 마이크로 프레임워크',
     'search_the_docs' => '문서 검색',
     'about' => '홈페이지',
     'install' => '설치',

@@ -1,7 +1,7 @@
 <?php
 
 return [
-	'subtitle' => 'Расширяемый микро-фреймворк для PHP',
+	'subtitle' => '<span class="flight-blue">Расширяемый</span> микро-фреймворк для PHP',
 	'search_the_docs' => 'Поиск в документации',
 	'about' => 'О нас',
 	'install' => 'Установка',

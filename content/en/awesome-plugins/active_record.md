@@ -500,6 +500,20 @@ Where `field BETWEEN $value AND $value1`
 $user->between('id', [1, 2])->find();
 ```
 
+### OR Conditions
+
+It is possible to wrap your conditions in an OR statement. This is done with either the `startWrap()` and `endWrap()` method or by filling in the 3rd parameter of the condition after the field and value.
+
+```php
+// Method 1
+$user->eq('id', 1)->startWrap()->eq('name', 'demo')->or()->eq('name', 'test')->endWrap('OR')->find();
+// This will evaluate to `id = 1 AND (name = 'demo' OR name = 'test')`
+
+// Method 2
+$user->eq('id', 1)->eq('name', 'demo', 'OR')->find();
+// This will evaluate to `id = 1 OR name = 'demo'`
+```
+
 ## Relationships
 You can set several kinds of relationships using this library. You can set one->many and one->one relationships between tables. This requires a little extra setup in the class beforehand.
 

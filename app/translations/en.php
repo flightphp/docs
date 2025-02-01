@@ -1,7 +1,7 @@
 <?php
 
 return [
-	'subtitle' => 'An extensible micro-framework for PHP',
+	'subtitle' => 'An <span class="flight-blue">extensible</span> micro-framework for PHP',
 	'search_the_docs' => 'Search the docs',
 	'about' => 'About',
 	'install' => 'Install',
