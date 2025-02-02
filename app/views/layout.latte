@@ -49,6 +49,58 @@
 		<meta name="twitter:image" content="https://opengraph.b-cdn.net/production/documents/ade04545-313f-484b-b7fa-1ac9b7353fdc.png?token=PdAO1XOREJuL0GoaHMKS5iTnTrlcpivus_gxSKrMHAM&height=526&width=1200&expires=33243193906">
 
 		<!-- Meta Tags Generated via https://www.opengraph.xyz -->
+
+
+		<script type="text/javascript" nonce="{$nonce}" n:syntax="off">
+			/*!
+			 * Color mode toggler for Bootstrap's docs (https://getbootstrap.com/)
+			 * Copyright 2011-2023 The Bootstrap Authors
+			 * Licensed under the Creative Commons Attribution 3.0 Unported License.
+			 */
+
+			(() => {
+				'use strict'
+
+				const getStoredTheme = () => localStorage.getItem('theme')
+				const setStoredTheme = theme => localStorage.setItem('theme', theme)
+
+				const getPreferredTheme = () => {
+					const storedTheme = getStoredTheme()
+					if (storedTheme) {
+						return storedTheme
+					}
+
+					return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+				}
+
+				const setTheme = theme => {
+					document.documentElement.setAttribute('data-bs-theme', theme)
+					const prismLink = document.getElementById('prism_link');
+					let prismHref = 'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/';
+					if(theme === 'light') {
+						prismLink.setAttribute('href', prismHref + 'prism.min.css')
+					} else {
+						prismLink.setAttribute('href', prismHref + 'prism-twilight.min.css')
+					}
+				}
+
+				setTheme(getPreferredTheme())
+
+				// when you click on a data-bs-theme-value set the theme and store it
+				window.addEventListener('DOMContentLoaded', () => {
+					document.querySelectorAll('[data-bs-theme-value]')
+					.forEach(toggle => {
+						toggle.addEventListener('click', () => {
+						const theme = toggle.getAttribute('data-bs-theme-value')
+							setStoredTheme(theme)
+							setTheme(theme);
+						})
+					})
+				})
+ 
+				
+			})();
+		</script>
 	</head>
 	<body>
 		<div id="container" class="container">
@@ -142,56 +194,7 @@
 
 			gtag('config', 'G-3C36SDZ8FE');
 		</script>
-		<script type="text/javascript" nonce="{$nonce}" n:syntax="off">
-			/*!
-			 * Color mode toggler for Bootstrap's docs (https://getbootstrap.com/)
-			 * Copyright 2011-2023 The Bootstrap Authors
-			 * Licensed under the Creative Commons Attribution 3.0 Unported License.
-			 */
-
-			(() => {
-				'use strict'
-
-				const getStoredTheme = () => localStorage.getItem('theme')
-				const setStoredTheme = theme => localStorage.setItem('theme', theme)
-
-				const getPreferredTheme = () => {
-					const storedTheme = getStoredTheme()
-					if (storedTheme) {
-						return storedTheme
-					}
-
-					return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
-				}
-
-				const setTheme = theme => {
-					document.documentElement.setAttribute('data-bs-theme', theme)
-					const prismLink = document.getElementById('prism_link');
-					let prismHref = 'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/';
-					if(theme === 'light') {
-						prismLink.setAttribute('href', prismHref + 'prism.min.css')
-					} else {
-						prismLink.setAttribute('href', prismHref + 'prism-twilight.min.css')
-					}
-				}
-
-				setTheme(getPreferredTheme())
-
-				// when you click on a data-bs-theme-value set the theme and store it
-				window.addEventListener('DOMContentLoaded', () => {
-					document.querySelectorAll('[data-bs-theme-value]')
-					.forEach(toggle => {
-						toggle.addEventListener('click', () => {
-						const theme = toggle.getAttribute('data-bs-theme-value')
-							setStoredTheme(theme)
-							setTheme(theme);
-						})
-					})
-				})
- 
-				
-			})();
-		</script>
+		
 		<script src="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@10.2.9/dist/autoComplete.min.js"></script>
 		<script nonce="{$nonce}" n:syntax="double">
 			const autoCompletejs = new autoComplete({
