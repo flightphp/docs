@@ -22,6 +22,7 @@ We've tried to track down what we can of the various types of media around the i
 
 ## Videos
 
+- [Create a REST API for IoT Devices Using PHP & FlightPHP - ESP32 API](https://www.youtube.com/watch?v=VpsuaIH0EiU) by [IoT Craft Hub](https://www.youtube.com/@IoTCraftHub) (2024)
 - [PHP Flight Framework Simple Introductory Video](https://www.youtube.com/watch?v=VCztp1QLC2c) by [n0nag0n](https://www.youtube.com/@n0nag0n) (2024)
 - [Set header HTTP code in Flightphp (3 Solutions!!)](https://www.youtube.com/watch?v=g1i0iy3LqKo) by [Roel Van de Paar](https://www.youtube.com/@RoelVandePaar) (2024)
 - [PHP Flight Framework Tutorial. Super easy API Project!](https://www.youtube.com/watch?v=46WVlj1bXH0) by [n0nag0n](https://www.youtube.com/@n0nag0n) (2022)
