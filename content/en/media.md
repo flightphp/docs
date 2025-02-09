@@ -2,7 +2,7 @@
 
 We've tried to track down what we can of the various types of media around the internet around Flight. See below for different resources that you can use to learn more about Flight.
 
-## Articles
+## Articles and Write-ups
 
 - [Best PHP Micro Frameworks for 2024](https://dev.to/n0nag0n/best-php-micro-frameworks-for-2024-19h6) by [n0nag0n](https://github.com/n0nag0n) (2024)
 - [Creating a RESTful API with Flight Framework](https://dev.to/n0nag0n/creating-a-restful-api-with-flight-framework-56lj) by [n0nag0n](https://github.com/n0nag0n) (2024)
@@ -20,7 +20,7 @@ We've tried to track down what we can of the various types of media around the i
 - [Trying Out New PHP Framework (Flight)](https://scaledimages.com/post/2017-09-20-trying-out-new-php-framework-flight/) by Leon (2017)
 - [Setting up FlightPHP to work with Backbonejs](https://timothytocci.com/category/flightphp/) by [Timothy Tocci](https://timothytocci.com/author/timothytocci/) (2015)
 
-## Videos
+## Videos and Tutorials
 
 - [Create a REST API for IoT Devices Using PHP & FlightPHP - ESP32 API](https://www.youtube.com/watch?v=VpsuaIH0EiU) by [IoT Craft Hub](https://www.youtube.com/@IoTCraftHub) (2024)
 - [PHP Flight Framework Simple Introductory Video](https://www.youtube.com/watch?v=VCztp1QLC2c) by [n0nag0n](https://www.youtube.com/@n0nag0n) (2024)
