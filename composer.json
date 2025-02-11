@@ -13,9 +13,9 @@
 		"php": "^8.0",
 		"ext-json": "*",
 		"erusev/parsedown": "^1.7",
-		"flightphp/core": "^3.0",
+		"flightphp/core": "^3.13",
 		"latte/latte": "^3.0",
-		"tracy/tracy": "^2.9",
+		"tracy/tracy": "^2.10",
 		"wruczek/php-file-cache": "^0.0.5"
 	},
     "config": {
@@ -26,6 +26,6 @@
         "start": "[ -x \"$(command -v php8.2)\" ] && php8.2 -S localhost:8000 -t public || php -S localhost:8000 -t public"
     },
 	"require-dev": {
-		"flightphp/tracy-extensions": "^0.2"
+		"flightphp/tracy-extensions": "^0.2.3"
 	}
 }
