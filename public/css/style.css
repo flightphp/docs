@@ -336,7 +336,7 @@ div.flight-container-search {
         color: #323232;
         border-radius: 18.5px;
         border-color: #C3C6CA;
-        background-image: url(/css/images/search.svg);
+        background-image: url(./images/search.svg);
     }
 
     input::placeholder,
