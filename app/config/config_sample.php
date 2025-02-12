@@ -10,21 +10,22 @@ date_default_timezone_set('UTC');
 error_reporting(E_ALL);
 
 // Set the default character encoding
-if(function_exists('mb_internal_encoding') === true) {
+if (function_exists('mb_internal_encoding') === true) {
 	mb_internal_encoding('UTF-8');
 }
 
 // Set the default locale
-if(function_exists('setlocale') === true) {
+if (function_exists('setlocale') === true) {
 	setlocale(LC_ALL, 'en_US.UTF-8');
 }
 
 /* 
  * Set some flight variables
  */
-if(empty($app)) {
+if (empty($app)) {
 	$app = Flight::app();
 }
+
 $app->path(__DIR__ . $ds . '..' . $ds . '..');
 $app->set('flight.base_url', '/'); // if this is in a subdirectory, you'll need to change this
 $app->set('flight.case_sensitive', false); // if you want case sensitive routes, set this to true
@@ -48,8 +49,9 @@ Debugger::enable(); // auto tries to figure out your environment
 Debugger::$logDirectory = __DIR__ . $ds . '..' . $ds . 'log';
 Debugger::$strictMode = true; // display all errors
 // Debugger::$strictMode = E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED; // all errors except deprecated notices
+
 if (Debugger::$showBar) {
-    $app->set('flight.content_length', false); // if Debugger bar is visible, then content-length can not be set by Flight
+	$app->set('flight.content_length', false); // if Debugger bar is visible, then content-length can not be set by Flight
 	new TracyExtensionLoader($app);
 }
 
@@ -63,6 +65,5 @@ if (Debugger::$showBar) {
  */
 
 define('ENVIRONMENT', 'development');
-return [
 
-];
+return [];
