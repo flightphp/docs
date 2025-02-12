@@ -72,27 +72,8 @@
                             {_'code'}
                         </a>
                     </li>
-                    <li class="nav-item dropdown">
-                        <button
-                            class="btn btn-link dropdown-toggle"
-                            id="bd-theme"
-                            type="button"
-                            aria-expanded="false"
-                            data-bs-toggle="dropdown"
-                            data-bs-display="static"
-                            aria-label="Toggle theme (dark)">
-                            <i class="bi bi-brightness-high"></i>
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="bd-theme-text">
-                            <a href="#" class="dropdown-item" data-bs-theme-value="light">
-                                <i class="bi bi-brightness-high-fill"></i>
-                                {_'light'}
-                            </a>
-                            <a href="#" class="dropdown-item" data-bs-theme-value="dark">
-                                <i class="bi bi-moon-fill"></i>
-                                {_'dark'}
-                            </a>
-                        </div>
+                    <li class="nav-item">
+                        {include 'theme-toggler.latte'}
                     </li>
                 </ul>
             </div>
