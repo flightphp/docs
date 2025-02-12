@@ -2,20 +2,20 @@
 
 {block content}
 <div class="row">
-	<div class="col-md-3">
-		<nav id="navbar-learn" class="sticky-top flex-column align-items-stretch pe-4 border-end">
-			<nav class="nav nav-pills flex-column">
-				{foreach $heading_data as $heading}
-				<a class="nav-link" href="#{$heading['id']}" data-target="#{$heading['id']}">{$heading['title']}</a>
-				{/foreach}
-			</nav>
-		</nav>
-	</div>
+    <div class="col-md-3">
+        <nav id="navbar-learn" class="sticky-top flex-column align-items-stretch pe-4 border-end">
+            <nav class="nav nav-pills flex-column">
+                {foreach $heading_data as $heading}
+                <a class="nav-link" href="#{$heading['id']}" data-target="#{$heading['id']}">{$heading['title']}</a>
+                {/foreach}
+            </nav>
+        </nav>
+    </div>
 
-	<div class="col-md-9">
-		<div data-bs-spy="scroll" data-bs-target="#navbar-learn" data-bs-smooth-scroll="true" tabindex="0">
-			{$markdown|noescape}
-		</div>
-	</div>
+    <div class="col-md-9">
+        <div data-bs-spy="scroll" data-bs-target="#navbar-learn" data-bs-smooth-scroll="true" tabindex="0">
+            {$markdown|noescape}
+        </div>
+    </div>
 </div>
 {/block}
