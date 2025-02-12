@@ -240,7 +240,11 @@ class IndexController {
             $line_content = $line_parts[2];
 
             // pull the title from the first header tag in the markdown file.
-            preg_match('/# (.+)/', file_get_contents($file_path), $matches);
+            $file_contents = file_exists($file_path)
+                ? file_get_contents($file_path)
+                : '';
+
+            preg_match('/# (.+)/', $file_contents, $matches);
 
             if (empty($matches[1])) {
                 continue;
