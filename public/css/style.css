@@ -1,23 +1,26 @@
 html,
 body {
-    font-family: "Inter", -apple-system, BlinkMacSystemFont, Segoe UI, Oxygen, Ubuntu, Cantarell,
-        Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+    font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        'Segoe UI',
+        Oxygen,
+        Ubuntu,
+        Cantarell,
+        'Fira Sans',
+        'Droid Sans',
+        'Helvetica Neue',
+        sans-serif;
     font-size: 14px;
-    line-height: 1.8;
-    padding: 0;
-    margin: 0;
     box-sizing: border-box;
     background: #f3f3f3;
-    width: 100%;
-    position: relative;
-
 }
 
 *,
 *:before,
 *:after {
     box-sizing: inherit;
-    -webkit-font-smoothing: antialiased;
 }
 
 a,
