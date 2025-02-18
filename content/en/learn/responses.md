@@ -176,6 +176,8 @@ pass some data to be JSON encoded:
 Flight::json(['id' => 123]);
 ```
 
+> **Note:** By default, Flight will send a `Content-Type: application/json` header with the response. It will also use the constants `JSON_THROW_ON_ERROR` and `JSON_UNESCAPED_SLASHES` when encoding the JSON.
+
 ### JSON with Status Code
 
 You can also pass in a status code as the second argument:
