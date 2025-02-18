@@ -1,7 +1,7 @@
-<?php 
+<?php
 
 return [
-    'subtitle' => 'Ein erweiterbares Micro-Framework für PHP',
+    'subtitle' => 'Ein <span class="flight-blue">erweiterbares</span> Micro-Framework für PHP',
     'search_the_docs' => 'Suche in den Dokumenten',
     'about' => 'Über',
     'install' => 'Installieren',
@@ -15,7 +15,7 @@ return [
     'license' => 'Lizenz',
     'missing_documentation' => 'Fehlende Dokumentation? <a href="https://github.com/flightphp/docs" target="_blank">Fork und trage zur Verbesserung bei!</a>',
     'single_page_documentation' => 'Einzelseitige Dokumentation',
-	'click_here' => 'Klicke hier',
-	'need_to_view_single_page' => 'Möchten Sie die Dokumentation auf einer einzigen Seite anzeigen?',
-	'media' => 'Medien',
+    'click_here' => 'Klicke hier',
+    'need_to_view_single_page' => 'Möchten Sie die Dokumentation auf einer einzigen Seite anzeigen?',
+    'media' => 'Medien',
 ];

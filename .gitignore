@@ -4,3 +4,6 @@ app/config/config.php
 .vagrant/
 app/log/
 app/cache/
+.DS_Store
+*.sublime-*
+biome.*

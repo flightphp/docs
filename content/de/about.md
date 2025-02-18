@@ -1,15 +1,15 @@
 # Was ist Flight?
 
-Flight ist ein schnelles, einfaches, erweiterbares Framework für PHP. Es ist ziemlich vielseitig und kann für den Aufbau aller Arten von Webanwendungen verwendet werden. Es ist mit Einfachheit im Sinn entwickelt und auf eine Art und Weise geschrieben, die einfach zu verstehen und zu nutzen ist.
+Flight ist ein schnelles, einfaches und erweiterbares Framework für PHP. Es ist ziemlich vielseitig und kann zum Erstellen jeder Art von Webanwendung verwendet werden. Es wurde mit einem Fokus auf Einfachheit entwickelt und ist so geschrieben, dass es leicht verständlich und benutzbar ist.
 
-Flight ist ein großartiges Einsteiger-Framework für diejenigen, die neu in PHP sind und lernen möchten, wie man Webanwendungen erstellt. Es ist auch ein großartiges Framework für erfahrene Entwickler, die mehr Kontrolle über ihre Webanwendungen haben möchten. Es ist konzipiert, um leicht eine RESTful API, eine einfache Webanwendung oder eine komplexe Webanwendung zu erstellen.
+Flight ist ein großartiges Einsteiger-Framework für diejenigen, die neu in PHP sind und lernen möchten, wie man Webanwendungen erstellt. Es ist auch ein großartiges Framework für erfahrene Entwickler, die mehr Kontrolle über ihre Webanwendungen wünschen. Es ist so konzipiert, dass man einfach eine RESTful API, eine einfache Webanwendung oder eine komplexe Webanwendung erstellen kann.
 
 ## Schnellstart
 
 ```php
 <?php
 
-// wenn mit Composer installiert
+// wenn mit composer installiert
 require 'vendor/autoload.php';
 // oder wenn manuell per Zip-Datei installiert
 // require 'flight/Flight.php';
@@ -19,39 +19,47 @@ Flight::route('/', function() {
 });
 
 Flight::route('/json', function() {
-  Flight::json(['hallo' => 'Welt']);
+  Flight::json(['Hallo' => 'Welt']);
 });
 
 Flight::start();
 ```
 
-<div class="video-container">
-	<iframe width="100vw" height="315" src="https://www.youtube.com/embed/VCztp1QLC2c?si=W3fSWEKmoCIlC7Z5" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+<div class="flight-block-video">
+  <div class="row">
+    <div class="col-12 col-md-6 position-relative video-wrapper">
+      <iframe class="video-bg" width="100vw" height="315" src="https://www.youtube.com/embed/VCztp1QLC2c?si=W3fSWEKmoCIlC7Z5" title="YouTube-Video-Player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+    </div>
+    <div class="col-12 col-md-6 text-center mt-5 pt-5">
+      <span class="fligth-title-video">Einfach genug, oder?</span>
+      <br>
+      <a href="https://docs.flightphp.com/learn">Erfahren Sie mehr über Flight in der Dokumentation!</a>
+
+    </div>
+  </div>
 </div>
 
-Einfach genug, oder? [Erfahren Sie mehr über Flight in der Dokumentation!](learn)
+### Skeleton/Boilerplate App
 
-### Skelett/Grundgerüstanwendung
+Es gibt eine Beispielanwendung, die Ihnen helfen kann, mit dem Flight Framework zu beginnen. Gehen Sie zu [flightphp/skeleton](https://github.com/flightphp/skeleton) für Anleitungen, wie Sie loslegen können! Sie können auch die Seite [examples](examples) besuchen, um Inspiration für einige der Dinge zu erhalten, die Sie mit Flight tun können.
 
-Es gibt eine Beispielanwendung, die Ihnen hilft, mit dem Flight Framework zu beginnen. Gehen Sie zu [flightphp/skeleton](https://github.com/flightphp/skeleton), um Anweisungen zum Einstieg zu erhalten! Sie können auch die [Beispiele](examples) Seite besuchen, um sich von einigen der Dinge inspirieren zu lassen, die Sie mit Flight machen können.
+# Gemeinschaft
 
-# Community
+Wir sind auf Matrix Chat, chatten Sie mit uns unter [#flight-php-framework:matrix.org](https://matrix.to/#/#flight-php-framework:matrix.org).
 
-Wir sind im Matrix-Chat mit uns unter [#flight-php-framework:matrix.org](https://matrix.to/#/#flight-php-framework:matrix.org).
-
-# Beitragende
+# Mitwirken
 
 Es gibt zwei Möglichkeiten, wie Sie zu Flight beitragen können: 
 
-1. Sie können zum Kernframework beitragen, indem Sie das [Kern-Repository](https://github.com/flightphp/core) besuchen. 
-1. Sie können zur Dokumentation beitragen. Diese Dokumentationswebsite wird auf [Github](https://github.com/flightphp/docs) gehostet. Wenn Sie einen Fehler bemerken oder etwas besser ausarbeiten möchten, können Sie es gerne korrigieren und einen Pull-Request einreichen! Wir versuchen, auf dem neuesten Stand zu bleiben, aber Aktualisierungen und Sprachübersetzungen sind willkommen.
+1. Sie können zum Kern-Framework beitragen, indem Sie das [Core-Repository](https://github.com/flightphp/core) besuchen. 
+1. Sie können zur Dokumentation beitragen. Diese Dokumentationswebsite wird auf [Github](https://github.com/flightphp/docs) gehostet. Wenn Sie einen Fehler bemerken oder etwas besser ausarbeiten möchten, fühlen Sie sich frei, es zu korrigieren und einen Pull-Request einzureichen! Wir versuchen, auf dem Laufenden zu bleiben, aber Updates und Übersetzungen sind willkommen.
 
 # Anforderungen
 
 Flight erfordert PHP 7.4 oder höher.
 
-**Hinweis:** PHP 7.4 wird unterstützt, da zum aktuellen Zeitpunkt der Erstellung (2024) PHP 7.4 die Standardversion für einige LTS-Linux-Distributionen ist. Ein Wechsel zu PHP >8 würde für diese Benutzer viele Kopfschmerzen verursachen. Das Framework unterstützt auch PHP >8.
+**Hinweis:** PHP 7.4 wird unterstützt, da zum aktuellen Zeitpunkt (2024) PHP 7.4 die Standardversion für einige LTS-Linux-Distributionen ist. Ein Wechsel zu PHP >8 würde bei diesen Benutzern zu vielen Problemen führen. Das Framework unterstützt auch PHP >8.
 
 # Lizenz
 
-Flight wird unter der [MIT](https://github.com/flightphp/core/blob/master/LICENSE) Lizenz veröffentlicht.
+Flight ist unter der [MIT](https://github.com/flightphp/core/blob/master/LICENSE) Lizenz veröffentlicht.
