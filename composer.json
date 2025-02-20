@@ -32,6 +32,7 @@
         "start": "[ -x \"$(command -v php8.2)\" ] && php8.2 -S localhost:8000 -t public || php -S localhost:8000 -t public"
     },
     "require-dev": {
-        "flightphp/tracy-extensions": "^0.2.3"
+        "flightphp/tracy-extensions": "^0.2.3",
+        "rector/rector": "^2.0"
     }
 }
