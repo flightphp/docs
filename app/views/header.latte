@@ -1,6 +1,12 @@
-<header id="header" class="row justify-content-center">
-    <nav class="navbar navbar-expand-lg navbar-light">
-        <div class="container-fluid">
+<header id="header" class="text-center row justify-content-center">
+    <nav class="navbar navbar-expand-lg px-4">
+        {include 'logo.latte'}
+
+        <div class="d-flex align-items-center gap-4">
+            <ul class="navbar-nav">
+                {include 'theme-toggler.latte'}
+            </ul>
+
             <button
                 class="navbar-toggler"
                 type="button"
@@ -12,64 +18,36 @@
                 <span class="navbar-toggler-icon"></span>
                 <span class="visually-hidden">Toggle navigation</span>
             </button>
+        </div>
 
-            {include 'logo.latte'}
+        <div class="collapse navbar-collapse" id="main_navBarFlight">
+            <ul class="navbar-nav ms-auto my-4 my-md-0" id="nav">
+                {var $navItems = [
+                [['', '/'], 'about'],
+                [['/install'], 'install'],
+                [['/learn'], 'learn'],
+                [['/media'], 'media'],
+                [['/examples'], 'examples'],
+                [['/awesome-plugins'], 'awesome_plugins']
+                ]}
 
-            <div class="collapse navbar-collapse" id="main_navBarFlight">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0 mx-auto h5" id="nav">
-                    <li class="nav-item">
-                        <a
-                            n:class="in_array(Flight::request()->url, ['', '/']) ? 'active', nav-link"
-                            href="{Flight::getUrl('about')}">
-                            {_'about'}
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a
-                            n:class="strpos(Flight::request()->url, '/install') !== false ? 'active', nav-link"
-                            href="{Flight::getUrl('install')}">
-                            {_'install'}
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a
-                            n:class="strpos(Flight::request()->url, '/learn') !== false ? 'active', nav-link"
-                            href="{Flight::getUrl('learn')}">
-                            {_'learn'}
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a
-                            n:class="strpos(Flight::request()->url, '/media') !== false ? 'active', nav-link"
-                            href="{Flight::getUrl('media')}">
-                            {_'media'}
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a
-                            n:class="strpos(Flight::request()->url, '/examples') !== false ? 'active', nav-link"
-                            href="{Flight::getUrl('examples')}">
-                            {_'examples'}
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a
-                            n:class="strpos(Flight::request()->url, '/awesome-plugins') !== false ? 'active', nav-link"
-                            href="{Flight::getUrl('awesome_plugins')}">
-                            {_'awesome_plugins'}
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="https://github.com/flightphp/core"
-                            target="_blank">
-                            {_'code'}
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        {include 'theme-toggler.latte'}
-                    </li>
-                </ul>
-            </div>
+                {foreach $navItems as $item}
+                <li class="nav-item border">
+                    <a
+                        n:class="in_array(Flight::request()->url, $item[0]) ? 'active', nav-link"
+                        href="{Flight::getUrl($item[1])}">
+                        {_$item[1]}
+                    </a>
+                </li>
+                {/foreach}
+
+                <li class="nav-item">
+                    <a class="nav-link" href="https://github.com/flightphp/core"
+                        target="_blank">
+                        {_'code'}
+                    </a>
+                </li>
+            </ul>
         </div>
     </nav>
 </header>
