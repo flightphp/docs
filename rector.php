@@ -9,7 +9,4 @@ return RectorConfig::configure()
         __DIR__ . '/app',
         __DIR__ . '/public',
     ])
-    ->withPhpSets(php82: true)
-    ->withTypeCoverageLevel(0)
-    ->withDeadCodeLevel(0)
-    ->withCodeQualityLevel(0);
+    ->withPhpSets(php82: true);
