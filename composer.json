@@ -20,7 +20,10 @@
     },
     "config": {
         "process-timeout": 0,
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "phpstan/extension-installer": true
+        }
     },
     "scripts": {
         "pre-install-cmd": [
@@ -33,6 +36,8 @@
     },
     "require-dev": {
         "flightphp/tracy-extensions": "^0.2.3",
+        "phpstan/extension-installer": "^1.4",
+        "phpstan/phpstan": "^2.1",
         "rector/rector": "^2.0"
     }
 }

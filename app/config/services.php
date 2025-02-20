@@ -11,7 +11,7 @@ use Wruczek\PhpFileCache\PhpFileCache;
  * @var array $config 
  * @var CustomEngine $app
  */
-$app->register('latte', LatteEngine::class, [], function (LatteEngine $latte) {
+$app->register('latte', LatteEngine::class, [], function (LatteEngine $latte): void {
     $latte->setTempDirectory(__DIR__ . '/../cache/');
     $latte->setLoader(new FileLoader(__DIR__ . '/../views/'));
     $languageAbbreviation = Translator::getLanguageFromRequest();
@@ -25,7 +25,7 @@ $app->register('latte', LatteEngine::class, [], function (LatteEngine $latte) {
     $latte->addExtension($translatorExtension);
 });
 
-$app->register('cache', PhpFileCache::class, [__DIR__ . '/../cache/'], function (PhpFileCache $cache) {
+$app->register('cache', PhpFileCache::class, [__DIR__ . '/../cache/'], function (PhpFileCache $cache): void {
     $cache->setDevMode(ENVIRONMENT === 'development');
 });
 

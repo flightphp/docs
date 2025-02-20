@@ -7,10 +7,7 @@ namespace app\utils;
 use Flight;
 
 class Translator {
-    protected string $language;
-
-    public function __construct(string $language = 'en') {
-        $this->language = $language;
+    public function __construct(protected string $language = 'en') {
     }
 
     public function translate(string $translationKey) {
@@ -50,7 +47,14 @@ class Translator {
 
         if (!empty($language)) {
             $host = ENVIRONMENT !== 'development' ? Flight::request()->getHeader('Host') : 'localhost';
-            setcookie('lang', $language, time() + (86400 * 30), '/', $host, ENVIRONMENT !== 'development', true); // 86400 = 1 day
+
+            setcookie('lang', (string) $language, [
+                'expires' => time() + (86400 * 30),
+                'path' => '/',
+                'domain' => $host,
+                'secure' => ENVIRONMENT !== 'development',
+                'httponly' => true
+            ]); // 86400 = 1 day
         }
 
         // pull it from the cookie
@@ -63,7 +67,7 @@ class Translator {
             $language = Flight::request()->getHeader('Accept-Language', 'en');
         }
 
-        $languageAbbreviation = substr($language, 0, 2);
+        $languageAbbreviation = substr((string) $language, 0, 2);
 
         // This is a temporary cache, so we don't have to do this on every request
         Flight::set('current_script_language', $languageAbbreviation);

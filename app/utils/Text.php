@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace app\utils;
 
 class Text {
-    public static function slugify($text) {
+    public static function slugify(string $text) {
         // Swap out Non "Letters" with a -
         $text = preg_replace('/[^\\pL\d]+/u', '-', $text);
 
         // Trim out extra -'s
-        $text = trim($text, '-');
+        $text = trim((string) $text, '-');
 
         // Convert letters that we have left to the closest ASCII representation
         $text = iconv('utf-8', 'us-ascii//TRANSLIT', $text);
@@ -19,12 +19,12 @@ class Text {
         $text = strtolower($text);
 
         // Strip out anything we haven't been able to convert
-        $text = preg_replace('/[^-\w]+/', '', $text);
+        $text = preg_replace('/[^\-\w]+/', '', $text);
 
         return $text;
     }
 
-    public static function generateAndConvertHeaderListFromHtml($markdown_html, array &$heading_data = [], $heading_tag = 'h1') {
+    public static function generateAndConvertHeaderListFromHtml(string $markdown_html, array &$heading_data = [], $heading_tag = 'h1') {
         $markdown_html = preg_replace_callback('/(\<' . $heading_tag . '(.*?))\>(.*)(<\/' . $heading_tag . '>)/i', function ($matches) use (&$heading_data) {
             if (! stripos($matches[0], 'id=')) {
                 $title = strip_tags($matches[3]);

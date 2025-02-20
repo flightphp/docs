@@ -17,10 +17,8 @@ class IndexController {
     protected const CONTENT_DIR = __DIR__ . self::DS . '..' . self::DS . '..' . self::DS . 'content' . self::DS;
     protected string $language = 'en';
     protected Translator $Translator;
-    protected Engine $app;
 
-    public function __construct(Engine $app) {
-        $this->app = $app;
+    public function __construct(protected Engine $app) {
         $this->language = Translator::getLanguageFromRequest();
         $this->Translator = new Translator($this->language);
     }
@@ -29,7 +27,7 @@ class IndexController {
         $request = $this->app->request();
         $uri = $request->url;
 
-        if (strpos($uri, '?') !== false) {
+        if (str_contains($uri, '?')) {
             $uri = substr($uri, 0, strpos($uri, '?'));
         }
 
@@ -42,9 +40,7 @@ class IndexController {
     protected function compileSinglePage(string $section) {
         $app = $this->app;
 
-        $markdown_html = $app->cache()->refreshIfExpired($section . '_html_' . $this->language, function () use ($app, $section) {
-            return $app->parsedown()->text($this->Translator->getMarkdownLanguageFile($section . '.md'));
-        }, 86400); // 1 day
+        $markdown_html = $app->cache()->refreshIfExpired($section . '_html_' . $this->language, fn() => $app->parsedown()->text($this->Translator->getMarkdownLanguageFile($section . '.md')), 86400); // 1 day
 
         $markdown_html = $this->wrapContentInDiv($markdown_html);
 
@@ -71,7 +67,7 @@ class IndexController {
 
         // pull the title out of the first h1 tag
         $page_title = '';
-        preg_match('/\<h1\>(.*)\<\/h1\>/i', $markdown_html, $matches);
+        preg_match('/\<h1\>(.*)\<\/h1\>/i', (string) $markdown_html, $matches);
 
         if (isset($matches[1])) {
             $page_title = $matches[1];
@@ -228,7 +224,7 @@ class IndexController {
     public function searchGet() {
         $query = $this->app->request()->query['query'];
         $language_directory_to_grep = self::CONTENT_DIR . $this->language . '/';
-        $grep_command = 'grep -r -i -n --color=never --include="*.md" ' . escapeshellarg($query) . ' ' . escapeshellarg($language_directory_to_grep);
+        $grep_command = 'grep -r -i -n --color=never --include="*.md" ' . escapeshellarg((string) $query) . ' ' . escapeshellarg($language_directory_to_grep);
         exec($grep_command, $grep_output);
 
         $files_found = [];
@@ -281,13 +277,13 @@ class IndexController {
         $secret = $this->app->get('config')['github_webhook_secret'];
         $request = $this->app->request();
         $signature_header = $request->getVar('HTTP_X_HUB_SIGNATURE');
-        $signature_parts = explode('=', $signature_header);
+        $signature_parts = explode('=', (string) $signature_header);
 
         if (count($signature_parts) != 2) {
             throw new Exception('signature has invalid format');
         }
 
-        $known_signature = hash_hmac('sha1', $request->getBody(), $secret);
+        $known_signature = hash_hmac('sha1', $request->getBody(), (string) $secret);
 
         if (! hash_equals($known_signature, $signature_parts[1])) {
             throw new Exception('Could not verify request signature ' . $signature_parts[1]);
