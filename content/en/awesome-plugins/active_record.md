@@ -126,7 +126,7 @@ Flight::user()->find(1);
 
 ## `runway` Methods
 
-[runway](https://docs.flightphp.com/awesome-plugins/runway) is a CLI tool for Flight that has a custom command for this library. 
+[runway](/awesome-plugins/runway) is a CLI tool for Flight that has a custom command for this library. 
 
 ```bash
 # Usage
