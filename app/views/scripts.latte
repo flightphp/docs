@@ -50,13 +50,13 @@
         },
         resultItem: {
             highlight: true,
-            events: {
-                input: {
-                    selection(event) {
-                        const selection = event.detail.selection.value;
-
-                        window.location.href = selection.url;
-                    },
+        },
+        events: {
+            input: {
+                selection(event) {
+                    const selection = event.detail.selection.value;
+                    console.log(selection);
+                    window.location.href = selection.url;
                 },
             },
         },
