@@ -14,4 +14,5 @@ use Parsedown;
  * @method LatteEngine latte()
  * @method Parsedown parsedown()
  */
-class CustomEngine extends Engine {}
+class CustomEngine extends Engine {
+}

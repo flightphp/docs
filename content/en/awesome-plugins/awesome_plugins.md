@@ -12,7 +12,7 @@ Authentication and Authorization are crucial for any application that requires c
 
 Caching is a great way to speed up your application. There are a number of caching libraries that can be used with Flight.
 
-- [Wruczek/PHP-File-Cache](/awesome-plugins/php-file-cache) - Light, simple and standalone PHP in-file caching class
+- [flightphp/cache](/awesome-plugins/php-file-cache) - Light, simple and standalone PHP in-file caching class
 
 ## CLI
 

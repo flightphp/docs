@@ -1,0 +1,64 @@
+<script
+    nonce="{$nonce}"
+    src="./js/color-mode-toggler.js"></script>
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    crossorigin="anonymous"></script>
+<script src="https://unpkg.com/prismjs@1.29.0/components/prism-core.min.js"></script>
+<script src="https://unpkg.com/prismjs@1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-3C36SDZ8FE"></script>
+<script nonce="{$nonce}" src="./js/gtag.js"></script>
+
+<script
+    src="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@10.2.9/dist/autoComplete.min.js"></script>
+<script nonce="{$nonce}" n:syntax="double">
+    new autoComplete({
+        data: {
+            async src() {
+                const autoCompleteValue =
+                    document.getElementById("autocomplete").value;
+
+                const query = encodeURIComponent(autoCompleteValue);
+                const searchUrl = {{Flight::getUrl('search')}};
+
+                try {
+                    // Fetch Data from external Source
+                    const source = await fetch(`${searchUrl}?query=${query}`);
+
+                    // Data should be an array of `Objects` or `Strings`
+                    const data = await source.json();
+
+                    return data;
+                } catch(error) {
+                    return error;
+                }
+            }
+        },
+        keys: ["search_result"],
+        cache: false,
+        selector: "#autocomplete",
+        threshold: 2,
+        debounce: 300,
+        placeHolder: {{_'search_the_docs'}},
+        highlight: true,
+        resultsList: {
+            maxResults: 10,
+            noResults: false,
+        },
+        resultItem: {
+            highlight: true,
+            events: {
+                input: {
+                    selection(event) {
+                        const selection = event.detail.selection.value;
+
+                        window.location.href = selection.url;
+                    },
+                },
+            },
+        },
+    });
+</script>
