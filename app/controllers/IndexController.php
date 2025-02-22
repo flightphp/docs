@@ -223,31 +223,31 @@ class IndexController {
 
     public function searchGet() {
         $query = $this->app->request()->query['query'];
-        $language_directory_to_grep = self::CONTENT_DIR . $this->language . '/';
-        $grep_command = 'grep -r -i -n --color=never --include="*.md" ' . escapeshellarg((string) $query) . ' ' . escapeshellarg($language_directory_to_grep);
+        $language_directory_to_grep = self::CONTENT_DIR . $this->language . self::DS;
+        $grep_command = 'grep -r -i -n --color=never --include="*.md" '.escapeshellarg($query).' '.escapeshellarg($language_directory_to_grep);
         exec($grep_command, $grep_output);
 
         $files_found = [];
-
-        foreach ($grep_output as $line) {
+        foreach($grep_output as $line) {
             $line_parts = explode(':', $line);
-            $file_path = $line_parts[0];
+            // Catch the windows C drive letter
+            if($line_parts[0] === 'C') {
+                array_shift($line_parts);
+            }
+            $file_path = str_replace('/', self::DS, $line_parts[0]);
             $line_number = $line_parts[1];
             $line_content = $line_parts[2];
 
-            // pull the title from the first header tag in the markdown file.
             $file_contents = file_exists($file_path)
                 ? file_get_contents($file_path)
                 : '';
 
+            // pull the title from the first header tag in the markdown file.
             preg_match('/# (.+)/', $file_contents, $matches);
-
-            if (empty($matches[1])) {
+            if(empty($matches[1])) {
                 continue;
             }
-
             $title = $matches[1];
-
             $files_found[$file_path][] = [
                 'line_number' => $line_number,
                 'line_content' => $line_content,
@@ -256,13 +256,11 @@ class IndexController {
         }
 
         $final_search = [];
-
-        foreach ($files_found as $file_path => $data) {
+        foreach($files_found as $file_path => $data) {
             $count = count($files_found[$file_path]);
-
             $final_search[] = [
-                'search_result' => $data[0]['page_name'] . ' ("' . $query . '" ' . $count . 'x)',
-                'url' => '/' . str_replace([$language_directory_to_grep, '.md', '_'], ['', '', '-'], $file_path),
+                'search_result' => $data[0]['page_name'].' ("'.$query.'" '.$count.'x)',
+                'url' => '/'.str_replace([ $language_directory_to_grep, '.md', '_', '\\' ], [ '', '', '-', '/' ], $file_path),
                 'hits' => $count
             ];
         }
