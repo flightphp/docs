@@ -11,6 +11,8 @@ Light, simple and standalone PHP in-file caching class
 - Supports PHP 7.4+
 - Free under a MIT license
 
+This docs site is using this library to cache each of the pages!
+
 Click [here](https://github.com/flightphp/cache) to view the code.
 
 ## Installation
