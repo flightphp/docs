@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "49a8bd7030106b6f1a886bdfd6a18091",
+    "content-hash": "4502fa3c57b94feae488f12c843a7fd7",
     "packages": [
         {
             "name": "erusev/parsedown",
@@ -57,17 +57,71 @@
             "time": "2019-12-30T22:54:17+00:00"
         },
         {
-            "name": "flightphp/core",
-            "version": "v3.13.1",
+            "name": "flightphp/cache",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/flightphp/core.git",
-                "reference": "da6540bbdd3b64a28de0606da7b530d0013f281c"
+                "url": "https://github.com/flightphp/cache.git",
+                "reference": "75fe4fc60186e2663f8371095b0977c319939902"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/flightphp/core/zipball/da6540bbdd3b64a28de0606da7b530d0013f281c",
-                "reference": "da6540bbdd3b64a28de0606da7b530d0013f281c",
+                "url": "https://api.github.com/repos/flightphp/cache/zipball/75fe4fc60186e2663f8371095b0977c319939902",
+                "reference": "75fe4fc60186e2663f8371095b0977c319939902",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.4"
+            },
+            "require-dev": {
+                "phpstan/extension-installer": "^1.4",
+                "phpstan/phpstan": "^2.1",
+                "phpunit/phpunit": "^9.0 || ^12.0",
+                "rregeer/phpunit-coverage-check": "^0.3.1",
+                "squizlabs/php_codesniffer": "^3.11"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "flight\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Wruczek",
+                    "email": "wruczekk@gmail.com",
+                    "homepage": "https://wruczek.tech",
+                    "role": "Original Author"
+                },
+                {
+                    "name": "n0nag0n",
+                    "email": "n0nag0n@sky-9.com",
+                    "role": "Maintainer"
+                }
+            ],
+            "description": "Light, simple and standalone PHP in-file caching class",
+            "support": {
+                "issues": "https://github.com/flightphp/cache/issues",
+                "source": "https://github.com/flightphp/cache/tree/1.0.0"
+            },
+            "time": "2025-02-21T14:03:10+00:00"
+        },
+        {
+            "name": "flightphp/core",
+            "version": "v3.14.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/flightphp/core.git",
+                "reference": "2762daf4f4725eae784291ac4ef21b04a6863be6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/flightphp/core/zipball/2762daf4f4725eae784291ac4ef21b04a6863be6",
+                "reference": "2762daf4f4725eae784291ac4ef21b04a6863be6",
                 "shasum": ""
             },
             "require": {
@@ -126,9 +180,9 @@
             "homepage": "http://flightphp.com",
             "support": {
                 "issues": "https://github.com/flightphp/core/issues",
-                "source": "https://github.com/flightphp/core/tree/v3.13.1"
+                "source": "https://github.com/flightphp/core/tree/v3.14.0"
             },
-            "time": "2025-01-14T05:58:50+00:00"
+            "time": "2025-02-21T17:42:57+00:00"
         },
         {
             "name": "latte/latte",
@@ -290,52 +344,6 @@
                 "source": "https://github.com/nette/tracy/tree/v2.10.9"
             },
             "time": "2024-11-07T14:48:00+00:00"
-        },
-        {
-            "name": "wruczek/php-file-cache",
-            "version": "0.0.5",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Wruczek/PHP-File-Cache.git",
-                "reference": "83b0da10bc4cbf03fcc6f593abe7bfb663719902"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Wruczek/PHP-File-Cache/zipball/83b0da10bc4cbf03fcc6f593abe7bfb663719902",
-                "reference": "83b0da10bc4cbf03fcc6f593abe7bfb663719902",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.4.0"
-            },
-            "require-dev": {
-                "php": ">=5.6.0",
-                "phpunit/phpunit": "5.6.*"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Wruczek\\PhpFileCache\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Wruczek",
-                    "email": "wruczekk@gmail.com",
-                    "homepage": "https://wruczek.tech"
-                }
-            ],
-            "description": "Light, simple and standalone PHP in-file caching class",
-            "support": {
-                "issues": "https://github.com/Wruczek/PHP-File-Cache/issues",
-                "source": "https://github.com/Wruczek/PHP-File-Cache/tree/master"
-            },
-            "abandoned": true,
-            "time": "2020-04-06T04:02:34+00:00"
         }
     ],
     "packages-dev": [

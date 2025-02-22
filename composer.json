@@ -13,10 +13,10 @@
         "php": "^8.0",
         "ext-json": "*",
         "erusev/parsedown": "^1.7",
+        "flightphp/cache": "^1.0",
         "flightphp/core": "^3.13",
         "latte/latte": "^3.0",
-        "tracy/tracy": "^2.10",
-        "wruczek/php-file-cache": "^0.0.5"
+        "tracy/tracy": "^2.10"
     },
     "config": {
         "process-timeout": 0,

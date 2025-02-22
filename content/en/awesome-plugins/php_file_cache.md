@@ -1,4 +1,4 @@
-# Wruczek/PHP-File-Cache
+# flightphp/cache
 
 Light, simple and standalone PHP in-file caching class
 
@@ -8,17 +8,17 @@ Light, simple and standalone PHP in-file caching class
 - Secure - every generated cache file have a php header with die, making direct access impossible even if someone knows the path and your server is not configured properly
 - Well documented and tested
 - Handles concurrency correctly via flock
-- Supports PHP 5.4.0 - 7.1+
+- Supports PHP 7.4+
 - Free under a MIT license
 
-Click [here](https://github.com/Wruczek/PHP-File-Cache) to view the code.
+Click [here](https://github.com/flightphp/cache) to view the code.
 
 ## Installation
 
 Install via composer:
 
 ```bash
-composer require wruczek/php-file-cache
+composer require flightphp/cache
 ```
 
 ## Usage
@@ -26,12 +26,12 @@ composer require wruczek/php-file-cache
 Usage is fairly straightforward.
 
 ```php
-use Wruczek\PhpFileCache\PhpFileCache;
+use flight\Cache;
 
 $app = Flight::app();
 
 // You pass the directory the cache will be stored in into the constructor
-$app->register('cache', PhpFileCache::class, [ __DIR__ . '/../cache/' ], function(PhpFileCache $cache) {
+$app->register('cache', Cache::class, [ __DIR__ . '/../cache/' ], function(Cache $cache) {
 
 	// This ensures that the cache is only used when in production mode
 	// ENVIRONMENT is a constant that is set in your bootstrap file or elsewhere in your app
@@ -59,4 +59,4 @@ if(empty($data)) {
 
 ## Documentation
 
-Visit [https://github.com/Wruczek/PHP-File-Cache](https://github.com/Wruczek/PHP-File-Cache) for full documentation and make sure you see the [examples](https://github.com/Wruczek/PHP-File-Cache/tree/master/examples) folder.
+Visit [https://github.com/flightphp/cache](https://github.com/flightphp/cache) for full documentation and make sure you see the [examples](https://github.com/flightphp/cache/tree/master/examples) folder.

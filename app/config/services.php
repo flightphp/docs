@@ -5,7 +5,7 @@ use app\utils\Translator;
 use Latte\Engine as LatteEngine;
 use Latte\Essential\TranslatorExtension;
 use Latte\Loaders\FileLoader;
-use Wruczek\PhpFileCache\PhpFileCache;
+use flight\Cache;
 
 /** 
  * @var array $config 
@@ -25,7 +25,7 @@ $app->register('latte', LatteEngine::class, [], function (LatteEngine $latte) {
     $latte->addExtension($translatorExtension);
 });
 
-$app->register('cache', PhpFileCache::class, [__DIR__ . '/../cache/'], function (PhpFileCache $cache) {
+$app->register('cache', Cache::class, [__DIR__ . '/../cache/'], function (Cache $cache) {
     $cache->setDevMode(ENVIRONMENT === 'development');
 });
 
