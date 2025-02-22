@@ -55,11 +55,11 @@ class IndexController {
         $section_file_path = str_replace('_', '-', $section);
         $sub_section_underscored = str_replace('-', '_', $sub_section);
         $heading_data = $app->cache()->retrieve($sub_section_underscored . '_heading_data_' . $this->language);
-        $markdown_html = $app->cache()->refreshIfExpired($sub_section_underscored . '_html_' . $this->language, function () use ($app, $section_file_path, $sub_section_underscored, &$heading_data) {
+        $markdown_html = $app->cache()->refreshIfExpired($sub_section_underscored . '_html_' . $this->language, function () use ($app, $section_file_path, $sub_section, $sub_section_underscored, &$heading_data) {
             $parsed_text = $app->parsedown()->text($this->Translator->getMarkdownLanguageFile('/' . $section_file_path . '/' . $sub_section_underscored . '.md'));
 
             $heading_data = [];
-            $parsed_text = Text::generateAndConvertHeaderListFromHtml($parsed_text, $heading_data, 'h2');
+            $parsed_text = Text::generateAndConvertHeaderListFromHtml($parsed_text, $heading_data, 'h2', $section_file_path.'/'.$sub_section);
             $app->cache()->store($sub_section_underscored . '_heading_data_' . $this->language, $heading_data, 86400); // 1 day
 
             return $parsed_text;
@@ -76,10 +76,13 @@ class IndexController {
         $Translator = new Translator($this->language);
         $markdown_html = $this->wrapContentInDiv($markdown_html);
 
+        // replace any (#some-anchor) with /$section_file_path#some-anchor
+        $markdown_html = preg_replace("/\"(#[a-zA-Z\-]+)\"/", "\"/{$section_file_path}/{$sub_section}$1\"", $markdown_html);
         $this->renderPage('single_page_scrollspy.latte', [
             'custom_page_title' => ($page_title ? $page_title . ' - ' : '') . $Translator->translate($section),
             'markdown' => $markdown_html,
             'heading_data' => $heading_data,
+            'relative_uri' => '/'.$section_file_path
         ]);
     }
 
@@ -208,7 +211,7 @@ class IndexController {
 
             foreach ($sections as $section) {
                 $slugged_section = Text::slugify($section);
-                $markdown_html .= '<h1><a href="/' . $section . '" id="' . $slugged_section . '">' . ucwords($section) . '</a> <a href="#' . $slugged_section . '" class="bi bi-link-45deg" title="Permalink to this heading"></a></h1>';
+                $markdown_html .= '<h1><a href="/' . $section . '" id="' . $slugged_section . '">' . ucwords($section) . '</a> <a href="/' . $section . '#' . $slugged_section . '" class="bi bi-link-45deg" title="Permalink to this heading"></a></h1>';
                 $markdown_html .= $app->parsedown()->text($this->Translator->getMarkdownLanguageFile($section . '.md'));
             }
 
