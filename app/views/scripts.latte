@@ -17,28 +17,28 @@
 <script nonce="{$nonce}" n:syntax="double">
     new autoComplete({
         data: {
-            async src() {
-                const autoCompleteValue =
-                    document.getElementById("autocomplete").value;
-
-                const query = encodeURIComponent(autoCompleteValue);
-                const searchUrl = {{Flight::getUrl('search')}};
-
+            src: async (query) => {
                 try {
+                    const autoCompleteValue =
+                        document.getElementById("autocomplete").value;
+
+                    query = encodeURIComponent(autoCompleteValue);
+                    const searchUrl = {{Flight::getUrl('search')}};
+
                     // Fetch Data from external Source
-                    const source = await fetch(`${searchUrl}?query=${query}`);
+                    const source = await fetch(searchUrl + "?query=" + query);
 
                     // Data should be an array of `Objects` or `Strings`
                     const data = await source.json();
 
                     return data;
-                } catch(error) {
+                } catch (error) {
                     return error;
                 }
-            }
+            },
+            keys: ["search_result"],
+            cache: false,
         },
-        keys: ["search_result"],
-        cache: false,
         selector: "#autocomplete",
         threshold: 2,
         debounce: 300,
