@@ -11,7 +11,7 @@ use flight\Cache;
  * @var array $config 
  * @var CustomEngine $app
  */
-$app->register('latte', LatteEngine::class, [], function (LatteEngine $latte) {
+$app->register('latte', LatteEngine::class, [], function (LatteEngine $latte): void {
     $latte->setTempDirectory(__DIR__ . '/../cache/');
     $latte->setLoader(new FileLoader(__DIR__ . '/../views/'));
     $languageAbbreviation = Translator::getLanguageFromRequest();

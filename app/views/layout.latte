@@ -15,12 +15,12 @@
 
         {include 'opengraph.latte'}
     </head>
-    <body>
-        <div id="container" class="container">
+    <body class="pb-5">
+        <div id="container" class="container shadow pb-5">
             {include 'header.latte'}
-            {include 'search.latte'}
+            {include 'banner.latte'}
 
-            <main>{block content}{/block}</main>
+            <main class="p-4">{block content}{/block}</main>
 
             {include 'footer.latte'}
         </div>

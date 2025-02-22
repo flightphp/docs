@@ -10,7 +10,7 @@
         }
     ],
     "require": {
-        "php": "^8.0",
+        "php": "^8.2",
         "ext-json": "*",
         "erusev/parsedown": "^1.7",
         "flightphp/cache": "^1.0",
@@ -20,12 +20,25 @@
     },
     "config": {
         "process-timeout": 0,
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "phpstan/extension-installer": true
+        }
     },
     "scripts": {
-        "start": "[ -x \"$(command -v php8.2)\" ] && php8.2 -S localhost:8000 -t public || php -S localhost:8000 -t public"
+        "pre-install-cmd": [
+            "composer check-platform-reqs"
+        ],
+        "pre-update-cmd": [
+            "composer check-platform-reqs"
+        ],
+        "start": "[ -x \"$(command -v php8.2)\" ] && php8.2 -S localhost:8000 -t public || php -S localhost:8000 -t public",
+        "rector": "rector"
     },
     "require-dev": {
-        "flightphp/tracy-extensions": "^0.2.3"
+        "flightphp/tracy-extensions": "^0.2.3",
+        "phpstan/extension-installer": "^1.4",
+        "phpstan/phpstan": "^2.1",
+        "rector/rector": "^2.0"
     }
 }
