@@ -23,7 +23,7 @@ composer require flightphp/cache
 
 ## Usage
 
-Usage is fairly straightforward.
+Usage is fairly straightforward. This saves a cache file in the cache directory.
 
 ```php
 use flight\Cache;
