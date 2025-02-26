@@ -1,39 +1,41 @@
-# Wruczek/PHP-File-Cache
+# flightphp/cache
 
-Leichte, einfache und eigenständige PHP-In-File-Caching-Klasse
+Leichtgewichtige, einfache und eigenständige PHP-In-Datei-Caching-Klasse
 
-**Vorteile**
+**Vorteile** 
 - Leicht, eigenständig und einfach
-- Der gesamte Code in einer Datei - keine sinnlosen Treiber.
-- Sicher - jede generierte Cache-Datei hat einen PHP-Header mit "die", was direkten Zugriff unmöglich macht, selbst wenn jemand den Pfad kennt und Ihr Server nicht ordnungsgemäß konfiguriert ist.
+- Alles Code in einer Datei - keine sinnlosen Treiber.
+- Sicher - jede generierte Cache-Datei hat einen PHP-Header mit `die`, was den direkten Zugriff unmöglich macht, selbst wenn jemand den Pfad kennt und Ihr Server nicht richtig konfiguriert ist.
 - Gut dokumentiert und getestet
-- Behandelt Konkurrenz richtig über flock
-- Unterstützt PHP 5.4.0 - 7.1+
+- Bewältigt Konkurrenz korrekt über flock
+- Unterstützt PHP 7.4+
 - Kostenlos unter einer MIT-Lizenz
 
-Klicken Sie [hier](https://github.com/Wruczek/PHP-File-Cache), um den Code anzuzeigen.
+Diese Dokumentationsseite verwendet diese Bibliothek, um jede der Seiten zu cachen!
+
+Klicken Sie [hier](https://github.com/flightphp/cache), um den Code anzuzeigen.
 
 ## Installation
 
 Installation über Composer:
 
 ```bash
-composer require wruczek/php-file-cache
+composer require flightphp/cache
 ```
 
 ## Verwendung
 
-Die Verwendung ist ziemlich einfach.
+Die Verwendung ist ziemlich unkompliziert. Damit wird eine Cache-Datei im Cache-Verzeichnis gespeichert.
 
 ```php
-use Wruczek\PhpFileCache\PhpFileCache;
+use flight\Cache;
 
 $app = Flight::app();
 
-// Sie geben das Verzeichnis, in dem der Cache gespeichert wird, dem Konstruktor weiter
-$app->register('cache', PhpFileCache::class, [ __DIR__ . '/../cache/' ], function(PhpFileCache $cache) {
+// Sie übergeben das Verzeichnis, in dem der Cache gespeichert wird, an den Konstruktor
+$app->register('cache', Cache::class, [ __DIR__ . '/../cache/' ], function(Cache $cache) {
 
-	// Dies stellt sicher, dass der Cache nur verwendet wird, wenn sich die Anwendung im Produktionsmodus befindet
+	// Dies stellt sicher, dass der Cache nur im Produktionsmodus verwendet wird
 	// ENVIRONMENT ist eine Konstante, die in Ihrer Bootstrap-Datei oder anderswo in Ihrer Anwendung festgelegt ist
 	$cache->setDevMode(ENVIRONMENT === 'development');
 });
@@ -46,7 +48,7 @@ Dann können Sie es in Ihrem Code wie folgt verwenden:
 // Cache-Instanz abrufen
 $cache = Flight::cache();
 $data = $cache->refreshIfExpired('simple-cache-test', function () {
-    return date("H:i:s"); // Daten zur Zwischenspeicherung zurückgeben
+    return date("H:i:s"); // Daten, die zwischengespeichert werden sollen, zurückgeben
 }, 10); // 10 Sekunden
 
 // oder
@@ -59,4 +61,4 @@ if(empty($data)) {
 
 ## Dokumentation
 
-Besuchen Sie [https://github.com/Wruczek/PHP-File-Cache](https://github.com/Wruczek/PHP-File-Cache) für die vollständige Dokumentation und stellen Sie sicher, dass Sie den [Beispiele](https://github.com/Wruczek/PHP-File-Cache/tree/master/examples)-Ordner sehen.
+Besuchen Sie [https://github.com/flightphp/cache](https://github.com/flightphp/cache) für die vollständige Dokumentation und stellen Sie sicher, dass Sie den [Beispiele](https://github.com/flightphp/cache/tree/master/examples) Ordner sehen.

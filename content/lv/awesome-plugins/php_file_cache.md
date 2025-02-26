@@ -1,52 +1,54 @@
-# Wruczek/PHP-File-Cache
+# flightphp/cache
 
-Viegla, vienkārša un neatkarīga PHP iekšējās kešatmiņas klase
+Gaismas, vienkārša un patstāvīga PHP iekšējā kešatmiņas klase
 
 **Priekšrocības** 
-- Viegla, neatkarīga un vienkārša
-- Viss kods vienā failā - bezjēdzīgu draiveru nav.
-- Drošs - katram ģenerētajam kešatmiņas failam ir php galvenes fails ar die, padarot tiešu piekļuvi neiespējamu pat tad, ja kādam ir zināms ceļš un jūsu serveris nav konfigurēts pareizi
-- Labi dokumentēts un pārbaudīts
-- Pareizi apstrādā vienlaicību ,izmantojot flock
-- Atbalsta PHP 5.4.0 - 7.1+
-- Bezmaksas saskaņā ar MIT licences noteikumiem
+- Gaismas, patstāvīga un vienkārša
+- Visi kodi vienā failā - bez liekiem draiveriem.
+- Droša - katram ģenerētajam kešatmiņas failam ir php galvene ar die, padarot tiešu piekļuvi neiespējamu, pat ja kāds zina ceļu un jūsu serveris nav pareizi konfigurēts
+- Labi dokumentēta un pārbaudīta
+- Pareizi apstrādā konkurenci, izmantojot flock
+- Atbalsta PHP 7.4+
+- Bezmaksas saskaņā ar MIT licenci
 
-Noklikšķiniet [šeit](https://github.com/Wruczek/PHP-File-Cache), lai aplūkotu kodu.
+Šī dokumentācijas vietne izmanto šo bibliotēku, lai kešotu katru no lapām!
+
+Noklikšķiniet [šeit](https://github.com/flightphp/cache), lai skatītu kodu.
 
 ## Instalācija
 
-Uzstādiet, izmantojot komponistu:
+Instalējiet, izmantojot composer:
 
 ```bash
-composer require wruczek/php-file-cache
+composer require flightphp/cache
 ```
 
-## Lietošana
+## Izmantošana
 
-Lietošana ir diezgan vienkārša.
+Izmantošana ir salīdzinoši vienkārša. Tas saglabā kešatmiņas failu kešatmiņas direktorijā.
 
 ```php
-use Wruczek\PhpFileCache\PhpFileCache;
+use flight\Cache;
 
 $app = Flight::app();
 
-// Jūs nododat direktoriju, kurā kešatmiņa tiks saglabāta, konstruktorā
-$app->register('cache', PhpFileCache::class, [ __DIR__ . '/../cache/' ], function(PhpFileCache $cache) {
+// Jūs nododat direktoriju, kur kešatmiņa tiks glabāta, konstruktorā
+$app->register('cache', Cache::class, [ __DIR__ . '/../cache/' ], function(Cache $cache) {
 
-	// Tas nodrošina, ka kešatmiņa tiek izmantota tikai tad, ja esat produktīvā režīmā
-	// ENVIRONMENT ir konstante, kas ir iestatīta jūsu sākotnējā failā vai citur jūsu lietotnē
+	// Tas nodrošina, ka kešatmiņa tiek izmantota tikai ražošanas režīmā
+	// ENVIRONMENT ir konstante, kas tiek iestatīta jūsu sākuma failā vai citur jūsu lietotnē
 	$cache->setDevMode(ENVIRONMENT === 'development');
 });
 ```
 
-Tad jūs varat to izmantot savā kodā šādi:
+Tad jūs to varat izmantot savā kodā šādi:
 
 ```php
 
-// Saņemt kešatmiņas instanci
+// Iegūstiet kešatmiņas instanci
 $cache = Flight::cache();
 $data = $cache->refreshIfExpired('simple-cache-test', function () {
-    return date("H:i:s"); // atgriezt dati, kas tiks saglabāti
+    return date("H:i:s"); // atgrieziet datus, kas tiks kešoti
 }, 10); // 10 sekundes
 
 // vai
@@ -59,4 +61,4 @@ if(empty($data)) {
 
 ## Dokumentācija
 
-Apmeklējiet [https://github.com/Wruczek/PHP-File-Cache](https://github.com/Wruczek/PHP-File-Cache) pilnai dokumentācijai un pārliecinieties, ka apskatāt [piemērus](https://github.com/Wruczek/PHP-File-Cache/tree/master/examples) mapes.
+Apmeklējiet [https://github.com/flightphp/cache](https://github.com/flightphp/cache) pilnīgai dokumentācijai un pārliecinieties, ka apskatāt [piemērus](https://github.com/flightphp/cache/tree/master/examples) mapi.

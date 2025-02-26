@@ -1,18 +1,25 @@
-# Plugins Impressionnants
+# Plugins géniaux
 
-Flight est incroyablement extensible. Il existe plusieurs plugins qui peuvent être utilisés pour ajouter des fonctionnalités à votre application Flight. Certains sont officiellement pris en charge par l'équipe Flight et d'autres sont des bibliothèques micro/lite pour vous aider à démarrer.
+Flight est incroyablement extensible. Il existe un certain nombre de plugins qui peuvent être utilisés pour ajouter des fonctionnalités à votre application Flight. Certains sont officiellement supportés par l'équipe Flight et d'autres sont des bibliothèques micro/légères pour vous aider à démarrer.
+
+## Documentation de l'API
+
+La documentation de l'API est cruciale pour toute API. Elle aide les développeurs à comprendre comment interagir avec votre API et à quoi s'attendre en retour. Il existe quelques outils disponibles pour vous aider à générer la documentation de l'API pour vos projets Flight.
+
+- [FlightPHP OpenAPI Generator](https://dev.to/danielsc/define-generate-and-implement-an-api-first-approach-with-openapi-generator-and-flightphp-1fb3) - Article de blog écrit par Daniel Schreiber sur la façon d'utiliser le générateur OpenAPI avec FlightPHP pour générer la documentation de l'API.
+- [Swagger UI](https://github.com/zircote/swagger-php) - Swagger UI est un excellent outil pour vous aider à générer la documentation de l'API pour vos projets Flight. C'est très facile à utiliser et peut être personnalisé pour répondre à vos besoins. C'est la bibliothèque PHP qui vous aide à générer la documentation Swagger.
 
 ## Authentification/Autorisation
 
 L'authentification et l'autorisation sont cruciales pour toute application qui nécessite des contrôles sur qui peut accéder à quoi.
 
-- [flightphp/permissions](/awesome-plugins/permissions) - Bibliothèque officielle des autorisations de Flight. Cette bibliothèque est un moyen simple d'ajouter des autorisations au niveau utilisateur et application à votre application.
+- [flightphp/permissions](/awesome-plugins/permissions) - Bibliothèque officielle des permissions Flight. Cette bibliothèque est un moyen simple d'ajouter des autorisations au niveau de l'utilisateur et de l'application à votre application.
 
 ## Mise en cache
 
-La mise en cache est un excellent moyen d'accélérer votre application. Il existe plusieurs bibliothèques de mise en cache qui peuvent être utilisées avec Flight.
+La mise en cache est un excellent moyen d'accélérer votre application. Il existe un certain nombre de bibliothèques de mise en cache qui peuvent être utilisées avec Flight.
 
-- [Wruczek/PHP-File-Cache](/awesome-plugins/php-file-cache) - Classe de mise en cache PHP légère, simple et autonome
+- [flightphp/cache](/awesome-plugins/php-file-cache) - Classe de mise en cache PHP légère, simple et autonome
 
 ## CLI
 
@@ -22,43 +29,44 @@ Les applications CLI sont un excellent moyen d'interagir avec votre application.
 
 ## Cookies
 
-Les cookies sont un excellent moyen de stocker de petites données côté client. Ils peuvent être utilisés pour stocker les préférences de l'utilisateur, les paramètres de l'application, et plus encore.
+Les cookies sont un excellent moyen de stocker de petits morceaux de données du côté client. Ils peuvent être utilisés pour stocker les préférences des utilisateurs, les paramètres de l'application, et plus encore.
 
 - [overclokk/cookie](/awesome-plugins/php-cookie) - PHP Cookie est une bibliothèque PHP qui fournit un moyen simple et efficace de gérer les cookies.
 
 ## Débogage
 
-Le débogage est essentiel lorsque vous développez en environnement local. Il existe quelques plugins qui peuvent améliorer votre expérience de débogage.
+Le débogage est crucial lorsque vous développez dans votre environnement local. Il existe quelques plugins qui peuvent améliorer votre expérience de débogage.
 
-- [tracy/tracy](/awesome-plugins/tracy) - Il s'agit d'un gestionnaire d'erreurs complet qui peut être utilisé avec Flight. Il possède plusieurs panneaux qui peuvent vous aider à déboguer votre application. Il est également très facile à étendre et à ajouter vos propres panneaux.
-- [flightphp/tracy-extensions](/awesome-plugins/tracy-extensions) - Utilisé avec le gestionnaire d'erreurs [Tracy](/awesome-plugins/tracy), ce plugin ajoute quelques panneaux supplémentaires pour aider spécifiquement à déboguer les projets Flight.
+- [tracy/tracy](/awesome-plugins/tracy) - C'est un gestionnaire d'erreurs complet qui peut être utilisé avec Flight. Il possède plusieurs panneaux qui peuvent vous aider à déboguer votre application. Il est également très facile à étendre et à ajouter vos propres panneaux.
+- [flightphp/tracy-extensions](/awesome-plugins/tracy-extensions) - Utilisé avec le gestionnaire d'erreurs [Tracy](/awesome-plugins/tracy), ce plugin ajoute quelques panneaux supplémentaires pour aider au débogage spécifiquement pour les projets Flight.
 
 ## Bases de données
 
-Les bases de données sont au cœur de la plupart des applications. C'est ainsi que vous stockez et récupérez des données. Certaines bibliothèques de base de données ne sont que des wrappers simples pour écrire des requêtes, et d'autres sont des ORM complets.
+Les bases de données sont au cœur de la plupart des applications. C'est ainsi que vous stockez et récupérez des données. Certaines bibliothèques de bases de données sont simplement des wrappers pour écrire des requêtes et d'autres sont des ORM complets.
 
-- [flightphp/core PdoWrapper](/awesome-plugins/pdo-wrapper) - Wrapper PDO officiel de Flight faisant partie du cœur. Il s'agit d'un wrapper simple pour simplifier le processus d'écriture et d'exécution des requêtes. Ce n'est pas un ORM.
-- [flightphp/active-record](/awesome-plugins/active-record) - ORM/Mapper ActiveRecord officiel de Flight. Excellente petite bibliothèque pour récupérer et stocker facilement des données dans votre base de données.
+- [flightphp/core PdoWrapper](/awesome-plugins/pdo-wrapper) - Wrapper PDO officiel de Flight faisant partie du noyau. C'est un wrapper simple pour aider à simplifier le processus d'écriture de requêtes et de leur exécution. Ce n'est pas un ORM.
+- [flightphp/active-record](/awesome-plugins/active-record) - ORM/Mapper ActiveRecord officiel de Flight. Petite bibliothèque géniale pour récupérer et stocker facilement des données dans votre base de données.
+- [byjg/php-migration](/awesome-plugins/migrations) - Plugin pour suivre tous les changements de base de données pour votre projet.
 
-## Chiffrement
+## Cryptage
 
-Le chiffrement est essentiel pour toute application qui stocke des données sensibles. Chiffrer et déchiffrer les données n'est pas très difficile, mais stocker correctement la clé de chiffrement peut être difficile. La chose la plus importante est de ne jamais stocker votre clé de chiffrement dans un répertoire public ou de la commit dans votre dépôt de code.
+Le cryptage est crucial pour toute application qui stocke des données sensibles. Crypter et décrypter les données n'est pas très difficile, mais stocker correctement la clé de cryptage [peut](https://stackoverflow.com/questions/6767839/where-should-i-store-an-encryption-key-for-php#:~:text=Write%20a%20php%20config%20file%20and%20store%20it,folder%20is%20not%20accessible%20to%20the%20end%20user.) [être](https://www.reddit.com/r/PHP/comments/luqsn/the_encryption_key_where_do_you_store_it/) [difficile](https://security.stackexchange.com/questions/48047/location-to-store-an-encryption-key). La chose la plus importante est de ne jamais stocker votre clé de cryptage dans un répertoire public ou de l'engager dans votre dépôt de code.
 
-- [defuse/php-encryption](/awesome-plugins/php-encryption) - Il s'agit d'une bibliothèque qui peut être utilisée pour chiffrer et déchiffrer des données. Il est assez simple de commencer à chiffrer et déchiffrer des données.
+- [defuse/php-encryption](/awesome-plugins/php-encryption) - C'est une bibliothèque qui peut être utilisée pour crypter et décrypter des données. Se lancer est assez simple pour commencer à crypter et déchiffrer des données.
 
 ## Session
 
-Les sessions ne sont pas vraiment utiles pour les API, mais pour développer une application Web, les sessions peuvent être cruciales pour maintenir l'état et les informations de connexion.
+Les sessions ne sont pas vraiment utiles pour les API, mais pour créer une application web, les sessions peuvent être cruciales pour maintenir l'état et les informations de connexion.
 
-- [Ghostff/Session](/awesome-plugins/session) - Gestionnaire de sessions PHP (non bloquant, flash, segment, chiffrement de session). Utilise PHP open_ssl pour le chiffrement/déchiffrement optionnel des données de session.
+- [Ghostff/Session](/awesome-plugins/session) - Gestionnaire de session PHP (non-bloquant, flash, segment, cryptage de session). Utilise l'open_ssl PHP pour un cryptage/décryptage facultatif des données de session.
 
-## Mise en forme
+## Modélisation
 
-La mise en forme est essentielle pour toute application Web avec une interface utilisateur. Il existe plusieurs moteurs de mise en forme qui peuvent être utilisés avec Flight.
+La modélisation est essentielle pour toute application web avec une interface utilisateur. Il existe un certain nombre de moteurs de modélisation qui peuvent être utilisés avec Flight.
 
-- [flightphp/core View](/learn#views) - Il s'agit d'un moteur de mise en forme très basique qui fait partie du cœur. Il n'est pas recommandé de l'utiliser si vous avez plus de quelques pages dans votre projet.
-- [latte/latte](/awesome-plugins/latte) - Latte est un moteur de mise en forme complet et très facile à utiliser qui se rapproche plus d'une syntaxe PHP que Twig ou Smarty. Il est également très facile à étendre et à ajouter vos propres filtres et fonctions.
+- [flightphp/core View](/learn#views) - C'est un moteur de modélisation très basique qui fait partie du noyau. Il n'est pas recommandé de l'utiliser si vous avez plus de quelques pages dans votre projet.
+- [latte/latte](/awesome-plugins/latte) - Latte est un moteur de modélisation complet qui est très facile à utiliser et qui ressemble davantage à une syntaxe PHP qu'à Twig ou Smarty. Il est également très facile à étendre et à ajouter vos propres filtres et fonctions.
 
 ## Contribution
 
-Vous avez un plugin que vous aimeriez partager ? Soumettez une pull request pour l'ajouter à la liste !
+Vous avez un plugin que vous souhaitez partager ? Soumettez une demande de tirage pour l'ajouter à la liste !

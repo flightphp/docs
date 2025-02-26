@@ -1,62 +1,64 @@
-# Wruczek/PHP-File-Cache
+# flightphp/cache
 
-가벼우면서 간단하며 독립적인 PHP 인 파일 캐싱 클래스
+가볍고 간단하며 독립적인 PHP 인파일 캐싱 클래스
 
 **장점**
-- 가벼우면서 독립적이며 간단함
-- 모든 코드가 하나의 파일에 있음 - 무의미한 드라이버가 없음.
-- 보안 - 생성된 모든 캐시 파일에는 php 헤더가 포함되어 있어 직접 액세스가 불가능함 (누군가 경로를 알고 있더라도 서버가 제대로 구성되어 있지 않으면)
-- 잘 문서화되어 있으며 테스트됨
-- flock를 통해 동시성을 올바르게 처리함
-- PHP 5.4.0 - 7.1+를 지원함
-- MIT 라이선스 하에 무료로 제공됨
+- 가볍고 독립적이며 간단함
+- 모든 코드가 하나의 파일에 있음 - 불필요한 드라이버 없음.
+- 안전함 - 생성된 모든 캐시 파일은 die가 포함된 php 헤더를 가지고 있어, 경로를 알고 서버가 제대로 설정되지 않았더라도 직접 접근할 수 없음
+- 잘 문서화되고 테스트됨
+- flock을 통해 동시성을 제대로 처리함
+- PHP 7.4+ 지원
+- MIT 라이센스 하에 무료
 
-코드를 보려면 [here](https://github.com/Wruczek/PHP-File-Cache) 클릭하세요.
+이 문서 사이트는 각 페이지를 캐시하기 위해 이 라이브러리를 사용하고 있습니다!
+
+코드를 보려면 [여기](https://github.com/flightphp/cache)를 클릭하세요.
 
 ## 설치
 
-컴포저를 통해 설치하십시오:
+composer를 통해 설치:
 
 ```bash
-composer require wruczek/php-file-cache
+composer require flightphp/cache
 ```
 
 ## 사용법
 
-사용법은 매우 간단합니다.
+사용법은 매우 간단합니다. 이것은 캐시 디렉토리에 캐시 파일을 저장합니다.
 
 ```php
-use Wruczek\PhpFileCache\PhpFileCache;
+use flight\Cache;
 
 $app = Flight::app();
 
-// 캐시가 저장될 디렉토리를 생성자로 전달합니다
-$app->register('cache', PhpFileCache::class, [ __DIR__ . '/../cache/' ], function(PhpFileCache $cache) {
+// 캐시가 저장될 디렉토리를 생성자에 전달합니다
+$app->register('cache', Cache::class, [ __DIR__ . '/../cache/' ], function(Cache $cache) {
 
-	// 이렇게 함으로써 캐시는 프로덕션 모드에서만 사용됨을 보장합니다
-	// ENVIRONMENT는 부트스트랩 파일이나 앱의 다른 곳에서 설정된 상수입니다.
+	// 이는 캐시가 프로덕션 모드에 있을 때만 사용되도록 보장합니다
+	// ENVIRONMENT는 부트스트랩 파일이나 앱의 다른 곳에서 설정된 상수입니다
 	$cache->setDevMode(ENVIRONMENT === 'development');
 });
 ```
 
-그런 다음 다음과 같이 코드에서 사용할 수 있습니다:
+그런 다음 코드를 다음과 같이 사용할 수 있습니다:
 
 ```php
 
-// 캐시 인스턴스 가져오기
+// 캐시 인스턴스를 가져옵니다
 $cache = Flight::cache();
 $data = $cache->refreshIfExpired('simple-cache-test', function () {
-    return date("H:i:s"); // 캐시될 데이터 반환
-}, 10); // 10초
+    return date("H:i:s"); // 캐시될 데이터를 반환함
+}, 10); // 10 초
 
 // 또는
 $data = $cache->retrieve('simple-cache-test');
 if(empty($data)) {
 	$data = date("H:i:s");
-	$cache->store('simple-cache-test', $data, 10); // 10초
+	$cache->store('simple-cache-test', $data, 10); // 10 초
 }
 ```
 
 ## 문서
 
-자세한 문서를 보려면 [https://github.com/Wruczek/PHP-File-Cache](https://github.com/Wruczek/PHP-File-Cache)을 방문하고 [examples](https://github.com/Wruczek/PHP-File-Cache/tree/master/examples) 폴더를 확인해주세요.
+전체 문서를 보려면 [https://github.com/flightphp/cache](https://github.com/flightphp/cache)를 방문하고 [예제](https://github.com/flightphp/cache/tree/master/examples) 폴더도 확인하세요.

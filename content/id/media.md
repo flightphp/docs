@@ -1,9 +1,10 @@
 # Media
 
-Kami telah berusaha untuk melacak apa yang kami bisa dari berbagai jenis media di internet tentang Flight. Lihat di bawah untuk berbagai sumber yang dapat Anda gunakan untuk mempelajari lebih lanjut tentang Flight.
+Kami telah berusaha untuk melacak semua jenis media terkait Flight di internet. Lihat di bawah untuk berbagai sumber yang dapat Anda gunakan untuk belajar lebih lanjut tentang Flight.
 
-## Artikel
+## Artikel dan Penulisan
 
+- [Define, Generate, and Implement: An API-First Approach with OpenAPI Generator and FlightPHP](https://dev.to/danielsc/define-generate-and-implement-an-api-first-approach-with-openapi-generator-and-flightphp-1fb3) oleh [Daniel Schreiber](https://github.com/daniel-sc) (2025)
 - [Best PHP Micro Frameworks for 2024](https://dev.to/n0nag0n/best-php-micro-frameworks-for-2024-19h6) oleh [n0nag0n](https://github.com/n0nag0n) (2024)
 - [Creating a RESTful API with Flight Framework](https://dev.to/n0nag0n/creating-a-restful-api-with-flight-framework-56lj) oleh [n0nag0n](https://github.com/n0nag0n) (2024)
 - [Building a Simple Blog with Flight Part 2](https://dev.to/n0nag0n/building-a-simple-blog-with-flight-part-2-5acb) oleh [n0nag0n](https://github.com/n0nag0n) (2024)
@@ -20,8 +21,9 @@ Kami telah berusaha untuk melacak apa yang kami bisa dari berbagai jenis media d
 - [Trying Out New PHP Framework (Flight)](https://scaledimages.com/post/2017-09-20-trying-out-new-php-framework-flight/) oleh Leon (2017)
 - [Setting up FlightPHP to work with Backbonejs](https://timothytocci.com/category/flightphp/) oleh [Timothy Tocci](https://timothytocci.com/author/timothytocci/) (2015)
 
-## Video
+## Video dan Tutorial
 
+- [Create a REST API for IoT Devices Using PHP & FlightPHP - ESP32 API](https://www.youtube.com/watch?v=VpsuaIH0EiU) oleh [IoT Craft Hub](https://www.youtube.com/@IoTCraftHub) (2024)
 - [PHP Flight Framework Simple Introductory Video](https://www.youtube.com/watch?v=VCztp1QLC2c) oleh [n0nag0n](https://www.youtube.com/@n0nag0n) (2024)
 - [Set header HTTP code in Flightphp (3 Solutions!!)](https://www.youtube.com/watch?v=g1i0iy3LqKo) oleh [Roel Van de Paar](https://www.youtube.com/@RoelVandePaar) (2024)
 - [PHP Flight Framework Tutorial. Super easy API Project!](https://www.youtube.com/watch?v=46WVlj1bXH0) oleh [n0nag0n](https://www.youtube.com/@n0nag0n) (2022)
