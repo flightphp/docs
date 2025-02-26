@@ -1,40 +1,42 @@
-# Wruczek/PHP-File-Cache
+# flightphp/cache
 
-Classe standalone de cache de arquivo PHP leve e simples
+Classe de cache em arquivo PHP leve, simples e autônoma
 
-**Vantagens**
-- Leve, standalone e simples
-- Todo código em um único arquivo - sem drivers desnecessários.
-- Seguro - cada arquivo de cache gerado possui um cabeçalho php com die, tornando o acesso direto impossível mesmo se alguém conhecer o caminho e seu servidor não estiver configurado corretamente
+**Vantagens** 
+- Leve, autônoma e simples
+- Todo o código em um arquivo - sem drivers desnecessários.
+- Seguro - cada arquivo de cache gerado tem um cabeçalho php com die, impossibilitando o acesso direto mesmo que alguém conheça o caminho e seu servidor não esteja configurado corretamente
 - Bem documentado e testado
-- Manipula corretamente a concorrência via flock
-- Suporta PHP 5.4.0 - 7.1+
-- Gratuito sob uma licença MIT
+- Lida corretamente com concorrência via flock
+- Suporta PHP 7.4+
+- Grátis sob uma licença MIT
 
-Clique [aqui](https://github.com/Wruczek/PHP-File-Cache) para visualizar o código.
+Este site de docs está usando esta biblioteca para armazenar em cache cada uma das páginas!
+
+Clique [aqui](https://github.com/flightphp/cache) para ver o código.
 
 ## Instalação
 
 Instale via composer:
 
 ```bash
-composer require wruczek/php-file-cache
+composer require flightphp/cache
 ```
 
 ## Uso
 
-O uso é bastante direto.
+O uso é bastante simples. Isso salva um arquivo de cache no diretório de cache.
 
 ```php
-use Wruczek\PhpFileCache\PhpFileCache;
+use flight\Cache;
 
 $app = Flight::app();
 
-// Você passa o diretório no qual o cache será armazenado para o construtor
-$app->register('cache', PhpFileCache::class, [ __DIR__ . '/../cache/' ], function(PhpFileCache $cache) {
+// Você passa o diretório onde o cache será armazenado no construtor
+$app->register('cache', Cache::class, [ __DIR__ . '/../cache/' ], function(Cache $cache) {
 
-	// Isso garante que o cache seja usado apenas no modo de produção
-	// AMBIENTE é uma constante definida em seu arquivo de inicialização ou em outro lugar de seu aplicativo
+	// Isso garante que o cache seja usado apenas quando em modo de produção
+	// ENVIRONMENT é uma constante que é definida em seu arquivo de bootstrap ou em outro lugar em seu app
 	$cache->setDevMode(ENVIRONMENT === 'development');
 });
 ```
@@ -43,7 +45,7 @@ Então você pode usá-lo em seu código assim:
 
 ```php
 
-// Obter instância de cache
+// Obter instância do cache
 $cache = Flight::cache();
 $data = $cache->refreshIfExpired('simple-cache-test', function () {
     return date("H:i:s"); // retornar dados a serem armazenados em cache
@@ -59,4 +61,4 @@ if(empty($data)) {
 
 ## Documentação
 
-Visite [https://github.com/Wruczek/PHP-File-Cache](https://github.com/Wruczek/PHP-File-Cache) para ver a documentação completa e certifique-se de ver a pasta de [exemplos](https://github.com/Wruczek/PHP-File-Cache/tree/master/examples).
+Visite [https://github.com/flightphp/cache](https://github.com/flightphp/cache) para a documentação completa e certifique-se de ver a pasta [exemplos](https://github.com/flightphp/cache/tree/master/examples).

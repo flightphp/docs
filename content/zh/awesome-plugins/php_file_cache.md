@@ -1,52 +1,54 @@
-# Wruczek/PHP-File-Cache
+# flightphp/cache
 
-輕巧，簡單且獨立的PHP文件緩存類
+轻量、简单且独立的 PHP 文件内缓存类
 
-**優勢**
-- 輕巧，獨立且簡單
-- 所有代碼在一個文件中 - 沒有多餘的驅動程序。
-- 安全 - 每個生成的緩存文件都帶有帶有 die 的php頭部，即使有人知道路徑且您的服務器未正確配置，也無法直接訪問
-- 良好的文檔和測試
-- 通過 flock 正確處理並發
-- 支持 PHP 5.4.0 - 7.1+
-- 在 MIT 許可證下免費
+**优点**
+- 轻量、独立且简单
+- 所有代码在一个文件中 - 没有无意义的驱动程序。
+- 安全 - 每个生成的缓存文件都有一个带有 die 的 php 头，即使有人知道路径且您的服务器配置不当，也无法直接访问
+- 有良好的文档和测试
+- 通过 flock 正确处理并发
+- 支持 PHP 7.4+
+- 在 MIT 许可证下免费
 
-點擊[這裡](https://github.com/Wruczek/PHP-File-Cache)查看代碼。
+此文档站点使用此库缓存每个页面！
 
-## 安裝
+点击 [这里](https://github.com/flightphp/cache) 查看代码。
 
-通過 composer 安裝：
+## 安装
+
+通过 Composer 安装：
 
 ```bash
-composer require wruczek/php-file-cache
+composer require flightphp/cache
 ```
 
 ## 用法
 
-使用非常簡單。
+用法相当简单。这将在缓存目录中保存一个缓存文件。
 
 ```php
-use Wruczek\PhpFileCache\PhpFileCache;
+use flight\Cache;
 
 $app = Flight::app();
 
-// 將緩存存儲的目錄傳遞給構造函數
-$app->register('cache', PhpFileCache::class, [ __DIR__ . '/../cache/' ], function(PhpFileCache $cache) {
+// 您将缓存存储的目录传递给构造函数
+$app->register('cache', Cache::class, [ __DIR__ . '/../cache/' ], function(Cache $cache) {
 
-	// 這可以確保僅在生產模式下使用緩存
-	// ENVIRONMENT 是在您的啟動文件或應用程序的其他地方設置的常數
+	// 这确保只有在生产模式下才使用缓存
+	// ENVIRONMENT 是在引导文件或应用程序其他地方设置的常量
 	$cache->setDevMode(ENVIRONMENT === 'development');
 });
 ```
 
-然后您可以像這樣在代碼中使用它：
+然后您可以像这样在代码中使用它：
 
 ```php
 
-// 獲取緩存實例
+// 获取缓存实例
 $cache = Flight::cache();
 $data = $cache->refreshIfExpired('simple-cache-test', function () {
-    return date("H:i:s"); // 返回要緩存的數據
+    return date("H:i:s"); // 返回要缓存的数据
 }, 10); // 10 秒
 
 // 或者
@@ -57,6 +59,6 @@ if(empty($data)) {
 }
 ```
 
-## 文檔
+## 文档
 
-訪問[https://github.com/Wruczek/PHP-File-Cache](https://github.com/Wruczek/PHP-File-Cache)查看完整文檔，並確保您查看[examples](https://github.com/Wruczek/PHP-File-Cache/tree/master/examples)文件夾。
+访问 [https://github.com/flightphp/cache](https://github.com/flightphp/cache) 查看完整文档，并确保查看 [examples](https://github.com/flightphp/cache/tree/master/examples) 文件夹。
