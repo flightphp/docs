@@ -6,8 +6,8 @@ Flight is incredibly extensible. There are a number of plugins that can be used 
 
 API documentation is crucial for any API. It helps developers understand how to interact with your API and what to expect in return. There are a couple tools available to help you generate API documentation for your Flight Projects.
 
-- [FlightPHP OpenAPI Generator](https://dev.to/danielsc/define-generate-and-implement-an-api-first-approach-with-openapi-generator-and-flightphp-1fb3) - Blog post written by Daniel Schreiber on how to use the OpenAPI Generator with FlightPHP to generate API documentation.
-- [Swagger UI](https://github.com/zircote/swagger-php) - Swagger UI is a great tool to help you generate API documentation for your Flight projects. It's very easy to use and can be customized to fit your needs. This is the PHP library to help you generate the Swagger documentation.
+- [FlightPHP OpenAPI Generator](https://dev.to/danielsc/define-generate-and-implement-an-api-first-approach-with-openapi-generator-and-flightphp-1fb3) - Blog post written by Daniel Schreiber on how to use the OpenAPI Spec with FlightPHP to build out your API using an API first approach.
+- [SwaggerUI](https://github.com/zircote/swagger-php) - Swagger UI is a great tool to help you generate API documentation for your Flight projects. It's very easy to use and can be customized to fit your needs. This is the PHP library to help you generate the Swagger documentation.
 
 ## Authentication/Authorization
 
