@@ -9,6 +9,7 @@ You have two options to get started with Flight:
 
 While these are not officially sponsored by the Flight Team, these could give you ideas on how to structure your own projects that are built with Flight!
 
+- [Decay](https://github.com/boxybird/decay) - Flight v3 with HTMX and SleekDB all about zombies! ([Demo](https://decay.andrewrhyand.com))
 - [Flight Example Blog](https://github.com/n0nag0n/flightphp-blog) - Flight v3 with Middleware, Controllers, Active Record, and Latte.
 - [Flight CRUD RESTful API](https://github.com/soheilkhaledabdi/php-crud-api-flight) - Simple CRUD API project using the Flight framework, which provides a basic structure for new users to quickly set up a PHP application with CRUD operations and database connectivity. The project demonstrates how to use Flight for RESTful API development, making it an ideal learning tool for beginners and a useful starter kit for more experienced developers.
 - [Flight School Management System](https://github.com/krmu/FlightPHP_School) - Flight v3
