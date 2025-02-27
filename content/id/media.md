@@ -1,8 +1,8 @@
 # Media
 
-Kami telah berusaha untuk melacak semua jenis media terkait Flight di internet. Lihat di bawah untuk berbagai sumber yang dapat Anda gunakan untuk belajar lebih lanjut tentang Flight.
+Kami telah berusaha untuk melacak apa yang kami bisa tentang berbagai jenis media di internet seputar Flight. Lihat di bawah untuk berbagai sumber yang dapat Anda gunakan untuk mempelajari lebih lanjut tentang Flight.
 
-## Artikel dan Penulisan
+## Artikel dan Tulisannya
 
 - [Define, Generate, and Implement: An API-First Approach with OpenAPI Generator and FlightPHP](https://dev.to/danielsc/define-generate-and-implement-an-api-first-approach-with-openapi-generator-and-flightphp-1fb3) oleh [Daniel Schreiber](https://github.com/daniel-sc) (2025)
 - [Best PHP Micro Frameworks for 2024](https://dev.to/n0nag0n/best-php-micro-frameworks-for-2024-19h6) oleh [n0nag0n](https://github.com/n0nag0n) (2024)

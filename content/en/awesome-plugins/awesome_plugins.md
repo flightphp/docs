@@ -54,6 +54,12 @@ Encryption is crucial for any application that stores sensitive data. Encrypting
 
 - [defuse/php-encryption](/awesome-plugins/php-encryption) - This is a library that can be used to encrypt and decrypt data. Getting up and running is fairly simple to start encrypting and decrypting data.
 
+## Job Queue
+
+Job queues are really helpful to asynchronously process tasks. This can be sending emails, processing images, or anything that doesn't need to be done in real time.
+
+- [n0nag0n/simple-job-queue](/awesome-plugins/simple-job-queue) - Simple Job Queue is a library that can be used to process jobs asynchronously. It can be used with beanstalkd, MySQL/MariaDB, SQLite, and PostgreSQL.
+
 ## Session
 
 Sessions aren't really useful for API's but for building out a web application, sessions can be crucial for maintaining state and login information.

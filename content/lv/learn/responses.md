@@ -1,34 +1,34 @@
 # Atbildes
 
-Flight palīdz ģenerēt daļu no atbildes virsrakstiem jūsu vietā, taču lielāko kontroli par to, ko jūs nosūtāt atpakaļ lietotājam, ierakstāt jūs. Dažreiz varat piekļūt `Response` objektam tieši, bet lielāko daļu laika jūs izmantosiet `Flight` instanci, lai nosūtītu atbildi.
+Flight palīdz ģenerēt daļu no atbildes virsrakstiem, bet jūs valdāt pārsvaru pār to, ko nosūtāt atpakaļ lietotājam. Dažreiz jūs varat tieši piekļūt `Response` objektam, bet lielāko daļu laika jūs izmantosit `Flight` instanci, lai nosūtītu atbildi.
 
 ## Pamata atbildes nosūtīšana
 
-Flight izmanto ob_start() izejas buferēšanai. Tas nozīmē, ka jūs varat izmantot `echo` vai `print`, lai nosūtītu atbildi lietotājam, un Flight to noķers un nosūtīs atpakaļ lietotājam ar atbilstošajiem virsrakstiem.
+Flight izmanto ob_start(), lai buferētu izvadi. Tas nozīmē, ka jūs varat izmantot `echo` vai `print`, lai nosūtītu atbildi lietotājam, un Flight to sag捕arīs un nosūtīs atpakaļ lietotājam ar atbilstošajiem virsrakstiem.
 
 ```php
 
-// Tas nosūtīs "Sveiki, pasaule!" lietotāja pārlūkprogrammai
+// Tas nosūtīs "Hello, World!" lietotāja pārlūkā
 Flight::route('/', function() {
-	echo "Sveiki, pasaule!";
+	echo "Hello, World!";
 });
 
 // HTTP/1.1 200 OK
 // Content-Type: text/html
 //
-// Sveiki, pasaule!
+// Hello, World!
 ```
 
-Alternatīvi, jūs varat izsaukt `write()` metodi, lai pievienotu korpusu.
+Kā alternatīvu, jūs varat izsaukt `write()` metodi, lai pievienotu ķermenim.
 
 ```php
 
-// Tas nosūtīs "Sveiki, pasaule!" lietotāja pārlūkprogrammai
+// Tas nosūtīs "Hello, World!" lietotāja pārlūkā
 Flight::route('/', function() {
-	// izsmeļoši, bet dažreiz noderīgi, kad jums tas ir vajadzīgs
-	Flight::response()->write("Sveiki, pasaule!");
+	// detalizēts, bet dažreiz izpilda darbu, kad tas jums nepieciešams
+	Flight::response()->write("Hello, World!");
 
-	// ja vēlaties iegūt korpusu, ko esat iestatījis šajā brīdī
+	// ja vēlaties iegūt ķermeni, ko esat iestatījis šajā punktā
 	// jūs varat to izdarīt šādi
 	$body = Flight::response()->getBody();
 });
@@ -42,7 +42,7 @@ Jūs varat iestatīt atbildes statusa kodu, izmantojot `status` metodi:
 Flight::route('/@id', function($id) {
 	if($id == 123) {
 		Flight::response()->status(200);
-		echo "Sveiki, pasaule!";
+		echo "Hello, World!";
 	} else {
 		Flight::response()->status(403);
 		echo "Aizliegts";
@@ -50,7 +50,7 @@ Flight::route('/@id', function($id) {
 });
 ```
 
-Ja vēlaties iegūt pašreizējo statusa kodu, jūs varat izmantot `status` metodi bez jebkādiem argumentiem:
+Ja vēlaties iegūt pašreizējo statusa kodu, varat izmantot `status` metodi bez jebkādiem argumentiem:
 
 ```php
 Flight::response()->status(); // 200
@@ -58,38 +58,38 @@ Flight::response()->status(); // 200
 
 ## Atbildes ķermeņa iestatīšana
 
-Jūs varat iestatīt atbildes ķermeni, izmantojot `write` metodi, tomēr, ja jūs izsaucat 'echo' vai 'print', 
-tas tiks noķerts un nosūtīts kā atbildes ķermenis caur izejas buferēšanu.
+Jūs varat iestatīt atbildes ķermeni, izmantojot `write` metodi, tomēr, ja jūs kaut ko echo vai print, 
+tas tiks sag捕arīts un nosūtīts kā atbildes ķermenis caur izvades buferēšanu.
 
 ```php
 Flight::route('/', function() {
-	Flight::response()->write("Sveiki, pasaule!");
+	Flight::response()->write("Hello, World!");
 });
 
-// tāpat kā
+// tas pats kā
 
 Flight::route('/', function() {
-	echo "Sveiki, pasaule!";
+	echo "Hello, World!";
 });
 ```
 
 ### Atbildes ķermeņa notīrīšana
 
-Ja vēlaties notīrīt atbildes ķermeni, varat izmantot `clearBody` metodi:
+Ja vēlaties notīrīt atbildes ķermeni, jūs varat izmantot `clearBody` metodi:
 
 ```php
 Flight::route('/', function() {
 	if($someCondition) {
-		Flight::response()->write("Sveiki, pasaule!");
+		Flight::response()->write("Hello, World!");
 	} else {
 		Flight::response()->clearBody();
 	}
 });
 ```
 
-### Atsaukšanas palaidšana uz atbildes ķermeni
+### Atbildes ķermeņa atsauces izpildīšana
 
-Jūs varat palaist atsaukšanu uz atbildes ķermeni, izmantojot `addResponseBodyCallback` metodi:
+Jūs varat izpildīt atsauci uz atbildes ķermeni, izmantojot `addResponseBodyCallback` metodi:
 
 ```php
 Flight::route('/users', function() {
@@ -98,19 +98,19 @@ Flight::route('/users', function() {
 	Flight::render('users_table', ['users' => $users]);
 });
 
-// Tas gzipos visas atbildes jebkurai maršrutu
+// Tas gzipos visas atbildes par jebkuru maršrutu
 Flight::response()->addResponseBodyCallback(function($body) {
 	return gzencode($body, 9);
 });
 ```
 
-Jūs varat pievienot vairākus atsaukšanas, un tie tiks izpildīti secībā, kādā tie tika pievienoti. Tā kā tas var pieņemt jebkuru [callable](https://www.php.net/manual/en/language.types.callable.php), tas var pieņemt klases masīvu `[ $class, 'method' ]`, slēgtu `$strReplace = function($body) { str_replace('hi', 'there', $body); };`, vai funkcijas nosaukumu `'minify'`, ja jums ir funkcija, lai samazinātu jūsu html kodu piemēram.
+Jūs varat pievienot vairākas atsauces, un tās tiks izpildītas secībā, kādā tās tika pievienotas. Tā kā šī var pieņemt jebkuru [izsaucamu](https://www.php.net/manual/en/language.types.callable.php), tā var pieņemt klases masīvu `[ $class, 'method' ]`, slēgšanu `$strReplace = function($body) { str_replace('hi', 'there', $body); };`, vai funkcijas nosaukumu `'minify'`, ja jums būtu funkcija, lai samazinātu jūsu html kodu piemēram.
 
-**Piezīme:** Maršruta atsaukšanas nedarbosies, ja izmantojat `flight.v2.output_buffering` konfigurācijas opciju.
+**Piezīme:** Maršruta atsauces nedarbosies, ja jūs izmantojat `flight.v2.output_buffering` konfigurācijas opciju.
 
-### Specifiska maršruta atsaukšana
+### Specifiska maršruta atsauce
 
-Ja jūs gribētu, lai tas attiektos tikai uz konkrētu maršrutu, jūs varētu pievienot atsaukšanu pašā maršrutā:
+Ja vēlaties, lai tas attiektos tikai uz konkrētu maršrutu, jūs varētu pievienot atsauci pašā maršrutā:
 
 ```php
 Flight::route('/users', function() {
@@ -125,15 +125,15 @@ Flight::route('/users', function() {
 });
 ```
 
-### Middleware opcija
+### Vidēja opcija
 
-Jūs varat arī izmantot starpprogrammas, lai lietotu atsaukšanu uz visiem maršrutiem caur starpprogrammu:
+Jūs varat arī izmantot vidējo, lai pielāgotu atsauci visiem maršrutiem, izmantojot vidēji:
 
 ```php
 // MinifyMiddleware.php
 class MinifyMiddleware {
 	public function before() {
-		// Pielietot atsaukšanu šeit uz response() objektu.
+		// Pielietojiet atsauci šeit uz response() objektu.
 		Flight::response()->addResponseBodyCallback(function($body) {
 			return $this->minify($body);
 		});
@@ -154,29 +154,29 @@ Flight::group('/users', function() {
 
 ## Atbildes virsraksta iestatīšana
 
-Jūs varat iestatīt virsrakstu, piemēram, atbildes satura tipu, izmantojot `header` metodi:
+Jūs varat iestatīt virsrakstu, piemēram, atbildes satura veidu, izmantojot `header` metodi:
 
 ```php
 
-// Tas nosūtīs "Sveiki, pasaule!" lietotāja pārlūkprogrammai vienkāršā tekstā
+// Tas nosūtīs "Hello, World!" lietotāja pārlūkā kā vienkāršu tekstu
 Flight::route('/', function() {
 	Flight::response()->header('Content-Type', 'text/plain');
 	// vai
 	Flight::response()->setHeader('Content-Type', 'text/plain');
-	echo "Sveiki, pasaule!";
+	echo "Hello, World!";
 });
 ```
 
 ## JSON
 
-Flight nodrošina atbalstu JSON un JSONP atbildēm. Lai nosūtītu JSON atbildi, Jūs 
-pārsūtāt datus, lai tiktu JSON kodēti:
+Flight nodrošina atbalstu JSON un JSONP atbilžu nosūtīšanai. Lai nosūtītu JSON atbildi, jūs
+pārsniedzat datus, kas jākodo JSON formātā:
 
 ```php
 Flight::json(['id' => 123]);
 ```
 
-> **Piezīme:** Pēc noklusējuma Flight nosūtīs `Content-Type: application/json` virsrakstu ar atbildi. Tas arī izmantos konstantus `JSON_THROW_ON_ERROR` un `JSON_UNESCAPED_SLASHES`, kad kodēs JSON.
+> **Piezīme:** Pēc noklusējuma Flight nosūtīs `Content-Type: application/json` virsrakstu kopā ar atbildi. Tas arī izmantos konstantus `JSON_THROW_ON_ERROR` un `JSON_UNESCAPED_SLASHES`, kad kodē JSON.
 
 ### JSON ar statusa kodu
 
@@ -186,85 +186,86 @@ Jūs varat arī pārsūtīt statusa kodu kā otro argumentu:
 Flight::json(['id' => 123], 201);
 ```
 
-### JSON ar skaistu izdrukāšanu
+### JSON ar skaistu izskatu
 
-Jūs varat arī pārsūtīt argumentu pēdējā pozīcijā, lai iespējotu skaistu drukāšanu:
+Jūs varat arī pārsūtīt argumentu pēdējā pozīcijā, lai iespējotu skaistu izskatu:
 
 ```php
 Flight::json(['id' => 123], 200, true, 'utf-8', JSON_PRETTY_PRINT);
 ```
 
-Ja jūs maināt opcijas, kas pārsūtītas uz `Flight::json()`, un vēlaties vienkāršāku sintaksi, 
-jūs varat vienkārši pārdefinēt JSON metodi:
+Ja jūs maināt opcijas, ko nododat `Flight::json()`, un vēlaties vienkāršāku sintaksi, jūs varat 
+vienkārši pārsaukt JSON metodi:
 
 ```php
 Flight::map('json', function($data, $code = 200, $options = 0) {
 	Flight::_json($data, $code, true, 'utf-8', $options);
-}
+});
 
-// Un tagad to var izmantot šādā veidā
+// Un tagad to var izmantot šādi
 Flight::json(['id' => 123], 200, JSON_PRETTY_PRINT);
 ```
 
 ### JSON un izpildes apstādināšana (v3.10.0)
 
-Ja vēlaties nosūtīt JSON atbildi un apstāt izpildi, jūs varat izmantot `jsonHalt` metodi.
-Tas ir noderīgi gadījumos, kad jūs pārbaudāt kādu autorizācijas veidu un, ja
-lietotājs nav autorizēts, jūs varat nekavējoties nosūtīt JSON atbildi, notīrīt esošā ķermeņa saturu
-un apstāt izpildi.
+Ja vēlaties nosūtīt JSON atbildi un apstādināt izpildi, jūs varat izmantot `jsonHalt` metodi.
+Tas ir noderīgi gadījumiem, kad jūs pārbaudāt varbūt kādu autorizāciju, un, ja
+lietotājs nav autorizēts, jūs varat nekavējoties nosūtīt JSON atbildi, notīrīt esošo ķermeņa
+saturs un apstādināt izpildi.
 
 ```php
 Flight::route('/users', function() {
 	$authorized = someAuthorizationCheck();
 	// Pārbaudiet, vai lietotājs ir autorizēts
 	if($authorized === false) {
-		Flight::jsonHalt(['error' => 'Neautorizēts'], 401);
+		Flight::jsonHalt(['error' => 'Nav autorizēts'], 401);
 	}
 
-	// Turpināt ar pārējām maršruta daļām
+	// Turpiniet ar pārējo maršrutu
 });
 ```
 
-Pirms v3.10.0 jums vajadzēja darīt kaut ko tādu:
+Pirms v3.10.0 jūs būtu jāveic kaut kas tāds:
 
 ```php
 Flight::route('/users', function() {
 	$authorized = someAuthorizationCheck();
 	// Pārbaudiet, vai lietotājs ir autorizēts
 	if($authorized === false) {
-		Flight::halt(401, json_encode(['error' => 'Neautorizēts']));
+		Flight::halt(401, json_encode(['error' => 'Nav autorizēts']));
 	}
 
-	// Turpināt ar pārējām maršruta daļām
+	// Turpiniet ar pārējo maršrutu
 });
 ```
 
 ### JSONP
 
-JSONP pieprasījumiem jūs varat izvēles kārtībā pārsūtīt pieprasījuma parametra nosaukumu, ko izmantojat, lai definētu savu atsaukšanas funkciju:
+JSONP pieprasījumiem jūs varat izvēles veidā pārsūtīt vaicājuma parametra nosaukumu,
+ko izmantojat, lai noteiktu jūsu atsauces funkciju:
 
 ```php
 Flight::jsonp(['id' => 123], 'q');
 ```
 
-Tādējādi, veicot GET pieprasījumu, izmantojot `?q=my_func`, jūs saņemsiet izeju:
+Tātad, veicot GET pieprasījumu, izmantojot `?q=my_func`, jums vajadzētu saņemt izeju:
 
 ```javascript
 my_func({"id":123});
 ```
 
-Ja jūs nenorādāt pieprasījuma parametra nosaukumu, tas noklusēts uz `jsonp`.
+Ja jūs neizpildāt vaicājuma parametra nosaukumu, tas noklusējuma būs `jsonp`.
 
-## Pāradresēt uz citu URL
+## Tomburgizzard uz citu URL
 
-Jūs varat pāradresēt pašreizējo pieprasījumu, izmantojot `redirect()` metodi un pārsūtot
+Jūs varat pārsūtīt pašreizējo pieprasījumu, izmantojot `redirect()` metodi un pārsūtot
 jaunu URL:
 
 ```php
 Flight::redirect('/new/location');
 ```
 
-Pēc noklusējuma Flight nosūtīs HTTP 303 ("Redzēt citu") statusa kodu. Jūs varat izvēles kārtībā iestatīt
+Pēc noklusējuma Flight nosūta HTTP 303 ("Redzēt citu") statusa kodu. Jūs varat izvēles veidā iestatīt
 pielāgotu kodu:
 
 ```php
@@ -273,20 +274,20 @@ Flight::redirect('/new/location', 401);
 
 ## Apstāšanās
 
-Jūs varat apstāties sistēmā jebkurā brīdī, izsaucot `halt` metodi:
+Jūs varat apstāties ietvarā jebkurā brīdī, izsaucot `halt` metodi:
 
 ```php
 Flight::halt();
 ```
 
-Jūs varat arī norādīt opciju `HTTP` statusa kodu un ziņojumu:
+Jūs arī varat norādīt opcionalu `HTTP` statusa kodu un ziņojumu:
 
 ```php
-Flight::halt(200, 'Drīz atgriezīsimies...');
+Flight::halt(200, 'Atgriezīsimies drīz...');
 ```
 
-Izsaucot `halt`, tiks atstumta jebkura atbildes saturs līdz šim brīdim. Ja vēlaties apstāties
-sistēmā un izvadīt pašreizējo atbildi, izmantojiet `stop` metodi:
+Izsaucot `halt`, tiks izmests jebkurš atbildes saturs līdz tam punktam. Ja vēlaties apstāties
+ietvarā un izvadīt pašreizējo atbildi, izmantojiet `stop` metodi:
 
 ```php
 Flight::stop();
@@ -295,7 +296,7 @@ Flight::stop();
 ## Atbildes datu notīrīšana
 
 Jūs varat notīrīt atbildes ķermeni un virsrakstus, izmantojot `clear()` metodi. Tas notīrīs
-jebkādus virsrakstus, kas piešķirti atbildei, notīrīs atbildes ķermeni un iestatīs statusa kodu uz `200`.
+jebkurus virsrakstus, kas piešķirti atbildei, notīrīs atbildes ķermeni un iestatīs statusa kodu uz `200`.
 
 ```php
 Flight::response()->clear();
@@ -303,7 +304,7 @@ Flight::response()->clear();
 
 ### Tikai atbildes ķermeņa notīrīšana
 
-Ja jūs vēlaties tikai notīrīt atbildes ķermeni, varat izmantot `clearBody()` metodi:
+Ja jūs vēlaties tikai notīrīt atbildes ķermeni, jūs varat izmantot `clearBody()` metodi:
 
 ```php
 // Tas joprojām saglabās jebkurus virsrakstus, kas iestatīti uz response() objektu.
@@ -312,24 +313,24 @@ Flight::response()->clearBody();
 
 ## HTTP kešatmiņa
 
-Flight nodrošina iebūvētu atbalstu HTTP līmeņa kešatmiņai. Ja kešatmiņas nosacījums 
-tiek izpildīts, Flight atgriezīs HTTP `304 Not Modified` atbildi. Nākamreiz, kad 
-klients pieprasīs to pašu resursu, viņiem tiks ieteikts izmantot savu lokāli
+Flight nodrošina iebūvētu atbalstu HTTP līmeņa kešatmiņai. Ja kešatmiņas nosacījums
+ir izpildīts, Flight nosūtīs HTTP `304 Not Modified` atbildi. Nākamreiz, kad
+klients pieprasīs to pašu resursu, viņiem tiks lūgts izmantot viņu lokāli
 kešoto versiju.
 
 ### Maršruta līmeņa kešatmiņa
 
-Ja vēlaties kešot visu savu atbildi, varat izmantot `cache()` metodi un pārsūtīt laiku kešatmiņai.
+Ja vēlaties kešot visu atbildi, jūs varat izmantot `cache()` metodi un pārsūtīt laiku kešot.
 
 ```php
 
-// Tas kešos atbildi 5 minūtes
+// Tas kešos atbildi uz 5 minūtēm
 Flight::route('/news', function () {
   Flight::response()->cache(time() + 300);
   echo 'Šis saturs tiks kešots.';
 });
 
-// Alternatīvi, jūs varat izmantot virkni, ko pārsūtīsiet
+// Alternatīvi jūs varat izmantot virkni, ko jūs nodosiet
 // uz strtotime() metodi
 Flight::route('/news', function () {
   Flight::response()->cache('+5 minutes');
@@ -337,11 +338,11 @@ Flight::route('/news', function () {
 });
 ```
 
-### Pēdējā modifikācija
+### Pēdējais modificēts
 
 Jūs varat izmantot `lastModified` metodi un pārsūtīt UNIX laika zīmogu, lai iestatītu datumu
-un laiku, kad lapa tika pēdējoreiz modificēta. Klients turpinās izmantot savu kešu, līdz
-pēdējā modifikētā vērtība tiek mainīta.
+un laiku, kad lapa tika pēdējoreiz modificēta. Klients turpinās izmantot savu kešu līdz
+pēdējā modificētā vērtība tiks mainīta.
 
 ```php
 Flight::route('/news', function () {
@@ -352,7 +353,7 @@ Flight::route('/news', function () {
 
 ### ETag
 
-`ETag` kešatmiņa ir līdzīga `Last-Modified`, izņemot to, ka jūs varat norādīt jebkuru ID, 
+`ETag` kešatmiņa ir līdzīga `Last-Modified`, izņemot to, ka jūs varat norādīt jebkuru id,
 ko vēlaties resursam:
 
 ```php
@@ -362,13 +363,13 @@ Flight::route('/news', function () {
 });
 ```
 
-Ņemiet vērā, ka, izsaucot either `lastModified` vai `etag`, tiek iestatīta un pārbaudīta 
-kešatmiņas vērtība. Ja kešatmiņas vērtība ir tāda pati starp pieprasījumiem, Flight 
-nekavējoties nosūtīs `HTTP 304` atbildi un pārtrauks apstrādi.
+Paturiet prātā, ka izsaukot gan `lastModified`, gan `etag`, abi iestatīs un pārbaudīs
+kešatmiņas vērtību. Ja kešatmiņas vērtība ir vienāda starp pieprasījumiem, Flight uzreiz
+nosūtīs `HTTP 304` atbildi un apstādinās apstrādi.
 
 ## Faila lejupielāde (v3.12.0)
 
-Ir palīgfunkcija, lai lejupielādētu failu. Jūs varat izmantot `download` metodi un pārsūtīt ceļu.
+Ir palīgmetode, lai lejupielādētu failu. Jūs varat izmantot `download` metodi un pārsūtīt ceļu.
 
 ```php
 Flight::route('/download', function () {

@@ -1,23 +1,23 @@
 # flightphp/cache
 
-Clase de caché en archivo PHP ligera, simple y autónoma
+Clase de caché de archivo PHP ligera, simple y autónoma
 
 **Ventajas** 
 - Ligera, autónoma y simple
 - Todo el código en un solo archivo - sin controladores innecesarios.
 - Seguro - cada archivo de caché generado tiene un encabezado php con die, haciendo imposible el acceso directo incluso si alguien conoce la ruta y tu servidor no está configurado correctamente
-- Bien documentada y probada
+- Bien documentado y probado
 - Maneja la concurrencia correctamente a través de flock
 - Soporta PHP 7.4+
 - Gratis bajo una licencia MIT
 
-¡Este sitio de documentación está utilizando esta biblioteca para almacenar en caché cada una de las páginas!
+¡Este sitio de documentación está usando esta biblioteca para almacenar en caché cada una de las páginas!
 
 Haz clic [aquí](https://github.com/flightphp/cache) para ver el código.
 
 ## Instalación
 
-Instala a través de composer:
+Instalar a través de composer:
 
 ```bash
 composer require flightphp/cache
@@ -32,11 +32,11 @@ use flight\Cache;
 
 $app = Flight::app();
 
-// Pasas el directorio donde se almacenará la caché al constructor
+// Pasas el directorio donde se almacenará la caché en el constructor
 $app->register('cache', Cache::class, [ __DIR__ . '/../cache/' ], function(Cache $cache) {
 
 	// Esto asegura que la caché solo se use cuando esté en modo de producción
-	// ENVIRONMENT es una constante que se establece en tu archivo de arranque o en otro lugar de tu aplicación
+	// ENVIRONMENT es una constante que se establece en tu archivo de inicialización o en otro lugar de tu aplicación
 	$cache->setDevMode(ENVIRONMENT === 'development');
 });
 ```
@@ -61,4 +61,4 @@ if(empty($data)) {
 
 ## Documentación
 
-Visita [https://github.com/flightphp/cache](https://github.com/flightphp/cache) para documentación completa y asegúrate de ver la carpeta de [ejemplos](https://github.com/flightphp/cache/tree/master/examples).
+Visita [https://github.com/flightphp/cache](https://github.com/flightphp/cache) para la documentación completa y asegúrate de ver la carpeta de [ejemplos](https://github.com/flightphp/cache/tree/master/examples).

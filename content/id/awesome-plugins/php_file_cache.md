@@ -1,17 +1,17 @@
 # flightphp/cache
 
-Kelas caching dalam file PHP yang ringan, sederhana, dan mandiri
+Kelas caching PHP di-file yang ringan, sederhana, dan mandiri
 
-**Keuntungan**
+**Keuntungan** 
 - Ringan, mandiri, dan sederhana
-- Semua kode dalam satu file - tanpa driver yang tidak berguna.
-- Aman - setiap file cache yang dihasilkan memiliki header php dengan die, membuat akses langsung tidak mungkin meskipun seseorang mengetahui jalur dan server Anda tidak dikonfigurasi dengan baik
+- Semua kode dalam satu file - tidak ada driver yang tidak berguna.
+- Aman - setiap file cache yang dihasilkan memiliki header php dengan die, sehingga akses langsung tidak mungkin dilakukan meskipun seseorang mengetahui jalur dan server Anda tidak dikonfigurasi dengan benar
 - Didokumentasikan dengan baik dan diuji
-- Menangani konkruensi dengan benar melalui flock
+- Menangani konkurensi dengan benar melalui flock
 - Mendukung PHP 7.4+
 - Gratis di bawah lisensi MIT
 
-Situs dokumentasi ini menggunakan pustaka ini untuk menyimpan cache setiap halaman!
+Situs dokumen ini menggunakan perpustakaan ini untuk menyimpan cache setiap halaman!
 
 Klik [di sini](https://github.com/flightphp/cache) untuk melihat kodenya.
 
@@ -32,7 +32,7 @@ use flight\Cache;
 
 $app = Flight::app();
 
-// Anda mengoper direktori tempat cache akan disimpan ke dalam konstruktor
+// Anda memasukkan direktori tempat cache akan disimpan ke dalam konstruktor
 $app->register('cache', Cache::class, [ __DIR__ . '/../cache/' ], function(Cache $cache) {
 
 	// Ini memastikan bahwa cache hanya digunakan saat dalam mode produksi
@@ -41,14 +41,14 @@ $app->register('cache', Cache::class, [ __DIR__ . '/../cache/' ], function(Cache
 });
 ```
 
-Kemudian Anda bisa menggunakannya dalam kode Anda seperti ini:
+Kemudian Anda dapat menggunakannya di kode Anda seperti ini:
 
 ```php
 
 // Dapatkan instance cache
 $cache = Flight::cache();
 $data = $cache->refreshIfExpired('simple-cache-test', function () {
-    return date("H:i:s"); // mengembalikan data untuk disimpan di cache
+    return date("H:i:s"); // kembalikan data untuk disimpan di cache
 }, 10); // 10 detik
 
 // atau

@@ -1,40 +1,38 @@
 # Erweiterung
 
-Flight ist so konzipiert, dass es ein erweiterbares Framework ist. Das Framework wird mit einer Reihe von Standardmethoden und -komponenten ausgeliefert, erlaubt es Ihnen jedoch, Ihre eigenen Methoden zuzuordnen, Ihre eigenen Klassen zu registrieren oder sogar vorhandene Klassen und Methoden zu überschreiben.
+Flight ist als erweiterbares Framework konzipiert. Das Framework wird mit einer Reihe von Standardmethoden und -komponenten geliefert, ermöglicht es Ihnen jedoch, Ihre eigenen Methoden zuzuordnen, Ihre eigenen Klassen zu registrieren oder sogar vorhandene Klassen und Methoden zu überschreiben.
 
-Wenn Sie nach einem DIC (Dependency Injection Container) suchen, springen Sie zur 
-[Dependency Injection Container](dependency-injection-container) Seite.
+Wenn Sie nach einem DIC (Dependency Injection Container) suchen, wechseln Sie zur [Dependency Injection Container](dependency-injection-container) Seite.
 
 ## Methoden zuordnen
 
-Um Ihre eigene einfache benutzerdefinierte Methode zuzuordnen, verwenden Sie die Funktion `map`:
+Um Ihre eigene einfache benutzerdefinierte Methode zuzuordnen, verwenden Sie die `map` Funktion:
 
 ```php
 // Ordnen Sie Ihre Methode zu
 Flight::map('hello', function (string $name) {
-  echo "Hallo $name!";
+  echo "hallo $name!";
 });
 
 // Rufen Sie Ihre benutzerdefinierte Methode auf
 Flight::hello('Bob');
 ```
 
-Obwohl es möglich ist, einfache benutzerdefinierte Methoden zu erstellen, wird empfohlen, einfach Standardfunktionen in PHP zu erstellen. Dies hat Autovervollständigung in IDEs und ist einfacher zu lesen.
-Das Äquivalent des obigen Codes wäre:
+Obwohl es möglich ist, einfache benutzerdefinierte Methoden zu erstellen, wird empfohlen, einfach standardmäßige Funktionen in PHP zu erstellen. Dies bietet Autocomplete in IDEs und ist einfacher zu lesen. Das Äquivalent des obigen Codes wäre:
 
 ```php
 function hello(string $name) {
-  echo "Hallo $name!";
+  echo "hallo $name!";
 }
 
 hello('Bob');
 ```
 
-Dies wird häufiger verwendet, wenn Sie Variablen in Ihre Methode übergeben müssen, um einen erwarteten Wert zu erhalten. Die Verwendung der `register()` Methode wie unten ist mehr für die Übergabe von Konfigurationen gedacht und dann für den Aufruf Ihrer vorkonfigurierten Klasse.
+Dies wird häufiger verwendet, wenn Sie Variablen in Ihre Methode übergeben müssen, um einen erwarteten Wert zu erhalten. Die Verwendung der `register()` Methode wie unten ist mehr für die Übergabe von Konfigurationen gedacht und dann um Ihre vorkonfigurierte Klasse aufzurufen.
 
 ## Klassen registrieren
 
-Um Ihre eigene Klasse zu registrieren und zu konfigurieren, verwenden Sie die Funktion `register`:
+Um Ihre eigene Klasse zu registrieren und zu konfigurieren, verwenden Sie die `register` Funktion:
 
 ```php
 // Registrieren Sie Ihre Klasse
@@ -44,12 +42,10 @@ Flight::register('user', User::class);
 $user = Flight::user();
 ```
 
-Die `register` Methode ermöglicht es Ihnen auch, Parameter an den Klassenkonstruktor zu übergeben. Wenn Sie also Ihre benutzerdefinierte Klasse laden, wird sie vorinitialisiert. 
-Sie können die Konstruktorparameter definieren, indem Sie ein zusätzliches Array übergeben.
-Hier ist ein Beispiel für das Laden einer Datenbankverbindung:
+Die Registermethode erlaubt es Ihnen auch, Parameter an den Klassenkonstruktor weiterzugeben. Wenn Sie also Ihre benutzerdefinierte Klasse laden, wird sie vorinitialisiert. Sie können die Konstruktorparameter definieren, indem Sie ein zusätzliches Array übergeben. Hier ist ein Beispiel für das Laden einer Datenbankverbindung:
 
 ```php
-// Klasse mit Konstruktorparametern registrieren
+// Registrieren Sie die Klasse mit Konstruktorparametern
 Flight::register('db', PDO::class, ['mysql:host=localhost;dbname=test', 'user', 'pass']);
 
 // Holen Sie sich eine Instanz Ihrer Klasse
@@ -59,7 +55,7 @@ Flight::register('db', PDO::class, ['mysql:host=localhost;dbname=test', 'user', 
 //
 $db = Flight::db();
 
-// und wenn Sie es später in Ihrem Code benötigen, rufen Sie einfach dieselbe Methode erneut auf
+// und falls Sie es später in Ihrem Code benötigen, rufen Sie einfach dieselbe Methode erneut auf
 class SomeController {
   public function __construct() {
 	$this->db = Flight::db();
@@ -67,7 +63,7 @@ class SomeController {
 }
 ```
 
-Wenn Sie einen zusätzlichen Rückrufparameter übergeben, wird dieser sofort nach der Konstruktion der Klasse ausgeführt. Dies ermöglicht es Ihnen, alle Einrichtungsverfahren für Ihr neues Objekt durchzuführen. Die Rückruf-Funktion nimmt einen Parameter, eine Instanz des neuen Objekts.
+Wenn Sie einen zusätzlichen Rückrufparameter übergeben, wird dieser sofort nach dem Konstruktor der Klasse ausgeführt. Dies ermöglicht es Ihnen, alle erforderlichen Einrichtungsverfahren für Ihr neues Objekt durchzuführen. Die Rückruffunktion nimmt einen Parameter, eine Instanz des neuen Objekts.
 
 ```php
 // Der Rückruf erhält das Objekt, das konstruiert wurde
@@ -81,8 +77,7 @@ Flight::register(
 );
 ```
 
-Standardmäßig erhalten Sie jedes Mal, wenn Sie Ihre Klasse laden, eine gemeinsame Instanz.
-Um eine neue Instanz einer Klasse zu erhalten, übergeben Sie einfach `false` als Parameter:
+Standardmäßig erhalten Sie jedes Mal, wenn Sie Ihre Klasse laden, eine gemeinsame Instanz. Um eine neue Instanz einer Klasse zu erhalten, übergeben Sie einfach `false` als Parameter:
 
 ```php
 // Gemeinsame Instanz der Klasse
@@ -92,11 +87,11 @@ $shared = Flight::db();
 $new = Flight::db(false);
 ```
 
-Beachten Sie, dass zugeordnete Methoden Vorrang vor registrierten Klassen haben. Wenn Sie beide mit demselben Namen deklarieren, wird nur die zugeordnete Methode aufgerufen.
+Beachten Sie, dass zugeordnete Methoden Vorrang vor registrierten Klassen haben. Wenn Sie beide mit dem gleichen Namen deklarieren, wird nur die zugeordnete Methode aufgerufen.
 
 ## Protokollierung
 
-Flight hat kein integriertes Protokollierungssystem, es ist jedoch sehr einfach, eine Protokollbibliothek mit Flight zu verwenden. Hier ist ein Beispiel mit der Monolog-Bibliothek:
+Flight hat kein integriertes Protokollierungssystem, es ist jedoch wirklich einfach, eine Protokollbibliothek mit Flight zu verwenden. Hier ist ein Beispiel mit der Monolog-Bibliothek:
 
 ```php
 // index.php oder bootstrap.php
@@ -114,20 +109,19 @@ Jetzt, da es registriert ist, können Sie es in Ihrer Anwendung verwenden:
 Flight::log()->warning('Dies ist eine Warnmeldung');
 ```
 
-Dies protokolliert eine Nachricht in die Protokolldatei, die Sie angegeben haben. Was ist, wenn Sie etwas protokollieren möchten, wenn ein Fehler auftritt? Sie können die Methode `error` verwenden:
+Dies protokolliert eine Nachricht in die von Ihnen angegebene Protokolldatei. Was, wenn Sie etwas protokollieren möchten, wenn ein Fehler auftritt? Sie können die `error` Methode verwenden:
 
 ```php
 // In Ihrem Controller oder Route
 
 Flight::map('error', function(Throwable $ex) {
 	Flight::log()->error($ex->getMessage());
-	// Zeigen Sie Ihre benutzerdefinierte Fehlerseite an
+	// Anzeigen Ihrer benutzerdefinierten Fehlermeldung
 	include 'errors/500.html';
 });
 ```
 
-Sie könnten auch ein einfaches APM (Application Performance Monitoring) System 
-mit den `before` und `after` Methoden erstellen:
+Sie könnten auch ein einfaches APM (Application Performance Monitoring) System mit den `before` und `after` Methoden erstellen:
 
 ```php
 // In Ihrer Bootstrap-Datei
@@ -141,19 +135,19 @@ Flight::after('start', function() {
 	$start = Flight::get('start_time');
 	Flight::log()->info('Anfrage '.Flight::request()->url.' dauerte ' . round($end - $start, 4) . ' Sekunden');
 
-	// Sie könnten auch Ihre Anforderungs- oder Antwortüberschriften hinzufügen
-	// um sie ebenfalls zu protokollieren (seien Sie vorsichtig, da dies eine 
-	// große Menge an Daten erzeugen würde, wenn Sie viele Anfragen haben)
-	Flight::log()->info('Anforderungsüberschriften: ' . json_encode(Flight::request()->headers));
-	Flight::log()->info('Antwortüberschriften: ' . json_encode(Flight::response()->headers));
+	// Sie könnten auch Ihre Anfrage- oder Antwort-Header hinzufügen
+	// um sie ebenfalls zu protokollieren (sein Sie vorsichtig, da dies eine 
+	// Menge Daten sein könnte, wenn Sie viele Anfragen haben)
+	Flight::log()->info('Anfrage-Header: ' . json_encode(Flight::request()->headers));
+	Flight::log()->info('Antwort-Header: ' . json_encode(Flight::response()->headers));
 });
 ```
 
-## Framework-Methoden überschreiben
+## Frameworkmethoden überschreiben
 
-Flight ermöglicht es Ihnen, seine Standardfunktionalität anzupassen, um Ihren eigenen Bedürfnissen gerecht zu werden, ohne dass Sie Code ändern müssen. Sie können alle Methoden, die Sie überschreiben können, [hier](/learn/api) einsehen.
+Flight ermöglicht es Ihnen, die Standardfunktionalität an Ihre eigenen Bedürfnisse anzupassen, ohne den Code ändern zu müssen. Sie können alle Methoden anzeigen, die Sie überschreiben können [hier](/learn/api).
 
-Wenn Flight beispielsweise eine URL nicht mit einer Route abgleichen kann, wird die Methode `notFound` aufgerufen, die eine generische `HTTP 404` Antwort sendet. Sie können dieses Verhalten durch die Verwendung der Methode `map` überschreiben:
+Wenn Flight beispielsweise eine URL nicht mit einem Pfad abgleichen kann, ruft es die `notFound` Methode auf, die eine generische `HTTP 404` Antwort sendet. Sie können dieses Verhalten durch Verwendung der `map` Methode überschreiben:
 
 ```php
 Flight::map('notFound', function() {
@@ -162,8 +156,7 @@ Flight::map('notFound', function() {
 });
 ```
 
-Flight ermöglicht es Ihnen auch, die Kernkomponenten des Frameworks zu ersetzen. 
-Zum Beispiel können Sie die Standard-Router-Klasse durch Ihre eigene benutzerdefinierte Klasse ersetzen:
+Flight erlaubt es Ihnen auch, Kernkomponenten des Frameworks zu ersetzen. Beispielsweise können Sie die Standard-Router-Klasse durch Ihre eigene benutzerdefinierte Klasse ersetzen:
 
 ```php
 // Registrieren Sie Ihre benutzerdefinierte Klasse
@@ -173,4 +166,4 @@ Flight::register('router', MyRouter::class);
 $myrouter = Flight::router();
 ```
 
-Frameworkmethoden wie `map` und `register` können jedoch nicht überschrieben werden. Sie erhalten einen Fehler, wenn Sie dies versuchen.
+Frameworkmethoden wie `map` und `register` können jedoch nicht überschrieben werden. Sie erhalten einen Fehler, wenn Sie versuchen, dies zu tun.

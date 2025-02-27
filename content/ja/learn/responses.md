@@ -1,10 +1,10 @@
 # レスポンス
 
-Flightはレスポンスヘッダーの一部を生成するのを助けますが、ユーザーに返す内容の大部分はあなたが制御します。時々、`Response` オブジェクトに直接アクセスできますが、ほとんどの場合、レスポンスを送信するために `Flight` インスタンスを使用します。
+Flight はあなたのためにレスポンスヘッダーの一部を生成しますが、ユーザーに返すものの大部分はあなたが制御します。場合によっては、`Response` オブジェクトに直接アクセスできますが、ほとんどの場合、`Flight` インスタンスを使用してレスポンスを送信します。
 
-## 基本的なレスポンスを送信する
+## 基本的なレスポンスの送信
 
-Flightはob_start()を使用して出力をバッファリングします。これは、`echo` や `print` を使用してユーザーにレスポンスを送信でき、Flightがそれをキャプチャして適切なヘッダーを付けてユーザーに返すことを意味します。
+Flight は ob_start() を使用して出力をバッファリングします。これは、`echo` または `print` を使用してユーザーにレスポンスを送信でき、Flight がそれをキャプチャして適切なヘッダーでユーザーに返すことを意味します。
 
 ```php
 
@@ -19,24 +19,24 @@ Flight::route('/', function() {
 // Hello, World!
 ```
 
-代わりに、`write()` メソッドを呼び出してボディに追加することもできます。
+代わりに、`write()` メソッドを呼び出してボディに追加することも可能です。
 
 ```php
 
 // これにより「Hello, World!」がユーザーのブラウザに送信されます
 Flight::route('/', function() {
-	// 詳細ですが、時々必要なときに役に立ちます
+	// 冗長ですが、必要なときに仕事をすることがあります
 	Flight::response()->write("Hello, World!");
 
 	// この時点で設定したボディを取得したい場合
-	// そのようにすることができます
+	// このようにして取得できます
 	$body = Flight::response()->getBody();
 });
 ```
 
 ## ステータスコード
 
-`status` メソッドを使ってレスポンスのステータスコードを設定できます：
+`status` メソッドを使用してレスポンスのステータスコードを設定できます：
 
 ```php
 Flight::route('/@id', function($id) {
@@ -58,15 +58,15 @@ Flight::response()->status(); // 200
 
 ## レスポンスボディの設定
 
-`write` メソッドを使用してレスポンスボディを設定できますが、`echo` や `print` を使うと、
-それがキャプチャされ、出力バッファリングを通じてレスポンスボディとして送信されます。
+`write` メソッドを使用してレスポンスボディを設定できますが、何かを `echo` または `print` すると 
+それはキャプチャされ、出力バッファリング経由でレスポンスボディとして送信されます。
 
 ```php
 Flight::route('/', function() {
 	Flight::response()->write("Hello, World!");
 });
 
-// 同じ内容として
+// 同じ意味です
 
 Flight::route('/', function() {
 	echo "Hello, World!";
@@ -75,7 +75,7 @@ Flight::route('/', function() {
 
 ### レスポンスボディのクリア
 
-レスポンスボディをクリアしたい場合、`clearBody` メソッドを使用できます：
+レスポンスボディをクリアしたい場合は、`clearBody` メソッドを使用できます：
 
 ```php
 Flight::route('/', function() {
@@ -87,9 +87,9 @@ Flight::route('/', function() {
 });
 ```
 
-### レスポンスボディでコールバックを実行する
+### レスポンスボディでコールバックを実行
 
-`addResponseBodyCallback` メソッドを使用して、レスポンスボディでコールバックを実行できます：
+`addResponseBodyCallback` メソッドを使用してレスポンスボディでコールバックを実行できます：
 
 ```php
 Flight::route('/users', function() {
@@ -98,19 +98,19 @@ Flight::route('/users', function() {
 	Flight::render('users_table', ['users' => $users]);
 });
 
-// これにより、すべてのルートのレスポンスがgzipされます
+// これにより、すべてのルートのレスポンスが gzip 圧縮されます
 Flight::response()->addResponseBodyCallback(function($body) {
 	return gzencode($body, 9);
 });
 ```
 
-複数のコールバックを追加できますが、それらは追加された順に実行されます。これは任意の [呼び出し可能](https://www.php.net/manual/en/language.types.callable.php) を受け入れるため、クラスの配列 `[ $class, 'method' ]`、クロージャ `$strReplace = function($body) { str_replace('hi', 'there', $body); };`、またはHTMLコードを最小化する関数がある場合の関数名 `'minify'` を受け入れます。
+複数のコールバックを追加でき、それらは追加された順に実行されます。このメソッドは任意の [callable](https://www.php.net/manual/en/language.types.callable.php) を受け入れるため、クラス配列 `[ $class, 'method' ]`、クロージャ `$strReplace = function($body) { str_replace('hi', 'there', $body); };`、または例えばHTMLコードを最適化する関数名 `'minify'` を受け入れることができます。
 
-**注:** ルートコールバックは、`flight.v2.output_buffering` 設定オプションを使用している場合は機能しません。
+**注意:** ルートコールバックは `flight.v2.output_buffering` 設定オプションを使用している場合には機能しません。
 
 ### 特定のルートコールバック
 
-これを特定のルートのみに適用したい場合は、ルート自体にコールバックを追加できます：
+これを特定のルートにのみ適用したい場合は、ルート自体でコールバックを追加できます：
 
 ```php
 Flight::route('/users', function() {
@@ -118,7 +118,7 @@ Flight::route('/users', function() {
 	$users = $db->fetchAll("SELECT * FROM users");
 	Flight::render('users_table', ['users' => $users]);
 
-	// これにより、このルートのレスポンスのみがgzipされます
+	// これにより、このルートのレスポンスのみが gzip 圧縮されます
 	Flight::response()->addResponseBodyCallback(function($body) {
 		return gzencode($body, 9);
 	});
@@ -127,7 +127,7 @@ Flight::route('/users', function() {
 
 ### ミドルウェアオプション
 
-ミドルウェアを使用して、すべてのルートにコールバックを適用することもできます：
+ミドルウェアを使用してすべてのルートにコールバックを適用することもできます：
 
 ```php
 // MinifyMiddleware.php
@@ -140,7 +140,7 @@ class MinifyMiddleware {
 	}
 
 	protected function minify(string $body): string {
-		// ボディを何らかの方法で最小化します
+		// ボディを何らかの方法で最適化します
 		return $body;
 	}
 }
@@ -158,7 +158,7 @@ Flight::group('/users', function() {
 
 ```php
 
-// これにより、「Hello, World!」がユーザーのブラウザにプレーンテキストで送信されます
+// これにより「Hello, World!」がプレーンテキストでユーザーのブラウザに送信されます
 Flight::route('/', function() {
 	Flight::response()->header('Content-Type', 'text/plain');
 	// または
@@ -169,96 +169,97 @@ Flight::route('/', function() {
 
 ## JSON
 
-FlightはJSONおよびJSONPレスポンスの送信をサポートしています。JSONレスポンスを送信するには、JSONエンコードされるデータを渡します：
+Flight は JSON および JSONP レスポンスを送信するためのサポートを提供しています。JSON レスポンスを送信するには、いくつかのデータを JSON エンコードします：
 
 ```php
 Flight::json(['id' => 123]);
 ```
 
-> **注意:** デフォルトでは、Flightはレスポンスとともに`Content-Type: application/json`ヘッダーを送信します。また、JSONをエンコードする際に`JSON_THROW_ON_ERROR`および`JSON_UNESCAPED_SLASHES`定数も使用します。
+> **注意:** デフォルトで、Flight はレスポンスに `Content-Type: application/json` ヘッダーを送信します。また、JSON をエンコードするときに定数 `JSON_THROW_ON_ERROR` および `JSON_UNESCAPED_SLASHES` を使用します。
 
-### ステータスコード付きのJSON
+### ステータスコード付きの JSON
 
-第2引数としてステータスコードを渡すこともできます：
+第二引数としてステータスコードを渡すこともできます：
 
 ```php
 Flight::json(['id' => 123], 201);
 ```
 
-### プレティプリント付きのJSON
+### プレティプリント付きの JSON
 
-最後の位置に引数を渡すことで、プレティプリントを有効にすることもできます：
+最後の位置に引数を渡すことで、プレティプリントを有効にすることも可能です：
 
 ```php
 Flight::json(['id' => 123], 200, true, 'utf-8', JSON_PRETTY_PRINT);
 ```
 
-`Flight::json()`に渡されるオプションを簡潔な構文に変更したい場合、単にJSONメソッドを再マッピングできます：
+`Flight::json()` に渡すオプションを変更して、よりシンプルな構文が必要な場合は、JSON メソッドを再マッピングすることができます：
 
 ```php
 Flight::map('json', function($data, $code = 200, $options = 0) {
 	Flight::_json($data, $code, true, 'utf-8', $options);
 }
 
-// そして、次のように使用できます
+// これで、このように使うことができます
 Flight::json(['id' => 123], 200, JSON_PRETTY_PRINT);
 ```
 
-### JSONと実行の停止 (v3.10.0)
+### JSON と実行の停止 (v3.10.0)
 
-JSONレスポンスを送信し、実行を停止したい場合は、`jsonHalt` メソッドを使用できます。これは、ユーザーが承認されていない場合などに、既存のボディ内容をクリアして実行を停止するのに便利です。
+JSON レスポンスを送信し実行を停止する場合は、`jsonHalt` メソッドを使用します。
+これは、何らかの認証をチェックしていて、ユーザーが認証されていない場合に、すぐに JSON レスポンスを送信し、既存のボディコンテンツをクリアし、実行を停止できる便利な方法です。
 
 ```php
 Flight::route('/users', function() {
 	$authorized = someAuthorizationCheck();
-	// ユーザーが承認されているか確認します
+	// ユーザーが認証されているかどうかをチェック
 	if($authorized === false) {
 		Flight::jsonHalt(['error' => 'Unauthorized'], 401);
 	}
 
-	// ルートの残りの部分を続けます
+	// ルートの残りを続行
 });
 ```
 
-v3.10.0以前は、次のようにする必要がありました：
+v3.10.0以前では、このようにする必要がありました：
 
 ```php
 Flight::route('/users', function() {
 	$authorized = someAuthorizationCheck();
-	// ユーザーが承認されているか確認します
+	// ユーザーが認証されているかどうかをチェック
 	if($authorized === false) {
 		Flight::halt(401, json_encode(['error' => 'Unauthorized']));
 	}
 
-	// ルートの残りの部分を続けます
+	// ルートの残りを続行
 });
 ```
 
 ### JSONP
 
-JSONPリクエストの場合、コールバック関数を定義するために使用するクエリパラメータ名をオプションで渡すことができます：
+JSONP リクエストについては、オプションでコールバック関数を定義するために使用しているクエリパラメータ名を渡すことができます：
 
 ```php
 Flight::jsonp(['id' => 123], 'q');
 ```
 
-したがって、`?q=my_func`を使用してGETリクエストを行うと、次の出力を受け取るべきです：
+したがって、`?q=my_func` を使用して GET リクエストを行うと、次の出力が得られます：
 
 ```javascript
 my_func({"id":123});
 ```
 
-クエリパラメータ名を渡さない場合は、デフォルトで`jsonp`になります。
+クエリパラメータ名を渡さない場合は、デフォルトで `jsonp` に設定されます。
 
-## 別のURLにリダイレクト
+## 別の URL へのリダイレクト
 
-`redirect()` メソッドを使用して現在のリクエストをリダイレクトし、新しいURLを渡すことができます：
+`redirect()` メソッドを使用して新しい URL を渡すことで、現在のリクエストをリダイレクトできます：
 
 ```php
 Flight::redirect('/new/location');
 ```
 
-デフォルトでは、FlightはHTTP 303 ("See Other") ステータスコードを送信します。オプションでカスタムコードを設定できます：
+デフォルトでは Flight は HTTP 303 ("See Other") ステータスコードを送信します。オプションでカスタムコードを設定できます：
 
 ```php
 Flight::redirect('/new/location', 401);
@@ -266,19 +267,19 @@ Flight::redirect('/new/location', 401);
 
 ## 停止
 
-`halt` メソッドを呼び出すことで、フレームワークを任意の時点で停止できます：
+いつでも `halt` メソッドを呼び出すことでフレームワークを停止できます：
 
 ```php
 Flight::halt();
 ```
 
-オプションでHTTPステータスコードとメッセージを指定できます：
+オプションの `HTTP` ステータスコードとメッセージを指定することもできます：
 
 ```php
-Flight::halt(200, 'すぐに戻ります...');
+Flight::halt(200, 'Be right back...');
 ```
 
-`halt`を呼び出すと、その時点までのレスポンスコンテンツはすべて破棄されます。フレームワークを停止して現在のレスポンスを出力したい場合は、`stop` メソッドを使用します：
+`halt` を呼び出すと、その時点までのレスポンスコンテンツは破棄されます。フレームワークを停止し、現在のレスポンスを出力したい場合は、`stop` メソッドを使用します：
 
 ```php
 Flight::stop();
@@ -286,28 +287,28 @@ Flight::stop();
 
 ## レスポンスデータのクリア
 
-`clear()` メソッドを使用してレスポンスボディとヘッダーをクリアできます。これにより、レスポンスに割り当てられたすべてのヘッダーがクリアされ、レスポンスボディがクリアされ、ステータスコードが `200` に設定されます。
+`clear()` メソッドを使用してレスポンスボディとヘッダーをクリアできます。これにより、レスポンスに割り当てられたヘッダーがクリアされ、レスポンスボディがクリアされ、ステータスコードが `200` に設定されます。
 
 ```php
 Flight::response()->clear();
 ```
 
-### レスポンスボディのみをクリア
+### レスポンスボディのみのクリア
 
-レスポンスボディのみをクリアしたい場合、`clearBody()` メソッドを使用できます：
+レスポンスボディのみをクリアしたい場合は、`clearBody()` メソッドを使用できます：
 
 ```php
-// これにより、レスポンス()オブジェクトに設定されたヘッダーは保持されます。
+// これにより、レスポンス() オブジェクトに設定されたヘッダーは保持されます。
 Flight::response()->clearBody();
 ```
 
-## HTTPキャッシング
+## HTTP キャッシング
 
-FlightはHTTPレベルのキャッシングを標準でサポートしています。キャッシング条件が満たされると、FlightはHTTP `304 Not Modified` レスポンスを返します。次回クライアントが同じリソースをリクエストすると、ローカルにキャッシュされたバージョンを使用するように促されます。
+Flight には、HTTP レベルのキャッシングに対するビルトインのサポートがあります。キャッシング条件が満たされると、Flight は HTTP `304 Not Modified` レスポンスを返します。クライアントが同じリソースを再度リクエストする際には、ローカルにキャッシュされたバージョンを使用するように促されます。
 
-### ルートレベルキャッシング
+### ルートレベルのキャッシング
 
-レスポンス全体をキャッシュしたい場合、`cache()` メソッドを使用し、キャッシュする時間を渡すことができます。
+レスポンス全体をキャッシュしたい場合は、`cache()` メソッドを使用し、キャッシュする時間を渡すことができます。
 
 ```php
 
@@ -317,7 +318,7 @@ Flight::route('/news', function () {
   echo 'このコンテンツはキャッシュされます。';
 });
 
-// また、strtotime()メソッドに渡す文字列を使用することもできます
+// または、strtotime() メソッドに渡す文字列を使用できます
 Flight::route('/news', function () {
   Flight::response()->cache('+5 minutes');
   echo 'このコンテンツはキャッシュされます。';
@@ -326,7 +327,7 @@ Flight::route('/news', function () {
 
 ### 最終更新日時
 
-`lastModified` メソッドを使用し、UNIXタイムスタンプを渡してページが最終更新された日付と時刻を設定できます。クライアントは最終更新値が変更されるまでキャッシュを使用し続けます。
+`lastModified` メソッドを使用して、UNIX タイムスタンプを渡し、ページが最後に修正された日時を設定できます。クライアントは、最終更新値が変更されるまでキャッシュを使用し続けます。
 
 ```php
 Flight::route('/news', function () {
@@ -337,7 +338,7 @@ Flight::route('/news', function () {
 
 ### ETag
 
-`ETag`キャッシングは`Last-Modified`に似ていますが、リソース用の任意のIDを指定できます：
+`ETag` キャッシングは `Last-Modified` と似ていますが、リソースのために望む任意の ID を指定できます：
 
 ```php
 Flight::route('/news', function () {
@@ -346,11 +347,11 @@ Flight::route('/news', function () {
 });
 ```
 
-`lastModified`または`etag`を呼び出すと、両方のキャッシュ値が設定され、確認されます。リクエスト間でキャッシュ値が同じ場合、Flightは即座に`HTTP 304`レスポンスを送信し、処理を停止します。
+`lastModified` または `etag` を呼び出すと、どちらもキャッシュ値を設定およびチェックします。要求間でキャッシュ値が同じである場合、Flight は即座に `HTTP 304` レスポンスを送信し、処理を停止します。
 
 ## ファイルのダウンロード (v3.12.0)
 
-ファイルをダウンロードするためのヘルパーメソッドがあります。`download`メソッドを使用し、パスを渡すできます。
+ファイルをダウンロードするためのヘルパーメソッドがあります。`download` メソッドを使用し、パスを渡すことができます。
 
 ```php
 Flight::route('/download', function () {

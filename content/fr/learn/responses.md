@@ -1,10 +1,10 @@
 # Réponses
 
-Flight vous aide à générer une partie des en-têtes de réponse, mais vous gardez le contrôle sur ce que vous renvoyez à l'utilisateur. Parfois, vous pouvez accéder directement à l'objet `Response`, mais la plupart du temps, vous utiliserez l'instance `Flight` pour envoyer une réponse.
+Flight aide à générer une partie des en-têtes de réponse pour vous, mais vous gardez le contrôle sur ce que vous renvoyez à l'utilisateur. Parfois, vous pouvez accéder directement à l'objet `Response`, mais la plupart du temps, vous utiliserez l'instance `Flight` pour envoyer une réponse.
 
 ## Envoi d'une réponse de base
 
-Flight utilise ob_start() pour mettre en tampon la sortie. Cela signifie que vous pouvez utiliser `echo` ou `print` pour envoyer une réponse à l'utilisateur et Flight la capturera et la renverra à l'utilisateur avec les en-têtes appropriés.
+Flight utilise ob_start() pour mettre en mémoire tampon la sortie. Cela signifie que vous pouvez utiliser `echo` ou `print` pour envoyer une réponse à l'utilisateur et Flight la capturera et la renverra avec les en-têtes appropriés.
 
 ```php
 
@@ -25,7 +25,7 @@ En alternative, vous pouvez appeler la méthode `write()` pour ajouter au corps 
 
 // Cela enverra "Hello, World!" au navigateur de l'utilisateur
 Flight::route('/', function() {
-	// verbeux, mais cela fait parfois le travail quand vous en avez besoin
+	// verbeux, mais cela fait souvent le travail lorsque vous en avez besoin
 	Flight::response()->write("Hello, World!");
 
 	// si vous souhaitez récupérer le corps que vous avez défini à ce stade
@@ -50,7 +50,7 @@ Flight::route('/@id', function($id) {
 });
 ```
 
-Si vous souhaitez obtenir le code d'état actuel, vous pouvez utiliser la méthode `status` sans arguments :
+Si vous souhaitez obtenir le code d'état actuel, vous pouvez utiliser la méthode `status` sans aucun argument :
 
 ```php
 Flight::response()->status(); // 200
@@ -58,15 +58,15 @@ Flight::response()->status(); // 200
 
 ## Définir un corps de réponse
 
-Vous pouvez définir le corps de la réponse en utilisant la méthode `write`, cependant, si vous echo ou print quoi que ce soit, 
-cela sera capturé et envoyé comme corps de réponse via la mise en tampon de sortie.
+Vous pouvez définir le corps de la réponse en utilisant la méthode `write`, cependant, si vous echo ou print quelque chose, 
+il sera capturé et envoyé comme corps de réponse via la mise en mémoire tampon de sortie.
 
 ```php
 Flight::route('/', function() {
 	Flight::response()->write("Hello, World!");
 });
 
-// identique à
+// même que
 
 Flight::route('/', function() {
 	echo "Hello, World!";
@@ -98,19 +98,19 @@ Flight::route('/users', function() {
 	Flight::render('users_table', ['users' => $users]);
 });
 
-// Cela compressera tous les réponses pour n'importe quelle route
+// Cela gérera toutes les réponses pour n'importe quelle route
 Flight::response()->addResponseBodyCallback(function($body) {
 	return gzencode($body, 9);
 });
 ```
 
-Vous pouvez ajouter plusieurs rappels et ils seront exécutés dans l'ordre où ils ont été ajoutés. Parce que cela peut accepter n'importe quel [callable](https://www.php.net/manual/en/language.types.callable.php), cela peut accepter un tableau de classe `[ $class, 'method' ]`, une fermeture `$strReplace = function($body) { str_replace('hi', 'there', $body); };`, ou un nom de fonction `'minify'` si vous aviez une fonction pour minifier votre code html par exemple.
+Vous pouvez ajouter plusieurs rappels et ils seront exécutés dans l'ordre dans lequel ils ont été ajoutés. Étant donné que cela peut accepter tout [callable](https://www.php.net/manual/en/language.types.callable.php), cela peut accepter un tableau de classe `[ $class, 'method' ]`, une closure `$strReplace = function($body) { str_replace('hi', 'there', $body); };`, ou un nom de fonction `'minify'` si vous aviez une fonction pour minifier votre code html par exemple.
 
 **Remarque :** Les rappels de route ne fonctionneront pas si vous utilisez l'option de configuration `flight.v2.output_buffering`.
 
 ### Rappel de route spécifique
 
-Si vous souhaitez que cela ne s'applique qu'à une route spécifique, vous pouvez ajouter le rappel dans la route elle-même :
+Si vous souhaitez que cela s'applique uniquement à une route spécifique, vous pouvez ajouter le rappel dans la route elle-même :
 
 ```php
 Flight::route('/users', function() {
@@ -118,7 +118,7 @@ Flight::route('/users', function() {
 	$users = $db->fetchAll("SELECT * FROM users");
 	Flight::render('users_table', ['users' => $users]);
 
-	// Cela ne compressera que la réponse pour cette route
+	// Cela gérera uniquement la réponse pour cette route
 	Flight::response()->addResponseBodyCallback(function($body) {
 		return gzencode($body, 9);
 	});
@@ -140,7 +140,7 @@ class MinifyMiddleware {
 	}
 
 	protected function minify(string $body): string {
-		// minifiez le corps d'une manière ou d'une autre
+		// minifiez le corps d'une certaine manière
 		return $body;
 	}
 }
@@ -154,7 +154,7 @@ Flight::group('/users', function() {
 
 ## Définir un en-tête de réponse
 
-Vous pouvez définir un en-tête tel que le type de contenu de la réponse en utilisant la méthode `header` :
+Vous pouvez définir un en-tête comme le type de contenu de la réponse en utilisant la méthode `header` :
 
 ```php
 
@@ -169,7 +169,8 @@ Flight::route('/', function() {
 
 ## JSON
 
-Flight fournit un support pour l'envoi de réponses JSON et JSONP. Pour envoyer une réponse JSON, vous passez certaines données à encoder en JSON :
+Flight fournit un support pour l'envoi de réponses JSON et JSONP. Pour envoyer une réponse JSON, vous
+transmettez des données à encoder en JSON :
 
 ```php
 Flight::json(['id' => 123]);
@@ -185,15 +186,15 @@ Vous pouvez également passer un code d'état en tant que deuxième argument :
 Flight::json(['id' => 123], 201);
 ```
 
-### JSON avec impression soignée
+### JSON avec formatage
 
-Vous pouvez également passer un argument à la dernière position pour activer l'impression soignée :
+Vous pouvez également passer un argument à la dernière position pour activer le formatage :
 
 ```php
 Flight::json(['id' => 123], 200, true, 'utf-8', JSON_PRETTY_PRINT);
 ```
 
-Si vous modifiez les options passées dans `Flight::json()` et souhaitez une syntaxe plus simple, vous pouvez 
+Si vous modifiez les options passées dans `Flight::json()` et souhaitez une syntaxe plus simple, vous pouvez
 simplement remapper la méthode JSON :
 
 ```php
@@ -201,14 +202,14 @@ Flight::map('json', function($data, $code = 200, $options = 0) {
 	Flight::_json($data, $code, true, 'utf-8', $options);
 }
 
-// Et maintenant, cela peut être utilisé comme ceci
+// Et maintenant cela peut être utilisé comme ceci
 Flight::json(['id' => 123], 200, JSON_PRETTY_PRINT);
 ```
 
 ### JSON et arrêter l'exécution (v3.10.0)
 
 Si vous souhaitez envoyer une réponse JSON et arrêter l'exécution, vous pouvez utiliser la méthode `jsonHalt`.
-Cela est utile dans les cas où vous vérifiez peut-être un type d'autorisation et si
+Ceci est utile pour les cas où vous vérifiez peut-être un certain type d'autorisation et si
 l'utilisateur n'est pas autorisé, vous pouvez envoyer une réponse JSON immédiatement, effacer le contenu du corps existant
 et arrêter l'exécution.
 
@@ -240,23 +241,23 @@ Flight::route('/users', function() {
 
 ### JSONP
 
-Pour les requêtes JSONP, vous pouvez éventuellement passer le nom du paramètre de requête que vous utilisez pour définir votre fonction de rappel :
+Pour les requêtes JSONP, vous pouvez facultativement passer le nom du paramètre de requête que vous utilisez pour définir votre fonction de rappel :
 
 ```php
 Flight::jsonp(['id' => 123], 'q');
 ```
 
-Ainsi, lors d'une requête GET utilisant `?q=my_func`, vous devriez recevoir la sortie :
+Ainsi, lorsque vous effectuez une requête GET en utilisant `?q=my_func`, vous devriez recevoir la sortie :
 
 ```javascript
 my_func({"id":123});
 ```
 
-Si vous ne passez pas de nom de paramètre de requête, il sera défini par défaut sur `jsonp`.
+Si vous ne passez pas de nom de paramètre de requête, il sera par défaut `jsonp`.
 
-## Redirection vers une autre URL
+## Rediriger vers une autre URL
 
-Vous pouvez rediriger la requête actuelle en utilisant la méthode `redirect()` et en passant 
+Vous pouvez rediriger la demande actuelle en utilisant la méthode `redirect()` et en passant
 une nouvelle URL :
 
 ```php
@@ -278,13 +279,13 @@ Vous pouvez arrêter le framework à tout moment en appelant la méthode `halt` 
 Flight::halt();
 ```
 
-Vous pouvez également spécifier un code et un message `HTTP` optionnels :
+Vous pouvez également spécifier un code de statut `HTTP` et un message optionnels :
 
 ```php
-Flight::halt(200, 'Ne partez pas...');
+Flight::halt(200, 'Soyez de retour bientôt...');
 ```
 
-Appeler `halt` supprimera tout contenu de réponse jusqu'à ce point. Si vous souhaitez arrêter
+Appeler `halt` annulera tout contenu de réponse jusqu'à ce point. Si vous souhaitez arrêter
 le framework et afficher la réponse actuelle, utilisez la méthode `stop` :
 
 ```php
@@ -293,16 +294,16 @@ Flight::stop();
 
 ## Effacer les données de réponse
 
-Vous pouvez effacer le corps de la réponse et les en-têtes en utilisant la méthode `clear()`. Cela effacera
-tous les en-têtes attribués à la réponse, effacera le corps de la réponse, et définira le code d'état sur `200`.
+Vous pouvez effacer le corps et les en-têtes de réponse en utilisant la méthode `clear()`. Cela effacera
+tous les en-têtes assignés à la réponse, effacera le corps de la réponse et définira le code d'état sur `200`.
 
 ```php
 Flight::response()->clear();
 ```
 
-### Effacer uniquement le corps de la réponse
+### Effacer uniquement le corps de réponse
 
-Si vous souhaitez uniquement effacer le corps de la réponse, vous pouvez utiliser la méthode `clearBody()` :
+Si vous voulez uniquement effacer le corps de la réponse, vous pouvez utiliser la méthode `clearBody()` :
 
 ```php
 // Cela conservera toujours tous les en-têtes définis sur l'objet response().
@@ -312,13 +313,12 @@ Flight::response()->clearBody();
 ## Mise en cache HTTP
 
 Flight fournit un support intégré pour la mise en cache au niveau HTTP. Si la condition de mise en cache
-est remplie, Flight renverra une réponse HTTP `304 Not Modified`. La prochaine fois que le
-client demandera la même ressource, il lui sera demandé d'utiliser sa version localement
-cachée.
+est remplie, Flight retournera une réponse HTTP `304 Non modifié`. La prochaine fois que le
+client demandera la même ressource, il sera invité à utiliser sa version mise en cache localement.
 
 ### Mise en cache au niveau de la route
 
-Si vous souhaitez mettre en cache toute votre réponse, vous pouvez utiliser la méthode `cache()` et passer le temps à mettre en cache.
+Si vous souhaitez mettre en cache l'ensemble de votre réponse, vous pouvez utiliser la méthode `cache()` et passer le temps à mettre en cache.
 
 ```php
 
@@ -336,11 +336,11 @@ Flight::route('/news', function () {
 });
 ```
 
-### Last-Modified
+### Dernière modification
 
-Vous pouvez utiliser la méthode `lastModified` et passer un timestamp UNIX pour définir la date
-et l'heure de la dernière modification d'une page. Le client continuera à utiliser son cache jusqu'à ce que
-la valeur de dernière modification soit changée.
+Vous pouvez utiliser la méthode `lastModified` et passer un horodatage UNIX pour définir la date
+et l'heure de la dernière modification d'une page. Le client continuera à utiliser son cache jusqu'à
+ce que la valeur de dernière modification soit changée.
 
 ```php
 Flight::route('/news', function () {
@@ -351,23 +351,23 @@ Flight::route('/news', function () {
 
 ### ETag
 
-Le cache `ETag` est similaire à `Last-Modified`, sauf que vous pouvez spécifier n'importe quel id que
+La mise en cache `ETag` est similaire à `Last-Modified`, sauf que vous pouvez spécifier n'importe quel identifiant que
 vous souhaitez pour la ressource :
 
 ```php
 Flight::route('/news', function () {
-  Flight::etag('my-unique-id');
+  Flight::etag('mon-id-unique');
   echo 'Ce contenu sera mis en cache.';
 });
 ```
 
-Gardez à l'esprit que l'appel de `lastModified` ou `etag` définira et vérifiera 
-la valeur de cache. Si la valeur de cache est la même entre les requêtes, Flight renverra immédiatement 
+Gardez à l'esprit que l'appel de `lastModified` ou `etag` définira et vérifiera
+la valeur de cache. Si la valeur de cache est la même entre les requêtes, Flight enverra immédiatement
 une réponse `HTTP 304` et arrêtera le traitement.
 
 ## Télécharger un fichier (v3.12.0)
 
-Il existe une méthode d'aide pour télécharger un fichier. Vous pouvez utiliser la méthode `download` et passer le chemin.
+Il existe une méthode d'assistance pour télécharger un fichier. Vous pouvez utiliser la méthode `download` et passer le chemin.
 
 ```php
 Flight::route('/download', function () {
