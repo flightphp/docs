@@ -1,8 +1,8 @@
 # Mediji
 
-Mēs esam mēģinājuši izsekot, ko mēs varam par dažādiem mediju veidiem ap interneta ap Flight. Apskatiet zemāk dažādus resursus, kurus varat izmantot, lai uzzinātu vairāk par Flight.
+Mēs esam centušies noskaidrot, ko varam par dažādiem mediju veidiem internetā ap Flight. Skatiet zemāk dažādus resursus, kurus varat izmantot, lai uzzinātu vairāk par Flight.
 
-## Raksti un apraksti
+## Raksti un pārskati
 
 - [Define, Generate, and Implement: An API-First Approach with OpenAPI Generator and FlightPHP](https://dev.to/danielsc/define-generate-and-implement-an-api-first-approach-with-openapi-generator-and-flightphp-1fb3) autors [Daniel Schreiber](https://github.com/daniel-sc) (2025)
 - [Best PHP Micro Frameworks for 2024](https://dev.to/n0nag0n/best-php-micro-frameworks-for-2024-19h6) autors [n0nag0n](https://github.com/n0nag0n) (2024)
@@ -21,7 +21,7 @@ Mēs esam mēģinājuši izsekot, ko mēs varam par dažādiem mediju veidiem ap
 - [Trying Out New PHP Framework (Flight)](https://scaledimages.com/post/2017-09-20-trying-out-new-php-framework-flight/) autors Leon (2017)
 - [Setting up FlightPHP to work with Backbonejs](https://timothytocci.com/category/flightphp/) autors [Timothy Tocci](https://timothytocci.com/author/timothytocci/) (2015)
 
-## Videoklipi un apmācības
+## Videoklipi un pamācības
 
 - [Create a REST API for IoT Devices Using PHP & FlightPHP - ESP32 API](https://www.youtube.com/watch?v=VpsuaIH0EiU) autors [IoT Craft Hub](https://www.youtube.com/@IoTCraftHub) (2024)
 - [PHP Flight Framework Simple Introductory Video](https://www.youtube.com/watch?v=VCztp1QLC2c) autors [n0nag0n](https://www.youtube.com/@n0nag0n) (2024)

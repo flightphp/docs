@@ -1,11 +1,11 @@
 # flightphp/cache
 
-Classe de mise en cache PHP autonome, légère et simple
+Classe de mise en cache en fichier PHP légère, simple et autonome
 
 **Avantages** 
-- Léger, autonome et simple
+- Légère, autonome et simple
 - Tout le code dans un seul fichier - pas de pilotes inutiles.
-- Sécurisé - chaque fichier de cache généré a un en-tête php avec die, rendant l'accès direct impossible même si quelqu'un connaît le chemin et que votre serveur n'est pas configuré correctement
+- Sécurisée - chaque fichier de cache généré a un en-tête php avec die, rendant l'accès direct impossible même si quelqu'un connaît le chemin et que votre serveur n'est pas configuré correctement
 - Bien documenté et testé
 - Gère correctement la concurrence via flock
 - Prend en charge PHP 7.4+
@@ -32,11 +32,11 @@ use flight\Cache;
 
 $app = Flight::app();
 
-// Vous passez le répertoire dans lequel le cache sera stocké au constructeur
+// Vous passez le répertoire dans lequel le cache sera stocké dans le constructeur
 $app->register('cache', Cache::class, [ __DIR__ . '/../cache/' ], function(Cache $cache) {
 
-	// Cela assure que le cache n'est utilisé que lorsque vous êtes en mode production
-	// ENVIRONMENT est une constante qui est définie dans votre fichier bootstrap ou ailleurs dans votre application
+	// Cela garantit que le cache n'est utilisé que lorsque vous êtes en mode production
+	// ENVIRONMENT est une constante qui est définie dans votre fichier de démarrage ou ailleurs dans votre application
 	$cache->setDevMode(ENVIRONMENT === 'development');
 });
 ```
@@ -61,4 +61,4 @@ if(empty($data)) {
 
 ## Documentation
 
-Visitez [https://github.com/flightphp/cache](https://github.com/flightphp/cache) pour la documentation complète et assurez-vous de consulter le dossier [exemples](https://github.com/flightphp/cache/tree/master/examples).
+Visitez [https://github.com/flightphp/cache](https://github.com/flightphp/cache) pour une documentation complète et assurez-vous de voir le dossier [exemples](https://github.com/flightphp/cache/tree/master/examples).

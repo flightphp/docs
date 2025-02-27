@@ -1,19 +1,19 @@
 # flightphp/cache
 
-Leichtgewichtige, einfache und eigenständige PHP-In-Datei-Caching-Klasse
+Leichte, einfache und eigenständige PHP-In-Datei-Caching-Klasse
 
 **Vorteile** 
 - Leicht, eigenständig und einfach
-- Alles Code in einer Datei - keine sinnlosen Treiber.
-- Sicher - jede generierte Cache-Datei hat einen PHP-Header mit `die`, was den direkten Zugriff unmöglich macht, selbst wenn jemand den Pfad kennt und Ihr Server nicht richtig konfiguriert ist.
+- Alle Codes in einer Datei - keine sinnlosen Treiber.
+- Sicher - jede generierte Cache-Datei hat einen PHP-Header mit die, der den direkten Zugriff unmöglich macht, selbst wenn jemand den Pfad kennt und Ihr Server nicht richtig konfiguriert ist
 - Gut dokumentiert und getestet
-- Bewältigt Konkurrenz korrekt über flock
+- Handhabt die Konkurrierendheit korrekt über flock
 - Unterstützt PHP 7.4+
 - Kostenlos unter einer MIT-Lizenz
 
 Diese Dokumentationsseite verwendet diese Bibliothek, um jede der Seiten zu cachen!
 
-Klicken Sie [hier](https://github.com/flightphp/cache), um den Code anzuzeigen.
+Klicken Sie [hier](https://github.com/flightphp/cache), um den Code zu sehen.
 
 ## Installation
 
@@ -25,7 +25,7 @@ composer require flightphp/cache
 
 ## Verwendung
 
-Die Verwendung ist ziemlich unkompliziert. Damit wird eine Cache-Datei im Cache-Verzeichnis gespeichert.
+Die Verwendung ist ziemlich unkompliziert. Dies speichert eine Cache-Datei im Cache-Verzeichnis.
 
 ```php
 use flight\Cache;
@@ -36,19 +36,19 @@ $app = Flight::app();
 $app->register('cache', Cache::class, [ __DIR__ . '/../cache/' ], function(Cache $cache) {
 
 	// Dies stellt sicher, dass der Cache nur im Produktionsmodus verwendet wird
-	// ENVIRONMENT ist eine Konstante, die in Ihrer Bootstrap-Datei oder anderswo in Ihrer Anwendung festgelegt ist
+	// ENVIRONMENT ist eine Konstante, die in Ihrer Bootstrap-Datei oder an einer anderen Stelle in Ihrer App gesetzt wird
 	$cache->setDevMode(ENVIRONMENT === 'development');
 });
 ```
 
-Dann können Sie es in Ihrem Code wie folgt verwenden:
+Dann können Sie es in Ihrem Code so verwenden:
 
 ```php
 
-// Cache-Instanz abrufen
+// Erhalte Cache-Instanz
 $cache = Flight::cache();
 $data = $cache->refreshIfExpired('simple-cache-test', function () {
-    return date("H:i:s"); // Daten, die zwischengespeichert werden sollen, zurückgeben
+    return date("H:i:s"); // gibt die zu cachenden Daten zurück
 }, 10); // 10 Sekunden
 
 // oder

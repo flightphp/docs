@@ -1,61 +1,71 @@
 # Paplašināšana
 
-Flight ir veidota kā paplašināma ietvarstruktūra. Ietvarstruktūra nāk ar noteiktu noklusējuma metožu un komponentu kopu, taču tā ļauj jums kartot savas metodes, reģistrēt savas klases vai pat pārdefinēt esošās klases un metodes.
+Flight ir izstrādāts kā paplašināms rīku komplekts. Rīku komplekts nāk ar komplektu
+noklusējuma metožu un komponentu, bet ļauj jums pievienot savas metodes,
+reģistrēt savas klases vai pat aizvietot esošās klases un metodes.
 
-Ja meklējat DIC (atkarības injekcijas konteineru), aizejiet uz [Atkarības injekcijas konteineri](dependency-injection-container) lapu.
+Ja meklējat DIC (atkarību injekcijas konteineru), dodieties uz
+[Atkarību injekcijas konteinera](dependency-injection-container) lapu.
 
 ## Metožu kartēšana
 
-Lai kartotu savu vienkāršo pielāgoto metodi, izmantojiet funkciju `map`:
+Lai kartētu savu vienkāršo pielāgoto metodi, izmantojiet `map` funkciju:
 
 ```php
-// Kartojiet savu metodi
+// Kartējiet savu metodi
 Flight::map('hello', function (string $name) {
-  echo "sveiki $name!";
+  echo "sveiks $name!";
 });
 
 // Izsauciet savu pielāgoto metodi
 Flight::hello('Bob');
 ```
 
-Lai gan ir iespējams izveidot vienkāršas pielāgotas metodes, ieteicams vienkārši izveidot standarta funkcijas PHP. Tam ir automātiska pabeigšana IDE un tas ir vieglāk lasāms. Iepriekšējā koda ekvivalents būtu:
+Lai gan ir iespējams veidot vienkāršas pielāgotas metodes, ieteicams vienkārši izveidot
+standarta funkcijas PHP. Tam ir automātiska pabeigšana IDE un tas ir vieglāk lasāms.
+Atbilstošais iepriekš minētā koda variants būtu:
 
 ```php
 function hello(string $name) {
-  echo "sveiki $name!";
+  echo "sveiks $name!";
 }
 
 hello('Bob');
 ```
 
-Tas tiek izmantots vairāk, kad jums ir jānodod mainīgie jūsu metodei, lai iegūtu sagaidāmo vērtību. Izmantojot `register()` metodi, kā norādīts zemāk, tas attiecas uz konfigurācijas nodošanu un pēc tam jūsu iepriekš konfigurētās klases izsaukšanu.
+Tas tiek izmantots vairāk, kad nepieciešams nodot mainīgos savā metodē, lai iegūtu gaidīto
+vērtību. Izmantojot `register()` metodi zemāk, tas ir vairāk paredzēts konfigurācijas
+nodošanai un pēc tam jūsu iepriekš konfigurētās klases izsaukšanai.
 
 ## Klases reģistrācija
 
-Lai reģistrētu savu klasi un to konfigurētu, izmantojiet funkciju `register`:
+Lai reģistrētu savu klasi un konfigurētu to, izmantojiet `register` funkciju:
 
 ```php
 // Reģistrējiet savu klasi
 Flight::register('user', User::class);
 
-// Iegūstiet sava objekta instance
+// Iegūstiet instanci no savas klases
 $user = Flight::user();
 ```
 
-Reģistrēšanas metode ļauj arī nodot parametrus jūsu klases konstruktoram. Tātad, kad jūs ielādējat savu pielāgoto klasi, tā būs iepriekš inicializēta. Jūs varat definēt konstruktora parametrus, nododot papildu masīvu. Šeit ir piemērs datu bāzes savienojuma ielādēšanai:
+Reģistrācijas metode arī ļauj jums nodot parametrus savai klases
+konstruktora metodei. Tādējādi, kad ielādējat savu pielāgoto klasi, tā tiks iepriekš
+initializēta. Jūs varat definēt konstruktora parametrus, nododot papildu masīvu.
+Šeit ir piemērs, kā ielādēt datubāzes savienojumu:
 
 ```php
 // Reģistrējiet klasi ar konstruktora parametriem
 Flight::register('db', PDO::class, ['mysql:host=localhost;dbname=test', 'user', 'pass']);
 
-// Iegūstiet sava objekta instance
-// Tas izveidos objektu ar noteiktajiem parametriem
+// Iegūstiet instanci no savas klases
+// Tas izveidos objektu ar definētajiem parametriem
 //
 // new PDO('mysql:host=localhost;dbname=test','user','pass');
 //
 $db = Flight::db();
 
-// un, ja jums tas vēlāk vajadzēs savā kodā, jūs vienkārši izsaucat to pašu metodi
+// un, ja jums tas būs nepieciešams vēlāk savā kodā, vienkārši izsauciet to pašu metodi vēlreiz
 class SomeController {
   public function __construct() {
 	$this->db = Flight::db();
@@ -63,7 +73,9 @@ class SomeController {
 }
 ```
 
-Ja jūs nododat papildu atgriezeniskās saites parametru, tas tiks izpildīts tūlīt pēc klases konstrukcijas. Tas ļauj jums veikt jebkādas iestatīšanas procedūras jūsu jaunajam objektam. Atgriezeniskās saites funkcija pieņem vienu parametru, jaunā objekta instanci.
+Ja jūs nododat papildu atgriezeniskās saites parametru, tas tiks izpildīts uzreiz
+pēc klases konstrukcijas. Tas ļauj veikt jebkādas sagatavošanas procedūras jūsu
+jaunajam objektam. Atgriezeniskās saites funkcijai ir viens parametrs, jauna objekta instance.
 
 ```php
 // Atgriezeniskā saite tiks nodota objektam, kas tika konstruēts
@@ -77,42 +89,47 @@ Flight::register(
 );
 ```
 
-Pēc noklusējuma, katru reizi, kad jūs ielādējat savu klasi, jūs saņemsiet kopīgu instanci. Lai iegūtu jaunu klases instanci, vienkārši nododiet `false` kā parametrs:
+Noklusējuma iestatījumos, katru reizi, kad ielādējat savu klasi, jūs saņemsiet kopēju instanci.
+Lai iegūtu jaunu klases instanci, vienkārši nododiet `false` kā parametru:
 
 ```php
-// Kopa instance no klases
+// Kopīga klases instance
 $shared = Flight::db();
 
-// Jauna instance no klases
+// Jauna klases instance
 $new = Flight::db(false);
 ```
 
-Ņemiet vērā, ka kartotām metodēm ir prioritāte pār reģistrētajām klasēm. Ja jūs deklarējat abus, izmantojot to pašu nosaukumu, tiks izsaukta tikai kartotā metode.
+Ņemiet vērā, ka kartētām metodēm ir priekšroka pār reģistrētām klasēm. Ja jūs
+deklarējat abus, izmantojot to pašu nosaukumu, tiks izsaukta tikai kartētā metode.
 
-## Pierakstīšana
+## Žurnālfailu veidošana
 
-Flight nav iebūvēta pierakstīšanas sistēma, tomēr ir ļoti viegli izmantot pierakstīšanas bibliotēku kopā ar Flight. Šeit ir piemērs, izmantojot Monolog bibliotēku:
+Flight nav iebūvēta žurnālfailu sistēma, tomēr ir ļoti viegli
+izmantot žurnālfailu bibliotēku ar Flight. Šeit ir piemērs, izmantojot Monolog
+bibliotēku:
 
 ```php
 // index.php vai bootstrap.php
 
-// Reģistrējiet ierakstītāju pie Flight
-Flight::register('log', Monolog\Logger::class, [ 'name' ], function(Monolog\Logger $log) {
+// Reģistrējiet žurnālu ar Flight
+Flight::register('log', Monolog\Logger::class, ['name'], function(Monolog\Logger $log) {
     $log->pushHandler(new Monolog\Handler\StreamHandler('path/to/your.log', Monolog\Logger::WARNING));
 });
 ```
 
-Tagad, kad tas ir reģistrēts, jūs varat to izmantot savā lietotnē:
+Tagad, kad tas ir reģistrēts, jūs to varat izmantot savā lietotnē:
 
 ```php
-// Jūsu kontrollerī vai maršrutā
-Flight::log()->warning('Šis ir brīdinājuma ziņojums');
+// Jūsu kontrolierī vai maršrutā
+Flight::log()->warning('Tas ir brīdinājuma ziņojums');
 ```
 
-Tas ierakstīs ziņojumu log failā, kuru norādījāt. Ko darīt, ja vēlaties ierakstīt kaut ko, kad notiek kļūda? Jūs varat izmantot `error` metodi:
+Tas ierakstīs ziņojumu žurnālfailā, kuru jūs norādījāt. Ko darīt, ja vēlaties ierakstīt kaut ko, kad
+notiek kļūda? Jūs varat izmantot `error` metodi:
 
 ```php
-// Jūsu kontrollerī vai maršrutā
+// Jūsu kontrolierī vai maršrutā
 
 Flight::map('error', function(Throwable $ex) {
 	Flight::log()->error($ex->getMessage());
@@ -121,7 +138,8 @@ Flight::map('error', function(Throwable $ex) {
 });
 ```
 
-Jūs arī varētu izveidot pamata APM (Lietojumprogrammu veiktspējas uzraudzības) sistēmu, izmantojot `before` un `after` metodes:
+Jūs arī varētu izveidot pamata APM (pieteikumu veiktspējas uzraudzības) sistēmu
+izmantojot `before` un `after` metodes:
 
 ```php
 // Jūsu bootstrap failā
@@ -133,21 +151,24 @@ Flight::before('start', function() {
 Flight::after('start', function() {
 	$end = microtime(true);
 	$start = Flight::get('start_time');
-	Flight::log()->info('Pieprasījums '.Flight::request()->url.' aizņēma ' . round($end - $start, 4) . ' sekundes');
+	Flight::log()->info('Pieprasījums '.Flight::request()->url.' ilga ' . round($end - $start, 4) . ' sekundes');
 
-	// Jūs varētu arī pievienot savus pieprasījuma vai atbildes galvenes,
-	// lai tās arī ierakstītu (esiet uzmanīgs, jo tas varētu būt daudz 
-	// datu, ja jums ir daudz pieprasījumu)
+	// Jūs varētu arī pievienot savus pieprasījuma vai atbildes galvenes
+	// lai tās reģistrētu (esiet uzmanīgi, jo tas varētu būt
+	// daudz datu, ja jums ir daudz pieprasījumu)
 	Flight::log()->info('Pieprasījuma galvenes: ' . json_encode(Flight::request()->headers));
 	Flight::log()->info('Atbildes galvenes: ' . json_encode(Flight::response()->headers));
 });
 ```
 
-## Ietvara metožu pārrakstīšana
+## Rīku komplekta metožu aizvietošana
 
-Flight ļauj jums pārrakstīt tā noklusējuma funkcionalitāti, lai tā atbilstu jūsu vajadzībām, neieguldot nevienā kodā. Jūs varat apskatīt visas metodes, kuras varat pārrakstīt [šeit](/learn/api).
+Flight ļauj jums mainīt tā noklusējuma funkcionalitāti, lai tā atbilstu jūsu vajadzībām,
+neizmainot nekādu kodu. Jūs varat skatīt visas metodes, kuras varat aizvietot [šeit](/learn/api).
 
-Piemēram, kad Flight nespēj pieskaņot URL maršrutam, tā izsauc `notFound` metodi, kas nosūta vispārēju `HTTP 404` atbildi. Jūs varat pārrakstīt šo uzvedību, izmantojot `map` metodi:
+Piemēram, kad Flight nevar atbilstoši maršrutam savienot URL, tas izsauc `notFound`
+metodi, kas sūta vispārēju `HTTP 404` atbildi. Jūs varat aizvietot šo uzvedību
+izmantojot `map` metodi:
 
 ```php
 Flight::map('notFound', function() {
@@ -156,7 +177,8 @@ Flight::map('notFound', function() {
 });
 ```
 
-Flight arī ļauj jums aizstāt ietvara pamatkomponentus. Piemēram, jūs varat aizstāt noklusējuma maršrutētāja klasi ar savu pielāgoto klasi:
+Flight arī ļauj jums aizvietot rīku komplekta kodolkomponentus.
+Piemēram, jūs varat aizvietot noklusējuma maršrutētāja klasi ar savu pielāgoto klasi:
 
 ```php
 // Reģistrējiet savu pielāgoto klasi
@@ -166,4 +188,5 @@ Flight::register('router', MyRouter::class);
 $myrouter = Flight::router();
 ```
 
-Tomēr ietvara metodes, piemēram, `map` un `register`, nevar tikt pārrakstītas. Ja jūs mēģināsiet to izdarīt, jūs saņemsiet kļūdu.
+Tomēr, rīku komplekta metodes, piemēram, `map` un `register`, nevar tikt aizvietotas. Jūs
+saņemsiet kļūdu, ja mēģināsiet to izdarīt.
