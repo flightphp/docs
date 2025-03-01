@@ -2,9 +2,10 @@
 
 Flight provides some basic templating functionality by default. 
 
-If you need more complex templating needs, see the Smarty and Latte examples in the [Custom Views](#custom-views) section.
+Flight allows you to swap out the default view engine simply by registering your
+own view class. Scroll down to see examples of how to use Smarty, Latte, Blade, and more!
 
-## Default View Engine
+## Built-in View Engine
 
 To display a view template call the `render` method with the name 
 of the template file and optional template data:
@@ -108,12 +109,7 @@ The output would be:
 </html>
 ```
 
-## Custom View Engines
-
-Flight allows you to swap out the default view engine simply by registering your
-own view class. 
-
-### Smarty
+## Smarty
 
 Here's how you would use the [Smarty](http://www.smarty.net/)
 template engine for your views:
@@ -147,7 +143,7 @@ Flight::map('render', function(string $template, array $data): void {
 });
 ```
 
-### Latte
+## Latte
 
 Here's how you would use the [Latte](https://latte.nette.org/)
 template engine for your views:
@@ -172,3 +168,61 @@ Flight::map('render', function(string $template, array $data): void {
   echo Flight::view()->render($template, $data);
 });
 ```
+
+## Blade
+
+Here's how you would use the [Blade](https://laravel.com/docs/8.x/blade) template engine for your views:
+
+First, you need to install the BladeOne library via Composer:
+
+```bash
+composer require eftec/bladeone
+```
+
+Then, you can configure BladeOne as the view class in Flight:
+
+```php
+<?php
+// Load BladeOne library
+use eftec\bladeone\BladeOne;
+
+// Register BladeOne as the view class
+// Also pass a callback function to configure BladeOne on load
+Flight::register('view', BladeOne::class, [], function (BladeOne $blade) {
+  $views = __DIR__ . '/../views';
+  $cache = __DIR__ . '/../cache';
+
+  $blade->setPath($views);
+  $blade->setCompiledPath($cache);
+});
+
+// Assign template data
+Flight::view()->share('name', 'Bob');
+
+// Display the template
+echo Flight::view()->run('hello', []);
+```
+
+For completeness, you should also override Flight's default render method:
+
+```php
+<?php
+Flight::map('render', function(string $template, array $data): void {
+  echo Flight::view()->run($template, $data);
+});
+```
+
+In this example, the hello.blade.php template file might look like this:
+
+```php
+<?php
+Hello, {{ $name }}!
+```
+
+The output would be:
+
+```
+Hello, Bob!
+```
+
+By following these steps, you can integrate the Blade template engine with Flight and use it to render your views. 
