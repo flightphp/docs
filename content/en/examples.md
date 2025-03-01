@@ -7,7 +7,7 @@ You have two options to get started with a new Flight project:
 
 Community contributed examples:
 
-- [flightravel](https://github.com/fadrian06-templates/flighravel): A simple FlightPHP started kit with Laravel-like structure.
+- [flightravel](https://github.com/fadrian06-templates/flighravel): FlightPHP with Laravel directories, with PHP tooling + GH Actions
 - [fleact](https://github.com/flightphp/fleact) - A FlightPHP starter kit with ReactJS integration.
 - [flastro](https://github.com/flightphp/flastro) - A FlightPHP starter kit with Astro integration.
 - [velt](https://github.com/flightphp/velt) - Velt is a quick and easy Svelte starter template with a FlightPHP backend. 
