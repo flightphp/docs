@@ -1,9 +1,12 @@
 # Need a quick start?
 
-You have two options to get started with Flight:
+You have two options to get started with a new Flight project:
 
 - [Full Skeleton Boilerplate](https://github.com/flightphp/skeleton): A more full fledged example with controllers and views.
 - [Single File Skeleton Boilerplate](https://github.com/flightphp/skeleton-simple): A single file that includes everything you need to run your app in a single simple file.
+
+Community contributed examples:
+
 - [flightravel](https://github.com/fadrian06-templates/flighravel): A simple FlightPHP started kit with Laravel-like structure.
 - [fleact](https://github.com/flightphp/fleact) - A FlightPHP starter kit with ReactJS integration.
 - [flastro](https://github.com/flightphp/flastro) - A FlightPHP starter kit with Astro integration.
