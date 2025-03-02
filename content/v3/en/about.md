@@ -62,4 +62,4 @@ Flight requires PHP 7.4 or greater.
 
 # License
 
-Flight is released under the [MIT](https://github.com/flightphp/core/blob/master/LICENSE) license.
+Flight is released under the [MIT](https://github.com/flightphp/core/blob/master/LICENSE) license. 
