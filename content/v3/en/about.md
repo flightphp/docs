@@ -12,7 +12,7 @@ First install it with Composer
 composer require flightphp/core
 ```
 
-or you can download a zip of this repo. Then you would have a basic `index.php` file like the following:
+or you can download a zip of the repo [here](https://github.com/flightphp/core). Then you would have a basic `index.php` file like the following:
 
 ```php
 <?php
