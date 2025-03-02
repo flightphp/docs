@@ -95,6 +95,11 @@ foreach ($files as $file) {
             mkdir($directory, 0775, true);
         }
 
+		if(!$full_response) {
+			echo "  **Skipping file because it's received an empty response**" . PHP_EOL;
+			continue;
+		}
+		
         file_put_contents($translatedFilePath, $full_response);
         echo "  Updated: " . $translatedFilePath . PHP_EOL;
     }
