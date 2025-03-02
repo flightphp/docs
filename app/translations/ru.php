@@ -18,4 +18,5 @@ return [
     'click_here' => 'Нажмите здесь',
     'need_to_view_single_page' => 'Нужно просмотреть как одну страницу?',
     'media' => 'Медиа',
+	'version' => 'Версия',
 ];

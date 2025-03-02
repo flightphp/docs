@@ -234,7 +234,7 @@ nav.navbar {
 }
 
 div.flight-container-search {
-    max-height: 250px;
+    max-height: 350px;
     background-color: #e8ecf2;
 
     .text-right {

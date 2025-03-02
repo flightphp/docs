@@ -25,4 +25,29 @@ class HeaderSecurityMiddleware {
         Flight::response()->header('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
         Flight::response()->header('Permissions-Policy', 'geolocation=()');
     }
+
+	public function after() {
+		$executedRoute = Flight::router()->executedRoute;
+		$language = $executedRoute->params['language'] ?? '';
+		$version = $executedRoute->params['version'] ?? '';
+		$domain = ENVIRONMENT !== 'development' ? Flight::request()->getBaseUrl() : 'localhost';
+		if($language !== '') {
+			setcookie('language', (string) $language, [
+				'expires' => time() + (86400 * 30),
+				'path' => '/',
+				'domain' => $domain,
+				'secure' => ENVIRONMENT !== 'development',
+				'httponly' => true
+			]); // 86400 = 1 day
+		}
+		if($version !== '') {
+			setcookie('version', (string) $version, [
+				'expires' => time() + (86400 * 30),
+				'path' => '/',
+				'domain' => $domain,
+				'secure' => ENVIRONMENT !== 'development',
+				'httponly' => true
+			]); // 86400 = 1 day
+		}
+	}
 }

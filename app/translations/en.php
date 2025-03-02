@@ -18,4 +18,5 @@ return [
     'click_here' => 'Click here',
     'need_to_view_single_page' => 'Need to view as a single page?',
     'media' => 'Media',
+	'version' => 'Version',
 ];

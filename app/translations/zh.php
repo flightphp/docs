@@ -18,4 +18,5 @@ return [
     'click_here' => '点击这里',
     'need_to_view_single_page' => '需要查看单页？',
     'media' => '媒体',
+	'version' => '版本',
 ];
