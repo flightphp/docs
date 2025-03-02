@@ -6,6 +6,14 @@ Flight is a great beginner framework for those who are new to PHP and want to le
 
 ## Quick Start
 
+First install it with Composer
+
+```
+composer require flightphp/core
+```
+
+or you can download a zip of this repo. Then you would have a basic `index.php` file like the following:
+
 ```php
 <?php
 
@@ -24,6 +32,8 @@ Flight::route('/json', function() {
 
 Flight::start();
 ```
+
+That's it! You have a basic Flight application. You can now run this file with `php -S localhost:8000` and visit `http://localhost:8000` in your browser to see the output.
 
 <div class="flight-block-video">
   <div class="row">
