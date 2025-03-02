@@ -1,6 +1,7 @@
-# Erfahren Sie mehr über Flight
+# Lernen Sie Flight kennen
 
-Flight ist ein schnelles, einfaches, erweiterbares Framework für PHP. Es ist ziemlich vielseitig und kann für den Aufbau jeder Art von Webanwendung verwendet werden. Es ist auf Einfachheit ausgelegt und so geschrieben, dass es leicht verständlich und einfach zu verwenden ist.
+Flight ist ein schnelles, einfaches, erweiterbares Framework für PHP. Es ist ziemlich vielseitig und kann verwendet werden, um jede Art von Webanwendung zu erstellen. 
+Es wurde mit Einfachheit im Hinterkopf entwickelt und ist so geschrieben, dass es leicht zu verstehen und zu verwenden ist.
 
 ## Wichtige Framework-Konzepte
 
@@ -8,64 +9,65 @@ Flight ist ein schnelles, einfaches, erweiterbares Framework für PHP. Es ist zi
 
 Hier ist ein kurzer Artikel darüber, warum Sie ein Framework verwenden sollten. Es ist eine gute Idee, die Vorteile der Verwendung eines Frameworks zu verstehen, bevor Sie eines verwenden.
 
-Zusätzlich wurde ein ausgezeichnetes Tutorial von [@lubiana](https://git.php.fail/lubiana) erstellt. Obwohl es nicht im Detail auf Flight eingeht, wird Ihnen dieser Leitfaden helfen, einige der wichtigsten Konzepte rund um ein Framework zu verstehen und warum sie nützlich sind. 
-Sie können das Tutorial [hier](https://git.php.fail/lubiana/no-framework-tutorial/src/branch/master/README.md) finden.
+Darüber hinaus wurde ein hervorragendes Tutorial von [@lubiana](https://git.php.fail/lubiana) erstellt. Während es nicht ins Detail über Flight geht, 
+wird Ihnen dieser Leitfaden helfen, einige der wichtigsten Konzepte rund um ein Framework zu verstehen und warum diese vorteilhaft sind. 
+Sie finden das Tutorial [hier](https://git.php.fail/lubiana/no-framework-tutorial/src/branch/master/README.md).
 
 ##### [Flight im Vergleich zu anderen Frameworks](/learn/flight-vs-another-framework)
-Wenn Sie von einem anderen Framework wie Laravel, Slim, Fat-Free oder Symfony zu Flight migrieren, hilft Ihnen diese Seite, die Unterschiede zwischen den beiden zu verstehen.
+Wenn Sie von einem anderen Framework wie Laravel, Slim, Fat-Free oder Symfony zu Flight migrieren, wird Ihnen diese Seite helfen, die Unterschiede zwischen den beiden zu verstehen.
 
-## Kernthemen
+## Kern Themen
 
 ##### [Autoloading](/learn/autoloading)
 
-Lernen Sie, wie Sie Ihre eigenen Klassen in Ihrer Anwendung automatisch laden.
+Erfahren Sie, wie Sie Ihre eigenen Klassen in Ihrer Anwendung automatisch laden.
 
 ##### [Routing](/learn/routing)
 
-Lernen Sie, wie Sie Routen für Ihre Webanwendung verwalten. Dies umfasst auch das Gruppieren von Routen, Routenparameter und Middleware.
+Erfahren Sie, wie Sie Routen für Ihre Webanwendung verwalten. Dies umfasst auch das Gruppieren von Routen, Routenparameter und Middleware.
 
 ##### [Middleware](/learn/middleware)
 
-Lernen Sie, wie Sie Middleware verwenden, um Anfragen und Antworten in Ihrer Anwendung zu filtern.
+Erfahren Sie, wie Sie Middleware verwenden, um Anfragen und Antworten in Ihrer Anwendung zu filtern.
 
-##### [Anfragen](/learn/requests)
+##### [Requests](/learn/requests)
 
-Lernen Sie, wie Sie Anfragen und Antworten in Ihrer Anwendung verarbeiten.
+Erfahren Sie, wie Sie Anfragen und Antworten in Ihrer Anwendung behandeln.
 
-##### [Antworten](/learn/responses)
+##### [Responses](/learn/responses)
 
-Lernen Sie, wie Sie Antworten an Ihre Benutzer senden.
+Erfahren Sie, wie Sie Antworten an Ihre Benutzer senden.
 
-##### [HTML-Templates](/learn/templates)
+##### [HTML-Vorlagen](/learn/templates)
 
-Lernen Sie, wie Sie den integrierten View-Engine verwenden, um Ihre HTML-Templates zu rendern.
+Erfahren Sie, wie Sie die integrierte View-Engine nutzen, um Ihre HTML-Vorlagen zu rendern.
 
 ##### [Sicherheit](/learn/security)
 
-Lernen Sie, wie Sie Ihre Anwendung vor üblichen Sicherheitsbedrohungen schützen.
+Erfahren Sie, wie Sie Ihre Anwendung vor gängigen Sicherheitsbedrohungen schützen.
 
 ##### [Konfiguration](/learn/configuration)
 
-Lernen Sie, wie Sie das Framework für Ihre Anwendung konfigurieren.
+Erfahren Sie, wie Sie das Framework für Ihre Anwendung konfigurieren.
 
 ##### [Flight erweitern](/learn/extending)
 
-Lernen Sie, wie Sie das Framework erweitern, um Ihre eigenen Methoden und Klassen hinzuzufügen.
+Erfahren Sie, wie Sie das Framework erweitern können, indem Sie Ihre eigenen Methoden und Klassen hinzufügen.
 
 ##### [Ereignisse und Filterung](/learn/filtering)
 
-Lernen Sie, wie Sie das Ereignissystem verwenden, um Hooks zu Ihren Methoden und internen Framework-Methoden hinzuzufügen.
+Erfahren Sie, wie Sie das Ereignissystem nutzen, um Hooks zu Ihren Methoden und internen Framework-Methoden hinzuzufügen.
 
 ##### [Dependency Injection Container](/learn/dependency-injection-container)
 
-Lernen Sie, wie Sie Dependency Injection Container (DIC) verwenden, um die Abhängigkeiten Ihrer Anwendung zu verwalten.
+Erfahren Sie, wie Sie Dependency Injection Container (DIC) verwenden, um die Abhängigkeiten Ihrer Anwendung zu verwalten.
 
-##### [Framework-API](/learn/api)
+##### [Framework API](/learn/api)
 
 Erfahren Sie mehr über die Kernmethoden des Frameworks.
 
-##### [Migration auf v3](/learn/migrating-to-v3)
-Die Abwärtskompatibilität wurde größtenteils beibehalten, aber es gibt einige Änderungen, auf die Sie achten sollten, wenn Sie von v2 auf v3 migrieren.
+##### [Migrieren zu v3](/learn/migrating-to-v3)
+Die Abwärtskompatibilität wurde größtenteils aufrechterhalten, aber es gibt einige Änderungen, über die Sie sich beim Migrieren von v2 auf v3 im Klaren sein sollten.
 
-##### [Problembehandlung](/learn/troubleshooting)
-Es kann einige häufige Probleme geben, auf die Sie bei der Verwendung von Flight stoßen. Diese Seite unterstützt Sie bei der Problembehandlung dieser Probleme.
+##### [Fehlerbehebung](/learn/troubleshooting)
+Es gibt einige häufige Probleme, auf die Sie stoßen könnten, wenn Sie Flight verwenden. Diese Seite hilft Ihnen, diese Probleme zu beheben.

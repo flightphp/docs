@@ -76,7 +76,7 @@ class IndexController {
 
 		$Translator = $this->setupTranslatorService($language, $version);
 
-        $markdown_html = $app->cache()->refreshIfExpired($section . '_html_' . $language, fn() => $app->parsedown()->text($Translator->getMarkdownLanguageFile($section . '.md')), 86400); // 1 day
+        $markdown_html = $app->cache()->refreshIfExpired($section . '_html_' . $language . '_' . $version, fn() => $app->parsedown()->text($Translator->getMarkdownLanguageFile($section . '.md')), 86400); // 1 day
 
         $markdown_html = $this->wrapContentInDiv($markdown_html);
 
@@ -102,13 +102,13 @@ class IndexController {
 
         $section_file_path = str_replace('_', '-', $section);
         $sub_section_underscored = str_replace('-', '_', $sub_section);
-        $heading_data = $app->cache()->retrieve($sub_section_underscored . '_heading_data_' . $language);
-        $markdown_html = $app->cache()->refreshIfExpired($sub_section_underscored . '_html_' . $language, function () use ($app, $section_file_path, $sub_section, $sub_section_underscored, &$heading_data, $language, $Translator) {
+        $heading_data = $app->cache()->retrieve($sub_section_underscored . '_heading_data_' . $language . '_' . $version);
+        $markdown_html = $app->cache()->refreshIfExpired($sub_section_underscored . '_html_' . $language . '_' . $version, function () use ($app, $section_file_path, $sub_section, $sub_section_underscored, &$heading_data, $language, $Translator, $version) {
             $parsed_text = $app->parsedown()->text($Translator->getMarkdownLanguageFile('/' . $section_file_path . '/' . $sub_section_underscored . '.md'));
 
             $heading_data = [];
             $parsed_text = Text::generateAndConvertHeaderListFromHtml($parsed_text, $heading_data, 'h2', $section_file_path.'/'.$sub_section);
-            $app->cache()->store($sub_section_underscored . '_heading_data_' . $language, $heading_data, 86400); // 1 day
+            $app->cache()->store($sub_section_underscored . '_heading_data_' . $language . '_' . $version, $heading_data, 86400); // 1 day
 
             return $parsed_text;
         }, 86400); // 1 day
@@ -326,7 +326,7 @@ class IndexController {
 
 		$Translator = $this->setupTranslatorService($language, $version);
 
-        $markdown_html = $app->cache()->refreshIfExpired('single_page_html_' . $language, function () use ($app, $sections, $Translator) {
+        $markdown_html = $app->cache()->refreshIfExpired('single_page_html_' . $language . '_' . $version, function () use ($app, $sections, $Translator) {
             $markdown_html = '';
 
             foreach ($sections as $section) {
