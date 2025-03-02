@@ -13,16 +13,27 @@ use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 
 class IndexController {
-    private const DS = DIRECTORY_SEPARATOR;
-    protected const CONTENT_DIR = __DIR__ . self::DS . '..' . self::DS . '..' . self::DS . 'content' . self::DS;
-    protected string $language = 'en';
-    protected Translator $Translator;
 
+	/** @var string */
+    private const DS = DIRECTORY_SEPARATOR;
+
+	/** @var string Path to the base content directory */
+    protected const CONTENT_DIR = __DIR__ . self::DS . '..' . self::DS . '..' . self::DS . 'content' . self::DS;
+
+	/**
+	 * IndexController constructor.
+	 *
+	 * @param Engine $app Flight Engine
+	 */
     public function __construct(protected Engine $app) {
-        $this->language = Translator::getLanguageFromRequest();
-        $this->Translator = new Translator($this->language);
     }
 
+	/**
+	 * Renders a page using the specified Latte template file and parameters.
+	 *
+	 * @param string $latte_file The path to the Latte template file to be rendered.
+	 * @param array $params An optional array of parameters to be passed to the template.
+	 */
     public function renderPage(string $latte_file, array $params = []) {
         $request = $this->app->request();
         $uri = $request->url;
@@ -37,30 +48,67 @@ class IndexController {
         $this->app->latte()->render($latte_file, $params);
     }
 
-    protected function compileSinglePage(string $section) {
+	/**
+	 * Sets up the translator service with the specified language and version.
+	 *
+	 * @param string $language The language to be used by the translator.
+	 * @param string $version The version of the translation service.
+	 * @return Translator The configured translator service.
+	 */
+	protected function setupTranslatorService(string $language, string $version): Translator {
+		$Translator = $this->app->translator();
+		$Translator->setLanguage($language);
+		$Translator->setVersion($version);
+        return $Translator;
+	}
+
+	/**
+	 * Compiles a single page based on the specified language, version, and section.
+	 *
+	 * @param string $language The language of the page to compile.
+	 * @param string $version The version of the page to compile.
+	 * @param string $section The section of the page to compile.
+	 *
+	 * @return void
+	 */
+    protected function compileSinglePage(string $language, string $version, string $section) {
         $app = $this->app;
 
-        $markdown_html = $app->cache()->refreshIfExpired($section . '_html_' . $this->language, fn() => $app->parsedown()->text($this->Translator->getMarkdownLanguageFile($section . '.md')), 86400); // 1 day
+		$Translator = $this->setupTranslatorService($language, $version);
+
+        $markdown_html = $app->cache()->refreshIfExpired($section . '_html_' . $language, fn() => $app->parsedown()->text($Translator->getMarkdownLanguageFile($section . '.md')), 86400); // 1 day
 
         $markdown_html = $this->wrapContentInDiv($markdown_html);
 
         $this->renderPage('single_page.latte', [
             'page_title' => $section,
             'markdown' => $markdown_html,
+			'version' => $version,
         ]);
     }
 
-    protected function compileScrollspyPage(string $section, string $sub_section) {
+	/**
+	 * Compiles the Scrollspy page based on the provided language, version, section, and sub-section.
+	 *
+	 * @param string $language The language of the documentation.
+	 * @param string $version The version of the documentation.
+	 * @param string $section The main section of the documentation.
+	 * @param string $sub_section The sub-section of the documentation.
+	 */
+    protected function compileScrollspyPage(string $language, string $version, string $section, string $sub_section) {
         $app = $this->app;
+
+		$Translator = $this->setupTranslatorService($language, $version);
+
         $section_file_path = str_replace('_', '-', $section);
         $sub_section_underscored = str_replace('-', '_', $sub_section);
-        $heading_data = $app->cache()->retrieve($sub_section_underscored . '_heading_data_' . $this->language);
-        $markdown_html = $app->cache()->refreshIfExpired($sub_section_underscored . '_html_' . $this->language, function () use ($app, $section_file_path, $sub_section, $sub_section_underscored, &$heading_data) {
-            $parsed_text = $app->parsedown()->text($this->Translator->getMarkdownLanguageFile('/' . $section_file_path . '/' . $sub_section_underscored . '.md'));
+        $heading_data = $app->cache()->retrieve($sub_section_underscored . '_heading_data_' . $language);
+        $markdown_html = $app->cache()->refreshIfExpired($sub_section_underscored . '_html_' . $language, function () use ($app, $section_file_path, $sub_section, $sub_section_underscored, &$heading_data, $language, $Translator) {
+            $parsed_text = $app->parsedown()->text($Translator->getMarkdownLanguageFile('/' . $section_file_path . '/' . $sub_section_underscored . '.md'));
 
             $heading_data = [];
             $parsed_text = Text::generateAndConvertHeaderListFromHtml($parsed_text, $heading_data, 'h2', $section_file_path.'/'.$sub_section);
-            $app->cache()->store($sub_section_underscored . '_heading_data_' . $this->language, $heading_data, 86400); // 1 day
+            $app->cache()->store($sub_section_underscored . '_heading_data_' . $language, $heading_data, 86400); // 1 day
 
             return $parsed_text;
         }, 86400); // 1 day
@@ -73,7 +121,6 @@ class IndexController {
             $page_title = $matches[1];
         }
 
-        $Translator = new Translator($this->language);
         $markdown_html = $this->wrapContentInDiv($markdown_html);
 
         // replace any (#some-anchor) with /$section_file_path#some-anchor
@@ -82,15 +129,19 @@ class IndexController {
             'custom_page_title' => ($page_title ? $page_title . ' - ' : '') . $Translator->translate($section),
             'markdown' => $markdown_html,
             'heading_data' => $heading_data,
-            'relative_uri' => '/'.$section_file_path
+            'relative_uri' => '/'.$section_file_path,
+			'version' => $version,
         ]);
     }
 
     /**
      * This is necessary to encapsulate contents (<p>, <pre>, <ol>, <ul>)
      * in a div which can be then styled with CSS thanks to the class name `flight-block`
+	 * 
+	 * @param string $html
+	 * @return string
      */
-    private function wrapContentInDiv(string $html): string {
+    protected function wrapContentInDiv(string $html): string {
         $dom = new DOMDocument();
         $dom->loadHTML('<?xml encoding="utf-8" ?>' . $html);
         $xpath = new DOMXPath($dom);
@@ -152,49 +203,116 @@ class IndexController {
         return $d;
     }
 
-    public function licenseGet() {
-        $this->compileSinglePage('license');
+	/**
+	 * Handles the retrieval of the license page.
+	 *
+	 * @param string $language The language in which the page is requested.
+	 * @param string $version The version of the page to retrieve.
+	 */
+    public function licenseGet(string $language, string $version) {
+        $this->compileSinglePage($language, $version, 'license');
     }
 
-    public function aboutGet() {
-        $this->compileSinglePage('about');
+	/**
+	 * Handles the retrieval of the about page.
+	 *
+	 * @param string $language The language in which the page is requested.
+	 * @param string $version The version of the page to retrieve.
+	 */
+    public function aboutGet(string $language, string $version) {
+        $this->compileSinglePage($language, $version, 'about');
     }
 
-    public function examplesGet() {
-        $this->compileSinglePage('examples');
+	/**
+	 * Handles the retrieval of the examples page.
+	 *
+	 * @param string $language The language in which the page is requested.
+	 * @param string $version The version of the page to retrieve.
+	 */
+    public function examplesGet(string $language, string $version) {
+        $this->compileSinglePage($language, $version, 'examples');
     }
 
-    public function installGet() {
-        $this->compileScrollspyPage('install', 'install');
+	/**
+	 * Handles the retrieval of the install page.
+	 * 
+	 * @param string $language The language in which the page is requested.
+	 * @param string $version The version of the page to retrieve.
+	 */
+    public function installGet(string $language, string $version) {
+		if($version === 'v2') {
+			$this->compileSinglePage($language, $version, 'install');
+		} else {
+        	$this->compileScrollspyPage($language, $version, 'install', 'install');
+		}
     }
 
-    public function learnGet() {
-        $this->compileSinglePage('learn');
+	/**
+	 * Handles the retrieval of the learn page.
+	 *
+	 * @param string $language The language in which the page is requested.
+	 * @param string $version The version of the page to retrieve.
+	 */
+    public function learnGet(string $language, string $version) {
+		if($version === 'v2') {
+			$this->compileScrollspyPage($language, $version, 'learn', 'learn');
+		} else {
+			$this->compileSinglePage($language, $version, 'learn');
+		}
     }
 
-    public function mediaGet() {
-        $this->compileSinglePage('media');
+	/**
+	 * Handles the retrieval of the media page.
+	 *
+	 * @param string $language The language in which the page is requested.
+	 * @param string $version The version of the page to retrieve.
+	 */
+    public function mediaGet(string $language, string $version) {
+        $this->compileSinglePage($language, $version, 'media');
     }
 
-    public function learnSectionsGet(string $section_name) {
-        $this->compileScrollspyPage('learn', $section_name);
+	/**
+	 * Handles the retrieval of the section within the learn page.
+	 *
+	 * @param string $language The language in which the page is requested.
+	 * @param string $version The version of the page to retrieve.
+	 */
+    public function learnSectionsGet(string $language, string $version, string $section_name) {
+        $this->compileScrollspyPage($language, $version, 'learn', $section_name);
     }
 
-    public function awesomePluginsGet() {
-        $this->compileScrollspyPage('awesome_plugins', 'awesome_plugins');
+	/**
+	 * Handles the retrieval of the awesome plugins page.
+	 *
+	 * @param string $language The language in which the page is requested.
+	 * @param string $version The version of the page to retrieve.
+	 */
+    public function awesomePluginsGet(string $language, string $version) {
+        $this->compileScrollspyPage($language, $version, 'awesome_plugins', 'awesome_plugins');
     }
 
-    public function pluginGet(string $plugin_name) {
-        $this->compileScrollspyPage('awesome_plugins', $plugin_name);
+	/**
+	 * Handles the retrieval of the section within the awesome plugins page.
+	 *
+	 * @param string $language The language in which the page is requested.
+	 * @param string $version The version of the page to retrieve.
+	 */
+    public function pluginGet(string $language, string $version, string $plugin_name) {
+        $this->compileScrollspyPage($language, $version, 'awesome_plugins', $plugin_name);
     }
 
-    // This is if you want to save everything into a single page
-    public function singlePageGet() {
+	/**
+	 * This is if you want all documentation to be viewable in a single page
+	 *
+	 * @param string $language The language of the page.
+	 * @param string $version The version of the page.
+	 */
+    public function singlePageGet(string $language, string $version) {
         $app = $this->app;
 
         // recursively look through all the content files, and pull out each section and render it
         $sections = [];
-        $language_directory = self::CONTENT_DIR . $this->language . '/';
+        $language_directory = self::CONTENT_DIR . '/' . $version . '/' . $language . '/';
         $files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($language_directory));
 
         foreach ($files as $file) {
@@ -206,13 +324,15 @@ class IndexController {
             $sections[] = $section;
         }
 
-        $markdown_html = $app->cache()->refreshIfExpired('single_page_html_' . $this->language, function () use ($app, $sections) {
+		$Translator = $this->setupTranslatorService($language, $version);
+
+        $markdown_html = $app->cache()->refreshIfExpired('single_page_html_' . $language, function () use ($app, $sections, $Translator) {
             $markdown_html = '';
 
             foreach ($sections as $section) {
                 $slugged_section = Text::slugify($section);
                 $markdown_html .= '<h1><a href="/' . $section . '" id="' . $slugged_section . '">' . ucwords($section) . '</a> <a href="/' . $section . '#' . $slugged_section . '" class="bi bi-link-45deg" title="Permalink to this heading"></a></h1>';
-                $markdown_html .= $app->parsedown()->text($this->Translator->getMarkdownLanguageFile($section . '.md'));
+                $markdown_html .= $app->parsedown()->text($Translator->getMarkdownLanguageFile($section . '.md'));
             }
 
             return $markdown_html;
@@ -221,12 +341,19 @@ class IndexController {
         $this->renderPage('single_page.latte', [
             'page_title' => 'single_page_documentation',
             'markdown' => $markdown_html,
+			'version' => $version,
         ]);
     }
 
-    public function searchGet() {
+	/**
+	 * Handles the GET request for searching documentation.
+	 *
+	 * @param string $language The language of the documentation.
+	 * @param string $version The version of the documentation.
+	 */
+    public function searchGet(string $language, string $version) {
         $query = $this->app->request()->query['query'];
-        $language_directory_to_grep = self::CONTENT_DIR . $this->language . self::DS;
+        $language_directory_to_grep = self::CONTENT_DIR . $version . self::DS . $language . self::DS;
         $grep_command = 'grep -r -i -n --color=never --include="*.md" '.escapeshellarg($query).' '.escapeshellarg($language_directory_to_grep);
         exec($grep_command, $grep_output);
 
@@ -263,7 +390,7 @@ class IndexController {
             $count = count($files_found[$file_path]);
             $final_search[] = [
                 'search_result' => $data[0]['page_name'].' ("'.$query.'" '.$count.'x)',
-                'url' => '/'.str_replace([ $language_directory_to_grep, '.md', '_', '\\' ], [ '', '', '-', '/' ], $file_path),
+                'url' => '/'.$language.'/'.$version.'/'.str_replace([ $language_directory_to_grep, '.md', '_', '\\' ], [ '', '', '-', '/' ], $file_path),
                 'hits' => $count
             ];
         }
@@ -274,6 +401,11 @@ class IndexController {
         $this->app->json($final_search);
     }
 
+	/**
+	 * Handles the POST request to update this repo from a webhook from GitHub
+	 *
+	 * @return void
+	 */
     public function updateStuffPost() {
         $secret = $this->app->get('config')['github_webhook_secret'];
         $request = $this->app->request();
@@ -290,7 +422,7 @@ class IndexController {
             throw new Exception('Could not verify request signature ' . $signature_parts[1]);
         }
 
-        // it was successful. Do the stuff
+        // it was successful. Pull the latest changes and update the composer dependencies
         exec('cd /var/www/flightphp-docs/ && git pull && /usr/bin/php82 /usr/local/bin/composer install --no-progress -o --no-dev && rm -rf app/cache/*');
     }
 }

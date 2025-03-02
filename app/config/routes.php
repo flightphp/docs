@@ -2,13 +2,42 @@
 
 use app\controllers\IndexController;
 use app\middleware\HeaderSecurityMiddleware;
+use app\utils\Translator;
 use flight\Engine;
 use flight\net\Router;
 
-/** @var Engine $app */
-$app->group('', function (Router $router) use ($app): void {
-    $IndexController = new IndexController($app);
+$headerSecurityMiddleware = new HeaderSecurityMiddleware();
 
+/** @var Engine $app */
+/** @var Router $router */
+
+// if theres no language or version in the url, redirect and default to en and v3
+$app->route('/', function () use ($app) {
+	// pull out the default language by the accept header
+	$language = Translator::getLanguageFromRequest();
+	$app->redirect('/'.$language.'/v3/');
+})->addMiddleware($headerSecurityMiddleware);
+
+$app->route('/@language:[a-z0-9]{2}', function (string $language) use ($app): void {
+	// if there's a number in it, it's actually probably the version so we'll need to pull the language out and consider this a version
+	if (preg_match('/\d/', $language) === 1) {
+		$version = $language;
+		$language = Translator::getLanguageFromRequest();
+		$app->redirect("/en/$language/");
+	} else {
+		$version = 'v3';
+	}
+	$app->redirect("/$language/$version/");
+})->addMiddleware($headerSecurityMiddleware);
+
+// Pick up old routes that didn't use to have a language and version header
+$app->route('/@section:[\w\-]{3,}(/@sub_section:[\w\-]{3,})', function (string $section, ?string $sub_section = '') use ($app): void {
+	$language = Translator::getLanguageFromRequest();
+	$app->redirect("/{$language}/v3/$section/$sub_section");
+})->addMiddleware($headerSecurityMiddleware);
+
+$IndexController = new IndexController($app);
+$app->group('/@language:[a-z]{2}/@version:[a-z0-9]{2}', function (Router $router) use ($app, $IndexController): void {
     $router->get('/', [$IndexController, 'aboutGet'], false, 'about');
     $router->get('/single-page', [$IndexController, 'singlePageGet'], false, 'single_page');
     $router->get('/about', [$IndexController, 'aboutGet']);
@@ -35,13 +64,22 @@ $app->group('', function (Router $router) use ($app): void {
     });
 
     // Clever name for the github webhook
-    $router->post('/update-stuff', [$IndexController, 'updateStuffPost'], false, 'update_stuff');
-}, [new HeaderSecurityMiddleware()]);
+}, [ $headerSecurityMiddleware ]);
+
+$router->post('/update-stuff', [$IndexController, 'updateStuffPost'], false, 'update_stuff')
+	->addMiddleware($headerSecurityMiddleware);
 
 $app->map('notFound', function () use ($app): void {
     $app->response()->clearBody()->status(404);
 
-    (new IndexController($app))->renderPage('not_found.latte');
+	// pull the version out of the URL
+	$url = $app->request()->url;
+	$version = preg_match('~/(v\d)/~', $url, $matches) === 1 ? $matches[1] : 'v3';
+
+    (new IndexController($app))->renderPage('not_found.latte', [
+		'title' => '404 Not Found',
+		'version' => $version
+	]);
     $app->response()->send();
 
     exit;

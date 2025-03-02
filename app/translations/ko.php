@@ -18,4 +18,5 @@ return [
     'click_here' => '여기를 클릭하세요',
     'need_to_view_single_page' => '단일 페이지로 보려?',
     'media' => '미디어',
+	'version' => '버전',
 ];
