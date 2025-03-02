@@ -24,7 +24,7 @@ Hello, <?= $name ?>!
 
 The output would be:
 
-```
+```text
 Hello, Bob!
 ```
 
@@ -149,7 +149,6 @@ Here's how you would use the [Latte](https://latte.nette.org/)
 template engine for your views:
 
 ```php
-
 // Register Latte as the view class
 // Also pass a callback function to configure Latte on load
 Flight::register('view', Latte\Engine::class, [], function (Latte\Engine $latte) {

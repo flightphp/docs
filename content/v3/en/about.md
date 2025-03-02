@@ -8,7 +8,7 @@ Flight is a great beginner framework for those who are new to PHP and want to le
 
 First install it with Composer
 
-```
+```bash
 composer require flightphp/core
 ```
 
