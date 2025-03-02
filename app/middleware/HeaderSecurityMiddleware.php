@@ -30,7 +30,7 @@ class HeaderSecurityMiddleware {
 		$executedRoute = Flight::router()->executedRoute;
 		$language = $executedRoute->params['language'] ?? '';
 		$version = $executedRoute->params['version'] ?? '';
-		$domain = ENVIRONMENT !== 'development' ? Flight::request()->getBaseUrl() : 'localhost';
+		$domain = ENVIRONMENT !== 'development' ? Flight::request()->host : 'localhost';
 		if($language !== '') {
 			setcookie('language', (string) $language, [
 				'expires' => time() + (86400 * 30),
