@@ -18,4 +18,5 @@ return [
     'click_here' => 'Klik di sini',
     'need_to_view_single_page' => 'Perlu melihat dalam satu halaman?',
     'media' => 'Media',
+	'version' => 'Versi',
 ];
