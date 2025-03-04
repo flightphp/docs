@@ -432,5 +432,6 @@ class IndexController {
         // it was successful. Pull the latest changes and update the composer dependencies
         exec('cd /var/www/flightphp-docs/ && git pull && /usr/bin/php82 /usr/local/bin/composer install --no-progress -o --no-dev && rm -rf app/cache/*', $output);
 		$this->app->json($output);
+		
     }
 }
