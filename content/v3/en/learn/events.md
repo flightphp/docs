@@ -71,6 +71,26 @@ This triggers the `'user.login'` event and sends `'alice'` to the listener we de
 - If no listeners are registered, nothing happens—your app won’t break.
 - Use the spread operator (`...`) to pass multiple arguments flexibly.
 
+### Registering Event Listeners
+
+...
+
+**Stopping Further Listeners**:
+If a listener returns `false`, no additional listeners for that event will be executed. This allows you to halt the event chain based on specific conditions. Remember, the order of listeners matters, as the first one to return `false` will stop the rest from running.
+
+**Example**:
+```php
+Flight::onEvent('user.login', function ($username) {
+    if (isBanned($username)) {
+        logoutUser($username);
+        return false; // Stops subsequent listeners
+    }
+});
+Flight::onEvent('user.login', function ($username) {
+    sendWelcomeEmail($username); // this is never sent
+});
+```
+
 ## Overriding Event Methods
 
 `Flight::onEvent()` and `Flight::triggerEvent()` are available to be [extended](/learn/extending), meaning you can redefine how they work. This is great for advanced users who want to customize the event system, like adding logging or changing how events are dispatched.
