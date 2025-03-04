@@ -11,6 +11,10 @@ $headerSecurityMiddleware = new HeaderSecurityMiddleware();
 /** @var Engine $app */
 /** @var Router $router */
 
+// This processes github webhooks
+$router->post('/update-stuff', [$IndexController, 'updateStuffPost'], false, 'update_stuff')
+	->addMiddleware($headerSecurityMiddleware);
+
 // if theres no language or version in the url, redirect and default to en and v3
 $app->route('/', function () use ($app) {
 	// pull out the default language by the accept header
@@ -65,9 +69,6 @@ $app->group('/@language:[a-z]{2}/@version:[a-z0-9]{2}', function (Router $router
 
     // Clever name for the github webhook
 }, [ $headerSecurityMiddleware ]);
-
-$router->post('/update-stuff', [$IndexController, 'updateStuffPost'], false, 'update_stuff')
-	->addMiddleware($headerSecurityMiddleware);
 
 $app->map('notFound', function () use ($app): void {
     $app->response()->clearBody()->status(404);
