@@ -276,3 +276,14 @@ Flight::route('/edit-page/(@id)', function ($pageId) {
 - **Use Events Wisely**: They’re great for decoupling, but too many can make your code hard to follow—use them when it makes sense.
 
 The event system in Flight PHP, with `Flight::onEvent()` and `Flight::triggerEvent()`, gives you a simple yet powerful way to build flexible applications. By letting different parts of your app talk to each other through events, you can keep your code organized, reusable, and easy to expand. Whether you’re logging actions, sending notifications, or managing updates, events help you do it without tangling your logic. Plus, with the ability to override these methods, you’ve got the freedom to tailor the system to your needs. Start small with a single event, and watch how it transforms your app’s structure!
+
+## Built-in Events
+
+Flight PHP comes with a few built-in events that you can use to hook into the framework's lifecycle. These events are triggered at specific points in the request/response cycle, allowing you to execute custom logic when certain actions occur.
+
+### Built-in Events List
+- `flight.request.received`: Triggered when a request is received, parsed and processed.
+- `flight.route.middleware.before`: Triggered after the before middleware is executed.
+- `flight.route.middleware.after`: Triggered after the after middleware is executed.
+- `flight.route.executed`: Triggered after a route is executed and processed.
+- `flight.response.sent`: Triggered after a response is sent to the client.
