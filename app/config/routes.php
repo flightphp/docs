@@ -11,6 +11,8 @@ $headerSecurityMiddleware = new HeaderSecurityMiddleware();
 /** @var Engine $app */
 /** @var Router $router */
 
+$IndexController = new IndexController($app);
+
 // This processes github webhooks
 $router->post('/update-stuff', [$IndexController, 'updateStuffPost'], false, 'update_stuff')
 	->addMiddleware($headerSecurityMiddleware);
@@ -40,7 +42,6 @@ $app->route('/@section:[\w\-]{3,}(/@sub_section:[\w\-]{3,})', function (string $
 	$app->redirect("/{$language}/v3/$section/$sub_section");
 })->addMiddleware($headerSecurityMiddleware);
 
-$IndexController = new IndexController($app);
 $app->group('/@language:[a-z]{2}/@version:[a-z0-9]{2}', function (Router $router) use ($app, $IndexController): void {
     $router->get('/', [$IndexController, 'aboutGet'], false, 'about');
     $router->get('/single-page', [$IndexController, 'singlePageGet'], false, 'single_page');
