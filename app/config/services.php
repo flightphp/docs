@@ -30,7 +30,7 @@ $app->register('latte', LatteEngine::class, [], function (LatteEngine $latte) us
 
 // Cache for storing parsedown and other things
 $app->register('cache', Cache::class, [__DIR__ . '/../cache/'], function (Cache $cache) {
-    $cache->setDevMode(ENVIRONMENT !== 'development');
+    $cache->setDevMode(ENVIRONMENT === 'development');
 });
 
 // Parsedown is a markdown parser

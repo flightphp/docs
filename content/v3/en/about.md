@@ -73,7 +73,11 @@ There is an example app that can help you get started with the Flight Framework.
 
 # Community
 
-We're on Matrix Chat with us at [#flight-php-framework:matrix.org](https://matrix.to/#/#flight-php-framework:matrix.org).
+We're on Matrix Chat
+
+[![Matrix](https://img.shields.io/matrix/flight-php-framework%3Amatrix.org?server_fqdn=matrix.org&style=social&logo=matrix)](https://matrix.to/#/#flight-php-framework:matrix.org)
+
+And Discord
 
 [![](https://dcbadge.limes.pink/api/server/https://discord.gg/Ysr4zqHfbX)](https://discord.gg/Ysr4zqHfbX)
 
