@@ -54,4 +54,16 @@ class Text {
 
         return $markdown_html;
     }
+
+	/**
+	 * Adds classes to elements in the html for styling
+	 *
+	 * @param string $html html
+	 * @return string
+	 */
+	public static function addClassesToElements(string $html): string {
+		// add class="table" to all <table> elements
+		$html = preg_replace('/<table(.*?)>/', '<table$1 class="table table-striped">', $html);
+		return $html;
+	}
 }

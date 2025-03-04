@@ -76,7 +76,11 @@ class IndexController {
 
 		$Translator = $this->setupTranslatorService($language, $version);
 
-        $markdown_html = $app->cache()->refreshIfExpired($section . '_html_' . $language . '_' . $version, fn() => $app->parsedown()->text($Translator->getMarkdownLanguageFile($section . '.md')), 86400); // 1 day
+        $markdown_html = $app->cache()->refreshIfExpired($section . '_html_' . $language . '_' . $version, function() use ($app, $section, $Translator) {
+			$markdown_html = $app->parsedown()->text($Translator->getMarkdownLanguageFile($section . '.md'));
+			$markdown_html = Text::addClassesToElements($markdown_html);
+			return $markdown_html;
+		}, 86400); // 1 day
 
         $markdown_html = $this->wrapContentInDiv($markdown_html);
 
@@ -108,6 +112,7 @@ class IndexController {
 
             $heading_data = [];
             $parsed_text = Text::generateAndConvertHeaderListFromHtml($parsed_text, $heading_data, 'h2', $section_file_path.'/'.$sub_section);
+			$parsed_text = Text::addClassesToElements($parsed_text);
             $app->cache()->store($sub_section_underscored . '_heading_data_' . $language . '_' . $version, $heading_data, 86400); // 1 day
 
             return $parsed_text;
@@ -185,6 +190,8 @@ class IndexController {
                 && $element->nodeName !== 'ol'
                 && $element->nodeName !== 'ul'
                 && $element->nodeName !== 'blockquote'
+				&& $element->nodeName !== 'table'
+				&& $element->nodeName !== 'dl'
                 && is_null($div) === false
             ) {
                 $d .= '</div>';
