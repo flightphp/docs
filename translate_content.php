@@ -35,8 +35,8 @@ if ($fromDate) {
 
 echo "Translating content from " . date('Y-m-d', $fromDate) . PHP_EOL;
 
-$top_level_files = glob(__DIR__ . '/content/en/*.md');
-$files = array_merge($top_level_files, glob(__DIR__ . '/content/en/**/*.md'));
+$top_level_files = glob(__DIR__ . '/content/v3/en/*.md');
+$files = array_merge($top_level_files, glob(__DIR__ . '/content/v3/en/**/*.md'));
 
 // pull all markdown files our of the content/en/ folder and each subdirectory
 foreach ($files as $file) {
@@ -95,6 +95,11 @@ foreach ($files as $file) {
             mkdir($directory, 0775, true);
         }
 
+		if(!$full_response) {
+			echo "  **Skipping file because it's received an empty response**" . PHP_EOL;
+			continue;
+		}
+		
         file_put_contents($translatedFilePath, $full_response);
         echo "  Updated: " . $translatedFilePath . PHP_EOL;
     }

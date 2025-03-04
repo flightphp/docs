@@ -18,11 +18,36 @@ class HeaderSecurityMiddleware {
         }
 
         Flight::response()->header('X-Frame-Options', 'SAMEORIGIN');
-        Flight::response()->header("Content-Security-Policy", "default-src 'self'; script-src 'self' https://api.github.com https://cdn.jsdelivr.net https://buttons.github.io https://unpkg.com https://opengraph.b-cdn.net https://www.googletagmanager.com 'nonce-" . $nonce . "'; font-src 'self' https://fonts.gstatic.com https://fonts.googleapis.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net https://unpkg.com https://cdnjs.cloudflare.com; img-src 'self' https://cdn.jsdelivr.net data: https://api.github.com https://raw.githubusercontent.com; connect-src 'self' https://api.github.com; frame-src https://www.youtube.com");
+        Flight::response()->header("Content-Security-Policy", "default-src 'self'; script-src 'self' https://api.github.com https://cdn.jsdelivr.net https://buttons.github.io https://unpkg.com https://opengraph.b-cdn.net https://www.googletagmanager.com 'nonce-" . $nonce . "'; font-src 'self' https://fonts.gstatic.com https://fonts.googleapis.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net https://unpkg.com https://cdnjs.cloudflare.com; img-src 'self' https://dcbadge.limes.pink https://img.shields.io https://cdn.jsdelivr.net data: https://api.github.com https://raw.githubusercontent.com; connect-src 'self' https://api.github.com; frame-src https://www.youtube.com");
         Flight::response()->header('X-XSS-Protection', '1; mode=block');
         Flight::response()->header('X-Content-Type-Options', 'nosniff');
         Flight::response()->header('Referrer-Policy', 'no-referrer-when-downgrade');
         Flight::response()->header('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
         Flight::response()->header('Permissions-Policy', 'geolocation=()');
     }
+
+	public function after() {
+		$executedRoute = Flight::router()->executedRoute;
+		$language = $executedRoute->params['language'] ?? '';
+		$version = $executedRoute->params['version'] ?? '';
+		$domain = ENVIRONMENT !== 'development' ? Flight::request()->host : 'localhost';
+		if($language !== '') {
+			setcookie('language', (string) $language, [
+				'expires' => time() + (86400 * 30),
+				'path' => '/',
+				'domain' => $domain,
+				'secure' => ENVIRONMENT !== 'development',
+				'httponly' => true
+			]); // 86400 = 1 day
+		}
+		if($version !== '') {
+			setcookie('version', (string) $version, [
+				'expires' => time() + (86400 * 30),
+				'path' => '/',
+				'domain' => $domain,
+				'secure' => ENVIRONMENT !== 'development',
+				'httponly' => true
+			]); // 86400 = 1 day
+		}
+	}
 }

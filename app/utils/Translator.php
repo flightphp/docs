@@ -7,8 +7,16 @@ namespace app\utils;
 use Flight;
 
 class Translator {
-    public function __construct(protected string $language = 'en') {
+    public function __construct(protected string $language = 'en', protected string $version = 'v3') {
     }
+
+	public function setLanguage(string $language): void {
+		$this->language = $language;
+	}
+
+	public function setVersion(string $version): void {
+		$this->version = $version;
+	}
 
     public function translate(string $translationKey) {
         $translationContent = $this->getTranslationFileContents();
@@ -48,7 +56,7 @@ class Translator {
         if (!empty($language)) {
             $host = ENVIRONMENT !== 'development' ? Flight::request()->getHeader('Host') : 'localhost';
 
-            setcookie('lang', (string) $language, [
+            setcookie('language', (string) $language, [
                 'expires' => time() + (86400 * 30),
                 'path' => '/',
                 'domain' => $host,
@@ -58,11 +66,11 @@ class Translator {
         }
 
         // pull it from the cookie
-        if (empty($language) && !empty(Flight::request()->cookies->lang)) {
-            $language = Flight::request()->cookies->lang;
+        if (empty($language) && !empty(Flight::request()->cookies->language)) {
+            $language = Flight::request()->cookies->language;
         }
 
-        // pull it from the header
+        // pull it from the header or default it to en
         if (empty($language)) {
             $language = Flight::request()->getHeader('Accept-Language', 'en');
         }
@@ -77,13 +85,14 @@ class Translator {
 
     public function getMarkdownLanguageFile(string $file): string {
         $language = $this->language;
-        $markdownFilePath = __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'content' . DIRECTORY_SEPARATOR;
-        $markdownFile = $markdownFilePath . $language . DIRECTORY_SEPARATOR . $file;
+		$ds = DIRECTORY_SEPARATOR;
+        $markdownFilePath = __DIR__ . $ds . '..' . $ds . '..' . $ds . 'content' . $ds . $this->version . $ds;
+        $markdownFile = $markdownFilePath . $language . $ds . $file;
 
         // fallback to english if it doesn't exist in the language
         if (file_exists($markdownFile) === false) {
             $language = 'en';
-            $markdownFile = $markdownFilePath . $language . DIRECTORY_SEPARATOR . $file;
+            $markdownFile = $markdownFilePath . $language . $ds . $file;
         }
 
         if (file_exists($markdownFile) === false) {
