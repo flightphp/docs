@@ -38,6 +38,10 @@ Learn how to handle requests and responses in your application.
 
 Learn how to send responses to your users.
 
+##### [Events](/learn/events)
+
+Learn how to use the event system to add custom events to your application.
+
 ##### [HTML Templates](/learn/templates)
 
 Learn how to use the built-in view engine to render your HTML templates.

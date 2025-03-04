@@ -51,6 +51,8 @@ Flight::lastModified(int $time) // Performs last modified HTTP caching.
 Flight::json(mixed $data, int $code = 200, bool $encode = true, string $charset = 'utf8', int $option) // Sends a JSON response.
 Flight::jsonp(mixed $data, string $param = 'jsonp', int $code = 200, bool $encode = true, string $charset = 'utf8', int $option) // Sends a JSONP response.
 Flight::jsonHalt(mixed $data, int $code = 200, bool $encode = true, string $charset = 'utf8', int $option) // Sends a JSON response and stops the framework.
+Flight::onEvent(string $event, callable $callback) // Registers an event listener.
+Flight::triggerEvent(string $event, ...$args) // Triggers an event.
 ```
 
 Any custom methods added with `map` and `register` can also be filtered. For examples on how to map these methods, see the [Extending Flight](/learn/extending) guide.
