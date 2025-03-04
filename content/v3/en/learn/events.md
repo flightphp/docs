@@ -33,7 +33,9 @@ Flight::onEvent(string $event, callable $callback): void
 - `$callback`: The function to run when the event is triggered.
 
 ### How It Works
-You “subscribe” to an event by telling Flight what to do when it happens. The callback can accept arguments passed from the event trigger.
+You "subscribe" to an event by telling Flight what to do when it happens. The callback can accept arguments passed from the event trigger.
+
+Flight's event system is synchronous, which means that each event listener is executed in sequence, one after another. When you trigger an event, all registered listeners for that event will run to completion before your code continues. This is important to understand as it differs from asynchronous event systems where listeners might run in parallel or at a later time.
 
 ### Simple Example
 ```php
@@ -79,7 +81,7 @@ Flight::map('onEvent', function (string $event, callable $callback) {
     // Log every event registration
     error_log("New event listener added for: $event");
     // Call the default behavior (assuming an internal event system)
-    Flight::event()->on($event, $callback);
+    Flight::_onEvent($event, $callback);
 });
 ```
 Now, every time you register an event, it logs it before proceeding.
@@ -88,6 +90,107 @@ Now, every time you register an event, it logs it before proceeding.
 - Add debugging or monitoring.
 - Restrict events in certain environments (e.g., disable in testing).
 - Integrate with a different event library.
+
+## Where to Put Your Events
+
+As a beginner, you might wonder: *where do I register all these events in my app?* Flight’s simplicity means there’s no strict rule—you can put them wherever makes sense for your project. However, keeping them organized helps you maintain your code as your app grows. Here are some practical options and best practices, tailored to Flight’s lightweight nature:
+
+### Option 1: In Your Main `index.php`
+For small apps or quick prototypes, you can register events right in your `index.php` file alongside your routes. This keeps everything in one place, which is fine when simplicity is your priority.
+
+```php
+require 'vendor/autoload.php';
+
+// Register events
+Flight::onEvent('user.login', function ($username) {
+    error_log("$username logged in at " . date('Y-m-d H:i:s'));
+});
+
+// Define routes
+Flight::route('/login', function () {
+    $username = 'bob';
+    Flight::triggerEvent('user.login', $username);
+    echo "Logged in!";
+});
+
+Flight::start();
+```
+- **Pros**: Simple, no extra files, great for small projects.
+- **Cons**: Can get messy as your app grows with more events and routes.
+
+### Option 2: A Separate `events.php` File
+For a slightly larger app, consider moving event registrations into a dedicated file like `app/config/events.php`. Include this file in your `index.php` before your routes. This mimics how routes are often organized in `app/config/routes.php` in Flight projects.
+
+```php
+// app/config/events.php
+Flight::onEvent('user.login', function ($username) {
+    error_log("$username logged in at " . date('Y-m-d H:i:s'));
+});
+
+Flight::onEvent('user.registered', function ($email, $name) {
+    echo "Email sent to $email: Welcome, $name!";
+});
+```
+
+```php
+// index.php
+require 'vendor/autoload.php';
+require 'app/config/events.php';
+
+Flight::route('/login', function () {
+    $username = 'bob';
+    Flight::triggerEvent('user.login', $username);
+    echo "Logged in!";
+});
+
+Flight::start();
+```
+- **Pros**: Keeps `index.php` focused on routing, organizes events logically, easy to find and edit.
+- **Cons**: Adds a tiny bit of structure, which might feel like overkill for very small apps.
+
+### Option 3: Near Where They’re Triggered
+Another approach is to register events close to where they’re triggered, like inside a controller or route definition. This works well if an event is specific to one part of your app.
+
+```php
+Flight::route('/signup', function () {
+    // Register event here
+    Flight::onEvent('user.registered', function ($email) {
+        echo "Welcome email sent to $email!";
+    });
+
+    $email = 'jane@example.com';
+    Flight::triggerEvent('user.registered', $email);
+    echo "Signed up!";
+});
+```
+- **Pros**: Keeps related code together, good for isolated features.
+- **Cons**: Scatters event registrations, making it harder to see all events at once; risks duplicate registrations if not careful.
+
+### Best Practice for Flight
+- **Start Simple**: For tiny apps, put events in `index.php`. It’s quick and aligns with Flight’s minimalism.
+- **Grow Smart**: As your app expands (e.g., more than 5-10 events), use an `app/config/events.php` file. It’s a natural step up, like organizing routes, and keeps your code tidy without adding complex frameworks.
+- **Avoid Over-Engineering**: Don’t create a full-blown “event manager” class or directory unless your app gets huge—Flight thrives on simplicity, so keep it lightweight.
+
+### Tip: Group by Purpose
+In `events.php`, group related events (e.g., all user-related events together) with comments for clarity:
+
+```php
+// app/config/events.php
+// User Events
+Flight::onEvent('user.login', function ($username) {
+    error_log("$username logged in");
+});
+Flight::onEvent('user.registered', function ($email) {
+    echo "Welcome to $email!";
+});
+
+// Page Events
+Flight::onEvent('page.updated', function ($pageId) {
+    unset($_SESSION['pages'][$pageId]);
+});
+```
+
+This structure scales well and stays beginner-friendly.
 
 ## Examples for Beginners
 
