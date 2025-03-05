@@ -19,4 +19,5 @@ return [
     'need_to_view_single_page' => '단일 페이지로 보려?',
     'media' => '미디어',
 	'version' => '버전',
+	'guides' => '가이드',
 ];

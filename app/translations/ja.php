@@ -19,4 +19,5 @@ return [
     'need_to_view_single_page' => '単一ページで表示する必要がありますか？',
     'media' => 'メディア',
 	'version' => 'バージョン',
+	'guides' => 'ガイド',
 ];

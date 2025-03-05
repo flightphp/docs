@@ -87,6 +87,16 @@ class DocsController {
     }
 
 	/**
+	 * Handles the retrieval of the section within the learn page.
+	 *
+	 * @param string $language The language in which the page is requested.
+	 * @param string $version The version of the page to retrieve.
+	 */
+    public function learnSectionsGet(string $language, string $version, string $section_name) {
+        $this->DocsLogic->compileScrollspyPage($language, $version, 'learn', $section_name);
+    }
+
+	/**
 	 * Handles the retrieval of the media page.
 	 *
 	 * @param string $language The language in which the page is requested.
@@ -97,13 +107,23 @@ class DocsController {
     }
 
 	/**
+	 * Handles the retrieval of the guide page.
+	 *
+	 * @param string $language The language in which the page is requested.
+	 * @param string $version The version of the page to retrieve.
+	 */
+    public function guidesGet(string $language, string $version) {
+		$this->DocsLogic->compileSinglePage($language, $version, 'guides');
+    }
+
+	/**
 	 * Handles the retrieval of the section within the learn page.
 	 *
 	 * @param string $language The language in which the page is requested.
 	 * @param string $version The version of the page to retrieve.
 	 */
-    public function learnSectionsGet(string $language, string $version, string $section_name) {
-        $this->DocsLogic->compileScrollspyPage($language, $version, 'learn', $section_name);
+    public function guidesSectionsGet(string $language, string $version, string $section_name) {
+        $this->DocsLogic->compileScrollspyPage($language, $version, 'guides', $section_name);
     }
 
 	/**

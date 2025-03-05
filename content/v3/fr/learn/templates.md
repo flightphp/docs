@@ -1,12 +1,12 @@
-# Vues HTML et Modèles
+# Vues et Modèles HTML
 
-Flight fournit par défaut quelques fonctionnalités de base pour le templating.
+Flight fournit par défaut quelques fonctionnalités de base de modélisation.
 
-Flight vous permet de remplacer le moteur de vue par défaut simplement en enregistrant votre propre classe de vue. Faites défiler vers le bas pour voir des exemples d'utilisation de Smarty, Latte, Blade, et plus encore !
+Flight vous permet de remplacer le moteur de vue par défaut simplement en enregistrant votre propre classe de vue. Faites défiler pour voir des exemples d'utilisation de Smarty, Latte, Blade, et plus encore !
 
 ## Moteur de vue intégré
 
-Pour afficher un modèle de vue, appelez la méthode `render` avec le nom du fichier modèle et des données de modèle optionnelles :
+Pour afficher un modèle de vue, appelez la méthode `render` avec le nom du fichier modèle et des données de modèle facultatives :
 
 ```php
 Flight::render('hello.php', ['name' => 'Bob']);
@@ -20,7 +20,7 @@ Hello, <?= $name ?>!
 
 La sortie serait :
 
-```
+```text
 Hello, Bob!
 ```
 
@@ -36,30 +36,30 @@ La variable `name` est maintenant disponible dans toutes vos vues. Vous pouvez d
 Flight::render('hello');
 ```
 
-Notez que lorsque vous spécifiez le nom du modèle dans la méthode render, vous pouvez omettre l'extension `.php`.
+Notez que lors de la spécification du nom du modèle dans la méthode render, vous pouvez omettre l'extension `.php`.
 
-Par défaut, Flight cherchera un répertoire `views` pour les fichiers de modèle. Vous pouvez définir un chemin alternatif pour vos modèles en configurant ce qui suit :
+Par défaut, Flight cherchera un répertoire `views` pour les fichiers de modèle. Vous pouvez définir un chemin alternatif pour vos modèles en définissant la configuration suivante :
 
 ```php
 Flight::set('flight.views.path', '/path/to/views');
 ```
 
-### Mise en page
+### Dispositions
 
-Il est courant que les sites Web aient un seul fichier modèle de mise en page avec un contenu interchangeable. Pour rendre du contenu à utiliser dans une mise en page, vous pouvez passer un paramètre optionnel à la méthode `render`.
+Il est courant que les sites Web aient un seul fichier modèle de disposition avec un contenu interchangeant. Pour rendre le contenu à utiliser dans une disposition, vous pouvez passer un paramètre facultatif à la méthode `render`.
 
 ```php
 Flight::render('header', ['heading' => 'Hello'], 'headerContent');
 Flight::render('body', ['body' => 'World'], 'bodyContent');
 ```
 
-Votre vue aura alors des variables sauvegardées appelées `headerContent` et `bodyContent`. Vous pouvez ensuite rendre votre mise en page en faisant :
+Votre vue disposera alors de variables sauvegardées appelées `headerContent` et `bodyContent`. Vous pouvez ensuite rendre votre disposition en faisant :
 
 ```php
 Flight::render('layout', ['title' => 'Home Page']);
 ```
 
-Si les fichiers modèle ressemblent à ceci :
+Si les fichiers de modèle ressemblent à ceci :
 
 `header.php` :
 
@@ -102,7 +102,7 @@ La sortie serait :
 
 ## Smarty
 
-Voici comment vous utiliseriez le moteur de template [Smarty](http://www.smarty.net/) pour vos vues :
+Voici comment vous utiliseriez le moteur de modèle [Smarty](http://www.smarty.net/) pour vos vues :
 
 ```php
 // Charger la bibliothèque Smarty
@@ -117,14 +117,14 @@ Flight::register('view', Smarty::class, [], function (Smarty $smarty) {
   $smarty->setCacheDir('./cache/');
 });
 
-// Assigner des données modèle
+// Assigner des données de modèle
 Flight::view()->assign('name', 'Bob');
 
 // Afficher le modèle
 Flight::view()->display('hello.tpl');
 ```
 
-Pour plus de complétude, vous devriez également remplacer la méthode render par défaut de Flight :
+Pour être complet, vous devriez également remplacer la méthode render par défaut de Flight :
 
 ```php
 Flight::map('render', function(string $template, array $data): void {
@@ -135,23 +135,22 @@ Flight::map('render', function(string $template, array $data): void {
 
 ## Latte
 
-Voici comment vous utiliseriez le moteur de template [Latte](https://latte.nette.org/) pour vos vues :
+Voici comment vous utiliseriez le moteur de modèle [Latte](https://latte.nette.org/) pour vos vues :
 
 ```php
-
 // Enregistrer Latte comme classe de vue
 // Passer également une fonction de rappel pour configurer Latte au chargement
 Flight::register('view', Latte\Engine::class, [], function (Latte\Engine $latte) {
   // C'est ici que Latte mettra en cache vos modèles pour accélérer les choses
-	// Une chose intéressante à propos de Latte est qu'il rafraîchit automatiquement votre
-	// cache lorsque vous apportez des modifications à vos modèles !
-	$latte->setTempDirectory(__DIR__ . '/../cache/');
+  // Une chose intéressante à propos de Latte est qu'il actualise automatiquement votre
+  // cache lorsque vous apportez des modifications à vos modèles !
+  $latte->setTempDirectory(__DIR__ . '/../cache/');
 
-	// Indiquez à Latte où se trouvera le répertoire racine pour vos vues.
-	$latte->setLoader(new \Latte\Loaders\FileLoader(__DIR__ . '/../views/'));
+  // Indiquer à Latte où se trouvera le répertoire racine de vos vues.
+  $latte->setLoader(new \Latte\Loaders\FileLoader(__DIR__ . '/../views/'));
 });
 
-// Et enveloppez-le pour que vous puissiez utiliser Flight::render() correctement
+// Et enveloppez le pour que vous puissiez utiliser Flight::render() correctement
 Flight::map('render', function(string $template, array $data): void {
   // C'est comme $latte_engine->render($template, $data);
   echo Flight::view()->render($template, $data);
@@ -160,7 +159,7 @@ Flight::map('render', function(string $template, array $data): void {
 
 ## Blade
 
-Voici comment vous utiliseriez le moteur de template [Blade](https://laravel.com/docs/8.x/blade) pour vos vues :
+Voici comment vous utiliseriez le moteur de modèle [Blade](https://laravel.com/docs/8.x/blade) pour vos vues :
 
 Tout d'abord, vous devez installer la bibliothèque BladeOne via Composer :
 
@@ -185,14 +184,14 @@ Flight::register('view', BladeOne::class, [], function (BladeOne $blade) {
   $blade->setCompiledPath($cache);
 });
 
-// Assigner des données modèle
+// Assigner des données de modèle
 Flight::view()->share('name', 'Bob');
 
 // Afficher le modèle
 echo Flight::view()->run('hello', []);
 ```
 
-Pour plus de complétude, vous devriez également remplacer la méthode render par défaut de Flight :
+Pour être complet, vous devriez également remplacer la méthode render par défaut de Flight :
 
 ```php
 <?php
@@ -214,4 +213,4 @@ La sortie serait :
 Hello, Bob!
 ```
 
-En suivant ces étapes, vous pouvez intégrer le moteur de template Blade avec Flight et l'utiliser pour rendre vos vues.
+En suivant ces étapes, vous pouvez intégrer le moteur de modèle Blade avec Flight et l'utiliser pour rendre vos vues.

@@ -19,4 +19,5 @@ return [
     'need_to_view_single_page' => 'Besoin de voir en une seule page?',
     'media' => 'Médias',
 	'version' => 'Version',
+	'guides' => 'Guides',
 ];

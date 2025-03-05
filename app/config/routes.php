@@ -72,6 +72,11 @@ $router->group('', function (Router $router) use ($app) {
 			$router->get('/@section_name', [DocsController::class, 'learnSectionsGet']);
 		});
 
+		$router->group('/guides', function (Router $router): void {
+			$router->get('', [DocsController::class, 'guidesGet'], false, 'guides');
+			$router->get('/@section_name', [DocsController::class, 'guidesSectionsGet']);
+		});
+
 		$router->group('/awesome-plugins', function (Router $router): void {
 			$router->get('', [DocsController::class, 'awesomePluginsGet'], false, 'awesome_plugins');
 			$router->get('/@plugin_name', [DocsController::class, 'pluginGet'], false, 'plugin');

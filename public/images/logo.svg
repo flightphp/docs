@@ -1,0 +1,6 @@
+<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <!-- Trail -->
+  <path d="M30 50 C20 40, 10 40, 0 50" stroke="#6F42C1" stroke-width="2" stroke-linecap="round" fill="none"/>
+  <!-- Airplane -->
+  <path d="M90 50 L60 30 L30 50 L60 70 Z" fill="#007BFF"/>
+</svg>

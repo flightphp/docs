@@ -19,4 +19,5 @@ return [
     'need_to_view_single_page' => 'Precisa ver a documentação de uma única página?',
     'media' => 'Mídia',
 	'version' => 'Versão',
+	'guides' => 'Guias',
 ];

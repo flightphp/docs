@@ -1,64 +1,59 @@
 # Tampilan HTML dan Template
 
-Flight menyediakan beberapa fungsi templating dasar secara default.
+Flight menyediakan beberapa fungsionalitas templating dasar secara default.
 
-Flight memungkinkan Anda untuk menukar mesin tampilan default hanya dengan mendaftarkan kelas tampilan Anda sendiri. Gulir ke bawah untuk melihat contoh cara menggunakan Smarty, Latte, Blade, dan lainnya!
+Flight memungkinkan Anda untuk mengganti mesin tampilan default hanya dengan mendaftarkan kelas tampilan Anda sendiri. Gulir ke bawah untuk melihat contoh cara menggunakan Smarty, Latte, Blade, dan lainnya!
 
 ## Mesin Tampilan Bawaan
 
-Untuk menampilkan template tampilan, panggil metode `render` dengan nama
-file template dan data template opsional:
+Untuk menampilkan sebuah template tampilan, panggil metode `render` dengan nama file template dan data template opsional:
 
 ```php
 Flight::render('hello.php', ['name' => 'Bob']);
 ```
 
-Data template yang Anda masukkan secara otomatis disuntikkan ke dalam template dan dapat
-diacu seperti variabel lokal. File template hanyalah file PHP. Jika
-konten dari file template `hello.php` adalah:
+Data template yang Anda masukkan secara otomatis disuntikkan ke dalam template dan dapat dirujuk seperti variabel lokal. File template hanyalah file PHP. Jika konten dari file template `hello.php` adalah:
 
 ```php
 Hello, <?= $name ?>!
 ```
 
-Outputnya akan menjadi:
+Outputnya adalah:
 
-```
+```text
 Hello, Bob!
 ```
 
-Anda juga dapat menetapkan variabel tampilan secara manual dengan menggunakan metode set:
+Anda juga dapat secara manual mengatur variabel tampilan dengan menggunakan metode set:
 
 ```php
 Flight::view()->set('name', 'Bob');
 ```
 
-Variabel `name` sekarang tersedia di semua tampilan Anda. Jadi Anda dapat dengan mudah melakukan:
+Variabel `name` kini tersedia di semua tampilan Anda. Jadi Anda dapat dengan mudah melakukan:
 
 ```php
 Flight::render('hello');
 ```
 
-Perhatikan bahwa saat menentukan nama template di metode render, Anda dapat
-meninggalkan ekstensi `.php`.
+Perhatikan bahwa saat menentukan nama template dalam metode render, Anda dapat menghilangkan ekstensi `.php`.
 
-Secara default, Flight akan mencari direktori `views` untuk file template. Anda dapat
-menetapkan jalur alternatif untuk template Anda dengan menetapkan konfigurasi berikut:
+Secara default, Flight akan mencari direktori `views` untuk file template. Anda dapat menetapkan jalur alternatif untuk template Anda dengan mengatur konfigurasi berikut:
 
 ```php
 Flight::set('flight.views.path', '/path/to/views');
 ```
 
-### Layout
+### Tata Letak
 
-Adalah umum bagi situs web untuk memiliki satu file template layout dengan konten yang saling berganti. Untuk merender konten yang akan digunakan dalam layout, Anda dapat memasukkan parameter opsional ke dalam metode `render`.
+Adalah hal yang umum untuk situs web memiliki satu file template tata letak dengan konten yang saling bertukar. Untuk merender konten yang digunakan dalam tata letak, Anda dapat memasukkan parameter opsional ke dalam metode `render`.
 
 ```php
 Flight::render('header', ['heading' => 'Hello'], 'headerContent');
 Flight::render('body', ['body' => 'World'], 'bodyContent');
 ```
 
-Tampilan Anda kemudian akan memiliki variabel yang disimpan yang disebut `headerContent` dan `bodyContent`. Anda kemudian dapat merender layout Anda dengan melakukan:
+Tampilan Anda kemudian akan memiliki variabel yang disimpan yang disebut `headerContent` dan `bodyContent`. Anda kemudian dapat merender tata letak Anda dengan melakukan:
 
 ```php
 Flight::render('layout', ['title' => 'Home Page']);
@@ -92,7 +87,7 @@ Jika file template terlihat seperti ini:
 </html>
 ```
 
-Outputnya akan menjadi:
+Outputnya adalah:
 ```html
 <html>
   <head>
@@ -107,14 +102,14 @@ Outputnya akan menjadi:
 
 ## Smarty
 
-Ini adalah cara Anda menggunakan mesin template [Smarty](http://www.smarty.net/) untuk tampilan Anda:
+Berikut cara menggunakan mesin template [Smarty](http://www.smarty.net/) untuk tampilan Anda:
 
 ```php
-// Memuat pustaka Smarty
+// Muat pustaka Smarty
 require './Smarty/libs/Smarty.class.php';
 
-// Mendaftarkan Smarty sebagai kelas tampilan
-// Juga masukkan fungsi callback untuk mengonfigurasi Smarty saat memuat
+// Daftarkan Smarty sebagai kelas tampilan
+// Juga lewati fungsi callback untuk mengonfigurasi Smarty saat dimuat
 Flight::register('view', Smarty::class, [], function (Smarty $smarty) {
   $smarty->setTemplateDir('./templates/');
   $smarty->setCompileDir('./templates_c/');
@@ -122,14 +117,14 @@ Flight::register('view', Smarty::class, [], function (Smarty $smarty) {
   $smarty->setCacheDir('./cache/');
 });
 
-// Menetapkan data template
+// Tetapkan data template
 Flight::view()->assign('name', 'Bob');
 
-// Menampilkan template
+// Tampilkan template
 Flight::view()->display('hello.tpl');
 ```
 
-Untuk kelengkapan, Anda juga harus menimpa metode render default dari Flight:
+Untuk kelengkapan, Anda juga harus menimpa metode render default Flight:
 
 ```php
 Flight::map('render', function(string $template, array $data): void {
@@ -140,23 +135,22 @@ Flight::map('render', function(string $template, array $data): void {
 
 ## Latte
 
-Ini adalah cara Anda menggunakan mesin template [Latte](https://latte.nette.org/) untuk tampilan Anda:
+Berikut cara menggunakan mesin template [Latte](https://latte.nette.org/) untuk tampilan Anda:
 
 ```php
-
-// Mendaftarkan Latte sebagai kelas tampilan
-// Juga masukkan fungsi callback untuk mengonfigurasi Latte saat memuat
+// Daftarkan Latte sebagai kelas tampilan
+// Juga lewati fungsi callback untuk mengonfigurasi Latte saat dimuat
 Flight::register('view', Latte\Engine::class, [], function (Latte\Engine $latte) {
-  // Di sinilah Latte akan menyimpan cache untuk template Anda agar lebih cepat
-	// Salah satu hal menarik tentang Latte adalah bahwa ia secara otomatis menyegarkan
-	// cache Anda ketika Anda melakukan perubahan pada template Anda!
+  // Di sinilah Latte akan menyimpan cache template Anda untuk mempercepat segalanya
+	// Satu hal menarik tentang Latte adalah bahwa ia secara otomatis menyegarkan
+	// cache saat Anda melakukan perubahan pada template Anda!
 	$latte->setTempDirectory(__DIR__ . '/../cache/');
 
-	// Beritahu Latte di mana direktori root untuk tampilan Anda akan berada.
+	// Beri tahu Latte di mana direktori akar untuk tampilan Anda akan berada.
 	$latte->setLoader(new \Latte\Loaders\FileLoader(__DIR__ . '/../views/'));
 });
 
-// Dan selesai sehingga Anda dapat menggunakan Flight::render() dengan benar
+// Dan akhiri sehingga Anda dapat menggunakan Flight::render() dengan benar
 Flight::map('render', function(string $template, array $data): void {
   // Ini seperti $latte_engine->render($template, $data);
   echo Flight::view()->render($template, $data);
@@ -165,7 +159,7 @@ Flight::map('render', function(string $template, array $data): void {
 
 ## Blade
 
-Ini adalah cara Anda menggunakan mesin template [Blade](https://laravel.com/docs/8.x/blade) untuk tampilan Anda:
+Berikut cara menggunakan mesin template [Blade](https://laravel.com/docs/8.x/blade) untuk tampilan Anda:
 
 Pertama, Anda perlu menginstal pustaka BladeOne melalui Composer:
 
@@ -177,11 +171,11 @@ Kemudian, Anda dapat mengonfigurasi BladeOne sebagai kelas tampilan di Flight:
 
 ```php
 <?php
-// Memuat pustaka BladeOne
+// Muat pustaka BladeOne
 use eftec\bladeone\BladeOne;
 
-// Mendaftarkan BladeOne sebagai kelas tampilan
-// Juga masukkan fungsi callback untuk mengonfigurasi BladeOne saat memuat
+// Daftarkan BladeOne sebagai kelas tampilan
+// Juga lewati fungsi callback untuk mengonfigurasi BladeOne saat dimuat
 Flight::register('view', BladeOne::class, [], function (BladeOne $blade) {
   $views = __DIR__ . '/../views';
   $cache = __DIR__ . '/../cache';
@@ -190,14 +184,14 @@ Flight::register('view', BladeOne::class, [], function (BladeOne $blade) {
   $blade->setCompiledPath($cache);
 });
 
-// Menetapkan data template
+// Tetapkan data template
 Flight::view()->share('name', 'Bob');
 
-// Menampilkan template
+// Tampilkan template
 echo Flight::view()->run('hello', []);
 ```
 
-Untuk kelengkapan, Anda juga harus menimpa metode render default dari Flight:
+Untuk kelengkapan, Anda juga harus menimpa metode render default Flight:
 
 ```php
 <?php
@@ -213,7 +207,7 @@ Dalam contoh ini, file template hello.blade.php mungkin terlihat seperti ini:
 Hello, {{ $name }}!
 ```
 
-Outputnya akan menjadi:
+Outputnya adalah:
 
 ```
 Hello, Bob!

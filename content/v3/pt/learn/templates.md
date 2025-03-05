@@ -1,18 +1,18 @@
-# Visualizações e Modelos HTML
+# Visões e Modelos HTML
 
 O Flight fornece algumas funcionalidades básicas de modelagem por padrão.
 
-O Flight permite que você troque o mecanismo de visualização padrão simplesmente registrando sua própria classe de visualização. Role para baixo para ver exemplos de como usar Smarty, Latte, Blade e mais!
+O Flight permite que você substitua o mecanismo de visualização padrão simplesmente registrando sua própria classe de visualização. Role para baixo para ver exemplos de como usar Smarty, Latte, Blade e mais!
 
 ## Mecanismo de Visualização Integrado
 
-Para exibir um modelo de visualização, chame o método `render` com o nome do arquivo do modelo e dados de modelo opcionais:
+Para exibir um modelo de visualização, chame o método `render` com o nome do arquivo de modelo e dados de modelo opcionais:
 
 ```php
 Flight::render('hello.php', ['name' => 'Bob']);
 ```
 
-Os dados do modelo que você passa são automaticamente injetados no modelo e podem ser referenciados como uma variável local. Os arquivos do modelo são simplesmente arquivos PHP. Se o conteúdo do arquivo do modelo `hello.php` for:
+Os dados do modelo que você passa são automaticamente injetados no modelo e podem ser referenciados como uma variável local. Os arquivos de modelo são simplesmente arquivos PHP. Se o conteúdo do arquivo de modelo `hello.php` for:
 
 ```php
 Hello, <?= $name ?>!
@@ -20,11 +20,11 @@ Hello, <?= $name ?>!
 
 A saída seria:
 
-```
+```text
 Hello, Bob!
 ```
 
-Você também pode definir manualmente as variáveis de visualização usando o método set:
+Você também pode definir variáveis de visualização manualmente usando o método set:
 
 ```php
 Flight::view()->set('name', 'Bob');
@@ -36,9 +36,9 @@ A variável `name` agora está disponível em todas as suas visualizações. Ent
 Flight::render('hello');
 ```
 
-Observe que ao especificar o nome do modelo no método render, você pode omitir a extensão `.php`.
+Observe que ao especificar o nome do modelo no método render, você pode deixar de fora a extensão `.php`.
 
-Por padrão, o Flight procurará um diretório `views` para arquivos de modelo. Você pode definir um caminho alternativo para seus modelos configurando o seguinte:
+Por padrão, o Flight irá procurar um diretório `views` para arquivos de modelo. Você pode definir um caminho alternativo para seus modelos configurando o seguinte:
 
 ```php
 Flight::set('flight.views.path', '/path/to/views');
@@ -46,7 +46,7 @@ Flight::set('flight.views.path', '/path/to/views');
 
 ### Layouts
 
-É comum que sites tenham um único arquivo de modelo de layout com conteúdo intercambiável. Para renderizar conteúdo a ser usado em um layout, você pode passar um parâmetro opcional para o método `render`.
+É comum que websites tenham um único arquivo de modelo de layout com conteúdo intercambiável. Para renderizar conteúdo a ser usado em um layout, você pode passar um parâmetro opcional para o método `render`.
 
 ```php
 Flight::render('header', ['heading' => 'Hello'], 'headerContent');
@@ -59,7 +59,7 @@ Sua visualização terá então variáveis salvas chamadas `headerContent` e `bo
 Flight::render('layout', ['title' => 'Home Page']);
 ```
 
-Se os arquivos do modelo se parecerem com isso:
+Se os arquivos de modelo forem assim:
 
 `header.php`:
 
@@ -102,14 +102,15 @@ A saída seria:
 
 ## Smarty
 
-Aqui está como você usaria o [Smarty](http://www.smarty.net/) para seus modelos:
+Aqui está como você usaria o [Smarty](http://www.smarty.net/)
+mecanismo de modelo para suas visualizações:
 
 ```php
-// Carregar a biblioteca Smarty
+// Carregar biblioteca Smarty
 require './Smarty/libs/Smarty.class.php';
 
-// Registrar o Smarty como a classe de visualização
-// Também passe uma função de retorno para configurar o Smarty no carregamento
+// Registrar Smarty como a classe de visualização
+// Também passe uma função de retorno para configurar o Smarty ao carregar
 Flight::register('view', Smarty::class, [], function (Smarty $smarty) {
   $smarty->setTemplateDir('./templates/');
   $smarty->setCompileDir('./templates_c/');
@@ -124,7 +125,7 @@ Flight::view()->assign('name', 'Bob');
 Flight::view()->display('hello.tpl');
 ```
 
-Para completar, você também deve substituir o método render padrão do Flight:
+Para completar, você também deve sobrescrever o método render padrão do Flight:
 
 ```php
 Flight::map('render', function(string $template, array $data): void {
@@ -135,19 +136,19 @@ Flight::map('render', function(string $template, array $data): void {
 
 ## Latte
 
-Aqui está como você usaria o [Latte](https://latte.nette.org/) para seus modelos:
+Aqui está como você usaria o [Latte](https://latte.nette.org/)
+mecanismo de modelo para suas visualizações:
 
 ```php
-
-// Registrar o Latte como a classe de visualização
-// Também passe uma função de retorno para configurar o Latte no carregamento
+// Registrar Latte como a classe de visualização
+// Também passe uma função de retorno para configurar o Latte ao carregar
 Flight::register('view', Latte\Engine::class, [], function (Latte\Engine $latte) {
-  // Aqui é onde o Latte irá armazenar em cache seus modelos para acelerar as coisas
+  // Aqui é onde o Latte irá armazenar seus modelos para acelerar as coisas
 	// Uma coisa interessante sobre o Latte é que ele atualiza automaticamente seu
 	// cache quando você faz alterações em seus modelos!
 	$latte->setTempDirectory(__DIR__ . '/../cache/');
 
-	// Informe ao Latte onde o diretório raiz para suas visualizações estará.
+	// Diga ao Latte onde estará o diretório raiz para suas visualizações.
 	$latte->setLoader(new \Latte\Loaders\FileLoader(__DIR__ . '/../views/'));
 });
 
@@ -160,7 +161,7 @@ Flight::map('render', function(string $template, array $data): void {
 
 ## Blade
 
-Aqui está como você usaria o [Blade](https://laravel.com/docs/8.x/blade) para seus modelos:
+Aqui está como você usaria o [Blade](https://laravel.com/docs/8.x/blade) mecanismo de modelo para suas visualizações:
 
 Primeiro, você precisa instalar a biblioteca BladeOne via Composer:
 
@@ -168,15 +169,15 @@ Primeiro, você precisa instalar a biblioteca BladeOne via Composer:
 composer require eftec/bladeone
 ```
 
-Então, você pode configurar o BladeOne como a classe de visualização no Flight:
+Em seguida, você pode configurar o BladeOne como a classe de visualização no Flight:
 
 ```php
 <?php
-// Carregar a biblioteca BladeOne
+// Carregar biblioteca BladeOne
 use eftec\bladeone\BladeOne;
 
-// Registrar o BladeOne como a classe de visualização
-// Também passe uma função de retorno para configurar o BladeOne no carregamento
+// Registrar BladeOne como a classe de visualização
+// Também passe uma função de retorno para configurar o BladeOne ao carregar
 Flight::register('view', BladeOne::class, [], function (BladeOne $blade) {
   $views = __DIR__ . '/../views';
   $cache = __DIR__ . '/../cache';
@@ -192,7 +193,7 @@ Flight::view()->share('name', 'Bob');
 echo Flight::view()->run('hello', []);
 ```
 
-Para completar, você também deve substituir o método render padrão do Flight:
+Para completar, você também deve sobrescrever o método render padrão do Flight:
 
 ```php
 <?php
@@ -214,4 +215,4 @@ A saída seria:
 Hello, Bob!
 ```
 
-Ao seguir essas etapas, você pode integrar o mecanismo de modelo Blade com o Flight e usá-lo para renderizar suas visualizações.
+Seguindo esses passos, você pode integrar o mecanismo de modelo Blade com o Flight e usá-lo para renderizar suas visualizações.

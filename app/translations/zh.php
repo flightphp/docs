@@ -19,4 +19,5 @@ return [
     'need_to_view_single_page' => '需要查看单页？',
     'media' => '媒体',
 	'version' => '版本',
+	'guides' => '指南',
 ];

@@ -19,4 +19,5 @@ return [
     'need_to_view_single_page' => 'Vai nepieciešams skatīt vienas lapas dokumentāciju?',
     'media' => 'Mediji',
 	'version' => 'Versija',
+	'guides' => 'Rokasgrāmatas',
 ];

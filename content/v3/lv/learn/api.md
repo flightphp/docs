@@ -1,56 +1,58 @@
-# Ietvara API Metodes
+# Rāmis API Metodes
 
-Flight ir radīts, lai būtu viegli lietojams un saprotams. Zemāk ir pilnīgs
-metožu kopa ietvarā. Tā sastāv no pamatmetodēm, kas ir regulāras
-statiskās metodes, un paplašināmām metodēm, kas ir atkarinātas metodes, kas var tikt filtrētas
-vai pārrakstītas.
+Flight ir izstrādāta, lai būtu viegli lietojama un saprotama. Tālāk ir sniegts pilnīgs
+metožu kopums rāmim. Tas sastāv no kodola metodēm, kuras ir parastas
+statiskas metodes, un paplašināmām metodēm, kuras ir kartētas metodes, ko var filtrēt
+vai pārrakstīt.
 
-## Pamatmetodes
+## Kodola Metodes
 
-Šīs metodes ir pamata ietvarā un tās nevar tikt pārrakstītas.
+Šīs metodes ir centrālās rāmim un tās nevar tikt pārrakstītas.
 
 ```php
-Flight::map(virkne $name, callable $callback, bool $pass_route = false) // Izveido pielāgotu ietvara metodi.
-Flight::register(virkne $name, virkne $class, masīvs $params = [], ?callable $callback = null) // Reģistrē klasi ietvara metodē.
-Flight::unregister(virkne $name) // Atceļ klasi no ietvara metodes.
-Flight::before(virkne $name, callable $callback) // Pievieno filtru pirms ietvara metodes.
-Flight::after(virkne $name, callable $callback) // Pievieno filtru pēc ietvara metodes.
-Flight::path(virkne $path) // Pievieno ceļu klasēm automātiskai ielādei.
-Flight::get(virkne $key) // Iegūst mainīgo, ko iestatījis Flight::set().
-Flight::set(virkne $key, mixed $value) // Iestata mainīgo Flight dzinējā.
-Flight::has(virkne $key) // Pārbauda, vai mainīgais ir iestatīts.
-Flight::clear(masīvs|virkne $key = []) // Notīra mainīgo.
-Flight::init() // Inicializē ietvaru uz tās noklusējuma iestatījumiem.
-Flight::app() // Iegūst pieteikumu objekta instanci
-Flight::request() // Iegūst pieprasījuma objekta instanci
-Flight::response() // Iegūst atbildes objekta instanci
-Flight::router() // Iegūst maršrutētāja objekta instanci
-Flight::view() // Iegūst skata objekta instanci
+Flight::map(string $name, callable $callback, bool $pass_route = false) // Izveido pielāgotu rāmja metodi.
+Flight::register(string $name, string $class, array $params = [], ?callable $callback = null) // Reģistrē klasi rāmja metodei.
+Flight::unregister(string $name) // Atceļ klases reģistrāciju rāmja metodei.
+Flight::before(string $name, callable $callback) // Pievieno filtru pirms rāmja metodes.
+Flight::after(string $name, callable $callback) // Pievieno filtru pēc rāmja metodes.
+Flight::path(string $path) // Pievieno ceļu klases automātiskai ielādēšanai.
+Flight::get(string $key) // Iegūst mainīgo, ko iestata Flight::set().
+Flight::set(string $key, mixed $value) // Iestata mainīgo Flight dzinī.
+Flight::has(string $key) // Pārbauda, vai mainīgais ir iestatīts.
+Flight::clear(array|string $key = []) // Notīra mainīgo.
+Flight::init() // Inicializē rāmi uz noklusējuma iestatījumiem.
+Flight::app() // Iegūst lietotnes objekta instanci.
+Flight::request() // Iegūst pieprasījuma objekta instanci.
+Flight::response() // Iegūst atbildes objekta instanci.
+Flight::router() // Iegūst maršrutētāja objekta instanci.
+Flight::view() // Iegūst skata objekta instanci.
 ```
 
-## Paplašināmas metodes
+## Paplašināmās Metodes
 
 ```php
-Flight::start() // Sāk ietvaru.
-Flight::stop() // Aptur ietvaru un nosūta atbildi.
-Flight::halt(int $code = 200, virkne $message = '') // Aptur ietvaru ar neobligātu statusa kodu un ziņojumu.
-Flight::route(virkne $pattern, callable $callback, bool $pass_route = false, virkne $alias = '') // Atkarina URL modeli uz atgriezšanu.
-Flight::post(virkne $pattern, callable $callback, bool $pass_route = false, virkne $alias = '') // Atkarina POST pieprasījuma URL modeli uz atgriezšanu.
-Flight::put(virkne $pattern, callable $callback, bool $pass_route = false, virkne $alias = '') // Atkarina PUT pieprasījuma URL modeli uz atgriezšanu.
-Flight::patch(virkne $pattern, callable $callback, bool $pass_route = false, virkne $alias = '') // Atkarina PATCH pieprasījuma URL modeli uz atgriezšanu.
-Flight::delete(virkne $pattern, callable $callback, bool $pass_route = false, virkne $alias = '') // Atkarina DELETE pieprasījuma URL modeli uz atgriezšanu.
-Flight::group(virkne $pattern, callable $callback) // Izveido grupu URL, modelim jābūt teksta virknei.
-Flight::getUrl(virkne $name, masīvs $params = []) // Ģenerē URL, pamatojoties uz maršruta aliasu.
-Flight::redirect(virkne $url, int $code) // Novirza uz citu URL.
-Flight::download(virkne $filePath) // Lejupielādē failu.
-Flight::render(virkne $file, masīvs $data, ?string $key = null) // Renderē veidni failam.
+Flight::start() // Sāk rāmja darbību.
+Flight::stop() // Apstājas rāmja darbība un nosūta atbildi.
+Flight::halt(int $code = 200, string $message = '') // Apstājas rāmja darbība ar opciju statusa kodu un ziņojumu.
+Flight::route(string $pattern, callable $callback, bool $pass_route = false, string $alias = '') // Kartē URL paraugu uz atbildes funkciju.
+Flight::post(string $pattern, callable $callback, bool $pass_route = false, string $alias = '') // Kartē POST pieprasījuma URL paraugu uz atbildes funkciju.
+Flight::put(string $pattern, callable $callback, bool $pass_route = false, string $alias = '') // Kartē PUT pieprasījuma URL paraugu uz atbildes funkciju.
+Flight::patch(string $pattern, callable $callback, bool $pass_route = false, string $alias = '') // Kartē PATCH pieprasījuma URL paraugu uz atbildes funkciju.
+Flight::delete(string $pattern, callable $callback, bool $pass_route = false, string $alias = '') // Kartē DELETE pieprasījuma URL paraugu uz atbildes funkciju.
+Flight::group(string $pattern, callable $callback) // Izveido grupēšanu URL, paraugam jābūt virknē.
+Flight::getUrl(string $name, array $params = []) // Ģenerē URL, pamatojoties uz maršruta aliasu.
+Flight::redirect(string $url, int $code) // Pāradresē uz citu URL.
+Flight::download(string $filePath) // Lejupielādē failu.
+Flight::render(string $file, array $data, ?string $key = null) // Attēlo veidnes failu.
 Flight::error(Throwable $error) // Nosūta HTTP 500 atbildi.
 Flight::notFound() // Nosūta HTTP 404 atbildi.
-Flight::etag(virkne $id, virkne $type = 'string') // Veic ETag HTTP kešatmiņu.
-Flight::lastModified(int $time) // Veic pēdējo modificēto HTTP kešošanu.
-Flight::json(mixed $data, int $code = 200, bool $encode = true, virkne $charset = 'utf8', int $option) // Nosūta JSON atbildi.
-Flight::jsonp(mixed $data, virkne $param = 'jsonp', int $code = 200, bool $encode = true, virkne $charset = 'utf8', int $option) // Nosūta JSONP atbildi.
-Flight::jsonHalt(mixed $data, int $code = 200, bool $encode = true, virkne $charset = 'utf8', int $option) // Nosūta JSON atbildi un aptur ietvaru.
+Flight::etag(string $id, string $type = 'string') // Veic ETag HTTP kešatmiņu.
+Flight::lastModified(int $time) // Veic pēdējās izmaiņas HTTP kešatmiņu.
+Flight::json(mixed $data, int $code = 200, bool $encode = true, string $charset = 'utf8', int $option) // Nosūta JSON atbildi.
+Flight::jsonp(mixed $data, string $param = 'jsonp', int $code = 200, bool $encode = true, string $charset = 'utf8', int $option) // Nosūta JSONP atbildi.
+Flight::jsonHalt(mixed $data, int $code = 200, bool $encode = true, string $charset = 'utf8', int $option) // Nosūta JSON atbildi un apstājas rāmja darbība.
+Flight::onEvent(string $event, callable $callback) // Reģistrē notikumu klausītāju.
+Flight::triggerEvent(string $event, ...$args) // Izsauc notikumu.
 ```
 
-Jebkuras pielāgotas metodes, kas pievienotas ar `map` un `register`, var tikt filtrētas. Piemēru par to, kā atkarināt šīs metodes, skatīt [Paplašinot Flight](/learn/extending) rokasgrāmatā.
+Jebkuras pielāgotas metodes, kas pievienotas ar `map` un `register`, var arī tikt filtrētas. Lai iegūtu piemērus, kā kartēt šīs metodes, skatiet [Paplašinot Flight](/learn/extending) ceļvedi.

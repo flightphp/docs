@@ -1,34 +1,34 @@
-# Iepazīstieties ar Flight
+# Uzziniet par Flight
 
-Flight ir ātrs, vienkāršs, paplašināms rāmis PHP. Tas ir diezgan daudzveidīgs un var tikt izmantots, lai veidotu jebkura veida tīmekļa lietojumprogrammas. 
-Tas ir izstrādāts, ņemot vērā vienkāršību, un ir uzrakstīts tā, lai to būtu viegli saprast un lietot.
+Flight ir ātra, vienkārša, paplašināma PHP ietvars. Tas ir diezgan daudzpusīgs un to var izmantot jebkura veida tīmekļa lietojumprogrammu izveidošanai. 
+Tas ir izstrādāts ar vienkāršību prātā un ir uzrakstīts veidā, kas ir viegli saprotams un lietojams.
 
-## Svarīgas rāmja koncepcijas
+## Svarīgas ietvara koncepcijas
 
-##### [Kāpēc rāmis?](/learn/why-frameworks)
+##### [Kāpēc ietvars?](/learn/why-frameworks)
 
-Šeit ir īss raksts par to, kāpēc jums vajadzētu izmantot rāmi. Ir laba ideja saprast rāma izmantošanas priekšrocības, pirms sākat to lietot.
+Šeit ir īss raksts par to, kāpēc jums vajadzētu izmantot ietvaru. Ir laba prakse saprast ietvaru izmantošanas priekšrocības, pirms sākat to lietot.
 
-Turklāt lielisks pamācība ir izstrādāta no [@lubiana](https://git.php.fail/lubiana). Lai gan tā nesniedz lielu sīkāku informāciju par Flight konkrēti, 
-šis ceļvedis palīdzēs jums saprast dažas no galvenajām koncepcijām, kas saistītas ar rāmi un kāpēc tās ir izdevīgas lietošanai. 
+Turklāt lielisks pamācību ir izveidojis [@lubiana](https://git.php.fail/lubiana). Lai gan tā nesniedz lielu detalizāciju par Flight konkrēti, 
+šis ceļvedis palīdzēs jums saprast dažas no galvenajām koncepcijām, kas saistītas ar ietvaru, un kāpēc tās ir izdevīgas lietošanai. 
 Jūs varat atrast pamācību [šeit](https://git.php.fail/lubiana/no-framework-tutorial/src/branch/master/README.md).
 
-##### [Flight salīdzinājumā ar citiem rāmjiem](/learn/flight-vs-another-framework)
-Ja jūs pārejat no cita rāmja, piemēram, Laravel, Slim, Fat-Free vai Symfony uz Flight, šī lapa palīdzēs jums saprast atšķirības starp abiem.
+##### [Flight salīdzinājumā ar citiem ietvariem](/learn/flight-vs-another-framework)
+Ja jūs pārvietojaties no cita ietvara, piemēram, Laravel, Slim, Fat-Free vai Symfony uz Flight, šī lapa palīdzēs jums saprast atšķirības starp abiem.
 
 ## Galvenie temati
 
-##### [Automātiska ielāde](/learn/autoloading)
+##### [Automātiska iekļaušana](/learn/autoloading)
 
-Uzziniet, kā automātiski ielādēt savas klases jūsu lietojumprogrammā.
+Uzziniet, kā automātiski iekļaut savas klases jūsu lietojumprogrammā.
 
 ##### [Maršrutēšana](/learn/routing)
 
-Uzziniet, kā pārvaldīt maršrutus jūsu tīmekļa lietojumprogrammā. Tas ietver arī maršrutu grupēšanu, maršruta parametrus un starpprogrammas.
+Uzziniet, kā pārvaldīt maršrutus jūsu tīmekļa lietojumprogrammā. Tas ietver arī maršrutu grupēšanu, maršrutu parametrus un vidusdienu programmas.
 
-##### [Starpprogramma](/learn/middleware)
+##### [Vidusdienas programmas](/learn/middleware)
 
-Uzziniet, kā izmantot starpprogrammu, lai filtrētu pieprasījumus un atbildes jūsu lietojumprogrammā.
+Uzziniet, kā izmantot vidusdienas programmas, lai filtrētu pieprasījumus un atbildes jūsu lietojumprogrammā.
 
 ##### [Pieprasījumi](/learn/requests)
 
@@ -38,36 +38,40 @@ Uzziniet, kā apstrādāt pieprasījumus un atbildes jūsu lietojumprogrammā.
 
 Uzziniet, kā sūtīt atbildes saviem lietotājiem.
 
+##### [Notikumi](/learn/events)
+
+Uzziniet, kā izmantot notikumu sistēmu, lai pievienotu pielāgotus notikumus jūsu lietojumprogrammā.
+
 ##### [HTML veidnes](/learn/templates)
 
-Uzziniet, kā izmantot iebūvēto skata dzinēju, lai attēlotu savas HTML veidnes.
+Uzziniet, kā izmantot iebūvēto skatījumu dzinēju, lai attēlotu savas HTML veidnes.
 
 ##### [Drošība](/learn/security)
 
-Uzziniet, kā nodrošināt savu lietojumprogrammu pret izplatītām drošības draudiem.
+Uzziniet, kā nodrošināt savu lietojumprogrammu pret izplatītām drošības apdraudējumiem.
 
 ##### [Konfigurācija](/learn/configuration)
 
-Uzziniet, kā konfigurēt rāmji jūsu lietojumprogrammai.
+Uzziniet, kā konfigurēt ietvaru jūsu lietojumprogrammai.
 
-##### [Flight paplašināšana](/learn/extending)
+##### [Paplašinot Flight](/learn/extending)
 
-Uzziniet, kā paplašināt rāmi, pievienojot savas metodes un klases.
+Uzziniet, kā paplašināt ietvaru, pievienojot savas metodes un klases.
 
 ##### [Notikumi un filtrēšana](/learn/filtering)
 
-Uzziniet, kā izmantot notikumu sistēmu, lai pievienotu piekļuves punktus savām metodēm un iekšējām rāmja metodēm.
+Uzziniet, kā izmantot notikumu sistēmu, lai pievienotu āķus savām metodēm un iekšējām ietvara metodēm.
 
-##### [Atkarību injekcijas konteiners](/learn/dependency-injection-container)
+##### [Atkarību injekcijas konteineris](/learn/dependency-injection-container)
 
 Uzziniet, kā izmantot atkarību injekcijas konteinerus (DIC), lai pārvaldītu jūsu lietojumprogrammas atkarības.
 
-##### [Rāmja API](/learn/api)
+##### [Ietvara API](/learn/api)
 
-Uzziniet par rāmja pamatmetodēm.
+Uzziniet par ietvara pamatmetodēm.
 
 ##### [Migrācija uz v3](/learn/migrating-to-v3)
-Atpakaļsaderība lielākoties ir saglabāta, taču ir dažas izmaiņas, par kurām jums vajadzētu būt informētam, pārejot no v2 uz v3.
+Atpakaļsaderība lielākajā daļā ir saglabāta, taču ir dažas izmaiņas, par kurām jums vajadzētu būt informētam, pārejot no v2 uz v3.
 
-##### [Problēmu risināšana](/learn/troubleshooting)
-Ir daži bieži sastopami jautājumi, ar kuriem jūs varat saskarties, lietojot Flight. Šī lapa palīdzēs jums risināt šīs problēmas.
+##### [Problemu novēršana](/learn/troubleshooting)
+Pastāv dažas izplatītas problēmas, ar kurām jūs varētu saskarties, lietojot Flight. Šī lapa palīdzēs jums novērst šīs problēmas.

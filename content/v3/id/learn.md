@@ -1,26 +1,26 @@
 # Pelajari Tentang Flight
 
-Flight adalah framework PHP yang cepat, sederhana, dan dapat diperluas. Ini cukup serbaguna dan dapat digunakan untuk membangun berbagai jenis aplikasi web. 
+Flight adalah kerangka kerja PHP yang cepat, sederhana, dan dapat diperluas. Ini cukup serbaguna dan dapat digunakan untuk membangun berbagai macam aplikasi web. 
 Ini dibangun dengan kesederhanaan dalam pikiran dan ditulis dengan cara yang mudah dipahami dan digunakan.
 
-## Konsep Penting dalam Framework
+## Konsep Kerangka Kerja yang Penting
 
-##### [Mengapa Menggunakan Framework?](/learn/why-frameworks)
+##### [Mengapa Kerangka Kerja?](/learn/why-frameworks)
 
-Berikut adalah artikel singkat tentang mengapa Anda harus menggunakan framework. Ini adalah ide yang baik untuk memahami manfaat menggunakan framework sebelum Anda mulai menggunakannya.
+Berikut adalah artikel singkat tentang mengapa Anda harus menggunakan kerangka kerja. Ini adalah ide bagus untuk memahami manfaat menggunakan kerangka kerja sebelum Anda mulai menggunakannya.
 
-Selain itu, tutorial yang sangat baik telah dibuat oleh [@lubiana](https://git.php.fail/lubiana). Meskipun tidak membahas secara mendalam tentang Flight secara spesifik, 
-petunjuk ini akan membantu Anda memahami beberapa konsep utama seputar framework dan mengapa mereka bermanfaat untuk digunakan. 
-Anda dapat menemukan tutorial tersebut [di sini](https://git.php.fail/lubiana/no-framework-tutorial/src/branch/master/README.md).
+Selain itu, tutorial yang sangat baik telah dibuat oleh [@lubiana](https://git.php.fail/lubiana). Meskipun tidak membahas secara mendetail tentang Flight secara spesifik, 
+panduan ini akan membantu Anda memahami beberapa konsep utama yang mengelilingi kerangka kerja dan mengapa mereka bermanfaat untuk digunakan. 
+Anda dapat menemukan tutorial [di sini](https://git.php.fail/lubiana/no-framework-tutorial/src/branch/master/README.md).
 
-##### [Flight Dibandingkan dengan Framework Lain](/learn/flight-vs-another-framework)
-Jika Anda bermigrasi dari framework lain seperti Laravel, Slim, Fat-Free, atau Symfony ke Flight, halaman ini akan membantu Anda memahami perbedaan antara keduanya.
+##### [Flight Dibandingkan dengan Kerangka Kerja Lain](/learn/flight-vs-another-framework)
+Jika Anda berpindah dari kerangka kerja lain seperti Laravel, Slim, Fat-Free, atau Symfony ke Flight, halaman ini akan membantu Anda memahami perbedaan antara keduanya.
 
 ## Topik Inti
 
-##### [Autoloading](/learn/autoloading)
+##### [Pengautoloadan](/learn/autoloading)
 
-Pelajari cara meng-autoload kelas Anda sendiri dalam aplikasi Anda.
+Pelajari cara mengautoload kelas Anda sendiri dalam aplikasi Anda.
 
 ##### [Routing](/learn/routing)
 
@@ -28,46 +28,50 @@ Pelajari cara mengelola rute untuk aplikasi web Anda. Ini juga termasuk pengelom
 
 ##### [Middleware](/learn/middleware)
 
-Pelajari cara menggunakan middleware untuk memfilter permintaan dan respon dalam aplikasi Anda.
+Pelajari cara menggunakan middleware untuk menyaring permintaan dan respons dalam aplikasi Anda.
 
-##### [Requests](/learn/requests)
+##### [Permintaan](/learn/requests)
 
-Pelajari cara menangani permintaan dan respon dalam aplikasi Anda.
+Pelajari cara menangani permintaan dan respons dalam aplikasi Anda.
 
-##### [Responses](/learn/responses)
+##### [Respons](/learn/responses)
 
-Pelajari cara mengirim respon kepada pengguna Anda.
+Pelajari cara mengirim respons kepada pengguna Anda.
 
-##### [HTML Templates](/learn/templates)
+##### [Peristiwa](/learn/events)
+
+Pelajari cara menggunakan sistem peristiwa untuk menambahkan peristiwa khusus ke aplikasi Anda.
+
+##### [Template HTML](/learn/templates)
 
 Pelajari cara menggunakan mesin tampilan bawaan untuk merender template HTML Anda.
 
 ##### [Keamanan](/learn/security)
 
-Pelajari cara mengamankan aplikasi Anda dari ancaman keamanan yang umum.
+Pelajari cara mengamankan aplikasi Anda dari ancaman keamanan umum.
 
 ##### [Konfigurasi](/learn/configuration)
 
-Pelajari cara mengonfigurasi framework untuk aplikasi Anda.
+Pelajari cara mengonfigurasi kerangka kerja untuk aplikasi Anda.
 
 ##### [Memperluas Flight](/learn/extending)
 
-Pelajari cara memperluas framework dengan menambahkan metode dan kelas Anda sendiri.
+Pelajari cara memperluas kerangka kerja dengan menambahkan metode dan kelas Anda sendiri.
 
-##### [Event dan Penyaringan](/learn/filtering)
+##### [Peristiwa dan Penyaringan](/learn/filtering)
 
-Pelajari cara menggunakan sistem event untuk menambahkan hook ke metode Anda dan metode internal framework.
+Pelajari cara menggunakan sistem peristiwa untuk menambahkan hook ke metode Anda dan metode kerangka kerja internal.
 
-##### [Kontainer Injeksi Ketergantungan](/learn/dependency-injection-container)
+##### [Kontainer Penyuntikan Ketergantungan](/learn/dependency-injection-container)
 
-Pelajari cara menggunakan kontainer injeksi ketergantungan (DIC) untuk mengelola ketergantungan aplikasi Anda.
+Pelajari cara menggunakan kontainer penyuntikan ketergantungan (DIC) untuk mengelola ketergantungan aplikasi Anda.
 
-##### [API Framework](/learn/api)
+##### [API Kerangka Kerja](/learn/api)
 
-Pelajari tentang metode inti dari framework.
+Pelajari tentang metode inti dari kerangka kerja.
 
 ##### [Migrasi ke v3](/learn/migrating-to-v3)
-Kompatibilitas mundur sebagian besar telah dipertahankan, tetapi ada beberapa perubahan yang harus Anda ketahui saat bermigrasi dari v2 ke v3.
+Kompatibilitas ke belakang sebagian besar telah dipertahankan, tetapi ada beberapa perubahan yang harus Anda ketahui saat bermigrasi dari v2 ke v3.
 
-##### [Memecahkan Masalah](/learn/troubleshooting)
+##### [Pemecahan Masalah](/learn/troubleshooting)
 Ada beberapa masalah umum yang mungkin Anda temui saat menggunakan Flight. Halaman ini akan membantu Anda memecahkan masalah tersebut.
