@@ -361,6 +361,7 @@ if (password_verify($password, $stored_hash)) {
 Protect against brute force attacks by limiting request rates with a cache.
 
 ```php
+// Assuming you have flightphp/cache installed and registered
 // Using flightphp/cache in a middleware
 Flight::before('start', function() {
     $cache = Flight::cache();
