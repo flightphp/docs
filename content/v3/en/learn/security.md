@@ -311,6 +311,71 @@ $CorsUtil = new CorsUtil();
 Flight::before('start', [ $CorsUtil, 'setupCors' ]);
 ```
 
+## Error Handling
+Hide sensitive error details in production to avoid leaking info to attackers.
+
+```php
+// In your bootstrap.php or index.php
+
+// in flightphp/skeleton, this is in app/config/config.php
+$environment = ENVIRONMENT;
+if ($environment === 'production') {
+    ini_set('display_errors', 0); // Disable error display
+    ini_set('log_errors', 1);     // Log errors instead
+    ini_set('error_log', '/path/to/error.log');
+}
+
+// In your routes or controllers
+// Use Flight::halt() for controlled error responses
+Flight::halt(403, 'Access denied');
+```
+
+## Input Sanitization
+Never trust user input. Sanitize it before processing to prevent malicious data from sneaking in.
+
+```php
+
+// Lets assume a $_POST request with $_POST['input'] and $_POST['email']
+
+// Sanitize a string input
+$clean_input = filter_var(Flight::request()->data->input, FILTER_SANITIZE_STRING);
+// Sanitize an email
+$clean_email = filter_var(Flight::request()->data->email, FILTER_SANITIZE_EMAIL);
+```
+
+## Password Hashing
+Store passwords securely and verify them safely using PHP’s built-in functions.
+
+```php
+$password = Flight::request()->data->password;
+// Hash a password when storing (e.g., during registration)
+$hashed_password = password_hash($password, PASSWORD_DEFAULT);
+
+// Verify a password (e.g., during login)
+if (password_verify($password, $stored_hash)) {
+    // Password matches
+}
+```
+
+## Rate Limiting
+Protect against brute force attacks by limiting request rates with a cache.
+
+```php
+// Using flightphp/cache in a middleware
+Flight::before('start', function() {
+    $cache = Flight::cache();
+    $ip = Flight::request()->ip;
+    $key = "rate_limit_{$ip}";
+    $attempts = (int) $cache->retrieve($key);
+    
+    if ($attempts >= 10) {
+        Flight::halt(429, 'Too many requests');
+    }
+    
+    $cache->set($key, $attempts + 1, 60); // Reset after 60 seconds
+});
+```
+
 ## Conclusion
 
 Security is a big deal and it's important to make sure your web applications are secure. Flight provides a number of features to help you 
