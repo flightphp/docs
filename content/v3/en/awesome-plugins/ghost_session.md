@@ -27,7 +27,7 @@ $app = Flight::app();
 $app->register('session', Session::class);
 
 // one thing to remember is that you must commit your session on each page load
-// or you'll need to run auto_commit in your configuration.
+// or you'll need to run auto_commit in your configuration. 
 ```
 
 ## Simple Example

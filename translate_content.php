@@ -5,6 +5,12 @@
 // You'll need your own chatgpt key to run this script
 $chatgpt_key = getenv('CHATGPT_KEY');
 
+$filenames_to_skip = [
+	// 'awesome_plugins.md',
+	// 'session.md',
+	// 'security.md',
+];
+
 if (empty($chatgpt_key)) {
     echo "You need to set the CHATGPT_KEY environment variable to run this script" . PHP_EOL;
 
@@ -46,6 +52,11 @@ foreach ($files as $file) {
         echo "  **Skipping file because it's older than the from-date**" . PHP_EOL;
         continue;
     }
+
+	if(in_array(basename($file), $filenames_to_skip)) {
+		echo "  **Skipping file because it's in the skip list**" . PHP_EOL;
+		continue;
+	}
 
     foreach ($languages as $languageAbbreviation) {
         $full_response = '';
