@@ -1,147 +1,176 @@
-# Ghostff/Session
+# FlightPHP セッション - 軽量ファイルベースのセッションハンドラー
 
-PHPセッションマネージャー（非同期、フラッシュ、セグメント、セッション暗号化）。セッションデータのオプションの暗号化/復号にPHP open_sslを使用します。ファイル、MySQL、Redis、およびMemcachedをサポートしています。
+これは、[Flight PHP Framework](https://docs.flightphp.com/) のための軽量なファイルベースのセッションハンドラープラグインです。これは、セッションの管理に関してシンプルでありながら強力なソリューションを提供し、ブロッキングしないセッションの読み取り、任意の暗号化、自動コミット機能、開発用のテストモードなどの機能を備えています。セッションデータはファイルに保存されるため、データベースを必要としないアプリケーションに最適です。
 
-[こちら](https://github.com/Ghostff/Session)をクリックしてコードを表示してください。
+データベースを使用したい場合は、データベースバックエンドを持つこれらの同様の機能を多数備えた[ghostff/session](/awesome-plugins/ghost-session)プラグインをチェックしてください。
+
+完全なソースコードと詳細は、[Githubリポジトリ](https://github.com/flightphp/session)を訪れてください。
 
 ## インストール
 
-Composerを使用してインストールしてください。
+Composerを介してプラグインをインストールします：
 
 ```bash
-composer require ghostff/session
+composer require flightphp/session
 ```
 
-## 基本的な設定
+## 基本的な使い方
 
-デフォルトの設定を使用するには何も渡す必要はありません。詳細な設定については、[Github Readme](https://github.com/Ghostff/Session)を参照してください。
+ここでは、Flightアプリケーションで`flightphp/session`プラグインを使用する簡単な例を示します：
 
 ```php
-
-use Ghostff\Session\Session;
-
 require 'vendor/autoload.php';
+
+use flight\Session;
 
 $app = Flight::app();
 
+// セッションサービスを登録
 $app->register('session', Session::class);
 
-// 1つ覚えておくべきことは、各ページの読み込みごとにセッションをコミットする必要があることです
-// または構成でauto_commitを実行する必要があります。
+// セッションを使用した例のルート
+Flight::route('/login', function() {
+    $session = Flight::session();
+    $session->set('user_id', 123);
+    $session->set('username', 'johndoe');
+    $session->set('is_admin', false);
+
+    echo $session->get('username'); // 出力: johndoe
+    echo $session->get('preferences', 'default_theme'); // 出力: default_theme
+
+    if ($session->get('user_id')) {
+        Flight::json(['message' => 'ユーザーはログインしています！', 'user_id' => $session->get('user_id')]);
+    }
+});
+
+Flight::route('/logout', function() {
+    $session = Flight::session();
+    $session->clear(); // すべてのセッションデータをクリア
+    Flight::json(['message' => '正常にログアウトしました']);
+});
+
+Flight::start();
 ```
 
-## シンプルな例
+### 重要なポイント
+- **ノンブロッキング**: セッションスタートのデフォルトとして`read_and_close`を使用し、セッションロックの問題を防ぎます。
+- **自動コミット**: デフォルトで有効になっており、無効にされない限り、シャットダウン時に変更が自動的に保存されます。
+- **ファイルストレージ**: セッションはデフォルトで`/flight_sessions`の下にあるシステムの一時ディレクトリに保存されます。
 
-以下は、この方法を使用する例です。
+## 設定
+
+セッションハンドラーを登録する際に、オプションの配列を渡すことでカスタマイズできます：
 
 ```php
-Flight::route('POST /login', function() {
-	$session = Flight::session();
+$app->register('session', Session::class, [
+    'save_path' => '/custom/path/to/sessions',         // セッションファイルのディレクトリ
+    'encryption_key' => 'a-secure-32-byte-key-here',   // 暗号化を有効にする（AES-256-CBCに推奨される32バイト）
+    'auto_commit' => false,                            // 手動制御のため自動コミットを無効にする
+    'start_session' => true,                           // 自動的にセッションを開始する（デフォルト: true）
+    'test_mode' => false                               // 開発用にテストモードを有効にする
+]);
+```
 
-	// ここにログインロジックなどを記述します
-	// パスワードの検証などを行います
+### 設定オプション
+| オプション          | 説明                                           | デフォルト値                        |
+|--------------------|-----------------------------------------------|-------------------------------------|
+| `save_path`        | セッションファイルが保存されるディレクトリ   | `sys_get_temp_dir() . '/flight_sessions'` |
+| `encryption_key`   | AES-256-CBC暗号化用のキー（オプション）      | `null`（暗号化なし）                |
+| `auto_commit`      | シャットダウン時にセッションデータを自動保存 | `true`                              |
+| `start_session`    | 自動的にセッションを開始                     | `true`                              |
+| `test_mode`        | PHPセッションに影響を与えずにテストモードで実行 | `false`                             |
+| `test_session_id`  | テストモード用のカスタムセッションID（オプション） | 設定されていない場合はランダムに生成  |
 
-	// ログインに成功した場合
-	$session->set('is_logged_in', true);
-	$session->set('user', $user);
+## 高度な使い方
 
-	// セッションに書き込むたびに、明示的にコミットする必要があります。
-	$session->commit();
+### 手動コミット
+自動コミットを無効にすると、変更を手動でコミットする必要があります：
+
+```php
+$app->register('session', Session::class, ['auto_commit' => false]);
+
+Flight::route('/update', function() {
+    $session = Flight::session();
+    $session->set('key', 'value');
+    $session->commit(); // 明示的に変更を保存
 });
+```
 
-// このチェックは制限されたページのロジック内にあるか、ミドルウェアでラップされています。
-Flight::route('/some-restricted-page', function() {
-	$session = Flight::session();
+### 暗号化によるセッションのセキュリティ
+機密データのために暗号化を有効にします：
 
-	if(!$session->get('is_logged_in')) {
-		Flight::redirect('/login');
-	}
+```php
+$app->register('session', Session::class, [
+    'encryption_key' => 'your-32-byte-secret-key-here'
+]);
 
-	// ここに制限されたページのロジックを記述します
+Flight::route('/secure', function() {
+    $session = Flight::session();
+    $session->set('credit_card', '4111-1111-1111-1111'); // 自動的に暗号化されます
+    echo $session->get('credit_card'); // 取得時に復号化されます
 });
+```
 
-// ミドルウェアバージョン
-Flight::route('/some-restricted-page', function() {
-	// 通常のページロジック
+### セッション再生成
+セキュリティのためにセッションIDを再生成します（例: ログイン後）：
+
+```php
+Flight::route('/post-login', function() {
+    $session = Flight::session();
+    $session->regenerate(); // 新しいID、データを保持
+    // または
+    $session->regenerate(true); // 新しいID、古いデータを削除
+});
+```
+
+### ミドルウェアの例
+セッションベースの認証でルートを保護します：
+
+```php
+Flight::route('/admin', function() {
+    Flight::json(['message' => '管理パネルへようこそ']);
 })->addMiddleware(function() {
-	$session = Flight::session();
-
-	if(!$session->get('is_logged_in')) {
-		Flight::redirect('/login');
-	}
+    $session = Flight::session();
+    if (!$session->get('is_admin')) {
+        Flight::halt(403, 'アクセス拒否');
+    }
 });
 ```
 
-## より複雑な例
+これはミドルウェアでの使い方の簡単な例です。詳細な例については、[ミドルウェア](/learn/middleware)のドキュメントを参照してください。
 
-以下は、この方法を使用するより複雑な例です。
+## メソッド
 
-```php
+`Session`クラスは以下のメソッドを提供します：
 
-use Ghostff\Session\Session;
+- `set(string $key, $value)`: セッションに値を保存します。
+- `get(string $key, $default = null)`: 値を取得し、キーが存在しない場合のオプションのデフォルトを提供します。
+- `delete(string $key)`: セッションから特定のキーを削除します。
+- `clear()`: すべてのセッションデータを削除します。
+- `commit()`: 現在のセッションデータをファイルシステムに保存します。
+- `id()`: 現在のセッションIDを返します。
+- `regenerate(bool $deleteOld = false)`: セッションIDを再生成し、オプションで古いデータを削除します。
 
-require 'vendor/autoload.php';
+`get()`と`id()`を除くすべてのメソッドは、チェーンのために`Session`インスタンスを返します。
 
-$app = Flight::app();
+## このプラグインを使用する理由
 
-// カスタムパスをセッション構成ファイルに設定し、セッションIDにランダムな文字列を指定します
-$app->register('session', Session::class, [ 'path/to/session_config.php', bin2hex(random_bytes(32)) ], function(Session $session) {
-		// または手動で構成オプションをオーバーライドできます
-		$session->updateConfiguration([
-			// セッションデータをデータベースに格納する場合（「すべてのデバイスからログアウト」のような機能が必要な場合に適しています）
-			Session::CONFIG_DRIVER        => Ghostff\Session\Drivers\MySql::class,
-			Session::CONFIG_ENCRYPT_DATA  => true,
-			Session::CONFIG_SALT_KEY      => hash('sha256', 'my-super-S3CR3T-salt'), // これを他のものに変更してください
-			Session::CONFIG_AUTO_COMMIT   => true, // 必要に応じておよび/またはセッションのコミットが難しい場合にのみ行います。
-												   // さらにFlight::after('start', function() { Flight::session()->commit(); });を実行できます。
-			Session::CONFIG_MYSQL_DS         => [
-				'driver'    => 'mysql',             # PDO dns用のデータベースドライバー 例(mysql:host=...;dbname=...)
-				'host'      => '127.0.0.1',         # データベースホスト
-				'db_name'   => 'my_app_database',   # データベース名
-				'db_table'  => 'sessions',          # データベースのテーブル
-				'db_user'   => 'root',              # データベースのユーザー名
-				'db_pass'   => '',                  # データベースのパスワード
-				'persistent_conn'=> false,          # スクリプトがデータベースに話すたびに新しい接続を確立するオーバーヘッドを避けるため、ウェブアプリケーションが高速になります。バックサイドを見つけてください
-			]
-		]);
-	}
-);
-```
+- **軽量**: 外部依存関係なし—ただのファイル。
+- **ノンブロッキング**: デフォルトで`read_and_close`でセッションロックを回避。
+- **安全**: 機密データのためのAES-256-CBC暗号化をサポート。
+- **柔軟**: 自動コミット、テストモードおよび手動コントロールオプション。
+- **Flightネイティブ**: Flightフレームワークのために特別に構築されています。
 
-## ヘルプ！セッションデータが保持されません！
+## 技術的詳細
 
-セッションデータを設定しており、リクエスト間で保持されていない場合は、セッションデータをコミットするのを忘れている可能性があります。これは、セッションデータを設定した後に`$session->commit()`を呼び出すことで行えます。
+- **ストレージ形式**: セッションファイルは`sess_`でプレフィックスされ、設定された`save_path`に保存されます。暗号化データは`E`プレフィックス、平文は`P`を使用します。
+- **暗号化**: `encryption_key`が提供される場合、各セッション書き込みに対してランダムIVを使用したAES-256-CBCを使用します。
+- **ガーベジコレクション**: PHPの`SessionHandlerInterface::gc()`を実装して、期限切れのセッションをクリーンアップします。
 
-```php
-Flight::route('POST /login', function() {
-	$session = Flight::session();
+## 貢献
 
-	// ここにログインロジックなどを記述します
-	// パスワードの検証などを行います
+貢献は歓迎します！[リポジトリ](https://github.com/flightphp/session)をフォークし、変更を加えてプルリクエストを送信してください。バグを報告するか、Githubのイシュートラッカーを通じて機能を提案してください。
 
-	// ログインに成功した場合
-	$session->set('is_logged_in', true);
-	$session->set('user', $user);
+## ライセンス
 
-	// セッションに書き込むたびに、明示的にコミットする必要があります。
-	$session->commit();
-});
-```
-
-別の方法は、セッションサービスを設定する際に、構成で`auto_commit`を`true`に設定することです。これにより、各リクエスト後に自動的にセッションデータがコミットされます。
-
-```php
-
-$app->register('session', Session::class, [ 'path/to/session_config.php', bin2hex(random_bytes(32)) ], function(Session $session) {
-		$session->updateConfiguration([
-			Session::CONFIG_AUTO_COMMIT   => true,
-		]);
-	}
-);
-```
-
-さらに、`Flight::after('start', function() { Flight::session()->commit(); });`を使用して、各リクエスト後にセッションデータをコミットできます。
-
-## ドキュメント
-
-詳細なドキュメントについては、[Github Readme](https://github.com/Ghostff/Session)をご覧ください。構成オプションは、[default_config.php](https://github.com/Ghostff/Session/blob/master/src/default_config.php)ファイル自体で詳細に説明されています。パッケージ自体を調査したい場合は、コードが理解しやすいです。
+このプラグインはMITライセンスの下でライセンスされています。詳細については、[Githubリポジトリ](https://github.com/flightphp/session)を参照してください。

@@ -1,147 +1,176 @@
-# Ghostff/Session
+# FlightPHP Sessão - Manipulador de Sessão Leve Baseado em Arquivo
 
-Gerenciador de Sessão PHP (não bloqueante, flash, segmento, criptografia de sessão). Usa PHP open_ssl para criptografia/descriptografia opcional de dados de sessão. Suporta Arquivo, MySQL, Redis e Memcached.
+Este é um plugin de manipulador de sessão leve e baseado em arquivo para o [Flight PHP Framework](https://docs.flightphp.com/). Ele fornece uma solução simples, mas poderosa para gerenciar sessões, com recursos como leituras de sessão não bloqueantes, criptografia opcional, funcionalidade de auto-confirmação e um modo de teste para desenvolvimento. Os dados da sessão são armazenados em arquivos, tornando-o ideal para aplicativos que não exigem um banco de dados.
 
-Clique [aqui](https://github.com/Ghostff/Session) para visualizar o código.
+Se você quiser usar um banco de dados, confira o plugin [ghostff/session](/awesome-plugins/ghost-session) com muitas dessas mesmas características, mas com um backend de banco de dados.
+
+Visite o [repositório do Github](https://github.com/flightphp/session) para o código-fonte completo e detalhes.
 
 ## Instalação
 
-Instale com o compositor.
+Instale o plugin via Composer:
 
 ```bash
-composer require ghostff/session
+composer require flightphp/session
 ```
 
-## Configuração Básica
+## Uso Básico
 
-Não é necessário passar nada para usar as configurações padrão com sua sessão. Você pode ler sobre mais configurações no [README do Github] (https://github.com/Ghostff/Session).
+Aqui está um exemplo simples de como usar o plugin `flightphp/session` em sua aplicação Flight:
 
 ```php
-
-use Ghostff\Session\Session;
-
 require 'vendor/autoload.php';
+
+use flight\Session;
 
 $app = Flight::app();
 
+// Registra o serviço de sessão
 $app->register('session', Session::class);
 
-// uma coisa a lembrar é que você deve confirmar sua sessão em cada carregamento de página
-// ou você precisará executar auto_commit em sua configuração.
+// Exemplo de rota com uso de sessão
+Flight::route('/login', function() {
+    $session = Flight::session();
+    $session->set('user_id', 123);
+    $session->set('username', 'johndoe');
+    $session->set('is_admin', false);
+
+    echo $session->get('username'); // Saída: johndoe
+    echo $session->get('preferences', 'default_theme'); // Saída: default_theme
+
+    if ($session->get('user_id')) {
+        Flight::json(['message' => 'Usuário está logado!', 'user_id' => $session->get('user_id')]);
+    }
+});
+
+Flight::route('/logout', function() {
+    $session = Flight::session();
+    $session->clear(); // Limpa todos os dados da sessão
+    Flight::json(['message' => 'Desconectado com sucesso']);
+});
+
+Flight::start();
 ```
 
-## Exemplo Simples
+### Pontos-Chave
+- **Não-Bloqueante**: Usa `read_and_close` para iniciar a sessão por padrão, evitando problemas de bloqueio de sessão.
+- **Auto-Confirmação**: Habilitado por padrão, então as alterações são salvas automaticamente no desligamento, a menos que desativado.
+- **Armazenamento em Arquivo**: Sessões são armazenadas no diretório temporário do sistema sob `/flight_sessions` por padrão.
 
-Aqui está um exemplo simples de como você pode usar isso.
+## Configuração
+
+Você pode personalizar o manipulador de sessão passando um array de opções ao registrá-lo:
 
 ```php
-Flight::route('POST /login', function() {
-	$session = Flight::session();
+$app->register('session', Session::class, [
+    'save_path' => '/custom/path/to/sessions',         // Diretório para os arquivos de sessão
+    'encryption_key' => 'a-secure-32-byte-key-here',   // Habilitar criptografia (32 bytes recomendado para AES-256-CBC)
+    'auto_commit' => false,                            // Desativar auto-confirmação para controle manual
+    'start_session' => true,                           // Iniciar sessão automaticamente (padrão: true)
+    'test_mode' => false                               // Habilitar modo de teste para desenvolvimento
+]);
+```
 
-	// faça sua lógica de login aqui
-	// validar senha, etc.
+### Opções de Configuração
+| Opção             | Descrição                                        | Valor Padrão                     |
+|-------------------|--------------------------------------------------|-----------------------------------|
+| `save_path`       | Diretório onde os arquivos de sessão são armazenados | `sys_get_temp_dir() . '/flight_sessions'` |
+| `encryption_key`  | Chave para criptografia AES-256-CBC (opcional)  | `null` (sem criptografia)        |
+| `auto_commit`     | Salvar dados da sessão automaticamente ao desligar | `true`                            |
+| `start_session`   | Iniciar a sessão automaticamente                  | `true`                            |
+| `test_mode`       | Executar em modo de teste sem afetar as sessões do PHP | `false`                           |
+| `test_session_id` | ID de sessão personalizado para o modo de teste (opcional) | Gerado aleatoriamente se não definido |
 
-	// se o login for bem-sucedido
-	$session->set('is_logged_in', true);
-	$session->set('user', $user);
+## Uso Avançado
 
-	// toda vez que você escreve na sessão, deve confirmá-la deliberadamente.
-	$session->commit();
+### Confirmação Manual
+Se você desativar a auto-confirmação, deverá confirmar manualmente as alterações:
+
+```php
+$app->register('session', Session::class, ['auto_commit' => false]);
+
+Flight::route('/update', function() {
+    $session = Flight::session();
+    $session->set('key', 'value');
+    $session->commit(); // Salva explicitamente as alterações
 });
+```
 
-// Esta verificação pode estar na lógica da página restrita ou envolvida com middleware.
-Flight::route('/alguma-pagina-restrita', function() {
-	$session = Flight::session();
+### Segurança da Sessão com Criptografia
+Habilite a criptografia para dados sensíveis:
 
-	if(!$session->get('is_logged_in')) {
-		Flight::redirect('/login');
-	}
+```php
+$app->register('session', Session::class, [
+    'encryption_key' => 'your-32-byte-secret-key-here'
+]);
 
-	// faça sua lógica de página restrita aqui
+Flight::route('/secure', function() {
+    $session = Flight::session();
+    $session->set('credit_card', '4111-1111-1111-1111'); // Criptografado automaticamente
+    echo $session->get('credit_card'); // Descriptografado na recuperação
 });
+```
 
-// a versão do middleware
-Flight::route('/alguma-pagina-restrita', function() {
-	// lógica regular da página
+### Regeneração da Sessão
+Regere a ID da sessão para segurança (por exemplo, após login):
+
+```php
+Flight::route('/post-login', function() {
+    $session = Flight::session();
+    $session->regenerate(); // Nova ID, mantém os dados
+    // OU
+    $session->regenerate(true); // Nova ID, exclui dados antigos
+});
+```
+
+### Exemplo de Middleware
+Proteja rotas com autenticação baseada em sessão:
+
+```php
+Flight::route('/admin', function() {
+    Flight::json(['message' => 'Bem-vindo ao painel de administração']);
 })->addMiddleware(function() {
-	$session = Flight::session();
-
-	if(!$session->get('is_logged_in')) {
-		Flight::redirect('/login');
-	}
+    $session = Flight::session();
+    if (!$session->get('is_admin')) {
+        Flight::halt(403, 'Acesso negado');
+    }
 });
 ```
 
-## Exemplo Mais Complexo
+Este é apenas um exemplo simples de como usar isso em middleware. Para um exemplo mais detalhado, consulte a [documentação de middleware](/learn/middleware).
 
-Aqui está um exemplo mais complexo de como você pode usar isso.
+## Métodos
 
-```php
+A classe `Session` fornece estes métodos:
 
-use Ghostff\Session\Session;
+- `set(string $key, $value)`: Armazena um valor na sessão.
+- `get(string $key, $default = null)`: Recupera um valor, com um padrão opcional se a chave não existir.
+- `delete(string $key)`: Remove uma chave específica da sessão.
+- `clear()`: Exclui todos os dados da sessão.
+- `commit()`: Salva os dados atuais da sessão no sistema de arquivos.
+- `id()`: Retorna a ID da sessão atual.
+- `regenerate(bool $deleteOld = false)`: Regenera a ID da sessão, excluindo opcionalmente os dados antigos.
 
-require 'vendor/autoload.php';
+Todos os métodos, exceto `get()` e `id()`, retornam a instância `Session` para encadeamento.
 
-$app = Flight::app();
+## Por Que Usar Este Plugin?
 
-// defina um caminho personalizado para o arquivo de configuração da sessão e forneça uma string aleatória para o id da sessão
-$app->register('session', Session::class, [ 'caminho/para/session_config.php', bin2hex(random_bytes(32)) ], function(Session $session) {
-		// ou você pode substituir manualmente as opções de configuração
-		$session->updateConfiguration([
-			// se deseja armazenar seus dados de sessão em um banco de dados (bom se deseja algo como, "sair de todos os dispositivos" funcionalidade)
-			Session::CONFIG_DRIVER        => Ghostff\Session\Drivers\MySql::class,
-			Session::CONFIG_ENCRYPT_DATA  => true,
-			Session::CONFIG_SALT_KEY      => hash('sha256', 'minha-super-senha-S3CR3TA'), // por favor, mude isso para ser algo diferente
-			Session::CONFIG_AUTO_COMMIT   => true, // faça isso apenas se for necessário e/ou for difícil confirmar() sua sessão.
-												   // adicionalmente você poderia fazer Flight::after('start', function() { Flight::session()->commit(); });
-			Session::CONFIG_MYSQL_DS         => [
-				'driver'    => 'mysql',             # Driver de banco de dados para o dns do PDO, por exemplo (mysql:host=...;dbname=...)
-				'host'      => '127.0.0.1',         # Host do banco de dados
-				'db_name'   => 'meu_banco_de_dados_do_aplicativo',   # Nome do banco de dados
-				'db_table'  => 'sessoes',          # Tabela do banco de dados
-				'db_user'   => 'root',              # Nome de usuário do banco de dados
-				'db_pass'   => '',                  # Senha do banco de dados
-				'persistent_conn'=> false,          # Evite o overhead de estabelecer uma nova conexão toda vez que um script precisa se comunicar com um banco de dados, resultando em uma aplicação web mais rápida. ENCONTRE O LADO NEGATIVO VOCÊ MESMO
-			]
-		]);
-	}
-);
-```
+- **Leve**: Sem dependências externas—apenas arquivos.
+- **Não-Bloqueante**: Evita bloqueio de sessão com `read_and_close` por padrão.
+- **Seguro**: Suporta criptografia AES-256-CBC para dados sensíveis.
+- **Flexível**: Opções de auto-confirmação, modo de teste e controle manual.
+- **Nativo ao Flight**: Construído especificamente para o framework Flight.
 
-## Ajuda! Meus Dados de Sessão não Estão Persistindo!
+## Detalhes Técnicos
 
-Você está definindo seus dados de sessão e eles não estão persistindo entre as solicitações? Você pode ter esquecido de confirmar seus dados de sessão. Você pode fazer isso chamando `$session->commit()` depois de definir seus dados de sessão.
+- **Formato de Armazenamento**: Os arquivos de sessão são prefixados com `sess_` e armazenados no `save_path` configurado. Dados criptografados usam um prefixo `E`, texto não criptografado usa `P`.
+- **Criptografia**: Usa AES-256-CBC com um IV aleatório por gravação de sessão quando uma `encryption_key` é fornecida.
+- **Coleta de Lixo**: Implementa o `SessionHandlerInterface::gc()` do PHP para limpar sessões expiradas.
 
-```php
-Flight::route('POST /login', function() {
-	$session = Flight::session();
+## Contribuindo
 
-	// faça sua lógica de login aqui
-	// validar senha, etc.
+Contribuições são bem-vindas! Fork o [repositório](https://github.com/flightphp/session), faça suas alterações e envie um pull request. Relate bugs ou sugira recursos pelo rastreador de problemas do Github.
 
-	// se o login for bem-sucedido
-	$session->set('is_logged_in', true);
-	$session->set('user', $user);
+## Licença
 
-	// toda vez que você escreve na sessão, deve confirmá-la deliberadamente.
-	$session->commit();
-});
-```
-
-A outra maneira de contornar isso é ao configurar seu serviço de sessão, você tem que definir `auto_commit` como `true` em sua configuração. Isso irá confirmar automaticamente seus dados de sessão após cada solicitação.
-
-```php
-
-$app->register('session', Session::class, [ 'caminho/para/session_config.php', bin2hex(random_bytes(32)) ], function(Session $session) {
-		$session->updateConfiguration([
-			Session::CONFIG_AUTO_COMMIT   => true,
-		]);
-	}
-);
-```
-
-Além disso, você poderia fazer `Flight::after('start', function() { Flight::session()->commit(); });` para confirmar seus dados de sessão após cada solicitação.
-
-## Documentação
-
-Visite o [README do Github](https://github.com/Ghostff/Session) para documentação completa. As opções de configuração são [bem documentadas no arquivo default_config.php](https://github.com/Ghostff/Session/blob/master/src/default_config.php) em si. O código é simples de entender se você quiser examinar este pacote por conta própria.
+Este plugin é licenciado sob a Licença MIT. Consulte o [repositório do Github](https://github.com/flightphp/session) para detalhes.

@@ -1,147 +1,176 @@
-# 鬼/会话
+# FlightPHP 会话 - 轻量级文件基础会话处理器
 
-PHP 会话管理器（非阻塞、闪存、分段、会话加密）。 使用 PHP open_ssl 可选择加密/解密会话数据。支持文件、MySQL、Redis 和 Memcached。
+这是一个轻量级的文件基础会话处理器插件，适用于 [Flight PHP Framework](https://docs.flightphp.com/)。它提供了一种简单而强大的会话管理解决方案，具有非阻塞会话读取、可选加密、自动提交功能和开发测试模式等特性。会话数据存储在文件中，适合不需要数据库的应用程序。
 
-单击[这里](https://github.com/Ghostff/Session)查看代码。
+如果您确实想使用数据库，可以查看 [ghostff/session](/awesome-plugins/ghost-session) 插件，它具有许多相同的功能，但使用数据库后端。
+
+访问 [Github 仓库](https://github.com/flightphp/session) 获取完整源代码和详细信息。
 
 ## 安装
 
-使用composer安装。
+通过 Composer 安装插件：
 
 ```bash
-composer require ghostff/session
+composer require flightphp/session
 ```
 
-## 基本配置
+## 基本用法
 
-您不需要传入任何内容即可使用默认设置与您的会话。您可以在[GitHub Readme](https://github.com/Ghostff/Session)中阅读更多设置。
+以下是如何在您的 Flight 应用程序中使用 `flightphp/session` 插件的简单示例：
 
 ```php
-
-use Ghostff\Session\Session;
-
 require 'vendor/autoload.php';
+
+use flight\Session;
 
 $app = Flight::app();
 
+// 注册会话服务
 $app->register('session', Session::class);
 
-// 有一件事要记住，那就是每次加载页面都必须提交您的会话
-// 或者您需要在配置中运行 auto_commit。
+// 示例路由，使用会话
+Flight::route('/login', function() {
+    $session = Flight::session();
+    $session->set('user_id', 123);
+    $session->set('username', 'johndoe');
+    $session->set('is_admin', false);
+
+    echo $session->get('username'); // 输出: johndoe
+    echo $session->get('preferences', 'default_theme'); // 输出: default_theme
+
+    if ($session->get('user_id')) {
+        Flight::json(['message' => '用户已登录！', 'user_id' => $session->get('user_id')]);
+    }
+});
+
+Flight::route('/logout', function() {
+    $session = Flight::session();
+    $session->clear(); // 清除所有会话数据
+    Flight::json(['message' => '成功登出']);
+});
+
+Flight::start();
 ```
 
-## 简单示例
+### 关键点
+- **非阻塞**：默认使用 `read_and_close` 启动会话，防止会话锁定问题。
+- **自动提交**：默认启用，因此在关闭时更改会自动保存，除非禁用。
+- **文件存储**：会话默认存储在系统临时目录下的 `/flight_sessions` 中。
 
-以下是您可能如何使用此程序的简单示例。
+## 配置
+
+您可以在注册时传递选项数组来自定义会话处理器：
 
 ```php
-Flight::route('POST /login', function() {
-	$session = Flight::session();
+$app->register('session', Session::class, [
+    'save_path' => '/custom/path/to/sessions',         // 会话文件目录
+    'encryption_key' => 'a-secure-32-byte-key-here',   // 启用加密（建议 AES-256-CBC 的 32 字节密钥）
+    'auto_commit' => false,                            // 禁用自动提交以进行手动控制
+    'start_session' => true,                           // 自动启动会话（默认：true）
+    'test_mode' => false                               // 启用开发测试模式
+]);
+```
 
-	// 在此执行登录逻辑
-	// 验证密码等。
+### 配置选项
+| 选项              | 描述                                           | 默认值                          |
+|-------------------|-----------------------------------------------|---------------------------------|
+| `save_path`       | 存储会话文件的目录                          | `sys_get_temp_dir() . '/flight_sessions'` |
+| `encryption_key`  | AES-256-CBC 加密的密钥（可选）               | `null`（不加密）               |
+| `auto_commit`     | 在关闭时自动保存会话数据                     | `true`                          |
+| `start_session`   | 自动启动会话                                  | `true`                          |
+| `test_mode`       | 在不影响 PHP 会话的情况下以测试模式运行      | `false`                         |
+| `test_session_id` | 测试模式的自定义会话 ID（可选）              | 如果未设置则随机生成           |
 
-	// 如果登录成功
-	$session->set('is_logged_in', true);
-	$session->set('user', $user);
+## 高级用法
 
-	// 每次写入会话时，必须有意识地提交它。
-	$session->commit();
+### 手动提交
+如果您禁用自动提交，您必须手动提交更改：
+
+```php
+$app->register('session', Session::class, ['auto_commit' => false]);
+
+Flight::route('/update', function() {
+    $session = Flight::session();
+    $session->set('key', 'value');
+    $session->commit(); // 显式保存更改
 });
+```
 
-// 此检查可以在受限页面逻辑中，或用中间件包装后执行。
-Flight::route('/一些受限页面', function() {
-	$session = Flight::session();
+### 使用加密的会话安全性
+为敏感数据启用加密：
 
-	if(!$session->get('is_logged_in')) {
-		Flight::redirect('/login');
-	}
+```php
+$app->register('session', Session::class, [
+    'encryption_key' => 'your-32-byte-secret-key-here'
+]);
 
-	// 在此执行受限页面逻辑
+Flight::route('/secure', function() {
+    $session = Flight::session();
+    $session->set('credit_card', '4111-1111-1111-1111'); // 自动加密
+    echo $session->get('credit_card'); // 在提取时解密
 });
+```
 
-// 中间件版本
-Flight::route('/一些受限页面', function() {
-	// 常规页面逻辑
+### 会话再生
+为了安全性（例如，在登录后）再生会话 ID：
+
+```php
+Flight::route('/post-login', function() {
+    $session = Flight::session();
+    $session->regenerate(); // 新 ID，保留数据
+    // 或者
+    $session->regenerate(true); // 新 ID，删除旧数据
+});
+```
+
+### 中间件示例
+使用基于会话的身份验证保护路由：
+
+```php
+Flight::route('/admin', function() {
+    Flight::json(['message' => '欢迎来到管理面板']);
 })->addMiddleware(function() {
-	$session = Flight::session();
-
-	if(!$session->get('is_logged_in')) {
-		Flight::redirect('/login');
-	}
+    $session = Flight::session();
+    if (!$session->get('is_admin')) {
+        Flight::halt(403, '访问被拒绝');
+    }
 });
 ```
 
-## 更复杂的示例
+这只是如何在中间件中使用此功能的一个简单示例。有关更深入的示例，请参阅 [中间件](/learn/middleware) 文档。
 
-以下是您可能如何使用此程序的更复杂示例。
+## 方法
 
-```php
+`Session` 类提供以下方法：
 
-use Ghostff\Session\Session;
+- `set(string $key, $value)`：将值存储在会话中。
+- `get(string $key, $default = null)`：检索值，如果键不存在，则可选默认值。
+- `delete(string $key)`：从会话中移除特定键。
+- `clear()`：删除所有会话数据。
+- `commit()`：将当前会话数据保存到文件系统。
+- `id()`：返回当前会话 ID。
+- `regenerate(bool $deleteOld = false)`：再生会话 ID，可选择删除旧数据。
 
-require 'vendor/autoload.php';
+除了 `get()` 和 `id()` 之外，所有方法都返回 `Session` 实例以便于链接调用。
 
-$app = Flight::app();
+## 为什么使用这个插件？
 
-// 将自定义路径设置为会话配置文件，并为会话ID设置一个随机字符串
-$app->register('session', Session::class, ['path/to/session_config.php', bin2hex(random_bytes(32))], function(Session $session) {
-		// 或者您可以手动覆盖配置选项
-		$session->updateConfiguration([
-			// 如果您希望将会话数据存储在数据库中（如果您想要像“注销所有设备”功能之类的功能）
-			Session::CONFIG_DRIVER        => Ghostff\Session\Drivers\MySql::class,
-			Session::CONFIG_ENCRYPT_DATA  => true,
-			Session::CONFIG_SALT_KEY      => hash('sha256', 'my-super-S3CR3T-salt'), // 请将其更改为其他内容
-			Session::CONFIG_AUTO_COMMIT   => true, // 只在需要时才执行此操作，否则很难 commit() 您的会话。
-												   // 另外，您可以执行 Flight::after('start', function() { Flight::session()->commit(); });
-			Session::CONFIG_MYSQL_DS         => [
-				'driver'    => 'mysql',             # 用于PDO dns的数据库驱动程序，例如（mysql:host=...;dbname=...）
-				'host'      => '127.0.0.1',         # 数据库主机
-				'db_name'   => 'my_app_database',   # 数据库名称
-				'db_table'  => 'sessions',          # 数据库表
-				'db_user'   => 'root',              # 数据库用户名
-				'db_pass'   => '',                  # 数据库密码
-				'persistent_conn'=> false,          # 避免每次脚本需要与数据库交谈时建立新连接的开销，从而使web应用程序更快。找到自己的缺点
-			]
-		]);
-	}
-);
-```
+- **轻量级**：没有外部依赖——仅仅是文件。
+- **非阻塞**：默认使用 `read_and_close` 避免会话锁定。
+- **安全**：支持 AES-256-CBC 加密敏感数据。
+- **灵活**：提供自动提交、测试模式和手动控制选项。
+- **Flight 原生**：专门为 Flight 框架构建。
 
-## 帮助！我的会话数据没有持久化！
+## 技术细节
 
-您是否设置了会话数据，但在请求之间没有持续保留？您可能忘记提交会话数据。您可以在设置会话数据后调用 `$session->commit()` 完成此操作。
+- **存储格式**：会话文件以 `sess_` 前缀开头，存储在配置的 `save_path` 中。加密数据使用 `E` 前缀，明文使用 `P`。
+- **加密**：在提供 `encryption_key` 时，使用 AES-256-CBC，且每次会话写入时采用随机 IV。
+- **垃圾收集**：实现 PHP 的 `SessionHandlerInterface::gc()` 以清理过期的会话。
 
-```php
-Flight::route('POST /login', function() {
-	$session = Flight::session();
+## 贡献
 
-	// 在此执行登录逻辑
-	// 验证密码等。
+欢迎贡献！叉出 [仓库](https://github.com/flightphp/session)，进行更改，并提交拉取请求。通过 Github 问题跟踪器报告错误或提出功能建议。
 
-	// 如果登录成功
-	$session->set('is_logged_in', true);
-	$session->set('user', $user);
+## 许可证
 
-	// 每次写入会话时，必须有意识地提交它。
-	$session->commit();
-});
-```
-
-解决此问题的另一种方法是，在设置会话服务时，在您的配置中将 `auto_commit` 设置为 `true`。 这将在每次请求之后自动提交您的会话数据。
-
-```php
-
-$app->register('session', Session::class, ['path/to/session_config.php', bin2hex(random_bytes(32))], function(Session $session) {
-		$session->updateConfiguration([
-			Session::CONFIG_AUTO_COMMIT   => true,
-		]);
-	}
-);
-```
-
-另外，您可以执行 `Flight::after('start', function() { Flight::session()->commit(); });` 在每次请求之后提交会话数据。
-
-## 文档
-
-访问[GitHub Readme](https://github.com/Ghostff/Session)获取完整文档。 如果您想自己查看这个包，那么默认_config.php 文件中的配置选项都[有很好的文档] (https://github.com/Ghostff/Session/blob/master/src/default_config.php)。 代码简单易懂。
+这个插件遵循 MIT 许可证。详情请参阅 [Github 仓库](https://github.com/flightphp/session) 。

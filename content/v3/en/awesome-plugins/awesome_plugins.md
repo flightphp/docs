@@ -64,7 +64,8 @@ Job queues are really helpful to asynchronously process tasks. This can be sendi
 
 Sessions aren't really useful for API's but for building out a web application, sessions can be crucial for maintaining state and login information.
 
-- [Ghostff/Session](/awesome-plugins/session) - PHP Session Manager (non-blocking, flash, segment, session encryption). Uses PHP open_ssl for optional encrypt/decryption of session data.
+- <span class="badge bg-primary">official</span> [flightphp/session](/awesome-plugins/session) - Official Flight Session library. This is a simple session library that can be used to store and retrieve session data. It uses PHP's built in session handling.
+- [Ghostff/Session](/awesome-plugins/ghost-session) - PHP Session Manager (non-blocking, flash, segment, session encryption). Uses PHP open_ssl for optional encrypt/decryption of session data.
 
 ## Templating
 

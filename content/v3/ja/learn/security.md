@@ -1,46 +1,46 @@
 # セキュリティ
 
-セキュリティはWebアプリケーションに関連する重要な要素です。アプリケーションが安全であり、ユーザーのデータが保護されていることを確認したいですね。Flight はウェブアプリケーションをセキュアにするための機能をいくつか提供しています。
+セキュリティはウェブアプリケーションにとって非常に重要です。アプリケーションが安全で、ユーザーのデータが守られていることを確認したいでしょう。Flightは、ウェブアプリケーションのセキュリティを確保するための多くの機能を提供しています。
 
 ## ヘッダー
 
-HTTPヘッダーはウェブアプリケーションをセキュアにする最も簡単な方法の一つです。ヘッダーを使用してクリックジャッキング、XSS、その他の攻撃を防ぐことができます。これらのヘッダーをアプリケーションに追加する方法にはいくつかの方法があります。
+HTTPヘッダーは、ウェブアプリケーションを保護する最も簡単な方法の1つです。ヘッダーを使用して、クリックジャッキング、XSS、およびその他の攻撃を防ぐことができます。これらのヘッダーをアプリケーションに追加する方法はいくつかあります。
 
-セキュリティヘッダーを確認するための優れたウェブサイトのいくつかは、[securityheaders.com](https://securityheaders.com/) と [observatory.mozilla.org](https://observatory.mozilla.org/) です。
+ヘッダーのセキュリティを確認するための優れたウェブサイトは、[securityheaders.com](https://securityheaders.com/) と [observatory.mozilla.org](https://observatory.mozilla.org/) です。
 
 ### 手動で追加
 
-`Flight\Response` オブジェクトの `header` メソッドを使用してこれらのヘッダーを手動で追加できます。
+`Flight\Response`オブジェクトの`header`メソッドを使用して、これらのヘッダーを手動で追加できます。
 ```php
-// クリックジャッキングを防ぐために X-Frame-Options ヘッダーを設定する
+// クリックジャッキングを防ぐためにX-Frame-Optionsヘッダーを設定
 Flight::response()->header('X-Frame-Options', 'SAMEORIGIN');
 
-// XSS を防ぐために Content-Security-Policy ヘッダーを設定する
-// 注: このヘッダーは非常に複雑になる可能性があるため、
-//  アプリケーション用のインターネット上の例を確認することをお勧めします
+// XSSを防ぐためにContent-Security-Policyヘッダーを設定
+// 注意: このヘッダーは非常に複雑になることがあるので、
+//  アプリケーションのためにインターネット上の例を参照することをお勧めします
 Flight::response()->header("Content-Security-Policy", "default-src 'self'");
 
-// XSS を防ぐために X-XSS-Protection ヘッダーを設定する
+// XSSを防ぐためにX-XSS-Protectionヘッダーを設定
 Flight::response()->header('X-XSS-Protection', '1; mode=block');
 
-// MIME スニッフィングを防ぐために X-Content-Type-Options ヘッダーを設定する
+// MIMEスニッフィングを防ぐためにX-Content-Type-Optionsヘッダーを設定
 Flight::response()->header('X-Content-Type-Options', 'nosniff');
 
-// リファラーポリシー ヘッダーを設定して送信するリファラー情報の量を制御する
+// どれだけのリファラー情報が送信されるかを制御するためにReferrer-Policyヘッダーを設定
 Flight::response()->header('Referrer-Policy', 'no-referrer-when-downgrade');
 
-// HTTPS を強制するために Strict-Transport-Security ヘッダーを設定する
+// HTTPSを強制するためにStrict-Transport-Securityヘッダーを設定
 Flight::response()->header('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
 
-// 使用可能な機能やAPIを制御するために Permissions-Policy ヘッダーを設定する
+// 使用できる機能とAPIを制御するためにPermissions-Policyヘッダーを設定
 Flight::response()->header('Permissions-Policy', 'geolocation=()');
 ```
 
-これらは `bootstrap.php` または `index.php` ファイルの先頭に追加することができます。
+これらは、`bootstrap.php`や`index.php`ファイルの先頭に追加できます。
 
 ### フィルターとして追加
 
-以下のように、フィルター/フックにこれらを追加することもできます。
+次のようなフィルター/フックで追加することもできます：
 
 ```php
 // フィルター内でヘッダーを追加
@@ -57,7 +57,7 @@ Flight::before('start', function() {
 
 ### ミドルウェアとして追加
 
-ミドルウェアクラスとしても追加できます。これはコードを清潔で整理された状態に保つのに適した方法です。
+ミドルウェアクラスとして追加することもできます。これは、コードをクリーンで整理する良い方法です。
 
 ```php
 // app/middleware/SecurityHeadersMiddleware.php
@@ -79,56 +79,56 @@ class SecurityHeadersMiddleware
 }
 
 // index.php またはルートがある場所
-// この空のグループは、すべてのルートに対するグローバルミドルウェアとして機能します。もちろん、同じことをして、特定のルートにのみこれを追加することもできます。
+// FYI、この空の文字列グループはすべてのルートに対するグローバルミドルウェアとして機能します。
+// もちろん、同じことをして特定のルートにのみ追加することもできます。
 Flight::group('', function(Router $router) {
 	$router->get('/users', [ 'UserController', 'getUsers' ]);
-	// 他のルート
+	// その他のルート
 }, [ new SecurityHeadersMiddleware() ]);
 ```
 
+## クロスサイトリクエストフォージェリ (CSRF)
 
-## クロスサイトリクエストフォージェリ（CSRF）
+クロスサイトリクエストフォージェリ (CSRF) は、悪意のあるウェブサイトがユーザーのブラウザを使用して、あなたのウェブサイトにリクエストを送信させる攻撃の一種です。これを使用して、ユーザーの知らないうちにあなたのウェブサイトでアクションを実行することができます。Flightは、組み込みのCSRF保護メカニズムを提供していませんが、ミドルウェアを使用して自分自身のものを簡単に実装できます。
 
-クロスサイトリクエストフォージェリ（CSRF）は、悪意のあるウェブサイトがユーザーのブラウザを使用してあなたのウェブサイトにリクエストを送信する攻撃の一種です。これにより、ユーザーの知識を得ることなくウェブサイトでのアクションを実行することができます。Flight はビルトインのCSRF保護メカニズムを提供していませんが、ミドルウェアを使用して簡単に独自の実装ができます。
+### セットアップ
 
-### 設定
-
-まず、CSRFトークンを生成し、ユーザーのセッションに保存する必要があります。その後、このトークンをフォームで使用し、フォームが送信された際に確認できます。
+まず、CSRFトークンを生成し、ユーザーのセッションに保存する必要があります。その後、このトークンをフォームで使用し、フォームが送信されるときに確認します。
 
 ```php
-// CSRFトークンを生成し、ユーザーのセッションに保存します
-// （Flight にセッションオブジェクトを作成してアタッチしていると仮定しています）
-// 詳細はセッションのドキュメントを参照してください
+// CSRFトークンを生成し、ユーザーのセッションに保存
+// (Flightにセッションオブジェクトを作成してアタッチしたと仮定)
+// 詳細についてはセッションのドキュメントを参照してください
 Flight::register('session', \Ghostff\Session\Session::class);
 
-// セッションごとに1つのトークンを生成するだけで十分です（同じユーザーの複数のタブとリクエストで機能するようになります）
+// セッションあたり1つのトークンを生成する必要があります（複数のタブや同じユーザーのリクエストで機能するため）
 if(Flight::session()->get('csrf_token') === null) {
 	Flight::session()->set('csrf_token', bin2hex(random_bytes(32)) );
 }
 ```
 
 ```html
-<!-- フォーム内でCSRFトークンを使用 -->
+<!-- フォームにCSRFトークンを使用 -->
 <form method="post">
 	<input type="hidden" name="csrf_token" value="<?= Flight::session()->get('csrf_token') ?>">
 	<!-- 他のフォームフィールド -->
 </form>
 ```
 
-#### Latte を使用する
+#### Latteを使用する
 
-カスタム関数を設定して、Latteテンプレート内でCSRFトークンを出力することもできます。
+独自の関数を定義してCSRFトークンをLatteテンプレートに出力することもできます。
 
 ```php
 // CSRFトークンを出力するカスタム関数を設定
-// 注: ビューはビューエンジンとしてLatteが設定されていると想定しています
+// 注意: ViewはLatteをビューエンジンとして構成されています
 Flight::view()->addFunction('csrf', function() {
 	$csrfToken = Flight::session()->get('csrf_token');
 	return new \Latte\Runtime\Html('<input type="hidden" name="csrf_token" value="' . $csrfToken . '">');
 });
 ```
 
-そして、Latteテンプレートでは `csrf()` 関数を使用してCSRFトークンを出力できます。
+これで、Latteテンプレート内で`csrf()`関数を使用してCSRFトークンを出力できます。
 
 ```html
 <form method="post">
@@ -137,29 +137,30 @@ Flight::view()->addFunction('csrf', function() {
 </form>
 ```
 
-簡単ですね？
+短くてシンプルですよね？
 
 ### CSRFトークンの確認
 
-イベントフィルターを使用してCSRFトークンを確認できます:
+イベントフィルターを使用してCSRFトークンを確認できます：
 
 ```php
-// このミドルウェアはリクエストがPOSTリクエストかどうかを確認し、POSTリクエストの場合はCSRFトークンが有効かどうかを確認します
+// このミドルウェアはリクエストがPOSTリクエストであるかをチェックし、
+// それが正しければCSRFトークンが有効であるかを確認します
 Flight::before('start', function() {
 	if(Flight::request()->method == 'POST') {
 
-		// フォーム値からcsrfトークンを取得
+		// フォームの値からCSRFトークンを取得
 		$token = Flight::request()->data->csrf_token;
 		if($token !== Flight::session()->get('csrf_token')) {
-			Flight::halt(403, 'Invalid CSRF token');
-			// または JSON応答用
-			Flight::jsonHalt(['error' => 'Invalid CSRF token'], 403);
+			Flight::halt(403, '無効なCSRFトークン');
+			// あるいはJSONレスポンスのために
+			Flight::jsonHalt(['error' => '無効なCSRFトークン'], 403);
 		}
 	}
 });
 ```
 
-または、ミドルウェアクラスを使用できます:
+または、ミドルウェアクラスを使用することもできます：
 
 ```php
 // app/middleware/CsrfMiddleware.php
@@ -173,7 +174,7 @@ class CsrfMiddleware
 		if(Flight::request()->method == 'POST') {
 			$token = Flight::request()->data->csrf_token;
 			if($token !== Flight::session()->get('csrf_token')) {
-				Flight::halt(403, 'Invalid CSRF token');
+				Flight::halt(403, '無効なCSRFトークン');
 			}
 		}
 	}
@@ -182,56 +183,55 @@ class CsrfMiddleware
 // index.php またはルートがある場所
 Flight::group('', function(Router $router) {
 	$router->get('/users', [ 'UserController', 'getUsers' ]);
-	// 他のルート
+	// その他のルート
 }, [ new CsrfMiddleware() ]);
 ```
 
+## クロスサイトスクリプティング (XSS)
 
-## クロスサイトスクリプティング（XSS）
-
-クロスサイトスクリプティング（XSS）は、悪意のあるウェブサイトがあなたのウェブサイトにコードをインジェクションする攻撃の一種です。これらの機会のほとんどは、エンドユーザーが記入するフォーム値から来ます。ユーザーからの出力を**決して**信用しないでください！常にすべてのユーザーが世界で最高のハッカーであると仮定してください。彼らは悪意のあるJavaScriptやHTMLをページにインジェクションすることができます。このコードは、ユーザーから情報を盗むか、あなたのウェブサイトでアクションを実行するために使用される可能性があります。Flightのビュークラスを使用すると、XSS攻撃を防ぐために出力を簡単にエスケープできます。
+クロスサイトスクリプティング (XSS) は、悪意のあるウェブサイトがあなたのウェブサイトにコードを挿入できるようになる攻撃の一種です。これらの機会のほとんどは、あなたのエンドユーザーが記入するフォームの値から来ます。ユーザーからの出力を**決して**信頼しないでください！彼らが世界最高のハッカーであると常に仮定してください。彼らはあなたのページに悪意のあるJavaScriptやHTMLを挿入できます。このコードは、ユーザーの情報を盗むために使用されたり、あなたのウェブサイトでアクションを実行したりできます。Flightのビュークラスを使用することで、出力を簡単にエスケープしてXSS攻撃を防ぐことができます。
 
 ```php
-// ユーザーが賢いことを考えて、これを名前として使用しようとします
+// ユーザーが賢いと仮定してこの名前を使用しようとした場合
 $name = '<script>alert("XSS")</script>';
 
-// この部分は出力をエスケープします
+// これは出力をエスケープします
 Flight::view()->set('name', $name);
-// これが出力されます：&lt;script&gt;alert(&quot;XSS&quot;)&lt;/script&gt;
+// これは出力されます: &lt;script&gt;alert(&quot;XSS&quot;)&lt;/script&gt;
 
-// ビュークラスとして設定されているLatteなどを使用している場合、これも自動的にエスケープされます。
+// もしあなたがビュークラスとして登録されたLatteのようなものを使用すると、
+// それも自動的にエスケープされます。
 Flight::view()->render('template', ['name' => $name]);
 ```
 
 ## SQLインジェクション
 
-SQLインジェクションは、悪意のあるユーザーがSQLコードをデータベースにインジェクションできる攻撃の一種です。これを使用してデータベースから情報を盗むか、データベースでアクションを実行できます。再度、ユーザーからの入力を**決して**信頼しないでください！常に彼らが自衛に出ていると仮定してください。`PDO` オブジェクト内でプリペアステートメントを使用することで、SQLインジェクションを防げます。
+SQLインジェクションは、悪意のあるユーザーがデータベースにSQLコードを注入できるようになる攻撃の一種です。これを使用して、データベースから情報を盗んだり、データベースでアクションを実行したりできます。再び、ユーザーからの入力を**決して**信頼しないでください！彼らが血を求めていると常に仮定してください。`PDO`オブジェクトでプリペアドステートメントを使用することで、SQLインジェクションを防ぐことができます。
 
 ```php
-// Flight::db() をPDOオブジェクトとして登録していると仮定します
+// Flight::db()があなたのPDOオブジェクトとして登録されていると仮定
 $statement = Flight::db()->prepare('SELECT * FROM users WHERE username = :username');
 $statement->execute([':username' => $username]);
 $users = $statement->fetchAll();
 
-// PdoWrapperクラスを使用して、これは簡単に1行で行うことができます
+// PdoWrapperクラスを使用すると、これを1行で簡単に行えます
 $users = Flight::db()->fetchAll('SELECT * FROM users WHERE username = :username', [ 'username' => $username ]);
 
-// ？プレースホルダを使用してPDOオブジェクトで同じことができます
+// ? プレースホルダーを使用するPDOオブジェクトでも同様のことができます
 $statement = Flight::db()->fetchAll('SELECT * FROM users WHERE username = ?', [ $username ]);
 
-// 決してこのようなことをしないでください...
+// こんなことは絶対にしないと約束してください...
 $users = Flight::db()->fetchAll("SELECT * FROM users WHERE username = '{$username}' LIMIT 5");
-// なぜならば $username = "' OR 1=1; -- "; の場合、どうなるでしょう...
-// クエリが組み立てられると次のようになります
+// だってもし$username = "' OR 1=1; -- "; だったらどうするのでしょうか？
+// クエリが構築された後は、次のようになります
 // SELECT * FROM users WHERE username = '' OR 1=1; -- LIMIT 5
-// 奇妙に見えるかもしれませんが、これは動作する有効なクエリです。実際、
-// これは非常に一般的なSQLインジェクション攻撃で、すべてのユーザーを返します。
-
+// 不思議に見えますが、これは有効なクエリで機能します。実際、
+// これはすべてのユーザーを返す非常に一般的なSQLインジェクション攻撃です。
 ```
 
 ## CORS
 
-クロスオリジンリソース共有（CORS）は、ウェブページ上の多くのリソース（フォント、JavaScriptなど）を、リソースが起源となるドメイン以外のドメインからリクエストできるようにする仕組みです。Flight には組み込みの機能がありませんが、`Flight::start()` メソッドが呼び出される前にフックを実行するためのフックを簡単に設定できます。
+クロスオリジンリソース共有 (CORS) は、ウェブページ上の多くのリソース（フォント、JavaScriptなど）が、リソースの発信元ドメイン外の別のドメインからリクエストされることを可能にするメカニズムです。Flightは組み込み機能を提供していませんが、`Flight::start()`メソッドが呼び出される前に実行するフックで簡単に処理できます。
 
 ```php
 // app/utils/CorsUtil.php
@@ -271,7 +271,7 @@ class CorsUtil
 
 	private function allowOrigins(): void
 	{
-		// ここで許可されるホストをカスタマイズしてください。
+		// ここで許可するホストをカスタマイズします。
 		$allowed = [
 			'capacitor://localhost',
 			'ionic://localhost',
@@ -293,10 +293,76 @@ class CorsUtil
 // index.php またはルートがある場所
 $CorsUtil = new CorsUtil();
 
-// start が実行される前にこれを実行する必要があります。
+// これはstartが実行される前に実行される必要があります。
 Flight::before('start', [ $CorsUtil, 'setupCors' ]);
+```
+
+## エラーハンドリング
+攻撃者に情報を漏らさないように、プロダクション環境では敏感なエラーの詳細を非表示にします。
+
+```php
+// bootstrap.php または index.php で
+
+// flightphp/skeletonでは、これは app/config/config.php にあります
+$environment = ENVIRONMENT;
+if ($environment === 'production') {
+    ini_set('display_errors', 0); // エラー表示を無効にする
+    ini_set('log_errors', 1);     // エラーをログに記録する
+    ini_set('error_log', '/path/to/error.log');
+}
+
+// ルートやコントローラー内で
+// コントロールされたエラー応答には Flight::halt() を使用
+Flight::halt(403, 'アクセス拒否');
+```
+
+## 入力のサニタイズ
+ユーザー入力を信頼しないでください。悪意のあるデータが入り込まないように、処理の前にサニタイズします。
+
+```php
+
+// $_POST['input'] および $_POST['email'] を持つ$_POSTリクエストがあると仮定します
+
+// 文字列入力をサニタイズ
+$clean_input = filter_var(Flight::request()->data->input, FILTER_SANITIZE_STRING);
+// メールをサニタイズ
+$clean_email = filter_var(Flight::request()->data->email, FILTER_SANITIZE_EMAIL);
+```
+
+## パスワードのハッシュ化
+パスワードを安全に保存し、安全に確認します。PHPの組み込み関数を使用してください。
+
+```php
+$password = Flight::request()->data->password;
+// パスワードを保存する際にハッシュ化します（例: 登録時）
+$hashed_password = password_hash($password, PASSWORD_DEFAULT);
+
+// パスワードを確認します（例: ログイン時）
+if (password_verify($password, $stored_hash)) {
+    // パスワードが一致します
+}
+```
+
+## レート制限
+キャッシュを使用してリクエスト率を制限し、ブルートフォース攻撃から保護します。
+
+```php
+// flightphp/cache がインストールされ、登録されていると仮定します
+// ミドルウェア内で flightphp/cache を使用
+Flight::before('start', function() {
+    $cache = Flight::cache();
+    $ip = Flight::request()->ip;
+    $key = "rate_limit_{$ip}";
+    $attempts = (int) $cache->retrieve($key);
+    
+    if ($attempts >= 10) {
+        Flight::halt(429, 'リクエストが多すぎます');
+    }
+    
+    $cache->set($key, $attempts + 1, 60); // 60秒後にリセット
+});
 ```
 
 ## 結論
 
-セキュリティは重要な要素であり、Webアプリケーションが安全であることを確認することが重要です。Flight はウェブアプリケーションをセキュアにするためのいくつかの機能を提供していますが、常に用心深く、ユーザーのデータを安全に保つためにできる限りのことを行っていることを確認することが重要です。常に最悪を想定し、ユーザーからの入力を信頼せずに、出力をエスケープし、SQLインジェクションを防ぐためにプリペアドステートメントを使用してください。CSRFとCORS攻撃からルートを保護するためにミドルウェアを使用してください。これらのすべてを行うことで、安全なウェブアプリケーションの構築に向けて大きく前進することができます。
+セキュリティは非常に重要であり、ウェブアプリケーションが安全であることを確認することが重要です。Flightはウェブアプリケーションを保護するための多くの機能を提供しますが、常に警戒し、ユーザーのデータを守るためにできることをすべて行うことが重要です。最悪の事態を常に想定し、ユーザーからの入力を決して信頼しないでください。出力は常にエスケープし、SQLインジェクションを防ぐためにプリペアドステートメントを使用してください。CSRFやCORS攻撃からルートを保護するために、常にミドルウェアを使用してください。これらすべてを実行すれば、安全なウェブアプリケーションを構築する道のりが開けるでしょう。

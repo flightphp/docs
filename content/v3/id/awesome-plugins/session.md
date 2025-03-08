@@ -1,147 +1,176 @@
-# Ghostff/Session
+# FlightPHP Sesi - Pengelola Sesi Berbasis File yang Ringan
 
-Manajer Sesi PHP (non-blocking, flash, segmen, enkripsi sesi). Menggunakan PHP open_ssl untuk enkripsi/dekripsi data sesi secara opsional. Mendukung File, MySQL, Redis, dan Memcached.
+Ini adalah plugin pengelola sesi berbasis file yang ringan untuk [Flight PHP Framework](https://docs.flightphp.com/). Ini memberikan solusi sederhana namun kuat untuk mengelola sesi, dengan fitur seperti pembacaan sesi non-blocking, enkripsi opsional, fungsionalitas auto-commit, dan mode uji untuk pengembangan. Data sesi disimpan dalam file, menjadikannya ideal untuk aplikasi yang tidak memerlukan basis data.
 
-Klik [di sini](https://github.com/Ghostff/Session) untuk melihat kodenya.
+Jika Anda ingin menggunakan basis data, periksa plugin [ghostff/session](/awesome-plugins/ghost-session) dengan banyak fitur yang sama tetapi dengan backend basis data.
+
+Kunjungi [repositori Github](https://github.com/flightphp/session) untuk kode sumber lengkap dan detailnya.
 
 ## Instalasi
 
-Install menggunakan composer.
+Instal plugin melalui Composer:
 
 ```bash
-composer require ghostff/session
+composer require flightphp/session
 ```
 
-## Konfigurasi Dasar
+## Penggunaan Dasar
 
-Anda tidak perlu meneruskan apapun untuk menggunakan pengaturan default dengan sesi Anda. Anda dapat membaca lebih banyak tentang pengaturan di [Github Readme](https://github.com/Ghostff/Session).
+Berikut adalah contoh sederhana tentang cara menggunakan plugin `flightphp/session` dalam aplikasi Flight Anda:
 
 ```php
-
-use Ghostff\Session\Session;
-
 require 'vendor/autoload.php';
+
+use flight\Session;
 
 $app = Flight::app();
 
+// Daftarkan layanan sesi
 $app->register('session', Session::class);
 
-// satu hal yang perlu diingat adalah bahwa Anda harus mengkomit sesi Anda pada setiap pemuatan halaman
-// atau Anda perlu menjalankan auto_commit dalam konfigurasi Anda.
+// Contoh rute dengan penggunaan sesi
+Flight::route('/login', function() {
+    $session = Flight::session();
+    $session->set('user_id', 123);
+    $session->set('username', 'johndoe');
+    $session->set('is_admin', false);
+
+    echo $session->get('username'); // Menghasilkan: johndoe
+    echo $session->get('preferences', 'default_theme'); // Menghasilkan: default_theme
+
+    if ($session->get('user_id')) {
+        Flight::json(['message' => 'Pengguna sudah login!', 'user_id' => $session->get('user_id')]);
+    }
+});
+
+Flight::route('/logout', function() {
+    $session = Flight::session();
+    $session->clear(); // Hapus semua data sesi
+    Flight::json(['message' => 'Berhasil keluar']);
+});
+
+Flight::start();
 ```
 
-## Contoh Sederhana
+### Poin Kunci
+- **Non-Blocking**: Menggunakan `read_and_close` untuk memulai sesi secara default, mencegah masalah penguncian sesi.
+- **Auto-Commit**: Diaktifkan secara default, sehingga perubahan disimpan secara otomatis saat dimatikan kecuali dinonaktifkan.
+- **Penyimpanan File**: Sesi disimpan di direktori temp sistem di bawah `/flight_sessions` secara default.
 
-Berikut adalah contoh sederhana tentang bagaimana Anda mungkin menggunakan ini.
+## Konfigurasi
+
+Anda dapat menyesuaikan pengelola sesi dengan melewatkan array opsi saat mendaftar:
 
 ```php
-Flight::route('POST /login', function() {
-	$session = Flight::session();
+$app->register('session', Session::class, [
+    'save_path' => '/custom/path/to/sessions',         // Direktori untuk file sesi
+    'encryption_key' => 'a-secure-32-byte-key-here',   // Aktifkan enkripsi (32 byte disarankan untuk AES-256-CBC)
+    'auto_commit' => false,                            // Nonaktifkan auto-commit untuk kontrol manual
+    'start_session' => true,                           // Mulai sesi secara otomatis (default: true)
+    'test_mode' => false                               // Aktifkan mode uji untuk pengembangan
+]);
+```
 
-	// lakukan logika login Anda di sini
-	// validasi kata sandi, dll.
+### Opsi Konfigurasi
+| Opsi              | Deskripsi                                      | Nilai Default                     |
+|-------------------|--------------------------------------------------|-----------------------------------|
+| `save_path`       | Direktori tempat file sesi disimpan              | `sys_get_temp_dir() . '/flight_sessions'` |
+| `encryption_key`  | Kunci untuk enkripsi AES-256-CBC (opsional)     | `null` (tidak ada enkripsi)      |
+| `auto_commit`     | Simpan data sesi secara otomatis saat dimatikan  | `true`                            |
+| `start_session`   | Mulai sesi secara otomatis                       | `true`                            |
+| `test_mode`       | Jalankan dalam mode uji tanpa mempengaruhi sesi PHP | `false`                       |
+| `test_session_id` | ID sesi kustom untuk mode uji (opsional)        | Dihasilkan secara acak jika tidak disetel |
 
-	// jika login berhasil
-	$session->set('is_logged_in', true);
-	$session->set('user', $user);
+## Penggunaan Lanjut
 
-	// setiap kali Anda menulis ke sesi, Anda harus mengkomitnya secara sengaja.
-	$session->commit();
+### Manual Commit
+Jika Anda menonaktifkan auto-commit, Anda harus melakukan commit perubahan secara manual:
+
+```php
+$app->register('session', Session::class, ['auto_commit' => false]);
+
+Flight::route('/update', function() {
+    $session = Flight::session();
+    $session->set('key', 'value');
+    $session->commit(); // Simpan perubahan secara eksplisit
 });
+```
 
-// Pemeriksaan ini bisa ada dalam logika halaman terbatas, atau dibungkus dengan middleware.
-Flight::route('/some-restricted-page', function() {
-	$session = Flight::session();
+### Keamanan Sesi dengan Enkripsi
+Aktifkan enkripsi untuk data sensitif:
 
-	if(!$session->get('is_logged_in')) {
-		Flight::redirect('/login');
-	}
+```php
+$app->register('session', Session::class, [
+    'encryption_key' => 'your-32-byte-secret-key-here'
+]);
 
-	// lakukan logika halaman terbatas Anda di sini
+Flight::route('/secure', function() {
+    $session = Flight::session();
+    $session->set('credit_card', '4111-1111-1111-1111'); // Dienkripsi secara otomatis
+    echo $session->get('credit_card'); // Didekripsi saat diambil
 });
+```
 
-// versi middleware
-Flight::route('/some-restricted-page', function() {
-	// logika halaman reguler
+### Regenerasi Sesi
+Regenerasi ID sesi untuk keamanan (misalnya, setelah login):
+
+```php
+Flight::route('/post-login', function() {
+    $session = Flight::session();
+    $session->regenerate(); // ID baru, pertahankan data
+    // ATAU
+    $session->regenerate(true); // ID baru, hapus data lama
+});
+```
+
+### Contoh Middleware
+Lindungi rute dengan otentikasi berbasis sesi:
+
+```php
+Flight::route('/admin', function() {
+    Flight::json(['message' => 'Selamat datang di panel admin']);
 })->addMiddleware(function() {
-	$session = Flight::session();
-
-	if(!$session->get('is_logged_in')) {
-		Flight::redirect('/login');
-	}
+    $session = Flight::session();
+    if (!$session->get('is_admin')) {
+        Flight::halt(403, 'Akses ditolak');
+    }
 });
 ```
 
-## Contoh yang Lebih Kompleks
+Ini hanyalah contoh sederhana tentang cara menggunakan ini dalam middleware. Untuk contoh yang lebih mendalam, lihat dokumentasi [middleware](/learn/middleware).
 
-Berikut adalah contoh yang lebih kompleks tentang bagaimana Anda mungkin menggunakan ini.
+## Metode
 
-```php
+Kelas `Session` menyediakan metode ini:
 
-use Ghostff\Session\Session;
+- `set(string $key, $value)`: Menyimpan sebuah nilai dalam sesi.
+- `get(string $key, $default = null)`: Mengambil sebuah nilai, dengan nilai default opsional jika kunci tidak ada.
+- `delete(string $key)`: Menghapus kunci tertentu dari sesi.
+- `clear()`: Menghapus semua data sesi.
+- `commit()`: Menyimpan data sesi saat ini ke sistem file.
+- `id()`: Mengembalikan ID sesi saat ini.
+- `regenerate(bool $deleteOld = false)`: Regenerasi ID sesi, pilihan untuk menghapus data lama.
 
-require 'vendor/autoload.php';
+Semua metode kecuali `get()` dan `id()` mengembalikan instance `Session` untuk chaining.
 
-$app = Flight::app();
+## Mengapa Menggunakan Plugin Ini?
 
-// atur path kustom untuk file konfigurasi sesi Anda dan berikan string acak untuk id sesi
-$app->register('session', Session::class, [ 'path/to/session_config.php', bin2hex(random_bytes(32)) ], function(Session $session) {
-		// atau Anda dapat secara manual menimpa opsi konfigurasi
-		$session->updateConfiguration([
-			// jika Anda ingin menyimpan data sesi Anda dalam database (baik jika Anda ingin sesuatu seperti, "keluarkan saya dari semua perangkat" fungsionalitas)
-			Session::CONFIG_DRIVER        => Ghostff\Session\Drivers\MySql::class,
-			Session::CONFIG_ENCRYPT_DATA  => true,
-			Session::CONFIG_SALT_KEY      => hash('sha256', 'my-super-S3CR3T-salt'), // silakan ganti ini menjadi sesuatu yang lain
-			Session::CONFIG_AUTO_COMMIT   => true, // hanya lakukan ini jika memerlukannya dan/atau sulit untuk mengkomit sesi Anda.
-												   // tambahan Anda bisa melakukan Flight::after('start', function() { Flight::session()->commit(); });
-			Session::CONFIG_MYSQL_DS         => [
-				'driver'    => 'mysql',             # Driver database untuk dns PDO eg(mysql:host=...;dbname=...)
-				'host'      => '127.0.0.1',         # Host database
-				'db_name'   => 'my_app_database',   # Nama database
-				'db_table'  => 'sessions',          # Tabel database
-				'db_user'   => 'root',              # Nama pengguna database
-				'db_pass'   => '',                  # Kata sandi database
-				'persistent_conn'=> false,          # Hindari biaya overhead untuk membuat koneksi baru setiap kali skrip perlu berbicara ke database, yang mengakibatkan aplikasi web yang lebih cepat. TEMUKAN BELAKANGNYA SENDIRI
-			]
-		]);
-	}
-);
-```
+- **Ringan**: Tidak ada dependensi eksternal—hanya file.
+- **Non-Blocking**: Menghindari penguncian sesi dengan `read_and_close` secara default.
+- **Aman**: Mendukung enkripsi AES-256-CBC untuk data sensitif.
+- **Fleksibel**: Opsi auto-commit, mode uji, dan kontrol manual.
+- **Flight-Native**: Dibangun khusus untuk framework Flight.
 
-## Bantuan! Data Sesi Saya Tidak Persisten!
+## Detail Teknis
 
-Apakah Anda mengatur data sesi Anda dan tidak persisten antara permintaan? Anda mungkin lupa untuk mengkomit data sesi Anda. Anda dapat melakukan ini dengan memanggil `$session->commit()` setelah Anda mengatur data sesi Anda.
+- **Format Penyimpanan**: File sesi diawali dengan `sess_` dan disimpan di `save_path` yang dikonfigurasi. Data terenkripsi menggunakan awalan `E`, data teks biasa menggunakan `P`.
+- **Enkripsi**: Menggunakan AES-256-CBC dengan IV acak per penulisan sesi saat kunci `encryption_key` disediakan.
+- **Pengumpulan Sampah**: Mengimplementasikan `SessionHandlerInterface::gc()` PHP untuk membersihkan sesi yang telah kedaluwarsa.
 
-```php
-Flight::route('POST /login', function() {
-	$session = Flight::session();
+## Berkontribusi
 
-	// lakukan logika login Anda di sini
-	// validasi kata sandi, dll.
+Kontribusi sangat diterima! Fork [repositori](https://github.com/flightphp/session), lakukan perubahan Anda, dan kirim pull request. Laporkan bug atau sarankan fitur melalui pelacak masalah Github.
 
-	// jika login berhasil
-	$session->set('is_logged_in', true);
-	$session->set('user', $user);
+## Lisensi
 
-	// setiap kali Anda menulis ke sesi, Anda harus mengkomitnya secara sengaja.
-	$session->commit();
-});
-```
-
-Cara lain untuk mengatasi ini adalah ketika Anda mengatur layanan sesi Anda, Anda harus mengatur `auto_commit` menjadi `true` dalam konfigurasi Anda. Ini akan secara otomatis mengkomit data sesi Anda setelah setiap permintaan.
-
-```php
-
-$app->register('session', Session::class, [ 'path/to/session_config.php', bin2hex(random_bytes(32)) ], function(Session $session) {
-		$session->updateConfiguration([
-			Session::CONFIG_AUTO_COMMIT   => true,
-		]);
-	}
-);
-```
-
-Selain itu, Anda dapat melakukan `Flight::after('start', function() { Flight::session()->commit(); });` untuk mengkomit data sesi Anda setelah setiap permintaan.
-
-## Dokumentasi
-
-Kunjungi [Github Readme](https://github.com/Ghostff/Session) untuk dokumentasi lengkap. Opsi konfigurasi [didokumentasikan dengan baik dalam default_config.php](https://github.com/Ghostff/Session/blob/master/src/default_config.php) file itu sendiri. Kodenya mudah untuk dipahami jika Anda ingin meneliti paket ini sendiri.
+Plugin ini dilisensikan di bawah Lisensi MIT. Lihat [repositori Github](https://github.com/flightphp/session) untuk detailnya.
