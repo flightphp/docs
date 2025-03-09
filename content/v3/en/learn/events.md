@@ -282,8 +282,13 @@ The event system in Flight PHP, with `Flight::onEvent()` and `Flight::triggerEve
 Flight PHP comes with a few built-in events that you can use to hook into the framework's lifecycle. These events are triggered at specific points in the request/response cycle, allowing you to execute custom logic when certain actions occur.
 
 ### Built-in Events List
-- `flight.request.received`: Triggered when a request is received, parsed and processed.
-- `flight.route.middleware.before`: Triggered after the before middleware is executed.
-- `flight.route.middleware.after`: Triggered after the after middleware is executed.
-- `flight.route.executed`: Triggered after a route is executed and processed.
-- `flight.response.sent`: Triggered after a response is sent to the client.
+- **flight.request.received**: `function(Request $request)` Triggered when a request is received, parsed and processed.
+- **flight.error**: `function(Throwable $exception)` Triggered when an error occurs during the request lifecycle.
+- **flight.redirect**: `function(string $url, int $status_code)` Triggered when a redirect is initiated.
+- **flight.middleware.before**: `function(Route $route)`Triggered after the before middleware is executed.
+- **flight.middleware.after**: `function(Route $route)` Triggered after the after middleware is executed.
+- **flight.middleware.executed**: `function(Route $route, $middleware)` Triggered after any middleware is executed
+- **flight.route.matched**: `function(Route $route)` Triggered when a route is matched, but not yet run.
+- **flight.route.executed**: `function(Route $route, float $executionTime)` Triggered after a route is executed and processed. `$executionTime` is time it took to execute the route (call the controller, etc).
+- **flight.view.rendered**: `function(string $template_file_path, float $executionTime)` Triggered after a view is rendered. `$executionTime` is time it took to render the template. **Note: If you override the `render` method, you will need to re-trigger this event.**
+- **flight.response.sent**: `function(Response $response, float $executionTime)` Triggered after a response is sent to the client. `$executionTime` is time it took to build the response.
