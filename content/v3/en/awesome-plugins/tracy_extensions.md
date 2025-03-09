@@ -68,6 +68,7 @@ If you have a custom session handler (such as ghostff/session), you can pass any
 ```php
 
 use Ghostff\Session\Session;
+// or use flight\Session;
 
 require 'vendor/autoload.php';
 
