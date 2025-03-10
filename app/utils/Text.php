@@ -40,7 +40,7 @@ class Text {
 	 * @param string $section_file_path [description]
 	 * @return string
 	 */
-    public static function generateAndConvertHeaderListFromHtml(string $markdown_html, array &$heading_data = [], $heading_tag = 'h1', string $section_file_path): string {
+    public static function generateAndConvertHeaderListFromHtml(string $markdown_html, array &$heading_data = [], $heading_tag = 'h1', string $section_file_path = ''): string {
         $markdown_html = preg_replace_callback('/(\<' . $heading_tag . '(.*?))\>(.*)(<\/' . $heading_tag . '>)/i', function ($matches) use (&$heading_data, $section_file_path) {
             if (! stripos($matches[0], 'id=')) {
                 $title = strip_tags($matches[3]);

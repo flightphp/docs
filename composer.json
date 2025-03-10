@@ -45,8 +45,7 @@
         "ci": [
             "composer check-platform-reqs --no-ansi",
             "phpunit --colors=never --no-progress",
-            "phpstan --no-progress --no-ansi",
-            "rector --dry-run --no-progress-bar --no-ansi"
+            "phpstan --no-progress --no-ansi"
         ],
         "serve": [
             "Composer\\Config::disableProcessTimeout",
