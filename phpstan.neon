@@ -7,6 +7,6 @@ parameters:
         - app
         - public/index.php
     excludePaths:
-        - app/cache
+        - app/cache/*
         - app/views
         - app/config/config.php
