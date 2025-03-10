@@ -35,6 +35,9 @@
         "pre-install-cmd": [
             "composer check-platform-reqs"
         ],
+        "post-autoload-dump": [
+            "php -r \"if (!file_exists('app/config/config.php')) copy('app/config/config_sample.php', 'app/config/config.php');\""
+        ],
         "pre-update-cmd": [
             "composer check-platform-reqs"
         ],
