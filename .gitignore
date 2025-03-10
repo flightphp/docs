@@ -7,3 +7,4 @@ app/cache/
 .DS_Store
 *.sublime-*
 biome.*
+.phpunit.result.cache

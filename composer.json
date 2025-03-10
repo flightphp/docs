@@ -39,12 +39,28 @@
             "composer check-platform-reqs"
         ],
         "start": "[ -x \"$(command -v php8.2)\" ] && php8.2 -S localhost:8000 -t public || php -S localhost:8000 -t public",
-        "rector": "rector"
+        "ci": [
+            "composer check-platform-reqs --no-ansi",
+            "phpunit --colors=never --no-progress",
+            "phpstan --no-progress --no-ansi",
+            "rector --dry-run --no-progress-bar --no-ansi"
+        ],
+        "serve": [
+            "Composer\\Config::disableProcessTimeout",
+            "php -S 0.0.0.0:61001 -t public"
+        ]
     },
     "require-dev": {
         "flightphp/tracy-extensions": "^0.2.3",
+        "guzzlehttp/guzzle": "^7.9",
         "phpstan/extension-installer": "^1.4",
         "phpstan/phpstan": "^2.1",
+        "phpunit/phpunit": "^11.5",
         "rector/rector": "^2.0"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests"
+        }
     }
 }

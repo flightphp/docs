@@ -10,6 +10,8 @@ use flight\net\Router;
 /** @var CustomEngine $app */
 /** @var Router $router */
 
+Flight::route('GET /api/status', static fn() => Flight::json(['status' => 'ok']));
+
 // This acts like a global middleware
 $router->group('', function (Router $router) use ($app) {
 
