@@ -5,4 +5,8 @@ parameters:
     level: 0
     paths:
         - app
-        - public
+        - public/index.php
+    excludePaths:
+        - app/cache
+        - app/views
+        - app/config/config.php
