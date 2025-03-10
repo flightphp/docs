@@ -8,3 +8,4 @@ app/cache/
 *.sublime-*
 biome.*
 .phpunit.result.cache
+node_modules/

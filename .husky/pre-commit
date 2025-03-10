@@ -1,0 +1,2 @@
+composer validate --no-ansi
+composer ci
