@@ -7,8 +7,7 @@ namespace Tests\Feature;
 use GuzzleHttp\Client;
 use PHPUnit\Framework\TestCase;
 
-abstract class FeatureTestCase extends TestCase
-{
+abstract class FeatureTestCase extends TestCase {
   protected static Client $client;
 
   public function __construct(string $name) // @phpstan-ignore-line

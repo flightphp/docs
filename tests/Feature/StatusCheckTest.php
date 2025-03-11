@@ -6,11 +6,9 @@ namespace Tests\Feature;
 
 use PHPUnit\Framework\Attributes\Test;
 
-final class StatusCheckTest extends FeatureTestCase
-{
+final class StatusCheckTest extends FeatureTestCase {
   #[Test]
-  public function apiIsRunning(): void
-  {
+  public function apiIsRunning(): void {
     $response = self::$client->get('./api/status');
 
     self::assertSame(200, $response->getStatusCode());
