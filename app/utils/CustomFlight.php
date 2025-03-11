@@ -15,6 +15,7 @@ use app\utils\Translator;
  * @method LatteEngine latte()
  * @method Parsedown parsedown()
  * @method Translator translator()
+ * @deprecated
  */
 class CustomEngine extends Engine {
 }
