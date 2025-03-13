@@ -5,6 +5,9 @@
  * required services, plugins, connections, etc. are loaded and ready to go
  * for every request made to the application.
  */
+
+use app\utils\Config;
+
 require_once __DIR__ . '/../../vendor/autoload.php';
 
 if (!file_exists(__DIR__ . '/config.php')) {
@@ -16,8 +19,7 @@ if (!file_exists(__DIR__ . '/config.php')) {
  * P.S. When you require a php file and that file returns an array, the array
  * will be returned by the require statement where you can assign it to a var.
  */
-$config = require __DIR__ . '/config.php';
-Flight::set('config', $config);
+Flight::set('config', new Config(require __DIR__ . '/config.php'));
 
 // Whip out the ol' router and we'll pass that to the routes file
 $router = Flight::router();
