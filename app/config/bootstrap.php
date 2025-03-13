@@ -11,20 +11,16 @@ if (!file_exists(__DIR__ . '/config.php')) {
     Flight::halt(500, 'Config file not found. Please create a config.php file in the app/config directory to get started.');
 }
 
-// It is better practice to not use static methods for everything. It makes your
-// app much more difficult to unit test easily.
-$app = Flight::app();
-
 /*
  * Load the config file
  * P.S. When you require a php file and that file returns an array, the array
  * will be returned by the require statement where you can assign it to a var.
  */
 $config = require __DIR__ . '/config.php';
-$app->set('config', $config);
+Flight::set('config', $config);
 
 // Whip out the ol' router and we'll pass that to the routes file
-$router = $app->router();
+$router = Flight::router();
 
 /*
  * Load the routes file. the $router variable above is passed into the routes.php
@@ -62,7 +58,8 @@ require_once __DIR__ . '/services.php';
 
 // At this point, your app should have all the instructions it needs and it'll
 // "start" processing everything. This is where the magic happens.
-$app->start();
+Flight::start();
+
 /*
  .----..---.  .--.  .----.  .---.     .---. .-. .-.  .--.  .---.    .----. .-. .-..----. .----..-.  .-.
 { {__ {_   _}/ {} \ | {}  }{_   _}   {_   _}| {_} | / {} \{_   _}   | {}  }| { } || {}  }| {}  }\ \/ / 

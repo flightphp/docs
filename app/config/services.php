@@ -1,25 +1,19 @@
 <?php
 
-use app\utils\CustomEngine;
 use app\utils\Translator;
 use Latte\Engine as LatteEngine;
 use Latte\Essential\TranslatorExtension;
 use Latte\Loaders\FileLoader;
 use flight\Cache;
 
-/** 
- * @var array $config 
- * @var CustomEngine $app
- */
-
- // This translates some common parts of the page, not the content
-$app->register('translator', Translator::class);
+// This translates some common parts of the page, not the content
+Flight::register('translator', Translator::class);
 
 // Templating Engine used to render the views
-$app->register('latte', LatteEngine::class, [], function (LatteEngine $latte) use ($app): void {
+Flight::register('latte', LatteEngine::class, [], static function (LatteEngine $latte): void {
     $latte->setTempDirectory(__DIR__ . '/../cache/');
     $latte->setLoader(new FileLoader(__DIR__ . '/../views/'));
-    $translator = $app->translator();
+    $translator = Flight::translator();
 
     $translatorExtension = new TranslatorExtension(
         [$translator, 'translate'],
@@ -29,9 +23,9 @@ $app->register('latte', LatteEngine::class, [], function (LatteEngine $latte) us
 });
 
 // Cache for storing parsedown and other things
-$app->register('cache', Cache::class, [__DIR__ . '/../cache/'], function (Cache $cache) {
+Flight::register('cache', Cache::class, [__DIR__ . '/../cache/'], static function (Cache $cache): void {
     $cache->setDevMode(ENVIRONMENT === 'development');
 });
 
 // Parsedown is a markdown parser
-$app->register('parsedown', Parsedown::class);
+Flight::register('parsedown', Parsedown::class);
