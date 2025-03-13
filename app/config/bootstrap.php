@@ -11,9 +11,6 @@ if (!file_exists(__DIR__ . '/config.php')) {
     Flight::halt(500, 'Config file not found. Please create a config.php file in the app/config directory to get started.');
 }
 
-// this has to be hard code required because autoload hasn't been registered yet.
-require_once __DIR__ . '/../utils/CustomFlight.php';
-
 // It is better practice to not use static methods for everything. It makes your
 // app much more difficult to unit test easily.
 $app = Flight::app();
