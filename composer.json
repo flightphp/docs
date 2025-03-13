@@ -7,6 +7,11 @@
         {
             "name": "n0nag0n",
             "email": "n0nag0n@sky-9.com"
+        },
+        {
+            "homepage": "https://faslatam.42web.io",
+            "name": "fadrian06",
+            "role": "Contributor"
         }
     ],
     "require": {
@@ -14,8 +19,10 @@
         "ext-json": "*",
         "erusev/parsedown": "^1.7",
         "flightphp/cache": "^1.0",
-        "flightphp/core": "^3.13",
+        "flightphp/container": "^1.1",
+        "flightphp/core": "^3.15",
         "latte/latte": "^3.0",
+        "symfony/polyfill-mbstring": "^1.31",
         "tracy/tracy": "^2.10"
     },
     "config": {
@@ -29,16 +36,41 @@
         "pre-install-cmd": [
             "composer check-platform-reqs"
         ],
+        "post-autoload-dump": [
+            "php -r \"if (!file_exists('app/config/config.php')) copy('app/config/config_sample.php', 'app/config/config.php');\""
+        ],
         "pre-update-cmd": [
             "composer check-platform-reqs"
         ],
         "start": "[ -x \"$(command -v php8.2)\" ] && php8.2 -S localhost:8000 -t public || php -S localhost:8000 -t public",
-        "rector": "rector"
+        "ci": [
+            "composer check-platform-reqs --no-ansi",
+            "phpunit --colors=never --no-progress",
+            "phpstan --no-progress --no-ansi"
+        ],
+        "serve": [
+            "Composer\\Config::disableProcessTimeout",
+            "php -S 0.0.0.0:61001 -t public"
+        ]
     },
     "require-dev": {
         "flightphp/tracy-extensions": "^0.2.3",
+        "guzzlehttp/guzzle": "^7.9",
         "phpstan/extension-installer": "^1.4",
         "phpstan/phpstan": "^2.1",
-        "rector/rector": "^2.0"
+        "phpstan/phpstan-deprecation-rules": "^2.0",
+        "phpunit/phpunit": "^11.5",
+        "rector/rector": "^2.0",
+        "symfony/var-dumper": "^7.2"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests"
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "app\\": "app"
+        }
     }
 }
