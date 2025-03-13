@@ -10,9 +10,7 @@ date_default_timezone_set('UTC');
 error_reporting(E_ALL);
 
 // Set the default character encoding
-if (function_exists('mb_internal_encoding') === true) {
-    mb_internal_encoding('UTF-8');
-}
+mb_internal_encoding('UTF-8');
 
 // Set the default locale
 if (function_exists('setlocale') === true) {
