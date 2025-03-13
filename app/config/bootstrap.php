@@ -5,16 +5,14 @@
  * required services, plugins, connections, etc. are loaded and ready to go
  * for every request made to the application.
  */
+require_once __DIR__ . '/../../vendor/autoload.php';
 
-$ds = DIRECTORY_SEPARATOR;
-require_once __DIR__ . $ds . '..' . $ds . '..' . $ds . 'vendor' . $ds . 'autoload.php';
-
-if (file_exists(__DIR__ . $ds . 'config.php') === false) {
+if (!file_exists(__DIR__ . '/config.php')) {
     Flight::halt(500, 'Config file not found. Please create a config.php file in the app/config directory to get started.');
 }
 
 // this has to be hard code required because autoload hasn't been registered yet.
-require_once __DIR__ . $ds . '..' . $ds . 'utils' . $ds . 'CustomFlight.php';
+require_once __DIR__ . '/../utils/CustomFlight.php';
 
 // It is better practice to not use static methods for everything. It makes your
 // app much more difficult to unit test easily.
@@ -25,7 +23,7 @@ $app = Flight::app();
  * P.S. When you require a php file and that file returns an array, the array
  * will be returned by the require statement where you can assign it to a var.
  */
-$config = require __DIR__ . $ds . 'config.php';
+$config = require __DIR__ . '/config.php';
 $app->set('config', $config);
 
 // Whip out the ol' router and we'll pass that to the routes file
@@ -38,7 +36,7 @@ $router = $app->router();
  * When someone hits that URL, you point them to a function or method
  * that will handle the request.
  */
-require_once __DIR__ . $ds . 'routes.php';
+require_once __DIR__ . '/routes.php';
 
 /*
  * You additionally could just define the routes in this file. It's up to you.
@@ -63,7 +61,7 @@ require_once __DIR__ . $ds . 'routes.php';
  * That's a discussion for another day. Suffice to say, that Flight has a basic concept
  * of a services container by registering classes to the Engine class.
  */
-require_once __DIR__ . $ds . 'services.php';
+require_once __DIR__ . '/services.php';
 
 // At this point, your app should have all the instructions it needs and it'll
 // "start" processing everything. This is where the magic happens.
