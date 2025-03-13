@@ -84,7 +84,7 @@ Flight::group('', static function (): void {
             Flight::route('GET /@plugin_name', [DocsController::class, 'pluginGet'], false, 'plugin');
         });
     });
-}, [new HeaderSecurityMiddleware()]);
+}, [HeaderSecurityMiddleware::class]);
 
 /*
  * 404 Handler
