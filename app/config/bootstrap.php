@@ -21,9 +21,6 @@ if (!file_exists(__DIR__ . '/config.php')) {
  */
 Flight::set('config', new Config(require __DIR__ . '/config.php'));
 
-// Whip out the ol' router and we'll pass that to the routes file
-$router = Flight::router();
-
 /*
  * Load the routes file. the $router variable above is passed into the routes.php
  * file below so that you can define routes in that file.
