@@ -12,7 +12,7 @@ A documentação da API é crucial para qualquer API. Ela ajuda os desenvolvedor
 ## Monitoramento de Desempenho de Aplicação (APM)
 
 O Monitoramento de Desempenho de Aplicação (APM) é crucial para qualquer aplicação. Ele ajuda você a entender como sua aplicação está se saindo e onde estão os gargalos. Existem várias ferramentas APM que podem ser usadas com Flight.
-- <span class="badge bg-info">beta</span>[flightphp/flight-apm](/awesome-plugins/apm) - Flight APM é uma biblioteca APM simples que pode ser usada para monitorar suas aplicações Flight. Pode ser usada para monitorar o desempenho da sua aplicação e ajudá-lo a identificar gargalos.
+- <span class="badge bg-info">beta</span>[flightphp/apm](/awesome-plugins/apm) - Flight APM é uma biblioteca APM simples que pode ser usada para monitorar suas aplicações Flight. Pode ser usada para monitorar o desempenho da sua aplicação e ajudá-lo a identificar gargalos.
 
 ## Autenticação/Autorização
 

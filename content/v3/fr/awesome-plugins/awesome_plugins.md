@@ -12,7 +12,7 @@ La documentation de l'API est cruciale pour toute API. Elle aide les développeu
 ## Surveillance de la performance des applications (APM)
 
 La surveillance de la performance des applications (APM) est cruciale pour toute application. Elle vous aide à comprendre comment votre application fonctionne et où se trouvent les goulets d'étranglement. Il existe plusieurs outils APM qui peuvent être utilisés avec Flight.
-- <span class="badge bg-info">beta</span>[flightphp/flight-apm](/awesome-plugins/apm) - Flight APM est une bibliothèque APM simple qui peut être utilisée pour surveiller vos applications Flight. Elle peut être utilisée pour surveiller la performance de votre application et vous aider à identifier les goulets d'étranglement.
+- <span class="badge bg-info">beta</span>[flightphp/apm](/awesome-plugins/apm) - Flight APM est une bibliothèque APM simple qui peut être utilisée pour surveiller vos applications Flight. Elle peut être utilisée pour surveiller la performance de votre application et vous aider à identifier les goulets d'étranglement.
 
 ## Authentification/Autorisation
 

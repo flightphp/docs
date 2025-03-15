@@ -12,7 +12,7 @@ Dokumentasi API sangat penting untuk setiap API. Ini membantu pengembang memaham
 ## Pemantauan Kinerja Aplikasi (APM)
 
 Pemantauan Kinerja Aplikasi (APM) sangat penting untuk setiap aplikasi. Ini membantu Anda memahami bagaimana kinerja aplikasi Anda dan di mana kendalanya. Ada sejumlah alat APM yang dapat digunakan dengan Flight.
-- <span class="badge bg-info">beta</span>[flightphp/flight-apm](/awesome-plugins/apm) - Flight APM adalah pustaka APM sederhana yang dapat digunakan untuk memantau aplikasi Flight Anda. Ini dapat digunakan untuk memantau kinerja aplikasi Anda dan membantu Anda mengidentifikasi kendala.
+- <span class="badge bg-info">beta</span>[flightphp/apm](/awesome-plugins/apm) - Flight APM adalah pustaka APM sederhana yang dapat digunakan untuk memantau aplikasi Flight Anda. Ini dapat digunakan untuk memantau kinerja aplikasi Anda dan membantu Anda mengidentifikasi kendala.
 
 ## Autentikasi/Otorisasi
 

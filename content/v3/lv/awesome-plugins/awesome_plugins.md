@@ -12,7 +12,7 @@ API dokumentācija ir izšķiroša nozīme jebkuram API. Tā palīdz izstrādāt
 ## Lietojumprogrammu veiktspējas uzraudzība (APM)
 
 Lietojumprogrammu veiktspējas uzraudzība (APM) ir izšķiroša nozīme jebkurai lietojumprogrammai. Tā palīdz jums saprast, kā jūsu lietojumprogramma darbojas un kur ir šaurās vietas. Ir pieejami vairāki APM rīki, kurus var izmantot kopā ar Flight.
-- <span class="badge bg-info">beta</span>[flightphp/flight-apm](/awesome-plugins/apm) - Flight APM ir vienkārša APM bibliotēka, ko var izmantot, lai uzraudzītu jūsu Flight lietojumprogrammas. To var izmantot, lai uzraudzītu jūsu lietojumprogrammas veiktspēju un palīdzētu identificēt šaurās vietas.
+- <span class="badge bg-info">beta</span>[flightphp/apm](/awesome-plugins/apm) - Flight APM ir vienkārša APM bibliotēka, ko var izmantot, lai uzraudzītu jūsu Flight lietojumprogrammas. To var izmantot, lai uzraudzītu jūsu lietojumprogrammas veiktspēju un palīdzētu identificēt šaurās vietas.
 
 ## Autentifikācija/Autorizācija
 

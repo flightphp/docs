@@ -12,7 +12,7 @@ API-Dokumentation ist entscheidend für jede API. Sie hilft Entwicklern zu verst
 ## Anwendungsleistungsüberwachung (APM)
 
 Anwendungsleistungsüberwachung (APM) ist entscheidend für jede Anwendung. Sie hilft Ihnen zu verstehen, wie Ihre Anwendung funktioniert und wo die Engpässe liegen. Es gibt eine Reihe von APM-Tools, die mit Flight verwendet werden können.
-- <span class="badge bg-info">beta</span>[flightphp/flight-apm](/awesome-plugins/apm) - Flight APM ist eine einfache APM-Bibliothek, die verwendet werden kann, um Ihre Flight-Anwendungen zu überwachen. Sie kann genutzt werden, um die Leistung Ihrer Anwendung zu überwachen und Engpässe zu identifizieren.
+- <span class="badge bg-info">beta</span>[flightphp/apm](/awesome-plugins/apm) - Flight APM ist eine einfache APM-Bibliothek, die verwendet werden kann, um Ihre Flight-Anwendungen zu überwachen. Sie kann genutzt werden, um die Leistung Ihrer Anwendung zu überwachen und Engpässe zu identifizieren.
 
 ## Authentifizierung/Autorisierung
 

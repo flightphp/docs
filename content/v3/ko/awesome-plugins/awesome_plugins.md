@@ -12,7 +12,7 @@ API 문서화는 모든 API에 필수적이다. 이는 개발자가 API와 상�
 ## 애플리케이션 성능 모니터링 (APM)
 
 애플리케이션 성능 모니터링(APM)은 모든 애플리케이션에 필수적이다. 이는 애플리케이션의 성능을 이해하고 병목 지점을 찾는 데 도움을 준다. Flight와 함께 사용할 수 있는 여러 APM 도구가 있다.
-- <span class="badge bg-info">beta</span>[flightphp/flight-apm](/awesome-plugins/apm) - Flight APM은 Flight 애플리케이션을 모니터링하기 위해 사용할 수 있는 간단한 APM 라이브러리이다. 애플리케이션의 성능을 모니터링하고 병목 현상을 식별하는 데 도움을 줄 수 있다.
+- <span class="badge bg-info">beta</span>[flightphp/apm](/awesome-plugins/apm) - Flight APM은 Flight 애플리케이션을 모니터링하기 위해 사용할 수 있는 간단한 APM 라이브러리이다. 애플리케이션의 성능을 모니터링하고 병목 현상을 식별하는 데 도움을 줄 수 있다.
 
 ## 인증/권한 부여
 

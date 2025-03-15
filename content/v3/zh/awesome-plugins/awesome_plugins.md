@@ -12,7 +12,7 @@ API 文档对任何 API 都至关重要。它帮助开发人员理解如何与�
 ## 应用性能监控 (APM)
 
 应用性能监控 (APM) 对任何应用程序都至关重要。它帮助您了解您的应用程序的性能以及瓶颈所在。 有许多 APM 工具可以与 Flight 一起使用。
-- <span class="badge bg-info">beta</span>[flightphp/flight-apm](/awesome-plugins/apm) - Flight APM 是一个简单的 APM 库，可用于监控您的 Flight 应用程序。 它可以用于监控您的应用程序的性能并帮助您识别瓶颈。
+- <span class="badge bg-info">beta</span>[flightphp/apm](/awesome-plugins/apm) - Flight APM 是一个简单的 APM 库，可用于监控您的 Flight 应用程序。 它可以用于监控您的应用程序的性能并帮助您识别瓶颈。
 
 ## 身份验证/授权
 

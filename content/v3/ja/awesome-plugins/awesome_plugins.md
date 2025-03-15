@@ -12,7 +12,7 @@ APIドキュメントは、すべてのAPIにとって重要です。開発者�
 ## アプリケーションパフォーマンスモニタリング (APM)
 
 アプリケーションパフォーマンスモニタリング（APM）は、すべてのアプリケーションにとって重要です。アプリケーションがどのように機能しているか、ボトルネックがどこにあるかを理解するのに役立ちます。Flightで使用できるAPMツールがいくつかあります。
-- <span class="badge bg-info">ベータ</span>[flightphp/flight-apm](/awesome-plugins/apm) - Flight APMは、Flightアプリケーションを監視するために使用できるシンプルなAPMライブラリです。アプリケーションのパフォーマンスを監視し、ボトルネックを特定するのに役立ちます。
+- <span class="badge bg-info">ベータ</span>[flightphp/apm](/awesome-plugins/apm) - Flight APMは、Flightアプリケーションを監視するために使用できるシンプルなAPMライブラリです。アプリケーションのパフォーマンスを監視し、ボトルネックを特定するのに役立ちます。
 
 ## 認証/認可
 
