@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "203fe67f8e46fbce3e96f8f761919d96",
+    "content-hash": "7f483c5a580b9a7b1f40297041c69fa0",
     "packages": [
         {
             "name": "adhocore/cli",
@@ -131,16 +131,16 @@
         },
         {
             "name": "flightphp/apm",
-            "version": "v0.1.1",
+            "version": "v0.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/flightphp/apm.git",
-                "reference": "658483edff5c50920ffceb197765dc2cc18cbdfc"
+                "reference": "a6ca791390b622df74dae5265fb89a126b84c170"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/flightphp/apm/zipball/658483edff5c50920ffceb197765dc2cc18cbdfc",
-                "reference": "658483edff5c50920ffceb197765dc2cc18cbdfc",
+                "url": "https://api.github.com/repos/flightphp/apm/zipball/a6ca791390b622df74dae5265fb89a126b84c170",
+                "reference": "a6ca791390b622df74dae5265fb89a126b84c170",
                 "shasum": ""
             },
             "require": {
@@ -191,9 +191,9 @@
             ],
             "support": {
                 "issues": "https://github.com/flightphp/apm/issues",
-                "source": "https://github.com/flightphp/apm/tree/v0.1.1"
+                "source": "https://github.com/flightphp/apm/tree/v0.2.0"
             },
-            "time": "2025-03-15T05:30:48+00:00"
+            "time": "2025-03-15T16:15:15+00:00"
         },
         {
             "name": "flightphp/cache",
