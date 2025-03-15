@@ -1,5 +1,3 @@
----
-
 # Dokumentasi APM FlightPHP
 
 Selamat datang di APM FlightPHP—pelatih kinerja pribadi untuk aplikasi Anda! Panduan ini adalah peta jalan Anda untuk mengatur, menggunakan, dan menguasai Pemantauan Kinerja Aplikasi (APM) dengan FlightPHP. Baik Anda sedang mencari permintaan yang lambat atau hanya ingin mengagumi grafik latensi, kami siap membantu. Mari kita buat aplikasi Anda lebih cepat, pengguna Anda lebih bahagia, dan sesi debugging Anda lebih mudah!

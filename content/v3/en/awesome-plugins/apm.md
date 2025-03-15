@@ -1,9 +1,3 @@
-Hey! I totally get wanting to flesh things out a bit more—your tweaks look solid, and I’ll build on them to add more examples, descriptions, and a little extra flavor. I’ll keep it fun and friendly, while making sure it’s packed with useful details so users feel confident diving in. Let’s expand that documentation page with more context about what each piece does, why it’s useful, and some practical examples!
-
-Here’s the beefed-up version:
-
----
-
 # FlightPHP APM Documentation
 
 Welcome to FlightPHP APM—your app’s personal performance coach! This guide is your roadmap to setting up, using, and mastering Application Performance Monitoring (APM) with FlightPHP. Whether you’re hunting down slow requests or just want to geek out over latency charts, we’ve got you covered. Let’s make your app faster, your users happier, and your debugging sessions a breeze!

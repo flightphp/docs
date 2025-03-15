@@ -1,5 +1,3 @@
----
-
 # Documentation APM FlightPHP
 
 Bienvenue dans FlightPHP APM—le coach personnel de performance de votre application ! Ce guide est votre feuille de route pour configurer, utiliser et maîtriser la surveillance de performance des applications (APM) avec FlightPHP. Que vous cherchiez des requêtes lentes ou que vous souhaitiez vous plonger dans des graphiques de latence, nous avons ce qu'il vous faut. Rendons votre application plus rapide, vos utilisateurs plus heureux et vos sessions de débogage plus simples !

@@ -1,4 +1,3 @@
----
 # FlightPHP APM Dokumentation
 
 Willkommen in FlightPHP APM—der persönliche Leistungstrainer deiner App! Dieser Leitfaden ist deine Roadmap zum Einrichten, Verwenden und Meistern des Application Performance Monitoring (APM) mit FlightPHP. Egal, ob du langsame Anfragen aufspürst oder einfach nur die Latenzdiagramme bewundern möchtest, wir haben dich abgedeckt. Lass uns deine App schneller, deine Benutzer glücklicher und deine Debugging-Sitzungen zum Kinderspiel machen!

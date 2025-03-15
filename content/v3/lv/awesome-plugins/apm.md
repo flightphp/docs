@@ -1,9 +1,3 @@
-Hey! Es pilnībā saprotu vēlmi izstrādāt lietas nedaudz vairāk — jūsu izmaiņas izskatās pārliecinoši, un es uz tām būšu balstījies, lai pievienotu vairāk piemēru, apraksta un nedaudz papildu garšas. Es padarīšu to jautru un draudzīgu, vienlaikus pārliecinoties, ka tas ir pildīts ar noderīgiem sīkdatnēm, lai lietotāji justos pārliecināti, ienirdami. Paplašīsim to dokumentācijas lapu ar vairāk konteksta par to, ko katra daļa dara, kāpēc tas ir noderīgi un kādi ir daži praktiski piemēri!
-
-Šeit ir uzlabotā versija:
-
----
-
 # FlightPHP APM Dokumentācija
 
 Laipni lūdzam FlightPHP APM — jūsu lietotnes personīgais veiktspējas treneris! Šis ceļvedis ir jūsu maršruts, lai iestatītu, lietotu un apgūtu Lietojumprogrammu veiktspējas uzraudzību (APM) ar FlightPHP. Neatkarīgi no tā, vai jūs meklējat lēnas pieprasījuma vai vienkārši vēlaties izpētīt latentuma grafikus, mēs jums palīdzēsim. Padarīsim jūsu lietotni ātrāku, jūsu lietotājus laimīgākus un jūsu atkļūdošanas sesijas vieglākas!
