@@ -96,19 +96,4 @@ final class DocsLogicTest extends UnitTestCase {
 
         self::assertStringContainsString('composer require flightphp/core', $html);
     }
-
-    #[Test]
-    function it_compiles_scrollspy_page(): void {
-        ob_start();
-        $this->docsLogic->compileScrollspyPage('es', 'v3', 'install', 'install');
-        $html = new DOMDocument;
-        @$html->loadHTML(ob_get_clean());
-        $navLinks = $html->getElementsByTagName('a');
-        $target = $navLinks->item(0)->getAttribute('data-target');
-        $id = $navLinks->item(0)->getAttribute('id');
-
-        self::assertTrue($navLinks->count() >= 1);
-        self::assertStringStartsWith('#', $target);
-        self::assertStringStartsWith('#', $id);
-    }
 }

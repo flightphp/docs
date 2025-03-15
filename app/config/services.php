@@ -1,6 +1,8 @@
 <?php
 
 use app\utils\Translator;
+use flight\Apm;
+use flight\apm\logger\LoggerFactory;
 use Latte\Engine as LatteEngine;
 use Latte\Essential\TranslatorExtension;
 use Latte\Loaders\FileLoader;
@@ -29,3 +31,8 @@ Flight::register('cache', Cache::class, [__DIR__ . '/../cache/'], static functio
 
 // Parsedown is a markdown parser
 Flight::register('parsedown', Parsedown::class);
+
+// Register the APM
+$ApmLogger = LoggerFactory::create(__DIR__ . '/../../.runway-config.json');
+$Apm = new Apm($ApmLogger);
+$Apm->bindEventsToFlightInstance(Flight::app());

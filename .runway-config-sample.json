@@ -1,0 +1,6 @@
+{
+    "apm": {
+        "source_type": "sqlite",
+        "dest_db_dsn": "sqlite::memory:"
+    }
+}

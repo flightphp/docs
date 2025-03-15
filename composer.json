@@ -18,6 +18,7 @@
         "php": "^8.2",
         "ext-json": "*",
         "erusev/parsedown": "^1.7",
+        "flightphp/apm": "^0.1.1",
         "flightphp/cache": "^1.0",
         "flightphp/container": "^1.1",
         "flightphp/core": "^3.15",
@@ -37,7 +38,8 @@
             "composer check-platform-reqs"
         ],
         "post-autoload-dump": [
-            "php -r \"if (!file_exists('app/config/config.php')) copy('app/config/config_sample.php', 'app/config/config.php');\""
+            "php -r \"if (!file_exists('app/config/config.php')) copy('app/config/config_sample.php', 'app/config/config.php');\"",
+            "php -r \"if (!file_exists('.runway-config.json')) copy('.runway-config-sample.json', '.runway-config.json');\""
         ],
         "pre-update-cmd": [
             "composer check-platform-reqs"

@@ -6,6 +6,7 @@ use app\utils\CustomEngine;
 use app\utils\DocsLogic;
 use app\utils\Text;
 use Exception;
+use flight\core\EventDispatcher;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 
@@ -171,17 +172,23 @@ class DocsController {
 
 		$Translator = $this->DocsLogic->setupTranslatorService($language, $version);
 
-        $markdown_html = $app->cache()->refreshIfExpired('single_page_html_' . $language . '_' . $version, function () use ($app, $sections, $Translator) {
-            $markdown_html = '';
-
-            foreach ($sections as $section) {
+		$cacheHit = true;
+		$cacheStartTime = microtime(true);
+		$cacheKey = 'single_page_html_' . $language . '_' . $version;
+		$markdown_html = $app->cache()->retrieve($cacheKey);
+		if ($markdown_html === null) {
+			$cacheHit = false;
+			$markdown_html = '';
+			foreach ($sections as $section) {
                 $slugged_section = Text::slugify($section);
                 $markdown_html .= '<h1><a href="/' . $section . '" id="' . $slugged_section . '">' . ucwords($section) . '</a> <a href="/' . $section . '#' . $slugged_section . '" class="bi bi-link-45deg" title="Permalink to this heading"></a></h1>';
                 $markdown_html .= $app->parsedown()->text($Translator->getMarkdownLanguageFile($section . '.md'));
             }
 
-            return $markdown_html;
-        }, 86400); // 1 day
+			$app->cache()->store($cacheKey, $markdown_html, 86400); // 1 day
+		}
+
+		$app->eventDispatcher()->trigger('flight.cache.checked', 'single_page_get_'.$cacheKey, $cacheHit, microtime(true) - $cacheStartTime);
 
         $this->DocsLogic->renderPage('single_page.latte', [
             'page_title' => 'single_page_documentation',
