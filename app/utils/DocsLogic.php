@@ -5,6 +5,7 @@ namespace app\utils;
 use app\middleware\HeaderSecurityMiddleware;
 use DOMDocument;
 use DOMXPath;
+use flight\core\EventDispatcher;
 
 class DocsLogic {
 
@@ -65,11 +66,18 @@ class DocsLogic {
 
 		$Translator = $this->setupTranslatorService($language, $version);
 
-        $markdown_html = $app->cache()->refreshIfExpired($section . '_html_' . $language . '_' . $version, function() use ($app, $section, $Translator) {
+		$cacheStartTime = microtime(true);
+		$cacheHit = true;
+		$cacheKey = $section . '_html_' . $language . '_' . $version;
+		$markdown_html = $app->cache()->retrieve($cacheKey);
+		if ($markdown_html === null) {
+			$cacheHit = false;
 			$markdown_html = $app->parsedown()->text($Translator->getMarkdownLanguageFile($section . '.md'));
 			$markdown_html = Text::addClassesToElements($markdown_html);
-			return $markdown_html;
-		}, 86400); // 1 day
+			$app->cache()->store($cacheKey, $markdown_html, 86400); // 1 day
+		}
+
+		$app->eventDispatcher()->trigger('flight.cache.checked', 'compile_single_page_'.$cacheKey, $cacheHit, microtime(true) - $cacheStartTime);
 
         $markdown_html = $this->wrapContentInDiv($markdown_html);
 
@@ -93,19 +101,26 @@ class DocsLogic {
 
 		$Translator = $this->setupTranslatorService($language, $version);
 
-        $section_file_path = str_replace('_', '-', $section);
+		$section_file_path = str_replace('_', '-', $section);
         $sub_section_underscored = str_replace('-', '_', $sub_section);
         $heading_data = $app->cache()->retrieve($sub_section_underscored . '_heading_data_' . $language . '_' . $version);
-        $markdown_html = $app->cache()->refreshIfExpired($sub_section_underscored . '_html_' . $language . '_' . $version, function () use ($app, $section_file_path, $sub_section, $sub_section_underscored, &$heading_data, $language, $Translator, $version) {
-            $parsed_text = $app->parsedown()->text($Translator->getMarkdownLanguageFile('/' . $section_file_path . '/' . $sub_section_underscored . '.md'));
+
+		$cacheStartTime = microtime(true);
+		$cacheHit = true;
+		$cacheKey = $sub_section_underscored . '_html_' . $language . '_' . $version;
+		$markdown_html = $app->cache()->retrieve($cacheKey);
+		if ($markdown_html === null) {
+			$cacheHit = false;
+			$markdown_html = $app->parsedown()->text($Translator->getMarkdownLanguageFile('/' . $section_file_path . '/' . $sub_section_underscored . '.md'));
 
             $heading_data = [];
-            $parsed_text = Text::generateAndConvertHeaderListFromHtml($parsed_text, $heading_data, 'h2', $section_file_path.'/'.$sub_section);
-			$parsed_text = Text::addClassesToElements($parsed_text);
+            $markdown_html = Text::generateAndConvertHeaderListFromHtml($markdown_html, $heading_data, 'h2', $section_file_path.'/'.$sub_section);
+			$markdown_html = Text::addClassesToElements($markdown_html);
             $app->cache()->store($sub_section_underscored . '_heading_data_' . $language . '_' . $version, $heading_data, 86400); // 1 day
+			$app->cache()->store($cacheKey, $markdown_html, 86400); // 1 day
+		}
 
-            return $parsed_text;
-        }, 86400); // 1 day
+		$app->eventDispatcher()->trigger('flight.cache.checked', 'compile_scrollspy_page_'.$cacheKey, $cacheHit, microtime(true) - $cacheStartTime);
 
         // pull the title out of the first h1 tag
         $page_title = '';

@@ -3,7 +3,7 @@
 namespace app\utils;
 
 use flight\Engine;
-use Wruczek\PhpFileCache\PhpFileCache;
+use flight\Cache;
 use Latte\Engine as LatteEngine;
 use Parsedown;
 use app\utils\Translator;
@@ -11,7 +11,7 @@ use app\utils\Translator;
 /**
  * This is only for autocomplete help.
  * 
- * @method PhpFileCache cache()
+ * @method Cache cache()
  * @method LatteEngine latte()
  * @method Parsedown parsedown()
  * @method Translator translator()
