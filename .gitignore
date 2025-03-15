@@ -7,3 +7,5 @@ app/cache/
 .DS_Store
 *.sublime-*
 biome.*
+.runway-config.json
+apm.db*
