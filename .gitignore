@@ -9,3 +9,5 @@ app/cache/
 biome.*
 .phpunit.result.cache
 node_modules/
+tests/cache/
+.coverage

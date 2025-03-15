@@ -5,16 +5,11 @@ namespace app\utils;
 use app\middleware\HeaderSecurityMiddleware;
 use DOMDocument;
 use DOMXPath;
+use flight\Engine;
 
 class DocsLogic {
-
-	/**
-	 * DocsLogic constructor.
-	 *
-	 * @param CustomEngine $app Flight Engine
-	 */
-	public function __construct(protected $app) {
-		
+	public function __construct(protected Engine $app) {
+        //
 	}
 
 	/**
