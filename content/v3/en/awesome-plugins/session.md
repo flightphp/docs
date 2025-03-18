@@ -62,13 +62,14 @@ Flight::start();
 You can customize the session handler by passing an array of options when registering:
 
 ```php
-$app->register('session', Session::class, [
+// Yep, it's a double array :)
+$app->register('session', Session::class, [ [
     'save_path' => '/custom/path/to/sessions',         // Directory for session files
     'encryption_key' => 'a-secure-32-byte-key-here',   // Enable encryption (32 bytes recommended for AES-256-CBC)
     'auto_commit' => false,                            // Disable auto-commit for manual control
     'start_session' => true,                           // Start session automatically (default: true)
     'test_mode' => false                               // Enable test mode for development
-]);
+] ]);
 ```
 
 ### Configuration Options
