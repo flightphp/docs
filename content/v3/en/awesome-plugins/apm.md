@@ -72,6 +72,8 @@ php vendor/bin/runway apm:init
   }
   ```
 
+> This process will also ask if you want to run the migrations for this setup. If you're setting this up for your first time, the answer is yes.
+
 **Why two locations?**
 Raw metrics pile up fast (think unfiltered logs). The worker processes them into a structured destination for the dashboard. Keeps things tidy!
 
@@ -254,6 +256,17 @@ Tune the worker to your liking:
 php vendor/bin/runway apm:worker --daemon --batch_size 100 --timeout 3600
 ```
 Runs for an hour, processing 100 metrics at a time.
+
+## Upgrading
+
+If you are upgrading to a newer version of the APM, there is a chance that there are database migrations that need to be run. You can do this by running the following command:
+
+```bash
+php vendor/bin/runway apm:migrate
+```
+This will run any migrations that are needed to update the database schema to the latest version.
+
+**Note:** If you're APM database is large in size, these migrations may take some time to run. You may want to run this command during off-peak hours.
 
 ## Troubleshooting
 

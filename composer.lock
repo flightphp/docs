@@ -131,16 +131,16 @@
         },
         {
             "name": "flightphp/apm",
-            "version": "v0.2.0",
+            "version": "v0.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/flightphp/apm.git",
-                "reference": "a6ca791390b622df74dae5265fb89a126b84c170"
+                "reference": "a9eb6b09b543cc19200586165fb98ed0adc0aab8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/flightphp/apm/zipball/a6ca791390b622df74dae5265fb89a126b84c170",
-                "reference": "a6ca791390b622df74dae5265fb89a126b84c170",
+                "url": "https://api.github.com/repos/flightphp/apm/zipball/a9eb6b09b543cc19200586165fb98ed0adc0aab8",
+                "reference": "a9eb6b09b543cc19200586165fb98ed0adc0aab8",
                 "shasum": ""
             },
             "require": {
@@ -191,9 +191,9 @@
             ],
             "support": {
                 "issues": "https://github.com/flightphp/apm/issues",
-                "source": "https://github.com/flightphp/apm/tree/v0.2.0"
+                "source": "https://github.com/flightphp/apm/tree/v0.2.1"
             },
-            "time": "2025-03-15T16:15:15+00:00"
+            "time": "2025-03-18T05:33:13+00:00"
         },
         {
             "name": "flightphp/cache",

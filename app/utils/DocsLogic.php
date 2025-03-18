@@ -5,9 +5,23 @@ namespace app\utils;
 use app\middleware\HeaderSecurityMiddleware;
 use DOMDocument;
 use DOMXPath;
-use flight\core\EventDispatcher;
 
 class DocsLogic {
+
+	const AVAILABLE_LANGUAGES = [
+		'en',
+		'es',
+		'fr',
+		'lv',
+		'pt',
+		'de',
+		'ru',
+		'zh',
+		'ja',
+		'ko',
+		'uk',
+		'id'
+	];
 
 	/**
 	 * DocsLogic constructor.
@@ -64,6 +78,16 @@ class DocsLogic {
     public function compileSinglePage(string $language, string $version, string $section) {
         $app = $this->app;
 
+		// Check if the language is valid
+		if ($this->checkValidLanguage($language) === false) {
+			$language = 'en';
+		}
+
+		// Check if the version is valid
+		if ($this->checkValidVersion($version) === false) {
+			$version = 'v3';
+		}
+
 		$Translator = $this->setupTranslatorService($language, $version);
 
 		$cacheStartTime = microtime(true);
@@ -98,6 +122,16 @@ class DocsLogic {
 	 */
     public function compileScrollspyPage(string $language, string $version, string $section, string $sub_section) {
         $app = $this->app;
+
+		// Check if the language is valid
+		if ($this->checkValidLanguage($language) === false) {
+			$language = 'en';
+		}
+
+		// Check if the version is valid
+		if ($this->checkValidVersion($version) === false) {
+			$version = 'v3';
+		}
 
 		$Translator = $this->setupTranslatorService($language, $version);
 
@@ -213,4 +247,24 @@ class DocsLogic {
 
         return $d;
     }
+
+	/**
+	 * Checks if the provided language is valid.
+	 * 
+	 * @param string $language The language code to check.
+	 * @return bool True if the language is valid, false otherwise.
+	 */
+	public function checkValidLanguage(string $language): bool {
+		return in_array($language, self::AVAILABLE_LANGUAGES, true) === true;
+	}
+
+	/**
+	 * Checks if the provided version is valid.
+	 * 
+	 * @param string $version The version code to check.
+	 * @return bool True if the version is valid, false otherwise.
+	 */
+	public function checkValidVersion(string $version): bool {
+		return in_array($version, ['v3', 'v2'], true) === true;
+	}
 }

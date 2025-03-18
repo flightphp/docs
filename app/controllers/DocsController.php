@@ -156,6 +156,16 @@ class DocsController {
     public function singlePageGet(string $language, string $version) {
         $app = $this->app;
 
+		// Check if the language is valid
+		if ($this->DocsLogic->checkValidLanguage($language) === false) {
+			$language = 'en';
+		}
+
+		// Check if the version is valid
+		if ($this->DocsLogic->checkValidVersion($version) === false) {
+			$version = 'v3';
+		}
+
         // recursively look through all the content files, and pull out each section and render it
         $sections = [];
         $language_directory = self::CONTENT_DIR . '/' . $version . '/' . $language . '/';
