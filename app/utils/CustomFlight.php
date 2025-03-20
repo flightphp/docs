@@ -10,7 +10,7 @@ use app\utils\Translator;
 
 /**
  * This is only for autocomplete help.
- *
+ * @deprecated
  * @method Cache cache()
  * @method LatteEngine latte()
  * @method Parsedown parsedown()

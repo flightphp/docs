@@ -9,16 +9,30 @@ use flight\core\EventDispatcher;
 use flight\Engine;
 
 class DocsLogic {
-	public function __construct(protected Engine $app) {
-        //
-	}
+    const AVAILABLE_LANGUAGES = [
+        'en',
+        'es',
+        'fr',
+        'lv',
+        'pt',
+        'de',
+        'ru',
+        'zh',
+        'ja',
+        'ko',
+        'uk',
+        'id'
+    ];
 
-	/**
-	 * Renders a page using the specified Latte template file and parameters.
-	 *
-	 * @param string $latte_file The path to the Latte template file to be rendered.
-	 * @param array $params An optional array of parameters to be passed to the template.
-	 */
+    public function __construct(protected Engine $app) {
+    }
+
+    /**
+     * Renders a page using the specified Latte template file and parameters.
+     *
+     * @param string $latte_file The path to the Latte template file to be rendered.
+     * @param array $params An optional array of parameters to be passed to the template.
+     */
     public function renderPage(string $latte_file, array $params = []) {
         $request = $this->app->request();
         $uri = $request->url;
@@ -33,89 +47,109 @@ class DocsLogic {
         $this->app->latte()->render($latte_file, $params);
     }
 
-	/**
-	 * Sets up the translator service with the specified language and version.
-	 *
-	 * @param string $language The language to be used by the translator.
-	 * @param string $version The version of the translation service.
-	 * @return Translator The configured translator service.
-	 */
-	public function setupTranslatorService(string $language, string $version): Translator {
-		$Translator = $this->app->translator();
-		$Translator->setLanguage($language);
-		$Translator->setVersion($version);
+    /**
+     * Sets up the translator service with the specified language and version.
+     *
+     * @param string $language The language to be used by the translator.
+     * @param string $version The version of the translation service.
+     * @return Translator The configured translator service.
+     */
+    public function setupTranslatorService(string $language, string $version): Translator {
+        $Translator = $this->app->translator();
+        $Translator->setLanguage($language);
+        $Translator->setVersion($version);
         return $Translator;
-	}
+    }
 
-	/**
-	 * Compiles a single page based on the specified language, version, and section.
-	 *
-	 * @param string $language The language of the page to compile.
-	 * @param string $version The version of the page to compile.
-	 * @param string $section The section of the page to compile.
-	 *
-	 * @return void
-	 */
+    /**
+     * Compiles a single page based on the specified language, version, and section.
+     *
+     * @param string $language The language of the page to compile.
+     * @param string $version The version of the page to compile.
+     * @param string $section The section of the page to compile.
+     *
+     * @return void
+     */
     public function compileSinglePage(string $language, string $version, string $section) {
         $app = $this->app;
 
-		$Translator = $this->setupTranslatorService($language, $version);
+        // Check if the language is valid
+        if ($this->checkValidLanguage($language) === false) {
+            $language = 'en';
+        }
 
-		$cacheStartTime = microtime(true);
-		$cacheHit = true;
-		$cacheKey = $section . '_html_' . $language . '_' . $version;
-		$markdown_html = $app->cache()->retrieve($cacheKey);
-		if ($markdown_html === null) {
-			$cacheHit = false;
-			$markdown_html = $app->parsedown()->text($Translator->getMarkdownLanguageFile($section . '.md'));
-			$markdown_html = Text::addClassesToElements($markdown_html);
-			$app->cache()->store($cacheKey, $markdown_html, 86400); // 1 day
-		}
+        // Check if the version is valid
+        if ($this->checkValidVersion($version) === false) {
+            $version = 'v3';
+        }
 
-		$app->eventDispatcher()->trigger('flight.cache.checked', 'compile_single_page_'.$cacheKey, $cacheHit, microtime(true) - $cacheStartTime);
+        $Translator = $this->setupTranslatorService($language, $version);
+
+        $cacheStartTime = microtime(true);
+        $cacheHit = true;
+        $cacheKey = $section . '_html_' . $language . '_' . $version;
+        $markdown_html = $app->cache()->retrieve($cacheKey);
+        if ($markdown_html === null) {
+            $cacheHit = false;
+            $markdown_html = $app->parsedown()->text($Translator->getMarkdownLanguageFile($section . '.md'));
+            $markdown_html = Text::addClassesToElements($markdown_html);
+            $app->cache()->store($cacheKey, $markdown_html, 86400); // 1 day
+        }
+
+        $app->eventDispatcher()->trigger('flight.cache.checked', 'compile_single_page_' . $cacheKey, $cacheHit, microtime(true) - $cacheStartTime);
 
         $markdown_html = $this->wrapContentInDiv($markdown_html);
 
         $this->renderPage('single_page.latte', [
             'page_title' => $section,
             'markdown' => $markdown_html,
-			'version' => $version,
+            'version' => $version,
         ]);
     }
 
-	/**
-	 * Compiles the Scrollspy page based on the provided language, version, section, and sub-section.
-	 *
-	 * @param string $language The language of the documentation.
-	 * @param string $version The version of the documentation.
-	 * @param string $section The main section of the documentation.
-	 * @param string $sub_section The sub-section of the documentation.
-	 */
+    /**
+     * Compiles the Scrollspy page based on the provided language, version, section, and sub-section.
+     *
+     * @param string $language The language of the documentation.
+     * @param string $version The version of the documentation.
+     * @param string $section The main section of the documentation.
+     * @param string $sub_section The sub-section of the documentation.
+     */
     public function compileScrollspyPage(string $language, string $version, string $section, string $sub_section) {
         $app = $this->app;
 
-		$Translator = $this->setupTranslatorService($language, $version);
+        // Check if the language is valid
+        if ($this->checkValidLanguage($language) === false) {
+            $language = 'en';
+        }
 
-		$section_file_path = str_replace('_', '-', $section);
+        // Check if the version is valid
+        if ($this->checkValidVersion($version) === false) {
+            $version = 'v3';
+        }
+
+        $Translator = $this->setupTranslatorService($language, $version);
+
+        $section_file_path = str_replace('_', '-', $section);
         $sub_section_underscored = str_replace('-', '_', $sub_section);
         $heading_data = $app->cache()->retrieve($sub_section_underscored . '_heading_data_' . $language . '_' . $version);
 
-		$cacheStartTime = microtime(true);
-		$cacheHit = true;
-		$cacheKey = $sub_section_underscored . '_html_' . $language . '_' . $version;
-		$markdown_html = $app->cache()->retrieve($cacheKey);
-		if ($markdown_html === null) {
-			$cacheHit = false;
-			$markdown_html = $app->parsedown()->text($Translator->getMarkdownLanguageFile('/' . $section_file_path . '/' . $sub_section_underscored . '.md'));
+        $cacheStartTime = microtime(true);
+        $cacheHit = true;
+        $cacheKey = $sub_section_underscored . '_html_' . $language . '_' . $version;
+        $markdown_html = $app->cache()->retrieve($cacheKey);
+        if ($markdown_html === null) {
+            $cacheHit = false;
+            $markdown_html = $app->parsedown()->text($Translator->getMarkdownLanguageFile('/' . $section_file_path . '/' . $sub_section_underscored . '.md'));
 
             $heading_data = [];
-            $markdown_html = Text::generateAndConvertHeaderListFromHtml($markdown_html, $heading_data, 'h2', $section_file_path.'/'.$sub_section);
-			$markdown_html = Text::addClassesToElements($markdown_html);
+            $markdown_html = Text::generateAndConvertHeaderListFromHtml($markdown_html, $heading_data, 'h2', $section_file_path . '/' . $sub_section);
+            $markdown_html = Text::addClassesToElements($markdown_html);
             $app->cache()->store($sub_section_underscored . '_heading_data_' . $language . '_' . $version, $heading_data, 86400); // 1 day
-			$app->cache()->store($cacheKey, $markdown_html, 86400); // 1 day
-		}
+            $app->cache()->store($cacheKey, $markdown_html, 86400); // 1 day
+        }
 
-		$app->eventDispatcher()->trigger('flight.cache.checked', 'compile_scrollspy_page_'.$cacheKey, $cacheHit, microtime(true) - $cacheStartTime);
+        $app->eventDispatcher()->trigger('flight.cache.checked', 'compile_scrollspy_page_' . $cacheKey, $cacheHit, microtime(true) - $cacheStartTime);
 
         // pull the title out of the first h1 tag
         $page_title = '';
@@ -133,17 +167,17 @@ class DocsLogic {
             'custom_page_title' => ($page_title ? $page_title . ' - ' : '') . $Translator->translate($section),
             'markdown' => $markdown_html,
             'heading_data' => $heading_data,
-            'relative_uri' => '/'.$section_file_path,
-			'version' => $version,
+            'relative_uri' => '/' . $section_file_path,
+            'version' => $version,
         ]);
     }
 
-	/**
+    /**
      * This is necessary to encapsulate contents (<p>, <pre>, <ol>, <ul>)
      * in a div which can be then styled with CSS thanks to the class name `flight-block`
-	 * 
-	 * @param string $html
-	 * @return string
+     *
+     * @param string $html
+     * @return string
      */
     protected function wrapContentInDiv(string $html): string {
         $dom = new DOMDocument;
@@ -189,8 +223,8 @@ class DocsLogic {
                 && $element->nodeName !== 'ol'
                 && $element->nodeName !== 'ul'
                 && $element->nodeName !== 'blockquote'
-				&& $element->nodeName !== 'table'
-				&& $element->nodeName !== 'dl'
+                && $element->nodeName !== 'table'
+                && $element->nodeName !== 'dl'
                 && is_null($div) === false
             ) {
                 $d .= '</div>';
@@ -207,5 +241,25 @@ class DocsLogic {
         }
 
         return $d;
+    }
+
+    /**
+     * Checks if the provided language is valid.
+     *
+     * @param string $language The language code to check.
+     * @return bool True if the language is valid, false otherwise.
+     */
+    public function checkValidLanguage(string $language): bool {
+        return in_array($language, self::AVAILABLE_LANGUAGES, true) === true;
+    }
+
+    /**
+     * Checks if the provided version is valid.
+     *
+     * @param string $version The version code to check.
+     * @return bool True if the version is valid, false otherwise.
+     */
+    public function checkValidVersion(string $version): bool {
+        return in_array($version, ['v3', 'v2'], true) === true;
     }
 }

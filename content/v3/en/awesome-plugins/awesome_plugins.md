@@ -9,6 +9,11 @@ API documentation is crucial for any API. It helps developers understand how to 
 - [FlightPHP OpenAPI Generator](https://dev.to/danielsc/define-generate-and-implement-an-api-first-approach-with-openapi-generator-and-flightphp-1fb3) - Blog post written by Daniel Schreiber on how to use the OpenAPI Spec with FlightPHP to build out your API using an API first approach.
 - [SwaggerUI](https://github.com/zircote/swagger-php) - Swagger UI is a great tool to help you generate API documentation for your Flight projects. It's very easy to use and can be customized to fit your needs. This is the PHP library to help you generate the Swagger documentation.
 
+## Application Performance Monitoring (APM)
+
+Application Performance Monitoring (APM) is crucial for any application. It helps you understand how your application is performing and where the bottlenecks are. There are a number of APM tools that can be used with Flight.
+- <span class="badge bg-info">beta</span>[flightphp/apm](/awesome-plugins/apm) - Flight APM is a simple APM library that can be used to monitor your Flight applications. It can be used to monitor the performance of your application and help you identify bottlenecks.
+
 ## Authentication/Authorization
 
 Authentication and Authorization are crucial for any application that requires controls to be in place for who can access what. 

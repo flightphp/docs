@@ -1,32 +1,32 @@
-Tracy Flight Panel Extensions
+Tracy Flight パネル拡張
 =====
 
-これはFlightを使いやすくするための拡張機能セットです。
+これは、Flightをよりリッチに使用するための一連の拡張です。
 
 - Flight - すべてのFlight変数を分析します。
-- Database - ページで実行されたすべてのクエリを分析します（データベース接続を正しく初期化した場合）
-- Request - `$_SERVER`変数を分析し、すべてのグローバルペイロード（`$_GET`、`$_POST`、`$_FILES`）を調べます。
-- Session - セッションがアクティブな場合、すべての`$_SESSION`変数を分析します。
+- Database - ページで実行されたすべてのクエリを分析します（データベース接続を正しく開始した場合）。
+- Request - すべての `$_SERVER` 変数を分析し、すべてのグローバルペイロード（`$_GET`、`$_POST`、`$_FILES`）を調べます。
+- Session - セッションがアクティブな場合、すべての `$_SESSION` 変数を分析します。
 
-これはパネルです
+これがパネルです。
 
 ![Flight Bar](https://raw.githubusercontent.com/flightphp/tracy-extensions/master/flight-tracy-bar.png)
 
-それぞれのパネルはアプリケーションについて非常に役立つ情報を表示します！
+それぞれのパネルは、アプリケーションに関する非常に役立つ情報を表示します！
 
 ![Flight Data](https://raw.githubusercontent.com/flightphp/tracy-extensions/master/flight-var-data.png)
 ![Flight Database](https://raw.githubusercontent.com/flightphp/tracy-extensions/master/flight-db.png)
 ![Flight Request](https://raw.githubusercontent.com/flightphp/tracy-extensions/master/flight-request.png)
 
-[ここをクリック](https://github.com/flightphp/tracy-extensions)してコードを表示します。
+コードは[こちら](https://github.com/flightphp/tracy-extensions)から確認できます。
 
 インストール
 -------
-`composer require flightphp/tracy-extensions --dev` を実行して、準備が整います！
+`composer require flightphp/tracy-extensions --dev`を実行すると、準備完了です！
 
 設定
 -------
-これを開始するために行う必要がある設定は非常に少ないです。これを使用する前に Tracy デバッガを初期化する必要があります [https://tracy.nette.org/en/guide](https://tracy.nette.org/en/guide):
+これを始めるために必要な設定はほとんどありません。使用する前にTracyデバッガを初期化する必要があります。[https://tracy.nette.org/en/guide](https://tracy.nette.org/en/guide):
 
 ```php
 <?php
@@ -38,24 +38,24 @@ use flight\debug\tracy\TracyExtensionLoader;
 require __DIR__ . '/vendor/autoload.php';
 
 Debugger::enable();
-// Debugger::enable(Debugger::DEVELOPMENT) で環境を指定する必要があるかもしれません
+// 環境を指定する必要がある場合があります Debugger::enable(Debugger::DEVELOPMENT)
 
-// アプリでデータベース接続を使用する場合、
-//（本番環境ではなく開発環境でのみ使用）必要なPDOラッパーがあります
-// 通常のPDO接続と同じパラメーターを持っています
+// アプリでデータベース接続を使用する場合、 
+// 開発中のみ使用する必要がある必須PDOラッパーがあります（本番環境では使用しないでください！）
+// 通常のPDO接続と同じパラメータを持っています
 $pdo = new PdoQueryCapture('sqlite:test.db', 'user', 'pass');
-// またはFlightフレームワークにこれをアタッチする場合
+// または、これをFlightフレームワークに接続する場合
 Flight::register('db', PdoQueryCapture::class, ['sqlite:test.db', 'user', 'pass']);
-// クエリを実行するたびに、時間、クエリ、およびパラメーターがキャプチャされます
+// クエリを行うたびに、その時間、クエリ、およびパラメータがキャプチャされます
 
-// これが全体を結びつけます
+// これは点をつなぎます
 if(Debugger::$showBar === true) {
-	// これは false にする必要があります、さもないとTracy が実際にレンダリングできません :(
+	// これはfalseである必要があります。でないとTracyは実際にレンダリングできません :(
 	Flight::set('flight.content_length', false);
 	new TracyExtensionLoader(Flight::app());
 }
 
-// もっとコード
+// さらなるコード
 
 Flight::start();
 ```
@@ -63,13 +63,12 @@ Flight::start();
 ## 追加の設定
 
 ### セッションデータ
-カスタムセッションハンドラー（例えばghostff/sessionなど）を持っている場合、
-任意のセッションデータ配列をTracyに渡し、自動的に出力します。
-`TracyExtensionLoader` コンストラクターの第二パラメーターで `session_data` キーで渡します。
+カスタムセッションハンドラ（例えば、ghostff/session）を持っている場合、Tracyに任意のセッションデータの配列を渡すことができます。これを`TracyExtensionLoader`コンストラクタの二番目のパラメータの`session_data`キーで渡します。
 
 ```php
 
 use Ghostff\Session\Session;
+// または flight\Session を使用します。
 
 require 'vendor/autoload.php';
 
@@ -78,21 +77,19 @@ $app = Flight::app();
 $app->register('session', Session::class);
 
 if(Debugger::$showBar === true) {
-	// これは false にする必要があります、さもないとTracy が実際にレンダリングできません :(
+	// これはfalseである必要があります。でないとTracyは実際にレンダリングできません :(
 	Flight::set('flight.content_length', false);
 	new TracyExtensionLoader(Flight::app(), [ 'session_data' => Flight::session()->getAll() ]);
 }
 
-// ルートやその他のもの...
+// ルートやその他のこと...
 
 Flight::start();
 ```
 
 ### Latte
 
-プロジェクトにLatteがインストールされている場合、
-テンプレートを分析するためのLatteパネルを使用できます。
-`TracyExtensionLoader` コンストラクターの第二パラメーターで `latte` キーでLatteインスタンスを渡すことができます。
+プロジェクトにLatteがインストールされている場合、Latteパネルを使用してテンプレートを分析できます。 `TracyExtensionLoader`コンストラクタの二番目のパラメータに`latte`キーを使用してLatteインスタンスを渡すことができます。
 
 ```php
 
@@ -105,12 +102,13 @@ $app = Flight::app();
 $app->register('latte', Engine::class, [], function($latte) {
 	$latte->setTempDirectory(__DIR__ . '/temp');
 
-	// これでLatte PanelをTracyに追加します
+	// ここでLatteパネルをTracyに追加します
 	$latte->addExtension(new Latte\Bridges\Tracy\TracyExtension);
 });
 
 if(Debugger::$showBar === true) {
-	// これは false にする必要があります、さもないとTracy が実際にレンダリングできません :(
+	// これはfalseである必要があります。でないとTracyは実際にレンダリングできません :(
 	Flight::set('flight.content_length', false);
 	new TracyExtensionLoader(Flight::app());
 }
+```
