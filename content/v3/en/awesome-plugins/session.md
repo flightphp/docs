@@ -151,6 +151,7 @@ The `Session` class provides these methods:
 - `commit()`: Saves the current session data to the file system.
 - `id()`: Returns the current session ID.
 - `regenerate(bool $deleteOld = false)`: Regenerates the session ID, optionally deleting old data.
+- `getAll()` : Returns all data from current session
 
 All methods except `get()` and `id()` return the `Session` instance for chaining.
 
