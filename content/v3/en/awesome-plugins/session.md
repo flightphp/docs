@@ -65,6 +65,7 @@ You can customize the session handler by passing an array of options when regist
 // Yep, it's a double array :)
 $app->register('session', Session::class, [ [
     'save_path' => '/custom/path/to/sessions',         // Directory for session files
+	'prefix' => 'myapp_',                              // Prefix for session files
     'encryption_key' => 'a-secure-32-byte-key-here',   // Enable encryption (32 bytes recommended for AES-256-CBC)
     'auto_commit' => false,                            // Disable auto-commit for manual control
     'start_session' => true,                           // Start session automatically (default: true)
@@ -76,6 +77,7 @@ $app->register('session', Session::class, [ [
 | Option            | Description                                      | Default Value                     |
 |-------------------|--------------------------------------------------|-----------------------------------|
 | `save_path`       | Directory where session files are stored         | `sys_get_temp_dir() . '/flight_sessions'` |
+| `prefix`          | Prefix for the saved session file                | `sess_`                           |
 | `encryption_key`  | Key for AES-256-CBC encryption (optional)        | `null` (no encryption)            |
 | `auto_commit`     | Auto-save session data on shutdown               | `true`                            |
 | `start_session`   | Start the session automatically                  | `true`                            |
