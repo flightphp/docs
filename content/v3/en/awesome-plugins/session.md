@@ -147,11 +147,12 @@ The `Session` class provides these methods:
 - `set(string $key, $value)`: Stores a value in the session.
 - `get(string $key, $default = null)`: Retrieves a value, with an optional default if the key doesn’t exist.
 - `delete(string $key)`: Removes a specific key from the session.
-- `clear()`: Deletes all session data.
+- `clear()`: Deletes all session data, but keeps the same file name for the session.
 - `commit()`: Saves the current session data to the file system.
 - `id()`: Returns the current session ID.
-- `regenerate(bool $deleteOld = false)`: Regenerates the session ID, optionally deleting old data.
-- `getAll()` : Returns all data from current session
+- `regenerate(bool $deleteOldFile = false)`: Regenerates the session ID including creating a new session file, keeping all the old data and the old file remains on the system. If `$deleteOldFile` is `true`, the old session file is deleted.
+- `destroy(string $id)`: Destroys a session by ID and deletes the session file from the system. This is part of the `SessionHandlerInterface` and `$id` is required. Typical usage would be `$session->destroy($session->id())`.
+- `getAll()` : Returns all data from current session.
 
 All methods except `get()` and `id()` return the `Session` instance for chaining.
 
