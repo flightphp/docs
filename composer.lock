@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7f483c5a580b9a7b1f40297041c69fa0",
+    "content-hash": "cae84da8586639fd041f3e440cb5269c",
     "packages": [
         {
             "name": "adhocore/cli",
@@ -131,16 +131,16 @@
         },
         {
             "name": "flightphp/apm",
-            "version": "v0.2.1",
+            "version": "v0.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/flightphp/apm.git",
-                "reference": "a9eb6b09b543cc19200586165fb98ed0adc0aab8"
+                "reference": "3af8fc1eba19e3d16f513c9ae83d65eb4009d428"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/flightphp/apm/zipball/a9eb6b09b543cc19200586165fb98ed0adc0aab8",
-                "reference": "a9eb6b09b543cc19200586165fb98ed0adc0aab8",
+                "url": "https://api.github.com/repos/flightphp/apm/zipball/3af8fc1eba19e3d16f513c9ae83d65eb4009d428",
+                "reference": "3af8fc1eba19e3d16f513c9ae83d65eb4009d428",
                 "shasum": ""
             },
             "require": {
@@ -172,8 +172,8 @@
                     "role": "Owner"
                 }
             ],
-            "description": "High Performance Application Performance Monitoring (APM) for FlightPHP",
-            "homepage": "https://docs.flightphp.com",
+            "description": "High-Performance Application Performance Monitoring (APM) for Flight PHP for better observability in your applications.",
+            "homepage": "https://docs.flightphp.com/awesome-plugins/apm",
             "keywords": [
                 "Application performance monitor",
                 "Simple",
@@ -185,15 +185,16 @@
                 "lightweight",
                 "monitor",
                 "monitoring",
+                "observability",
                 "performance",
                 "performance monitoring",
                 "php"
             ],
             "support": {
                 "issues": "https://github.com/flightphp/apm/issues",
-                "source": "https://github.com/flightphp/apm/tree/v0.2.1"
+                "source": "https://github.com/flightphp/apm/tree/v0.2.2"
             },
-            "time": "2025-03-18T05:33:13+00:00"
+            "time": "2025-03-26T04:44:34+00:00"
         },
         {
             "name": "flightphp/cache",
@@ -789,16 +790,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "2.1.8",
+            "version": "2.1.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "f9adff3b87c03b12cc7e46a30a524648e497758f"
+                "reference": "8ca5f79a8f63c49b2359065832a654e1ec70ac30"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/f9adff3b87c03b12cc7e46a30a524648e497758f",
-                "reference": "f9adff3b87c03b12cc7e46a30a524648e497758f",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/8ca5f79a8f63c49b2359065832a654e1ec70ac30",
+                "reference": "8ca5f79a8f63c49b2359065832a654e1ec70ac30",
                 "shasum": ""
             },
             "require": {
@@ -843,7 +844,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-03-09T09:30:48+00:00"
+            "time": "2025-03-24T13:45:00+00:00"
         },
         {
             "name": "rector/rector",

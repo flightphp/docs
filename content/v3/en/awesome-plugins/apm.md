@@ -257,6 +257,23 @@ php vendor/bin/runway apm:worker --daemon --batch_size 100 --timeout 3600
 ```
 Runs for an hour, processing 100 metrics at a time.
 
+## Request ID in App
+
+Each request has a unique request ID for tracking. You can use this ID in your app to correlate logs and metrics. For instance you can add the request ID to an error page:
+
+```php
+Flight::map('error', function($message) {
+	// Get the request ID from the response header X-Flight-Request-Id
+	$requestId = Flight::response()->getHeader('X-Flight-Request-Id');
+
+	// Additionally you could fetch it from the Flight variable
+	// This method won't work well in swoole or other async platforms.
+	// $requestId = Flight::get('apm.request_id');
+	
+	echo "Error: $message (Request ID: $requestId)";
+});
+```
+
 ## Upgrading
 
 If you are upgrading to a newer version of the APM, there is a chance that there are database migrations that need to be run. You can do this by running the following command:
@@ -267,6 +284,21 @@ php vendor/bin/runway apm:migrate
 This will run any migrations that are needed to update the database schema to the latest version.
 
 **Note:** If you're APM database is large in size, these migrations may take some time to run. You may want to run this command during off-peak hours.
+
+## Purging Old Data
+
+To keep your database tidy, you can purge old data. This is especially useful if you’re running a busy app and want to keep the database size manageable.
+You can do this by running the following command:
+
+```bash
+php vendor/bin/runway apm:purge
+```
+This will remove all data older than 30 days from the database. You can adjust the number of days by passing a different value to the `--days` option:
+
+```bash
+php vendor/bin/runway apm:purge --days 7
+```
+This will remove all data older than 7 days from the database.
 
 ## Troubleshooting
 
