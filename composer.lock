@@ -131,16 +131,16 @@
         },
         {
             "name": "flightphp/apm",
-            "version": "v0.3.0",
+            "version": "v0.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/flightphp/apm.git",
-                "reference": "e0c9757e4089877e1e6dd0617c20162a34210ecf"
+                "reference": "99238565858c9f7cebd021a9eacefd72fc18ceda"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/flightphp/apm/zipball/e0c9757e4089877e1e6dd0617c20162a34210ecf",
-                "reference": "e0c9757e4089877e1e6dd0617c20162a34210ecf",
+                "url": "https://api.github.com/repos/flightphp/apm/zipball/99238565858c9f7cebd021a9eacefd72fc18ceda",
+                "reference": "99238565858c9f7cebd021a9eacefd72fc18ceda",
                 "shasum": ""
             },
             "require": {
@@ -192,9 +192,9 @@
             ],
             "support": {
                 "issues": "https://github.com/flightphp/apm/issues",
-                "source": "https://github.com/flightphp/apm/tree/v0.3.0"
+                "source": "https://github.com/flightphp/apm/tree/v0.3.1"
             },
-            "time": "2025-03-26T13:35:45+00:00"
+            "time": "2025-03-29T13:50:25+00:00"
         },
         {
             "name": "flightphp/cache",
@@ -848,21 +848,21 @@
         },
         {
             "name": "rector/rector",
-            "version": "2.0.10",
+            "version": "2.0.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/rectorphp/rector.git",
-                "reference": "5844a718acb40f40afcd110394270afa55509fd0"
+                "reference": "059b827cc648929711606e9824337e41e2f9ed92"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rectorphp/rector/zipball/5844a718acb40f40afcd110394270afa55509fd0",
-                "reference": "5844a718acb40f40afcd110394270afa55509fd0",
+                "url": "https://api.github.com/repos/rectorphp/rector/zipball/059b827cc648929711606e9824337e41e2f9ed92",
+                "reference": "059b827cc648929711606e9824337e41e2f9ed92",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.4|^8.0",
-                "phpstan/phpstan": "^2.1.6"
+                "phpstan/phpstan": "^2.1.9"
             },
             "conflict": {
                 "rector/rector-doctrine": "*",
@@ -895,7 +895,7 @@
             ],
             "support": {
                 "issues": "https://github.com/rectorphp/rector/issues",
-                "source": "https://github.com/rectorphp/rector/tree/2.0.10"
+                "source": "https://github.com/rectorphp/rector/tree/2.0.11"
             },
             "funding": [
                 {
@@ -903,7 +903,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-03-03T17:35:18+00:00"
+            "time": "2025-03-28T10:25:17+00:00"
         }
     ],
     "aliases": [],
