@@ -194,7 +194,7 @@ Track anything—like an API call or payment process:
 ```php
 use flight\apm\CustomEvent;
 
-$app->eventDispatcher()->emit('apm.custom', new CustomEvent('api_call', [
+$app->eventDispatcher()->trigger('apm.custom', new CustomEvent('api_call', [
     'endpoint' => 'https://api.example.com/users',
     'response_time' => 0.25,
     'status' => 200
@@ -208,7 +208,7 @@ In the dashboard’s request details under “Custom Events”—expandable with
 ```php
 $start = microtime(true);
 $apiResponse = file_get_contents('https://api.example.com/data');
-$app->eventDispatcher()->emit('apm.custom', new CustomEvent('external_api', [
+$app->eventDispatcher()->trigger('apm.custom', new CustomEvent('external_api', [
     'url' => 'https://api.example.com/data',
     'time' => microtime(true) - $start,
     'success' => $apiResponse !== false
