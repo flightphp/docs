@@ -84,28 +84,29 @@ require 'vendor/autoload.php';
 
 $app = Flight::app();
 
-// set a custom path to your session configuration file and give it a random string for the session id
-$app->register('session', Session::class, [ 'path/to/session_config.php', bin2hex(random_bytes(32)) ], function(Session $session) {
-		// or you can manually override configuration options
-		$session->updateConfiguration([
-			// if you want to store your session data in a database (good if you want something like, "log me out of all devices" functionality)
-			Session::CONFIG_DRIVER        => Ghostff\Session\Drivers\MySql::class,
-			Session::CONFIG_ENCRYPT_DATA  => true,
-			Session::CONFIG_SALT_KEY      => hash('sha256', 'my-super-S3CR3T-salt'), // please change this to be something else
-			Session::CONFIG_AUTO_COMMIT   => true, // only do this if it requires it and/or it's hard to commit() your session.
-												   // additionally you could do Flight::after('start', function() { Flight::session()->commit(); });
-			Session::CONFIG_MYSQL_DS         => [
-				'driver'    => 'mysql',             # Database driver for PDO dns eg(mysql:host=...;dbname=...)
-				'host'      => '127.0.0.1',         # Database host
-				'db_name'   => 'my_app_database',   # Database name
-				'db_table'  => 'sessions',          # Database table
-				'db_user'   => 'root',              # Database username
-				'db_pass'   => '',                  # Database password
-				'persistent_conn'=> false,          # Avoid the overhead of establishing a new connection every time a script needs to talk to a database, resulting in a faster web application. FIND THE BACKSIDE YOURSELF
-			]
-		]);
-	}
-);
+// set a custom path to your session configuration file as the first arg
+// or give it the custom array
+// 2nd arg is to give it a random string for the session id
+$app->register('session', Session::class, [ 
+	[
+		// if you want to store your session data in a database (good if you want something like, "log me out of all devices" functionality)
+		Session::CONFIG_DRIVER        => Ghostff\Session\Drivers\MySql::class,
+		Session::CONFIG_ENCRYPT_DATA  => true,
+		Session::CONFIG_SALT_KEY      => hash('sha256', 'my-super-S3CR3T-salt'), // please change this to be something else
+		Session::CONFIG_AUTO_COMMIT   => true, // only do this if it requires it and/or it's hard to commit() your session.
+												// additionally you could do Flight::after('start', function() { Flight::session()->commit(); });
+		Session::CONFIG_MYSQL_DS         => [
+			'driver'    => 'mysql',             # Database driver for PDO dns eg(mysql:host=...;dbname=...)
+			'host'      => '127.0.0.1',         # Database host
+			'db_name'   => 'my_app_database',   # Database name
+			'db_table'  => 'sessions',          # Database table
+			'db_user'   => 'root',              # Database username
+			'db_pass'   => '',                  # Database password
+			'persistent_conn'=> false,          # Avoid the overhead of establishing a new connection every time a script needs to talk to a database, resulting in a faster web application. FIND THE BACKSIDE YOURSELF
+		]
+	], 
+	bin2hex(random_bytes(32)) 
+]);
 ```
 
 ## Help! My Session Data is Not Persisting!
