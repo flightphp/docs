@@ -86,7 +86,6 @@ $app = Flight::app();
 
 // set a custom path to your session configuration file as the first arg
 // or give it the custom array
-// 2nd arg is to give it a random string for the session id
 $app->register('session', Session::class, [ 
 	[
 		// if you want to store your session data in a database (good if you want something like, "log me out of all devices" functionality)
@@ -104,8 +103,7 @@ $app->register('session', Session::class, [
 			'db_pass'   => '',                  # Database password
 			'persistent_conn'=> false,          # Avoid the overhead of establishing a new connection every time a script needs to talk to a database, resulting in a faster web application. FIND THE BACKSIDE YOURSELF
 		]
-	], 
-	bin2hex(random_bytes(32)) 
+	] 
 ]);
 ```
 
