@@ -72,12 +72,12 @@ foreach ($files as $file) {
         ];
 
         do {
-            $ch = curl_init('https://api.openai.com/v1/chat/completions');
+            $ch = curl_init('https://api.x.ai/v1/chat/completions');
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_POST, true);
 
             curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
-                "model" => "gpt-4o-mini",
+                "model" => "grok-3-mini",
                 "messages" => $messages
             ]));
 

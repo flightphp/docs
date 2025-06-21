@@ -1,154 +1,154 @@
-# Pasākumu sistēma Flight PHP (v3.15.0+)
+# Notikumu sistēma Flight PHP (v3.15.0+)
 
-Flight PHP ievieš vieglu un intuitīvu pasākumu sistēmu, kas ļauj reģistrēt un izsistīt pielāgotus pasākumus jūsu lietojumprogrammā. Pievienojot `Flight::onEvent()` un `Flight::triggerEvent()`, jūs tagad varat pieslēgties jūsu lietojumprogrammas dzīves cikla nozīmīgajiem brīžiem vai definēt savus pasākumus, lai padarītu jūsu kodu modulāru un paplašināmu. Šīs metodes ir daļa no Flight **kartējamajām metodēm**, tas nozīmē, ka jūs varat pārdefinēt to uzvedību, lai pielāgotu to savām vajadzībām.
+Flight PHP ievieš vieglu un intuitīvu notikumu sistēmu, kas ļauj reģistrēt un izraisīt pielāgotus notikumus jūsu aplikācijā. Ar `Flight::onEvent()` un `Flight::triggerEvent()` pievienošanu, jūs tagad varat pieslēgties galvenajiem jūsu app dzīves cikla mirkļiem vai definēt savus notikumus, lai padarītu kodu modulārāku un paplašināmu. Šīs metodes ir daļa no Flight **mappable methods**, kas nozīmē, ka jūs varat pārdefinēt to uzvedību atbilstoši savām vajadzībām.
 
-Šis ceļvedis aptver visu, kas jums jāzina, lai uzsāktu darbu ar pasākumiem, ieskaitot, kāpēc tie ir vērtīgi, kā tos izmantot un praktiskus piemērus, lai palīdzētu iesācējiem saprast to potenciālu.
+Šis ceļvedis aptver visu, ko jums vajadzētu zināt, lai sāktu ar notikumiem, ieskaitot iemeslus, kāpēc tie ir vērtīgi, kā tos izmantot, un praktiskus piemērus, lai palīdzētu iesācējiem saprast to spēku.
 
-## Kāpēc izmantot pasākumus?
+## Kāpēc izmantot notikumus?
 
-Pasākumi ļauj jums atdalīt dažādas jūsu lietojumprogrammas daļas, lai tās stipri neatkarētu viena no otras. Šī atdalīšana—bieži saukta par **atslēgšanu**—padara jūsu kodu vieglāk atjauninātu, paplašinātu vai labotu. Tā vietā, lai uzrakstītu visu vienā lielā blokā, jūs varat sadalīt savu loģiku mazākos, neatkarīgos gabalos, kas reaģē uz konkrētām darbībām (pasākumiem).
+Notikumi ļauj atdalīt dažādas aplikācijas daļas, lai tās nepārāk stipri nebalstītos viena uz otru. Šī atdalīšana — bieži saukta par **decoupling** — padara kodu vieglāku atjaunināšanai, paplašināšanai vai atkļūdošanai. Tā vietā, lai rakstītu visu vienā lielā blokā, jūs varat sadalīt loģiku mazākos, neatkarīgos gabalos, kas reaģē uz specifiskām darbībām (notikumiem).
 
-Iedomājieties, ka jūs veidojat bloga lietojumprogrammu:
-- Kad lietotājs ievieto komentāru, jūs varat vēlēties:
+Iedomājieties, ka jūs veidojat bloga app:
+- Kad lietotājs pievieno komentāru, jūs varētu vēlēties:
   - Saglabāt komentāru datu bāzē.
   - Nosūtīt e-pastu bloga īpašniekam.
-  - Reģistrēt darbību drošībai.
+  - Reģistrēt darbību drošības nolūkos.
 
-Bez pasākumiem jūs visu šo iepazīsiet vienā funkcijā. Ar pasākumiem jūs varat to sadalīt: viena daļa saglabā komentāru, otra izsist pasākumu, piemēram, `'comment.posted'`, un atsevišķi klausītāji apstrādā e-pastu un reģistrēšanu. Tas saglabā jūsu kodu tīrāku un ļauj jums pievienot vai noņemt funkcijas (piemēram, paziņojumus), nepieskaroties pamatloģikai.
+Bez notikumiem jūs to visu iespiestu vienā funkcijā. Ar notikumiem jūs to varat sadalīt: viena daļa saglabā komentāru, cita izraisa notikumu, piemēram, `'comment.posted'`, un atsevišķi klausītāji apstrādā e-pastu un reģistrāciju. Tas padara kodu tīrāku un ļauj pievienot vai noņemt funkcijas (piemēram, paziņojumus) bez ietekmes uz kodola loģiku.
 
-### Bieži lietojumi
-- **Reģistrēšana**: Ierakstīt darbības, piemēram, pieteikšanos vai kļūdas, nepiesārņojot jūsu galveno kodu.
-- **Paziņojumi**: Nosūtīt e-pastus vai brīdinājumus, kad notiek kaut kas.
-- **Atjauninājumi**: Atsvaidzināt kešatmiņas vai paziņot citām sistēmām par izmaiņām.
+### Biežākās izmantošanas vietas
+- **Reģistrācija**: Reģistrēt darbības, piemēram, pieteikumus vai kļūdas, neaizkraujot galveno kodu.
+- **Paziņojumi**: Nosūtīt e-pastus vai brīdinājumus, kad kaut kas notiek.
+- **Atjauninājumi**: Atsvaidzināt kešus vai paziņot citiem sistēmām par izmaiņām.
 
-## Pasākumu klausītāju reģistrēšana
+## Reģistrējot notikumu klausītājus
 
-Lai klausītos uz pasākumu, izmantojiet `Flight::onEvent()`. Šī metode ļauj jums definēt, kas notiks, kad pasākums notiek.
+Lai klausītos notikumu, izmantojiet `Flight::onEvent()`. Šī metode ļauj definēt, kas notiek, kad notikums notiek.
 
 ### Sintakse
 ```php
-Flight::onEvent(string $event, callable $callback): void
+Flight::onEvent(string $event, callable $callback): void  // $event: Notikuma nosaukums (piem., 'user.login').
 ```
-- `$event`: Nosaukums jūsu pasākumam (piemēram, `'user.login'`).
-- `$callback`: Funkcija, kas jāizpilda, kad pasākums tiek izsists.
+- `$event`: Notikuma nosaukums (piem., `'user.login'`).
+- `$callback`: Funkcija, kas jāizpilda, kad notikums tiek izsaukts.
 
 ### Kā tas darbojas
-Jūs "pierakstāties" uz pasākumu, sakot Flight, ko darīt, kad tas notiek. Atgriezeniskā funkcija var pieņemt argumentus, kas tiek nodoti no pasākuma izsistšanas.
+Jūs "abonējat" notikumu, norādot Flight, ko darīt, kad tas notiek. Callback var pieņemt argumentus, kas nodoti no notikuma izsaukuma.
 
-Flight pasākumu sistēma ir sinhrona, kas nozīmē, ka katrs pasākumu klausītājs tiek izpildīts secīgi, viens pēc otra. Kad jūs izsitat pasākumu, visi reģistrētie klausītāji šim pasākumam tiks izpildīti līdz beigām, pirms jūsu kods turpinās. Tas ir svarīgi saprast, jo tas atšķiras no asinkronajiem pasākumu sistēmām, kur klausītāji var darboties paralēli vai vēlāk.
+Flight notikumu sistēma ir sinhroniska, kas nozīmē, ka katrs notikuma klausītājs tiek izpildīts secīgi, viens pēc otra. Kad jūs izraisa notikumu, visi reģistrētie klausītāji tam notikumam tiks izpildīti līdz galam, pirms jūsu kods turpina. Tas ir svarīgi saprast, jo tas atšķiras no asinhroniskām notikumu sistēmām, kur klausītāji varētu darboties paralēli vai vēlāk.
 
 ### Vienkāršs piemērs
 ```php
 Flight::onEvent('user.login', function ($username) {
-    echo "Laipni lūdzam atpakaļ, $username!";
+    echo "Laipni lūgts atpakaļ, $username!";  // Šeit sveic lietotāju vārdā.
 });
 ```
-Šeit, kad pasākums `'user.login'` tiek izsists, tas sveicinās lietotāju pēc vārda.
+Šeit, kad `'user.login'` notikums tiek izsaukts, tas sveic lietotāju vārdā.
 
 ### Galvenie punkti
-- Jūs varat pievienot vairākus klausītājus vienam un tam pašam pasākumam—tie darbosies tajā secībā, kādā jūs tos reģistrējāt.
-- Atgriezeniskā funkcija var būt funkcija, anonīma funkcija vai metode no klases.
+- Jūs varat pievienot vairākus klausītājus vienam notikumam — tie tiks izpildīti reģistrēšanas secībā.
+- Callback var būt funkcija, anonīma funkcija vai klases metode.
 
-## Pasākumu izsistīšana
+## Izraisot notikumus
 
-Lai izsistītu pasākumu, izmantojiet `Flight::triggerEvent()`. Tas norāda Flight, lai izpildītu visus klausītājus, kas reģistrēti šim pasākumam, nododot jebkādus datus, ko sniedzat.
+Lai izraisītu notikumu, izmantojiet `Flight::triggerEvent()`. Tas liek Flight izpildīt visus reģistrētos klausītājus tam notikumam, nododot jebkādus datus, ko jūs norādāt.
 
 ### Sintakse
 ```php
 Flight::triggerEvent(string $event, ...$args): void
 ```
-- `$event`: Pasākuma nosaukums, ko jūs izsitat (jāatbilst reģistrētam pasākumam).
-- `...$args`: Papildus argumenti, kurus nosūtīt klausītājiem (var būt jebkura skaita argumenti).
+- `$event`: Notikuma nosaukums, ko jūs izraisa (jāatbilst reģistrētajam notikumam).
+- `...$args`: Izvēles argumenti, ko nosūtīt klausītājiem (var būt jebkurš argumentu skaits).
 
 ### Vienkāršs piemērs
 ```php
 $username = 'alice';
 Flight::triggerEvent('user.login', $username);
 ```
-Tas izsist pasākumu `'user.login'` un nosūta `'alice'` klausītājam, ko mēs definējām iepriekš, kas izvadīs: `Laipni lūdzam atpakaļ, alice!`.
+Tas izraisa `'user.login'` notikumu un nosūta `'alice'` klausītājam, ko mēs agrāk definējām, kas izvadīs: `Laipni lūgts atpakaļ, alice!`.
 
 ### Galvenie punkti
-- Ja nav reģistrētu klausītāju, nekas nenotiek—jūsu lietojumprogramma nesabruks.
-- Izmantojiet izplatīšanas operatoru (`...`), lai elastīgi nodotu vairākus argumentus.
+- Ja nav reģistrētu klausītāju, nekas nenotiek — jūsu app netiks sabojāts.
+- Izmantojiet izklājuma operatoru (`...`) , lai elastīgi nodotu vairākus argumentus.
 
-### Pasākumu klausītāju reģistrēšana
+### Reģistrējot notikumu klausītājus
 
 ...
 
-**Turbīnā turpmāks klausītājs**:
-Ja klausītājs atgriež `false`, nekādi papildu klausītāji šim pasākumam netiks izpildīti. Tas ļauj jums apturēt pasākumu ķēdi, pamatojoties uz noteiktām nosacījumiem. Atcerieties, ka klausītāju secība ir svarīga, jo pirmais, kas atgriež `false`, apturēs pārējo izpildi.
+**Apturēt turpmākos klausītājus**:
+Ja klausītājs atgriež `false`, neviens papildu klausītājs tam notikumam netiks izpildīts. Tas ļauj apturēt notikumu ķēdi, balstoties uz specifiskiem nosacījumiem. Atcerieties, ka klausītāju secība ir svarīga, jo pirmais, kas atgriež `false`, apturēs pārējos.
 
 **Piemērs**:
 ```php
 Flight::onEvent('user.login', function ($username) {
     if (isBanned($username)) {
         logoutUser($username);
-        return false; // Aptur nākamos klausītājus
+        return false;  // Aptur turpmākos klausītājus
     }
 });
 Flight::onEvent('user.login', function ($username) {
-    sendWelcomeEmail($username); // šis nekad netiks nosūtīts
+    sendWelcomeEmail($username);  // šis netiek nosūtīts
 });
 ```
 
-## Pasākumu metožu pārdefinēšana
+## Pārdefinējot notikumu metodes
 
-`Flight::onEvent()` un `Flight::triggerEvent()` ir pieejami, lai tiktu [paplašināti](/learn/extending), tas nozīmē, ka jūs varat pārdefinēt to darbību. Tas ir lieliski piemērots pieredzējušiem lietotājiem, kuri vēlas pielāgot pasākumu sistēmu, piemēram, pievienojot reģistrēšanu vai mainot, kā pasākumi tiek izsisti.
+`Flight::onEvent()` un `Flight::triggerEvent()` ir pieejamas [extended](/learn/extending), kas nozīmē, ka jūs varat pārdefinēt, kā tās darbojas. Tas ir lieliski piemērots pieredzējušiem lietotājiem, kuri vēlas pielāgot notikumu sistēmu, piemēram, pievienojot reģistrāciju vai mainot, kā notikumi tiek izsūtīti.
 
 ### Piemērs: Pielāgojot `onEvent`
 ```php
 Flight::map('onEvent', function (string $event, callable $callback) {
-    // Reģistrēt katru pasākumu reģistrāciju
-    error_log("Jauns pasākumu klausītājs pievienots: $event");
-    // Izsist standarta uzvedību (pieņemot, ka ir iekšēja pasākumu sistēma)
+    // Reģistrē katru notikuma reģistrāciju
+    error_log("Jauns notikuma klausītājs pievienots: $event");
+    // Izsauc noklusējuma uzvedību (pieņemot iekšēju notikumu sistēmu)
     Flight::_onEvent($event, $callback);
 });
 ```
-Tagad, katru reizi, kad jūs reģistrējat pasākumu, tas tiek ierakstīts pirms turpināšanas.
+Tagad katru reizi, kad jūs reģistrējat notikumu, tas to reģistrē pirms turpināšanas.
 
 ### Kāpēc pārdefinēt?
 - Pievienot atkļūdošanu vai uzraudzību.
-- Ierobežot pasākumus noteiktās vidēs (piemēram, izslēgt testēšanas laikā).
-- Integrēt ar citu pasākumu bibliotēku.
+- Ierobežot notikumus noteiktās vidēs (piemēram, atspējot testēšanā).
+- Integrēt ar citu notikumu bibliotēku.
 
-## Kur ievietot savus pasākumus
+## Kur ievietot savus notikumus
 
-Kā iesācējs, jūs varat jautāt: *kur reģistrēt visus šos pasākumus savā lietojumprogrammā?* Flight vienkāršība nozīmē, ka nav stingru noteikumu—jūs varat tos ievietot kur vien tas ir piemērots jūsu projektam. Tomēr, saglabājot tos organizētus, jūs palīdzat uzturēt savu kodu, kad jūsu lietojumprogramma aug. Šeit ir daži praktiski varianti un labākās prakses, pielāgotas Flight vieglajai būtībai:
+Kā iesācējs, jūs varētu brīnīties: *kur es reģistrēju visus šos notikumus savā app?* Flight vienkāršība nozīmē, ka nav stingru noteikumu — jūs varat ievietot tos tur, kur tas šķiet loģiski jūsu projektam. Tomēr to organizēšana palīdz uzturēt kodu, jo app aug. Šeit ir dažas praktiskas opcijas un labākās prakses, pielāgotas Flight vieglajai dabai:
 
-### Variants 1: Jūsu galvenajā `index.php`
-Nelielām lietojumprogrammām vai ātriem prototipiem jūs varat reģistrēt pasākumus tieši savā `index.php` failā kopā ar maršrutiem. Tas viss saglabā vienā vietā, kas ir labi, kad vienkāršība ir jūsu galvenā prioritāte.
+### Opcija 1: Galvenajā `index.php`
+Maziem app vai ātriem prototipiem jūs varat reģistrēt notikumus tieši `index.php` failā kopā ar maršrutiem. Tas visu tur vienuviet, kas ir piemēroti, kad galvenā prioritāte ir vienkāršība.
 
 ```php
 require 'vendor/autoload.php';
 
-// Reģistrēt pasākumus
+// Reģistrēt notikumus
 Flight::onEvent('user.login', function ($username) {
-    error_log("$username pieteicies " . date('Y-m-d H:i:s'));
+    error_log("$username pi logged in at " . date('Y-m-d H:i:s'));  // Reģistrē pieteikšanos ar laiku.
 });
 
 // Definēt maršrutus
 Flight::route('/login', function () {
     $username = 'bob';
     Flight::triggerEvent('user.login', $username);
-    echo "Pieteicies!";
+    echo "Pieslēdzies!";
 });
 
 Flight::start();
 ```
 - **Priekšrocības**: Vienkārši, nav papildu failu, lieliski maziem projektiem.
-- **Trūkumi**: Var kļūt haotiski, kad jūsu lietojumprogramma aug ar vairāk pasākumiem un maršrutiem.
+- **Trūkumi**: Var kļūt nekārtīgs, kad app aug ar vairāk notikumiem un maršrutiem.
 
-### Variants 2: Atsevišķs `events.php` fails
-Nedaudz lielākai lietojumprogrammai apsveriet iespēju pārvietot pasākumu reģistrācijas uz veltītu failu, piemēram, `app/config/events.php`. Iekļaujiet šo failu savā `index.php` pirms maršrutiem. Tas atdarina, kā maršruti bieži tiek organizēti `app/config/routes.php` Flight projektos.
+### Opcija 2: Atsevišķs `events.php` fails
+Nedaudz lielākam app, apsveriet iespēju pārvietot notikumu reģistrācijas uz speciālu failu, piemēram, `app/config/events.php`. Iekļaujiet šo failu `index.php` pirms maršrutiem. Tas līdzinās tam, kā maršruti bieži tiek organizēti `app/config/routes.php` Flight projektos.
 
 ```php
 // app/config/events.php
 Flight::onEvent('user.login', function ($username) {
-    error_log("$username pieteicies " . date('Y-m-d H:i:s'));
+    error_log("$username logged in at " . date('Y-m-d H:i:s'));  // Reģistrē pieteikšanos ar laiku.
 });
 
 Flight::onEvent('user.registered', function ($email, $name) {
-    echo "E-pasts nosūtīts uz $email: Laipni lūdzam, $name!";
+    echo "E-pasts nosūtīts uz $email: Laipni lūgts, $name!";
 });
 ```
 
@@ -160,136 +160,136 @@ require 'app/config/events.php';
 Flight::route('/login', function () {
     $username = 'bob';
     Flight::triggerEvent('user.login', $username);
-    echo "Pieteicies!";
+    echo "Pieslēdzies!";
 });
 
 Flight::start();
 ```
-- **Priekšrocības**: Saglabā `index.php` koncentrēts uz maršrutiem, organizē pasākumus loģiski, viegli atrast un rediģēt.
-- **Trūkumi**: Pievieno nedaudz struktūras, kas var šķist pārspīlēti ļoti maziem gabaliem.
+- **Priekšrocības**: Tur `index.php` fokusēts uz maršrutiem, loģiski organizē notikumus, viegli atrast un rediģēt.
+- **Trūkumi**: Pievieno nedaudz struktūras, kas var šķist pārāk daudz ļoti maziem app.
 
-### Variants 3: Tuvojoties, kur viņi tiek izsisti
-Vēl viens pieejas veids ir reģistrēt pasākumus tuvu vietai, kur tie tiek izsisti, piemēram, iekšā kontrolierī vai maršruta definīcijā. Tas labi darbojas, ja pasākums ir specifisks vienai jūsu lietojumprogrammas daļai.
+### Opcija 3: Tuvu vietai, kur tie tiek izraisīti
+Cita pieeja ir reģistrēt notikumus tuvu vietai, kur tie tiek izraisīti, piemēram, iekšā kontrolierī vai maršruta definīcijā. Tas darbojas labi, ja notikums ir specifisks vienai app daļai.
 
 ```php
 Flight::route('/signup', function () {
-    // Reģistrēt pasākumu šeit
+    // Reģistrēt notikumu šeit
     Flight::onEvent('user.registered', function ($email) {
-        echo "Laipni lūdzam e-pastā nosūtītā $email!";
+        echo "Laipni lūgts e-pasts nosūtīts uz $email!";  // Simulē e-pasta nosūtīšanu.
     });
 
     $email = 'jane@example.com';
     Flight::triggerEvent('user.registered', $email);
-    echo "Pieteicies!";
+    echo "Reģistrēts!";
 });
 ```
-- **Priekšrocības**: Saglabā saistīto kodu kopā, labi izolētām funkcijām.
-- **Trūkumi**: Izkliedē pasākumu reģistrācijas, apgrūtina visu pasākumu vienlaicīgu apskati; riski dubultiem reģistrācijām, ja neesat uzmanīgs.
+- **Priekšrocības**: Tur saistīto kodu kopā, labs izolētām funkcijām.
+- **Trūkumi**: Izklāj notikumu reģistrācijas, padarot grūtāk redzēt visus notikumus vienā vietā; risks atkārtot reģistrācijas, ja neuzmanīgs.
 
 ### Labākā prakse Flight
-- **Sāciet ar vienkāršu**: Ļoti maziem gabaliem ievietojiet pasākumus `index.php`. Tas ir ātri un atbilst Flight minimālismam.
-- **Audziniet gudri**: Kad jūsu lietojumprogramma paplašinās (piemēram, vairāk nekā 5-10 pasākumi), izmantojiet `app/config/events.php` failu. Tas ir dabisks solis uz augšu, piemēram, maršrutu organizēšana, un saglabā jūsu kodu kārtīgu bez sarežģītu sistēmu pievienošanas.
-- **Izvairieties no pārmērīgas struktūras**: Nepievienojiet pilnvērtīgu "pasākumu pārvaldīšanas" klasi vai direktoriju, ja jūsu lietojumprogramma kļūst milzīga—Flight uzplaukst vienkāršībā, tādēļ saglabājiet to vieglu.
+- **Sāciet vienkārši**: Maziem app ievietojiet notikumus `index.php`. Tas ir ātri un atbilst Flight minimālismam.
+- **Augiet gudri**: Kad app paplašinās (piemēram, vairāk nekā 5-10 notikumiem), izmantojiet `app/config/events.php` failu. Tas ir dabisks solis uz priekšu, līdzīgi kā organizēt maršrutus, un uztur kodu kārtīgu bez sarežģītām ietvēm.
+- **Izvairieties no pārmērīgas sarežģītības**: Neveidojiet pilnīgu “notikumu pārvaldnieka” klasi vai direktoriju, ja vien app nav milzīgs — Flight uzplaukst vienkāršībā, tāpēc turiet to vieglu.
 
 ### Padoms: Grupējiet pēc mērķa
-Failā `events.php` grupējiet saistītus pasākumus (piemēram, visus lietotāju saistītos pasākumus kopā) ar komentāriem skaidrībai:
+`events.php` failā grupējiet saistītos notikumus (piemēram, visi lietotājiem saistītie notikumi kopā) ar komentāriem skaidrībai:
 
 ```php
 // app/config/events.php
-// Lietotāju pasākumi
+// Lietotāju notikumi
 Flight::onEvent('user.login', function ($username) {
-    error_log("$username pieteicies");
+    error_log("$username pi logged in");  // Reģistrē pieteikšanos.
 });
 Flight::onEvent('user.registered', function ($email) {
-    echo "Laipni lūdzam uz $email!";
+    echo "Laipni lūgts uz $email!";
 });
 
-// Lapas pasākumi
+// Lappušu notikumi
 Flight::onEvent('page.updated', function ($pageId) {
-    unset($_SESSION['pages'][$pageId]);
+    unset($_SESSION['pages'][$pageId]);  // Notīra sesijas kešu, ja piemērojams.
 });
 ```
 
-Šī struktūra labi paplašinās un paliks draudzīga iesācējiem.
+Šī struktūra labi mērojas un paliek iesācējiem draudzīga.
 
 ## Piemēri iesācējiem
 
-Pastaigāsim cauri dažiem reālās pasaules scenārijiem, lai parādītu, kā pasākumi darbojas un kāpēc tie ir noderīgi.
+Ejiet cauri dažiem reālas pasaules scenārijiem, lai parādītu, kā notikumi darbojas un kāpēc tie ir noderīgi.
 
-### Piemērs 1: Lietotāja pieteikšanās reģistrēšana
+### Piemērs 1: Reģistrēt lietotāja pieteikšanos
 ```php
-// Solis 1: Reģistrēt klausītāju
+// 1. solis: Reģistrēt klausītāju
 Flight::onEvent('user.login', function ($username) {
     $time = date('Y-m-d H:i:s');
-    error_log("$username pieteicies plkst. $time");
+    error_log("$username pi logged in at $time");  // Reģistrē pieteikšanos ar laiku.
 });
 
-// Solis 2: Izsist to savā lietojumprogrammā
+// 2. solis: Izraisa to app
 Flight::route('/login', function () {
-    $username = 'bob'; // Pieņemiet, ka tas nāk no formas
+    $username = 'bob';  // Izlikts, ka tas nāk no formas
     Flight::triggerEvent('user.login', $username);
-    echo "Sveiki, $username!";
+    echo "Sveiks, $username!";
 });
 ```
-**Kāpēc tas ir noderīgi**: Pieteikšanās kods nenojauš par reģistrēšanu—tas tikai izsisti pasākumu. Jūs vēlāk varat pievienot vairāk klausītāju (piemēram, nosūtīt sveiciena e-pastu) bez maršruta mainīšanas.
+**Kāpēc tas ir noderīgi**: Pieteikšanās kods nav jāsazinās ar reģistrēšanu — tas tikai izraisa notikumu. Vēlāk jūs varat pievienot vairāk klausītāju (piemēram, nosūtīt laipni lūgts e-pastu), nemainot maršrutu.
 
-### Piemērs 2: Paziņošana par jauniem lietotājiem
+### Piemērs 2: Paziņot par jauniem lietotājiem
 ```php
 // Klausītājs jaunām reģistrācijām
 Flight::onEvent('user.registered', function ($email, $name) {
-    // Simulējiet e-pasta nosūtīšanu
-    echo "E-pasts nosūtīts uz $email: Laipni lūdzam, $name!";
+    // Simulē e-pasta nosūtīšanu
+    echo "E-pasts nosūtīts uz $email: Laipni lūgts, $name!";
 });
 
-// Izsisti to, kad kāds piesakās
+// Izraisa to, kad kāds reģistrējas
 Flight::route('/signup', function () {
     $email = 'jane@example.com';
     $name = 'Jane';
     Flight::triggerEvent('user.registered', $email, $name);
-    echo "Paldies, ka reģistrējāties!";
+    echo "Paldies par reģistrēšanos!";
 });
 ```
-**Kāpēc tas ir noderīgi**: Reģistrācijas loģika koncentrējas uz lietotāja radīšanu, kamēr pasākums apstrādā paziņojumus. Jūs varētu vēlāk pievienot vairāk klausītāju (piemēram, reģistrēt reģistrāciju) gadījumā, ja tas būs nepieciešams.
+**Kāpēc tas ir noderīgi**: Reģistrācijas loģika koncentrējas uz lietotāja izveidošanu, kamēr notikums apstrādā paziņojumus. Jūs varētu vēlāk pievienot vairāk klausītāju (piemēram, reģistrēt reģistrēšanos).
 
-### Piemērs 3: Kešatmiņas dzēšana
+### Piemērs 3: Notīrīt kešu
 ```php
-// Klausītājs kešatmiņas dzēšanai
+// Klausītājs, lai notīrītu kešu
 Flight::onEvent('page.updated', function ($pageId) {
-    unset($_SESSION['pages'][$pageId]); // Izmet kešatmiņu sesijā, ja nepieciešams
-    echo "Kešatmiņa dzēsta lapai $pageId.";
+    unset($_SESSION['pages'][$pageId]);  // Notīra sesijas kešu, ja piemērojams
+    echo "Kešs notīrīts lappusei $pageId.";
 });
 
-// Izsist to, kad lapa tiek rediģēta
+// Izraisa, kad lappuse tiek rediģēta
 Flight::route('/edit-page/(@id)', function ($pageId) {
-    // Pieņemiet, ka mēs esam atjauninājuši lapu
+    // Izlikts, ka mēs atjauninājām lappusi
     Flight::triggerEvent('page.updated', $pageId);
-    echo "Lapa $pageId atjaunināta.";
+    echo "Lappuse $pageId atjaunināta.";
 });
 ```
-**Kāpēc tas ir noderīgi**: Rediģēšanas kods nezina par kešatmiņu—tas tikai signalizē par atjauninājumu. Citas lietojumprogrammas daļas var reaģēt, kā nepieciešams.
+**Kāpēc tas ir noderīgi**: Rediģēšanas kods neinteresējas par kešu — tas tikai signalizē atjauninājumu. Citas app daļas var reaģēt, kā nepieciešams.
 
 ## Labākās prakses
 
-- **Nosakiet pasākumus skaidri**: Izmantojiet specifiskus nosaukumus, piemēram, `'user.login'` vai `'page.updated'`, lai būtu acīmredzams, ko viņi dara.
-- **Saglabājiet klausītājus vienkāršus**: Neievietojiet lēnus vai sarežģītus uzdevumus klausītājos—turiet savu lietojumprogrammu ātru.
-- **Testējiet savus pasākumus**: Manuāli izsistiet tos, lai pārliecinātos, ka klausītāji darbojas kā paredzēts.
-- **Izmantojiet pasākumus saprātīgi**: Tie ir lieliski, lai atsvaidzinātu, bet pārāk daudz var padarīt jūsu kodu grūti izsekojamu—izmantojiet tos, kad tas ir jēgas.
+- **Nosaukiet notikumus skaidri**: Izmantojiet specifiskus nosaukumus, piemēram, `'user.login'` vai `'page.updated'`, lai būtu skaidrs, ko tie dara.
+- **Turiet klausītājus vienkāršus**: Nelieciet lēnus vai sarežģītus uzdevumus klausītājos — turiet app ātru.
+- **Testējiet savus notikumus**: Izraisa tos manuāli, lai nodrošinātu, ka klausītāji darbojas, kā gaidīts.
+- **Izmantojiet notikumus gudri**: Tie ir lieliski decouplēšanai, bet pārāk daudzi var padarīt kodu grūti izsekojamu — izmantojiet tos, kad tas ir pamatoti.
 
-Pasākumu sistēma Flight PHP, izmantojot `Flight::onEvent()` un `Flight::triggerEvent()`, piedāvā jums vienkāršu, bet spēcīgu veidu, kā veidot elastīgas lietojumprogrammas. Ļaujot dažādām jūsu lietojumprogrammas daļām sazināties viena ar otru caur pasākumiem, jūs varat saglabāt savu kodu organizētu, atkārtoti izmantojamu un viegli paplašināmu. Neatkarīgi no tā, vai reģistrējat darbības, nosūtāt paziņojumus vai pārvaldāt atjauninājumus, pasākumi palīdz to darīt bez loģikas sapīšanos. Turklāt, ar iespēju pārdefinēt šīs metodes, jums ir brīvība pielāgot sistēmu savām vajadzībām. Sāciet ar mazu pasākumu un skatieties, kā tas transformē jūsu lietojumprogrammas struktūru!
+Flight PHP notikumu sistēma ar `Flight::onEvent()` un `Flight::triggerEvent()`, piedāvā vienkāršu, bet spēcīgu veidu, kā veidot elastiskas aplikācijas. Ielaižot dažādas app daļas sazināties caur notikumiem, jūs varat turēt kodu organizētu, atkārtoti izmantojamu un viegli paplašināmu. Vai jūs reģistrējat darbības, nosūtāt paziņojumus vai pārvaldāt atjauninājumus, notikumi palīdz to darīt bez loģikas sajaukšanas. Turklāt, ar iespēju pārdefinēt šīs metodes, jums ir brīvība pielāgot sistēmu savām vajadzībām. Sāciet ar vienu notikumu un vērojiet, kā tas pārveido app struktūru!
 
-## Iebūvēti pasākumi
+## Iebūvētie notikumi
 
-Flight PHP nāk ar dažiem iebūvētiem pasākumiem, kurus jūs varat izmantot, lai pieslēgtos rāmja dzīves ciklam. Šie pasākumi tiek izsisti noteiktos punktos pieprasījuma/atbildes ciklā, ļaujot jums izpildīt pielāgotu loģiku, kad noteiktas darbības notiek.
+Flight PHP nāk ar dažiem iebūvētiem notikumiem, ko jūs varat izmantot, lai pieslēgtos framework dzīves ciklam. Šie notikumi tiek izsaukti specifiskos pieprasījuma/atbildes cikla punktos, ļaujot izpildīt pielāgotu loģiku, kad noteiktas darbības notiek.
 
-### Iebūvēto pasākumu saraksts
-- **flight.request.received**: `function(Request $request)` Izsists, kad pieprasījums ir saņemts, analizēts un apstrādāts.
-- **flight.error**: `function(Throwable $exception)` Izsists, kad notiek kļūda pieprasījuma dzīves ciklā.
-- **flight.redirect**: `function(string $url, int $status_code)` Izsists, kad tiek uzsākta novirzīšana.
-- **flight.cache.checked**: `function(string $cache_key, bool $hit, float $executionTime)` Izsists, kad kešatmiņa tiek pārbaudīta attiecīgajam atslēgai un, vai kešatmiņa ir situsi vai ne.
-- **flight.middleware.before**: `function(Route $route)` Izsists pēc tam, kad pirms starpprogrammas ir izpildīta.
-- **flight.middleware.after**: `function(Route $route)` Izsists pēc tam, kad pēc starpprogrammas ir izpildīta.
-- **flight.middleware.executed**: `function(Route $route, $middleware, string $method, float $executionTime)` Izsists pēc tam, kad jebkura starpprogramma ir izpildīta
-- **flight.route.matched**: `function(Route $route)` Izsists, kad maršruts ir saskaņots, bet vēl nav izpildīts.
-- **flight.route.executed**: `function(Route $route, float $executionTime)` Izsists pēc tam, kad maršruts ir izpildīts un apstrādāts. `$executionTime` ir laiks, kas bija vajadzīgs maršruta izpildei (kontroliera izsaukšanai utt.).
-- **flight.view.rendered**: `function(string $template_file_path, float $executionTime)` Izsists pēc tam, kad skats ir izveidots. `$executionTime` ir laiks, kas bija vajadzīgs, lai parādītu veidni. **Piezīme: Ja jūs pārdefinējat `render` metodi, jums būs nepieciešams atkārtoti izsist šo pasākumu.**
-- **flight.response.sent**: `function(Response $response, float $executionTime)` Izsists pēc tam, kad atbilde ir nosūtīta klientam. `$executionTime` ir laiks, kas bija vajadzīgs, lai izveidotu atbildi.
+### Iebūvētie notikumi saraksts
+- **flight.request.received**: `function(Request $request)` Izsaukts, kad pieprasījums tiek saņemts, parsēts un apstrādāts.
+- **flight.error**: `function(Throwable $exception)` Izsaukts, kad kļūda notiek pieprasījuma dzīves ciklā.
+- **flight.redirect**: `function(string $url, int $status_code)` Izsaukts, kad tiek uzsākts pāradresējums.
+- **flight.cache.checked**: `function(string $cache_key, bool $hit, float $executionTime)` Izsaukts, kad kešs tiek pārbaudīts specifiskai atslēgai un vai kešs trāpīts vai netrāpīts.
+- **flight.middleware.before**: `function(Route $route)` Izsaukts pēc before middleware izpildes.
+- **flight.middleware.after**: `function(Route $route)` Izsaukts pēc after middleware izpildes.
+- **flight.middleware.executed**: `function(Route $route, $middleware, string $method, float $executionTime)` Izsaukts pēc jebkuras middleware izpildes
+- **flight.route.matched**: `function(Route $route)` Izsaukts, kad maršruts ir saskaņots, bet vēl nav izpildīts.
+- **flight.route.executed**: `function(Route $route, float $executionTime)` Izsaukts pēc maršruta izpildes un apstrādes. `$executionTime` ir laiks, kas vajadzīgs maršruta izpildei (zvana kontrolierim utt).
+- **flight.view.rendered**: `function(string $template_file_path, float $executionTime)` Izsaukts pēc skata renderēšanas. `$executionTime` ir laiks, kas vajadzīgs šablona renderēšanai. **Piezīme: Ja jūs pārdefinējat `render` metodi, jums būs jāizsauc šis notikums atkārtoti.**
+- **flight.response.sent**: `function(Response $response, float $executionTime)` Izsaukts pēc atbildes nosūtīšanas klientam. `$executionTime` ir laiks, kas vajadzīgs atbildes izveidošanai.

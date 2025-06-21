@@ -1,22 +1,22 @@
-# FlightPHP Sesija - Viegls Failu Bāzes Sesiju Apstrādātājs
+# FlightPHP Sesija - Viegls failu balstīts sesijas pārvaldnieks
 
-Šis ir viegls, failu bāzes sesiju apstrādātāja paplašinājums [Flight PHP Framework](https://docs.flightphp.com/). Tas nodrošina vienkāršu, taču jaudīgu risinājumu sesiju pārvaldīšanai, ar tādām funkcijām kā neblokējoša sesiju lasīšana, opcionalā šifrēšana, automātiskā apstiprināšana un testa režīms izstrādei. Sesiju dati tiek glabāti failos, padarot to ideāli piemērotu lietojumprogrammām, kurām nav nepieciešama datu bāze.
+Tas ir viegls, failu balstīts sesijas pārvaldnieka spraudnis [Flight PHP Framework](https://docs.flightphp.com/). Tas nodrošina vienkāršu, bet spēcīgu risinājumu sesiju pārvaldībai, ar iespējām kā nesekojošas sesijas lasīšanas, izvēles šifrēšanu, automātisku apstiprināšanu un testēšanas režīmu attīstībai. Sesijas dati tiek glabāti failos, padarot to ideālu lietojumprogrammām, kurām nav nepieciešama datubāze.
 
-Ja vēlaties izmantot datu bāzi, apskatiet [ghostff/session](/awesome-plugins/ghost-session) paplašinājumu ar daudzām no šīm pašām funkcijām, bet ar datu bāzes atbalstu.
+Ja vēlaties izmantot datubāzi, pārbaudiet [ghostff/session](/awesome-plugins/ghost-session) spraudni, kas satur daudzas no šīm pašām iespējām, bet ar datubāzes aizmuguri.
 
-Apmeklējiet [Github repozitoriju](https://github.com/flightphp/session) pilnīgai avota kodu un detaļu apskatei.
+Apmeklējiet [Github repozitoriju](https://github.com/flightphp/session) pilnam avota kodam un detaļām.
 
-## Instalācija
+## Instalēšana
 
-Uzstādiet paplašinājumu, izmantojot Composer:
+Instalējiet spraudni caur Composer:
 
 ```bash
 composer require flightphp/session
 ```
 
-## Pamata Lietošana
+## Pamata lietošana
 
-Šeit ir vienkāršs piemērs, kā izmantot `flightphp/session` paplašinājumu savā Flight lietojumprogrammā:
+Lūk, vienkāršs piemērs, kā izmantot `flightphp/session` spraudni jūsu Flight lietojumprogrammā:
 
 ```php
 require 'vendor/autoload.php';
@@ -25,18 +25,18 @@ use flight\Session;
 
 $app = Flight::app();
 
-// Reģistrējiet sesiju pakalpojumu
+// Reģistrē sesijas servisu
 $app->register('session', Session::class);
 
-// Piemēra maršruta izmantošana ar sesiju
+// Piemērs maršrutam ar sesijas lietošanu
 Flight::route('/login', function() {
     $session = Flight::session();
     $session->set('user_id', 123);
     $session->set('username', 'johndoe');
     $session->set('is_admin', false);
 
-    echo $session->get('username'); // Izvade: johndoe
-    echo $session->get('preferences', 'default_theme'); // Izvade: default_theme
+    echo $session->get('username'); // Izvada: johndoe
+    echo $session->get('preferences', 'default_theme'); // Izvada: default_theme
 
     if ($session->get('user_id')) {
         Flight::json(['message' => 'Lietotājs ir pieteicies!', 'user_id' => $session->get('user_id')]);
@@ -45,46 +45,65 @@ Flight::route('/login', function() {
 
 Flight::route('/logout', function() {
     $session = Flight::session();
-    $session->clear(); // Notīra visus sesiju datus
-    Flight::json(['message' => 'Veiksmīgi izrakstījās']);
+    $session->clear(); // Notīra visas sesijas datus
+    Flight::json(['message' => 'Izlogojies veiksmīgi']);
 });
 
 Flight::start();
 ```
 
-### Galvenie Punkti
-- **Neblokējoša**: Izmanto `read_and_close` sesijas sākšanai pēc noklusējuma, novēršot sesijas bloķēšanas problēmas.
-- **Automātiska Apstiprināšana**: Iespējota pēc noklusējuma, tāpēc izmaiņas tiek saglabātas automātiski izbeigšanās brīdī, ja nav atspējota.
-- **Failu Uzglabāšana**: Sesijas tiek glabātas sistēmas temp direktorijā zem `/flight_sessions` pēc noklusējuma.
+### Galvenie punkti
+- **Nesekojošas**: Pēc noklusējuma izmanto `read_and_close` sesijas sākšanai, novēršot sesijas bloķēšanas problēmas.
+- **Automātiska apstiprināšana**: Ieslēgta pēc noklusējuma, tāpēc izmaiņas tiek saglabātas automātiski izslēgšanās brīdī, ja vien nav atslēgta.
+- **Failu glabāšana**: Sesijas tiek glabātas sistēmas pagaidu direktorijā zem `/flight_sessions` pēc noklusējuma.
 
 ## Konfigurācija
 
-Jūs varat pielāgot sesiju apstrādātāju, pārsūtot opciju masīvu, reģistrējot:
+Jūs varat pielāgot sesijas pārvaldnieku, nododot masīvu ar opcijām reģistrējot:
 
 ```php
-$app->register('session', Session::class, [
-    'save_path' => '/custom/path/to/sessions',         // Direktorija sesiju failiem
-    'encryption_key' => 'a-secure-32-byte-key-here',   // Iespējot šifrēšanu (32 baiti ieteicami AES-256-CBC)
-    'auto_commit' => false,                            // Atspējot automātisko apstiprināšanu manuālai kontrolei
-    'start_session' => true,                           // Automātiski uzsākt sesiju (noklusējums: true)
-    'test_mode' => false                               // Iespējot testa režīmu izstrādei
-]);
+// Jā, tas ir dubults masīvs :)
+$app->register('session', Session::class, [ [
+    'save_path' => '/custom/path/to/sessions',         // Direktorija sesijas failiem
+	'prefix' => 'myapp_',                              // Priekša sesijas failiem
+    'encryption_key' => 'a-secure-32-byte-key-here',   // Ieslēgt šifrēšanu (32 baiti ieteikti AES-256-CBC)
+    'auto_commit' => false,                            // Atslēgt automātisko apstiprināšanu manuālai kontrolei
+    'start_session' => true,                           // Sākt sesiju automātiski (pēc noklusējuma: true)
+    'test_mode' => false,                              // Ieslēgt testēšanas režīmu attīstībai
+    'serialization' => 'json',                         // Serializācijas metode: 'json' (pēc noklusējuma) vai 'php' (legacy)
+] ]);
 ```
 
-### Konfigurācijas Opcijas
-| Opcija            | Apraksts                                      | Noklusējuma Vērtība                     |
-|-------------------|--------------------------------------------------|-----------------------------------|
-| `save_path`       | Direktorija, kurā glabājas sesiju faili         | `sys_get_temp_dir() . '/flight_sessions'` |
-| `encryption_key`  | Atslēga AES-256-CBC šifrēšanai (nopietna)        | `null` (nav šifrēšanas)            |
-| `auto_commit`     | Automātiski saglabāt sesiju datus izbeigšanās brīdī               | `true`                            |
-| `start_session`   | Automātiski uzsākt sesiju                  | `true`                            |
-| `test_mode`       | Darbība testa režīmā bez PHP sesiju ietekmes   | `false`                           |
-| `test_session_id` | Pielāgota sesijas ID testa režīmā (opcijas)       | Nejauši ģenerēts, ja nav iestatīts     |
+### Konfigurācijas opcijas
+| Opcija            | Apraksts                                      | Noklusētā vērtība                     |
+|-------------------|----------------------------------------------|---------------------------------------|
+| `save_path`       | Direktorija, kur glabājas sesijas faili         | `sys_get_temp_dir() . '/flight_sessions'` |
+| `prefix`          | Priekša saglabātajam sesijas failam                | `sess_`                           |
+| `encryption_key`  | Atslēga AES-256-CBC šifrēšanai (izvēles)        | `null` (bez šifrēšanas)            |
+| `auto_commit`     | Automātiski saglabāt sesijas datus izslēgšanās brīdī               | `true`                            |
+| `start_session`   | Sākt sesiju automātiski                  | `true`                            |
+| `test_mode`       | Darboties testēšanas režīmā bez ietekmēšanas uz PHP sesijām  | `false`                           |
+| `test_session_id` | Pielāgota sesijas ID testēšanas režīmam (izvēles)       | Nejauši ģenerēta, ja nav iestatīta     |
+| `serialization`   | Serializācijas metode: 'json' (pēc noklusējuma, droša) vai 'php' (legacy, atļauj objektus) | `'json'` |
 
-## Uzlabota Lietošana
+## Serializācijas režīmi
 
-### Manuāla Apstiprināšana
-Ja atspējojat automātisko apstiprināšanu, jums manuāli jāsaglabā izmaiņas:
+Pēc noklusējuma šī bibliotēka izmanto **JSON serializāciju** sesijas datiem, kas ir droša un novērš PHP objektu iesūkšanās ievainojamības. Ja jums ir nepieciešams glabāt PHP objektus sesijā (nav ieteicams lielākumam app), jūs varat izvēlēties legacy PHP serializāciju:
+
+- `'serialization' => 'json'` (pēc noklusējuma):
+  - Tiek atļautas tikai masīvi un primitīvi dati sesijas datos.
+  - Drošāka: imūna pret PHP objektu iesūkšanos.
+  - Faili tiek priekšēji ar `J` (vienkāršs JSON) vai `F` (šifrēts JSON).
+- `'serialization' => 'php'`:
+  - Atļauj glabāt PHP objektus (lietojiet ar uzmanību).
+  - Faili tiek priekšēji ar `P` (vienkārša PHP serializācija) vai `E` (šifrēta PHP serializācija).
+
+**Piezīme:** Ja izmantojat JSON serializāciju, mēģinot glabāt objektu, tiks izraisīta izņēmuma kļūda.
+
+## Paplašināta lietošana
+
+### Manuāla apstiprināšana
+Ja atslēdzat automātisko apstiprināšanu, jums ir manuāli jāapstiprina izmaiņas:
 
 ```php
 $app->register('session', Session::class, ['auto_commit' => false]);
@@ -92,12 +111,12 @@ $app->register('session', Session::class, ['auto_commit' => false]);
 Flight::route('/update', function() {
     $session = Flight::session();
     $session->set('key', 'value');
-    $session->commit(); // Skaidri saglabāt izmaiņas
+    $session->commit(); // Skaidri saglabā izmaiņas
 });
 ```
 
-### Sesijas Drošība ar Šifrēšanu
-Iespējot šifrēšanu sensitīviem datiem:
+### Sesijas drošība ar šifrēšanu
+Ieslēdziet šifrēšanu sensitīviem datiem:
 
 ```php
 $app->register('session', Session::class, [
@@ -106,12 +125,12 @@ $app->register('session', Session::class, [
 
 Flight::route('/secure', function() {
     $session = Flight::session();
-    $session->set('credit_card', '4111-1111-1111-1111'); // Automātiski šifrēts
-    echo $session->get('credit_card'); // Atšifrēts pie atgūšanas
+    $session->set('credit_card', '4111-1111-1111-1111'); // Šifrēts automātiski
+    echo $session->get('credit_card'); // Dekodēts pie saņemšanas
 });
 ```
 
-### Sesijas Atjaunošana
+### Sesijas atjaunošana
 Atjaunojiet sesijas ID drošībai (piemēram, pēc pieteikšanās):
 
 ```php
@@ -119,16 +138,16 @@ Flight::route('/post-login', function() {
     $session = Flight::session();
     $session->regenerate(); // Jauns ID, saglabā datus
     // VAI
-    $session->regenerate(true); // Jauns ID, izdzēš vecos datus
+    $session->regenerate(true); // Jauns ID, dzēš vecos datus
 });
 ```
 
-### Middleware Piemērs
-Aizsargājiet maršrutus ar sesiju balstītu autentifikāciju:
+### Middleware piemērs
+Aizsargājiet maršrutus ar sesijas balstītu autentifikāciju:
 
 ```php
 Flight::route('/admin', function() {
-    Flight::json(['message' => 'Laipni lūdzam administratora panelī']);
+    Flight::json(['message' => 'Laipni lūgts admin panelī']);
 })->addMiddleware(function() {
     $session = Flight::session();
     if (!$session->get('is_admin')) {
@@ -137,40 +156,47 @@ Flight::route('/admin', function() {
 });
 ```
 
-Tas ir tikai vienkāršs piemērs, kā izmantot šo vidusdaļā. Detalizētākai piemēram skatiet [middleware](/learn/middleware) dokumentāciju.
+Tas ir tikai vienkāršs piemērs, kā to izmantot middleware. Vairāk detalizētam piemēram, skatiet [middleware](/learn/middleware) dokumentāciju.
 
 ## Metodes
 
-`Session` klase nodrošina šīs metodes:
+`Session` klase nodrošina šādas metodes:
 
 - `set(string $key, $value)`: Glabā vērtību sesijā.
-- `get(string $key, $default = null)`: Atgūst vērtību, ar opciju noklusējuma vērtību, ja atslēga nepastāv.
+- `get(string $key, $default = null)`: Iegūst vērtību, ar izvēles noklusējumu, ja atslēga neeksistē.
 - `delete(string $key)`: Noņem specifisku atslēgu no sesijas.
-- `clear()`: Izdzēš visus sesijas datus.
+- `clear()`: Dzēš visus sesijas datus, bet saglabā to pašu faila nosaukumu sesijai.
 - `commit()`: Saglabā pašreizējos sesijas datus failu sistēmā.
 - `id()`: Atgriež pašreizējo sesijas ID.
-- `regenerate(bool $deleteOld = false)`: Atjauno sesijas ID, opcionalitātes gadījumā dzēšot vecos datus.
+- `regenerate(bool $deleteOldFile = false)`: Atjauno sesijas ID, ieskaitot jauna sesijas faila izveidošanu, saglabājot visus vecos datus un vecais fails paliek sistēmā. Ja `$deleteOldFile` ir `true`, vecais sesijas fails tiek dzēsts.
+- `destroy(string $id)`: Iznīcina sesiju pēc ID un dzēš sesijas failu no sistēmas. Tas ir daļa no `SessionHandlerInterface` un `$id` ir nepieciešams. Tipiska lietošana būtu `$session->destroy($session->id())`.
+- `getAll()` : Atgriež visus datus no pašreizējās sesijas.
 
-Visas metodes, izņemot `get()` un `id()`, atgriež `Session` instance, lai saistītu izsaukumus.
+Visas metodes izņemot `get()` un `id()` atgriež `Session` instanci ķēdes izveidošanai.
 
-## Kāpēc Izmantot Šo Paplašinājumu?
+## Kāpēc izmantot šo spraudni?
 
-- **Viegls**: Nav ārēju atkarību – tikai faili.
-- **Neblokējošs**: Novērš sesijas bloķēšanas problēmas ar `read_and_close` pēc noklusējuma.
+- **Viegls**: Nav ārēju atkarību — tikai faili.
+- **Nesekojošas**: Izvairās no sesijas bloķēšanas ar `read_and_close` pēc noklusējuma.
 - **Drošs**: Atbalsta AES-256-CBC šifrēšanu sensitīviem datiem.
-- **Elastīgs**: Automātiskā apstiprināšana, testa režīms un manuālās kontroles iespējas.
-- **Flight-Natīvs**: Izstrādāts īpaši Flight framework.
+- **Fleksibls**: Automātiska apstiprināšana, testēšanas režīms un manuālas kontroles opcijas.
+- **Flight-Native**: Izveidots specifiski Flight framework.
 
-## Tehniskās Detaļas
+## Tehniskās detaļas
 
-- **Uzglabāšanas Formāts**: Sesiju faili tiek prefiksēti ar `sess_` un uzglabāti konfigurētajā `save_path`. Šifrētie dati izmanto `E` prefiksu, teksta dati izmanto `P`.
-- **Šifrēšana**: Izmanto AES-256-CBC ar nejaušu IV katrai sesijas rakstīšanai, kad ir norādīta `encryption_key`.
-- **Atkritumu Vākšana**: īsteno PHP `SessionHandlerInterface::gc()` funkciju, lai notīrītu beigušās sesijas.
+- **Glabāšanas formāts**: Sesijas faili tiek priekšēji ar `sess_` un glabāti konfigurētajā `save_path`. Faila satura priekši:
+  - `J`: Vienkāršs JSON (pēc noklusējuma, bez šifrēšanas)
+  - `F`: Šifrēts JSON (pēc noklusējuma ar šifrēšanu)
+  - `P`: Vienkārša PHP serializācija (legacy, bez šifrēšanas)
+  - `E`: Šifrēta PHP serializācija (legacy ar šifrēšanu)
+- **Šifrēšana**: Izmanto AES-256-CBC ar nejaušu IV katrai sesijas rakstīšanai, kad tiek norādīta `encryption_key`. Šifrēšana darbojas gan JSON, gan PHP serializācijas režīmos.
+- **Serializācija**: JSON ir pēc noklusējuma un drošākā metode. PHP serializācija pieejama legacy/uzlabotai lietošanai, bet ir mazāk droša.
+- **Atkritumu savākšana**: Ietver PHP `SessionHandlerInterface::gc()` veco sesiju tīrīšanai.
 
-## Ieguldījumi
+## Dalība
 
-Ieguldījumi ir laipni gaidīti! Forkojiet [rep(res-zitoriju](https://github.com/flightphp/session), veiciet izmaiņas un iesniedziet pull pieprasījumu. Ziņojiet par kļūdām vai ieteiciet funkcijas, izmantojot Github problēmu izsekošanu.
+Ieteikumi ir laipni gaidīti! Forkojiet [repozitoriju](https://github.com/flightphp/session), veiciet izmaiņas un iesniedziet pull request. Ziņojiet par kļūdām vai ieteikumiām caur Github issue tracker.
 
-## Licences
+## Licence
 
-Šis paplašinājums ir licencēts saskaņā ar MIT licenci. Lai iegūtu detaļas, skatiet [Github repozitoriju](https://github.com/flightphp/session).
+Šis spraudnis ir licencēts zem MIT Licence. Skatiet [Github repozitoriju](https://github.com/flightphp/session) detaļām.

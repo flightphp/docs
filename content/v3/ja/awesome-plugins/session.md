@@ -1,22 +1,22 @@
-# FlightPHP セッション - 軽量ファイルベースのセッションハンドラー
+# FlightPHP セッション - 軽量なファイルベースのセッション ハンドラ
 
-これは、[Flight PHP Framework](https://docs.flightphp.com/) のための軽量なファイルベースのセッションハンドラープラグインです。これは、セッションの管理に関してシンプルでありながら強力なソリューションを提供し、ブロッキングしないセッションの読み取り、任意の暗号化、自動コミット機能、開発用のテストモードなどの機能を備えています。セッションデータはファイルに保存されるため、データベースを必要としないアプリケーションに最適です。
+これは、[Flight PHP Framework](https://docs.flightphp.com/) 向けの軽量でファイルベースのセッション ハンドラ プラグインです。ノンブロッキングのセッション読み込み、オプションの暗号化、オートコミット機能、開発用のテスト モードなどの機能を提供し、セッション管理を簡単かつ強力にします。セッション データはファイルに保存されるため、データベースを必要としないアプリケーションに理想的です。
 
-データベースを使用したい場合は、データベースバックエンドを持つこれらの同様の機能を多数備えた[ghostff/session](/awesome-plugins/ghost-session)プラグインをチェックしてください。
+データベースを使用したい場合は、同じ機能の多くを持つがデータベース バックエンドを備えた [ghostff/session](/awesome-plugins/ghost-session) プラグインを参照してください。
 
-完全なソースコードと詳細は、[Githubリポジトリ](https://github.com/flightphp/session)を訪れてください。
+完全なソース コードと詳細については、[Github リポジトリ](https://github.com/flightphp/session)を訪問してください。
 
 ## インストール
 
-Composerを介してプラグインをインストールします：
+Composer を介してプラグインをインストールします：
 
 ```bash
 composer require flightphp/session
 ```
 
-## 基本的な使い方
+## 基本的な使用方法
 
-ここでは、Flightアプリケーションで`flightphp/session`プラグインを使用する簡単な例を示します：
+Flight アプリケーションで `flightphp/session` プラグインを使用する簡単な例です：
 
 ```php
 require 'vendor/autoload.php';
@@ -25,7 +25,7 @@ use flight\Session;
 
 $app = Flight::app();
 
-// セッションサービスを登録
+// セッション サービスを登録
 $app->register('session', Session::class);
 
 // セッションを使用した例のルート
@@ -39,52 +39,71 @@ Flight::route('/login', function() {
     echo $session->get('preferences', 'default_theme'); // 出力: default_theme
 
     if ($session->get('user_id')) {
-        Flight::json(['message' => 'ユーザーはログインしています！', 'user_id' => $session->get('user_id')]);
+        Flight::json(['message' => 'User is logged in!', 'user_id' => $session->get('user_id')]);
     }
 });
 
 Flight::route('/logout', function() {
     $session = Flight::session();
-    $session->clear(); // すべてのセッションデータをクリア
-    Flight::json(['message' => '正常にログアウトしました']);
+    $session->clear(); // すべてのセッション データをクリア
+    Flight::json(['message' => 'Logged out successfully']);
 });
 
 Flight::start();
 ```
 
 ### 重要なポイント
-- **ノンブロッキング**: セッションスタートのデフォルトとして`read_and_close`を使用し、セッションロックの問題を防ぎます。
-- **自動コミット**: デフォルトで有効になっており、無効にされない限り、シャットダウン時に変更が自動的に保存されます。
-- **ファイルストレージ**: セッションはデフォルトで`/flight_sessions`の下にあるシステムの一時ディレクトリに保存されます。
+- **Non-Blocking**: デフォルトで `read_and_close` を使用し、セッション ロックの問題を防ぎます。
+- **Auto-Commit**: デフォルトで有効なので、シャットダウン時に変更が自動的に保存されますが、無効にすることもできます。
+- **File Storage**: セッションはデフォルトでシステムの temp ディレクトリの下の `/flight_sessions` に保存されます。
 
-## 設定
+## 構成
 
-セッションハンドラーを登録する際に、オプションの配列を渡すことでカスタマイズできます：
+登録時にオプションの配列を渡すことで、セッション ハンドラをカスタマイズできます：
 
 ```php
-$app->register('session', Session::class, [
-    'save_path' => '/custom/path/to/sessions',         // セッションファイルのディレクトリ
-    'encryption_key' => 'a-secure-32-byte-key-here',   // 暗号化を有効にする（AES-256-CBCに推奨される32バイト）
-    'auto_commit' => false,                            // 手動制御のため自動コミットを無効にする
-    'start_session' => true,                           // 自動的にセッションを開始する（デフォルト: true）
-    'test_mode' => false                               // 開発用にテストモードを有効にする
-]);
+// はい、二重配列です :)
+$app->register('session', Session::class, [ [
+    'save_path' => '/custom/path/to/sessions',         // セッション ファイルのディレクトリ
+	'prefix' => 'myapp_',                              // セッション ファイルのプレフィックス
+    'encryption_key' => 'a-secure-32-byte-key-here',   // 暗号化を有効にする (AES-256-CBC のために 32 バイト推奨)
+    'auto_commit' => false,                            // オートコミットを無効にして手動制御
+    'start_session' => true,                           // 自動的にセッションを開始 (デフォルト: true)
+    'test_mode' => false,                              // 開発用のテスト モードを有効
+    'serialization' => 'json',                         // シリアル化方法: 'json' (デフォルト) または 'php' (レガシー)
+] ]);
 ```
 
-### 設定オプション
-| オプション          | 説明                                           | デフォルト値                        |
-|--------------------|-----------------------------------------------|-------------------------------------|
-| `save_path`        | セッションファイルが保存されるディレクトリ   | `sys_get_temp_dir() . '/flight_sessions'` |
-| `encryption_key`   | AES-256-CBC暗号化用のキー（オプション）      | `null`（暗号化なし）                |
-| `auto_commit`      | シャットダウン時にセッションデータを自動保存 | `true`                              |
-| `start_session`    | 自動的にセッションを開始                     | `true`                              |
-| `test_mode`        | PHPセッションに影響を与えずにテストモードで実行 | `false`                             |
-| `test_session_id`  | テストモード用のカスタムセッションID（オプション） | 設定されていない場合はランダムに生成  |
+### 構成オプション
+| Option            | Description                                      | Default Value                     |
+|-------------------|--------------------------------------------------|-----------------------------------|
+| `save_path`       | セッション ファイルが保存されるディレクトリ     | `sys_get_temp_dir() . '/flight_sessions'` |
+| `prefix`          | 保存されたセッション ファイルのプレフィックス    | `sess_`                           |
+| `encryption_key`  | AES-256-CBC 暗号化のためのキー (オプション)      | `null` (暗号化なし)               |
+| `auto_commit`     | シャットダウン時にセッション データを自動保存    | `true`                            |
+| `start_session`   | 自動的にセッションを開始                         | `true`                            |
+| `test_mode`       | PHP セッションに影響を与えないテスト モードで実行 | `false`                           |
+| `test_session_id` | テスト モード用のカスタム セッション ID (オプション) | 設定されていない場合ランダム生成 |
+| `serialization`   | シリアル化方法: 'json' (デフォルト、安全) または 'php' (レガシー、オブジェクトを許可) | `'json'` |
 
-## 高度な使い方
+## シリアル化モード
+
+このライブラリはデフォルトで **JSON シリアル化** を使用し、セッション データの安全性が高く、PHP オブジェクト注入の脆弱性を防ぎます。セッションに PHP オブジェクトを保存する必要がある場合 (ほとんどのアプリでは推奨されません) は、レガシーの PHP シリアル化を選択できます：
+
+- `'serialization' => 'json'` (デフォルト):
+  - セッション データに配列とプリミティブのみを許可。
+  - より安全: PHP オブジェクト注入に耐性あり。
+  - ファイルは `J` (プレーン JSON) または `F` (暗号化 JSON) でプレフィックス付け。
+- `'serialization' => 'php'`:
+  - PHP オブジェクトの保存を許可 (注意して使用)。
+  - ファイルは `P` (プレーン PHP シリアル化) または `E` (暗号化 PHP シリアル化) でプレフィックス付け。
+
+**注:** JSON シリアル化を使用している場合、オブジェクトを保存しようとすると例外が発生します。
+
+## 高度な使用方法
 
 ### 手動コミット
-自動コミットを無効にすると、変更を手動でコミットする必要があります：
+オートコミットを無効にした場合、変更を手動でコミットする必要があります：
 
 ```php
 $app->register('session', Session::class, ['auto_commit' => false]);
@@ -92,12 +111,12 @@ $app->register('session', Session::class, ['auto_commit' => false]);
 Flight::route('/update', function() {
     $session = Flight::session();
     $session->set('key', 'value');
-    $session->commit(); // 明示的に変更を保存
+    $session->commit(); // 変更を明示的に保存
 });
 ```
 
-### 暗号化によるセッションのセキュリティ
-機密データのために暗号化を有効にします：
+### 暗号化によるセッション セキュリティ
+機密データを保護するために暗号化を有効にします：
 
 ```php
 $app->register('session', Session::class, [
@@ -106,71 +125,78 @@ $app->register('session', Session::class, [
 
 Flight::route('/secure', function() {
     $session = Flight::session();
-    $session->set('credit_card', '4111-1111-1111-1111'); // 自動的に暗号化されます
-    echo $session->get('credit_card'); // 取得時に復号化されます
+    $session->set('credit_card', '4111-1111-1111-1111'); // 自動的に暗号化
+    echo $session->get('credit_card'); // 取得時に復号化
 });
 ```
 
-### セッション再生成
-セキュリティのためにセッションIDを再生成します（例: ログイン後）：
+### セッション ID の再生成
+セキュリティのために (例: ログイン後) セッション ID を再生成します：
 
 ```php
 Flight::route('/post-login', function() {
     $session = Flight::session();
-    $session->regenerate(); // 新しいID、データを保持
+    $session->regenerate(); // 新しい ID、データを保持
     // または
-    $session->regenerate(true); // 新しいID、古いデータを削除
+    $session->regenerate(true); // 新しい ID、古いデータを削除
 });
 ```
 
 ### ミドルウェアの例
-セッションベースの認証でルートを保護します：
+セッション ベースの認証でルートを保護します：
 
 ```php
 Flight::route('/admin', function() {
-    Flight::json(['message' => '管理パネルへようこそ']);
+    Flight::json(['message' => 'Welcome to the admin panel']);
 })->addMiddleware(function() {
     $session = Flight::session();
     if (!$session->get('is_admin')) {
-        Flight::halt(403, 'アクセス拒否');
+        Flight::halt(403, 'Access denied');
     }
 });
 ```
 
-これはミドルウェアでの使い方の簡単な例です。詳細な例については、[ミドルウェア](/learn/middleware)のドキュメントを参照してください。
+これはミドルウェアでの簡単な例です。より詳細な例については、[middleware](/learn/middleware) ドキュメントを参照してください。
 
 ## メソッド
 
-`Session`クラスは以下のメソッドを提供します：
+`Session` クラスは以下のメソッドを提供します：
 
-- `set(string $key, $value)`: セッションに値を保存します。
-- `get(string $key, $default = null)`: 値を取得し、キーが存在しない場合のオプションのデフォルトを提供します。
-- `delete(string $key)`: セッションから特定のキーを削除します。
-- `clear()`: すべてのセッションデータを削除します。
-- `commit()`: 現在のセッションデータをファイルシステムに保存します。
-- `id()`: 現在のセッションIDを返します。
-- `regenerate(bool $deleteOld = false)`: セッションIDを再生成し、オプションで古いデータを削除します。
+- `set(string $key, $value)`: セッションに値を保存。
+- `get(string $key, $default = null)`: 値を取得し、キーが存在しない場合にデフォルト値をオプションで指定。
+- `delete(string $key)`: 特定のキーをセッションから削除。
+- `clear()`: すべてのセッション データを削除しますが、同じファイル名を保持。
+- `commit()`: 現在のセッション データをファイル システムに保存。
+- `id()`: 現在のセッション ID を返します。
+- `regenerate(bool $deleteOldFile = false)`: セッション ID を再生成し、新しいセッション ファイルを作成します。古いデータを保持し、古いファイルはシステムに残ります。`$deleteOldFile` が `true` の場合、古いセッション ファイルを削除。
+- `destroy(string $id)`: 指定された ID のセッションを破棄し、セッション ファイルをシステムから削除します。これは `SessionHandlerInterface` の一部で、`$id` は必須です。典型的な使用例は `$session->destroy($session->id())` です。
+- `getAll()` : 現在のセッションのすべてのデータを返します。
 
-`get()`と`id()`を除くすべてのメソッドは、チェーンのために`Session`インスタンスを返します。
+`get()` と `id()` を除くすべてのメソッドは、チェイニングのために `Session` インスタンスを返します。
 
-## このプラグインを使用する理由
+## このプラグインを使う理由
 
-- **軽量**: 外部依存関係なし—ただのファイル。
-- **ノンブロッキング**: デフォルトで`read_and_close`でセッションロックを回避。
-- **安全**: 機密データのためのAES-256-CBC暗号化をサポート。
-- **柔軟**: 自動コミット、テストモードおよび手動コントロールオプション。
-- **Flightネイティブ**: Flightフレームワークのために特別に構築されています。
+- **Lightweight**: 外部依存なし—just ファイルのみ。
+- **Non-Blocking**: デフォルトで `read_and_close` を使用してセッション ロックを回避。
+- **Secure**: 機密データ用の AES-256-CBC 暗号化をサポート。
+- **Flexible**: オートコミット、テスト モード、手動制御のオプション。
+- **Flight-Native**: Flight フレームワーク専用に構築。
 
-## 技術的詳細
+## 技術詳細
 
-- **ストレージ形式**: セッションファイルは`sess_`でプレフィックスされ、設定された`save_path`に保存されます。暗号化データは`E`プレフィックス、平文は`P`を使用します。
-- **暗号化**: `encryption_key`が提供される場合、各セッション書き込みに対してランダムIVを使用したAES-256-CBCを使用します。
-- **ガーベジコレクション**: PHPの`SessionHandlerInterface::gc()`を実装して、期限切れのセッションをクリーンアップします。
+- **Storage Format**: セッション ファイルは構成された `save_path` に `sess_` でプレフィックス付けされて保存されます。ファイル コンテンツのプレフィックス:
+  - `J`: プレーン JSON (デフォルト、暗号化なし)
+  - `F`: 暗号化 JSON (デフォルト、暗号化あり)
+  - `P`: プレーン PHP シリアル化 (レガシー、暗号化なし)
+  - `E`: 暗号化 PHP シリアル化 (レガシー、暗号化あり)
+- **Encryption**: `encryption_key` が提供された場合、各セッション 書き込みごとにランダム IV を使用して AES-256-CBC を適用。JSON と PHP シリアル化の両方で動作。
+- **Serialization**: JSON がデフォルトで最も安全。PHP シリアル化はレガシー/高度な使用のために利用可能ですが、セキュリティが低い。
+- **Garbage Collection**: 期限切れのセッションをクリーンアップするための PHP の `SessionHandlerInterface::gc()` を実装。
 
 ## 貢献
 
-貢献は歓迎します！[リポジトリ](https://github.com/flightphp/session)をフォークし、変更を加えてプルリクエストを送信してください。バグを報告するか、Githubのイシュートラッカーを通じて機能を提案してください。
+貢献を歓迎します！ [リポジトリ](https://github.com/flightphp/session) をフォークし、変更を加えてプル リクエストを送信してください。バグの報告や機能の提案は Github のイシュー トラッカーで行ってください。
 
 ## ライセンス
 
-このプラグインはMITライセンスの下でライセンスされています。詳細については、[Githubリポジトリ](https://github.com/flightphp/session)を参照してください。
+このプラグインは MIT ライセンスの下でライセンスされています。詳細は [Github リポジトリ](https://github.com/flightphp/session) を参照してください。

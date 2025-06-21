@@ -1,14 +1,14 @@
-Tracy Flight Панель Расширения
+Расширения панели Tracy Flight
 =====
 
-Это набор расширений, чтобы сделать работу с Flight немного более насыщенной.
+Это набор расширений, чтобы сделать работу с Flight немного богаче.
 
 - Flight - Анализировать все переменные Flight.
-- Database - Анализировать все запросы, которые были выполнены на странице (если вы правильно инициируете подключение к базе данных)
-- Request - Анализировать все переменные `$_SERVER` и examine все глобальные нагрузки (`$_GET`, `$_POST`, `$_FILES`)
+- Database - Анализировать все запросы, которые были выполнены на странице (если вы правильно инициализировали соединение с базой данных).
+- Request - Анализировать все переменные `$_SERVER` и осматривать все глобальные полезные нагрузки (`$_GET`, `$_POST`, `$_FILES`).
 - Session - Анализировать все переменные `$_SESSION`, если сессии активны.
 
-Это Панель
+Это панель
 
 ![Flight Bar](https://raw.githubusercontent.com/flightphp/tracy-extensions/master/flight-tracy-bar.png)
 
@@ -18,15 +18,15 @@ Tracy Flight Панель Расширения
 ![Flight Database](https://raw.githubusercontent.com/flightphp/tracy-extensions/master/flight-db.png)
 ![Flight Request](https://raw.githubusercontent.com/flightphp/tracy-extensions/master/flight-request.png)
 
-Нажмите [здесь](https://github.com/flightphp/tracy-extensions), чтобы посмотреть код.
+Нажмите [здесь](https://github.com/flightphp/tracy-extensions), чтобы просмотреть код.
 
 Установка
 -------
-Запустите `composer require flightphp/tracy-extensions --dev`, и вы на пути!
+Выполните `composer require flightphp/tracy-extensions --dev`, и вы готовы!
 
 Конфигурация
 -------
-Есть очень мало конфигураций, которые вам нужно выполнить, чтобы начать. Вам нужно будет инициировать отладчик Tracy перед использованием этого [https://tracy.nette.org/en/guide](https://tracy.nette.org/en/guide):
+Вам нужно очень мало настроек, чтобы начать. Вам потребуется инициализировать отладчик Tracy до использования этого [https://tracy.nette.org/en/guide](https://tracy.nette.org/en/guide):
 
 ```php
 <?php
@@ -38,24 +38,24 @@ use flight\debug\tracy\TracyExtensionLoader;
 require __DIR__ . '/vendor/autoload.php';
 
 Debugger::enable();
-// Возможно, вам нужно будет указать вашу среду с помощью Debugger::enable(Debugger::DEVELOPMENT)
+// Возможно, вам нужно указать вашу среду с Debugger::enable(Debugger::DEVELOPMENT)
 
-// если вы используете подключения к базе данных в вашем приложении, есть
-// обязательная обертка PDO, которую нужно использовать ТОЛЬКО В РАЗРАБОТКЕ (пожалуйста, не в продакшене!)
-// Она имеет те же параметры, что и обычное PDO соединение
+// если вы используете соединения с базой данных в вашем приложении, требуется
+// обертка PDO для использования ТОЛЬКО В РАЗРАБОТКЕ (не в производстве, пожалуйста!)
+// Она имеет те же параметры, что и обычное соединение PDO
 $pdo = new PdoQueryCapture('sqlite:test.db', 'user', 'pass');
 // или если вы прикрепляете это к фреймворку Flight
 Flight::register('db', PdoQueryCapture::class, ['sqlite:test.db', 'user', 'pass']);
-// теперь каждый раз, когда вы выполняете запрос, он будет захватывать время, запрос и параметры
+// теперь при каждом запросе он будет захватывать время, запрос и параметры
 
 // Это соединяет точки
 if(Debugger::$showBar === true) {
-	// Это должно быть ложным, иначе Tracy не сможет рендерить :(
+	// Это нужно установить в false, иначе Tracy не сможет отобразить
 	Flight::set('flight.content_length', false);
 	new TracyExtensionLoader(Flight::app());
 }
 
-// больше кода
+// дополнительный код
 
 Flight::start();
 ```
@@ -63,7 +63,7 @@ Flight::start();
 ## Дополнительная конфигурация
 
 ### Данные сессии
-Если у вас есть собственный обработчик сессий (например, ghostff/session), вы можете передать любой массив данных сессии в Tracy, и он автоматически выведет его для вас. Вы передаете его с помощью ключа `session_data` во втором параметре конструктора `TracyExtensionLoader`.
+Если у вас есть пользовательский обработчик сессий (например, ghostff/session), вы можете передать любой массив данных сессии в Tracy, и он автоматически выведет его. Вы передаете это с ключом `session_data` во втором параметре конструктора `TracyExtensionLoader`.
 
 ```php
 
@@ -77,7 +77,7 @@ $app = Flight::app();
 $app->register('session', Session::class);
 
 if(Debugger::$showBar === true) {
-	// Это должно быть ложным, иначе Tracy не сможет рендерить :(
+	// Это нужно установить в false, иначе Tracy не сможет отобразить
 	Flight::set('flight.content_length', false);
 	new TracyExtensionLoader(Flight::app(), [ 'session_data' => Flight::session()->getAll() ]);
 }
@@ -89,7 +89,7 @@ Flight::start();
 
 ### Latte
 
-Если у вас установлен Latte в вашем проекте, вы можете использовать панель Latte для анализа ваших шаблонов. Вы можете передать экземпляр Latte в конструктор `TracyExtensionLoader` с помощью ключа `latte` во втором параметре.
+Если у вас установлен Latte в проекте, вы можете использовать панель Latte для анализа шаблонов. Вы можете передать экземпляр Latte в конструктор `TracyExtensionLoader` с ключем `latte` во втором параметре.
 
 ```php
 
@@ -107,7 +107,7 @@ $app->register('latte', Engine::class, [], function($latte) {
 });
 
 if(Debugger::$showBar === true) {
-	// Это должно быть ложным, иначе Tracy не сможет рендерить :(
+	// Это нужно установить в false, иначе Tracy не сможет отобразить
 	Flight::set('flight.content_length', false);
 	new TracyExtensionLoader(Flight::app());
 }

@@ -1,10 +1,10 @@
-# FlightPHP 会话 - 轻量级文件基础会话处理器
+# FlightPHP 会话 - 轻量级基于文件的会话处理程序
 
-这是一个轻量级的文件基础会话处理器插件，适用于 [Flight PHP Framework](https://docs.flightphp.com/)。它提供了一种简单而强大的会话管理解决方案，具有非阻塞会话读取、可选加密、自动提交功能和开发测试模式等特性。会话数据存储在文件中，适合不需要数据库的应用程序。
+这是一个轻量级、基于文件的会话处理程序插件，用于 [Flight PHP Framework](https://docs.flightphp.com/)。它提供了一个简单而强大的解决方案，用于管理会话，包括非阻塞会话读取、可选加密、自动提交功能以及开发测试模式。会话数据存储在文件中，非常适合不需要数据库的应用。
 
-如果您确实想使用数据库，可以查看 [ghostff/session](/awesome-plugins/ghost-session) 插件，它具有许多相同的功能，但使用数据库后端。
+如果您想使用数据库，请查看 [ghostff/session](/awesome-plugins/ghost-session) 插件，它具有许多相同的功能，但使用数据库后端。
 
-访问 [Github 仓库](https://github.com/flightphp/session) 获取完整源代码和详细信息。
+访问 [Github 仓库](https://github.com/flightphp/session) 以获取完整源代码和详细信息。
 
 ## 安装
 
@@ -16,16 +16,14 @@ composer require flightphp/session
 
 ## 基本用法
 
-以下是如何在您的 Flight 应用程序中使用 `flightphp/session` 插件的简单示例：
+以下是一个在 Flight 应用中使用 `flightphp/session` 插件的简单示例：
 
 ```php
 require 'vendor/autoload.php';
 
 use flight\Session;
 
-$app = Flight::app();
-
-// 注册会话服务
+$app = Flight::app(); // 注册会话服务
 $app->register('session', Session::class);
 
 // 示例路由，使用会话
@@ -54,37 +52,56 @@ Flight::start();
 
 ### 关键点
 - **非阻塞**：默认使用 `read_and_close` 启动会话，防止会话锁定问题。
-- **自动提交**：默认启用，因此在关闭时更改会自动保存，除非禁用。
-- **文件存储**：会话默认存储在系统临时目录下的 `/flight_sessions` 中。
+- **自动提交**：默认启用，因此更改会在关闭时自动保存，除非禁用。
+- **文件存储**：会话默认存储在系统临时目录下的 `/flight_sessions`。
 
 ## 配置
 
-您可以在注册时传递选项数组来自定义会话处理器：
+在注册时，通过传递一个选项数组来自定义会话处理程序：
 
 ```php
-$app->register('session', Session::class, [
-    'save_path' => '/custom/path/to/sessions',         // 会话文件目录
-    'encryption_key' => 'a-secure-32-byte-key-here',   // 启用加密（建议 AES-256-CBC 的 32 字节密钥）
-    'auto_commit' => false,                            // 禁用自动提交以进行手动控制
-    'start_session' => true,                           // 自动启动会话（默认：true）
-    'test_mode' => false                               // 启用开发测试模式
-]);
+// 是的，这是一个双数组 :)
+$app->register('session', Session::class, [ [
+    'save_path' => '/custom/path/to/sessions',         // 会话文件的目录
+	'prefix' => 'myapp_',                              // 会话文件的前缀
+    'encryption_key' => 'a-secure-32-byte-key-here',   // 启用加密（推荐使用 32 字节用于 AES-256-CBC）
+    'auto_commit' => false,                            // 禁用自动提交以手动控制
+    'start_session' => true,                           // 自动启动会话（默认: true）
+    'test_mode' => false,                              // 启用测试模式用于开发
+    'serialization' => 'json',                         // 序列化方法: 'json'（默认）或 'php'（旧版）
+] ]);
 ```
 
 ### 配置选项
-| 选项              | 描述                                           | 默认值                          |
-|-------------------|-----------------------------------------------|---------------------------------|
-| `save_path`       | 存储会话文件的目录                          | `sys_get_temp_dir() . '/flight_sessions'` |
-| `encryption_key`  | AES-256-CBC 加密的密钥（可选）               | `null`（不加密）               |
-| `auto_commit`     | 在关闭时自动保存会话数据                     | `true`                          |
-| `start_session`   | 自动启动会话                                  | `true`                          |
-| `test_mode`       | 在不影响 PHP 会话的情况下以测试模式运行      | `false`                         |
-| `test_session_id` | 测试模式的自定义会话 ID（可选）              | 如果未设置则随机生成           |
+| 选项            | 描述                                      | 默认值                     |
+|-------------------|--------------------------------------------------|-----------------------------------|
+| `save_path`       | 会话文件存储的目录         | `sys_get_temp_dir() . '/flight_sessions'` |
+| `prefix`          | 保存会话文件的文件前缀                | `sess_`                           |
+| `encryption_key`  | 用于 AES-256-CBC 加密的密钥（可选）        | `null` (无加密)            |
+| `auto_commit`     | 在关闭时自动保存会话数据               | `true`                            |
+| `start_session`   | 自动启动会话                  | `true`                            |
+| `test_mode`       | 在测试模式下运行而不影响 PHP 会话  | `false`                           |
+| `test_session_id` | 测试模式的自定义会话 ID（可选）       | 如果未设置，则随机生成     |
+| `serialization`   | 序列化方法: 'json'（默认，安全）或 'php'（旧版，允许对象） | `'json'` |
+
+## 序列化模式
+
+默认情况下，此库使用 **JSON 序列化** 来处理会话数据，这很安全，可以防止 PHP 对象注入漏洞。如果您需要存储 PHP 对象（不推荐用于大多数应用），您可以选择使用旧版 PHP 序列化：
+
+- `'serialization' => 'json'` (默认):
+  - 只允许会话数据中包含数组和基本类型。
+  - 更安全：免疫 PHP 对象注入。
+  - 文件以 `J`（纯 JSON）或 `F`（加密 JSON）开头。
+- `'serialization' => 'php'`:
+  - 允许存储 PHP 对象（请谨慎使用）。
+  - 文件以 `P`（纯 PHP 序列化）或 `E`（加密 PHP 序列化）开头。
+
+**注意：** 如果使用 JSON 序列化，尝试存储对象会引发异常。
 
 ## 高级用法
 
 ### 手动提交
-如果您禁用自动提交，您必须手动提交更改：
+如果禁用自动提交，您必须手动提交更改：
 
 ```php
 $app->register('session', Session::class, ['auto_commit' => false]);
@@ -96,7 +113,7 @@ Flight::route('/update', function() {
 });
 ```
 
-### 使用加密的会话安全性
+### 使用加密的会话安全
 为敏感数据启用加密：
 
 ```php
@@ -107,18 +124,18 @@ $app->register('session', Session::class, [
 Flight::route('/secure', function() {
     $session = Flight::session();
     $session->set('credit_card', '4111-1111-1111-1111'); // 自动加密
-    echo $session->get('credit_card'); // 在提取时解密
+    echo $session->get('credit_card'); // 检索时解密
 });
 ```
 
 ### 会话再生
-为了安全性（例如，在登录后）再生会话 ID：
+为安全起见（例如，登录后），再生会话 ID：
 
 ```php
 Flight::route('/post-login', function() {
     $session = Flight::session();
     $session->regenerate(); // 新 ID，保留数据
-    // 或者
+    // 或
     $session->regenerate(true); // 新 ID，删除旧数据
 });
 ```
@@ -137,40 +154,47 @@ Flight::route('/admin', function() {
 });
 ```
 
-这只是如何在中间件中使用此功能的一个简单示例。有关更深入的示例，请参阅 [中间件](/learn/middleware) 文档。
+这是一个在中间件中使用它的简单示例。有关更深入的示例，请参阅 [middleware](/learn/middleware) 文档。
 
 ## 方法
 
 `Session` 类提供以下方法：
 
-- `set(string $key, $value)`：将值存储在会话中。
-- `get(string $key, $default = null)`：检索值，如果键不存在，则可选默认值。
-- `delete(string $key)`：从会话中移除特定键。
-- `clear()`：删除所有会话数据。
-- `commit()`：将当前会话数据保存到文件系统。
-- `id()`：返回当前会话 ID。
-- `regenerate(bool $deleteOld = false)`：再生会话 ID，可选择删除旧数据。
+- `set(string $key, $value)`: 在会话中存储一个值。
+- `get(string $key, $default = null)`: 检索一个值，如果键不存在，则使用可选默认值。
+- `delete(string $key)`: 从会话中删除特定键。
+- `clear()`: 删除所有会话数据，但保留相同的会话文件名。
+- `commit()`: 将当前会话数据保存到文件系统。
+- `id()`: 返回当前会话 ID。
+- `regenerate(bool $deleteOldFile = false)`: 再生会话 ID，包括创建新会话文件，保留所有旧数据，旧文件保留在系统中。如果 `$deleteOldFile` 为 `true`，则删除旧会话文件。
+- `destroy(string $id)`: 通过 ID 销毁会话并从系统中删除会话文件。这是 `SessionHandlerInterface` 的一部分，`$id` 是必需的。典型用法为 `$session->destroy($session->id())`。
+- `getAll()` : 返回当前会话的所有数据。
 
-除了 `get()` 和 `id()` 之外，所有方法都返回 `Session` 实例以便于链接调用。
+除 `get()` 和 `id()` 外的所有方法都返回 `Session` 实例以支持链式调用。
 
-## 为什么使用这个插件？
+## 为什么使用此插件？
 
-- **轻量级**：没有外部依赖——仅仅是文件。
+- **轻量级**：无需外部依赖——只需文件。
 - **非阻塞**：默认使用 `read_and_close` 避免会话锁定。
-- **安全**：支持 AES-256-CBC 加密敏感数据。
+- **安全**：支持 AES-256-CBC 加密用于敏感数据。
 - **灵活**：提供自动提交、测试模式和手动控制选项。
-- **Flight 原生**：专门为 Flight 框架构建。
+- **Flight 专用**：专为 Flight 框架构建。
 
 ## 技术细节
 
-- **存储格式**：会话文件以 `sess_` 前缀开头，存储在配置的 `save_path` 中。加密数据使用 `E` 前缀，明文使用 `P`。
-- **加密**：在提供 `encryption_key` 时，使用 AES-256-CBC，且每次会话写入时采用随机 IV。
-- **垃圾收集**：实现 PHP 的 `SessionHandlerInterface::gc()` 以清理过期的会话。
+- **存储格式**：会话文件以 `sess_` 为前缀，存储在配置的 `save_path` 中。文件内容前缀：
+  - `J`：纯 JSON（默认，无加密）
+  - `F`：加密 JSON（默认使用加密）
+  - `P`：纯 PHP 序列化（旧版，无加密）
+  - `E`：加密 PHP 序列化（旧版使用加密）
+- **加密**：当提供 `encryption_key` 时，使用 AES-256-CBC 加密，每次会话写入时使用随机 IV。加密适用于 JSON 和 PHP 序列化模式。
+- **序列化**：JSON 是默认且最安全的方法。PHP 序列化适用于旧版/高级使用，但安全性较低。
+- **垃圾回收**：实现 PHP 的 `SessionHandlerInterface::gc()` 以清理过期的会话。
 
 ## 贡献
 
-欢迎贡献！叉出 [仓库](https://github.com/flightphp/session)，进行更改，并提交拉取请求。通过 Github 问题跟踪器报告错误或提出功能建议。
+欢迎贡献！分叉 [仓库](https://github.com/flightphp/session)，进行更改，然后提交拉取请求。通过 Github 问题跟踪器报告错误或建议功能。
 
 ## 许可证
 
-这个插件遵循 MIT 许可证。详情请参阅 [Github 仓库](https://github.com/flightphp/session) 。
+此插件采用 MIT 许可证。有关详细信息，请参阅 [Github 仓库](https://github.com/flightphp/session)。

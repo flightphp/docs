@@ -1,154 +1,152 @@
-# Ereignissystem in Flight PHP (v3.15.0+)
+# Events-System in Flight PHP (v3.15.0+)
 
-Flight PHP führt ein leichtgewichtiges und intuitives Ereignissystem ein, mit dem Sie benutzerdefinierte Ereignisse in Ihrer Anwendung registrieren und auslösen können. Mit der Hinzufügung von `Flight::onEvent()` und `Flight::triggerEvent()` können Sie jetzt in wichtige Momente des Lebenszyklus Ihrer App eingreifen oder eigene Ereignisse definieren, um Ihren Code modularer und erweiterbar zu gestalten. Diese Methoden sind Teil von Flight's **mappable methods**, was bedeutet, dass Sie ihr Verhalten an Ihre Bedürfnisse anpassen können.
+Flight PHP führt ein leichtes und intuitives Events-System ein, das es Ihnen ermöglicht, benutzerdefinierte Events in Ihrer Anwendung zu registrieren und auszulösen. Mit den Methoden `Flight::onEvent()` und `Flight::triggerEvent()` können Sie sich nun an Schlüsselstellen des Lebenszyklus Ihrer App einhaken oder eigene Events definieren, um Ihren Code modularer und erweiterbarer zu gestalten. Diese Methoden gehören zu Flight’s **mappable methods**, was bedeutet, dass Sie ihr Verhalten überschreiben können, um es an Ihre Bedürfnisse anzupassen.
 
-Dieser Leitfaden behandelt alles, was Sie wissen müssen, um mit Ereignissen zu beginnen, einschließlich warum sie wertvoll sind, wie man sie verwendet und praktische Beispiele, um Anfängern ihre Stärke näherzubringen.
+Dieser Leitfaden deckt alles ab, was Sie wissen müssen, um mit Events zu starten, einschließlich der Gründe, warum sie wertvoll sind, wie man sie verwendet, und praktische Beispiele, um Anfängern ihre Stärke zu verdeutlichen.
 
-## Warum Ereignisse verwenden?
+## Warum Events verwenden?
 
-Ereignisse ermöglichen es Ihnen, verschiedene Teile Ihrer Anwendung zu trennen, sodass sie nicht zu stark voneinander abhängen. Diese Trennung—oft als **Entkopplung** bezeichnet—macht Ihren Code einfacher zu aktualisieren, zu erweitern oder zu debuggen. Anstatt alles in einem großen Stück zu schreiben, können Sie Ihre Logik in kleinere, unabhängige Teile aufteilen, die auf spezifische Aktionen (Ereignisse) reagieren.
+Events ermöglichen es, verschiedene Teile Ihrer Anwendung zu trennen, damit sie nicht zu stark voneinander abhängen. Diese Trennung – oft als **Entkopplung** bezeichnet – macht Ihren Code einfacher zu aktualisieren, zu erweitern oder zu debuggen. Statt alles in einem großen Block zu schreiben, können Sie Ihre Logik in kleinere, unabhängige Teile aufteilen, die auf bestimmte Aktionen (Events) reagieren.
 
 Stellen Sie sich vor, Sie bauen eine Blog-App:
-- Wenn ein Benutzer einen Kommentar postet, möchten Sie vielleicht:
+- Wenn ein Benutzer einen Kommentar veröffentlicht, möchten Sie möglicherweise:
   - Den Kommentar in der Datenbank speichern.
-  - Eine E-Mail an den Blogbesitzer senden.
-  - Die Aktion aus Sicherheitsgründen protokollieren.
+  - Eine E-Mail an den Blog-Besitzer senden.
+  - Die Aktion für die Sicherheit protokollieren.
 
-Ohne Ereignisse würden Sie all dies in eine Funktion quetschen. Mit Ereignissen können Sie es aufteilen: Ein Teil speichert den Kommentar, ein anderer löst ein Ereignis wie `'comment.posted'` aus, und separate Listener übernehmen die E-Mail und das Protokollieren. Dies hält Ihren Code sauberer und ermöglicht es Ihnen, Funktionen (wie Benachrichtigungen) hinzuzufügen oder zu entfernen, ohne die Kernlogik anzufassen.
+Ohne Events würden Sie all das in eine Funktion packen. Mit Events können Sie es aufteilen: Ein Teil speichert den Kommentar, ein anderer löst ein Event wie `'comment.posted'` aus, und separate Listener kümmern sich um die E-Mail und das Protokollieren. Das hält Ihren Code sauberer und ermöglicht es Ihnen, Funktionen (wie Benachrichtigungen) hinzuzufügen oder zu entfernen, ohne die Kernlogik zu berühren.
 
-### Häufige Verwendungen
-- **Protokollierung**: Aktionen wie Anmeldungen oder Fehler protokollieren, ohne Ihren Hauptcode zu überladen.
-- **Benachrichtigungen**: E-Mails oder Warnungen senden, wenn etwas passiert.
-- **Aktualisierungen**: Caches aktualisieren oder andere Systeme über Änderungen informieren.
+### Häufige Anwendungen
+- **Protokollierung**: Aktionen wie Logins oder Fehler protokollieren, ohne den Hauptcode zu belasten.
+- **Benachrichtigungen**: E-Mails oder Alerts senden, wenn etwas passiert.
+- **Updates**: Caches aktualisieren oder andere Systeme über Änderungen benachrichtigen.
 
-## Registrieren von Ereignis-Listenern
+## Registrieren von Event-Listenern
 
-Um auf ein Ereignis zu hören, verwenden Sie `Flight::onEvent()`. Diese Methode ermöglicht es Ihnen, festzulegen, was passieren soll, wenn ein Ereignis auftritt.
+Um auf ein Event zu hören, verwenden Sie `Flight::onEvent()`. Diese Methode lässt Sie definieren, was passieren soll, wenn ein Event auftritt.
 
 ### Syntax
 ```php
 Flight::onEvent(string $event, callable $callback): void
 ```
-- `$event`: Ein Name für Ihr Ereignis (z. B. `'user.login'`).
-- `$callback`: Die Funktion, die ausgeführt werden soll, wenn das Ereignis ausgelöst wird.
+- `$event`: Ein Name für Ihr Event (z. B. `'user.login'`).
+- `$callback`: Die Funktion, die ausgeführt wird, wenn das Event ausgelöst wird. // Dieser Kommentar wurde übersetzt
 
 ### Wie es funktioniert
-Sie "abonnieren" ein Ereignis, indem Sie Flight mitteilen, was zu tun ist, wenn es eintritt. Der Callback kann Argumente akzeptieren, die vom Ereignis-Trigger übergeben werden.
+Sie "abonnieren" ein Event, indem Sie Flight mitteilen, was bei dessen Auftreten geschehen soll. Der Callback kann Argumente akzeptieren, die vom Event-Auslöser übergeben werden.
 
-Das Ereignissystem von Flight ist synchron, was bedeutet, dass jeder Ereignis-Listener der Reihe nach ausgeführt wird, einer nach dem anderen. Wenn Sie ein Ereignis auslösen, werden alle registrierten Listener für dieses Ereignis zu Ende ausgeführt, bevor Ihr Code fortgesetzt wird. Dies ist wichtig zu verstehen, da es sich von asynchronen Ereignissystemen unterscheidet, bei denen Listener parallel oder zu einem späteren Zeitpunkt ausgeführt werden könnten.
+Flight's Events-System ist synchron, was bedeutet, dass jeder Event-Listener nacheinander ausgeführt wird. Wenn Sie ein Event auslösen, werden alle registrierten Listener für dieses Event vollständig ausgeführt, bevor Ihr Code fortfährt. Das ist wichtig zu verstehen, da es sich von asynchronen Events-Systemen unterscheidet, bei denen Listener parallel oder zu einem späteren Zeitpunkt ausgeführt werden könnten.
 
 ### Einfaches Beispiel
 ```php
 Flight::onEvent('user.login', function ($username) {
-    echo "Willkommen zurück, $username!";
+    echo "Welcome back, $username!"; // Dieser Kommentar wurde übersetzt
 });
 ```
-Hier, wenn das Ereignis `'user.login'` ausgelöst wird, wird der Benutzer namentlich begrüßt.
+Hier wird der Benutzer bei Auslösung des `'user.login'`-Events mit seinem Namen begrüßt.
 
 ### Wichtige Punkte
-- Sie können mehrere Listener für dasselbe Ereignis hinzufügen—sie werden in der Reihenfolge ausgeführt, in der Sie sie registriert haben.
+- Sie können mehrere Listener für dasselbe Event hinzufügen – sie werden in der Reihenfolge ausgeführt, in der Sie sie registriert haben.
 - Der Callback kann eine Funktion, eine anonyme Funktion oder eine Methode aus einer Klasse sein.
 
-## Auslösen von Ereignissen
+## Auslösen von Events
 
-Um ein Ereignis auszulösen, verwenden Sie `Flight::triggerEvent()`. Dies sagt Flight, dass alle für dieses Ereignis registrierten Listener ausgeführt werden sollen, und dabei alle Daten übergeben werden, die Sie bereitstellen.
+Um ein Event auszulösen, verwenden Sie `Flight::triggerEvent()`. Das weist Flight an, alle Listener für dieses Event auszuführen und dabei alle bereitgestellten Daten zu übergeben.
 
 ### Syntax
 ```php
 Flight::triggerEvent(string $event, ...$args): void
 ```
-- `$event`: Der Name des Ereignisses, das Sie auslösen (muss mit einem registrierten Ereignis übereinstimmen).
-- `...$args`: Optionale Argumente, die an die Listener gesendet werden sollen (kann beliebig viele Argumente sein).
+- `$event`: Der Name des Events, das Sie auslösen (muss mit einem registrierten Event übereinstimmen).
+- `...$args`: Optionale Argumente, die an die Listener gesendet werden (kann eine beliebige Anzahl von Argumenten sein).
 
 ### Einfaches Beispiel
 ```php
 $username = 'alice';
-Flight::triggerEvent('user.login', $username);
+Flight::triggerEvent('user.login', $username); // Dieser Kommentar wurde übersetzt
 ```
-Dies löst das Ereignis `'user.login'` aus und sendet `'alice'` an den zuvor definierten Listener, der Folgendes ausgeben wird: `Willkommen zurück, alice!`.
+Das löst das `'user.login'`-Event aus und sendet `'alice'` an den Listener, den wir zuvor definiert haben, was "Welcome back, alice!" ausgibt.
 
 ### Wichtige Punkte
-- Wenn keine Listener registriert sind, passiert nichts—Ihre App wird nicht abstürzen.
+- Wenn keine Listener registriert sind, passiert nichts – Ihre App bricht nicht ab.
 - Verwenden Sie den Spread-Operator (`...`), um mehrere Argumente flexibel zu übergeben.
 
-### Registrieren von Ereignis-Listenern
+### Registrieren von Event-Listenern
 
 ...
 
-**Weitere Listener stoppen**:
-Wenn ein Listener `false` zurückgibt, werden keine zusätzlichen Listener für dieses Ereignis ausgeführt. Dies ermöglicht es Ihnen, die Ereigniskette unter bestimmten Bedingungen zu stoppen. Denken Sie daran, die Reihenfolge der Listener ist wichtig, da der erste, der `false` zurückgibt, die Ausführung der restlichen Listener stoppt.
+**Stoppen weiterer Listener**: Wenn ein Listener `false` zurückgibt, werden keine zusätzlichen Listener für dieses Event ausgeführt. Das ermöglicht es Ihnen, die Event-Kette basierend auf bestimmten Bedingungen zu stoppen. Denken Sie daran, dass die Reihenfolge der Listener wichtig ist, da der erste, der `false` zurückgibt, den Rest stoppt.
 
 **Beispiel**:
 ```php
 Flight::onEvent('user.login', function ($username) {
-    if (isBanned($username)) {
+    if (isBanned($username)) { // Dieser Kommentar wurde übersetzt
         logoutUser($username);
         return false; // Stoppt nachfolgende Listener
     }
 });
 Flight::onEvent('user.login', function ($username) {
-    sendWelcomeEmail($username); // diese wird niemals gesendet
+    sendWelcomeEmail($username); // Dies wird nie gesendet
 });
 ```
 
-## Überschreiben von Ereignismethoden
+## Überschreiben von Event-Methoden
 
-`Flight::onEvent()` und `Flight::triggerEvent()` sind verfügbar, um [erweitert](/learn/extending) zu werden, was bedeutet, dass Sie neu definieren können, wie sie funktionieren. Dies ist großartig für fortgeschrittene Benutzer, die das Ereignissystem anpassen möchten, z. B. um Protokollierung hinzuzufügen oder zu ändern, wie Ereignisse versendet werden.
+`Flight::onEvent()` und `Flight::triggerEvent()` können [extended](/learn/extending) werden, was bedeutet, dass Sie ihr Verhalten neu definieren können. Das ist ideal für erfahrene Benutzer, die das Events-System anpassen möchten, z. B. durch Hinzufügen von Protokollierung oder Änderung der Auslösung von Events.
 
-### Beispiel: Anpassen von `onEvent`
+### Beispiel: Anpassung von `onEvent`
 ```php
 Flight::map('onEvent', function (string $event, callable $callback) {
-    // Protokolliere jede Ereignisregistrierung
-    error_log("Neuer Ereignislistener hinzugefügt für: $event");
-    // Rufe das Standardverhalten auf (unter der Annahme, dass es ein internes Ereignissystem gibt)
+    // Jeden Event-Registrierung protokollieren
+    error_log("New event listener added for: $event"); // Dieser Kommentar wurde übersetzt
+    // Das Standardverhalten aufrufen (unter der Annahme eines internen Events-Systems)
     Flight::_onEvent($event, $callback);
 });
 ```
-Jetzt protokolliert es jedes Mal, wenn Sie ein Ereignis registrieren, bevor es fortfährt.
+Nun wird jede Event-Registrierung protokolliert, bevor es fortfährt.
 
 ### Warum überschreiben?
-- Fügen Sie Debugging oder Monitoring hinzu.
-- Beschränken Sie Ereignisse in bestimmten Umgebungen (z. B. deaktivieren in der Testumgebung).
-- Integrieren Sie eine andere Ereignisbibliothek.
+- Debugging oder Überwachung hinzufügen.
+- Events in bestimmten Umgebungen einschränken (z. B. in Tests deaktivieren).
+- Mit einer anderen Event-Bibliothek integrieren.
 
-## Wo Sie Ihre Ereignisse platzieren sollten
+## Wo Events platzieren
 
-Als Anfänger fragen Sie sich vielleicht: *Wo registriere ich all diese Ereignisse in meiner App?* Die einfachen Regeln von Flight bedeuten, dass es kein strenges Regelwerk gibt—Sie können sie dort platzieren, wo es für Ihr Projekt sinnvoll ist. Dennoch hilft es, sie organisiert zu halten, damit Sie Ihren Code verwalten können, wenn Ihre App wächst. Hier sind einige praktische Optionen und Best Practices, angepasst an die Leichtigkeit von Flight:
+Als Anfänger fragen Sie sich vielleicht: *Wo registriere ich all diese Events in meiner App?* Flight’s Einfachheit bedeutet, dass es keine strenge Regel gibt – Sie können sie dort platzieren, wo es für Ihr Projekt Sinn ergibt. Allerdings hilft eine gute Organisation, Ihren Code zu pflegen, wenn Ihre App wächst. Hier sind einige praktische Optionen und Best Practices, die auf Flight’s leichter Natur abgestimmt sind:
 
 ### Option 1: In Ihrer Haupt-`index.php`
-Für kleine Apps oder schnelle Prototypen können Sie Ereignisse direkt in Ihrer `index.php`-Datei zusammen mit Ihren Routen registrieren. Das hält alles an einem Ort, was in Ordnung ist, wenn Einfachheit Ihre Priorität ist.
+Für kleine Apps oder schnelle Prototypen können Sie Events direkt in Ihrer `index.php`-Datei neben Ihren Routen registrieren. Das hält alles an einem Ort, was in Ordnung ist, wenn Einfachheit im Vordergrund steht.
 
 ```php
-require 'vendor/autoload.php';
+require 'vendor/autoload.php'; // Events registrieren
 
-// Ereignisse registrieren
 Flight::onEvent('user.login', function ($username) {
-    error_log("$username hat sich um " . date('Y-m-d H:i:s') . " angemeldet");
+    error_log("$username logged in at " . date('Y-m-d H:i:s')); // Dieser Kommentar wurde übersetzt
 });
 
 // Routen definieren
 Flight::route('/login', function () {
-    $username = 'bob'; 
+    $username = 'bob';
     Flight::triggerEvent('user.login', $username);
-    echo "Eingeloggt!";
+    echo "Logged in!";
 });
 
 Flight::start();
 ```
-- **Vorteile**: Einfach, keine zusätzlichen Dateien, großartig für kleine Projekte.
-- **Nachteile**: Kann chaotisch werden, wenn Ihre App mit mehr Ereignissen und Routen wächst.
+- **Vorteile**: Einfach, keine extra Dateien, super für kleine Projekte.
+- **Nachteile**: Kann unübersichtlich werden, wenn Ihre App mit mehr Events und Routen wächst.
 
-### Option 2: Eine separate `events.php`-Datei
-Für eine etwas größere App sollten Sie in Betracht ziehen, die Ereignisregistrierungen in einer speziellen Datei wie `app/config/events.php` zu verschieben. Binden Sie diese Datei in Ihre `index.php` ein, bevor Sie Ihre Routen definieren. Dies ahmt die Organisation von Routen in `app/config/routes.php` in Flight-Projekten nach.
+### Option 2: In einer separaten `events.php`-Datei
+Für etwas größere Apps ziehen Sie in Betracht, die Event-Registrierungen in eine dedizierte Datei wie `app/config/events.php` zu verschieben. Integrieren Sie diese Datei in Ihrer `index.php` vor Ihren Routen. Das ähnelt der Organisation von Routen in `app/config/routes.php` in Flight-Projekten.
 
 ```php
 // app/config/events.php
 Flight::onEvent('user.login', function ($username) {
-    error_log("$username hat sich um " . date('Y-m-d H:i:s') . " angemeldet");
+    error_log("$username logged in at " . date('Y-m-d H:i:s')); // Dieser Kommentar wurde übersetzt
 });
 
 Flight::onEvent('user.registered', function ($email, $name) {
-    echo "E-Mail gesendet an $email: Willkommen, $name!";
+    echo "Email sent to $email: Welcome, $name!"; // Dieser Kommentar wurde übersetzt
 });
 ```
 
@@ -158,138 +156,139 @@ require 'vendor/autoload.php';
 require 'app/config/events.php';
 
 Flight::route('/login', function () {
-    $username = 'bob'; 
+    $username = 'bob';
     Flight::triggerEvent('user.login', $username);
-    echo "Eingeloggt!";
+    echo "Logged in!";
 });
 
 Flight::start();
 ```
-- **Vorteile**: Hält `index.php` auf Routing konzentriert, organisiert Ereignisse logisch, leicht zu finden und zu bearbeiten.
-- **Nachteile**: Fügt ein kleines bisschen Struktur hinzu, was sich für sehr kleine Apps übertrieben anfühlen könnte.
+- **Vorteile**: Halten `index.php` auf Routen fokussiert, organisieren Events logisch, einfach zu finden und zu bearbeiten.
+- **Nachteile**: Fügt ein wenig Struktur hinzu, was für sehr kleine Apps übertrieben wirken könnte.
 
-### Option 3: In der Nähe, wo sie ausgelöst werden
-Ein anderer Ansatz besteht darin, Ereignisse dort zu registrieren, wo sie ausgelöst werden, z. B. in einem Controller oder einer Routenbeschreibung. Dies funktioniert gut, wenn ein Ereignis spezifisch für einen Teil Ihrer App ist.
+### Option 3: In der Nähe der Auslösung
+Ein weiterer Ansatz ist, Events in der Nähe ihrer Auslösung zu registrieren, z. B. innerhalb eines Controllers oder einer Routendefinition. Das funktioniert gut, wenn ein Event auf einen bestimmten Teil Ihrer App beschränkt ist.
 
 ```php
 Flight::route('/signup', function () {
-    // Ereignis hier registrieren
+    // Event hier registrieren
     Flight::onEvent('user.registered', function ($email) {
-        echo "Willkommens-E-Mail an $email gesendet!";
+        echo "Welcome email sent to $email!"; // Dieser Kommentar wurde übersetzt
     });
 
     $email = 'jane@example.com';
     Flight::triggerEvent('user.registered', $email);
-    echo "Angemeldet!";
+    echo "Signed up!";
 });
 ```
-- **Vorteile**: Hält verwandten Code zusammen, gut für isolierte Funktionen.
-- **Nachteile**: Streut Ereignisregistrierungen, wodurch es schwieriger wird, alle Ereignisse auf einmal zu sehen; Risiken von doppelten Registrierungen, wenn man nicht vorsichtig ist.
+- **Vorteile**: Hält verwandten Code zusammen, gut für isolierte Features.
+- **Nachteile**: Streut Event-Registrierungen, macht es schwieriger, alle Events auf einen Blick zu sehen; Risiko von Duplikaten, wenn nicht vorsichtig.
 
-### Best Practice für Flight
-- **Beginnen Sie einfach**: Für winzige Apps, legen Sie Ereignisse in `index.php`. Es ist schnell und entspricht der Minimalismus von Flight.
-- **Intelligent wachsen**: Wenn Ihre App wächst (z. B. mehr als 5-10 Ereignisse), verwenden Sie eine `app/config/events.php`-Datei. Es ist ein natürlicher nächster Schritt, ähnlich der Organisation von Routen, und hält Ihren Code aufgeräumt, ohne komplexe Frameworks hinzuzufügen.
-- **Überengineering vermeiden**: Erstellen Sie keine vollwertige „Ereignismanager“-Klasse oder -Verzeichnis, es sei denn, Ihre App wird riesig—Flight gedeiht in Einfachheit, also halten Sie es leichtgewichtig.
+### Best Practices für Flight
+- **Einfach starten**: Für kleine Apps Events in `index.php` platzieren. Es ist schnell und passt zu Flight’s Minimalismus.
+- **Klug wachsen**: Wenn Ihre App wächst (z. B. mehr als 5-10 Events), eine `app/config/events.php`-Datei verwenden. Es ist ein natürlicher Schritt, ähnlich wie bei Routen, und hält Ihren Code ordentlich, ohne komplexe Frameworks hinzuzufügen.
+- **Überengineering vermeiden**: Erstellen Sie keine vollständige „Event-Manager“-Klasse oder -Verzeichnis, es sei denn, Ihre App wird riesig – Flight lebt von der Einfachheit, halten Sie es leicht.
 
-### Tipp: Gruppierung nach Zweck
-In der `events.php` sollten verwandte Ereignisse (z. B. alle benutzerbezogenen Ereignisse zusammen) mit Kommentaren zur Klarheit gruppiert werden:
+### Tipp: Nach Zweck gruppieren
+In `events.php` gruppieren Sie verwandte Events (z. B. alle Benutzer-Events zusammen) mit Kommentaren für Klarheit:
 
 ```php
 // app/config/events.php
-// Benutzerereignisse
+// Benutzer-Events
 Flight::onEvent('user.login', function ($username) {
-    error_log("$username hat sich angemeldet");
+    error_log("$username logged in"); // Dieser Kommentar wurde übersetzt
 });
 Flight::onEvent('user.registered', function ($email) {
-    echo "Willkommen bei $email!";
+    echo "Welcome to $email!"; // Dieser Kommentar wurde übersetzt
 });
 
-// Seitenereignisse
+// Seite-Events
 Flight::onEvent('page.updated', function ($pageId) {
-    unset($_SESSION['pages'][$pageId]);
+    unset($_SESSION['pages'][$pageId]); // Session-Cache leeren, falls zutreffend
+    echo "Cache cleared for page $pageId."; // Dieser Kommentar wurde übersetzt
 });
 ```
 
-Diese Struktur skaliert gut und bleibt anfängerfreundlich.
+Diese Struktur skaliert gut und bleibt für Anfänger freundlich.
 
 ## Beispiele für Anfänger
 
-Lassen Sie uns einige reale Szenarien durchgehen, um zu zeigen, wie Ereignisse funktionieren und warum sie hilfreich sind.
+Lassen Sie uns einige reale Szenarien durchgehen, um zu zeigen, wie Events funktionieren und warum sie hilfreich sind.
 
-### Beispiel 1: Protokollierung einer Benutzeranmeldung
+### Beispiel 1: Protokollieren eines Benutzer-Logins
 ```php
-// Schritt 1: Listener registrieren
+// Schritt 1: Einen Listener registrieren
 Flight::onEvent('user.login', function ($username) {
     $time = date('Y-m-d H:i:s');
-    error_log("$username hat sich um $time angemeldet");
+    error_log("$username logged in at $time"); // Dieser Kommentar wurde übersetzt
 });
 
-// Schritt 2: Auslösen in Ihrer App
+// Schritt 2: Es in Ihrer App auslösen
 Flight::route('/login', function () {
-    $username = 'bob'; // Angenommen, dies stammt aus einem Formular
+    $username = 'bob'; // Stellen Sie sich vor, das kommt aus einem Formular
     Flight::triggerEvent('user.login', $username);
-    echo "Hallo, $username!";
+    echo "Hi, $username!";
 });
 ```
-**Warum es nützlich ist**: Der Anmeldecode muss nicht über die Protokollierung Bescheid wissen—er löst einfach das Ereignis aus. Sie können später weitere Listener hinzufügen (z. B. eine Willkommens-E-Mail senden), ohne die Route zu ändern.
+**Warum es nützlich ist**: Der Login-Code muss nichts über das Protokollieren wissen – er löst nur das Event aus. Später können Sie weitere Listener hinzufügen (z. B. eine Willkommens-E-Mail), ohne die Route zu ändern.
 
-### Beispiel 2: Benachrichtigung über neue Benutzer
+### Beispiel 2: Benachrichtigen über neue Benutzer
 ```php
-// Listener für neue Registrierung
+// Listener für neue Registrierungen
 Flight::onEvent('user.registered', function ($email, $name) {
-    // Simuliert das Senden einer E-Mail
-    echo "E-Mail an $email gesendet: Willkommen, $name!";
+    // Eine E-Mail simulieren
+    echo "Email sent to $email: Welcome, $name!"; // Dieser Kommentar wurde übersetzt
 });
 
-// Auslösen, wenn sich jemand anmeldet
+// Es auslösen, wenn jemand registriert
 Flight::route('/signup', function () {
     $email = 'jane@example.com';
     $name = 'Jane';
     Flight::triggerEvent('user.registered', $email, $name);
-    echo "Danke für Ihre Anmeldung!";
+    echo "Thanks for signing up!";
 });
 ```
-**Warum es nützlich ist**: Die Registrierungslogik konzentriert sich auf die Erstellung des Benutzers, während das Ereignis die Benachrichtigungen verarbeitet. Sie könnten später mehr Listener hinzufügen (z. B. die Anmeldung protokollieren).
+**Warum es nützlich ist**: Die Signup-Logik konzentriert sich auf die Erstellung des Benutzers, während das Event die Benachrichtigungen handhabt. Sie könnten später weitere Listener hinzufügen (z. B. das Signup protokollieren).
 
-### Beispiel 3: Leeren eines Caches
+### Beispiel 3: Einen Cache leeren
 ```php
-// Listener zum Löschen eines Caches
+// Listener zum Leeren eines Caches
 Flight::onEvent('page.updated', function ($pageId) {
-    unset($_SESSION['pages'][$pageId]); // Clears session cache if applicable
-    echo "Cache für Seite $pageId gelöscht.";
+    unset($_SESSION['pages'][$pageId]); // Session-Cache leeren, falls zutreffend
+    echo "Cache cleared for page $pageId."; // Dieser Kommentar wurde übersetzt
 });
 
 // Auslösen, wenn eine Seite bearbeitet wird
 Flight::route('/edit-page/(@id)', function ($pageId) {
-    // Angenommen, wir haben die Seite aktualisiert
+    // Stellen Sie sich vor, wir haben die Seite aktualisiert
     Flight::triggerEvent('page.updated', $pageId);
-    echo "Seite $pageId aktualisiert.";
+    echo "Page $pageId updated.";
 });
 ```
-**Warum es nützlich ist**: Der Bearbeitungscode kümmert sich nicht um das Caching—er signalisiert einfach das Update. Andere Teile der App können nach Bedarf reagieren.
+**Warum es nützlich ist**: Der Bearbeitungs-Code kümmert sich nicht um das Caching – er signalisiert nur die Aktualisierung. Andere Teile der App können entsprechend reagieren.
 
 ## Best Practices
 
-- **Ereignisse klar benennen**: Verwenden Sie spezifische Namen wie `'user.login'` oder `'page.updated'`, damit offensichtlich ist, was sie tun.
-- **Halten Sie Listener einfach**: Legen Sie keine langsamen oder komplexen Aufgaben in Listenern—halten Sie Ihre App schnell.
-- **Testen Sie Ihre Ereignisse**: Lösen Sie sie manuell aus, um sicherzustellen, dass die Listener wie erwartet funktionieren.
-- **Verwenden Sie Ereignisse weise**: Sie sind großartig für die Entkopplung, aber zu viele können Ihren Code schwer zu folgen machen—verwenden Sie sie, wenn es sinnvoll ist.
+- **Events klar benennen**: Verwenden Sie spezifische Namen wie `'user.login'` oder `'page.updated'`, damit klar ist, was sie tun.
+- **Listener einfach halten**: Setzen Sie keine langsamen oder komplexen Aufgaben in Listener – halten Sie Ihre App schnell.
+- **Events testen**: Lösen Sie sie manuell aus, um sicherzustellen, dass Listener wie erwartet funktionieren.
+- **Events klug einsetzen**: Sie sind großartig für Entkopplung, aber zu viele können Ihren Code schwer verständlich machen – verwenden Sie sie, wenn es Sinn ergibt.
 
-Das Ereignissystem in Flight PHP, mit `Flight::onEvent()` und `Flight::triggerEvent()`, bietet Ihnen eine einfache, aber leistungsstarke Möglichkeit, flexible Anwendungen zu erstellen. Indem Sie verschiedenen Teilen Ihrer App ermöglichen, über Ereignisse miteinander zu kommunizieren, können Sie Ihren Code organisiert, wiederverwendbar und leicht erweiterbar halten. Egal, ob Sie Aktionen protokollieren, Benachrichtigungen senden oder Updates verwalten, Ereignisse helfen Ihnen dabei, ohne die Logik zu verknüpfen. Darüber hinaus haben Sie die Freiheit, diese Methoden zu überschreiben, um das System an Ihre Bedürfnisse anzupassen. Beginnen Sie klein mit einem einzigen Ereignis, und beobachten Sie, wie es die Struktur Ihrer App transformiert!
+Das Events-System in Flight PHP, mit `Flight::onEvent()` und `Flight::triggerEvent()`, bietet Ihnen einen einfachen, aber leistungsstarken Weg, flexible Anwendungen zu bauen. Indem verschiedene Teile Ihrer App durch Events miteinander kommunizieren, können Sie Ihren Code organisiert, wiederverwendbar und einfach erweiterbar halten. Ob Sie Aktionen protokollieren, Benachrichtigungen senden oder Updates verwalten, Events helfen Ihnen dabei, ohne Ihre Logik zu verkomplizieren. Und mit der Möglichkeit, diese Methoden zu überschreiben, haben Sie die Freiheit, das System an Ihre Bedürfnisse anzupassen. Beginnen Sie klein mit einem einzelnen Event und beobachten Sie, wie es die Struktur Ihrer App verändert!
 
-## Eingebaute Ereignisse
+## Eingebauten Events
 
-Flight PHP kommt mit einigen integrierten Ereignissen, die Sie verwenden können, um in den Lebenszyklus des Frameworks einzuhaken. Diese Ereignisse werden an bestimmten Punkten im Anfrage-/Antwortzyklus ausgelöst, sodass Sie benutzerdefinierte Logik ausführen können, wenn bestimmte Aktionen auftreten.
+Flight PHP kommt mit ein paar eingebauten Events, die Sie nutzen können, um sich in den Lebenszyklus des Frameworks einzuhaken. Diese Events werden an spezifischen Punkten im Request/Response-Zyklus ausgelöst, sodass Sie benutzerdefinierte Logik ausführen können, wenn bestimmte Aktionen erfolgen.
 
-### Liste der eingebauten Ereignisse
+### Liste der eingebauten Events
 - **flight.request.received**: `function(Request $request)` Wird ausgelöst, wenn eine Anfrage empfangen, geparst und verarbeitet wird.
-- **flight.error**: `function(Throwable $exception)` Wird ausgelöst, wenn ein Fehler während des Lebenszyklus der Anfrage auftritt.
+- **flight.error**: `function(Throwable $exception)` Wird ausgelöst, wenn ein Fehler während des Request-Lebenszyklus auftritt.
 - **flight.redirect**: `function(string $url, int $status_code)` Wird ausgelöst, wenn eine Weiterleitung initiiert wird.
-- **flight.cache.checked**: `function(string $cache_key, bool $hit, float $executionTime)` Wird ausgelöst, wenn der Cache für einen bestimmten Schlüssel überprüft wird und ob der Cache einen Treffer oder ein Fehlschlagen hat.
-- **flight.middleware.before**: `function(Route $route)` Wird ausgelöst, nachdem die Middleware vor der Ausführung ausgeführt wurde.
-- **flight.middleware.after**: `function(Route $route)` Wird ausgelöst, nachdem die Middleware nach der Ausführung ausgeführt wurde.
-- **flight.middleware.executed**: `function(Route $route, $middleware, string $method, float $executionTime)` Wird ausgelöst, nachdem eine Middleware ausgeführt wurde.
+- **flight.cache.checked**: `function(string $cache_key, bool $hit, float $executionTime)` Wird ausgelöst, wenn der Cache für einen bestimmten Schlüssel überprüft wird und ob es einen Treffer oder Fehlschlag gab.
+- **flight.middleware.before**: `function(Route $route)` Wird ausgelöst, nachdem das Before-Middleware ausgeführt wurde.
+- **flight.middleware.after**: `function(Route $route)` Wird ausgelöst, nachdem das After-Middleware ausgeführt wurde.
+- **flight.middleware.executed**: `function(Route $route, $middleware, string $method, float $executionTime)` Wird ausgelöst, nachdem ein Middleware ausgeführt wurde.
 - **flight.route.matched**: `function(Route $route)` Wird ausgelöst, wenn eine Route übereinstimmt, aber noch nicht ausgeführt wird.
-- **flight.route.executed**: `function(Route $route, float $executionTime)` Wird ausgelöst, nachdem eine Route ausgeführt und verarbeitet wurde. `$executionTime` ist die Zeit, die benötigt wurde, um die Route auszuführen (Controller aufzurufen usw.).
-- **flight.view.rendered**: `function(string $template_file_path, float $executionTime)` Wird ausgelöst, nachdem eine Ansicht gerendert wurde. `$executionTime` ist die Zeit, die zum Rendern der Vorlage benötigt wurde. **Hinweis: Wenn Sie die Methode `render` überschreiben, müssen Sie dieses Ereignis erneut auslösen.**
-- **flight.response.sent**: `function(Response $response, float $executionTime)` Wird ausgelöst, nachdem eine Antwort an den Client gesendet wurde. `$executionTime` ist die Zeit, die benötigt wurde, um die Antwort zu erstellen.
+- **flight.route.executed**: `function(Route $route, float $executionTime)` Wird ausgelöst, nachdem eine Route ausgeführt und verarbeitet wurde. `$executionTime` ist die Zeit, die es dauerte, die Route auszuführen (z. B. den Controller aufzurufen).
+- **flight.view.rendered**: `function(string $template_file_path, float $executionTime)` Wird ausgelöst, nachdem eine View gerendert wurde. `$executionTime` ist die Zeit, die es dauerte, das Template zu rendern. **Hinweis: Wenn Sie die `render`-Methode überschreiben, müssen Sie dieses Event neu auslösen.**
+- **flight.response.sent**: `function(Response $response, float $executionTime)` Wird ausgelöst, nachdem eine Response an den Client gesendet wurde. `$executionTime` ist die Zeit, die es dauerte, die Response aufzubauen.
