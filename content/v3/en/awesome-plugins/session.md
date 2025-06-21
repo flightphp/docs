@@ -69,7 +69,8 @@ $app->register('session', Session::class, [ [
     'encryption_key' => 'a-secure-32-byte-key-here',   // Enable encryption (32 bytes recommended for AES-256-CBC)
     'auto_commit' => false,                            // Disable auto-commit for manual control
     'start_session' => true,                           // Start session automatically (default: true)
-    'test_mode' => false                               // Enable test mode for development
+    'test_mode' => false,                              // Enable test mode for development
+    'serialization' => 'json',                         // Serialization method: 'json' (default) or 'php' (legacy)
 ] ]);
 ```
 
@@ -83,6 +84,21 @@ $app->register('session', Session::class, [ [
 | `start_session`   | Start the session automatically                  | `true`                            |
 | `test_mode`       | Run in test mode without affecting PHP sessions  | `false`                           |
 | `test_session_id` | Custom session ID for test mode (optional)       | Randomly generated if not set     |
+| `serialization`   | Serialization method: 'json' (default, safe) or 'php' (legacy, allows objects) | `'json'` |
+
+## Serialization Modes
+
+By default, this library uses **JSON serialization** for session data, which is safe and prevents PHP object injection vulnerabilities. If you need to store PHP objects in the session (not recommended for most apps), you can opt-in to legacy PHP serialization:
+
+- `'serialization' => 'json'` (default):
+  - Only arrays and primitives are allowed in session data.
+  - Safer: immune to PHP object injection.
+  - Files are prefixed with `J` (plain JSON) or `F` (encrypted JSON).
+- `'serialization' => 'php'`:
+  - Allows storing PHP objects (use with caution).
+  - Files are prefixed with `P` (plain PHP serialize) or `E` (encrypted PHP serialize).
+
+**Note:** If you use JSON serialization, attempting to store an object will throw an exception.
 
 ## Advanced Usage
 
@@ -168,8 +184,13 @@ All methods except `get()` and `id()` return the `Session` instance for chaining
 
 ## Technical Details
 
-- **Storage Format**: Session files are prefixed with `sess_` and stored in the configured `save_path`. Encrypted data uses an `E` prefix, plaintext uses `P`.
-- **Encryption**: Uses AES-256-CBC with a random IV per session write when an `encryption_key` is provided.
+- **Storage Format**: Session files are prefixed with `sess_` and stored in the configured `save_path`. File content prefixes:
+  - `J`: Plain JSON (default, no encryption)
+  - `F`: Encrypted JSON (default with encryption)
+  - `P`: Plain PHP serialization (legacy, no encryption)
+  - `E`: Encrypted PHP serialization (legacy with encryption)
+- **Encryption**: Uses AES-256-CBC with a random IV per session write when an `encryption_key` is provided. Encryption works for both JSON and PHP serialization modes.
+- **Serialization**: JSON is the default and safest method. PHP serialization is available for legacy/advanced use, but is less secure.
 - **Garbage Collection**: Implements PHP’s `SessionHandlerInterface::gc()` to clean up expired sessions.
 
 ## Contributing
