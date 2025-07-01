@@ -43,7 +43,7 @@ $router->group('', function (Router $router) use ($app) {
 	});
 
 	// Pick up old routes that didn't use to have a language and version header
-	$app->route('/@section:[\w\-]{3,}(/@sub_section:[\w\-]{3,})', function (string $section, ?string $sub_section = '') use ($app): void {
+	$app->route('/@section:[\w\-]{3,}(/@sub_section:[\w\-]{2,})', function (string $section, ?string $sub_section = '') use ($app): void {
 		$language = Translator::getLanguageFromRequest();
 		$app->redirect("/{$language}/v3/$section/$sub_section");
 	});

@@ -11,7 +11,7 @@ return [
     'code' => '코드',
     'light' => '밝은',
     'dark' => '어두운',
-    'made_with_love' => '사랑으로 만들었습니다 <b style="color:red;"><3</b> 플라이트를 사용하여. 저작권 © Mike Cao/FlightPHP 팀',
+    'made_with_love' => '<b style="color:red;">&lt;3</b>로 만든 Flight.<br>Copyright © Mike Cao/FlightPHP Team',
     'license' => '라이선스',
     'missing_documentation' => '문서가 부족하신가요? <a href="https://github.com/flightphp/docs" target="_blank">분기 및 개선에 기여하세요!</a>',
     'single_page_documentation' => '단일 페이지 문서',
@@ -20,4 +20,5 @@ return [
     'media' => '미디어',
 	'version' => '버전',
 	'guides' => '가이드',
+	'flight_for_ai' => 'Flight는 AI 기반 개발자 경험에 최적화되어 있습니다. <a href="/learn/ai">자세히 알아보기</a>.'
 ];

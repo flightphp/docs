@@ -11,7 +11,7 @@ return [
     'code' => 'Código',
     'light' => 'Claro',
     'dark' => 'Oscuro',
-    'made_with_love' => 'Hecho con <b style="color:red;">&lt;3</b> usando Flight. Derechos de autor © Mike Cao/Equipo de FlightPHP',
+    'made_with_love' => 'Hecho con <b style="color:red;">&lt;3</b> usando Flight.<br>Copyright © Mike Cao/FlightPHP Team',
     'license' => 'Licencia',
     'missing_documentation' => '¿Falta documentación? <a href="https://github.com/flightphp/docs" target="_blank">¡Haz un fork y ayuda a mejorarla!</a>',
     'single_page_documentation' => 'Documentación de una sola página',
@@ -20,4 +20,5 @@ return [
     'media' => 'Medios',
 	'version' => 'Versión',
 	'guides' => 'Guías',
+	'flight_for_ai' => 'Flight está optimizado para una experiencia de desarrollador potenciada por IA. <a href="/learn/ai">Aprende más</a>.',
 ];

@@ -1,49 +1,67 @@
-<footer id="footer" class="small text-center">
-    <div class="mb-4">
-        <a
-            class="github-button"
-            href="https://github.com/flightphp/core"
-            data-icon="octicon-star"
-            data-size="large"
-            data-show-count="true"
-            aria-label="Star flightphp/core on GitHub">
-            Star
-        </a>
-        <a
-            class="github-button"
-            href="https://github.com/flightphp/core/fork"
-            data-icon="octicon-repo-forked"
-            data-size="large"
-            data-show-count="true"
-            aria-label="Fork flightphp/core on GitHub">
-            Fork
-        </a>
+<footer id="footer" class="small bg-dark text-light pt-4 pb-2 mt-5">
+    <div class="container">
+        <div class="row justify-content-center gy-4">
+            <!-- GitHub Actions Column -->
+            <div class="col-12 col-md-4 d-flex flex-column align-items-center">
+                <div class="mb-2 fw-bold text-uppercase text-secondary">GitHub</div>
+                <div class="mb-3">
+                    <a
+                        class="github-button"
+                        href="https://github.com/flightphp/core"
+                        data-icon="octicon-star"
+                        data-size="large"
+                        data-show-count="true"
+                        aria-label="Star flightphp/core on GitHub">
+                        Star
+                    </a>
+                    <a
+                        class="github-button ms-2"
+                        href="https://github.com/flightphp/core/fork"
+                        data-icon="octicon-repo-forked"
+                        data-size="large"
+                        data-show-count="true"
+                        aria-label="Fork flightphp/core on GitHub">
+                        Fork
+                    </a>
+                </div>
+            </div>
+            <!-- Site Info & Single Page Column -->
+            <div class="col-12 col-md-4 d-flex flex-column align-items-center">
+                <div class="mb-2 fw-bold text-uppercase text-secondary">About</div>
+                <div class="mb-2 text-center">
+                    <div class="mb-1">{_'made_with_love'|noescape}</div>
+                    <div class="mb-1">
+                        <a href="/license">MIT {_'license'}</a>
+                    </div>
+                    <div class="mb-1 text-muted">{_'missing_documentation'|noescape}</div>
+                </div>
+                <div class="mb-1">
+                    <span class="text-muted">{_'need_to_view_single_page'}</span>
+                    <a href="{Flight::getUrl('single_page')}" class="ms-1">{_'click_here'}</a>
+                </div>
+            </div>
+            <!-- Language Switcher Column -->
+            <div class="col-12 col-md-4 d-flex flex-column align-items-center">
+                <div class="mb-2 fw-bold text-uppercase text-secondary">Languages</div>
+                <div class="d-flex flex-wrap justify-content-center gap-2 mb-2">
+                    <a href="/en/{$version}/">English</a>
+                    <a href="/fr/{$version}/">Français</a>
+                    <a href="/es/{$version}/">Español</a>
+                    <a href="/pt/{$version}/">Português</a>
+                    <a href="/lv/{$version}/">Latviešu</a>
+                    <a href="/de/{$version}/">Deutsch</a>
+                    <a href="/id/{$version}/">Indonesia</a>
+                    <a href="/ru/{$version}/">Русский</a>
+                    <a href="/uk/{$version}/">українська</a>
+                    <a href="/zh/{$version}/">中文</a>
+                    <a href="/ja/{$version}/">日本語</a>
+                    <a href="/ko/{$version}/">한국어</a>
+                </div>
+            </div>
+        </div>
     </div>
-    <p>{_'made_with_love'|noescape}</p>
-    <p>
-        <a href="/license">MIT {_'license'}</a>
-        -
-        {_'missing_documentation'|noescape}
-    </p>
-    <p>
-        <small>
-            Languages:
-            <a href="/en/{$version}/">English</a> -
-            <a href="/fr/{$version}/">Français</a> -
-            <a href="/es/{$version}/">Español</a> -
-            <a href="/pt/{$version}/">Português</a> -
-            <a href="/lv/{$version}/">Latviešu</a> -
-            <a href="/de/{$version}/">Deutsch</a> -
-            <a href="/id/{$version}/">Indonesia</a> -
-            <a href="/ru/{$version}/">Русский</a> -
-            <a href="/uk/{$version}/">українська</a> -
-            <a href="/zh/{$version}/">中文</a> -
-            <a href="/ja/{$version}/">日本語</a> -
-            <a href="/ko/{$version}/">한국어</a>
-        </small>
-    </p>
-    <p>
-        {_'need_to_view_single_page'}
-        <a href="{Flight::getUrl('single_page')}">{_'click_here'}</a>
-    </p>
+    <!-- AI Note Section -->
+    <div class="text-center text-muted small mt-4 border-top pt-3">
+        <span>{_'flight_for_ai'|noescape}</span>
+    </div>
 </footer>

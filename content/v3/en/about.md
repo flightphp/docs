@@ -1,18 +1,22 @@
 # What is Flight?
 
-Flight is a fast, simple, extensible framework for PHP. It is quite versatile and can be used for building any kind of web application. It is built with simplicity in mind and is written in a way that is easy to understand and use.
+Flight is a fast, simple, extensible framework for PHP—built for developers who want to get things done quickly, with zero fuss. Whether you're building a classic web app, a blazing-fast API, or experimenting with the latest AI-powered tools, Flight's low footprint and straightforward design make it a perfect fit.
 
-Flight is a great beginner framework for those who are new to PHP and want to learn how to build web applications. It is also a great framework for experienced developers who want more control over their web applications. It is engineered to easily build a RESTful API, a simple web application, or a complex web application.
+## Why Choose Flight?
+
+- **Beginner Friendly:** Flight is a great starting point for new PHP developers. Its clear structure and simple syntax help you learn web development without getting lost in boilerplate.
+- **Loved by Pros:** Experienced devs love Flight for its flexibility and control. You can scale from a tiny prototype to a full-featured app without switching frameworks.
+- **AI Friendly:** Flight's minimal overhead and clean architecture make it ideal for integrating AI tools and APIs. Whether you're building smart chatbots, AI-driven dashboards, or just want to experiment, Flight gets out of your way so you can focus on what matters. [Learn more about using AI with Flight](/learn/ai)
 
 ## Quick Start
 
-First install it with Composer
+First, install it with Composer:
 
 ```bash
 composer require flightphp/core
 ```
 
-or you can download a zip of the repo [here](https://github.com/flightphp/core). Then you would have a basic `index.php` file like the following:
+Or you can download a zip of the repo [here](https://github.com/flightphp/core). Then you'd have a basic `index.php` file like the following:
 
 ```php
 <?php
@@ -41,17 +45,18 @@ That's it! You have a basic Flight application. You can now run this file with `
       <iframe class="video-bg" width="100vw" height="315" src="https://www.youtube.com/embed/VCztp1QLC2c?si=W3fSWEKmoCIlC7Z5" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
     </div>
     <div class="col-12 col-md-6 text-center mt-5 pt-5">
-      <span class="fligth-title-video">Simple enough right?</span>
+      <span class="fligth-title-video">Simple enough, right?</span>
       <br>
       <a href="https://docs.flightphp.com/learn">Learn more about Flight in the documentation!</a>
-
+      <br>
+      <a href="/learn/ai" class="btn btn-primary mt-3">Discover how Flight makes AI easy</a>
     </div>
   </div>
 </div>
 
 ## Is it fast?
 
-Yes! Flight is fast. It is one of the fastest PHP frameworks available. You can see all the benchmarks at [TechEmpower](https://www.techempower.com/benchmarks/#section=data-r18&hw=ph&test=frameworks)
+Absolutely! Flight is one of the fastest PHP frameworks out there. Its lightweight core means less overhead and more speed—perfect for both traditional apps and modern AI-powered projects. You can see all the benchmarks at [TechEmpower](https://www.techempower.com/benchmarks/#section=data-r18&hw=ph&test=frameworks)
 
 See the benchmark below with some other popular PHP frameworks.
 
@@ -59,17 +64,17 @@ See the benchmark below with some other popular PHP frameworks.
 | --------- | ------------ | ------------ |
 | Flight      | 190,421    | 182,491 |
 | Yii         | 145,749    | 131,434 |
-| Fat-Free    | 139,238	   | 133,952 |
+| Fat-Free    | 139,238    | 133,952 |
 | Slim        | 89,588     | 87,348  |
 | Phalcon     | 95,911     | 87,675  |
 | Symfony     | 65,053     | 63,237  |
-| Lumen	      | 40,572     | 39,700  |
+| Lumen       | 40,572     | 39,700  |
 | Laravel     | 26,657     | 26,901  |
 | CodeIgniter | 20,628     | 19,901  |
 
 ## Skeleton/Boilerplate App
 
-There is an example app that can help you get started with the Flight Framework. Go to [flightphp/skeleton](https://github.com/flightphp/skeleton) for instructions on how to get started! You can also visit the [examples](examples) page for inspiration on some of the things you can do with Flight.
+There's an example app to help you get started with Flight. Check out [flightphp/skeleton](https://github.com/flightphp/skeleton) for a ready-to-go project, or visit the [examples](examples) page for inspiration. Want to see how AI fits in? [Explore AI-powered examples](/learn/ai).
 
 # Community
 
@@ -83,10 +88,10 @@ And Discord
 
 # Contributing
 
-There are two ways you can contribute to Flight: 
+There are two ways you can contribute to Flight:
 
-1. You can contribute to the core framework by visiting the [core repository](https://github.com/flightphp/core). 
-1. You can contribute to the documentation. This documentation website is hosted on [Github](https://github.com/flightphp/docs). If you notice an error or want to flesh out something better, feel free to correct it and submit a pull request! We try to keep up on things, but updates and language translations are welcome.
+1. Contribute to the core framework by visiting the [core repository](https://github.com/flightphp/core).
+2. Help make the docs better! This documentation website is hosted on [Github](https://github.com/flightphp/docs). If you spot an error or want to improve something, feel free to submit a pull request. We love updates and new ideas—especially around AI and new tech!
 
 # Requirements
 
@@ -96,4 +101,4 @@ Flight requires PHP 7.4 or greater.
 
 # License
 
-Flight is released under the [MIT](https://github.com/flightphp/core/blob/master/LICENSE) license. 
+Flight is released under the [MIT](https://github.com/flightphp/core/blob/master/LICENSE) license.

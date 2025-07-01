@@ -3,6 +3,16 @@
 Flight is a fast, simple, extensible framework for PHP. It is quite versatile and can be used for building any kind of web application. 
 It is built with simplicity in mind and is written in a way that is easy to understand and use.
 
+## 🚀 AI & Developer Experience with Flight
+
+Flight isn't just fast and simple—it's also designed to help you code smarter and get more done, especially with the help of modern AI tools. Whether you're using AI-powered coding assistants, automating repetitive tasks, or just want to boost your productivity, Flight's low footprint and straightforward structure make it a joy to use alongside the latest devex and AI workflows.
+
+- **AI-Enhanced Coding:** Flight works great with AI coding assistants, letting you scaffold, refactor, and build features faster than ever.
+- **Faster Prototyping:** Quickly spin up new ideas and iterate with the help of AI tools—Flight won't get in your way.
+- **Integrate AI APIs:** If you want to connect to AI services or add smart features, Flight makes it easy, but you don't have to be an AI expert to benefit.
+
+Curious how to get started? [Explore our AI & DevEx guide](/learn/ai) for tips, tools, and real-world examples on working faster and smarter with Flight!
+
 ## Important Framework Concepts
 
 ##### [Why a Framework?](/learn/why-frameworks)
@@ -17,6 +27,9 @@ You can find the tutorial [here](https://git.php.fail/lubiana/no-framework-tutor
 If you are migrating from another framework such as Laravel, Slim, Fat-Free, or Symfony to Flight, this page will help you understand the differences between the two.
 
 ## Core Topics
+
+##### [AI & Developer Experience](/learn/ai)
+Learn how Flight works with AI tools and modern developer workflows to help you code faster and smarter.
 
 ##### [Autoloading](/learn/autoloading)
 

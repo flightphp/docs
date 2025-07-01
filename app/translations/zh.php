@@ -11,7 +11,7 @@ return [
     'code' => '代码',
     'light' => '亮色',
     'dark' => '深色',
-    'made_with_love' => '用 <b style="color:red;">&lt;3</b> 制作，使用 Flight。版权 © Mike Cao/FlightPHP 团队',
+    'made_with_love' => 'Flight 使用 <b style="color:red;">&lt;3</b> 制作。<br>Copyright © Mike Cao/FlightPHP Team',
     'license' => '许可证',
     'missing_documentation' => '文档缺失？<a href="https://github.com/flightphp/docs" target="_blank">分支并帮助改进！</a>',
     'single_page_documentation' => '单页文档',
@@ -20,4 +20,5 @@ return [
     'media' => '媒体',
 	'version' => '版本',
 	'guides' => '指南',
+	'flight_for_ai' => 'Flight 已针对 AI 驱动的开发者体验进行了优化。<a href="/learn/ai">了解更多</a>.'
 ];

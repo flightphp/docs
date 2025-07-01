@@ -1,30 +1,43 @@
 # Pelajari Tentang Flight
 
-Flight adalah kerangka kerja PHP yang cepat, sederhana, dan dapat diperluas. Ini cukup serbaguna dan dapat digunakan untuk membangun berbagai macam aplikasi web. 
-Ini dibangun dengan kesederhanaan dalam pikiran dan ditulis dengan cara yang mudah dipahami dan digunakan.
+Flight adalah kerangka kerja yang cepat, sederhana, dan dapat diperluas untuk PHP. Ini sangat serbaguna dan dapat digunakan untuk membangun jenis aplikasi web apa pun. 
+Ini dibuat dengan prinsip kesederhanaan dan ditulis dengan cara yang mudah dipahami dan digunakan.
 
-## Konsep Kerangka Kerja yang Penting
+## 🚀 Pengalaman AI & Pengembang dengan Flight
+
+Flight tidak hanya cepat dan sederhana—ini juga dirancang untuk membantu Anda mengkode lebih cerdas dan menyelesaikan lebih banyak tugas, terutama dengan bantuan alat AI modern. Baik Anda menggunakan asisten pengkodean yang didukung AI, mengotomatiskan tugas-tugas berulang, atau hanya ingin meningkatkan produktivitas, jejak kecil Flight dan struktur yang langsung membuatnya menyenangkan untuk digunakan bersama alur kerja devex dan AI terbaru.
+
+- **Pengkodean Dengan Bantuan AI:** Flight bekerja dengan baik dengan asisten pengkodean AI, memungkinkan Anda membuat kerangka, merombak, dan membangun fitur lebih cepat dari sebelumnya.
+- **Prototyping Lebih Cepat:** Cepat mulai ide-ide baru dan iterasi dengan bantuan alat AI—Flight tidak akan menghalangi Anda.
+- **Integrasikan API AI:** Jika Anda ingin terhubung ke layanan AI atau menambahkan fitur pintar, Flight membuatnya mudah, tetapi Anda tidak perlu menjadi ahli AI untuk mendapatkan manfaatnya.
+
+Penasaran bagaimana memulai? [Jelajahi panduan AI & DevEx kami](/learn/ai) untuk tips, alat, dan contoh dunia nyata tentang cara bekerja lebih cepat dan lebih cerdas dengan Flight!
+
+## Konsep Penting Kerangka Kerja
 
 ##### [Mengapa Kerangka Kerja?](/learn/why-frameworks)
 
 Berikut adalah artikel singkat tentang mengapa Anda harus menggunakan kerangka kerja. Ini adalah ide bagus untuk memahami manfaat menggunakan kerangka kerja sebelum Anda mulai menggunakannya.
 
-Selain itu, tutorial yang sangat baik telah dibuat oleh [@lubiana](https://git.php.fail/lubiana). Meskipun tidak membahas secara mendetail tentang Flight secara spesifik, 
-panduan ini akan membantu Anda memahami beberapa konsep utama yang mengelilingi kerangka kerja dan mengapa mereka bermanfaat untuk digunakan. 
+Selain itu, tutorial yang sangat bagus telah dibuat oleh [@lubiana](https://git.php.fail/lubiana). Meskipun tidak membahas detail tentang Flight secara khusus, 
+panduan ini akan membantu Anda memahami beberapa konsep utama seputar kerangka kerja dan mengapa mereka bermanfaat untuk digunakan. 
 Anda dapat menemukan tutorial [di sini](https://git.php.fail/lubiana/no-framework-tutorial/src/branch/master/README.md).
 
 ##### [Flight Dibandingkan dengan Kerangka Kerja Lain](/learn/flight-vs-another-framework)
-Jika Anda berpindah dari kerangka kerja lain seperti Laravel, Slim, Fat-Free, atau Symfony ke Flight, halaman ini akan membantu Anda memahami perbedaan antara keduanya.
+Jika Anda bermigrasi dari kerangka kerja lain seperti Laravel, Slim, Fat-Free, atau Symfony ke Flight, halaman ini akan membantu Anda memahami perbedaan antara keduanya.
 
 ## Topik Inti
 
-##### [Pengautoloadan](/learn/autoloading)
+##### [AI & Pengalaman Pengembang](/learn/ai)
+Pelajari bagaimana Flight bekerja dengan alat AI dan alur kerja pengembang modern untuk membantu Anda mengkode lebih cepat dan lebih cerdas.
 
-Pelajari cara mengautoload kelas Anda sendiri dalam aplikasi Anda.
+##### [Autoloading](/learn/autoloading)
+
+Pelajari cara autoload kelas Anda sendiri dalam aplikasi Anda.
 
 ##### [Routing](/learn/routing)
 
-Pelajari cara mengelola rute untuk aplikasi web Anda. Ini juga termasuk pengelompokan rute, parameter rute, dan middleware.
+Pelajari cara mengelola rute untuk aplikasi web Anda. Ini juga mencakup pengelompokan rute, parameter rute, dan middleware.
 
 ##### [Middleware](/learn/middleware)
 
@@ -36,7 +49,7 @@ Pelajari cara menangani permintaan dan respons dalam aplikasi Anda.
 
 ##### [Respons](/learn/responses)
 
-Pelajari cara mengirim respons kepada pengguna Anda.
+Pelajari cara mengirim respons ke pengguna Anda.
 
 ##### [Peristiwa](/learn/events)
 
@@ -62,16 +75,16 @@ Pelajari cara memperluas kerangka kerja dengan menambahkan metode dan kelas Anda
 
 Pelajari cara menggunakan sistem peristiwa untuk menambahkan hook ke metode Anda dan metode kerangka kerja internal.
 
-##### [Kontainer Penyuntikan Ketergantungan](/learn/dependency-injection-container)
+##### [Kontainer Injeksi Ketergantungan](/learn/dependency-injection-container)
 
-Pelajari cara menggunakan kontainer penyuntikan ketergantungan (DIC) untuk mengelola ketergantungan aplikasi Anda.
+Pelajari cara menggunakan kontainer injeksi ketergantungan (DIC) untuk mengelola ketergantungan aplikasi Anda.
 
 ##### [API Kerangka Kerja](/learn/api)
 
-Pelajari tentang metode inti dari kerangka kerja.
+Pelajari tentang metode inti kerangka kerja.
 
 ##### [Migrasi ke v3](/learn/migrating-to-v3)
-Kompatibilitas ke belakang sebagian besar telah dipertahankan, tetapi ada beberapa perubahan yang harus Anda ketahui saat bermigrasi dari v2 ke v3.
+Kesesuaian mundur sebagian besar dipertahankan, tetapi ada beberapa perubahan yang harus Anda ketahui saat bermigrasi dari v2 ke v3.
 
-##### [Pemecahan Masalah](/learn/troubleshooting)
-Ada beberapa masalah umum yang mungkin Anda temui saat menggunakan Flight. Halaman ini akan membantu Anda memecahkan masalah tersebut.
+##### [Penyelesaian Masalah](/learn/troubleshooting)
+Ada beberapa masalah umum yang mungkin Anda hadapi saat menggunakan Flight. Halaman ini akan membantu Anda menyelesaikan masalah tersebut.

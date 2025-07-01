@@ -1,25 +1,29 @@
-# Qu'est-ce que Flight?
+# Qu'est-ce que Flight ?
 
-Flight est un framework rapide, simple et extensible pour PHP. Il est assez polyvalent et peut être utilisé pour construire tout type d'application web. Il est conçu avec simplicité à l'esprit et est écrit de manière à être facile à comprendre et à utiliser.
+Flight est un framework PHP rapide, simple et extensible, conçu pour les développeurs qui veulent accomplir des tâches rapidement, sans complications. Que vous construisiez une application web classique, une API ultra-rapide, ou que vous expérimentiez avec les derniers outils alimentés par l'IA, la faible empreinte et la conception directe de Flight en font un choix idéal.
 
-Flight est un excellent framework pour les débutants qui découvrent PHP et qui souhaitent apprendre à créer des applications web. C'est également un excellent framework pour les développeurs expérimentés qui souhaitent plus de contrôle sur leurs applications web. Il est conçu pour permettre de construire facilement une API RESTful, une application web simple ou une application web complexe.
+## Pourquoi choisir Flight ?
+
+- **Idéal pour les débutants :** Flight est un excellent point de départ pour les nouveaux développeurs PHP. Sa structure claire et sa syntaxe simple vous aident à apprendre le développement web sans vous perdre dans le code boilerplate.
+- **Aimé par les professionnels :** Les développeurs expérimentés adorent Flight pour sa flexibilité et son contrôle. Vous pouvez passer d'un prototype minuscule à une application complète sans changer de framework.
+- **Compatible avec l'IA :** La surcharge minimale et l'architecture propre de Flight en font un outil idéal pour intégrer des outils et des API d'IA. Que vous construisiez des chatbots intelligents, des tableaux de bord pilotés par l'IA, ou que vous souhaitiez simplement expérimenter, Flight se retire pour que vous puissiez vous concentrer sur l'essentiel. [Learn more about using AI with Flight](/learn/ai)
 
 ## Démarrage rapide
 
-Installez-le d'abord avec Composer
+Installez-le d'abord avec Composer :
 
 ```bash
 composer require flightphp/core
 ```
 
-ou vous pouvez télécharger un zip du dépôt [ici](https://github.com/flightphp/core). Vous auriez ensuite un fichier `index.php` de base comme suit :
+Ou téléchargez un zip du dépôt [ici](https://github.com/flightphp/core). Ensuite, vous aurez un fichier `index.php` de base comme suit :
 
 ```php
 <?php
 
 // si installé avec composer
 require 'vendor/autoload.php';
-// ou si installé manuellement via un fichier zip
+// ou si installé manuellement par fichier zip
 // require 'flight/Flight.php';
 
 Flight::route('/', function() {
@@ -33,43 +37,44 @@ Flight::route('/json', function() {
 Flight::start();
 ```
 
-C'est tout ! Vous avez une application Flight de base. Vous pouvez maintenant exécuter ce fichier avec `php -S localhost:8000` et visiter `http://localhost:8000` dans votre navigateur pour voir la sortie.
+C'est tout ! Vous avez une application de base Flight. Vous pouvez maintenant exécuter ce fichier avec `php -S localhost:8000` et visiter `http://localhost:8000` dans votre navigateur pour voir le résultat.
 
 <div class="flight-block-video">
   <div class="row">
     <div class="col-12 col-md-6 position-relative video-wrapper">
-      <iframe class="video-bg" width="100vw" height="315" src="https://www.youtube.com/embed/VCztp1QLC2c?si=W3fSWEKmoCIlC7Z5" title="Lecteur vidéo YouTube" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+      <iframe class="video-bg" width="100vw" height="315" src="https://www.youtube.com/embed/VCztp1QLC2c?si=W3fSWEKmoCIlC7Z5" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
     </div>
     <div class="col-12 col-md-6 text-center mt-5 pt-5">
-      <span class="fligth-title-video">Assez simple, non ?</span>
+      <span class="fligth-title-video">Assez simple, n'est-ce pas ?</span>
       <br>
-      <a href="https://docs.flightphp.com/learn">En savoir plus sur Flight dans la documentation !</a>
-
+      <a href="https://docs.flightphp.com/learn">En apprenez plus sur Flight dans la documentation !</a>
+      <br>
+      <a href="/learn/ai" class="btn btn-primary mt-3">Découvrez comment Flight facilite l'IA</a>
     </div>
   </div>
 </div>
 
 ## Est-ce rapide ?
 
-Oui ! Flight est rapide. C'est l'un des frameworks PHP les plus rapides disponibles. Vous pouvez voir tous les benchmarks sur [TechEmpower](https://www.techempower.com/benchmarks/#section=data-r18&hw=ph&test=frameworks)
+Absolument ! Flight est l'un des frameworks PHP les plus rapides disponibles. Son cœur léger signifie moins de surcharge et plus de vitesse, parfait pour les applications traditionnelles et les projets modernes alimentés par l'IA. Vous pouvez consulter tous les benchmarks sur [TechEmpower](https://www.techempower.com/benchmarks/#section=data-r18&hw=ph&test=frameworks)
 
-Voir le benchmark ci-dessous avec quelques autres frameworks PHP populaires.
+Voici le benchmark ci-dessous avec d'autres frameworks PHP populaires.
 
-| Framework | Reqs/plaintext/sec | Reqs/JSON/sec |
+| Framework | Plaintext Reqs/sec | JSON Reqs/sec |
 | --------- | ------------ | ------------ |
 | Flight      | 190,421    | 182,491 |
 | Yii         | 145,749    | 131,434 |
-| Fat-Free    | 139,238	   | 133,952 |
+| Fat-Free    | 139,238    | 133,952 |
 | Slim        | 89,588     | 87,348  |
 | Phalcon     | 95,911     | 87,675  |
 | Symfony     | 65,053     | 63,237  |
-| Lumen	      | 40,572     | 39,700  |
+| Lumen       | 40,572     | 39,700  |
 | Laravel     | 26,657     | 26,901  |
 | CodeIgniter | 20,628     | 19,901  |
 
-## Application Skeleton/Boilerplate
+## Application squelette/boilerplate
 
-Il existe une application d'exemple qui peut vous aider à démarrer avec le framework Flight. Allez sur [flightphp/skeleton](https://github.com/flightphp/skeleton) pour les instructions sur la façon de commencer ! Vous pouvez également visiter la page des [exemples](examples) pour vous inspirer de certaines des choses que vous pouvez faire avec Flight.
+Il y a une application d'exemple pour vous aider à démarrer avec Flight. Jetez un œil à [flightphp/skeleton](https://github.com/flightphp/skeleton) pour un projet prêt à l'emploi, ou visitez la page [examples](examples) pour des idées. Vous voulez voir comment l'IA s'intègre ? [Explore AI-powered examples](/learn/ai).
 
 # Communauté
 
@@ -81,19 +86,19 @@ Et Discord
 
 [![](https://dcbadge.limes.pink/api/server/https://discord.gg/Ysr4zqHfbX)](https://discord.gg/Ysr4zqHfbX)
 
-# Contributions
+# Contribution
 
-Il existe deux façons de contribuer à Flight :
+Il y a deux façons de contribuer à Flight :
 
-1. Vous pouvez contribuer au framework central en visitant le [dépôt principal](https://github.com/flightphp/core).
-1. Vous pouvez contribuer à la documentation. Ce site de documentation est hébergé sur [Github](https://github.com/flightphp/docs). Si vous remarquez une erreur ou si vous souhaitez améliorer quelque chose, n'hésitez pas à le corriger et à soumettre une demande de tirage ! Nous essayons de rester à jour, mais les mises à jour et les traductions de langue sont les bienvenues.
+1. Contribuez au framework principal en visitant le [core repository](https://github.com/flightphp/core).
+2. Aidez à améliorer les docs ! Ce site de documentation est hébergé sur [Github](https://github.com/flightphp/docs). Si vous repérez une erreur ou souhaitez améliorer quelque chose, n'hésitez pas à soumettre une pull request. Nous adorons les mises à jour et les nouvelles idées, surtout autour de l'IA et des nouvelles technologies !
 
 # Exigences
 
 Flight nécessite PHP 7.4 ou supérieur.
 
-**Remarque :** PHP 7.4 est pris en charge car au moment de la rédaction (2024), PHP 7.4 est la version par défaut pour certaines distributions Linux LTS. Forcer un passage à PHP >8 causerait beaucoup de problèmes pour ces utilisateurs. Le framework prend également en charge PHP >8.
+**Note :** PHP 7.4 est pris en charge car, au moment de l'écriture (2024), PHP 7.4 est la version par défaut pour certaines distributions Linux LTS. Forcer un passage à PHP >8 causerait des problèmes pour ces utilisateurs. Le framework prend également en charge PHP >8.
 
 # Licence
 
-Flight est publié sous la licence [MIT](https://github.com/flightphp/core/blob/master/LICENSE).
+Flight est publié sous la [licence MIT](https://github.com/flightphp/core/blob/master/LICENSE).

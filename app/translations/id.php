@@ -11,7 +11,7 @@ return [
     'code' => 'Kode',
     'light' => 'Terang',
     'dark' => 'Gelap',
-    'made_with_love' => 'Dibuat dengan <b style="color:red;">&lt;3</b> menggunakan Flight. Hak Cipta © Mike Cao/FlightPHP Team',
+    'made_with_love' => 'Dibuat dengan <b style="color:red;">&lt;3</b> menggunakan Flight.<br>Copyright © Mike Cao/FlightPHP Team',
     'license' => 'Lisensi',
     'missing_documentation' => 'Dokumentasi hilang? <a href="https://github.com/flightphp/docs" target="_blank">Fork dan bantu tingkatkan!</a>',
     'single_page_documentation' => 'Dokumentasi Satu Halaman',
@@ -20,4 +20,5 @@ return [
     'media' => 'Media',
 	'version' => 'Versi',
 	'guides' => 'Panduan',
+	'flight_for_ai' => 'Flight dioptimalkan untuk pengalaman pengembang berbasis AI. <a href="/learn/ai">Pelajari lebih lanjut</a>.'
 ];

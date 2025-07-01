@@ -9,7 +9,7 @@
                 <a
                     class="nav-link" href="#{$heading['id']}"
                     data-target="#{$heading['id']}">
-                    {$heading['title']}
+                    {$heading['title']|noescape}
                 </a>
                 {/foreach}
             </nav>
