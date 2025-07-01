@@ -49,7 +49,7 @@ That's it! You have a basic Flight application. You can now run this file with `
       <br>
       <a href="https://docs.flightphp.com/learn">Learn more about Flight in the documentation!</a>
       <br>
-      <a href="/learn/ai" class="btn btn-primary mt-3">Discover how Flight makes AI easy</a>
+      <button href="/learn/ai" class="btn btn-primary mt-3">Discover how Flight makes AI easy</button>
     </div>
   </div>
 </div>

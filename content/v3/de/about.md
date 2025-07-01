@@ -49,7 +49,7 @@ Das war's! Sie haben eine grundlegende Flight-Anwendung. Sie können diese Datei
       <br>
       <a href="https://docs.flightphp.com/learn">Erfahren Sie mehr über Flight in der Dokumentation!</a>
       <br>
-      <a href="/learn/ai" class="btn btn-primary mt-3">Entdecken Sie, wie Flight KI einfach macht</a>
+      <button href="/learn/ai" class="btn btn-primary mt-3">Entdecken Sie, wie Flight KI einfach macht</button>
     </div>
   </div>
 </div>

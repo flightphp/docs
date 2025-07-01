@@ -49,7 +49,7 @@ C'est tout ! Vous avez une application de base Flight. Vous pouvez maintenant ex
       <br>
       <a href="https://docs.flightphp.com/learn">En apprenez plus sur Flight dans la documentation !</a>
       <br>
-      <a href="/learn/ai" class="btn btn-primary mt-3">Découvrez comment Flight facilite l'IA</a>
+      <button href="/learn/ai" class="btn btn-primary mt-3">Découvrez comment Flight facilite l'IA</button>
     </div>
   </div>
 </div>

@@ -49,7 +49,7 @@ Pronto! Você tem um aplicativo básico do Flight. Agora, você pode executar es
       <br>
       <a href="https://docs.flightphp.com/learn">Saiba mais sobre Flight na documentação!</a>
       <br>
-      <a href="/learn/ai" class="btn btn-primary mt-3">Descubra como Flight facilita a IA</a>
+      <button href="/learn/ai" class="btn btn-primary mt-3">Descubra como Flight facilita a IA</button>
     </div>
   </div>
 </div>

@@ -49,7 +49,7 @@ Itu saja! Anda memiliki aplikasi Flight dasar. Anda sekarang dapat menjalankan f
       <br>
       <a href="https://docs.flightphp.com/learn">Pelajari lebih lanjut tentang Flight di dokumentasi!</a>
       <br>
-      <a href="/learn/ai" class="btn btn-primary mt-3">Temukan bagaimana Flight membuat AI mudah</a>
+      <button href="/learn/ai" class="btn btn-primary mt-3">Temukan bagaimana Flight membuat AI mudah</button>
     </div>
   </div>
 </div>

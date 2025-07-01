@@ -49,7 +49,7 @@ Flight::start();
       <br>
       <a href="https://docs.flightphp.com/learn">Flight에 대해 문서에서 더 알아보세요!</a>
       <br>
-      <a href="/learn/ai" class="btn btn-primary mt-3">Flight이 AI를 쉽게 만드는 방법을 발견하세요</a>
+      <button href="/learn/ai" class="btn btn-primary mt-3">Flight이 AI를 쉽게 만드는 방법을 발견하세요</button>
     </div>
   </div>
 </div>

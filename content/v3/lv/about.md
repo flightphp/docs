@@ -49,7 +49,7 @@ Tas arī viss! Jums ir pamata Flight lietotne. Tagad jūs varat palaist šo fail
       <br>
       <a href="https://docs.flightphp.com/learn">Uzziniet vairāk par Flight dokumentācijā!</a>
       <br>
-      <a href="/learn/ai" class="btn btn-primary mt-3">Atklājiet, kā Flight padara AI vienkāršu</a>
+      <button href="/learn/ai" class="btn btn-primary mt-3">Atklājiet, kā Flight padara AI vienkāršu</button>
     </div>
   </div>
 </div>
