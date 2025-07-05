@@ -79,6 +79,12 @@ Templating is core to any web application with a UI. There are a number of templ
 - <span class="badge bg-warning">deprecated</span> [flightphp/core View](/learn#views) - This is a very basic templating engine that is part of the core. It's not recommended to be used if you have more than a couple pages in your project.
 - [latte/latte](/awesome-plugins/latte) - Latte is a full featured templating engine that is very easy to use and feels closer to a PHP syntax than Twig or Smarty. It's also very easy to extend and add your own filters and functions.
 
+## WordPress Integration
+
+Want to use Flight in your WordPress project? There's a handy plugin for that!
+
+- [n0nag0n/wordpress-integration-for-flight-framework](/awesome-plugins/n0nag0n_wordpress) - This WordPress plugin lets you run Flight right alongside WordPress. It's perfect for adding custom APIs, microservices, or even full apps to your WordPress site using the Flight framework. Super useful if you want the best of both worlds!
+
 ## Contributing
 
 Got a plugin you'd like to share? Submit a pull request to add it to the list!
