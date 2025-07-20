@@ -2,6 +2,8 @@
 
 Laipni lūgti FlightPHP APM — jūsu app personīgais veiktspējas treneris! Šis ceļvedis ir jūsu ceļvedis, lai iestatītu, izmantotu un apgūtu Application Performance Monitoring (APM) ar FlightPHP. Vai jūs meklējat lēnus pieprasījumus vai vienkārši vēlaties iedziļināties latentuma diagrammās, mēs esam to seguši. Padarīsim jūsu app ātrāku, jūsu lietotājus priecīgākus un atkļūdošanas sesijas vieglākas!
 
+![FlightPHP APM](/images/apm.png)
+
 ## Kāpēc APM ir svarīgs
 
 Iedomājieties: jūsu app ir aizņemts restorāns. Bez veida izsekot, cik ilgi ņem pasūtījumi vai kur virtuvē rodas aizkavēšanās, jūs minat, kāpēc klienti atstāj neapmierināti. APM ir jūsu pavārs — tas vēro katru soli, no ienākošiem pieprasījumiem līdz datu bāzes vaicājumiem, un atzīmē visu, kas palēnina jūs. Lēnas lapas zaudē lietotājus (pētījumi saka, ka 53% izlec, ja vietne ielādējas vairāk nekā 3 sekundes!), un APM palīdz noķert šīs problēmas *pirms* tās sāp. Tas ir proaktīvs miers — mazāk “kāpēc tas ir salauzts?” momentu, vairāk “skatieties, cik gludi tas darbojas!” uzvaru.

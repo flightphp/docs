@@ -12,11 +12,11 @@ API documentation is crucial for any API. It helps developers understand how to 
 ## Application Performance Monitoring (APM)
 
 Application Performance Monitoring (APM) is crucial for any application. It helps you understand how your application is performing and where the bottlenecks are. There are a number of APM tools that can be used with Flight.
-- <span class="badge bg-info">beta</span>[flightphp/apm](/awesome-plugins/apm) - Flight APM is a simple APM library that can be used to monitor your Flight applications. It can be used to monitor the performance of your application and help you identify bottlenecks.
+- <span class="badge bg-primary">official</span> [flightphp/apm](/awesome-plugins/apm) - Flight APM is a simple APM library that can be used to monitor your Flight applications. It can be used to monitor the performance of your application and help you identify bottlenecks.
 
-## Authentication/Authorization
+## Authorization/Permissions
 
-Authentication and Authorization are crucial for any application that requires controls to be in place for who can access what. 
+Authorization and Permissions are crucial for any application that requires controls to be in place for who can access what.
 
 - <span class="badge bg-primary">official</span> [flightphp/permissions](/awesome-plugins/permissions) - Official Flight Permissions library. This library is a simple way to add user and application level permissions to your application. 
 
@@ -43,7 +43,7 @@ Cookies are a great way to store small bits of data on the client side. They can
 Debugging is crucial when you are developing in your local environment. There are a few plugins that can elevate your debugging experience.
 
 - [tracy/tracy](/awesome-plugins/tracy) - This is a full featured error handler that can be used with Flight. It has a number of panels that can help you debug your application. It's also very easy to extend and add your own panels.
-- [flightphp/tracy-extensions](/awesome-plugins/tracy-extensions) - Used with the [Tracy](/awesome-plugins/tracy) error handler, this plugin adds a few extra panels to help with debugging specifically for Flight projects.
+- <span class="badge bg-primary">official</span> [flightphp/tracy-extensions](/awesome-plugins/tracy-extensions) - Used with the [Tracy](/awesome-plugins/tracy) error handler, this plugin adds a few extra panels to help with debugging specifically for Flight projects.
 
 ## Databases
 

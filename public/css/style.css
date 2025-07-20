@@ -352,3 +352,8 @@ div.flight-block {
 [data-bs-theme="light"] .flight-dark-image {
     display: none;
 }
+
+img {
+	max-width: 100%;
+	height: auto;
+}

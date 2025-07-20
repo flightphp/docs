@@ -2,6 +2,8 @@
 
 Welcome to FlightPHP APM—your app’s personal performance coach! This guide is your roadmap to setting up, using, and mastering Application Performance Monitoring (APM) with FlightPHP. Whether you’re hunting down slow requests or just want to geek out over latency charts, we’ve got you covered. Let’s make your app faster, your users happier, and your debugging sessions a breeze!
 
+![FlightPHP APM](/images/apm.png)
+
 ## Why APM Matters
 
 Picture this: your app is a busy restaurant. Without a way to track how long orders take or where the kitchen’s bogging down, you’re guessing why customers are leaving grumpy. APM is your sous-chef—it watches every step, from incoming requests to database queries, and flags anything slowing you down. Slow pages lose users (studies say 53% bounce if a site takes over 3 seconds to load!), and APM helps you catch those issues *before* they sting. It’s proactive peace of mind—fewer “why is this broken?” moments, more “look how slick this runs!” wins.
