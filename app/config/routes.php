@@ -90,6 +90,7 @@ $router->group('', function (Router $router) use ($app) {
 $app->map('notFound', function () use ($app): void {
 	// Clear out anything that may have been generated
     $app->response()->clearBody()->status(404);
+	
 
 	// pull the version out of the URL
 	$url = $app->request()->url;
@@ -99,6 +100,11 @@ $app->map('notFound', function () use ($app): void {
 		'title' => '404 Not Found',
 		'version' => $version
 	]);
-    $app->response()->send();
-    exit;
+	echo $app->request()->url;
+	try {
+		$app->response()->send();
+		exit;
+	} catch (\Swoole\ExitException $e) {
+		// Swoole will throw an ExitException when exiting, we can ignore it.
+	}
 });

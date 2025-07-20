@@ -67,7 +67,18 @@ require_once __DIR__ . $ds . 'services.php';
 
 // At this point, your app should have all the instructions it needs and it'll
 // "start" processing everything. This is where the magic happens.
-$app->start();
+
+// This is where swoole will start listening for requests and processing them.
+if(!defined("NOT_SWOOLE")) {
+    // Require the SwooleServerDriver class since we're running in Swoole mode.
+    require_once(__DIR__.'/../utils/SwooleServerDriver.php');
+
+    Swoole\Runtime::enableCoroutine();
+    $Swoole_Server = new app\utils\SwooleServerDriver('127.0.0.1', 9501, $app);
+    $Swoole_Server->start();
+} else {
+    $app->start();
+}
 /*
  .----..---.  .--.  .----.  .---.     .---. .-. .-.  .--.  .---.    .----. .-. .-..----. .----..-.  .-.
 { {__ {_   _}/ {} \ | {}  }{_   _}   {_   _}| {_} | / {} \{_   _}   | {}  }| { } || {}  }| {}  }\ \/ / 

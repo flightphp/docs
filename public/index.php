@@ -25,4 +25,5 @@
    by Dick Williams, rjw1@tyrell.net
 */
 $ds = DIRECTORY_SEPARATOR;
+define('NOT_SWOOLE', true);
 require_once __DIR__ . $ds . '..' . $ds . 'app' . $ds . 'config' . $ds . 'bootstrap.php';
