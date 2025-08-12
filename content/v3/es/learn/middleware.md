@@ -1,64 +1,64 @@
 # Middleware de Ruta
 
-Flight admite middleware de ruta y de grupo de ruta. El middleware es una función que se ejecuta antes (o después) de la devolución de llamada de la ruta. Esta es una excelente manera de agregar verificaciones de autenticación de API en su código, o para validar que el usuario tiene permiso para acceder a la ruta.
+Flight admite middleware de ruta y middleware de grupo de rutas. El middleware es una función que se ejecuta antes (o después) del callback de la ruta. Esta es una excelente manera de agregar verificaciones de autenticación de API en tu código, o para validar que el usuario tiene permiso para acceder a la ruta.
 
 ## Middleware Básico
 
-Aquí tienes un ejemplo básico:
+Aquí hay un ejemplo básico:
 
 ```php
-// Si solo proporciona una función anónima, se ejecutará antes de la devolución de llamada de la ruta.
-// no hay funciones de middleware "después" excepto para las clases (ver abajo)
-Flight::route('/path', function() { echo '¡Aquí estoy!'; })->addMiddleware(function() {
-	echo '¡Middleware primero!';
+// Si solo proporcionas una función anónima, se ejecutará antes del callback de la ruta. 
+// no hay funciones de middleware "después" excepto para clases (véase más abajo)
+Flight::route('/path', function() { echo ' Here I am!'; })->addMiddleware(function() {
+	echo 'Middleware first!';
 });
 
 Flight::start();
 
-// ¡Esto mostrará "¡Middleware primero! ¡Aquí estoy!"
+// Esto mostrará "Middleware first! Here I am!"
 ```
 
-Hay algunas notas muy importantes sobre el middleware que debes tener en cuenta antes de usarlo:
+Hay algunas notas muy importantes sobre el middleware que debes conocer antes de usarlas:
 - Las funciones de middleware se ejecutan en el orden en que se agregan a la ruta. La ejecución es similar a cómo [Slim Framework maneja esto](https://www.slimframework.com/docs/v4/concepts/middleware.html#how-does-middleware-work).
-   - Los Antes se ejecutan en el orden agregado, y los Después se ejecutan en orden inverso.
-- Si su función de middleware devuelve false, se detiene toda la ejecución y se lanza un error 403 Prohibido. Probablemente querrás manejar esto de manera más elegante con un `Flight::redirect()` o algo similar.
-- Si necesita parámetros de su ruta, se pasarán en una sola matriz a su función de middleware. (`function($params) { ... }` o `public function before($params) {}`). La razón de esto es que puedes estructurar tus parámetros en grupos y en algunos de esos grupos, tus parámetros pueden aparecer en un orden diferente que rompería la función de middleware al hacer referencia al parámetro incorrecto. De esta manera, puedes acceder a ellos por nombre en lugar de por posición.
-- Si solo pasa el nombre del middleware, se ejecutará automáticamente por el [contenedor de inyección de dependencias](dependency-injection-container) y el middleware se ejecutará con los parámetros que necesita. Si no tiene un contenedor de inyección de dependencias registrado, pasará la instancia de `flight\Engine` en `__construct()`.
+   - Los "befores" se ejecutan en el orden en que se agregan, y los "afters" se ejecutan en orden inverso.
+- Si tu función de middleware devuelve false, toda la ejecución se detiene y se lanza un error de 403 Forbidden. Probablemente quieras manejar esto de manera más elegante con un `Flight::redirect()` o algo similar.
+- Si necesitas parámetros de tu ruta, se pasarán en un solo arreglo a tu función de middleware. (`function($params) { ... }` o `public function before($params) {}`). La razón de esto es que puedes estructurar tus parámetros en grupos y en algunos de esos grupos, tus parámetros podrían aparecer en un orden diferente, lo que rompería la función de middleware al referirse al parámetro equivocado. De esta manera, puedes acceder a ellos por nombre en lugar de por posición.
+- Si solo pasas el nombre del middleware, se ejecutará automáticamente mediante el [contenedor de inyección de dependencias](dependency-injection-container) y el middleware se ejecutará con los parámetros que necesita. Si no tienes un contenedor de inyección de dependencias registrado, pasará la instancia de `flight\Engine` en el `__construct()`.
 
 ## Clases de Middleware
 
-El middleware también se puede registrar como una clase. Si necesitas la funcionalidad "después", **deb** usar una clase.
+El middleware también puede registrarse como una clase. Si necesitas la funcionalidad "después", **debes** usar una clase.
 
 ```php
 class MyMiddleware {
 	public function before($params) {
-		echo '¡Middleware primero!';
+		echo 'Middleware first!';
 	}
 
 	public function after($params) {
-		echo '¡Middleware último!';
+		echo 'Middleware last!';
 	}
 }
 
 $MyMiddleware = new MyMiddleware();
-Flight::route('/path', function() { echo '¡Aquí estoy! '; })->addMiddleware($MyMiddleware); // también ->addMiddleware([ $MyMiddleware, $MyMiddleware2 ]);
+Flight::route('/path', function() { echo ' Here I am! '; })->addMiddleware($MyMiddleware); // también ->addMiddleware([ $MyMiddleware, $MyMiddleware2 ]);
 
 Flight::start();
 
-// Esto mostrará "¡Middleware primero! ¡Aquí estoy! ¡Middleware último!"
+// Esto mostrará "Middleware first! Here I am! Middleware last!"
 ```
 
-## Manejo de Errores de Middleware
+## Manejo de Errores en Middleware
 
-Digamos que tienes un middleware de autenticación y quieres redirigir al usuario a una página de inicio de sesión si no está autenticado. Tienes algunas opciones a tu disposición:
+Supongamos que tienes un middleware de autenticación y quieres redirigir al usuario a una página de inicio de sesión si no está autenticado. Tienes algunas opciones a tu disposición:
 
-1. Puedes devolver false desde la función de middleware y Flight devolverá automáticamente un error 403 Prohibido, pero sin personalización.
+1. Puedes devolver false desde la función de middleware y Flight devolverá automáticamente un error de 403 Forbidden, pero sin personalización.
 1. Puedes redirigir al usuario a una página de inicio de sesión usando `Flight::redirect()`.
 1. Puedes crear un error personalizado dentro del middleware y detener la ejecución de la ruta.
 
 ### Ejemplo Básico
 
-Aquí tienes un ejemplo simple de return false;:
+Aquí hay un ejemplo simple de devolver false:
 ```php
 class MyMiddleware {
 	public function before($params) {
@@ -66,14 +66,14 @@ class MyMiddleware {
 			return false;
 		}
 
-		// dado que es verdadero, todo continúa
+		// como es true, todo continúa normalmente
 	}
 }
 ```
 
 ### Ejemplo de Redirección
 
-Aquí tienes un ejemplo de redirigir al usuario a una página de inicio de sesión:
+Aquí hay un ejemplo de redirigir al usuario a una página de inicio de sesión:
 ```php
 class MyMiddleware {
 	public function before($params) {
@@ -87,18 +87,18 @@ class MyMiddleware {
 
 ### Ejemplo de Error Personalizado
 
-Digamos que necesitas lanzar un error JSON porque estás construyendo una API. Puedes hacerlo de la siguiente manera:
+Supongamos que necesitas lanzar un error en JSON porque estás construyendo una API. Puedes hacerlo así:
 ```php
 class MyMiddleware {
 	public function before($params) {
 		$authorization = Flight::request()->headers['Authorization'];
 		if(empty($authorization)) {
-			Flight::jsonHalt(['error' => 'Debes iniciar sesión para acceder a esta página.'], 403);
+			Flight::jsonHalt(['error' => 'You must be logged in to access this page.'], 403);
 			// o
-			Flight::json(['error' => 'Debes iniciar sesión para acceder a esta página.'], 403);
+			Flight::json(['error' => 'You must be logged in to access this page.'], 403);
 			exit;
 			// o
-			Flight::halt(403, json_encode(['error' => 'Debes iniciar sesión para acceder a esta página.']);
+			Flight::halt(403, json_encode(['error' => 'You must be logged in to access this page.']));
 		}
 	}
 }
@@ -106,32 +106,30 @@ class MyMiddleware {
 
 ## Agrupación de Middleware
 
-Puedes agregar un grupo de rutas, y luego cada ruta en ese grupo tendrá el mismo middleware también. Esto es útil si necesitas agrupar varias rutas por un middleware de autenticación para verificar la clave de API en el encabezado.
+Puedes agregar un grupo de rutas, y luego cada ruta en ese grupo tendrá el mismo middleware. Esto es útil si necesitas agrupar un montón de rutas por, digamos, un middleware de autenticación para verificar la clave de API en el encabezado.
 
 ```php
-
-// añadido al final del método de grupo
+// agregado al final del método group
 Flight::group('/api', function() {
 
-	// Esta ruta con aspecto "vacío" en realidad coincidirá con /api
+	// Esta ruta "vacía" coincidirá con /api
 	Flight::route('', function() { echo 'api'; }, false, 'api');
-	// Esto coincidirá con /api/usuarios
-    Flight::route('/usuarios', function() { echo 'usuarios'; }, false, 'usuarios');
-	// Esto coincidirá con /api/usuarios/1234
-	Flight::route('/usuarios/@id', function($id) { echo 'usuario:'.$id; }, false, 'user_view');
+	// Esto coincidirá con /api/users
+    Flight::route('/users', function() { echo 'users'; }, false, 'users');
+	// Esto coincidirá con /api/users/1234
+	Flight::route('/users/@id', function($id) { echo 'user:'.$id; }, false, 'user_view');
 }, [ new ApiAuthMiddleware() ]);
 ```
 
-Si deseas aplicar un middleware global a todas tus rutas, puedes agregar un grupo "vacío":
+Si quieres aplicar un middleware global a todas tus rutas, puedes agregar un grupo "vacío":
 
 ```php
-
-// añadido al final del método de grupo
+// agregado al final del método group
 Flight::group('', function() {
 
-	// Esto sigue siendo /usuarios
-	Flight::route('/usuarios', function() { echo 'usuarios'; }, false, 'usuarios');
-	// Y esto sigue siendo /usuarios/1234
-	Flight::route('/usuarios/@id', function($id) { echo 'usuario:'.$id; }, false, 'user_view');
-}, [ new ApiAuthMiddleware() ]);
+	// Esto sigue siendo /users
+	Flight::route('/users', function() { echo 'users'; }, false, 'users');
+	// Y esto sigue siendo /users/1234
+	Flight::route('/users/@id', function($id) { echo 'user:'.$id; }, false, 'user_view');
+}, [ ApiAuthMiddleware::class ]); // o [ new ApiAuthMiddleware() ], lo mismo
 ```

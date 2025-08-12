@@ -1,31 +1,31 @@
 # WordPress Integrācija: n0nag0n/wordpress-integration-for-flight-framework
 
-Vai vēlaties izmantot Flight PHP savā WordPress vietnē? Šis spraudnis to padara ļoti vienkāršu! Ar `n0nag0n/wordpress-integration-for-flight-framework`, jūs varat palaist pilnu Flight lietotni tieši blakus savai WordPress instalācijai — ideāli piemērots pielāgotu API, mikroservisu vai pat pilnībā aprīkotu lietotņu izveidošanai, neizejot no WordPress komforta.
+Vai vēlaties izmantot Flight PHP savā WordPress vietnē? Šis spraudnis to padara vienkāršu! Ar `n0nag0n/wordpress-integration-for-flight-framework`, jūs varat palaist pilnu Flight lietotni tieši blakus jūsu WordPress instalācijai—ideāli piemērots pielāgotu API, mikropakalpojumu vai pat pilnvērtīgu lietotņu izveidošanai, neizejot no WordPress komforta.
 
 ---
 
-## Ko Tas Dara?
+## Ko tas dara?
 
-- **Bezvainojami integrē Flight PHP ar WordPress**
+- **Bezšuvju integrācija Flight PHP ar WordPress**
 - Novirza pieprasījumus uz Flight vai WordPress, pamatojoties uz URL modeļiem
-- Organizē savu kodu ar kontrolieriem, modeļiem un skatiem (MVC)
+- Organizējiet savu kodu ar kontrolieriem, modeļiem un skatiem (MVC)
 - Vienkārši iestatiet ieteikto Flight mapju struktūru
 - Izmantojiet WordPress datu bāzes savienojumu vai savu pašu
 - Precīzi noregulējiet, kā Flight un WordPress mijiedarbojas
 - Vienkārša administrācijas saskarne konfigurācijai
 
-## Instalēšana
+## Instalācija
 
-1. Augšupielādējiet `flight-integration` mapi savā `/wp-content/plugins/` direktorijā.
-2. Aktivizējiet spraudni WordPress administrācijas panelī (Spraudņu izvēlnē).
-3. Dodieties uz **Iestatījumi > Flight Framework**, lai konfigurētu spraudni.
+1. Augšupielādējiet `flight-integration` mapi uz jūsu `/wp-content/plugins/` direktoriju.
+2. Aktivizējiet spraudni WordPress administrācijā (Plugins izvēlnē).
+3. Dodieties uz **Settings > Flight Framework**, lai konfigurētu spraudni.
 4. Iestatiet piegādātāja ceļu uz savu Flight instalāciju (vai izmantojiet Composer, lai instalētu Flight).
-5. Konfigurējiet savu lietotnes mapju ceļu un izveidojiet mapju struktūru (spraudnis var palīdzēt ar to!).
+5. Konfigurējiet savu lietotnes mapes ceļu un izveidojiet mapju struktūru (spraudnis var palīdzēt ar to!).
 6. Sāciet veidot savu Flight lietotni!
 
-## Izmantošanas Piemēri
+## Izmantošanas piemēri
 
-### Pamata Maršrutēšanas Piemērs
+### Pamata maršrutēšanas piemērs
 Jūsu `app/config/routes.php` failā:
 
 ```php
@@ -34,7 +34,7 @@ Flight::route('GET /api/hello', function() {
 });
 ```
 
-### Kontrolera Piemērs
+### Kontroliera piemērs
 
 Izveidojiet kontrolieri `app/controllers/ApiController.php`:
 
@@ -60,7 +60,7 @@ class ApiController {
 }
 ```
 
-Pēc tam, jūsu `routes.php`:
+Pēc tam jūsu `routes.php`:
 
 ```php
 Flight::route('GET /api/users', [app\controllers\ApiController::class, 'getUsers']);
@@ -68,19 +68,19 @@ Flight::route('GET /api/users', [app\controllers\ApiController::class, 'getUsers
 
 ## BUJ
 
-**J: Vai man ir jāzina Flight, lai izmantotu šo spraudni?**  
-A: Jā, tas ir domāts izstrādātājiem, kuri vēlas izmantot Flight WordPress ietvaros. Ieteicams pamata zināšanas par Flight maršrutēšanu un pieprasījumu apstrādi.
+**J: Vai man jāzina Flight, lai izmantotu šo spraudni?**  
+A: Jā, tas ir domāts izstrādātājiem, kuri vēlas izmantot Flight iekš WordPress. Ieteicams pamata zināšanas par Flight maršrutēšanu un pieprasījumu apstrādi.
 
 **J: Vai tas palēninās manu WordPress vietni?**  
-A: Nē! Spraudnis apstrādā tikai pieprasījumus, kas atbilst jūsu Flight maršrutiem. Visi citi pieprasījumi iet uz WordPress kā parasti.
+A: Nē! Spraudnis apstrādā tikai pieprasījumus, kas atbilst jūsu Flight maršrutiem. Visi citi pieprasījumi tiek novirzīti uz WordPress kā parasti.
 
 **J: Vai es varu izmantot WordPress funkcijas savā Flight lietotnē?**  
-A: Protams! Jums ir pilnīga piekļuve visām WordPress funkcijām, āķiem un globālajiem mainīgajiem no Flight maršrutiem un kontrolieriem.
+A: Protams! Jums ir pilna piekļuve visām WordPress funkcijām, āķiem un globālajiem mainīgajiem no Flight maršrutiem un kontrolieriem.
 
 **J: Kā es varu izveidot pielāgotus maršrutus?**  
 A: Definējiet savus maršrutus `config/routes.php` failā savā lietotnes mapē. Skatiet parauga failu, ko izveido mapju struktūras ģenerators, piemēriem.
 
-## Izmaiņu Žurnāls
+## Izmaiņu žurnāls
 
 **1.0.0**  
 Sākotnējais izlaidums.

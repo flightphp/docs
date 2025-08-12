@@ -137,6 +137,6 @@ Flight::group('', function() {
 	Flight::route('/users', function() { echo 'users'; }, false, 'users');
 	// And this is still /users/1234
 	Flight::route('/users/@id', function($id) { echo 'user:'.$id; }, false, 'user_view');
-}, [ new ApiAuthMiddleware() ]);
+}, [ ApiAuthMiddleware::class ]); // or [ new ApiAuthMiddleware() ], same thing
 ```
 

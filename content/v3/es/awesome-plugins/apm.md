@@ -1,12 +1,12 @@
 # Documentación de FlightPHP APM
 
-Bienvenido a FlightPHP APM, tu entrenador personal de rendimiento para tu aplicación. Esta guía es tu mapa para configurar, usar y dominar la Monitorización de Rendimiento de Aplicaciones (APM) con FlightPHP. Ya sea que estés cazando solicitudes lentas o simplemente quieras emocionarte con gráficos de latencia, te tenemos cubierto. ¡Hagamos que tu aplicación sea más rápida, tus usuarios más felices y tus sesiones de depuración una brisa!
+¡Bienvenido a FlightPHP APM, tu entrenador personal de rendimiento para aplicaciones! Esta guía es tu mapa para configurar, usar y dominar la Monitorización de Rendimiento de Aplicaciones (APM) con FlightPHP. Ya sea que estés cazando solicitudes lentas o simplemente quieras entusiasmarte con gráficos de latencia, te tenemos cubierto. ¡Hagamos que tu aplicación sea más rápida, tus usuarios más felices y tus sesiones de depuración una brisa!
 
 ![FlightPHP APM](/images/apm.png)
 
-## Por qué importa el APM
+## Por qué importa APM
 
-Imagina esto: tu aplicación es un restaurante ocupado. Sin una forma de rastrear cuánto tardan los pedidos o dónde se atasca la cocina, estás adivinando por qué los clientes se van enojados. El APM es tu sous-chef, observa cada paso, desde las solicitudes entrantes hasta las consultas de la base de datos, y marca cualquier cosa que te esté ralentizando. Las páginas lentas pierden usuarios (estudios dicen que el 53% rebota si un sitio tarda más de 3 segundos en cargar), y el APM te ayuda a detectar esos problemas *antes* de que piquen. Es una paz proactiva, con menos momentos de "¿por qué esto está roto?" y más victorias de "¡mira lo bien que funciona esto!".
+Imagina esto: tu aplicación es un restaurante ocupado. Sin una forma de rastrear cuánto tiempo tardan los pedidos o dónde se atasca la cocina, estás adivinando por qué los clientes se van enfadados. APM es tu sous-chef: observa cada paso, desde las solicitudes entrantes hasta las consultas de la base de datos, y marca cualquier cosa que te esté ralentizando. Las páginas lentas pierden usuarios (estudios dicen que el 53% rebota si un sitio tarda más de 3 segundos en cargar), y APM te ayuda a detectar esos problemas *antes* de que piquen. Es una paz mental proactiva: menos momentos de "¿por qué esto está roto?" y más victorias de "¡mira qué bien funciona esto!".
 
 ## Instalación
 
@@ -18,11 +18,11 @@ composer require flightphp/apm
 
 Necesitarás:
 - **PHP 7.4+**: Mantiene la compatibilidad con distribuciones LTS de Linux mientras soporta PHP moderno.
-- **[Núcleo de FlightPHP](https://github.com/flightphp/core) v3.15+**: El framework ligero que estamos mejorando.
+- **[FlightPHP Core](https://github.com/flightphp/core) v3.15+**: El framework ligero que estamos mejorando.
 
-## Comenzando
+## Primeros pasos
 
-Aquí está tu guía paso a paso para el asombro del APM:
+Aquí tienes tu guía paso a paso para el asombro de APM:
 
 ### 1. Registrar el APM
 
@@ -33,14 +33,14 @@ use flight\apm\logger\LoggerFactory;
 use flight\Apm;
 
 $ApmLogger = LoggerFactory::create(__DIR__ . '/../../.runway-config.json');
-// ¿Qué está pasando aquí?
-// - LoggerFactory::create() toma tu configuración (más sobre eso pronto) y configura un registrador, SQLite por defecto.
-// - Apm es la estrella, escucha eventos de Flight (solicitudes, rutas, errores, etc.) y recopila métricas.
-// - bindEventsToFlightInstance($app) lo une todo a tu aplicación de Flight.
-
 $Apm = new Apm($ApmLogger);
 $Apm->bindEventsToFlightInstance($app);
 ```
+
+**¿Qué está pasando aquí?**
+- `LoggerFactory::create()` toma tu configuración (más sobre eso pronto) y configura un registrador, SQLite por defecto.
+- `Apm` es la estrella: escucha los eventos de Flight (solicitudes, rutas, errores, etc.) y recopila métricas.
+- `bindEventsToFlightInstance($app)` lo une todo a tu aplicación de Flight.
 
 **Consejo Pro: Muestreo**
 Si tu aplicación está ocupada, registrar *cada* solicitud podría sobrecargar las cosas. Usa una tasa de muestreo (de 0.0 a 1.0):
@@ -51,7 +51,7 @@ $Apm = new Apm($ApmLogger, 0.1); // Registra el 10% de las solicitudes
 
 Esto mantiene el rendimiento ágil mientras te da datos sólidos.
 
-### 2. Configúralo
+### 2. Configurarlo
 
 Ejecuta esto para crear tu `.runway-config.json`:
 
@@ -61,7 +61,7 @@ php vendor/bin/runway apm:init
 
 **¿Qué hace esto?**
 - Lanza un asistente que pregunta de dónde vienen las métricas en bruto (fuente) y a dónde van los datos procesados (destino).
-- Por defecto es SQLite, por ejemplo, `sqlite:/tmp/apm_metrics.sqlite` para la fuente, y otra para el destino.
+- Por defecto es SQLite, por ejemplo, `sqlite:/tmp/apm_metrics.sqlite` para la fuente y otro para el destino.
 - Terminarás con una configuración como:
   ```json
   {
@@ -74,32 +74,32 @@ php vendor/bin/runway apm:init
   }
   ```
 
-> Este proceso también preguntará si quieres ejecutar las migraciones para esta configuración. Si lo estás configurando por primera vez, la respuesta es sí.
+> Este proceso también preguntará si quieres ejecutar las migraciones para esta configuración. Si estás configurándolo por primera vez, la respuesta es sí.
 
 **¿Por qué dos ubicaciones?**
 Las métricas en bruto se acumulan rápidamente (piensa en registros sin filtrar). El trabajador las procesa en un destino estructurado para el panel de control. ¡Mantiene todo ordenado!
 
 ### 3. Procesar métricas con el trabajador
 
-El trabajador convierte las métricas en bruto en datos listos para el panel de control. Ejecuta esto una vez:
+El trabajador convierte las métricas en bruto en datos listos para el panel de control. Ejecútalo una vez:
 
 ```bash
 php vendor/bin/runway apm:worker
 ```
 
 **¿Qué está haciendo?**
-- Lee de tu fuente (por ejemplo, `apm_metrics.sqlite`).
+- Lee desde tu fuente (por ejemplo, `apm_metrics.sqlite`).
 - Procesa hasta 100 métricas (tamaño de lote por defecto) en tu destino.
-- Se detiene cuando termina o si no hay métricas leftidas.
+- Se detiene cuando termina o si no quedan métricas.
 
 **Mantenerlo en ejecución**
-Para aplicaciones en vivo, querrás un procesamiento continuo. Aquí están tus opciones:
+Para aplicaciones en vivo, querrás un procesamiento continuo. Aquí tienes tus opciones:
 
 - **Modo Daemon**:
   ```bash
   php vendor/bin/runway apm:worker --daemon
   ```
-  Se ejecuta para siempre, procesando métricas a medida que llegan. Genial para desarrollo o configuraciones pequeñas.
+  Se ejecuta para siempre, procesando métricas a medida que llegan. Ideal para desarrollo o configuraciones pequeñas.
 
 - **Crontab**:
   Agrega esto a tu crontab (`crontab -e`):
@@ -115,7 +115,7 @@ Para aplicaciones en vivo, querrás un procesamiento continuo. Aquí están tus 
   php vendor/bin/runway apm:worker --daemon
   # Ctrl+B, luego D para desconectar; `tmux attach -t apm-worker` para reconectar
   ```
-  Mantiene en ejecución incluso si te desconectas.
+  Mantiene la ejecución incluso si te desconectas.
 
 - **Ajustes personalizados**:
   ```bash
@@ -126,7 +126,7 @@ Para aplicaciones en vivo, querrás un procesamiento continuo. Aquí están tus 
   - `--timeout 300`: Salir después de 5 minutos.
 
 **¿Por qué molestarse?**
-Sin el trabajador, tu panel de control está vacío. Es el puente entre los registros en bruto y las ideas accionables.
+Sin el trabajador, tu panel de control está vacío. Es el puente entre los registros en bruto y los insights accionables.
 
 ### 4. Lanzar el panel de control
 
@@ -148,38 +148,38 @@ php vendor/bin/runway apm:dashboard --host 0.0.0.0 --port 8080 --php-path=/usr/l
 - `--port 8080`: Usa un puerto diferente si 8001 está ocupado.
 - `--php-path`: Apunta a PHP si no está en tu PATH.
 
-¡Abre la URL en tu navegador y explora!
+¡Visita la URL en tu navegador y explora!
 
 #### Modo de producción
 
-Para producción, puedes tener que probar algunas técnicas para que el panel de control funcione, ya que probablemente haya firewalls y otras medidas de seguridad. Aquí hay algunas opciones:
+Para producción, puede que tengas que probar algunas técnicas para que el panel de control funcione, ya que probablemente haya firewalls y otras medidas de seguridad. Aquí tienes algunas opciones:
 
-- **Usa un Proxy Inverso**: Configura Nginx o Apache para reenviar solicitudes al panel de control.
+- **Usar un Proxy Inverso**: Configura Nginx o Apache para reenviar solicitudes al panel de control.
 - **Túnel SSH**: Si puedes SSH al servidor, usa `ssh -L 8080:localhost:8001 youruser@yourserver` para tunelizar el panel de control a tu máquina local.
 - **VPN**: Si tu servidor está detrás de una VPN, conéctate a ella y accede al panel de control directamente.
-- **Configura Firewall**: Abre el puerto 8001 para tu IP o la red del servidor (o el puerto que hayas establecido).
-- **Configura Apache/Nginx**: Si tienes un servidor web frente a tu aplicación, puedes configurarlo para un dominio o subdominio. Si lo haces, establecerás la raíz de documentos en `/path/to/your/project/vendor/flightphp/apm/dashboard`.
+- **Configurar Firewall**: Abre el puerto 8001 para tu IP o la red del servidor (o el puerto que hayas establecido).
+- **Configurar Apache/Nginx**: Si tienes un servidor web frente a tu aplicación, puedes configurarlo para un dominio o subdominio. Si lo haces, establecerás la raíz de documentos en `/path/to/your/project/vendor/flightphp/apm/dashboard`.
 
 #### ¿Quieres un panel de control diferente?
 
-¡Puedes construir tu propio panel de control si quieres! Mira el directorio `vendor/flightphp/apm/src/apm/presenter` para ideas sobre cómo presentar los datos para tu propio panel de control.
+¡Puedes crear tu propio panel de control si quieres! Mira el directorio `vendor/flightphp/apm/src/apm/presenter` para ideas sobre cómo presentar los datos para tu propio panel de control!
 
 ## Características del panel de control
 
-El panel de control es tu sede del APM, aquí está lo que verás:
+El panel de control es tu sede de APM: aquí lo que verás:
 
 - **Registro de Solicitudes**: Cada solicitud con marca de tiempo, URL, código de respuesta y tiempo total. Haz clic en "Detalles" para middleware, consultas y errores.
-- **Solicitudes Más Lentas**: Las 5 solicitudes principales que consumen tiempo (por ejemplo, “/api/heavy” en 2.5s).
-- **Rutas Más Lentas**: Las 5 rutas por tiempo promedio, genial para detectar patrones.
-- **Tasa de Error**: Porcentaje de solicitudes que fallan (por ejemplo, 2.3% de 500s).
-- **Percentiles de Latencia**: 95.º (p95) y 99.º (p99) tiempos de respuesta, conoce tus escenarios en el peor caso.
+- **Solicitudes Más Lentas**: Las 5 principales solicitudes que consumen tiempo (por ejemplo, “/api/heavy” en 2.5s).
+- **Rutas Más Lentas**: Las 5 rutas principales por tiempo promedio, genial para detectar patrones.
+- **Tasa de Errores**: Porcentaje de solicitudes que fallan (por ejemplo, 2.3% de 500s).
+- **Percentiles de Latencia**: Tiempos de respuesta del 95.º (p95) y 99.º (p99) percentil, conoce tus escenarios en el peor caso.
 - **Gráfico de Códigos de Respuesta**: Visualiza 200s, 404s, 500s a lo largo del tiempo.
 - **Consultas/Middleware Largas**: Las 5 principales llamadas de base de datos lentas y capas de middleware.
 - **Aciertos/Fallos de Caché**: Con qué frecuencia tu caché salva el día.
 
 **Extras**:
-- Filtra por “Última Hora”, “Último Día” o “Última Semana”.
-- Activa el modo oscuro para esas sesiones nocturnas.
+- Filtra por "Última Hora", "Último Día" o "Última Semana".
+- Alterna el modo oscuro para esas sesiones nocturnas.
 
 **Ejemplo**:
 Una solicitud a `/users` podría mostrar:
@@ -200,10 +200,13 @@ $app->eventDispatcher()->trigger('apm.custom', new CustomEvent('api_call', [
     'response_time' => 0.25,
     'status' => 200
 ]));
-// ¿Dónde aparece?
-// En los detalles de la solicitud del panel de control bajo "Eventos Personalizados", expandible con formato JSON bonito.
+```
 
-// Caso de uso:
+**¿Dónde aparece?**
+En los detalles de la solicitud del panel de control bajo "Eventos Personalizados", expandible con formato JSON atractivo.
+
+**Caso de Uso**:
+```php
 $start = microtime(true);
 $apiResponse = file_get_contents('https://api.example.com/data');
 $app->eventDispatcher()->trigger('apm.custom', new CustomEvent('external_api', [
@@ -212,7 +215,7 @@ $app->eventDispatcher()->trigger('apm.custom', new CustomEvent('external_api', [
     'success' => $apiResponse !== false
 ]));
 ```
-¡Ahora verás si esa API está ralentizando tu aplicación!
+¡Ahora verás si esa API está arrastrando tu aplicación!
 
 ## Monitorización de la base de datos
 
@@ -223,17 +226,19 @@ use flight\database\PdoWrapper;
 
 $pdo = new PdoWrapper('sqlite:/path/to/db.sqlite');
 $Apm->addPdoConnection($pdo);
-// Lo que obtienes:
-// - Texto de la consulta (por ejemplo, `SELECT * FROM users WHERE id = ?`)
-// - Tiempo de ejecución (por ejemplo, 0.015s)
-// - Conteo de filas (por ejemplo, 42)
+```
 
-// Advertencia:
-// - Opcional: Salta esto si no necesitas rastreo de DB.
-// - Solo PdoWrapper: PDO central no está conectado todavía, ¡quédate atento!
-// - Advertencia de rendimiento: Registrar cada consulta en un sitio con base de datos pesada puede ralentizar las cosas. Usa muestreo (`$Apm = new Apm($ApmLogger, 0.1)`) para aligerar la carga.
+**Lo que obtienes**:
+- Texto de la consulta (por ejemplo, `SELECT * FROM users WHERE id = ?`)
+- Tiempo de ejecución (por ejemplo, 0.015s)
+- Conteo de filas (por ejemplo, 42)
 
-**Salida de ejemplo**:
+**Cuidado**:
+- **Opcional**: Omítelo si no necesitas rastreo de DB.
+- **Solo PdoWrapper**: PDO central no está conectado aún, ¡permanece atento!
+- **Advertencia de Rendimiento**: Registrar cada consulta en un sitio con base de datos pesada puede ralentizar las cosas. Usa muestreo (`$Apm = new Apm($ApmLogger, 0.1)`) para aligerar la carga.
+
+**Salida de Ejemplo**:
 - Consulta: `SELECT name FROM products WHERE price > 100`
 - Tiempo: 0.023s
 - Filas: 15
@@ -244,7 +249,7 @@ Ajusta el trabajador a tu gusto:
 
 - `--timeout 300`: Se detiene después de 5 minutos, bueno para pruebas.
 - `--max_messages 500`: Limita a 500 métricas, lo mantiene finito.
-- `--batch_size 200`: Procesar 200 a la vez, equilibra velocidad y memoria.
+- `--batch_size 200`: Procesa 200 a la vez, equilibra velocidad y memoria.
 - `--daemon`: Se ejecuta sin parar, ideal para monitoreo en vivo.
 
 **Ejemplo**:
@@ -270,21 +275,21 @@ Flight::map('error', function($message) {
 });
 ```
 
-## Actualizando
+## Actualización
 
-Si estás actualizando a una versión más nueva del APM, es posible que haya migraciones de base de datos que necesiten ejecutarse. Puedes hacer esto ejecutando el siguiente comando:
+Si estás actualizando a una versión más nueva de APM, es posible que haya migraciones de base de datos que necesiten ejecutarse. Puedes hacerlo ejecutando el siguiente comando:
 
 ```bash
 php vendor/bin/runway apm:migrate
 ```
-Esto ejecutará cualquier migración necesaria para actualizar el esquema de la base de datos a la última versión.
+Esto ejecutará cualquier migración necesaria para actualizar el esquema de la base de datos a la versión más reciente.
 
-**Nota:** Si tu base de datos de APM es grande, estas migraciones pueden tardar un tiempo. Puede que quieras ejecutar este comando durante horas de bajo pico.
+**Nota:** Si tu base de datos de APM es grande, estas migraciones pueden tardar algún tiempo. Puede que quieras ejecutar este comando durante horas de bajo pico.
 
-## Purgando datos antiguos
+## Purgar datos antiguos
 
 Para mantener tu base de datos ordenada, puedes purgar datos antiguos. Esto es especialmente útil si estás ejecutando una aplicación ocupada y quieres mantener el tamaño de la base de datos manejable.
-Puedes hacer esto ejecutando el siguiente comando:
+Puedes hacerlo ejecutando el siguiente comando:
 
 ```bash
 php vendor/bin/runway apm:purge
@@ -296,13 +301,13 @@ php vendor/bin/runway apm:purge --days 7
 ```
 Esto eliminará todos los datos más antiguos de 7 días de la base de datos.
 
-## Resolución de problemas
+## Solución de problemas
 
 ¿Atascado? Prueba estas:
 
 - **¿No hay datos en el panel de control?**
   - ¿Está ejecutándose el trabajador? Verifica `ps aux | grep apm:worker`.
-  - ¿Coinciden las rutas de configuración? Verifica que las DSNs en `.runway-config.json` apunten a archivos reales.
+  - ¿Las rutas de configuración coinciden? Verifica que los DSNs en `.runway-config.json` apunten a archivos reales.
   - Ejecuta `php vendor/bin/runway apm:worker` manualmente para procesar métricas pendientes.
 
 - **¿Errores en el trabajador?**

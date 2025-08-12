@@ -1,12 +1,12 @@
 # Dokumentasi FlightPHP APM
 
-Selamat datang di FlightPHP APM—pelatih performa pribadi aplikasi Anda! Panduan ini adalah peta jalan Anda untuk mengatur, menggunakan, dan menguasai Application Performance Monitoring (APM) dengan FlightPHP. Baik Anda sedang mencari permintaan yang lambat atau hanya ingin bersemangat dengan grafik latensi, kami sudah menutupinya. Mari buat aplikasi Anda lebih cepat, pengguna Anda lebih bahagia, dan sesi debugging Anda lebih mudah!
+Selamat datang di FlightPHP APM—pelatih performa pribadi aplikasi Anda! Panduan ini adalah peta jalan Anda untuk mengatur, menggunakan, dan menguasai Application Performance Monitoring (APM) dengan FlightPHP. Baik Anda sedang mencari permintaan yang lambat atau hanya ingin bersemangat dengan grafik latensi, kami telah menutupinya. Mari buat aplikasi Anda lebih cepat, pengguna Anda lebih bahagia, dan sesi debugging Anda lebih mudah!
 
 ![FlightPHP APM](/images/apm.png)
 
 ## Mengapa APM Penting
 
-Bayangkan ini: aplikasi Anda seperti restoran sibuk. Tanpa cara untuk melacak berapa lama pesanan memakan waktu atau di mana dapur mengalami kemacetan, Anda hanya menebak mengapa pelanggan pergi dengan marah. APM adalah sous-chef Anda—ia mengawasi setiap langkah, dari permintaan masuk hingga query database, dan menandai apa saja yang memperlambat Anda. Halaman yang lambat kehilangan pengguna (studi mengatakan 53% pengguna akan pergi jika situs memerlukan lebih dari 3 detik untuk dimuat!), dan APM membantu Anda menangkap masalah tersebut *sebelum* menyakiti. Ini adalah ketenangan pikiran yang proaktif—lebih sedikit momen “mengapa ini rusak?”, lebih banyak kemenangan “lihat betapa lancarnya ini berjalan!”.
+Bayangkan ini: aplikasi Anda seperti restoran sibuk. Tanpa cara untuk melacak berapa lama pesanan memakan waktu atau di mana dapur mengalami kemacetan, Anda hanya menebak mengapa pelanggan pergi dengan marah. APM adalah sous-chef Anda—ia mengawasi setiap langkah, dari permintaan masuk hingga query database, dan menandai apa saja yang memperlambat Anda. Halaman yang lambat kehilangan pengguna (studi mengatakan 53% pengguna berhenti jika situs memerlukan lebih dari 3 detik untuk dimuat!), dan APM membantu Anda menangkap masalah *sebelum* mereka menyakiti. Ini adalah ketenangan pikiran yang proaktif—lebih sedikit momen “mengapa ini rusak?”, lebih banyak kemenangan “lihat betapa mulusnya ini berjalan!”.
 
 ## Instalasi
 
@@ -17,12 +17,12 @@ composer require flightphp/apm
 ```
 
 Anda memerlukan:
-- **PHP 7.4+**: Menjaga kompatibilitas dengan distro Linux LTS sambil mendukung PHP modern.
-- **[FlightPHP Core](https://github.com/flightphp/core) v3.15+**: Kerangka kerja ringan yang kami tingkatkan.
+- **PHP 7.4+**: Menjaga kami kompatibel dengan distro Linux LTS sambil mendukung PHP modern.
+- **[FlightPHP Core](https://github.com/flightphp/core) v3.15+**: Kerangka ringan yang kami tingkatkan.
 
 ## Memulai
 
-Inilah langkah-demi-langkah untuk kehebatan APM:
+Berikut langkah demi langkah untuk kehebatan APM:
 
 ### 1. Daftarkan APM
 
@@ -32,17 +32,17 @@ Masukkan ini ke dalam file `index.php` atau `services.php` untuk mulai melacak:
 use flight\apm\logger\LoggerFactory;
 use flight\Apm;
 
-$ApmLogger = LoggerFactory::create(__DIR__ . '/../../.runway-config.json'); // Ini mengambil konfigurasi Anda (lebih lanjut nanti) dan mengatur logger—SQLite secara default.
-$Apm = new Apm($ApmLogger); // Apm adalah bintangnya—ia mendengarkan acara Flight (permintaan, rute, error, dll.) dan mengumpulkan metrik.
-$Apm->bindEventsToFlightInstance($app); // Ini menghubungkan semuanya ke aplikasi Flight Anda.
+$ApmLogger = LoggerFactory::create(__DIR__ . '/../../.runway-config.json');
+$Apm = new Apm($ApmLogger);
+$Apm->bindEventsToFlightInstance($app);
 ```
 
 **Apa yang terjadi di sini?**
 - `LoggerFactory::create()` mengambil konfigurasi Anda (lebih lanjut tentang itu nanti) dan mengatur logger—SQLite secara default.
-- `Apm` adalah yang utama—ia mendengarkan acara Flight (permintaan, rute, error, dll.) dan mengumpulkan metrik.
-- `bindEventsToFlightInstance($app)` menghubungkan semuanya ke aplikasi Flight Anda.
+- `Apm` adalah bintangnya—ia mendengarkan acara Flight (permintaan, rute, kesalahan, dll.) dan mengumpulkan metrik.
+- `bindEventsToFlightInstance($app)` menghubungkannya semua ke aplikasi Flight Anda.
 
-**Tips Pro: Pengambilan Contoh**
+**Tips Pro: Pengambilan Sampel**
 Jika aplikasi Anda sibuk, mencatat *setiap* permintaan mungkin membebani sistem. Gunakan tingkat sampel (0.0 hingga 1.0):
 
 ```php
@@ -59,8 +59,8 @@ Jalankan ini untuk membuat `.runway-config.json`:
 php vendor/bin/runway apm:init
 ```
 
-**Apa yang dilakukan ini?**
-- Meluncurkan wizard yang meminta di mana metrik mentah berasal (sumber) dan ke mana data yang diproses pergi (tujuan).
+**Apa yang dilakukannya?**
+- Meluncurkan wizard yang menanyakan di mana metrik mentah berasal (sumber) dan ke mana data yang diproses pergi (tujuan).
 - Default adalah SQLite—misalnya, `sqlite:/tmp/apm_metrics.sqlite` untuk sumber, yang lain untuk tujuan.
 - Anda akan mendapatkan konfigurasi seperti:
   ```json
@@ -77,11 +77,11 @@ php vendor/bin/runway apm:init
 > Proses ini juga akan menanyakan apakah Anda ingin menjalankan migrasi untuk pengaturan ini. Jika Anda mengatur ini untuk pertama kalinya, jawabannya adalah ya.
 
 **Mengapa dua lokasi?**
-Metrik mentah menumpuk dengan cepat (pikirkan log yang tidak disaring). Worker memprosesnya menjadi tujuan yang terstruktur untuk dashboard. Menjaga segala sesuatu tetap rapi!
+Metrik mentah menumpuk dengan cepat (pikirkan log yang tidak disaring). Pekerja memprosesnya menjadi tujuan yang terstruktur untuk dashboard. Menjaga segala sesuatu rapi!
 
-### 3. Proses Metrik dengan Worker
+### 3. Proses Metrik dengan Pekerja
 
-Worker mengubah metrik mentah menjadi data yang siap dashboard. Jalankan sekali:
+Pekerja mengubah metrik mentah menjadi data yang siap dashboard. Jalankan sekali:
 
 ```bash
 php vendor/bin/runway apm:worker
@@ -93,7 +93,7 @@ php vendor/bin/runway apm:worker
 - Berhenti ketika selesai atau jika tidak ada metrik yang tersisa.
 
 **Jaga Agar Tetap Berjalan**
-Untuk aplikasi langsung, Anda ingin pemrosesan berkelanjutan. Berikut adalah opsi Anda:
+Untuk aplikasi langsung, Anda ingin pemrosesan berkelanjutan. Berikut opsi Anda:
 
 - **Mode Daemon**:
   ```bash
@@ -106,16 +106,16 @@ Untuk aplikasi langsung, Anda ingin pemrosesan berkelanjutan. Berikut adalah ops
   ```bash
   * * * * * php /path/to/project/vendor/bin/runway apm:worker
   ```
-  Berjalan setiap menit—sempurna untuk produksi.
+  Dijalankan setiap menit—sempurna untuk produksi.
 
 - **Tmux/Screen**:
-  Mulai sesi yang dapat dilepas:
+  Mulai sesi yang bisa dilepas:
   ```bash
   tmux new -s apm-worker
   php vendor/bin/runway apm:worker --daemon
   # Ctrl+B, kemudian D untuk melepaskan; `tmux attach -t apm-worker` untuk menyambung kembali
   ```
-  Menjaga agar tetap berjalan bahkan jika Anda logout.
+  Menjaganya berjalan bahkan jika Anda logout.
 
 - **Penyesuaian Kustom**:
   ```bash
@@ -123,10 +123,10 @@ Untuk aplikasi langsung, Anda ingin pemrosesan berkelanjutan. Berikut adalah ops
   ```
   - `--batch_size 50`: Proses 50 metrik sekaligus.
   - `--max_messages 1000`: Berhenti setelah 1000 metrik.
-  - `--timeout 300`: Berhenti setelah 5 menit.
+  - `--timeout 300`: Keluar setelah 5 menit.
 
 **Mengapa repot?**
-Tanpa worker, dashboard Anda kosong. Ini adalah jembatan antara log mentah dan wawasan yang dapat ditindaklanjuti.
+Tanpa pekerja, dashboard Anda kosong. Ini adalah jembatan antara log mentah dan wawasan yang bisa ditindaklanjuti.
 
 ### 4. Luncurkan Dashboard
 
@@ -138,7 +138,7 @@ php vendor/bin/runway apm:dashboard
 
 **Apa ini?**
 - Menjalankan server PHP di `http://localhost:8001/apm/dashboard`.
-- Menampilkan log permintaan, rute lambat, tingkat error, dan banyak lagi.
+- Menampilkan log permintaan, rute lambat, tingkat kesalahan, dan banyak lagi.
 
 **Sesuaikan Itu**:
 ```bash
@@ -152,13 +152,13 @@ Kunjungi URL di browser Anda dan jelajahi!
 
 #### Mode Produksi
 
-Untuk produksi, Anda mungkin harus mencoba beberapa teknik untuk menjalankan dashboard karena mungkin ada firewall dan langkah keamanan lainnya. Berikut adalah beberapa opsi:
+Untuk produksi, Anda mungkin harus mencoba beberapa teknik untuk menjalankan dashboard karena mungkin ada firewall dan langkah-langkah keamanan lainnya. Berikut beberapa opsi:
 
 - **Gunakan Reverse Proxy**: Atur Nginx atau Apache untuk meneruskan permintaan ke dashboard.
-- **SSH Tunnel**: Jika Anda bisa SSH ke server, gunakan `ssh -L 8080:localhost:8001 youruser@yourserver` untuk mentransfer dashboard ke mesin lokal Anda.
-- **VPN**: Jika server Anda di balik VPN, sambungkan ke itu dan akses dashboard secara langsung.
-- **Konfigurasikan Firewall**: Buka port 8001 untuk IP Anda atau jaringan server. (atau port apa pun yang Anda atur).
-- **Konfigurasikan Apache/Nginx**: Jika Anda memiliki web server di depan aplikasi Anda, Anda bisa mengonfigurasikannya ke domain atau subdomain. Jika Anda melakukannya, atur root dokumen ke `/path/to/your/project/vendor/flightphp/apm/dashboard`.
+- **SSH Tunnel**: Jika Anda bisa SSH ke server, gunakan `ssh -L 8080:localhost:8001 youruser@yourserver` untuk menyalurkan dashboard ke mesin lokal Anda.
+- **VPN**: Jika server Anda di balik VPN, sambungkan ke sana dan akses dashboard secara langsung.
+- **Konfigurasi Firewall**: Buka port 8001 untuk IP Anda atau jaringan server. (atau port apa pun yang Anda atur).
+- **Konfigurasi Apache/Nginx**: Jika Anda memiliki web server di depan aplikasi Anda, Anda bisa mengonfigurasikannya ke domain atau subdomain. Jika Anda melakukan ini, Anda akan mengatur root dokumen ke `/path/to/your/project/vendor/flightphp/apm/dashboard`.
 
 #### Ingin dashboard yang berbeda?
 
@@ -168,10 +168,10 @@ Anda bisa membangun dashboard Anda sendiri jika Anda mau! Lihat direktori vendor
 
 Dashboard adalah markas APM Anda—ini yang akan Anda lihat:
 
-- **Log Permintaan**: Setiap permintaan dengan stempel waktu, URL, kode respons, dan waktu total. Klik “Details” untuk middleware, query, dan error.
+- **Log Permintaan**: Setiap permintaan dengan cap waktu, URL, kode respons, dan waktu total. Klik “Details” untuk middleware, query, dan kesalahan.
 - **Permintaan Terlambat**: 5 permintaan teratas yang menghabiskan waktu (misalnya, “/api/heavy” pada 2.5 detik).
 - **Rute Terlambat**: 5 rute teratas berdasarkan waktu rata-rata—bagus untuk menemukan pola.
-- **Tingkat Error**: Persentase permintaan yang gagal (misalnya, 2.3% 500s).
+- **Tingkat Kesalahan**: Persentase permintaan yang gagal (misalnya, 2.3% 500s).
 - **Persentil Latensi**: 95th (p95) dan 99th (p99) waktu respons—ketahui skenario terburuk Anda.
 - **Grafik Kode Respons**: Visualisasikan 200s, 404s, 500s seiring waktu.
 - **Query/Middleware Panjang**: 5 panggilan database lambat dan lapisan middleware teratas.
@@ -179,7 +179,7 @@ Dashboard adalah markas APM Anda—ini yang akan Anda lihat:
 
 **Ekstra**:
 - Filter berdasarkan “Last Hour,” “Last Day,” atau “Last Week.”
-- Alihkan mode gelap untuk sesi malam telat.
+- Alihkan mode gelap untuk sesi malam yang larut.
 
 **Contoh**:
 Permintaan ke `/users` mungkin menunjukkan:
@@ -199,10 +199,13 @@ $app->eventDispatcher()->trigger('apm.custom', new CustomEvent('api_call', [
     'endpoint' => 'https://api.example.com/users',
     'response_time' => 0.25,
     'status' => 200
-])); // Di mana ini muncul? Di detail permintaan dashboard di bawah “Custom Events”—dapat diperluas dengan pemformatan JSON yang bagus.
+]));
 ```
 
-**Kasus Penggunaan**:
+**Di mana itu muncul?**
+Di detail permintaan dashboard di bawah “Custom Events”—dapat diperluas dengan pemformatan JSON yang bagus.
+
+**Kebutuhan Penggunaan**:
 ```php
 $start = microtime(true);
 $apiResponse = file_get_contents('https://api.example.com/data');
@@ -210,8 +213,9 @@ $app->eventDispatcher()->trigger('apm.custom', new CustomEvent('external_api', [
     'url' => 'https://api.example.com/data',
     'time' => microtime(true) - $start,
     'success' => $apiResponse !== false
-])); // Sekarang Anda akan melihat jika API itu menarik aplikasi Anda!
+]));
 ```
+Sekarang Anda akan melihat jika API itu menarik aplikasi Anda ke bawah!
 
 ## Pemantauan Database
 
@@ -221,22 +225,27 @@ Lacak query PDO seperti ini:
 use flight\database\PdoWrapper;
 
 $pdo = new PdoWrapper('sqlite:/path/to/db.sqlite');
-$Apm->addPdoConnection($pdo); // Apa yang Anda dapatkan: Teks query (misalnya, `SELECT * FROM users WHERE id = ?`), waktu eksekusi (misalnya, 0.015 detik), dan jumlah baris (misalnya, 42)
+$Apm->addPdoConnection($pdo);
 ```
 
+**Apa yang Anda Dapatkan**:
+- Teks query (misalnya, `SELECT * FROM users WHERE id = ?`)
+- Waktu eksekusi (misalnya, 0.015 detik)
+- Jumlah baris (misalnya, 42)
+
 **Peringatan**:
-- **Opsional**: Lewati ini jika Anda tidak perlu pelacakan DB.
+- **Opsional**: Lewati ini jika Anda tidak perlu melacak DB.
 - **Hanya PdoWrapper**: PDO inti belum dihubungkan—tetap ikuti!
-- **Peringatan Performa**: Mencatat setiap query di situs yang berat DB bisa memperlambat hal-hal. Gunakan sampel (`$Apm = new Apm($ApmLogger, 0.1)`) untuk meringankan beban.
+- **Peringatan Performa**: Mencatat setiap query di situs yang berat DB bisa memperlambat hal-hal. Gunakan pengambilan sampel (`$Apm = new Apm($ApmLogger, 0.1)`) untuk meringankan beban.
 
 **Keluaran Contoh**:
 - Query: `SELECT name FROM products WHERE price > 100`
 - Time: 0.023 detik
 - Rows: 15
 
-## Opsi Worker
+## Opsi Pekerja
 
-Sesuaikan worker sesuai keinginan Anda:
+Sesuaikan pekerja sesuai keinginan Anda:
 
 - `--timeout 300`: Berhenti setelah 5 menit—bagus untuk pengujian.
 - `--max_messages 500`: Batas pada 500 metrik—menjaganya tetap terbatas.
@@ -251,7 +260,7 @@ Berjalan selama satu jam, memproses 100 metrik sekaligus.
 
 ## ID Permintaan di Aplikasi
 
-Setiap permintaan memiliki ID permintaan unik untuk pelacakan. Anda bisa menggunakan ID ini di aplikasi Anda untuk mengkorelasikan log dan metrik. Misalnya, Anda bisa menambahkan ID permintaan ke halaman error:
+Setiap permintaan memiliki ID permintaan unik untuk pelacakan. Anda bisa menggunakan ID ini di aplikasi Anda untuk mengkorelasikan log dan metrik. Misalnya, Anda bisa menambahkan ID permintaan ke halaman kesalahan:
 
 ```php
 Flight::map('error', function($message) {
@@ -292,20 +301,20 @@ php vendor/bin/runway apm:purge --days 7
 ```
 Ini akan menghapus semua data yang lebih lama dari 7 hari dari database.
 
-## Pemecahan Masalah
+## Memecahkan Masalah
 
 Tertahan? Coba ini:
 
 - **Tidak Ada Data Dashboard?**
-  - Apakah worker berjalan? Periksa `ps aux | grep apm:worker`.
-  - Apakah path konfigurasi cocok? Verifikasi DSN di `.runway-config.json` menunjuk ke file yang sebenarnya.
-  - Jalankan `php vendor/bin/runway apm:worker` secara manual untuk memproses metrik tertunda.
+  - Apakah pekerja berjalan? Periksa `ps aux | grep apm:worker`.
+  - Apakah jalur konfigurasi cocok? Verifikasi DSNs di `.runway-config.json` menunjuk ke file asli.
+  - Jalankan `php vendor/bin/runway apm:worker` secara manual untuk memproses metrik yang tertunda.
 
-- **Error Worker?**
+- **Kesalahan Pekerja?**
   - Lihat file SQLite Anda (misalnya, `sqlite3 /tmp/apm_metrics.sqlite "SELECT * FROM apm_metrics_log LIMIT 5"`).
   - Periksa log PHP untuk jejak tumpukan.
 
-- **Dashboard Tidak Akan Dimulai?**
+- **Dashboard Tidak Mau Dimulai?**
   - Port 8001 sedang digunakan? Gunakan `--port 8080`.
   - PHP tidak ditemukan? Gunakan `--php-path /usr/bin/php`.
   - Firewall memblokir? Buka port atau gunakan `--host localhost`.

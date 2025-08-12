@@ -1,27 +1,27 @@
 # Integração com WordPress: n0nag0n/wordpress-integration-for-flight-framework
 
-Quer usar o Flight PHP dentro do seu site WordPress? Este plugin torna isso muito fácil! Com `n0nag0n/wordpress-integration-for-flight-framework`, você pode executar um aplicativo Flight completo ao lado da sua instalação WordPress — perfeito para criar APIs personalizadas, microservices ou até aplicativos completos sem sair do conforto do WordPress.
+Quer usar o Flight PHP dentro do seu site WordPress? Este plugin facilita muito! Com `n0nag0n/wordpress-integration-for-flight-framework`, você pode executar um aplicativo Flight completo ao lado da sua instalação WordPress—perfeito para criar APIs personalizadas, microservices ou até aplicativos completos sem sair do conforto do WordPress.
 
 ---
 
-## O que Ele Faz?
+## O Que Ele Faz?
 
 - **Integra o Flight PHP ao WordPress de forma perfeita**
 - Roteia solicitações para o Flight ou WordPress com base em padrões de URL
-- Organize seu código com controladores, modelos e visualizações (MVC)
+- Organize seu código com controllers, models e views (MVC)
 - Configure facilmente a estrutura de pastas recomendada do Flight
 - Use a conexão de banco de dados do WordPress ou a sua própria
 - Ajuste como o Flight e o WordPress interagem
-- Interface de administração simples para configuração
+- Interface administrativa simples para configuração
 
 ## Instalação
 
-1. Faça o upload da pasta `flight-integration` para o diretório `/wp-content/plugins/`.
-2. Ative o plugin no painel do WordPress (menu Plugins).
+1. Carregue a pasta `flight-integration` no diretório `/wp-content/plugins/`.
+2. Ative o plugin no admin do WordPress (menu Plugins).
 3. Vá para **Configurações > Flight Framework** para configurar o plugin.
-4. Defina o caminho do vendor para a instalação do Flight (ou use o Composer para instalar o Flight).
+4. Defina o caminho do vendor para a sua instalação do Flight (ou use Composer para instalar o Flight).
 5. Configure o caminho da pasta do seu app e crie a estrutura de pastas (o plugin pode ajudar com isso!).
-6. Comece a construir seu aplicativo Flight!
+6. Comece a criar o seu aplicativo Flight!
 
 ## Exemplos de Uso
 
@@ -34,9 +34,9 @@ Flight::route('GET /api/hello', function() {
 });
 ```
 
-### Exemplo de Controlador
+### Exemplo de Controller
 
-Crie um controlador em `app/controllers/ApiController.php`:
+Crie um controller em `app/controllers/ApiController.php`:
 
 ```php
 namespace app\controllers;
@@ -68,17 +68,17 @@ Flight::route('GET /api/users', [app\controllers\ApiController::class, 'getUsers
 
 ## FAQ
 
-**P: Preciso conhecer o Flight para usar este plugin?**  
-R: Sim, isso é para desenvolvedores que desejam usar o Flight dentro do WordPress. Conhecimento básico sobre roteamento e manipulação de solicitações do Flight é recomendado.
+**P: Preciso saber sobre Flight para usar este plugin?**  
+R: Sim, isso é para desenvolvedores que querem usar o Flight dentro do WordPress. Conhecimento básico sobre roteamento e manipulação de solicitações do Flight é recomendado.
 
 **P: Isso vai deixar meu site WordPress mais lento?**  
 R: Não! O plugin processa apenas as solicitações que correspondem às rotas do Flight. Todas as outras solicitações vão para o WordPress como de costume.
 
 **P: Posso usar funções do WordPress no meu app Flight?**  
-R: Absolutamente! Você tem acesso total a todas as funções, hooks e variáveis globais do WordPress dentro das rotas e controladores do Flight.
+R: Absolutamente! Você tem acesso total a todas as funções, hooks e globals do WordPress dentro das suas rotas e controllers do Flight.
 
 **P: Como crio rotas personalizadas?**  
-R: Defina suas rotas no arquivo `config/routes.php` na pasta do seu app. Consulte o arquivo de exemplo criado pelo gerador de estrutura de pastas para exemplos.
+R: Defina suas rotas no arquivo `config/routes.php` na pasta do seu app. Consulte o arquivo de amostra criado pelo gerador de estrutura de pastas para exemplos.
 
 ## Registro de Alterações
 

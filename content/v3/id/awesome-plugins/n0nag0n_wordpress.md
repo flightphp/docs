@@ -1,27 +1,27 @@
 # Integrasi WordPress: n0nag0n/wordpress-integration-for-flight-framework
 
-Ingin menggunakan Flight PHP di dalam situs WordPress Anda? Plugin ini membuatnya sangat mudah! Dengan `n0nag0n/wordpress-integration-for-flight-framework`, Anda dapat menjalankan aplikasi Flight penuh di samping instalasi WordPress Anda—sempurna untuk membangun API khusus, microservices, atau bahkan aplikasi lengkap tanpa meninggalkan kenyamanan WordPress.
+Ingin menggunakan Flight PHP di dalam situs WordPress Anda? Plugin ini membuatnya sangat mudah! Dengan `n0nag0n/wordpress-integration-for-flight-framework`, Anda dapat menjalankan aplikasi Flight penuh tepat di samping instalasi WordPress Anda—sempurna untuk membangun API khusus, microservices, atau bahkan aplikasi lengkap tanpa meninggalkan kenyamanan WordPress.
 
 ---
 
 ## Apa yang Dilakukannya?
 
-- **Mengintegrasikan Flight PHP dengan WordPress tanpa hambatan**
+- **Mengintegrasikan Flight PHP dengan WordPress secara mulus**
 - Arahkan permintaan ke Flight atau WordPress berdasarkan pola URL
-- Organisasi kode Anda dengan controllers, models, dan views (MVC)
-- Mudah menyiapkan struktur folder Flight yang direkomendasikan
+- Atur kode Anda dengan controller, model, dan views (MVC)
+- Mudah atur struktur folder Flight yang direkomendasikan
 - Gunakan koneksi database WordPress atau milik Anda sendiri
-- Sesuaikan bagaimana Flight dan WordPress berinteraksi
+- Sesuaikan interaksi antara Flight dan WordPress
 - Antarmuka admin sederhana untuk konfigurasi
 
 ## Instalasi
 
 1. Unggah folder `flight-integration` ke direktori `/wp-content/plugins/` Anda.
 2. Aktifkan plugin di admin WordPress (menu Plugins).
-3. Buka **Settings > Flight Framework** untuk mengonfigurasi plugin.
+3. Buka **Pengaturan > Flight Framework** untuk mengonfigurasi plugin.
 4. Atur jalur vendor ke instalasi Flight Anda (atau gunakan Composer untuk menginstal Flight).
-5. Konfigurasi jalur folder app Anda dan buat struktur folder (plugin dapat membantu dengan ini!).
-6. Mulai bangun aplikasi Flight Anda!
+5. Konfigurasi jalur folder aplikasi Anda dan buat struktur folder (plugin dapat membantu dengan ini!).
+6. Mulailah membangun aplikasi Flight Anda!
 
 ## Contoh Penggunaan
 
@@ -72,13 +72,13 @@ Flight::route('GET /api/users', [app\controllers\ApiController::class, 'getUsers
 J: Ya, ini untuk pengembang yang ingin menggunakan Flight dalam WordPress. Pengetahuan dasar tentang routing dan penanganan permintaan Flight direkomendasikan.
 
 **T: Apakah ini akan memperlambat situs WordPress saya?**  
-J: Tidak! Plugin hanya memproses permintaan yang sesuai dengan rute Flight. Semua permintaan lainnya akan ke WordPress seperti biasa.
+J: Tidak! Plugin hanya memproses permintaan yang sesuai dengan rute Flight Anda. Semua permintaan lainnya tetap ke WordPress seperti biasa.
 
 **T: Bisakah saya menggunakan fungsi WordPress di aplikasi Flight saya?**  
-J: Tentu saja! Anda memiliki akses penuh ke semua fungsi WordPress, hooks, dan globals dari dalam rute dan controllers Flight.
+J: Tentu saja! Anda memiliki akses penuh ke semua fungsi WordPress, hooks, dan globals dari dalam rute dan controller Flight Anda.
 
 **T: Bagaimana cara membuat rute khusus?**  
-J: Tentukan rute Anda di file `config/routes.php` di folder app Anda. Lihat file sampel yang dibuat oleh generator struktur folder untuk contoh.
+J: Tentukan rute Anda di file `config/routes.php` di folder aplikasi Anda. Lihat file sampel yang dibuat oleh generator struktur folder untuk contoh.
 
 ## Changelog
 
@@ -87,4 +87,4 @@ Rilis awal.
 
 ---
 
-Untuk informasi lebih lanjut, periksa [repo GitHub](https://github.com/n0nag0n/wordpress-integration-for-flight-framework).
+Untuk informasi lebih lanjut, periksa [GitHub repo](https://github.com/n0nag0n/wordpress-integration-for-flight-framework).

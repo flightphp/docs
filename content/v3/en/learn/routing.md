@@ -406,6 +406,20 @@ $app->group('/api/v1', function (Router $router) {
 });
 ```
 
+### Grouping with Middleware
+
+You can also assign middleware to a group of routes:
+
+```php
+Flight::group('/api/v1', function () {
+  Flight::route('/users', function () {
+	// Matches /api/v1/users
+  });
+}, [ MyAuthMiddleware::class ]); // or [ new MyAuthMiddleware() ] if you want to use an instance
+```
+
+See more details on [group middleware](/learn/middleware#grouping-middleware) page.
+
 ## Resource Routing
 
 You can create a set of routes for a resource using the `resource` method. This will create

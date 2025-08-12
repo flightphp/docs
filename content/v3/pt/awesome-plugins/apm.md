@@ -1,12 +1,12 @@
-# Documentação do FlightPHP APM
+# FlightPHP APM Documentação
 
-Bem-vindo ao FlightPHP APM—seu treinador pessoal de desempenho de aplicativos! Este guia é o seu roteiro para configurar, usar e dominar o Monitoramento de Desempenho de Aplicativos (APM) com FlightPHP. Seja você caçando solicitações lentas ou apenas querendo se empolgar com gráficos de latência, cobrimos tudo. Vamos tornar seu aplicativo mais rápido, seus usuários mais felizes e suas sessões de depuração uma brisa!
+Bem-vindo ao FlightPHP APM—o treinador pessoal de desempenho do seu app! Este guia é o seu roteiro para configurar, usar e dominar o Monitoramento de Desempenho de Aplicações (APM) com FlightPHP. Seja você caçando solicitações lentas ou apenas querendo se aprofundar em gráficos de latência, nós cobrimos tudo. Vamos tornar o seu app mais rápido, os seus usuários mais felizes e as sessões de depuração uma brisa!
 
 ![FlightPHP APM](/images/apm.png)
 
 ## Por que o APM Importa
 
-Imagine isto: seu aplicativo é um restaurante movimentado. Sem uma forma de rastrear quanto tempo levam os pedidos ou onde a cozinha está travando, você está chutando por que os clientes estão saindo irritados. O APM é o seu subchefe—ele observa cada passo, desde solicitações de entrada até consultas de banco de dados, e sinaliza qualquer coisa que esteja desacelerando você. Páginas lentas perdem usuários (estudos dizem que 53% abandonam se um site leva mais de 3 segundos para carregar!), e o APM ajuda a pegar esses problemas *antes* que eles machuquem. É uma paz de espírito proativa—menos momentos de “por que isso está quebrado?” e mais vitórias de “olha como isso roda bem!”.
+Imagine isso: o seu app é um restaurante movimentado. Sem uma forma de rastrear quanto tempo levam os pedidos ou onde a cozinha está travando, você está chutando por que os clientes estão saindo irritados. O APM é o seu sous-chef—ele observa cada passo, desde solicitações de entrada até consultas de banco de dados, e marca qualquer coisa que esteja desacelerando. Páginas lentas perdem usuários (estudos dizem que 53% abandonam se um site leva mais de 3 segundos para carregar!), e o APM ajuda a pegar esses problemas *antes* que eles machuquem. É uma paz de espírito proativa—menos momentos de “por que isso está quebrado?”, mais vitórias de “olha como isso roda de forma elegante!”.
 
 ## Instalação
 
@@ -17,8 +17,8 @@ composer require flightphp/apm
 ```
 
 Você precisará de:
-- **PHP 7.4+**: Mantém a compatibilidade com distribuições LTS do Linux enquanto suporta PHP moderno.
-- **[Núcleo do FlightPHP](https://github.com/flightphp/core) v3.15+**: O framework leve que estamos aprimorando.
+- **PHP 7.4+**: Mantém a compatibilidade com distribuições Linux LTS enquanto suporta PHP moderno.
+- **[FlightPHP Core](https://github.com/flightphp/core) v3.15+**: O framework leve que estamos melhorando.
 
 ## Começando
 
@@ -26,7 +26,7 @@ Aqui está o seu passo a passo para o APM incrível:
 
 ### 1. Registrar o APM
 
-Adicione isso ao seu `index.php` ou um arquivo `services.php` para começar a rastrear:
+Adicione isso no seu `index.php` ou em um arquivo `services.php` para começar a rastrear:
 
 ```php
 use flight\apm\logger\LoggerFactory;
@@ -38,12 +38,12 @@ $Apm->bindEventsToFlightInstance($app);
 ```
 
 **O que está acontecendo aqui?**
-- `LoggerFactory::create()` pega sua configuração (mais sobre isso em breve) e configura um logger—SQLite por padrão.
+- `LoggerFactory::create()` pega a sua configuração (mais sobre isso em breve) e configura um logger—SQLite por padrão.
 - `Apm` é a estrela—ele escuta os eventos do Flight (solicitações, rotas, erros, etc.) e coleta métricas.
-- `bindEventsToFlightInstance($app)` liga tudo ao seu aplicativo Flight.
+- `bindEventsToFlightInstance($app)` amarra tudo ao seu app do Flight.
 
 **Dica Profissional: Amostragem**
-Se seu aplicativo estiver movimentado, registrar *toda* solicitação pode sobrecarregar as coisas. Use uma taxa de amostragem (de 0.0 a 1.0):
+Se o seu app estiver movimentado, registrar *toda* solicitação pode sobrecarregar as coisas. Use uma taxa de amostragem (de 0.0 a 1.0):
 
 ```php
 $Apm = new Apm($ApmLogger, 0.1); // Registra 10% das solicitações
@@ -53,14 +53,14 @@ Isso mantém o desempenho ágil enquanto ainda fornece dados sólidos.
 
 ### 2. Configure-o
 
-Execute isso para criar seu `.runway-config.json`:
+Execute isso para criar o seu `.runway-config.json`:
 
 ```bash
 php vendor/bin/runway apm:init
 ```
 
 **O que isso faz?**
-- Inicia um assistente perguntando de onde vêm as métricas brutas (fonte) e para onde vão os dados processados (destino).
+- Inicia um assistente que pergunta de onde vêm as métricas brutas (fonte) e para onde vão os dados processados (destino).
 - O padrão é SQLite—por exemplo, `sqlite:/tmp/apm_metrics.sqlite` para a fonte, outro para o destino.
 - Você acabará com uma configuração como:
   ```json
@@ -77,7 +77,7 @@ php vendor/bin/runway apm:init
 > Esse processo também perguntará se você quer executar as migrações para essa configuração. Se você está configurando isso pela primeira vez, a resposta é sim.
 
 **Por que dois locais?**
-Métricas brutas se acumulam rapidamente (pense em logs não filtrados). O worker processa-as em um destino estruturado para o painel. Mantém tudo organizado!
+As métricas brutas se acumulam rapidamente (pense em logs não filtrados). O worker processa elas em um destino estruturado para o painel. Mantém tudo organizado!
 
 ### 3. Processar Métricas com o Worker
 
@@ -89,20 +89,20 @@ php vendor/bin/runway apm:worker
 
 **O que ele está fazendo?**
 - Lê da sua fonte (por exemplo, `apm_metrics.sqlite`).
-- Processa até 100 métricas (tamanho do lote padrão) para o seu destino.
-- Para quando terminar ou se não houver mais métricas.
+- Processa até 100 métricas (tamanho do lote padrão) no seu destino.
+- Para quando terminar ou se não houver métricas restantes.
 
-**Mantenha-o em Execução**
-Para aplicativos ao vivo, você vai querer processamento contínuo. Aqui estão suas opções:
+**Mantenha-o Executando**
+Para apps ao vivo, você vai querer processamento contínuo. Aqui estão as suas opções:
 
 - **Modo Daemon**:
   ```bash
   php vendor/bin/runway apm:worker --daemon
   ```
-  Executa para sempre, processando métricas à medida que chegam. Ótimo para desenvolvimento ou configurações pequenas.
+  Executa para sempre, processando métricas à medida que elas chegam. Ótimo para dev ou configurações pequenas.
 
 - **Crontab**:
-  Adicione isso ao seu crontab (`crontab -e`):
+  Adicione isso à sua crontab (`crontab -e`):
   ```bash
   * * * * * php /path/to/project/vendor/bin/runway apm:worker
   ```
@@ -115,7 +115,7 @@ Para aplicativos ao vivo, você vai querer processamento contínuo. Aqui estão 
   php vendor/bin/runway apm:worker --daemon
   # Ctrl+B, depois D para destacar; `tmux attach -t apm-worker` para reconectar
   ```
-  Mantém isso em execução mesmo se você sair.
+  Mantém isso executando mesmo se você desconectar.
 
 - **Ajustes Personalizados**:
   ```bash
@@ -125,18 +125,18 @@ Para aplicativos ao vivo, você vai querer processamento contínuo. Aqui estão 
   - `--max_messages 1000`: Para após 1000 métricas.
   - `--timeout 300`: Sai após 5 minutos.
 
-**Por que se dar ao trabalho?**
-Sem o worker, seu painel está vazio. É a ponte entre logs brutos e insights acionáveis.
+**Por que se incomodar?**
+Sem o worker, o seu painel estará vazio. É a ponte entre logs brutos e insights acionáveis.
 
-### 4. Inicie o Painel
+### 4. Iniciar o Painel
 
-Veja os sinais vitais do seu aplicativo:
+Veja os sinais vitais do seu app:
 
 ```bash
 php vendor/bin/runway apm:dashboard
 ```
 
-**O que é isso?**
+**O que isso é?**
 - Inicia um servidor PHP em `http://localhost:8001/apm/dashboard`.
 - Mostra logs de solicitações, rotas lentas, taxas de erros e mais.
 
@@ -152,34 +152,34 @@ Acesse a URL no seu navegador e explore!
 
 #### Modo de Produção
 
-Para produção, você pode ter que tentar algumas técnicas para fazer o painel funcionar, pois provavelmente há firewalls e outras medidas de segurança. Aqui estão algumas opções:
+Para produção, você pode precisar tentar algumas técnicas para fazer o painel funcionar, pois provavelmente há firewalls e outras medidas de segurança no lugar. Aqui estão algumas opções:
 
-- **Use um Proxy Inverso**: Configure o Nginx ou Apache para encaminhar solicitações para o painel.
-- **Túnel SSH**: Se você puder fazer SSH no servidor, use `ssh -L 8080:localhost:8001 youruser@yourserver` para tunelizar o painel para sua máquina local.
-- **VPN**: Se seu servidor estiver atrás de uma VPN, conecte-se a ela e acesse o painel diretamente.
-- **Configure o Firewall**: Abra a porta 8001 para o seu IP ou a rede do servidor (ou qualquer porta que você definir).
-- **Configure Apache/Nginx**: Se você tiver um servidor web na frente do seu aplicativo, você pode configurá-lo para um domínio ou subdomínio. Se fizer isso, defina a raiz do documento para `/path/to/your/project/vendor/flightphp/apm/dashboard`.
+- **Usar um Proxy Reverso**: Configure o Nginx ou Apache para encaminhar solicitações para o painel.
+- **Túnel SSH**: Se você puder fazer SSH no servidor, use `ssh -L 8080:localhost:8001 youruser@yourserver` para tunelizar o painel para a sua máquina local.
+- **VPN**: Se o seu servidor estiver atrás de uma VPN, conecte-se a ela e acesse o painel diretamente.
+- **Configurar Firewall**: Abra a porta 8001 para o seu IP ou a rede do servidor (ou qualquer porta que você definir).
+- **Configurar Apache/Nginx**: Se você tiver um servidor web na frente da sua aplicação, você pode configurá-lo para um domínio ou subdomínio. Se fizer isso, você definirá a raiz do documento para `/path/to/your/project/vendor/flightphp/apm/dashboard`.
 
 #### Quer um painel diferente?
 
-Você pode criar seu próprio painel se quiser! Olhe no diretório vendor/flightphp/apm/src/apm/presenter para ideias sobre como apresentar os dados para o seu próprio painel!
+Você pode criar o seu próprio painel se quiser! Olhe no diretório `vendor/flightphp/apm/src/apm/presenter` para ideias sobre como apresentar os dados para o seu próprio painel!
 
 ## Recursos do Painel
 
-O painel é o seu QG do APM—aqui está o que você verá:
+O painel é o seu HQ do APM—aqui está o que você verá:
 
 - **Log de Solicitações**: Toda solicitação com carimbo de data/hora, URL, código de resposta e tempo total. Clique em “Detalhes” para middleware, consultas e erros.
-- **Solicitações Mais Lentas**: As 5 principais solicitações consumindo tempo (por exemplo, “/api/heavy” em 2,5s).
-- **Rotas Mais Lentas**: As 5 principais rotas pelo tempo médio—ótimo para identificar padrões.
-- **Taxa de Erros**: Porcentagem de solicitações falhando (por exemplo, 2,3% de 500s).
-- **Percentis de Latência**: 95º (p95) e 99º (p99) tempos de resposta—conheça seus cenários de pior caso.
+- **Solicitações Mais Lentas**: As 5 principais solicitações consumindo tempo (por exemplo, “/api/heavy” em 2.5s).
+- **Rotas Mais Lentas**: As 5 principais rotas por tempo médio—ótimo para identificar padrões.
+- **Taxa de Erros**: Porcentagem de solicitações falhando (por exemplo, 2.3% de 500s).
+- **Percentis de Latência**: 95º (p95) e 99º (p99) tempos de resposta—conheça os seus cenários de pior caso.
 - **Gráfico de Códigos de Resposta**: Visualize 200s, 404s, 500s ao longo do tempo.
 - **Consultas/Middleware Longas**: As 5 principais chamadas de banco de dados lentas e camadas de middleware.
-- **Acerto/Falha de Cache**: Com que frequência seu cache salva o dia.
+- **Acerto/Erro de Cache**: Com que frequência o seu cache salva o dia.
 
 **Extras**:
 - Filtre por “Última Hora”, “Último Dia” ou “Última Semana”.
-- Ative o modo escuro para aquelas sessões noturnas.
+- Ative o modo escuro para aquelas sessões noturnas tardias.
 
 **Exemplo**:
 Uma solicitação para `/users` pode mostrar:
@@ -203,7 +203,7 @@ $app->eventDispatcher()->trigger('apm.custom', new CustomEvent('api_call', [
 ```
 
 **Onde isso aparece?**
-Nos detalhes da solicitação do painel sob “Eventos Personalizados”—expandível com formatação JSON bonita.
+Nos detalhes da solicitação no painel sob “Eventos Personalizados”—expandível com formatação JSON bonita.
 
 **Caso de Uso**:
 ```php
@@ -215,7 +215,7 @@ $app->eventDispatcher()->trigger('apm.custom', new CustomEvent('external_api', [
     'success' => $apiResponse !== false
 ]));
 ```
-Agora você verá se essa API está arrastando seu aplicativo para baixo!
+Agora você verá se essa API está arrastando o seu app para baixo!
 
 ## Monitoramento de Banco de Dados
 
@@ -228,15 +228,15 @@ $pdo = new PdoWrapper('sqlite:/path/to/db.sqlite');
 $Apm->addPdoConnection($pdo);
 ```
 
-**O que Você Obtém**:
+**O Que Você Obtém**:
 - Texto da consulta (por exemplo, `SELECT * FROM users WHERE id = ?`)
 - Tempo de execução (por exemplo, 0.015s)
 - Contagem de linhas (por exemplo, 42)
 
 **Atenção**:
 - **Opcional**: Pule isso se você não precisar de rastreamento de DB.
-- **Apenas PdoWrapper**: PDO principal ainda não está conectado—fique atento!
-- **Aviso de Desempenho**: Registrar toda consulta em um site pesado de DB pode desacelerar as coisas. Use amostragem (`$Apm = new Apm($ApmLogger, 0.1)`) para aliviar a carga.
+- **Apenas PdoWrapper**: O PDO principal ainda não está conectado—fique ligado!
+- **Aviso de Desempenho**: Registrar cada consulta em um site com banco de dados pesado pode desacelerar as coisas. Use amostragem (`$Apm = new Apm($ApmLogger, 0.1)`) para aliviar a carga.
 
 **Saída de Exemplo**:
 - Consulta: `SELECT name FROM products WHERE price > 100`
@@ -258,9 +258,9 @@ php vendor/bin/runway apm:worker --daemon --batch_size 100 --timeout 3600
 ```
 Executa por uma hora, processando 100 métricas de cada vez.
 
-## ID de Solicitação no Aplicativo
+## ID de Solicitação no App
 
-Cada solicitação tem um ID de solicitação único para rastreamento. Você pode usar esse ID no seu aplicativo para correlacionar logs e métricas. Por exemplo, você pode adicionar o ID de solicitação a uma página de erro:
+Cada solicitação tem um ID de solicitação único para rastreamento. Você pode usar esse ID no seu app para correlacionar logs e métricas. Por exemplo, você pode adicionar o ID de solicitação a uma página de erro:
 
 ```php
 Flight::map('error', function($message) {
@@ -284,11 +284,11 @@ php vendor/bin/runway apm:migrate
 ```
 Isso executará quaisquer migrações necessárias para atualizar o esquema do banco de dados para a versão mais recente.
 
-**Nota:** Se o seu banco de dados do APM for grande, essas migrações podem levar algum tempo para serem executadas. Você pode querer executar esse comando durante horários de pico baixo.
+**Nota:** Se o seu banco de dados do APM for grande, essas migrações podem levar algum tempo para executar. Você pode querer executar esse comando durante horários de pico baixo.
 
-## Excluindo Dados Antigos
+## Limpando Dados Antigos
 
-Para manter seu banco de dados organizado, você pode excluir dados antigos. Isso é especialmente útil se você estiver executando um aplicativo movimentado e quiser manter o tamanho do banco de dados gerenciável.
+Para manter o seu banco de dados organizado, você pode limpar dados antigos. Isso é especialmente útil se você estiver executando um app movimentado e quiser manter o tamanho do banco de dados gerenciável.
 Você pode fazer isso executando o seguinte comando:
 
 ```bash
@@ -305,9 +305,9 @@ Isso removerá todos os dados mais antigos que 7 dias do banco de dados.
 
 Preso? Tente isso:
 
-- **Nenhum Dado no Painel?**
-  - O worker está em execução? Verifique `ps aux | grep apm:worker`.
-  - Os caminhos de configuração correspondem? Verifique se os DSNs em `.runway-config.json` apontam para arquivos reais.
+- **Sem Dados no Painel?**
+  - O worker está executando? Verifique `ps aux | grep apm:worker`.
+  - Caminhos de configuração correspondem? Verifique se os DSNs em `.runway-config.json` apontam para arquivos reais.
   - Execute `php vendor/bin/runway apm:worker` manualmente para processar métricas pendentes.
 
 - **Erros no Worker?**
@@ -315,7 +315,7 @@ Preso? Tente isso:
   - Verifique os logs do PHP para rastreamentos de pilha.
 
 - **Painel Não Inicia?**
-  - A porta 8001 está em uso? Use `--port 8080`.
+  - Porta 8001 em uso? Use `--port 8080`.
   - PHP não encontrado? Use `--php-path /usr/bin/php`.
   - Firewall bloqueando? Abra a porta ou use `--host localhost`.
 

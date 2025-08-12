@@ -8,12 +8,11 @@ $chatgpt_key = getenv('CHATGPT_KEY');
 $filenames_to_skip = [
 	// 'awesome_plugins.md',
 	// 'session.md',
-	// 'security.md',
+	// 'middleware.md',
 ];
 
 if (empty($chatgpt_key)) {
     echo "You need to set the CHATGPT_KEY environment variable to run this script" . PHP_EOL;
-
     exit(1);
 }
 
@@ -32,8 +31,13 @@ $languages = [
 ];
 
 // pull from-date from cli args
-$opts = getopt('', ['from-date:']);
+$opts = getopt('', ['from-date:', 'date-from:']);
 $fromDate = $opts['from-date'] ?? 0;
+
+// in case i'm an idiot and do date-from instead....
+if (isset($opts['date-from'])) {
+	$fromDate = $opts['date-from'];
+}
 
 if ($fromDate) {
     $fromDate = strtotime($fromDate . ' 00:00:00');
@@ -90,11 +94,19 @@ foreach ($files as $file) {
             curl_close($ch);
 
             $response = json_decode($response, true);
-            $full_response .= $response['choices'][0]['message']['content'];
+
+			$content = $response['choices'][0]['message']['content'] ?? '';
+
+			if (empty($content)) {
+				echo "  **Skipping file because it received an empty response**" . PHP_EOL;
+				break;
+			}
+
+            $full_response .= $content;
 
             $messages[] = [
                 'role' => 'assistant',
-                'content' => $response['choices'][0]['message']['content']
+                'content' => $content
             ];
         } while ($response['usage']['completion_tokens'] === 4096);
 
