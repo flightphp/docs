@@ -20,6 +20,15 @@ You’ll need:
 - **PHP 7.4+**: Keeps us compatible with LTS Linux distros while supporting modern PHP.
 - **[FlightPHP Core](https://github.com/flightphp/core) v3.15+**: The lightweight framework we’re boosting.
 
+## Supported Databases
+
+FlightPHP APM currently supports the following databases for storing metrics:
+
+- **SQLite3**: Simple, file-based, and great for local development or small apps. Default option in most setups.
+- **MySQL/MariaDB**: Ideal for larger projects or production environments where you need robust, scalable storage.
+
+You can choose your database type during the configuration step (see below). Make sure your PHP environment has the necessary extensions installed (e.g., `pdo_sqlite` or `pdo_mysql`).
+
 ## Getting Started
 
 Here’s your step-by-step to APM awesomeness:
@@ -35,6 +44,11 @@ use flight\Apm;
 $ApmLogger = LoggerFactory::create(__DIR__ . '/../../.runway-config.json');
 $Apm = new Apm($ApmLogger);
 $Apm->bindEventsToFlightInstance($app);
+
+// If you're adding a database connection
+// Must be PdoWrapper or PdoQueryCapture from Tracy Extensions
+$pdo = new PdoWrapper('mysql:host=localhost;dbname=example', 'user', 'pass', null, true); // <-- True required to enable tracking in the APM.
+$Apm->addPdoConnection($pdo);
 ```
 
 **What’s happening here?**
@@ -225,7 +239,7 @@ Track PDO queries like this:
 ```php
 use flight\database\PdoWrapper;
 
-$pdo = new PdoWrapper('sqlite:/path/to/db.sqlite');
+$pdo = new PdoWrapper('sqlite:/path/to/db.sqlite', null, null, null, true); // <-- True required to enable tracking in the APM.
 $Apm->addPdoConnection($pdo);
 ```
 
@@ -323,3 +337,10 @@ Stuck? Try these:
 - **Too Slow?**
   - Lower the sample rate: `$Apm = new Apm($ApmLogger, 0.05)` (5%).
   - Reduce batch size: `--batch_size 20`.
+
+- **Not Tracking Exceptions/Errors?**
+  - If you have [Tracy](https://tracy.nette.org/) enabled for your project, it will override Flight's error handling. You'll need to disable Tracy and then make sure that `Flight::set('flight.handle_errors', true);` is set.
+
+- **Not Tracking Database Queries?**
+  - Ensure you are using `PdoWrapper` for your database connections.
+  - Make sure you are making the last argument in the constructor `true`.

@@ -13,7 +13,7 @@
         "php": "^8.2",
         "ext-json": "*",
         "erusev/parsedown": "^1.7",
-        "flightphp/apm": "^0.3",
+        "flightphp/apm": "^0.4",
         "flightphp/async": "^0.1.1",
         "flightphp/cache": "^1.0",
         "flightphp/core": "^3.15",

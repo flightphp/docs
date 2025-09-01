@@ -46,10 +46,14 @@ class DocsLogic {
             $uri = substr($uri, 0, strpos($uri, '?'));
         }
 
+		
         // Here we can set variables that will be available on any page
         $params['url'] = $request->getScheme() . '://' . $request->getHeader('Host') . $uri;
         $params['nonce'] = HeaderSecurityMiddleware::$nonce;
+		$startTime = microtime(true);
         $this->app->latte()->render($latte_file, $params);
+		$executionTime = microtime(true) - $startTime;
+		$this->app->eventDispatcher()->trigger('flight.view.rendered', $latte_file.':'.$uri, $executionTime);
     }
 
 	/**
