@@ -1,37 +1,33 @@
 # リクエスト
 
-FlightはHTTPリクエストを単一のオブジェクトにカプセル化し、
-次のようにアクセスできます：
+Flight は HTTP リクエストを単一のオブジェクトにカプセル化し、以下のようにアクセスできます：
 
 ```php
 $request = Flight::request();
 ```
 
-## 一般的な使用例
+## 典型的な使用例
 
-Webアプリケーションでリクエストを処理する際は、通常、ヘッダーを
-取り出したり、`$_GET`や`$_POST`のパラメータを取得したり、あるいは
-生のリクエストボディを取得したいと思うことでしょう。Flightはそれを
-簡単に行うためのインターフェースを提供します。
+Web アプリケーションでリクエストを扱う場合、通常はヘッダーを取得したり、`$_GET` または `$_POST` パラメータを抽出したり、または生のリクエストボディを取得したりします。Flight はこれらの操作を簡単に行うインターフェースを提供します。
 
-クエリ文字列パラメータを取得する例は以下の通りです：
+クエリ文字列パラメータを取得する例です：
 
 ```php
 Flight::route('/search', function(){
 	$keyword = Flight::request()->query['keyword'];
-	echo "あなたが検索しているのは: $keyword";
-	// $keywordを使ってデータベースにクエリするか、何か他のことをする
+	echo "You are searching for: $keyword";
+	// データベースをクエリしたり、$keyword で他の処理を行ったりします
 });
 ```
 
-POSTメソッドのフォームの例はこちらです：
+POST メソッドのフォームの例です：
 
 ```php
 Flight::route('POST /submit', function(){
 	$name = Flight::request()->data['name'];
 	$email = Flight::request()->data['email'];
-	echo "あなたが送信したのは: $name, $email";
-	// $nameと$emailを使ってデータベースに保存するか、何か他のことをする
+	echo "You submitted: $name, $email";
+	// データベースに保存したり、$name と $email で他の処理を行ったりします
 });
 ```
 
@@ -39,36 +35,36 @@ Flight::route('POST /submit', function(){
 
 リクエストオブジェクトは以下のプロパティを提供します：
 
-- **body** - 生のHTTPリクエストボディ
-- **url** - リクエストされているURL
-- **base** - URLの親サブディレクトリ
+- **body** - 生の HTTP リクエストボディ
+- **url** - リクエストされている URL
+- **base** - URL の親サブディレクトリ
 - **method** - リクエストメソッド (GET, POST, PUT, DELETE)
-- **referrer** - リファラURL
-- **ip** - クライアントのIPアドレス
-- **ajax** - リクエストがAJAXリクエストかどうか
+- **referrer** - リファラ URL
+- **ip** - クライアントの IP アドレス
+- **ajax** - リクエストが AJAX リクエストかどうかを示す
 - **scheme** - サーバープロトコル (http, https)
 - **user_agent** - ブラウザ情報
 - **type** - コンテンツタイプ
 - **length** - コンテンツの長さ
 - **query** - クエリ文字列パラメータ
-- **data** - ポストデータまたはJSONデータ
+- **data** - POST データまたは JSON データ
 - **cookies** - クッキーデータ
 - **files** - アップロードされたファイル
-- **secure** - 接続が安全かどうか
-- **accept** - HTTPのacceptパラメータ
-- **proxy_ip** - クライアントのプロキシIPアドレス。`HTTP_CLIENT_IP`、`HTTP_X_FORWARDED_FOR`、`HTTP_X_FORWARDED`、`HTTP_X_CLUSTER_CLIENT_IP`、`HTTP_FORWARDED_FOR`、`HTTP_FORWARDED`をその順で`$_SERVER`配列からスキャンします。
+- **secure** - 接続がセキュアかどうかを示す
+- **accept** - HTTP アクセプトパラメータ
+- **proxy_ip** - クライアントのプロキシ IP アドレス。`$_SERVER` 配列を `HTTP_CLIENT_IP`, `HTTP_X_FORWARDED_FOR`, `HTTP_X_FORWARDED`, `HTTP_X_CLUSTER_CLIENT_IP`, `HTTP_FORWARDED_FOR`, `HTTP_FORWARDED` の順でスキャンします。
 - **host** - リクエストホスト名
+- **servername** - `$_SERVER` からの SERVER_NAME
 
-`query`、`data`、`cookies`、および`files`プロパティには
-配列またはオブジェクトとしてアクセスできます。
+`query`、`data`、`cookies`、および `files` プロパティは、配列またはオブジェクトとしてアクセスできます。
 
-したがって、クエリ文字列パラメータを取得するには、次のようにできます：
+クエリ文字列パラメータを取得するには、以下のようにできます：
 
 ```php
 $id = Flight::request()->query['id'];
 ```
 
-または、次のようにできます：
+または、以下のようにできます：
 
 ```php
 $id = Flight::request()->query->id;
@@ -76,16 +72,15 @@ $id = Flight::request()->query->id;
 
 ## 生のリクエストボディ
 
-例えばPUTリクエストを扱うときに生のHTTPリクエストボディを取得するには、
+PUT リクエストなどの場合に生の HTTP リクエストボディを取得するには、以下のようにします：
 
 ```php
 $body = Flight::request()->getBody();
 ```
 
-## JSON入力
+## JSON 入力
 
-`application/json`タイプのリクエストでデータ`{"id": 123}`を送信すると、
-それは`data`プロパティから利用可能になります：
+`application/json` タイプのデータ `{"id": 123}` を送信した場合、`data` プロパティから利用できます：
 
 ```php
 $id = Flight::request()->data->id;
@@ -93,7 +88,7 @@ $id = Flight::request()->data->id;
 
 ## `$_GET`
 
-`$_GET`配列には`query`プロパティを介してアクセスできます：
+`$_GET` 配列は、`query` プロパティ経由でアクセスできます：
 
 ```php
 $id = Flight::request()->query['id'];
@@ -101,7 +96,7 @@ $id = Flight::request()->query['id'];
 
 ## `$_POST`
 
-`$_POST`配列には`data`プロパティを介してアクセスできます：
+`$_POST` 配列は、`data` プロパティ経由でアクセスできます：
 
 ```php
 $id = Flight::request()->data['id'];
@@ -109,7 +104,7 @@ $id = Flight::request()->data['id'];
 
 ## `$_COOKIE`
 
-`$_COOKIE`配列には`cookies`プロパティを介してアクセスできます：
+`$_COOKIE` 配列は、`cookies` プロパティ経由でアクセスできます：
 
 ```php
 $myCookieValue = Flight::request()->cookies['myCookieName'];
@@ -117,40 +112,38 @@ $myCookieValue = Flight::request()->cookies['myCookieName'];
 
 ## `$_SERVER`
 
-`$_SERVER`配列には`getVar()`メソッドを介してショートカットでアクセスできます：
+`$_SERVER` 配列にアクセスするためのショートカットとして、`getVar()` メソッドがあります：
 
 ```php
-
-$host = Flight::request()->getVar['HTTP_HOST'];
+$host = Flight::request()->getVar('HTTP_HOST');
 ```
 
-## `$_FILES`を介してアップロードされたファイルにアクセスする
+## アップロードされたファイルを `$_FILES` 経由でアクセス
 
-`files`プロパティを介してアップロードされたファイルにアクセスできます：
+アップロードされたファイルは、`files` プロパティ経由でアクセスできます：
 
 ```php
 $uploadedFile = Flight::request()->files['myFile'];
 ```
 
-## ファイルアップロードの処理
+## ファイルアップロードの処理 (v3.12.0)
 
-フレームワークを使用してファイルアップロードを処理できます。基本的には
-リクエストからファイルデータを取り出し、それを新しい場所に移動することです。
+フレームワークを使ってファイルアップロードを処理するためのヘルパーメソッドがあります。これは基本的に、リクエストからファイルデータを取得し、新しい場所に移動するものです。
 
 ```php
 Flight::route('POST /upload', function(){
-	// <input type="file" name="myFile">のような入力フィールドがあった場合
+	// 入力フィールドが <input type="file" name="myFile"> の場合
 	$uploadedFileData = Flight::request()->getUploadedFiles();
 	$uploadedFile = $uploadedFileData['myFile'];
 	$uploadedFile->moveTo('/path/to/uploads/' . $uploadedFile->getClientFilename());
 });
 ```
 
-複数のファイルがアップロードされている場合は、それらをループ処理できます：
+複数のファイルをアップロードした場合、ループで処理できます：
 
 ```php
 Flight::route('POST /upload', function(){
-	// <input type="file" name="myFiles[]">のような入力フィールドがあった場合
+	// 入力フィールドが <input type="file" name="myFiles[]"> の場合
 	$uploadedFiles = Flight::request()->getUploadedFiles()['myFiles'];
 	foreach ($uploadedFiles as $uploadedFile) {
 		$uploadedFile->moveTo('/path/to/uploads/' . $uploadedFile->getClientFilename());
@@ -158,20 +151,19 @@ Flight::route('POST /upload', function(){
 });
 ```
 
-> **セキュリティノート:** ユーザー入力を常に検証し、サニタイズしてください。特にファイルアップロードを扱う場合は注意が必要です。許可する拡張子のタイプを必ず検証し、ファイルが実際にユーザーが主張するファイルタイプであることを確認するために「マジックバイト」も検証してください。これに役立つ[記事](https://dev.to/yasuie/php-file-upload-check-uploaded-files-with-magic-bytes-54oe)、[および](https://amazingalgorithms.com/snippets/php/detecting-the-mime-type-of-an-uploaded-file-using-magic-bytes/)、[ライブラリ](https://github.com/RikudouSage/MimeTypeDetector)があります。
+> **セキュリティの注意:** ユーザー入力、特にファイルアップロードを扱う場合は、常に検証とサニタイズを行ってください。許可する拡張子のタイプを検証するだけでなく、ファイルの「マジックバイト」を検証して、ユーザーが主張するファイルの種類であることを確認してください。これを助けるための [articles](https://dev.to/yasuie/php-file-upload-check-uploaded-files-with-magic-bytes-54oe) [and](https://amazingalgorithms.com/snippets/php/detecting-the-mime-type-of-an-uploaded-file-using-magic-bytes/) [libraries](https://github.com/RikudouSage/MimeTypeDetector) があります。
 
 ## リクエストヘッダー
 
-`getHeader()`または`getHeaders()`メソッドを使用してリクエストヘッダーにアクセスできます：
+リクエストヘッダーは、`getHeader()` または `getHeaders()` メソッドを使ってアクセスできます：
 
 ```php
-
-// おそらくAuthorizationヘッダーが必要な場合
+// Authorization ヘッダーが必要な場合
 $host = Flight::request()->getHeader('Authorization');
 // または
 $host = Flight::request()->header('Authorization');
 
-// すべてのヘッダーを取得する必要がある場合
+// すべてのヘッダーを取得する場合
 $headers = Flight::request()->getHeaders();
 // または
 $headers = Flight::request()->headers();
@@ -179,7 +171,7 @@ $headers = Flight::request()->headers();
 
 ## リクエストボディ
 
-`getBody()`メソッドを使用して生のリクエストボディにアクセスできます：
+生のリクエストボディは、`getBody()` メソッドを使ってアクセスできます：
 
 ```php
 $body = Flight::request()->getBody();
@@ -187,40 +179,41 @@ $body = Flight::request()->getBody();
 
 ## リクエストメソッド
 
-`method`プロパティまたは`getMethod()`メソッドを使用してリクエストメソッドにアクセスできます：
+リクエストメソッドは、`method` プロパティまたは `getMethod()` メソッドを使ってアクセスできます：
 
 ```php
-$method = Flight::request()->method; // 実際にはgetMethod()を呼び出す
+$method = Flight::request()->method; // 実際には getMethod() を呼びます
 $method = Flight::request()->getMethod();
 ```
 
-**注意:** `getMethod()`メソッドは最初に`$_SERVER['REQUEST_METHOD']`からメソッドを取得し、その後、存在する場合は`$_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE']`によって上書きされるか、存在する場合は`$_REQUEST['_method']`によって上書きされることがあります。
+**注意:** `getMethod()` メソッドはまず `$_SERVER['REQUEST_METHOD']` からメソッドを引き、`$_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE']` が存在する場合または `$_REQUEST['_method']` が存在する場合に上書きされます。
 
-## リクエストURL
+## リクエスト URL
 
-URLの部分を組み合わせるためのいくつかのヘルパーメソッドがあります。
+URL の一部を組み合わせるためのいくつかのヘルパーメソッドがあります。
 
-### 完全URL
+### 完全な URL
 
-`getFullUrl()`メソッドを使用して完全なリクエストURLにアクセスできます：
+完全なリクエスト URL は、`getFullUrl()` メソッドを使ってアクセスできます：
 
 ```php
 $url = Flight::request()->getFullUrl();
 // https://example.com/some/path?foo=bar
 ```
-### ベースURL
 
-`getBaseUrl()`メソッドを使用してベースURLにアクセスできます：
+### ベース URL
+
+ベース URL は、`getBaseUrl()` メソッドを使ってアクセスできます：
 
 ```php
 $url = Flight::request()->getBaseUrl();
-// 注意: トレーリングスラッシュはありません。
+// 注意: 末尾にスラッシュはありません。
 // https://example.com
 ```
 
-## クエリ解析
+## クエリのパース
 
-`parseQuery()`メソッドにURLを渡すことで、クエリ文字列を連想配列に解析できます：
+URL を `parseQuery()` メソッドに渡すと、クエリ文字列を連想配列にパースできます：
 
 ```php
 $query = Flight::request()->parseQuery('https://example.com/some/path?foo=bar');

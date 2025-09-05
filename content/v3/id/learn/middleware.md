@@ -1,16 +1,14 @@
-# Rute Perantara
+# Middleware Rute
 
-Flight mendukung rute dan kelompok rute perantara. Perantara adalah fungsi yang dieksekusi sebelum (atau setelah) callback rute. 
-Ini adalah cara yang bagus untuk menambahkan pemeriksaan otentikasi API dalam kode Anda, atau untuk memvalidasi bahwa pengguna memiliki izin 
-untuk mengakses rute tersebut.
+Flight mendukung middleware rute dan grup middleware rute. Middleware adalah fungsi yang dieksekusi sebelum (atau setelah) callback rute. Ini adalah cara yang bagus untuk menambahkan pemeriksaan otentikasi API dalam kode Anda, atau untuk memvalidasi bahwa pengguna memiliki izin untuk mengakses rute.
 
-## Perantara Dasar
+## Middleware Dasar
 
 Berikut adalah contoh dasar:
 
 ```php
-// Jika Anda hanya memberikan fungsi anonim, itu akan dieksekusi sebelum callback rute. 
-// tidak ada fungsi perantara "setelah" kecuali untuk kelas (lihat di bawah)
+// Jika Anda hanya menyediakan fungsi anonim, itu akan dieksekusi sebelum callback rute. 
+// tidak ada fungsi middleware "setelah" kecuali untuk kelas (lihat di bawah)
 Flight::route('/path', function() { echo ' Here I am!'; })->addMiddleware(function() {
 	echo 'Middleware first!';
 });
@@ -20,16 +18,16 @@ Flight::start();
 // Ini akan menghasilkan output "Middleware first! Here I am!"
 ```
 
-Ada beberapa catatan penting tentang perantara yang harus Anda ketahui sebelum menggunakannya:
-- Fungsi perantara dieksekusi sesuai urutan penambahan ke rute. Eksekusi mirip dengan cara [Slim Framework menanganinya](https://www.slimframework.com/docs/v4/concepts/middleware.html#how-does-middleware-work).
-   - Perantara sebelum dieksekusi sesuai urutan penambahan, dan perantara setelah dieksekusi dalam urutan terbalik.
-- Jika fungsi perantara Anda mengembalikan false, semua eksekusi dihentikan dan error 403 Forbidden dilemparkan. Anda mungkin ingin menangani ini dengan lebih halus menggunakan `Flight::redirect()` atau sesuatu yang serupa.
-- Jika Anda memerlukan parameter dari rute Anda, parameter tersebut akan dikirimkan dalam satu array ke fungsi perantara Anda. (`function($params) { ... }` atau `public function before($params) {}`). Alasan untuk ini adalah Anda dapat menyusun parameter ke dalam kelompok dan dalam beberapa kelompok tersebut, parameter Anda mungkin muncul dalam urutan yang berbeda yang dapat merusak fungsi perantara dengan merujuk pada parameter yang salah. Dengan cara ini, Anda dapat mengaksesnya berdasarkan nama daripada posisi.
-- Jika Anda hanya meneruskan nama perantara, itu akan secara otomatis dieksekusi oleh [kontainer injeksi dependensi](dependency-injection-container) dan perantara akan dieksekusi dengan parameter yang dibutuhkan. Jika Anda tidak memiliki kontainer injeksi dependensi yang terdaftar, itu akan meneruskan instance `flight\Engine` ke `__construct()`.
+Ada beberapa catatan penting tentang middleware yang harus Anda ketahui sebelum menggunakannya:
+- Fungsi middleware dieksekusi dalam urutan mereka ditambahkan ke rute. Eksekusi mirip dengan bagaimana [Slim Framework handles this](https://www.slimframework.com/docs/v4/concepts/middleware.html#how-does-middleware-work).
+   - Befores dieksekusi dalam urutan yang ditambahkan, dan Afters dieksekusi dalam urutan terbalik.
+- Jika fungsi middleware Anda mengembalikan false, semua eksekusi dihentikan dan error 403 Forbidden dilemparkan. Anda mungkin ingin menangani ini dengan lebih anggun menggunakan `Flight::redirect()` atau sesuatu yang serupa.
+- Jika Anda memerlukan parameter dari rute Anda, parameter tersebut akan dikirimkan dalam satu array ke fungsi middleware Anda. (`function($params) { ... }` atau `public function before($params) {}`). Alasan untuk ini adalah Anda dapat menyusun parameter Anda menjadi kelompok dan dalam beberapa kelompok tersebut, parameter Anda mungkin muncul dalam urutan yang berbeda yang akan merusak fungsi middleware dengan merujuk pada parameter yang salah. Dengan cara ini, Anda dapat mengaksesnya berdasarkan nama daripada posisi.
+- Jika Anda hanya meneruskan nama middleware, itu akan secara otomatis dieksekusi oleh [dependency injection container](dependency-injection-container) dan middleware akan dieksekusi dengan parameter yang dibutuhkannya. Jika Anda tidak memiliki dependency injection container yang terdaftar, itu akan meneruskan instance `flight\Engine` ke `__construct()`.
 
-## Kelas Perantara
+## Kelas Middleware
 
-Perantara juga dapat didaftarkan sebagai kelas. Jika Anda memerlukan fungsionalitas "setelah", Anda **harus** menggunakan kelas.
+Middleware juga dapat didaftarkan sebagai kelas. Jika Anda memerlukan fungsionalitas "setelah", Anda **harus** menggunakan kelas.
 
 ```php
 class MyMiddleware {
@@ -50,14 +48,13 @@ Flight::start();
 // Ini akan menampilkan "Middleware first! Here I am! Middleware last!"
 ```
 
-## Menangani Error Perantara
+## Menangani Error Middleware
 
-Katakanlah Anda memiliki perantara otentikasi dan Anda ingin mengarahkan pengguna ke halaman login jika mereka tidak 
-terotentikasi. Anda memiliki beberapa opsi yang tersedia:
+Katakanlah Anda memiliki middleware autentikasi dan Anda ingin mengarahkan pengguna ke halaman login jika mereka tidak terautentikasi. Anda memiliki beberapa opsi yang tersedia:
 
-1. Anda dapat mengembalikan false dari fungsi perantara dan Flight akan secara otomatis mengembalikan error 403 Forbidden, tetapi tanpa penyesuaian.
+1. Anda dapat mengembalikan false dari fungsi middleware dan Flight akan secara otomatis mengembalikan error 403 Forbidden, tetapi tanpa kustomisasi.
 1. Anda dapat mengarahkan pengguna ke halaman login menggunakan `Flight::redirect()`.
-1. Anda dapat membuat error khusus dalam perantara dan menghentikan eksekusi rute.
+1. Anda dapat membuat error khusus dalam middleware dan menghentikan eksekusi rute.
 
 ### Contoh Dasar
 
@@ -69,7 +66,7 @@ class MyMiddleware {
 			return false;
 		}
 
-		// karena itu benar, semuanya hanya terus berjalan
+		// karena itu benar, segala sesuatu hanya terus berlanjut
 	}
 }
 ```
@@ -101,19 +98,19 @@ class MyMiddleware {
 			Flight::json(['error' => 'You must be logged in to access this page.'], 403);
 			exit;
 			// atau
-			Flight::halt(403, json_encode(['error' => 'You must be logged in to access this page.']));
+			Flight::halt(403, json_encode(['error' => 'You must be logged in to access this page.']);
 		}
 	}
 }
 ```
 
-## Mengelompokkan Perantara
+## Mengelompokkan Middleware
 
-Anda dapat menambahkan kelompok rute, dan kemudian setiap rute dalam kelompok tersebut akan memiliki perantara yang sama. Ini berguna 
-jika Anda perlu mengelompokkan banyak rute dengan, katakanlah, perantara Auth untuk memeriksa kunci API di header.
+Anda dapat menambahkan grup rute, dan kemudian setiap rute dalam grup tersebut akan memiliki middleware yang sama. Ini berguna jika Anda perlu mengelompokkan banyak rute dengan, katakanlah, middleware Auth untuk memeriksa kunci API di header.
 
 ```php
-// ditambahkan di akhir metode group
+
+// ditambahkan di akhir metode grup
 Flight::group('/api', function() {
 
 	// Rute "kosong" ini sebenarnya akan cocok dengan /api
@@ -125,15 +122,16 @@ Flight::group('/api', function() {
 }, [ new ApiAuthMiddleware() ]);
 ```
 
-Jika Anda ingin menerapkan perantara global ke semua rute Anda, Anda dapat menambahkan kelompok "kosong":
+Jika Anda ingin menerapkan middleware global ke semua rute Anda, Anda dapat menambahkan grup "kosong":
 
 ```php
-// ditambahkan di akhir metode group
+
+// ditambahkan di akhir metode grup
 Flight::group('', function() {
 
-	// Ini tetap /users
+	// Ini masih /users
 	Flight::route('/users', function() { echo 'users'; }, false, 'users');
-	// Dan ini tetap /users/1234
+	// Dan ini masih /users/1234
 	Flight::route('/users/@id', function($id) { echo 'user:'.$id; }, false, 'user_view');
 }, [ ApiAuthMiddleware::class ]); // atau [ new ApiAuthMiddleware() ], hal yang sama
 ```

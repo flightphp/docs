@@ -1,33 +1,33 @@
 # Permintaan
 
-Flight mengenkapsulasi permintaan HTTP ke dalam satu objek, yang dapat diakses dengan melakukan:
+Flight mengenkapsulasi permintaan HTTP menjadi satu objek, yang dapat diakses dengan:
 
 ```php
 $request = Flight::request();
 ```
 
-## Kasus Penggunaan Umum
+## Kasus Penggunaan Tipikal
 
-Ketika Anda sedang bekerja dengan permintaan di aplikasi web, biasanya Anda ingin mengambil header, atau parameter `$_GET` atau `$_POST`, atau mungkin bahkan body permintaan mentah. Flight menyediakan antarmuka sederhana untuk melakukan semua hal ini.
+Saat Anda bekerja dengan permintaan dalam aplikasi web, biasanya Anda ingin mengambil header, atau parameter `$_GET` atau `$_POST`, atau mungkin bahkan badan permintaan mentah. Flight menyediakan antarmuka sederhana untuk melakukan semua hal ini.
 
-Berikut adalah contoh mengambil parameter string kueri:
+Berikut adalah contoh mendapatkan parameter string query:
 
 ```php
 Flight::route('/search', function(){
 	$keyword = Flight::request()->query['keyword'];
-	echo "Anda sedang mencari: $keyword";
-	// kueri database atau sesuatu lainnya dengan $keyword
+	echo "You are searching for: $keyword";
+	// query database atau sesuatu yang lain dengan $keyword
 });
 ```
 
-Berikut adalah contoh dari mungkin sebuah formulir dengan metode POST:
+Berikut adalah contoh mungkin formulir dengan metode POST:
 
 ```php
 Flight::route('POST /submit', function(){
 	$name = Flight::request()->data['name'];
 	$email = Flight::request()->data['email'];
-	echo "Anda mengirim: $name, $email";
-	// simpan ke dalam database atau sesuatu lainnya dengan $name dan $email
+	echo "You submitted: $name, $email";
+	// simpan ke database atau sesuatu yang lain dengan $name dan $email
 });
 ```
 
@@ -35,29 +35,30 @@ Flight::route('POST /submit', function(){
 
 Objek permintaan menyediakan properti berikut:
 
-- **body** - Body permintaan HTTP mentah
+- **body** - Badan permintaan HTTP mentah
 - **url** - URL yang diminta
 - **base** - Subdirektori induk dari URL
 - **method** - Metode permintaan (GET, POST, PUT, DELETE)
-- **referrer** - URL referer
-- **ip** - Alamat IP dari klien
+- **referrer** - URL rujukan
+- **ip** - Alamat IP klien
 - **ajax** - Apakah permintaan adalah permintaan AJAX
 - **scheme** - Protokol server (http, https)
 - **user_agent** - Informasi browser
-- **type** - Tipe konten
+- **type** - Jenis konten
 - **length** - Panjang konten
-- **query** - Parameter string kueri
-- **data** - Data post atau data JSON
+- **query** - Parameter string query
+- **data** - Data POST atau data JSON
 - **cookies** - Data cookie
 - **files** - File yang diunggah
 - **secure** - Apakah koneksi aman
 - **accept** - Parameter HTTP accept
-- **proxy_ip** - Alamat IP proxy dari klien. Memindai array `$_SERVER` untuk `HTTP_CLIENT_IP`, `HTTP_X_FORWARDED_FOR`, `HTTP_X_FORWARDED`, `HTTP_X_CLUSTER_CLIENT_IP`, `HTTP_FORWARDED_FOR`, `HTTP_FORWARDED` dalam urutan itu.
+- **proxy_ip** - Alamat IP proxy klien. Memindai array `$_SERVER` untuk `HTTP_CLIENT_IP`, `HTTP_X_FORWARDED_FOR`, `HTTP_X_FORWARDED`, `HTTP_X_CLUSTER_CLIENT_IP`, `HTTP_FORWARDED_FOR`, `HTTP_FORWARDED` dalam urutan itu.
 - **host** - Nama host permintaan
+- **servername** - SERVER_NAME dari `$_SERVER`
 
 Anda dapat mengakses properti `query`, `data`, `cookies`, dan `files` sebagai array atau objek.
 
-Jadi, untuk mendapatkan parameter string kueri, Anda dapat melakukan:
+Jadi, untuk mendapatkan parameter string query, Anda dapat melakukan:
 
 ```php
 $id = Flight::request()->query['id'];
@@ -69,9 +70,9 @@ Atau Anda dapat melakukan:
 $id = Flight::request()->query->id;
 ```
 
-## Body Permintaan RAW
+## Badan Permintaan Mentah
 
-Untuk mendapatkan body permintaan HTTP mentah, misalnya saat menangani permintaan PUT, Anda dapat melakukan:
+Untuk mendapatkan badan permintaan HTTP mentah, misalnya saat berhadapan dengan permintaan PUT, Anda dapat melakukan:
 
 ```php
 $body = Flight::request()->getBody();
@@ -79,7 +80,7 @@ $body = Flight::request()->getBody();
 
 ## Input JSON
 
-Jika Anda mengirimkan permintaan dengan tipe `application/json` dan data `{"id": 123}` itu akan tersedia dari properti `data`:
+Jika Anda mengirim permintaan dengan jenis `application/json` dan data `{"id": 123}`, itu akan tersedia dari properti `data`:
 
 ```php
 $id = Flight::request()->data->id;
@@ -114,8 +115,7 @@ $myCookieValue = Flight::request()->cookies['myCookieName'];
 Ada pintasan yang tersedia untuk mengakses array `$_SERVER` melalui metode `getVar()`:
 
 ```php
-
-$host = Flight::request()->getVar['HTTP_HOST'];
+$host = Flight::request()->getVar('HTTP_HOST');
 ```
 
 ## Mengakses File yang Diunggah melalui `$_FILES`
@@ -126,24 +126,24 @@ Anda dapat mengakses file yang diunggah melalui properti `files`:
 $uploadedFile = Flight::request()->files['myFile'];
 ```
 
-## Memproses Unggahan File (v3.12.0)
+## Pemrosesan Unggah File (v3.12.0)
 
-Anda dapat memproses unggahan file menggunakan framework dengan beberapa metode pembantu. Secara dasar, ini menyangkut mengambil data file dari permintaan, dan memindahkannya ke lokasi baru.
+Anda dapat memroses unggah file menggunakan framework dengan beberapa metode bantu. Pada dasarnya, itu berarti menarik data file dari permintaan, dan memindahkannya ke lokasi baru.
 
 ```php
 Flight::route('POST /upload', function(){
-	// Jika Anda memiliki field input seperti <input type="file" name="myFile">
+	// Jika Anda memiliki bidang input seperti <input type="file" name="myFile">
 	$uploadedFileData = Flight::request()->getUploadedFiles();
 	$uploadedFile = $uploadedFileData['myFile'];
 	$uploadedFile->moveTo('/path/to/uploads/' . $uploadedFile->getClientFilename());
 });
 ```
 
-Jika Anda memiliki beberapa file yang diunggah, Anda dapat melakukan pengulangan melalui mereka:
+Jika Anda memiliki beberapa file yang diunggah, Anda dapat mengulangi melalui mereka:
 
 ```php
 Flight::route('POST /upload', function(){
-	// Jika Anda memiliki field input seperti <input type="file" name="myFiles[]">
+	// Jika Anda memiliki bidang input seperti <input type="file" name="myFiles[]">
 	$uploadedFiles = Flight::request()->getUploadedFiles()['myFiles'];
 	foreach ($uploadedFiles as $uploadedFile) {
 		$uploadedFile->moveTo('/path/to/uploads/' . $uploadedFile->getClientFilename());
@@ -151,15 +151,14 @@ Flight::route('POST /upload', function(){
 });
 ```
 
-> **Catatan Keamanan:** Selalu validasi dan bersihkan input pengguna, terutama saat menangani unggahan file. Selalu validasi tipe ekstensi yang akan Anda izinkan untuk diunggah, tetapi Anda juga harus memvalidasi "magic bytes" dari file untuk memastikan file tersebut sebenarnya adalah tipe file yang diklaim pengguna. Terdapat [artikel](https://dev.to/yasuie/php-file-upload-check-uploaded-files-with-magic-bytes-54oe) [dan](https://amazingalgorithms.com/snippets/php/detecting-the-mime-type-of-an-uploaded-file-using-magic-bytes/) [perpustakaan](https://github.com/RikudouSage/MimeTypeDetector) yang tersedia untuk membantu dengan ini.
+> **Catatan Keamanan:** Selalu validasi dan sanitasi input pengguna, terutama saat berhadapan dengan unggah file. Selalu validasi jenis ekstensi yang akan Anda izinkan untuk diunggah, tetapi Anda juga harus validasi "magic bytes" file untuk memastikan itu benar-benar jenis file yang diklaim pengguna. Ada [articles](https://dev.to/yasuie/php-file-upload-check-uploaded-files-with-magic-bytes-54oe) [and](https://amazingalgorithms.com/snippets/php/detecting-the-mime-type-of-an-uploaded-file-using-magic-bytes/) [libraries](https://github.com/RikudouSage/MimeTypeDetector) yang tersedia untuk membantu dengan ini.
 
 ## Header Permintaan
 
 Anda dapat mengakses header permintaan menggunakan metode `getHeader()` atau `getHeaders()`:
 
 ```php
-
-// Mungkin Anda membutuhkan header Authorization
+// Mungkin Anda perlu header Authorization
 $host = Flight::request()->getHeader('Authorization');
 // atau
 $host = Flight::request()->header('Authorization');
@@ -170,9 +169,9 @@ $headers = Flight::request()->getHeaders();
 $headers = Flight::request()->headers();
 ```
 
-## Body Permintaan
+## Badan Permintaan
 
-Anda dapat mengakses body permintaan mentah menggunakan metode `getBody()`:
+Anda dapat mengakses badan permintaan mentah menggunakan metode `getBody()`:
 
 ```php
 $body = Flight::request()->getBody();
@@ -187,33 +186,34 @@ $method = Flight::request()->method; // sebenarnya memanggil getMethod()
 $method = Flight::request()->getMethod();
 ```
 
-**Catatan:** Metode `getMethod()` pertama-tama menarik metode dari `$_SERVER['REQUEST_METHOD']`, kemudian bisa ditimpa oleh `$_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE']` jika ada atau `$_REQUEST['_method']` jika ada.
+**Catatan:** Metode `getMethod()` pertama menarik metode dari `$_SERVER['REQUEST_METHOD']`, kemudian dapat ditimpa oleh `$_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE']` jika ada atau `$_REQUEST['_method']` jika ada.
 
 ## URL Permintaan
 
-Terdapat beberapa metode pembantu untuk menyusun bagian dari URL demi kenyamanan Anda.
+Ada beberapa metode bantu untuk menyusun bagian-bagian URL untuk kenyamanan Anda.
 
 ### URL Lengkap
 
-Anda dapat mengakses URL permintaan penuh menggunakan metode `getFullUrl()`:
+Anda dapat mengakses URL permintaan lengkap menggunakan metode `getFullUrl()`:
 
 ```php
 $url = Flight::request()->getFullUrl();
 // https://example.com/some/path?foo=bar
 ```
+
 ### URL Dasar
 
 Anda dapat mengakses URL dasar menggunakan metode `getBaseUrl()`:
 
 ```php
 $url = Flight::request()->getBaseUrl();
-// Perhatikan, tidak ada garis miring di akhir.
+// Perhatikan, tidak ada garis miring akhir.
 // https://example.com
 ```
 
-## Penguraian Kueri
+## Penguraian Query
 
-Anda dapat mengoper URL ke metode `parseQuery()` untuk menguraikan string kueri menjadi array asosiatif:
+Anda dapat meneruskan URL ke metode `parseQuery()` untuk menguraikan string query menjadi array asosiatif:
 
 ```php
 $query = Flight::request()->parseQuery('https://example.com/some/path?foo=bar');

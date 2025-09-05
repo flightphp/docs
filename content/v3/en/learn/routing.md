@@ -312,7 +312,8 @@ Flight::getUrl('user_view', [ 'id' => 5 ]); // will return '/users/5'
 
 ## Route Info
 
-If you want to inspect the matching route information, you can request for the route
+If you want to inspect the matching route information, there are 2 ways you can do this.
+You can use an `executedRoute` property oryou can request for the route
 object to be passed to your callback by passing in `true` as the third parameter in
 the route method. The route object will always be the last parameter passed to your
 callback function.
@@ -341,6 +342,37 @@ Flight::route('/', function(\flight\net\Route $route) {
   $route->alias;
 }, true);
 ```
+
+Or if you want to inspect the last executed route, you can do:
+
+```php
+Flight::route('/', function() {
+  $route = Flight::router()->executedRoute;
+  // Do something with $route
+  // Array of HTTP methods matched against
+  $route->methods;
+
+  // Array of named parameters
+  $route->params;
+
+  // Matching regular expression
+  $route->regex;
+
+  // Contains the contents of any '*' used in the URL pattern
+  $route->splat;
+
+  // Shows the url path....if you really need it
+  $route->pattern;
+
+  // Shows what middleware is assigned to this
+  $route->middleware;
+
+  // Shows the alias assigned to this route
+  $route->alias;
+});
+```
+
+> **Note:** The `executedRoute` property will only be set after a route has been executed. If you try to access it before a route has been executed, it will be `NULL`. You can also use executedRoute in middleware as well!
 
 ## Route Grouping
 

@@ -1,7 +1,6 @@
 # Запити
 
-Flight інкапсулює HTTP запит в один об'єкт, до якого можна
-доступитися, виконавши:
+Flight інкапсулює HTTP-запит в єдиний об'єкт, який можна отримати за допомогою:
 
 ```php
 $request = Flight::request();
@@ -9,27 +8,25 @@ $request = Flight::request();
 
 ## Типові випадки використання
 
-Коли ви працюєте з запитом в веб-додатку, зазвичай ви
-хочете отримати заголовок, або параметр `$_GET` чи `$_POST`, або можливо
-навіть сирий зміст запиту. Flight надає простий інтерфейс для всіх цих функцій.
+Коли ви працюєте з запитом у веб-додатку, зазвичай ви захочете витягнути заголовок, або параметр `$_GET` чи `$_POST`, або, можливо, сире тіло запиту. Flight надає простий інтерфейс для виконання всіх цих дій.
 
 Ось приклад отримання параметра рядка запиту:
 
 ```php
 Flight::route('/search', function(){
 	$keyword = Flight::request()->query['keyword'];
-	echo "Ви шукаєте: $keyword";
+	echo "You are searching for: $keyword";
 	// запит до бази даних або щось інше з $keyword
 });
 ```
 
-Ось приклад можливої форми з методом POST:
+Ось приклад, можливо, форми з методом POST:
 
 ```php
 Flight::route('POST /submit', function(){
 	$name = Flight::request()->data['name'];
 	$email = Flight::request()->data['email'];
-	echo "Ви надіслали: $name, $email";
+	echo "You submitted: $name, $email";
 	// зберегти в базі даних або щось інше з $name та $email
 });
 ```
@@ -38,28 +35,28 @@ Flight::route('POST /submit', function(){
 
 Об'єкт запиту надає такі властивості:
 
-- **body** - Сирий HTTP зміст запиту
-- **url** - Запитувана URL
-- **base** - Батьківський підкаталог URL
+- **body** - Сире тіло HTTP-запиту
+- **url** - URL, що запитується
+- **base** - Батьківська підтека URL
 - **method** - Метод запиту (GET, POST, PUT, DELETE)
-- **referrer** - URL реферера
-- **ip** - IP адреса клієнта
-- **ajax** - Чи є запит AJAX запитом
+- **referrer** - URL-адреса, з якої прийшов запит
+- **ip** - IP-адреса клієнта
+- **ajax** - Чи є запит AJAX-запитом
 - **scheme** - Протокол сервера (http, https)
 - **user_agent** - Інформація про браузер
 - **type** - Тип вмісту
 - **length** - Довжина вмісту
 - **query** - Параметри рядка запиту
-- **data** - Пост дані або JSON дані
-- **cookies** - Дані кукі
+- **data** - Дані POST або JSON
+- **cookies** - Дані файлів cookie
 - **files** - Завантажені файли
 - **secure** - Чи є з'єднання безпечним
-- **accept** - HTTP параметри прийому
-- **proxy_ip** - Проксі IP адреса клієнта. Оглядає масив `$_SERVER` на наявність `HTTP_CLIENT_IP`, `HTTP_X_FORWARDED_FOR`, `HTTP_X_FORWARDED`, `HTTP_X_CLUSTER_CLIENT_IP`, `HTTP_FORWARDED_FOR`, `HTTP_FORWARDED` у цьому порядку.
-- **host** - Назва хоста запиту
+- **accept** - Параметри HTTP accept
+- **proxy_ip** - IP-адреса проксі клієнта. Сканує масив `$_SERVER` для `HTTP_CLIENT_IP`, `HTTP_X_FORWARDED_FOR`, `HTTP_X_FORWARDED`, `HTTP_X_CLUSTER_CLIENT_IP`, `HTTP_FORWARDED_FOR`, `HTTP_FORWARDED` у такому порядку.
+- **host** - Ім'я хоста запиту
+- **servername** - Значення SERVER_NAME з `$_SERVER`
 
-Ви можете доступитися до властивостей `query`, `data`, `cookies` та `files`
-як масивів або об'єктів.
+Ви можете отримати доступ до властивостей `query`, `data`, `cookies` та `files` як до масивів або об'єктів.
 
 Отже, щоб отримати параметр рядка запиту, ви можете зробити:
 
@@ -73,19 +70,17 @@ $id = Flight::request()->query['id'];
 $id = Flight::request()->query->id;
 ```
 
-## Сирий зміст запиту
+## Сире тіло запиту
 
-Щоб отримати сирий HTTP зміст запиту, наприклад, обробляючи запити PUT,
-ви можете зробити:
+Щоб отримати сире тіло HTTP-запиту, наприклад, при роботі з запитами PUT, ви можете зробити:
 
 ```php
 $body = Flight::request()->getBody();
 ```
 
-## JSON Вхідні дані
+## JSON-вхід
 
-Якщо ви надсилаєте запит з типом `application/json` і даними `{"id": 123}`
-це буде доступно з властивості `data`:
+Якщо ви надсилаєте запит з типом `application/json` і даними `{"id": 123}`, це буде доступно з властивості `data`:
 
 ```php
 $id = Flight::request()->data->id;
@@ -93,7 +88,7 @@ $id = Flight::request()->data->id;
 
 ## `$_GET`
 
-Ви можете доступитися до масиву `$_GET` через властивість `query`:
+Ви можете отримати доступ до масиву `$_GET` через властивість `query`:
 
 ```php
 $id = Flight::request()->query['id'];
@@ -101,7 +96,7 @@ $id = Flight::request()->query['id'];
 
 ## `$_POST`
 
-Ви можете доступитися до масиву `$_POST` через властивість `data`:
+Ви можете отримати доступ до масиву `$_POST` через властивість `data`:
 
 ```php
 $id = Flight::request()->data['id'];
@@ -109,7 +104,7 @@ $id = Flight::request()->data['id'];
 
 ## `$_COOKIE`
 
-Ви можете доступитися до масиву `$_COOKIE` через властивість `cookies`:
+Ви можете отримати доступ до масиву `$_COOKIE` через властивість `cookies`:
 
 ```php
 $myCookieValue = Flight::request()->cookies['myCookieName'];
@@ -117,16 +112,15 @@ $myCookieValue = Flight::request()->cookies['myCookieName'];
 
 ## `$_SERVER`
 
-Є доступна скорочена функція для доступу до масиву `$_SERVER` через метод `getVar()`:
+Доступний ярлик для доступу до масиву `$_SERVER` через метод `getVar()`:
 
 ```php
-
-$host = Flight::request()->getVar['HTTP_HOST'];
+$host = Flight::request()->getVar('HTTP_HOST');
 ```
 
 ## Доступ до завантажених файлів через `$_FILES`
 
-Ви можете доступитися до завантажених файлів через властивість `files`:
+Ви можете отримати доступ до завантажених файлів через властивість `files`:
 
 ```php
 $uploadedFile = Flight::request()->files['myFile'];
@@ -134,23 +128,22 @@ $uploadedFile = Flight::request()->files['myFile'];
 
 ## Обробка завантажень файлів (v3.12.0)
 
-Ви можете обробляти завантаження файлів, використовуючи фреймворк з деякими допоміжними методами. Це в основному 
-зводиться до витягування даних файлу з запиту та переміщення їх у нове місце.
+Ви можете обробляти завантаження файлів за допомогою фреймворку з деякими допоміжними методами. Здебільшого це зводиться до витягування даних файлу з запиту та переміщення його в нове місце.
 
 ```php
 Flight::route('POST /upload', function(){
-	// Якщо у вас є поле введення <input type="file" name="myFile">
+	// Якщо у вас є поле вводу типу <input type="file" name="myFile">
 	$uploadedFileData = Flight::request()->getUploadedFiles();
 	$uploadedFile = $uploadedFileData['myFile'];
 	$uploadedFile->moveTo('/path/to/uploads/' . $uploadedFile->getClientFilename());
 });
 ```
 
-Якщо ви завантажили кілька файлів, ви можете пройтися по ним:
+Якщо ви маєте кілька завантажених файлів, ви можете перебрати їх:
 
 ```php
 Flight::route('POST /upload', function(){
-	// Якщо у вас є поле введення <input type="file" name="myFiles[]">
+	// Якщо у вас є поле вводу типу <input type="file" name="myFiles[]">
 	$uploadedFiles = Flight::request()->getUploadedFiles()['myFiles'];
 	foreach ($uploadedFiles as $uploadedFile) {
 		$uploadedFile->moveTo('/path/to/uploads/' . $uploadedFile->getClientFilename());
@@ -158,28 +151,27 @@ Flight::route('POST /upload', function(){
 });
 ```
 
-> **Примітка безпеки:** Завжди перевіряйте та очищуйте введення користувача, особливо під час обробки завантажень файлів. Завжди перевіряйте тип розширень, які ви дозволите завантажувати, але також слід перевіряти "магічні байти" файлу, щоб впевнитися, що це дійсно той тип файлу, який користувач стверджує, що це. Існують [статті](https://dev.to/yasuie/php-file-upload-check-uploaded-files-with-magic-bytes-54oe) [та](https://amazingalgorithms.com/snippets/php/detecting-the-mime-type-of-an-uploaded-file-using-magic-bytes/) [бібліотеки](https://github.com/RikudouSage/MimeTypeDetector), які можуть допомогти з цим.
+> **Примітка безпеки:** Завжди перевіряйте та очищуйте вхідні дані користувача, особливо при роботі з завантаженнями файлів. Завжди перевіряйте типи розширень, які ви дозволите завантажувати, але ви також повинні перевіряти "магічні байти" файлу, щоб забезпечити, що це дійсно тип файлу, який заявляє користувач. Є [статті](https://dev.to/yasuie/php-file-upload-check-uploaded-files-with-magic-bytes-54oe) [та](https://amazingalgorithms.com/snippets/php/detecting-the-mime-type-of-an-uploaded-file-using-magic-bytes/) [бібліотеки](https://github.com/RikudouSage/MimeTypeDetector), які можуть допомогти з цим.
 
 ## Заголовки запиту
 
-Ви можете доступитися до заголовків запиту, використовуючи методи `getHeader()` або `getHeaders()`:
+Ви можете отримати доступ до заголовків запиту за допомогою методу `getHeader()` або `getHeaders()`:
 
 ```php
-
 // Можливо, вам потрібен заголовок Authorization
 $host = Flight::request()->getHeader('Authorization');
 // або
 $host = Flight::request()->header('Authorization');
 
-// Якщо вам потрібно забрати всі заголовки
+// Якщо вам потрібно отримати всі заголовки
 $headers = Flight::request()->getHeaders();
 // або
 $headers = Flight::request()->headers();
 ```
 
-## Зміст запиту
+## Тіло запиту
 
-Ви можете доступитися до сирого змісту запиту, використовуючи метод `getBody()`:
+Ви можете отримати доступ до сирого тіла запиту за допомогою методу `getBody()`:
 
 ```php
 $body = Flight::request()->getBody();
@@ -187,41 +179,41 @@ $body = Flight::request()->getBody();
 
 ## Метод запиту
 
-Ви можете доступитися до методу запиту, використовуючи властивість `method` або метод `getMethod()`:
+Ви можете отримати доступ до методу запиту за допомогою властивості `method` або методу `getMethod()`:
 
 ```php
-$method = Flight::request()->method; // насправді викликає getMethod()
+$method = Flight::request()->method; // фактично викликає getMethod()
 $method = Flight::request()->getMethod();
 ```
 
-**Примітка:** Метод `getMethod()` спочатку отримує метод з `$_SERVER['REQUEST_METHOD']`, потім його можна переписати 
-через `$_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE']`, якщо він існує, або `$_REQUEST['_method']`, якщо він існує.
+**Примітка:** Метод `getMethod()` спочатку витягує метод з `$_SERVER['REQUEST_METHOD']`, потім його можна перезаписати за допомогою `$_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE']`, якщо він існує, або `$_REQUEST['_method']`, якщо він існує.
 
-## URL запитів
+## URL запиту
 
-Існує кілька допоміжних методів для збирання частин URL для зручності.
+Є кілька допоміжних методів для складання частин URL для вашої зручності.
 
 ### Повний URL
 
-Ви можете доступитися до повного URL запиту, використовуючи метод `getFullUrl()`:
+Ви можете отримати доступ до повного URL запиту за допомогою методу `getFullUrl()`:
 
 ```php
 $url = Flight::request()->getFullUrl();
 // https://example.com/some/path?foo=bar
 ```
+
 ### Базовий URL
 
-Ви можете доступитися до базового URL, використовуючи метод `getBaseUrl()`:
+Ви можете отримати доступ до базового URL за допомогою методу `getBaseUrl()`:
 
 ```php
 $url = Flight::request()->getBaseUrl();
-// Зверніть увагу, без кінцевого слешу.
+// Зауважте, без завершуючого слеша.
 // https://example.com
 ```
 
-## Парсинг запитів
+## Парсинг запиту
 
-Ви можете передати URL до методу `parseQuery()`, щоб розпарсити рядок запиту в асоціативний масив:
+Ви можете передати URL методу `parseQuery()`, щоб розібрати рядок запиту в асоціативний масив:
 
 ```php
 $query = Flight::request()->parseQuery('https://example.com/some/path?foo=bar');

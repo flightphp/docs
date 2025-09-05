@@ -2,7 +2,7 @@
 
 > **Note :** Vous voulez en savoir plus sur le routage ? Consultez la page ["why a framework?"](/learn/why-frameworks) pour une explication plus détaillée.
 
-Le routage de base dans Flight se fait en faisant correspondre un motif d'URL à une fonction de rappel ou à un tableau contenant une classe et une méthode.
+Le routage de base dans Flight se fait en associant un motif d'URL à une fonction de rappel ou à un tableau contenant une classe et une méthode.
 
 ```php
 Flight::route('/', function(){
@@ -10,10 +10,10 @@ Flight::route('/', function(){
 });
 ```
 
-> Les routes sont mises en correspondance dans l'ordre dans lequel elles sont définies. La première route correspondant à une requête sera invoquée.
+> Les routes sont mises en correspondance dans l'ordre dans lequel elles sont définies. La première route qui correspond à une demande sera invoquée.
 
-### Rappels/Fonctions
-Le rappel peut être n'importe quel objet qui est appelable. Vous pouvez donc utiliser une fonction régulière :
+### Fonctions de rappel
+La fonction de rappel peut être n'importe quel objet qui est appelable. Vous pouvez donc utiliser une fonction régulière :
 
 ```php
 function hello() {
@@ -55,7 +55,7 @@ class Greeting
 $greeting = new Greeting();
 
 Flight::route('/', [ $greeting, 'hello' ]);
-// Vous pouvez également faire cela sans créer l'objet en premier
+// Vous pouvez également faire cela sans créer l'objet au préalable
 // Note : Aucun argument ne sera injecté dans le constructeur
 Flight::route('/', [ 'Greeting', 'hello' ]);
 // De plus, vous pouvez utiliser cette syntaxe plus courte
@@ -65,7 +65,7 @@ Flight::route('/', Greeting::class.'->hello');
 ```
 
 #### Injection de dépendances via DIC (Conteneur d'injection de dépendances)
-Si vous souhaitez utiliser l'injection de dépendances via un conteneur (PSR-11, PHP-DI, Dice, etc.), le seul type de routes où cela est disponible est soit en créant directement l'objet vous-même et en utilisant le conteneur pour créer votre objet, soit en utilisant des chaînes pour définir la classe et la méthode à appeler. Vous pouvez vous rendre sur la page [Dependency Injection](/learn/extending) pour plus d'informations.
+Si vous souhaitez utiliser l'injection de dépendances via un conteneur (PSR-11, PHP-DI, Dice, etc.), le seul type de routes où cela est disponible est soit en créant directement l'objet vous-même et en utilisant le conteneur pour créer votre objet, soit en utilisant des chaînes pour définir la classe et la méthode à appeler. Vous pouvez consulter la page [Dependency Injection](/learn/extending) pour plus d'informations.
 
 Voici un exemple rapide :
 
@@ -93,7 +93,7 @@ class Greeting
 // Consultez la page Dependency Injection pour plus d'informations sur PSR-11
 $dice = new \Dice\Dice();
 
-// N'oubliez pas de réaffecter la variable avec '$dice =' !!!!!
+// N'oubliez pas de réaffecter la variable avec '$dice =' !!!!
 $dice = $dice->addRule('flight\database\PdoWrapper', [
 	'shared' => true,
 	'constructParams' => [ 
@@ -194,15 +194,15 @@ Vous pouvez également inclure des expressions régulières avec vos paramètres
 ```php
 Flight::route('/@name/@id:[0-9]{3}', function (string $name, string $id) {
   // Cela correspondra à /bob/123
-  // Mais ne correspondra pas à /bob/12345
+  // Mais pas à /bob/12345
 });
 ```
 
-> **Note :** La correspondance des groupes regex `()` avec des paramètres positionnels n'est pas prise en charge. :'\(
+> **Note :** Les groupes de regex correspondants `()` avec des paramètres positionnels ne sont pas pris en charge. :'\(
 
 ### Avertissement important
 
-Bien que dans l'exemple ci-dessus, il semble que `@name` soit directement lié à la variable `$name`, ce n'est pas le cas. L'ordre des paramètres dans la fonction de rappel est ce qui determine ce qui lui est transmis. Donc, si vous inversiez l'ordre des paramètres dans la fonction de rappel, les variables seraient également inversées. Voici un exemple :
+Bien que dans l'exemple ci-dessus, il semble que `@name` soit directement lié à la variable `$name`, ce n'est pas le cas. C'est l'ordre des paramètres dans la fonction de rappel qui détermine ce qui lui est passé. Donc, si vous inversiez l'ordre des paramètres dans la fonction de rappel, les variables seraient également inversées. Voici un exemple :
 
 ```php
 Flight::route('/@name/@id', function (string $id, string $name) {
@@ -210,8 +210,7 @@ Flight::route('/@name/@id', function (string $id, string $name) {
 });
 ```
 
-Et si vous accédiez à l'URL suivante : `/bob/123`, la sortie serait `hello, 123 (bob)!`. 
-Veuillez être prudent lorsque vous configurez vos routes et vos fonctions de rappel.
+Et si vous accédez à l'URL suivante : `/bob/123`, la sortie serait `hello, 123 (bob)!`. Soyez prudent lors de la configuration de vos routes et de vos fonctions de rappel.
 
 ## Paramètres optionnels
 
@@ -230,11 +229,11 @@ Flight::route(
 );
 ```
 
-Tous les paramètres optionnels qui ne sont pas correspondus seront transmis en tant que `NULL`.
+Tous les paramètres optionnels qui ne correspondent pas seront passés en tant que `NULL`.
 
 ## Joker
 
-La correspondance ne se fait que sur les segments d'URL individuels. Si vous souhaitez correspondre à plusieurs segments, vous pouvez utiliser le joker `*`.
+La correspondance ne se fait que sur des segments d'URL individuels. Si vous souhaitez faire correspondre plusieurs segments, vous pouvez utiliser le joker `*`.
 
 ```php
 Flight::route('/blog/*', function () {
@@ -242,7 +241,7 @@ Flight::route('/blog/*', function () {
 });
 ```
 
-Pour router toutes les requêtes vers un seul rappel, vous pouvez faire :
+Pour router toutes les demandes vers un seul rappel, vous pouvez faire :
 
 ```php
 Flight::route('*', function () {
@@ -252,13 +251,13 @@ Flight::route('*', function () {
 
 ## Passage
 
-Vous pouvez passer l'exécution à la route correspondante suivante en renvoyant `true` depuis votre fonction de rappel.
+Vous pouvez passer l'exécution à la route suivante correspondante en renvoyant `true` à partir de votre fonction de rappel.
 
 ```php
 Flight::route('/user/@name', function (string $name) {
   // Vérifier une condition
   if ($name !== "Bob") {
-    // Continuer vers la route suivante
+    // Continuer à la route suivante
     return true;
   }
 });
@@ -270,7 +269,7 @@ Flight::route('/user/*', function () {
 
 ## Alias de route
 
-Vous pouvez assigner un alias à une route, afin que l'URL puisse être générée dynamiquement plus tard dans votre code (comme un modèle par exemple).
+Vous pouvez attribuer un alias à une route, afin que l'URL puisse être générée dynamiquement plus tard dans votre code (comme dans un modèle par exemple).
 
 ```php
 Flight::route('/users/@id', function($id) { echo 'user:'.$id; }, false, 'user_view');
@@ -279,10 +278,9 @@ Flight::route('/users/@id', function($id) { echo 'user:'.$id; }, false, 'user_vi
 Flight::getUrl('user_view', [ 'id' => 5 ]); // renverra '/users/5'
 ```
 
-Ceci est particulièrement utile si votre URL change. Dans l'exemple ci-dessus, supposons que users ait été déplacé vers `/admin/users/@id` à la place.
-Avec l'aliasing en place, vous n'avez pas besoin de modifier les endroits où vous référencez l'alias car l'alias renverra maintenant `/admin/users/5` comme dans l'exemple ci-dessus.
+Ceci est particulièrement utile si votre URL change. Dans l'exemple ci-dessus, supposons que users ait été déplacé vers `/admin/users/@id` à la place. Avec l'aliasing en place, vous n'avez pas besoin de modifier les endroits où vous référencez l'alias car l'alias renverra maintenant `/admin/users/5` comme dans l'exemple.
 
-L'aliasage de route fonctionne toujours dans les groupes également :
+L'aliasage de route fonctionne également dans les groupes :
 
 ```php
 Flight::group('/users', function() {
@@ -296,11 +294,11 @@ Flight::getUrl('user_view', [ 'id' => 5 ]); // renverra '/users/5'
 
 ## Informations sur la route
 
-Si vous souhaitez inspecter les informations de la route correspondante, vous pouvez demander que l'objet de route soit transmis à votre rappel en passant `true` comme troisième paramètre dans la méthode de route. L'objet de route sera toujours le dernier paramètre transmis à votre fonction de rappel.
+Si vous souhaitez inspecter les informations de la route correspondante, il y a 2 façons de le faire. Vous pouvez utiliser la propriété `executedRoute` ou demander que l'objet de route soit passé à votre rappel en passant `true` en tant que troisième paramètre dans la méthode de route. L'objet de route sera toujours le dernier paramètre passé à votre fonction de rappel.
 
 ```php
 Flight::route('/', function(\flight\net\Route $route) {
-  // Tableau des méthodes HTTP correspondantes
+  // Tableau des méthodes HTTP mises en correspondance
   $route->methods;
 
   // Tableau des paramètres nommés
@@ -315,7 +313,7 @@ Flight::route('/', function(\flight\net\Route $route) {
   // Affiche le chemin d'URL....si vous en avez vraiment besoin
   $route->pattern;
 
-  // Affiche ce middleware est assigné à cela
+  // Affiche ce qui est assigné à ce middleware
   $route->middleware;
 
   // Affiche l'alias assigné à cette route
@@ -323,10 +321,40 @@ Flight::route('/', function(\flight\net\Route $route) {
 }, true);
 ```
 
+Ou si vous souhaitez inspecter la dernière route exécutée, vous pouvez faire :
+
+```php
+Flight::route('/', function() {
+  $route = Flight::router()->executedRoute;
+  // Faire quelque chose avec $route
+  // Tableau des méthodes HTTP mises en correspondance
+  $route->methods;
+
+  // Tableau des paramètres nommés
+  $route->params;
+
+  // Expression régulière correspondante
+  $route->regex;
+
+  // Contient le contenu de tout '*' utilisé dans le motif d'URL
+  $route->splat;
+
+  // Affiche le chemin d'URL....si vous en avez vraiment besoin
+  $route->pattern;
+
+  // Affiche ce qui est assigné à ce middleware
+  $route->middleware;
+
+  // Affiche l'alias assigné à cette route
+  $route->alias;
+});
+```
+
+> **Note :** La propriété `executedRoute` ne sera définie qu'après l'exécution d'une route. Si vous essayez d'y accéder avant l'exécution d'une route, elle sera `NULL`. Vous pouvez également utiliser executedRoute dans le middleware !
+
 ## Groupement de routes
 
-Il peut y avoir des moments où vous souhaitez regrouper des routes liées ensemble (telles que `/api/v1`).
-Vous pouvez le faire en utilisant la méthode `group` :
+Il peut y avoir des moments où vous souhaitez regrouper des routes liées ensemble (telles que `/api/v1`). Vous pouvez le faire en utilisant la méthode `group` :
 
 ```php
 Flight::group('/api/v1', function () {
@@ -340,7 +368,7 @@ Flight::group('/api/v1', function () {
 });
 ```
 
-Vous pouvez même imbriquer des groupes de groupes :
+Vous pouvez même imbriquer des groupes dans des groupes :
 
 ```php
 Flight::group('/api', function () {
@@ -387,7 +415,7 @@ $app->group('/api/v1', function (Router $router) {
 });
 ```
 
-### Groupement avec Middleware
+### Groupement avec middleware
 
 Vous pouvez également assigner un middleware à un groupe de routes :
 
@@ -399,19 +427,19 @@ Flight::group('/api/v1', function () {
 }, [ MyAuthMiddleware::class ]); // ou [ new MyAuthMiddleware() ] si vous souhaitez utiliser une instance
 ```
 
-Voir plus de détails sur la page [group middleware](/learn/middleware#grouping-middleware).
+Consultez plus de détails sur la page [group middleware](/learn/middleware#grouping-middleware).
 
 ## Routage de ressources
 
 Vous pouvez créer un ensemble de routes pour une ressource en utilisant la méthode `resource`. Cela créera un ensemble de routes pour une ressource qui suit les conventions RESTful.
 
-Pour créer une ressource, procédez comme suit :
+Pour créer une ressource, faites ce qui suit :
 
 ```php
 Flight::resource('/users', UsersController::class);
 ```
 
-Et ce qui se produira en arrière-plan est qu'il créera les routes suivantes :
+Et ce qui se produira en arrière-plan, c'est qu'il créera les routes suivantes :
 
 ```php
 [
@@ -460,7 +488,7 @@ class UsersController
 }
 ```
 
-> **Note**: Vous pouvez afficher les routes nouvellement ajoutées avec `runway` en exécutant `php runway routes`.
+> **Note** : Vous pouvez afficher les routes nouvellement ajoutées avec `runway` en exécutant `php runway routes`.
 
 ### Personnalisation des routes de ressources
 
@@ -468,10 +496,7 @@ Il y a quelques options pour configurer les routes de ressources.
 
 #### Base d'alias
 
-Vous pouvez configurer la `aliasBase`. Par défaut, l'alias est la dernière partie de l'URL spécifiée.
-Par exemple, `/users/` résulterait en une `aliasBase` de `users`. Lorsque ces routes sont créées,
-les aliases sont `users.index`, `users.create`, etc. Si vous souhaitez modifier l'alias, définissez la `aliasBase`
-à la valeur que vous voulez.
+Vous pouvez configurer la `aliasBase`. Par défaut, l'alias est la dernière partie de l'URL spécifiée. Par exemple, `/users/` résulterait en une `aliasBase` de `users`. Lorsque ces routes sont créées, les alias sont `users.index`, `users.create`, etc. Si vous souhaitez changer l'alias, définissez `aliasBase` sur la valeur souhaitée.
 
 ```php
 Flight::resource('/users', UsersController::class, [ 'aliasBase' => 'user' ]);
@@ -499,19 +524,15 @@ Vous pouvez également spécifier un middleware à exécuter sur chacune des rou
 Flight::resource('/users', UsersController::class, [ 'middleware' => [ MyAuthMiddleware::class ] ]);
 ```
 
-## Diffusion en continu
+## Streaming
 
-Vous pouvez maintenant diffuser des réponses au client en utilisant la méthode `streamWithHeaders()`. 
-Ceci est utile pour envoyer des fichiers volumineux, des processus de longue durée ou pour générer de grandes réponses. 
-La diffusion d'une route est gérée un peu différemment d'une route régulière.
+Vous pouvez maintenant diffuser des réponses au client en utilisant la méthode `streamWithHeaders()`. Cela est utile pour envoyer de grands fichiers, des processus de longue durée ou pour générer de grandes réponses. La diffusion d'une route est gérée un peu différemment d'une route régulière.
 
-> **Note:** Les réponses de diffusion en continu sont uniquement disponibles si vous avez [`flight.v2.output_buffering`](/learn/migrating-to-v3#output_buffering) défini sur false.
+> **Note :** Les réponses de streaming ne sont disponibles que si vous avez [`flight.v2.output_buffering`](/learn/migrating-to-v3#output_buffering) défini sur false.
 
-### Diffusion avec en-têtes manuels
+### Stream avec en-têtes manuels
 
-Vous pouvez diffuser une réponse au client en utilisant la méthode `stream()` sur une route. Si vous 
-faites cela, vous devez définir toutes les méthodes manuellement avant de sortir quoi que ce soit au client.
-Ceci se fait avec la fonction `header()` php ou la méthode `Flight::response()->setRealHeader()`.
+Vous pouvez diffuser une réponse au client en utilisant la méthode `stream()` sur une route. Si vous faites cela, vous devez définir toutes les méthodes manuellement avant de sortir quoi que ce soit vers le client. Cela se fait avec la fonction PHP `header()` ou la méthode `Flight::response()->setRealHeader()`.
 
 ```php
 Flight::route('/@filename', function($filename) {
@@ -529,7 +550,7 @@ Flight::route('/@filename', function($filename) {
 
 	$fileData = file_get_contents('/some/path/to/files/'.$fileNameSafe);
 
-	// Gestion des erreurs et tout cela
+	// Gestion des erreurs et tout
 	if(empty($fileData)) {
 		Flight::halt(404, 'File not found');
 	}
@@ -537,21 +558,21 @@ Flight::route('/@filename', function($filename) {
 	// définir manuellement la longueur du contenu si vous le souhaitez
 	header('Content-Length: '.filesize($filename));
 
-	// Diffusez les données au client
+	// Diffusez les données vers le client
 	echo $fileData;
 
 // C'est la ligne magique ici
 })->stream();
 ```
 
-### Diffusion avec en-têtes
+### Stream avec en-têtes
 
-Vous pouvez également utiliser la méthode `streamWithHeaders()` pour définir les en-têtes avant de commencer la diffusion.
+Vous pouvez également utiliser la méthode `streamWithHeaders()` pour définir les en-têtes avant de commencer à diffuser.
 
 ```php
 Flight::route('/stream-users', function() {
 
-	// vous pouvez ajouter n'importe quel en-tête supplémentaire que vous voulez ici
+	// vous pouvez ajouter n'importe quels en-têtes supplémentaires que vous voulez ici
 	// vous devez juste utiliser header() ou Flight::response()->setRealHeader()
 
 	// cependant que vous récupérez vos données, juste comme un exemple...
@@ -570,7 +591,7 @@ Flight::route('/stream-users', function() {
 	}
 	echo '}';
 
-// C'est ainsi que vous définirez les en-têtes avant de commencer la diffusion.
+// C'est ainsi que vous définirez les en-têtes avant de commencer à diffuser.
 })->streamWithHeaders([
 	'Content-Type' => 'application/json',
 	'Content-Disposition' => 'attachment; filename="users.json"',

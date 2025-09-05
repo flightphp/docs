@@ -1,13 +1,13 @@
 # Middleware de Ruta
 
-Flight admite middleware de ruta y middleware de grupo de rutas. El middleware es una función que se ejecuta antes (o después) del callback de la ruta. Esta es una excelente manera de agregar verificaciones de autenticación de API en tu código, o para validar que el usuario tiene permiso para acceder a la ruta.
+Flight admite middleware de ruta y middleware de grupo de ruta. El middleware es una función que se ejecuta antes (o después) del callback de la ruta. Esta es una excelente manera de agregar verificaciones de autenticación de API en tu código, o para validar que el usuario tenga permiso para acceder a la ruta.
 
-## Middleware Básico
+## Middleware Básica
 
 Aquí hay un ejemplo básico:
 
 ```php
-// Si solo proporcionas una función anónima, se ejecutará antes del callback de la ruta. 
+// Si solo suministras una función anónima, se ejecutará antes del callback de la ruta. 
 // no hay funciones de middleware "después" excepto para clases (véase más abajo)
 Flight::route('/path', function() { echo ' Here I am!'; })->addMiddleware(function() {
 	echo 'Middleware first!';
@@ -19,11 +19,11 @@ Flight::start();
 ```
 
 Hay algunas notas muy importantes sobre el middleware que debes conocer antes de usarlas:
-- Las funciones de middleware se ejecutan en el orden en que se agregan a la ruta. La ejecución es similar a cómo [Slim Framework maneja esto](https://www.slimframework.com/docs/v4/concepts/middleware.html#how-does-middleware-work).
-   - Los "befores" se ejecutan en el orden en que se agregan, y los "afters" se ejecutan en orden inverso.
-- Si tu función de middleware devuelve false, toda la ejecución se detiene y se lanza un error de 403 Forbidden. Probablemente quieras manejar esto de manera más elegante con un `Flight::redirect()` o algo similar.
-- Si necesitas parámetros de tu ruta, se pasarán en un solo arreglo a tu función de middleware. (`function($params) { ... }` o `public function before($params) {}`). La razón de esto es que puedes estructurar tus parámetros en grupos y en algunos de esos grupos, tus parámetros podrían aparecer en un orden diferente, lo que rompería la función de middleware al referirse al parámetro equivocado. De esta manera, puedes acceder a ellos por nombre en lugar de por posición.
-- Si solo pasas el nombre del middleware, se ejecutará automáticamente mediante el [contenedor de inyección de dependencias](dependency-injection-container) y el middleware se ejecutará con los parámetros que necesita. Si no tienes un contenedor de inyección de dependencias registrado, pasará la instancia de `flight\Engine` en el `__construct()`.
+- Las funciones de middleware se ejecutan en el orden en que se agregan a la ruta. La ejecución es similar a cómo [Slim Framework handles this](https://www.slimframework.com/docs/v4/concepts/middleware.html#how-does-middleware-work).
+   - Los "antes" se ejecutan en el orden en que se agregan, y los "después" se ejecutan en orden inverso.
+- Si tu función de middleware devuelve false, toda la ejecución se detiene y se lanza un error de 403 Forbidden. Probablemente querrás manejar esto de manera más elegante con un `Flight::redirect()` o algo similar.
+- Si necesitas parámetros de tu ruta, se pasarán en un solo arreglo a tu función de middleware. (`function($params) { ... }` o `public function before($params) {}`). La razón de esto es que puedes estructurar tus parámetros en grupos y en algunos de esos grupos, tus parámetros podrían aparecer en un orden diferente, lo que rompería la función de middleware al referirse al parámetro incorrecto. De esta manera, puedes acceder a ellos por nombre en lugar de por posición.
+- Si solo pasas el nombre del middleware, se ejecutará automáticamente mediante el [dependency injection container](dependency-injection-container) y el middleware se ejecutará con los parámetros que necesita. Si no tienes un contenedor de inyección de dependencias registrado, pasará la instancia de `flight\Engine` al `__construct()`.
 
 ## Clases de Middleware
 
@@ -48,7 +48,7 @@ Flight::start();
 // Esto mostrará "Middleware first! Here I am! Middleware last!"
 ```
 
-## Manejo de Errores en Middleware
+## Manejo de Errores de Middleware
 
 Supongamos que tienes un middleware de autenticación y quieres redirigir al usuario a una página de inicio de sesión si no está autenticado. Tienes algunas opciones a tu disposición:
 
@@ -66,7 +66,7 @@ class MyMiddleware {
 			return false;
 		}
 
-		// como es true, todo continúa normalmente
+		// como es verdadero, todo continúa
 	}
 }
 ```
@@ -87,7 +87,7 @@ class MyMiddleware {
 
 ### Ejemplo de Error Personalizado
 
-Supongamos que necesitas lanzar un error en JSON porque estás construyendo una API. Puedes hacerlo así:
+Supongamos que necesitas lanzar un error JSON porque estás construyendo una API. Puedes hacerlo así:
 ```php
 class MyMiddleware {
 	public function before($params) {
@@ -98,7 +98,7 @@ class MyMiddleware {
 			Flight::json(['error' => 'You must be logged in to access this page.'], 403);
 			exit;
 			// o
-			Flight::halt(403, json_encode(['error' => 'You must be logged in to access this page.']));
+			Flight::halt(403, json_encode(['error' => 'You must be logged in to access this page.']);
 		}
 	}
 }

@@ -1,9 +1,10 @@
-# Media
+# Medios
 
-Hemos intentado rastrear lo que podemos de los diversos tipos de medios en Internet alrededor de Flight. Consulta a continuación diferentes recursos que puedes utilizar para aprender más sobre Flight.
+Hemos intentado rastrear lo que podemos de los diversos tipos de medios en internet sobre Flight. Véase a continuación para diferentes recursos que puedes usar para aprender más sobre Flight.
 
-## Artículos y Escrituras
+## Artículos y escritos
 
+- [PHP Web Framework Flight](https://www.ojambo.com/php-web-framework-flight) por [ojambo](https://www.ojambo.com/) (2025)
 - [Define, Generate, and Implement: An API-First Approach with OpenAPI Generator and FlightPHP](https://dev.to/danielsc/define-generate-and-implement-an-api-first-approach-with-openapi-generator-and-flightphp-1fb3) por [Daniel Schreiber](https://github.com/daniel-sc) (2025)
 - [Best PHP Micro Frameworks for 2024](https://dev.to/n0nag0n/best-php-micro-frameworks-for-2024-19h6) por [n0nag0n](https://github.com/n0nag0n) (2024)
 - [Creating a RESTful API with Flight Framework](https://dev.to/n0nag0n/creating-a-restful-api-with-flight-framework-56lj) por [n0nag0n](https://github.com/n0nag0n) (2024)
@@ -21,8 +22,9 @@ Hemos intentado rastrear lo que podemos de los diversos tipos de medios en Inter
 - [Trying Out New PHP Framework (Flight)](https://scaledimages.com/post/2017-09-20-trying-out-new-php-framework-flight/) por Leon (2017)
 - [Setting up FlightPHP to work with Backbonejs](https://timothytocci.com/category/flightphp/) por [Timothy Tocci](https://timothytocci.com/author/timothytocci/) (2015)
 
-## Videos y Tutoriales
+## Videos y tutoriales
 
+- [Build a Flight PHP App with MVC & MariaDB in 10 Minutes! (Beginner Friendly)](https://www.youtube.com/watch?v=IsfueIUlfxI) por [ojamboshop](https://www.youtube.com/@ojamboshop) (2025)
 - [Create a REST API for IoT Devices Using PHP & FlightPHP - ESP32 API](https://www.youtube.com/watch?v=VpsuaIH0EiU) por [IoT Craft Hub](https://www.youtube.com/@IoTCraftHub) (2024)
 - [PHP Flight Framework Simple Introductory Video](https://www.youtube.com/watch?v=VCztp1QLC2c) por [n0nag0n](https://www.youtube.com/@n0nag0n) (2024)
 - [Set header HTTP code in Flightphp (3 Solutions!!)](https://www.youtube.com/watch?v=g1i0iy3LqKo) por [Roel Van de Paar](https://www.youtube.com/@RoelVandePaar) (2024)

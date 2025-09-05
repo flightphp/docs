@@ -1,8 +1,8 @@
 # 라우팅
 
-> **노트:** 라우팅에 대해 더 이해하고 싶으신가요? ["why a framework?"](/learn/why-frameworks) 페이지를 확인하세요. 더 자세한 설명이 있습니다.
+> **Note:** 라우팅에 대해 더 이해하고 싶으신가요? ["why a framework?"](/learn/why-frameworks) 페이지를 확인하세요. 더 자세한 설명이 있습니다.
 
-Flight의 기본 라우팅은 URL 패턴을 콜백 함수나 클래스와 메서드의 배열과 매칭하여 수행됩니다.
+Flight 기본 라우팅은 URL 패턴을 콜백 함수나 클래스와 메서드의 배열과 일치시키는 방식으로 수행됩니다.
 
 ```php
 Flight::route('/', function(){
@@ -10,7 +10,7 @@ Flight::route('/', function(){
 });
 ```
 
-> 라우트는 정의된 순서대로 매칭됩니다. 요청과 매칭되는 첫 번째 라우트가 호출됩니다.
+> 경로는 정의된 순서대로 일치합니다. 요청과 일치하는 첫 번째 경로가 호출됩니다.
 
 ### 콜백/함수
 콜백은 호출 가능한 모든 객체가 될 수 있습니다. 따라서 일반 함수를 사용할 수 있습니다:
@@ -24,7 +24,7 @@ Flight::route('/', 'hello');
 ```
 
 ### 클래스
-클래스의 정적 메서드를 사용할 수도 있습니다:
+클래스의 정적 메서드도 사용할 수 있습니다:
 
 ```php
 class Greeting {
@@ -36,7 +36,7 @@ class Greeting {
 Flight::route('/', [ 'Greeting','hello' ]);
 ```
 
-객체를 먼저 생성한 후 메서드를 호출하는 방식으로도 가능합니다:
+또는 먼저 객체를 생성한 후 메서드를 호출하는 방식:
 
 ```php
 // Greeting.php
@@ -56,16 +56,17 @@ $greeting = new Greeting();
 
 Flight::route('/', [ $greeting, 'hello' ]);
 // 객체를 먼저 생성하지 않고도 할 수 있습니다
-// 노트: 생성자에 인수가 주입되지 않습니다
+// 참고: 생성자에 인수가 주입되지 않습니다
 Flight::route('/', [ 'Greeting', 'hello' ]);
-// 추가로 이 더 짧은 구문을 사용할 수 있습니다
+// 또한 이 더 짧은 구문을 사용할 수 있습니다
 Flight::route('/', 'Greeting->hello');
 // 또는
 Flight::route('/', Greeting::class.'->hello');
 ```
 
 #### DIC(의존성 주입 컨테이너)를 통한 의존성 주입
-컨테이너를 통해 의존성 주입을 사용하려면 (PSR-11, PHP-DI, Dice 등), 사용 가능한 라우트 유형은 객체를 직접 생성하여 컨테이너를 사용하거나 클래스와 메서드를 문자열로 정의하는 것입니다. 더 많은 정보는 [Dependency Injection](/learn/extending) 페이지를 참조하세요.
+컨테이너를 통해 의존성 주입을 사용하려면 (PSR-11, PHP-DI, Dice 등), 사용 가능한 경로는 객체를 직접 생성하거나 클래스와 메서드를 문자열로 정의하는 것입니다. 
+더 많은 정보는 [Dependency Injection](/learn/extending) 페이지를 참조하세요.
 
 간단한 예제:
 
@@ -89,11 +90,11 @@ class Greeting
 
 // index.php
 
-// 필요한 매개변수로 컨테이너를 설정합니다
+// 필요한 파라미터로 컨테이너를 설정합니다
 // PSR-11에 대한 더 많은 정보는 Dependency Injection 페이지를 참조하세요
 $dice = new \Dice\Dice();
 
-// 변수를 재할당하는 것을 잊지 마세요: '$dice = '!!!!
+// 변수 재할당을 잊지 마세요 '$dice = '!!!!
 $dice = $dice->addRule('flight\database\PdoWrapper', [
 	'shared' => true,
 	'constructParams' => [ 
@@ -103,12 +104,12 @@ $dice = $dice->addRule('flight\database\PdoWrapper', [
 	]
 ]);
 
-// 컨테이너 핸들러를 등록합니다
+// 컨테이너 핸들러 등록
 Flight::registerContainerHandler(function($class, $params) use ($dice) {
 	return $dice->create($class, $params);
 });
 
-// 일반적인 방식으로 라우트
+// 일반적으로 경로 설정
 Flight::route('/hello/@id', [ 'Greeting', 'hello' ]);
 // 또는
 Flight::route('/hello/@id', 'Greeting->hello');
@@ -120,7 +121,7 @@ Flight::start();
 
 ## 메서드 라우팅
 
-기본적으로 라우트 패턴은 모든 요청 메서드에 대해 매칭됩니다. 특정 메서드에 응답하려면 URL 앞에 식별자를 추가합니다.
+기본적으로 경로 패턴은 모든 요청 메서드에 대해 일치합니다. 특정 메서드에 응답하려면 URL 앞에 식별자를 추가하세요.
 
 ```php
 Flight::route('GET /', function () {
@@ -131,11 +132,11 @@ Flight::route('POST /', function () {
   echo 'I received a POST request.';
 });
 
-// Flight::get()은 라우트를 생성하는 메서드가 아니라 변수를 가져오는 메서드입니다.
-// Flight::post('/', function() { /* code */ });
-// Flight::patch('/', function() { /* code */ });
-// Flight::put('/', function() { /* code */ });
-// Flight::delete('/', function() { /* code */ });
+// Flight::get()은 변수를 가져오는 메서드이지 경로를 생성하는 것이 아닙니다
+// Flight::post('/', function() { /* 코드 */ });
+// Flight::patch('/', function() { /* 코드 */ });
+// Flight::put('/', function() { /* 코드 */ });
+// Flight::delete('/', function() { /* 코드 */ });
 ```
 
 단일 콜백에 여러 메서드를 매핑하려면 `|` 구분자를 사용하세요:
@@ -151,7 +152,7 @@ Flight::route('GET|POST /', function () {
 ```php
 $router = Flight::router();
 
-// 모든 메서드에 매핑
+// 모든 메서드 매핑
 $router->map('/', function() {
 	echo 'hello world!';
 });
@@ -168,19 +169,19 @@ $router->get('/users', function() {
 
 ## 정규 표현식
 
-라우트에서 정규 표현식을 사용할 수 있습니다:
+경로에서 정규 표현식을 사용할 수 있습니다:
 
 ```php
 Flight::route('/user/[0-9]+', function () {
-  // /user/1234와 매칭됩니다
+  // 이것은 /user/1234와 일치합니다
 });
 ```
 
-이 방법은 사용 가능하지만, 이름이 지정된 매개변수나 정규 표현식이 포함된 이름이 지정된 매개변수를 사용하는 것이 더 가독성이 좋고 유지보수가 쉽습니다.
+이 방법은 사용 가능하지만, 이름이 지정된 파라미터나 이름이 지정된 파라미터와 정규 표현식을 사용하는 것이 더 가독성이 높고 유지보수가 쉽습니다.
 
-## 이름이 지정된 매개변수
+## 이름이 지정된 파라미터
 
-라우트에 이름이 지정된 매개변수를 지정하면 콜백 함수에 전달됩니다. **이는 라우트의 가독성을 위한 것입니다. 아래의 중요한 주의사항을 참조하세요.**
+경로에서 이름이 지정된 파라미터를 지정하면 콜백 함수에 전달됩니다. **이는 경로의 가독성을 위한 것입니다. 아래 중요한 주의사항 섹션을 참조하세요.**
 
 ```php
 Flight::route('/@name/@id', function (string $name, string $id) {
@@ -188,20 +189,20 @@ Flight::route('/@name/@id', function (string $name, string $id) {
 });
 ```
 
-이름이 지정된 매개변수에 정규 표현식을 포함하려면 `:` 구분자를 사용하세요:
+이름이 지정된 파라미터에 정규 표현식을 포함하려면 `:` 구분자를 사용하세요:
 
 ```php
 Flight::route('/@name/@id:[0-9]{3}', function (string $name, string $id) {
-  // /bob/123과 매칭됩니다
-  // 하지만 /bob/12345은 매칭되지 않습니다
+  // 이것은 /bob/123과 일치합니다
+  // 하지만 /bob/12345는 일치하지 않습니다
 });
 ```
 
-> **노트:** 위치 매개변수와 함께 정규 표현식 그룹 `()`을 매칭하는 것은 지원되지 않습니다. :'\(
+> **Note:** 위치 파라미터와 일치하는 정규 표현식 그룹 `()`은 지원되지 않습니다. :'\(
 
 ### 중요한 주의사항
 
-위 예제에서 `@name`이 변수 `$name`에 직접 연결된 것처럼 보이지만, 실제로는 아닙니다. 콜백 함수의 매개변수 순서가 전달되는 것을 결정합니다. 따라서 콜백 함수의 매개변수 순서를 변경하면 변수도 변경됩니다. 예제:
+위 예제에서 `@name`이 변수 `$name`에 직접 연결된 것처럼 보이지만, 실제로는 아닙니다. 콜백 함수의 파라미터 순서가 전달되는 것을 결정합니다. 따라서 콜백 함수의 파라미터 순서를 바꾸면 변수도 바뀝니다. 예:
 
 ```php
 Flight::route('/@name/@id', function (string $id, string $name) {
@@ -209,17 +210,18 @@ Flight::route('/@name/@id', function (string $id, string $name) {
 });
 ```
 
-다음 URL에 접근하면: `/bob/123`, 출력은 `hello, 123 (bob)!`이 됩니다. 라우트와 콜백 함수를 설정할 때 주의하세요.
+다음 URL로 이동하면: `/bob/123`, 출력은 `hello, 123 (bob)!`이 됩니다. 
+경로와 콜백 함수를 설정할 때 주의하세요.
 
-## 선택적 매개변수
+## 선택적 파라미터
 
-세그먼트를 괄호로 감싸서 선택적 이름이 지정된 매개변수를 지정할 수 있습니다.
+일치에 선택적 이름이 지정된 파라미터를 지정하려면 세그먼트를 괄호로 감싸세요.
 
 ```php
 Flight::route(
   '/blog(/@year(/@month(/@day)))',
   function(?string $year, ?string $month, ?string $day) {
-    // 다음 URL과 매칭됩니다:
+    // 이것은 다음 URL과 일치합니다:
     // /blog/2012/12/10
     // /blog/2012/12
     // /blog/2012
@@ -228,15 +230,15 @@ Flight::route(
 );
 ```
 
-매칭되지 않은 선택적 매개변수는 `NULL`로 전달됩니다.
+일치하지 않은 선택적 파라미터는 `NULL`로 전달됩니다.
 
 ## 와일드카드
 
-매칭은 개별 URL 세그먼트에만 적용됩니다. 여러 세그먼트를 매칭하려면 `*` 와일드카드를 사용하세요.
+일치는 개별 URL 세그먼트에만 적용됩니다. 여러 세그먼트를 일치시키려면 `*` 와일드카드를 사용하세요.
 
 ```php
 Flight::route('/blog/*', function () {
-  // /blog/2000/02/01과 매칭됩니다
+  // 이것은 /blog/2000/02/01과 일치합니다
 });
 ```
 
@@ -250,36 +252,36 @@ Flight::route('*', function () {
 
 ## 전달
 
-콜백 함수에서 `true`를 반환하여 다음 매칭 라우트로 실행을 전달할 수 있습니다.
+콜백 함수에서 `true`를 반환하여 다음 일치하는 경로로 실행을 전달할 수 있습니다.
 
 ```php
 Flight::route('/user/@name', function (string $name) {
   // 어떤 조건을 확인합니다
   if ($name !== "Bob") {
-    // 다음 라우트로 계속합니다
+    // 다음 경로로 계속합니다
     return true;
   }
 });
 
 Flight::route('/user/*', function () {
-  // 이 부분이 호출됩니다
+  // 이것이 호출됩니다
 });
 ```
 
-## 라우트 별칭
+## 경로 별칭
 
-라우트에 별칭을 지정하면 코드(예: 템플릿)에서 URL을 동적으로 생성할 수 있습니다.
+경로에 별칭을 할당하면 나중에 코드(예: 템플릿)에서 URL을 동적으로 생성할 수 있습니다.
 
 ```php
 Flight::route('/users/@id', function($id) { echo 'user:'.$id; }, false, 'user_view');
 
-// 코드 어딘가에서
+// 나중에 코드 어딘가에서
 Flight::getUrl('user_view', [ 'id' => 5 ]); // '/users/5'를 반환합니다
 ```
 
-URL이 변경될 경우 특히 유용합니다. 위 예제에서 users가 `/admin/users/@id`로 이동했다고 가정하면, 별칭을 사용하면 별칭이 이제 `/admin/users/5`를 반환하므로 별칭을 참조하는 곳을 변경할 필요가 없습니다.
+URL이 변경된 경우에 특히 유용합니다. 위 예에서 users가 `/admin/users/@id`로 이동했다고 가정하면, 별칭을 사용하면 별칭이 이제 `/admin/users/5`를 반환하므로 별칭을 참조하는 곳을 변경할 필요가 없습니다.
 
-그룹에서도 라우트 별칭이 작동합니다:
+그룹에서도 경로 별칭이 작동합니다:
 
 ```php
 Flight::group('/users', function() {
@@ -287,51 +289,83 @@ Flight::group('/users', function() {
 });
 
 
-// 코드 어딘가에서
+// 나중에 코드 어딘가에서
 Flight::getUrl('user_view', [ 'id' => 5 ]); // '/users/5'를 반환합니다
 ```
 
-## 라우트 정보
+## 경로 정보
 
-매칭 라우트 정보를 검사하려면 라우트 메서드의 세 번째 매개변수로 `true`를 전달하여 콜백 함수에 라우트 객체를 요청하세요. 라우트 객체는 콜백 함수에 전달되는 마지막 매개변수가 됩니다.
+일치하는 경로 정보를 검사하려면 2가지 방법이 있습니다.
+`executedRoute` 속성을 사용하거나 경로 메서드의 세 번째 파라미터에 `true`를 전달하여 경로 객체를 콜백에 전달할 수 있습니다. 경로 객체는 콜백 함수에 전달되는 마지막 파라미터입니다.
 
 ```php
 Flight::route('/', function(\flight\net\Route $route) {
-  // 매칭된 HTTP 메서드 배열
+  // 일치한 HTTP 메서드 배열
   $route->methods;
 
-  // 이름이 지정된 매개변수 배열
+  // 이름이 지정된 파라미터 배열
   $route->params;
 
-  // 매칭 정규 표현식
+  // 일치하는 정규 표현식
   $route->regex;
 
-  // URL 패턴에 사용된 '*'의 내용
+  // URL 패턴에 사용된 '*'의 내용 포함
   $route->splat;
 
-  // URL 경로를 보여줍니다... 정말 필요한 경우
+  // URL 경로를 보여줍니다... 정말 필요하다면
   $route->pattern;
 
-  // 이 라우트에 할당된 미들웨어를 보여줍니다
+  // 이 경로에 할당된 미들웨어를 보여줍니다
   $route->middleware;
 
-  // 이 라우트에 할당된 별칭을 보여줍니다
+  // 이 경로에 할당된 별칭을 보여줍니다
   $route->alias;
 }, true);
 ```
 
-## 라우트 그룹핑
+또는 마지막으로 실행된 경로를 검사하려면:
 
-관련된 라우트를 그룹으로 묶고 싶을 때가 있습니다(예: `/api/v1`). `group` 메서드를 사용하여 할 수 있습니다:
+```php
+Flight::route('/', function() {
+  $route = Flight::router()->executedRoute;
+  // $route로 무언가를 수행합니다
+  // 일치한 HTTP 메서드 배열
+  $route->methods;
+
+  // 이름이 지정된 파라미터 배열
+  $route->params;
+
+  // 일치하는 정규 표현식
+  $route->regex;
+
+  // URL 패턴에 사용된 '*'의 내용 포함
+  $route->splat;
+
+  // URL 경로를 보여줍니다... 정말 필요하다면
+  $route->pattern;
+
+  // 이 경로에 할당된 미들웨어를 보여줍니다
+  $route->middleware;
+
+  // 이 경로에 할당된 별칭을 보여줍니다
+  $route->alias;
+});
+```
+
+> **Note:** `executedRoute` 속성은 경로가 실행된 후에만 설정됩니다. 경로 실행 전에 접근하면 `NULL`일 수 있습니다. 미들웨어에서도 executedRoute를 사용할 수 있습니다!
+
+## 경로 그룹화
+
+관련된 경로를 그룹으로 묶고 싶을 때가 있습니다 (예: `/api/v1`). `group` 메서드를 사용하여 할 수 있습니다:
 
 ```php
 Flight::group('/api/v1', function () {
   Flight::route('/users', function () {
-	// /api/v1/users와 매칭됩니다
+	// /api/v1/users와 일치합니다
   });
 
   Flight::route('/posts', function () {
-	// /api/v1/posts와 매칭됩니다
+	// /api/v1/posts와 일치합니다
   });
 });
 ```
@@ -341,32 +375,32 @@ Flight::group('/api/v1', function () {
 ```php
 Flight::group('/api', function () {
   Flight::group('/v1', function () {
-	// Flight::get()은 변수를 가져오는 메서지입니다. 라우트를 설정하지 않습니다! 객체 컨텍스트를 참조하세요
+	// Flight::get()은 변수를 가져오는 것이지 경로를 설정하는 것이 아닙니다! 아래 객체 컨텍스트를 참조하세요
 	Flight::route('GET /users', function () {
-	  // GET /api/v1/users와 매칭됩니다
+	  // GET /api/v1/users와 일치합니다
 	});
 
 	Flight::post('/posts', function () {
-	  // POST /api/v1/posts와 매칭됩니다
+	  // POST /api/v1/posts와 일치합니다
 	});
 
 	Flight::put('/posts/1', function () {
-	  // PUT /api/v1/posts와 매칭됩니다
+	  // PUT /api/v1/posts와 일치합니다
 	});
   });
   Flight::group('/v2', function () {
 
-	// Flight::get()은 변수를 가져오는 메서지입니다. 라우트를 설정하지 않습니다! 객체 컨텍스트를 참조하세요
+	// Flight::get()은 변수를 가져오는 것이지 경로를 설정하는 것이 아닙니다! 아래 객체 컨텍스트를 참조하세요
 	Flight::route('GET /users', function () {
-	  // GET /api/v2/users와 매칭됩니다
+	  // GET /api/v2/users와 일치합니다
 	});
   });
 });
 ```
 
-### 객체 컨텍스트를 사용한 그룹핑
+### 객체 컨텍스트와의 그룹화
 
-`Engine` 객체와 함께 라우트 그룹핑을 사용할 수 있습니다:
+`Engine` 객체와 함께 경로 그룹화를 다음과 같이 사용할 수 있습니다:
 
 ```php
 $app = new \flight\Engine();
@@ -374,32 +408,32 @@ $app->group('/api/v1', function (Router $router) {
 
   // $router 변수를 사용하세요
   $router->get('/users', function () {
-	// GET /api/v1/users와 매칭됩니다
+	// GET /api/v1/users와 일치합니다
   });
 
   $router->post('/posts', function () {
-	// POST /api/v1/posts와 매칭됩니다
+	// POST /api/v1/posts와 일치합니다
   });
 });
 ```
 
-### 미들웨어를 사용한 그룹핑
+### 미들웨어와의 그룹화
 
-라우트 그룹에 미들웨어를 할당할 수 있습니다:
+경로 그룹에 미들웨어를 할당할 수도 있습니다:
 
 ```php
 Flight::group('/api/v1', function () {
   Flight::route('/users', function () {
-	// /api/v1/users와 매칭됩니다
+	// /api/v1/users와 일치합니다
   });
-}, [ MyAuthMiddleware::class ]); // 또는 [ new MyAuthMiddleware() ]를 사용하려면 인스턴스를 사용하세요
+}, [ MyAuthMiddleware::class ]); // 또는 [ new MyAuthMiddleware() ]를 사용하려면 인스턴스 사용
 ```
 
 더 많은 세부 사항은 [group middleware](/learn/middleware#grouping-middleware) 페이지를 참조하세요.
 
 ## 리소스 라우팅
 
-`resource` 메서드를 사용하여 RESTful 규칙을 따르는 리소스에 대한 일련의 라우트를 생성할 수 있습니다.
+`resource` 메서드를 사용하여 RESTful 규칙을 따르는 리소스에 대한 일련의 경로를 생성할 수 있습니다.
 
 리소스를 생성하려면:
 
@@ -407,7 +441,7 @@ Flight::group('/api/v1', function () {
 Flight::resource('/users', UsersController::class);
 ```
 
-배경에서 다음 라우트가 생성됩니다:
+배경에서 다음 경로가 생성됩니다:
 
 ```php
 [
@@ -456,23 +490,24 @@ class UsersController
 }
 ```
 
-> **노트**: 새로 추가된 라우트를 보려면 `php runway routes`를 실행하세요.
+> **Note**: 새로 추가된 경로를 `runway`로 확인하려면 `php runway routes`를 실행하세요.
 
-### 리소스 라우트 사용자 정의
+### 리소스 경로 사용자 정의
 
-리소스 라우트를 구성할 수 있는 몇 가지 옵션이 있습니다.
+리소스 경로를 구성하는 몇 가지 옵션이 있습니다.
 
 #### 별칭 기본값
 
-`aliasBase`를 구성할 수 있습니다. 기본적으로 별칭은 지정된 URL의 마지막 부분입니다. 예를 들어 `/users/`는 `aliasBase`가 `users`가 됩니다. 이러한 라우트가 생성되면 별칭은 `users.index`, `users.create` 등이 됩니다. 별칭을 변경하려면 `aliasBase`를 원하는 값으로 설정하세요.
+`aliasBase`를 구성할 수 있습니다. 기본적으로 별칭은 지정된 URL의 마지막 부분입니다.
+예를 들어 `/users/`는 `aliasBase`가 `users`가 됩니다. 이러한 경로가 생성되면 별칭은 `users.index`, `users.create` 등이 됩니다. 별칭을 변경하려면 `aliasBase`를 원하는 값으로 설정하세요.
 
 ```php
 Flight::resource('/users', UsersController::class, [ 'aliasBase' => 'user' ]);
 ```
 
-#### Only와 Except
+#### Only and Except
 
-`only`와 `except` 옵션을 사용하여 생성할 라우트를 지정할 수 있습니다.
+생성할 경로를 지정하려면 `only`와 `except` 옵션을 사용하세요.
 
 ```php
 Flight::resource('/users', UsersController::class, [ 'only' => [ 'index', 'show' ] ]);
@@ -482,11 +517,11 @@ Flight::resource('/users', UsersController::class, [ 'only' => [ 'index', 'show'
 Flight::resource('/users', UsersController::class, [ 'except' => [ 'create', 'store', 'edit', 'update', 'destroy' ] ]);
 ```
 
-이는 화이트리스트와 블랙리스트 옵션으로, 생성할 라우트를 지정할 수 있습니다.
+이것은 화이트리스트와 블랙리스트 옵션으로, 생성할 경로를 지정할 수 있습니다.
 
 #### 미들웨어
 
-`resource` 메서드가 생성하는 각 라우트에 미들웨어를 지정할 수 있습니다.
+`resource` 메서드로 생성된 각 경로에 미들웨어를 지정할 수 있습니다.
 
 ```php
 Flight::resource('/users', UsersController::class, [ 'middleware' => [ MyAuthMiddleware::class ] ]);
@@ -494,55 +529,57 @@ Flight::resource('/users', UsersController::class, [ 'middleware' => [ MyAuthMid
 
 ## 스트리밍
 
-`streamWithHeaders()` 메서드를 사용하여 클라이언트에 응답을 스트리밍할 수 있습니다. 이는 대용량 파일, 장기 실행 프로세스 또는 대용량 응답을 보낼 때 유용합니다. 스트리밍 라우트는 일반 라우트와 다르게 처리됩니다.
+`streamWithHeaders()` 메서드를 사용하여 클라이언트에 응답을 스트리밍할 수 있습니다. 
+이는 대용량 파일 전송, 장기 실행 프로세스 또는 대용량 응답 생성에 유용합니다. 
+스트리밍 경로는 일반 경로와 약간 다르게 처리됩니다.
 
-> **노트:** 스트리밍 응답은 [`flight.v2.output_buffering`](/learn/migrating-to-v3#output_buffering)가 false로 설정된 경우에만 사용 가능합니다.
+> **Note:** 스트리밍 응답은 [`flight.v2.output_buffering`](/learn/migrating-to-v3#output_buffering)가 false로 설정된 경우에만 사용 가능합니다.
 
-### 수동 헤더를 사용한 스트림
+### 수동 헤더와 스트리밍
 
-`stream()` 메서드를 사용하여 클라이언트에 응답을 스트리밍할 수 있습니다. 이 경우 출력 전에 모든 헤더를 수동으로 설정해야 합니다. 이는 `header()` PHP 함수나 `Flight::response()->setRealHeader()` 메서드로 수행됩니다.
+경로의 `stream()` 메서드를 사용하여 클라이언트에 응답을 스트리밍할 수 있습니다. 이렇게 하면 클라이언트에 출력하기 전에 모든 헤더를 수동으로 설정해야 합니다.
+이는 `header()` PHP 함수나 `Flight::response()->setRealHeader()` 메서드로 수행됩니다.
 
 ```php
 Flight::route('/@filename', function($filename) {
 
-	// 경로를 정리하는 등 명백히 해야 합니다.
+	// 분명히 경로를 정리하고 등등을 수행합니다.
 	$fileNameSafe = basename($filename);
 
-	// 라우트 실행 후 추가 헤더를 설정해야 하는 경우
-	// 출력 전에 정의해야 합니다.
-	// 모두 header() 함수나 Flight::response()->setRealHeader() 호출이어야 합니다.
+	// 경로가 실행된 후 추가 헤더를 설정하려면 출력 전에 정의해야 합니다.
+	// 모두 header() 함수의 원시 호출이거나 Flight::response()->setRealHeader() 호출이어야 합니다.
 	header('Content-Disposition: attachment; filename="'.$fileNameSafe.'"');
 	// 또는
 	Flight::response()->setRealHeader('Content-Disposition', 'attachment; filename="'.$fileNameSafe.'"');
 
 	$fileData = file_get_contents('/some/path/to/files/'.$fileNameSafe);
 
-	// 오류 처리 등
+	// 오류 처리 등등
 	if(empty($fileData)) {
 		Flight::halt(404, 'File not found');
 	}
 
-	// 원하는 경우 콘텐츠 길이를 수동으로 설정합니다
+	// 원하는 경우 수동으로 콘텐츠 길이 설정
 	header('Content-Length: '.filesize($filename));
 
-	// 데이터를 클라이언트에 스트리밍합니다
+	// 데이터를 클라이언트에 스트리밍
 	echo $fileData;
 
-// 이 부분이 핵심입니다
+// 이것이 마법의 줄입니다
 })->stream();
 ```
 
-### 헤더를 사용한 스트림
+### 헤더와 스트리밍
 
-`streamWithHeaders()` 메서드를 사용하여 스트리밍 전에 헤더를 설정할 수 있습니다.
+스트리밍을 시작하기 전에 헤더를 설정하려면 `streamWithHeaders()` 메서드를 사용하세요.
 
 ```php
 Flight::route('/stream-users', function() {
 
-	// 추가 헤더를 원하는 대로 추가할 수 있습니다
+	// 여기에 추가 헤더를 추가할 수 있습니다
 	// header() 또는 Flight::response()->setRealHeader()를 사용해야 합니다
 
-	// 데이터를 가져오는 방법에 따라... 예제로
+	// 데이터를 어떻게 가져오든, 예제로...
 	$users_stmt = Flight::db()->query("SELECT id, first_name, last_name FROM users");
 
 	echo '{';
@@ -558,7 +595,7 @@ Flight::route('/stream-users', function() {
 	}
 	echo '}';
 
-// 스트리밍 전에 헤더를 설정합니다.
+// 스트리밍을 시작하기 전에 헤더를 설정하는 방법입니다.
 })->streamWithHeaders([
 	'Content-Type' => 'application/json',
 	'Content-Disposition' => 'attachment; filename="users.json"',

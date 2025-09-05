@@ -1,6 +1,6 @@
 # Perutean
 
-> **Note:** Ingin memahami lebih lanjut tentang perutean? Periksa halaman ["why a framework?"](/learn/why-frameworks) untuk penjelasan yang lebih mendalam.
+> **Catatan:** Ingin memahami lebih lanjut tentang perutean? Periksa halaman ["why a framework?"](/learn/why-frameworks) untuk penjelasan yang lebih mendalam.
 
 Perutean dasar di Flight dilakukan dengan mencocokkan pola URL dengan fungsi callback atau array dari kelas dan metode.
 
@@ -10,10 +10,10 @@ Flight::route('/', function(){
 });
 ```
 
-> Rute dicocokkan dalam urutan yang ditentukan. Rute pertama yang cocok dengan permintaan akan dipanggil.
+> Rute dicocokkan dalam urutan mereka didefinisikan. Rute pertama yang cocok dengan permintaan akan dipanggil.
 
 ### Callbacks/Fungsi
-Callback bisa berupa objek apa saja yang dapat dipanggil. Jadi Anda bisa menggunakan fungsi reguler:
+Callback bisa menjadi objek apa saja yang dapat dipanggil. Jadi Anda bisa menggunakan fungsi reguler:
 
 ```php
 function hello() {
@@ -36,7 +36,7 @@ class Greeting {
 Flight::route('/', [ 'Greeting','hello' ]);
 ```
 
-Atau dengan membuat objek terlebih dahulu lalu memanggil metode:
+Atau dengan membuat objek terlebih dahulu kemudian memanggil metodenya:
 
 ```php
 // Greeting.php
@@ -56,7 +56,7 @@ $greeting = new Greeting();
 
 Flight::route('/', [ $greeting, 'hello' ]);
 // Anda juga bisa melakukannya tanpa membuat objek terlebih dahulu
-// Catatan: Tidak ada argumen yang akan disuntikkan ke konstruktor
+// Catatan: Tidak ada argumen yang disuntikkan ke konstruktor
 Flight::route('/', [ 'Greeting', 'hello' ]);
 // Selain itu, Anda bisa menggunakan sintaks yang lebih pendek
 Flight::route('/', 'Greeting->hello');
@@ -64,8 +64,8 @@ Flight::route('/', 'Greeting->hello');
 Flight::route('/', Greeting::class.'->hello');
 ```
 
-#### Injeksi Ketergantungan melalui DIC (Dependency Injection Container)
-Jika Anda ingin menggunakan injeksi ketergantungan melalui container (PSR-11, PHP-DI, Dice, dll), jenis rute yang tersedia hanyalah dengan membuat objek sendiri dan menggunakan container untuk membuat objek Anda atau menggunakan string untuk mendefinisikan kelas dan metode yang dipanggil. Anda bisa pergi ke halaman [Dependency Injection](/learn/extending) untuk informasi lebih lanjut.
+#### Injeksi Ketergantungan melalui DIC (Container Injeksi Ketergantungan)
+Jika Anda ingin menggunakan injeksi ketergantungan melalui container (PSR-11, PHP-DI, Dice, dll), jenis rute yang tersedia hanyalah dengan membuat objek langsung sendiri dan menggunakan container untuk membuat objek Anda atau menggunakan string untuk mendefinisikan kelas dan metode yang dipanggil. Anda bisa pergi ke halaman [Dependency Injection](/learn/extending) untuk informasi lebih lanjut.
 
 Berikut adalah contoh cepat:
 
@@ -103,7 +103,7 @@ $dice = $dice->addRule('flight\database\PdoWrapper', [
 	]
 ]);
 
-// Daftarkan handler container
+// Daftarkan penangan container
 Flight::registerContainerHandler(function($class, $params) use ($dice) {
 	return $dice->create($class, $params);
 });
@@ -139,7 +139,7 @@ Flight::route('POST /', function () {
 // Flight::delete('/', function() { /* code */ });
 ```
 
-Anda juga bisa memetakan beberapa metode ke callback tunggal dengan menggunakan pemisah `|`:
+Anda juga bisa memetakan beberapa metode ke callback tunggal dengan menggunakan delimiter `|`:
 
 ```php
 Flight::route('GET|POST /', function () {
@@ -169,19 +169,19 @@ $router->get('/users', function() {
 
 ## Ekspresi Reguler
 
-Anda bisa menggunakan ekspresi reguler di rute Anda:
+Anda bisa menggunakan ekspresi reguler dalam rute Anda:
 
 ```php
 Flight::route('/user/[0-9]+', function () {
-  // Ini akan cocok dengan /user/1234
+  // Ini akan mencocokkan /user/1234
 });
 ```
 
-Meskipun metode ini tersedia, disarankan untuk menggunakan parameter bernama, atau parameter bernama dengan ekspresi reguler, karena lebih mudah dibaca dan dikelola.
+Meskipun metode ini tersedia, disarankan untuk menggunakan parameter bernama, atau parameter bernama dengan ekspresi reguler, karena lebih mudah dibaca dan dipertahankan.
 
 ## Parameter Bernama
 
-Anda bisa menentukan parameter bernama di rute Anda yang akan diteruskan ke fungsi callback Anda. **Ini lebih untuk keterbacaan rute daripada apa pun. Lihat bagian di bawah tentang peringatan penting.**
+Anda bisa menentukan parameter bernama dalam rute Anda yang akan dikirimkan ke fungsi callback Anda. **Ini lebih untuk keterbacaan rute daripada apa pun. Lihat bagian di bawah tentang caveat penting.**
 
 ```php
 Flight::route('/@name/@id', function (string $name, string $id) {
@@ -189,20 +189,20 @@ Flight::route('/@name/@id', function (string $name, string $id) {
 });
 ```
 
-Anda juga bisa menyertakan ekspresi reguler dengan parameter bernama dengan menggunakan pemisah `:`:
+Anda juga bisa menyertakan ekspresi reguler dengan parameter bernama dengan menggunakan delimiter `:`:
 
 ```php
 Flight::route('/@name/@id:[0-9]{3}', function (string $name, string $id) {
-  // Ini akan cocok dengan /bob/123
-  // Tapi tidak akan cocok dengan /bob/12345
+  // Ini akan mencocokkan /bob/123
+  // Tapi tidak akan mencocokkan /bob/12345
 });
 ```
 
-> **Note:** Kelompok regex yang cocok `()` dengan parameter posisional tidak didukung. :'\(
+> **Catatan:** Kelompok regex pencocokan `()` dengan parameter posisional tidak didukung. :'\(
 
-### Peringatan Penting
+### Caveat Penting
 
-Meskipun dalam contoh di atas, terlihat seolah-olah `@name` langsung dihubungkan dengan variabel `$name`, itu tidak demikian. Urutan parameter di fungsi callback yang menentukan apa yang diteruskan kepadanya. Jadi jika Anda menukar urutan parameter di fungsi callback, variabel juga akan ditukar. Berikut adalah contoh:
+Meskipun dalam contoh di atas, seolah-olah `@name` langsung terikat ke variabel `$name`, itu tidak. Urutan parameter dalam fungsi callback adalah yang menentukan apa yang dikirimkan kepadanya. Jadi jika Anda mengganti urutan parameter dalam fungsi callback, variabel juga akan berganti. Berikut adalah contoh:
 
 ```php
 Flight::route('/@name/@id', function (string $id, string $name) {
@@ -220,7 +220,7 @@ Anda bisa menentukan parameter bernama yang opsional untuk pencocokan dengan mem
 Flight::route(
   '/blog(/@year(/@month(/@day)))',
   function(?string $year, ?string $month, ?string $day) {
-    // Ini akan cocok dengan URL berikut:
+    // Ini akan mencocokkan URL berikut:
     // /blog/2012/12/10
     // /blog/2012/12
     // /blog/2012
@@ -229,7 +229,7 @@ Flight::route(
 );
 ```
 
-Parameter opsional apa pun yang tidak cocok akan diteruskan sebagai `NULL`.
+Parameter opsional apa pun yang tidak cocok akan dikirimkan sebagai `NULL`.
 
 ## Wildcards
 
@@ -237,11 +237,11 @@ Pencocokan hanya dilakukan pada segmen URL individu. Jika Anda ingin mencocokkan
 
 ```php
 Flight::route('/blog/*', function () {
-  // Ini akan cocok dengan /blog/2000/02/01
+  // Ini akan mencocokkan /blog/2000/02/01
 });
 ```
 
-Untuk merutekan semua permintaan ke callback tunggal, Anda bisa melakukannya:
+Untuk merute semua permintaan ke callback tunggal, Anda bisa melakukan:
 
 ```php
 Flight::route('*', function () {
@@ -269,12 +269,12 @@ Flight::route('/user/*', function () {
 
 ## Aliasing Rute
 
-Anda bisa menetapkan alias ke rute, sehingga URL bisa dihasilkan secara dinamis nanti di kode Anda (seperti template misalnya).
+Anda bisa menetapkan alias ke rute, sehingga URL bisa dihasilkan secara dinamis nanti dalam kode Anda (seperti template misalnya).
 
 ```php
 Flight::route('/users/@id', function($id) { echo 'user:'.$id; }, false, 'user_view');
 
-// nanti di kode di suatu tempat
+// nanti dalam kode di suatu tempat
 Flight::getUrl('user_view', [ 'id' => 5 ]); // akan mengembalikan '/users/5'
 ```
 
@@ -288,13 +288,13 @@ Flight::group('/users', function() {
 });
 
 
-// nanti di kode di suatu tempat
+// nanti dalam kode di suatu tempat
 Flight::getUrl('user_view', [ 'id' => 5 ]); // akan mengembalikan '/users/5'
 ```
 
 ## Info Rute
 
-Jika Anda ingin memeriksa informasi rute yang cocok, Anda bisa meminta objek rute untuk diteruskan ke callback Anda dengan meneruskan `true` sebagai parameter ketiga di metode rute. Objek rute akan selalu menjadi parameter terakhir yang diteruskan ke fungsi callback Anda.
+Jika Anda ingin memeriksa informasi rute pencocokan, ada 2 cara Anda bisa melakukannya. Anda bisa menggunakan properti `executedRoute` atau Anda bisa meminta objek rute untuk dikirimkan ke callback Anda dengan meneruskan `true` sebagai parameter ketiga dalam metode rute. Objek rute akan selalu menjadi parameter terakhir yang dikirimkan ke fungsi callback Anda.
 
 ```php
 Flight::route('/', function(\flight\net\Route $route) {
@@ -304,13 +304,13 @@ Flight::route('/', function(\flight\net\Route $route) {
   // Array parameter bernama
   $route->params;
 
-  // Ekspresi reguler yang cocok
+  // Ekspresi reguler pencocokan
   $route->regex;
 
-  // Berisi isi dari '*' yang digunakan di pola URL
+  // Berisi isi dari '*' yang digunakan dalam pola URL
   $route->splat;
 
-  // Menampilkan path url....jika Anda benar-benar membutuhkannya
+  // Menampilkan path URL....jika Anda benar-benar membutuhkannya
   $route->pattern;
 
   // Menampilkan middleware yang ditugaskan ke ini
@@ -321,6 +321,37 @@ Flight::route('/', function(\flight\net\Route $route) {
 }, true);
 ```
 
+Atau jika Anda ingin memeriksa rute yang dieksekusi terakhir, Anda bisa melakukan:
+
+```php
+Flight::route('/', function() {
+  $route = Flight::router()->executedRoute;
+  // Lakukan sesuatu dengan $route
+  // Array metode HTTP yang dicocokkan
+  $route->methods;
+
+  // Array parameter bernama
+  $route->params;
+
+  // Ekspresi reguler pencocokan
+  $route->regex;
+
+  // Berisi isi dari '*' yang digunakan dalam pola URL
+  $route->splat;
+
+  // Menampilkan path URL....jika Anda benar-benar membutuhkannya
+  $route->pattern;
+
+  // Menampilkan middleware yang ditugaskan ke ini
+  $route->middleware;
+
+  // Menampilkan alias yang ditugaskan ke rute ini
+  $route->alias;
+});
+```
+
+> **Catatan:** Properti `executedRoute` hanya akan diatur setelah rute dieksekusi. Jika Anda mencoba mengaksesnya sebelum rute dieksekusi, itu akan menjadi `NULL`. Anda juga bisa menggunakan executedRoute dalam middleware juga!
+
 ## Pengelompokan Rute
 
 Mungkin ada saatnya Anda ingin mengelompokkan rute terkait bersama (seperti `/api/v1`). Anda bisa melakukan ini dengan menggunakan metode `group`:
@@ -328,38 +359,38 @@ Mungkin ada saatnya Anda ingin mengelompokkan rute terkait bersama (seperti `/ap
 ```php
 Flight::group('/api/v1', function () {
   Flight::route('/users', function () {
-	// Cocok dengan /api/v1/users
+	// Mencocokkan /api/v1/users
   });
 
   Flight::route('/posts', function () {
-	// Cocok dengan /api/v1/posts
+	// Mencocokkan /api/v1/posts
   });
 });
 ```
 
-Anda bahkan bisa menambahkan grup dalam grup:
+Anda bahkan bisa menyimpan grup dalam grup:
 
 ```php
 Flight::group('/api', function () {
   Flight::group('/v1', function () {
-	// Flight::get() mendapatkan variabel, itu tidak menetapkan rute! Lihat konteks objek di bawah
+	// Flight::get() mendapatkan variabel, itu tidak mengatur rute! Lihat konteks objek di bawah
 	Flight::route('GET /users', function () {
-	  // Cocok dengan GET /api/v1/users
+	  // Mencocokkan GET /api/v1/users
 	});
 
 	Flight::post('/posts', function () {
-	  // Cocok dengan POST /api/v1/posts
+	  // Mencocokkan POST /api/v1/posts
 	});
 
 	Flight::put('/posts/1', function () {
-	  // Cocok dengan PUT /api/v1/posts
+	  // Mencocokkan PUT /api/v1/posts
 	});
   });
   Flight::group('/v2', function () {
 
-	// Flight::get() mendapatkan variabel, itu tidak menetapkan rute! Lihat konteks objek di bawah
+	// Flight::get() mendapatkan variabel, itu tidak mengatur rute! Lihat konteks objek di bawah
 	Flight::route('GET /users', function () {
-	  // Cocok dengan GET /api/v2/users
+	  // Mencocokkan GET /api/v2/users
 	});
   });
 });
@@ -375,11 +406,11 @@ $app->group('/api/v1', function (Router $router) {
 
   // gunakan variabel $router
   $router->get('/users', function () {
-	// Cocok dengan GET /api/v1/users
+	// Mencocokkan GET /api/v1/users
   });
 
   $router->post('/posts', function () {
-	// Cocok dengan POST /api/v1/posts
+	// Mencocokkan POST /api/v1/posts
   });
 });
 ```
@@ -391,7 +422,7 @@ Anda juga bisa menetapkan middleware ke grup rute:
 ```php
 Flight::group('/api/v1', function () {
   Flight::route('/users', function () {
-	// Cocok dengan /api/v1/users
+	// Mencocokkan /api/v1/users
   });
 }, [ MyAuthMiddleware::class ]); // atau [ new MyAuthMiddleware() ] jika Anda ingin menggunakan instance
 ```
@@ -422,7 +453,7 @@ Dan apa yang akan terjadi di latar belakang adalah itu akan membuat rute berikut
 ]
 ```
 
-Dan pengontrol Anda akan terlihat seperti ini:
+Dan controller Anda akan terlihat seperti ini:
 
 ```php
 class UsersController
@@ -457,13 +488,13 @@ class UsersController
 }
 ```
 
-> **Note**: Anda bisa melihat rute yang baru ditambahkan dengan `runway` dengan menjalankan `php runway routes`.
+> **Catatan**: Anda bisa melihat rute yang baru ditambahkan dengan `runway` dengan menjalankan `php runway routes`.
 
 ### Menyesuaikan Rute Sumber Daya
 
 Ada beberapa opsi untuk mengonfigurasi rute sumber daya.
 
-#### Alias Base
+#### Basis Alias
 
 Anda bisa mengonfigurasi `aliasBase`. Secara default, alias adalah bagian terakhir dari URL yang ditentukan. Misalnya `/users/` akan menghasilkan `aliasBase` dari `users`. Saat rute ini dibuat, aliasnya adalah `users.index`, `users.create`, dll. Jika Anda ingin mengubah alias, atur `aliasBase` ke nilai yang Anda inginkan.
 
@@ -471,9 +502,9 @@ Anda bisa mengonfigurasi `aliasBase`. Secara default, alias adalah bagian terakh
 Flight::resource('/users', UsersController::class, [ 'aliasBase' => 'user' ]);
 ```
 
-#### Only and Except
+#### Only dan Except
 
-Anda juga bisa menentukan rute mana yang ingin Anda buat dengan menggunakan opsi `only` and `except`.
+Anda juga bisa menentukan rute mana yang ingin Anda buat dengan menggunakan opsi `only` dan `except`.
 
 ```php
 Flight::resource('/users', UsersController::class, [ 'only' => [ 'index', 'show' ] ]);
@@ -483,7 +514,7 @@ Flight::resource('/users', UsersController::class, [ 'only' => [ 'index', 'show'
 Flight::resource('/users', UsersController::class, [ 'except' => [ 'create', 'store', 'edit', 'update', 'destroy' ] ]);
 ```
 
-Ini pada dasarnya adalah opsi whitelisting dan blacklisting sehingga Anda bisa menentukan rute mana yang ingin Anda buat.
+Ini pada dasarnya adalah opsi whitelist dan blacklist sehingga Anda bisa menentukan rute mana yang ingin Anda buat.
 
 #### Middleware
 
@@ -497,11 +528,11 @@ Flight::resource('/users', UsersController::class, [ 'middleware' => [ MyAuthMid
 
 Anda sekarang bisa mengalirkan respons ke klien menggunakan metode `streamWithHeaders()`. Ini berguna untuk mengirim file besar, proses yang berjalan lama, atau menghasilkan respons besar. Mengalirkan rute ditangani sedikit berbeda daripada rute reguler.
 
-> **Note:** Respons streaming hanya tersedia jika Anda memiliki [`flight.v2.output_buffering`](/learn/migrating-to-v3#output_buffering) diatur ke false.
+> **Catatan:** Respons streaming hanya tersedia jika Anda memiliki [`flight.v2.output_buffering`](/learn/migrating-to-v3#output_buffering) diatur ke false.
 
 ### Stream dengan Header Manual
 
-Anda bisa mengalirkan respons ke klien dengan menggunakan metode `stream()` pada rute. Jika Anda melakukannya, Anda harus mengatur semua metode secara manual sebelum Anda mengeluarkan apa pun ke klien. Ini dilakukan dengan fungsi `header()` php atau metode `Flight::response()->setRealHeader()`.
+Anda bisa mengalirkan respons ke klien dengan menggunakan metode `stream()` pada rute. Jika Anda melakukannya, Anda harus mengatur semua metode secara manual sebelum mengeluarkan apa pun ke klien. Ini dilakukan dengan fungsi `header()` php atau metode `Flight::response()->setRealHeader()`.
 
 ```php
 Flight::route('/@filename', function($filename) {
@@ -509,9 +540,9 @@ Flight::route('/@filename', function($filename) {
 	// jelas Anda akan membersihkan path dan sebagainya.
 	$fileNameSafe = basename($filename);
 
-	// Jika Anda memiliki header tambahan untuk disetel di sini setelah rute dieksekusi
-	// Anda harus mendefinisikannya sebelum ada yang diecho.
-	// Mereka harus semua panggilan mentah ke fungsi header() atau 
+	// Jika Anda memiliki header tambahan untuk diatur di sini setelah rute dieksekusi
+	// Anda harus mendefinisikannya sebelum apa pun yang dik echoing.
+	// Mereka harus semuanya panggilan mentah ke fungsi header() atau 
 	// panggilan ke Flight::response()->setRealHeader()
 	header('Content-Disposition: attachment; filename="'.$fileNameSafe.'"');
 	// atau
@@ -519,7 +550,7 @@ Flight::route('/@filename', function($filename) {
 
 	$fileData = file_get_contents('/some/path/to/files/'.$fileNameSafe);
 
-	// Penanganan error dan sebagainya
+	// Penangkapan error dan sebagainya
 	if(empty($fileData)) {
 		Flight::halt(404, 'File not found');
 	}
@@ -536,12 +567,12 @@ Flight::route('/@filename', function($filename) {
 
 ### Stream dengan Header
 
-Anda juga bisa menggunakan metode `streamWithHeaders()` untuk mengatur header sebelum Anda mulai mengalirkan.
+Anda juga bisa menggunakan metode `streamWithHeaders()` untuk mengatur header sebelum Anda mulai streaming.
 
 ```php
 Flight::route('/stream-users', function() {
 
-	// Anda bisa menambahkan header tambahan yang Anda inginkan di sini
+	// Anda bisa menambahkan header tambahan apa pun yang Anda inginkan di sini
 	// Anda hanya harus menggunakan header() atau Flight::response()->setRealHeader()
 
 	// bagaimanapun Anda menarik data, hanya sebagai contoh...
@@ -560,7 +591,7 @@ Flight::route('/stream-users', function() {
 	}
 	echo '}';
 
-// Ini adalah cara Anda akan mengatur header sebelum Anda mulai mengalirkan.
+// Ini adalah cara Anda akan mengatur header sebelum mulai streaming.
 })->streamWithHeaders([
 	'Content-Type' => 'application/json',
 	'Content-Disposition' => 'attachment; filename="users.json"',

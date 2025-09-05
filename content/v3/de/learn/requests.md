@@ -1,6 +1,6 @@
 # Anfragen
 
-Flight kapselt die HTTP-Anfrage in ein einzelnes Objekt, das aufgerufen werden kann durch:
+Flight kapselt die HTTP-Anfrage in ein einzelnes Objekt, das wie folgt zugänglich ist:
 
 ```php
 $request = Flight::request();
@@ -8,26 +8,26 @@ $request = Flight::request();
 
 ## Typische Anwendungsfälle
 
-Wenn Sie mit einer Anfrage in einer Webanwendung arbeiten, möchten Sie in der Regel einen Header, oder ein `$_GET` oder `$_POST` Parameter extrahieren, oder vielleicht sogar den rohen Anfrageinhalt. Flight bietet eine einfache Schnittstelle, um all diese Dinge zu tun.
+Wenn du in einer Web-Anwendung mit einer Anfrage arbeitest, möchtest du normalerweise einen Header abrufen, oder einen `$_GET`- oder `$_POST`-Parameter, oder vielleicht sogar den rohen Anfragekörper. Flight bietet eine einfache Schnittstelle, um all diese Dinge zu erledigen.
 
-Hier ist ein Beispiel, wie man einen Abfragezeichenfolgenparameter erhält:
+Hier ein Beispiel, um einen Query-String-Parameter zu erhalten:
 
 ```php
 Flight::route('/search', function(){
 	$keyword = Flight::request()->query['keyword'];
-	echo "Sie suchen nach: $keyword";
-	// Abfrage einer Datenbank oder etwas anderem mit dem $keyword
+	echo "You are searching for: $keyword";
+	// eine Datenbank abfragen oder etwas anderes mit dem $keyword tun
 });
 ```
 
-Hier ist ein Beispiel für ein Formular mit einer POST-Methode:
+Hier ein Beispiel für ein Formular mit einer POST-Methode:
 
 ```php
 Flight::route('POST /submit', function(){
 	$name = Flight::request()->data['name'];
 	$email = Flight::request()->data['email'];
-	echo "Sie haben eingereicht: $name, $email";
-	// in eine Datenbank oder etwas anderes mit $name und $email speichern
+	echo "You submitted: $name, $email";
+	// in einer Datenbank speichern oder etwas anderes mit dem $name und $email tun
 });
 ```
 
@@ -35,43 +35,44 @@ Flight::route('POST /submit', function(){
 
 Das Anfrageobjekt bietet die folgenden Eigenschaften:
 
-- **body** - Der rohe HTTP-Anfrageinhalt
-- **url** - Die angeforderte URL
+- **body** - Der rohe HTTP-Anfragekörper
+- **url** - Die angefragte URL
 - **base** - Das übergeordnete Unterverzeichnis der URL
-- **method** - Die Anfrage-Methode (GET, POST, PUT, DELETE)
-- **referrer** - Die verweisende URL
-- **ip** - IP-Adresse des Clients
-- **ajax** - Ob die Anfrage eine AJAX-Anfrage ist
-- **scheme** - Das Serverprotokoll (http, https)
-- **user_agent** - Browserinformationen
+- **method** - Die Anfragemethode (GET, POST, PUT, DELETE)
+- **referrer** - Die Referrer-URL
+- **ip** - Die IP-Adresse des Clients
+- **ajax** - Ob es sich um eine AJAX-Anfrage handelt
+- **scheme** - Das Server-Protokoll (http, https)
+- **user_agent** - Browser-Informationen
 - **type** - Der Inhaltstyp
 - **length** - Die Inhaltslänge
-- **query** - Abfragezeichenfolgeparameter
-- **data** - Postdaten oder JSON-Daten
+- **query** - Query-String-Parameter
+- **data** - Post-Daten oder JSON-Daten
 - **cookies** - Cookie-Daten
 - **files** - Hochgeladene Dateien
 - **secure** - Ob die Verbindung sicher ist
-- **accept** - HTTP-Annahmeparameter
+- **accept** - HTTP-Accept-Parameter
 - **proxy_ip** - Proxy-IP-Adresse des Clients. Durchsucht das `$_SERVER`-Array nach `HTTP_CLIENT_IP`, `HTTP_X_FORWARDED_FOR`, `HTTP_X_FORWARDED`, `HTTP_X_CLUSTER_CLIENT_IP`, `HTTP_FORWARDED_FOR`, `HTTP_FORWARDED` in dieser Reihenfolge.
-- **host** - Der Hostname der Anfrage
+- **host** - Der Anfrage-Hostname
+- **servername** - Der SERVER_NAME aus `$_SERVER`
 
-Sie können auf die Eigenschaften `query`, `data`, `cookies` und `files` als Arrays oder Objekte zugreifen.
+Du kannst die Eigenschaften `query`, `data`, `cookies` und `files` als Arrays oder Objekte verwenden.
 
-Um einen Abfragezeichenfolgenparameter zu erhalten, können Sie tun:
+Um also einen Query-String-Parameter zu erhalten, kannst du tun:
 
 ```php
 $id = Flight::request()->query['id'];
 ```
 
-Oder Sie können tun:
+Oder du kannst tun:
 
 ```php
 $id = Flight::request()->query->id;
 ```
 
-## RAW Anfrageinhalt
+## Roher Anfragekörper
 
-Um den rohen HTTP-Anfrageinhalt zu erhalten, beispielsweise bei PUT-Anfragen, können Sie tun:
+Um den rohen HTTP-Anfragekörper zu erhalten, zum Beispiel bei PUT-Anfragen, kannst du tun:
 
 ```php
 $body = Flight::request()->getBody();
@@ -79,7 +80,7 @@ $body = Flight::request()->getBody();
 
 ## JSON-Eingabe
 
-Wenn Sie eine Anfrage mit dem Typ `application/json` und den Daten `{"id": 123}` senden, ist es über die `data`-Eigenschaft verfügbar:
+Wenn du eine Anfrage mit dem Typ `application/json` und den Daten `{"id": 123}` sendest, ist sie über die `data`-Eigenschaft verfügbar:
 
 ```php
 $id = Flight::request()->data->id;
@@ -87,7 +88,7 @@ $id = Flight::request()->data->id;
 
 ## `$_GET`
 
-Sie können auf das `$_GET`-Array über die `query`-Eigenschaft zugreifen:
+Du kannst das `$_GET`-Array über die `query`-Eigenschaft zugreifen:
 
 ```php
 $id = Flight::request()->query['id'];
@@ -95,7 +96,7 @@ $id = Flight::request()->query['id'];
 
 ## `$_POST`
 
-Sie können auf das `$_POST`-Array über die `data`-Eigenschaft zugreifen:
+Du kannst das `$_POST`-Array über die `data`-Eigenschaft zugreifen:
 
 ```php
 $id = Flight::request()->data['id'];
@@ -103,7 +104,7 @@ $id = Flight::request()->data['id'];
 
 ## `$_COOKIE`
 
-Sie können auf das `$_COOKIE`-Array über die `cookies`-Eigenschaft zugreifen:
+Du kannst das `$_COOKIE`-Array über die `cookies`-Eigenschaft zugreifen:
 
 ```php
 $myCookieValue = Flight::request()->cookies['myCookieName'];
@@ -111,39 +112,38 @@ $myCookieValue = Flight::request()->cookies['myCookieName'];
 
 ## `$_SERVER`
 
-Es gibt eine Abkürzung, um auf das `$_SERVER`-Array über die `getVar()`-Methode zuzugreifen:
+Es gibt einen Shortcut, um auf das `$_SERVER`-Array über die `getVar()`-Methode zuzugreifen:
 
 ```php
-
-$host = Flight::request()->getVar['HTTP_HOST'];
+$host = Flight::request()->getVar('HTTP_HOST');
 ```
 
-## Hochgeladene Dateien über `$_FILES` zugreifen
+## Auf Hochgeladene Dateien über `$_FILES` zugreifen
 
-Sie können auf hochgeladene Dateien über die `files`-Eigenschaft zugreifen:
+Du kannst auf hochgeladene Dateien über die `files`-Eigenschaft zugreifen:
 
 ```php
 $uploadedFile = Flight::request()->files['myFile'];
 ```
 
-## Verarbeitung von Datei-Uploads
+## Verarbeitung von Dateiuploads (v3.12.0)
 
-Sie können Datei-Uploads mithilfe des Frameworks mit einigen Hilfsmethoden verarbeiten. Es reduziert sich im Grunde darauf, die Dateidaten aus der Anfrage zu extrahieren und sie an einen neuen Speicherort zu verschieben.
+Du kannst Dateiuploads mit dem Framework mit einigen Hilfsmethoden verarbeiten. Es kommt im Wesentlichen darauf an, die Dateidaten aus der Anfrage zu ziehen und sie an einen neuen Ort zu verschieben.
 
 ```php
 Flight::route('POST /upload', function(){
-	// Wenn Sie ein Eingabefeld wie <input type="file" name="myFile"> hatten
+	// Wenn du ein Eingabefeld wie <input type="file" name="myFile"> hattest
 	$uploadedFileData = Flight::request()->getUploadedFiles();
 	$uploadedFile = $uploadedFileData['myFile'];
 	$uploadedFile->moveTo('/path/to/uploads/' . $uploadedFile->getClientFilename());
 });
 ```
 
-Wenn Sie mehrere Dateien hochgeladen haben, können Sie sie durchlaufen:
+Wenn du mehrere Dateien hochgeladen hast, kannst du durch sie iterieren:
 
 ```php
 Flight::route('POST /upload', function(){
-	// Wenn Sie ein Eingabefeld wie <input type="file" name="myFiles[]"> hatten
+	// Wenn du ein Eingabefeld wie <input type="file" name="myFiles[]"> hattest
 	$uploadedFiles = Flight::request()->getUploadedFiles()['myFiles'];
 	foreach ($uploadedFiles as $uploadedFile) {
 		$uploadedFile->moveTo('/path/to/uploads/' . $uploadedFile->getClientFilename());
@@ -151,69 +151,69 @@ Flight::route('POST /upload', function(){
 });
 ```
 
-> **Sicherheitsnotiz:** Validieren und sanitieren Sie immer die Benutzereingaben, insbesondere bei Datei-Uploads. Überprüfen Sie immer die Art der Dateierweiterungen, die Sie zulassen möchten, aber Sie sollten auch die "magischen Bytes" der Datei validieren, um sicherzustellen, dass es sich tatsächlich um den Dateityp handelt, den der Benutzer angibt. Es gibt [Artikel](https://dev.to/yasuie/php-file-upload-check-uploaded-files-with-magic-bytes-54oe) [und](https://amazingalgorithms.com/snippets/php/detecting-the-mime-type-of-an-uploaded-file-using-magic-bytes/) [Bibliotheken](https://github.com/RikudouSage/MimeTypeDetector), die Ihnen dabei helfen können.
+> **Sicherheitshinweis:** Überprüfe und bereinige immer die Benutzereingaben, besonders bei Dateiuploads. Überprüfe immer die Dateiendungen, die du erlaubst, aber du solltest auch die „Magic Bytes“ der Datei überprüfen, um sicherzustellen, dass es sich tatsächlich um die Art von Datei handelt, die der Benutzer angibt. Es gibt [articles](https://dev.to/yasuie/php-file-upload-check-uploaded-files-with-magic-bytes-54oe) [and](https://amazingalgorithms.com/snippets/php/detecting-the-mime-type-of-an-uploaded-file-using-magic-bytes/) [libraries](https://github.com/RikudouSage/MimeTypeDetector), die dabei helfen.
 
 ## Anfrage-Header
 
-Sie können auf Anfrage-Header mithilfe der `getHeader()`- oder `getHeaders()`-Methode zugreifen:
+Du kannst Anfrage-Header mit der `getHeader()`- oder `getHeaders()`-Methode zugreifen:
 
 ```php
-
-// Vielleicht benötigen Sie den Authorization-Header
+// Vielleicht brauchst du den Authorization-Header
 $host = Flight::request()->getHeader('Authorization');
 // oder
 $host = Flight::request()->header('Authorization');
 
-// Wenn Sie alle Header abrufen müssen
+// Wenn du alle Header abrufen möchtest
 $headers = Flight::request()->getHeaders();
 // oder
 $headers = Flight::request()->headers();
 ```
 
-## Anfrageinhalt
+## Anfragekörper
 
-Sie können auf den rohen Anfrageinhalt über die `getBody()`-Methode zugreifen:
+Du kannst den rohen Anfragekörper mit der `getBody()`-Methode zugreifen:
 
 ```php
 $body = Flight::request()->getBody();
 ```
 
-## Anfrage-Methode
+## Anfragemethode
 
-Sie können auf die Anfrage-Methode über die `method`-Eigenschaft oder die `getMethod()`-Methode zugreifen:
+Du kannst die Anfragemethode mit der `method`-Eigenschaft oder der `getMethod()`-Methode zugreifen:
 
 ```php
 $method = Flight::request()->method; // ruft tatsächlich getMethod() auf
 $method = Flight::request()->getMethod();
 ```
 
-**Hinweis:** Die `getMethod()`-Methode ruft zuerst die Methode aus `$_SERVER['REQUEST_METHOD']` ab, dann kann sie durch `$_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE']` überschrieben werden, wenn sie vorhanden ist, oder durch `$_REQUEST['_method']`, wenn sie vorhanden ist.
+**Hinweis:** Die `getMethod()`-Methode holt zuerst die Methode aus `$_SERVER['REQUEST_METHOD']`, dann kann sie durch `$_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE']` überschrieben werden, falls vorhanden, oder durch `$_REQUEST['_method']`, falls vorhanden.
 
 ## Anfrage-URLs
 
-Es gibt eine Reihe von Hilfsmethoden, um Teile einer URL zu Ihrem Vorteil zusammenzufügen.
+Es gibt ein paar Hilfsmethoden, um Teile einer URL zusammenzusetzen, zu deiner Bequemlichkeit.
 
 ### Vollständige URL
 
-Sie können die vollständige Anforderungs-URL über die `getFullUrl()`-Methode abrufen:
+Du kannst die vollständige Anfrage-URL mit der `getFullUrl()`-Methode zugreifen:
 
 ```php
 $url = Flight::request()->getFullUrl();
 // https://example.com/some/path?foo=bar
 ```
+
 ### Basis-URL
 
-Sie können die Basis-URL über die `getBaseUrl()`-Methode abrufen:
+Du kannst die Basis-URL mit der `getBaseUrl()`-Methode zugreifen:
 
 ```php
 $url = Flight::request()->getBaseUrl();
-// Hinweis, kein abschließender Schrägstrich.
+// Beachte, kein abschließender Slash.
 // https://example.com
 ```
 
-## Abfrageanalyse
+## Query-Parsing
 
-Sie können eine URL an die `parseQuery()`-Methode übergeben, um die Abfragezeichenfolge in ein assoziatives Array zu analysieren:
+Du kannst eine URL an die `parseQuery()`-Methode übergeben, um den Query-String in ein assoziatives Array zu parsen:
 
 ```php
 $query = Flight::request()->parseQuery('https://example.com/some/path?foo=bar');

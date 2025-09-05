@@ -58,6 +58,7 @@ The request object provides the following properties:
 - **accept** - HTTP accept parameters
 - **proxy_ip** - Proxy IP address of the client. Scans the `$_SERVER` array for `HTTP_CLIENT_IP`, `HTTP_X_FORWARDED_FOR`, `HTTP_X_FORWARDED`, `HTTP_X_CLUSTER_CLIENT_IP`, `HTTP_FORWARDED_FOR`, `HTTP_FORWARDED` in that order.
 - **host** - The request host name
+- **servername** - The SERVER_NAME from `$_SERVER`
 
 You can access the `query`, `data`, `cookies`, and `files` properties
 as arrays or objects.
@@ -122,7 +123,7 @@ There is a shortcut available to access the `$_SERVER` array via the `getVar()` 
 
 ```php
 
-$host = Flight::request()->getVar['HTTP_HOST'];
+$host = Flight::request()->getVar('HTTP_HOST');
 ```
 
 ## Accessing Uploaded Files via `$_FILES`

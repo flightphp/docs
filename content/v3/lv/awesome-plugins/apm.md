@@ -1,14 +1,14 @@
 # FlightPHP APM Dokumentācija
 
-Laipni lūgts FlightPHP APM — jūsu aplikācijas personīgais veiktspējas treneris! Šis ceļvedis ir jūsu ceļš uz Application Performance Monitoring (APM) iestatīšanu, izmantošanu un apgūšanu ar FlightPHP. Vai jūs medījat lēnus pieprasījumus vai vienkārši vēlaties izklaidēties ar latentuma diagrammām, mēs esam parūpējušies. Padarīsim jūsu aplikāciju ātrāku, jūsu lietotājus priecīgākus un atkļūdošanas sesijas vieglākas!
+Laipni lūgti FlightPHP APM—jūsu aplikācijas personīgais veiktspējas treneris! Šis ceļvedis ir jūsu rokasgrāmata, lai iestatītu, izmantotu un apgūtu Application Performance Monitoring (APM) ar FlightPHP. Vai jūs meklējat lēnus pieprasumus vai vienkārši vēlaties izklaidēties ar latentuma diagrammām, mēs esam to pārklājuši. Padarīsim jūsu aplikāciju ātrāku, lietotājus laimīgākus un atkļūdošanas sesijas vieglākas!
 
 ![FlightPHP APM](/images/apm.png)
 
 ## Kāpēc APM ir svarīgs
 
-Iedomājieties: jūsu aplikācija ir aizņemts restorāns. Bez veida, kā izsekot, cik ilgi pasūtījumi prasa vai kur virtuvē ir aizkavēšanās, jūs minaties, kāpēc klienti aiziet neapmierināti. APM ir jūsu pavārs — tas vēro katru soli, no ienākošiem pieprasījumiem līdz datubāzes vaicājumiem, un atzīmē visu, kas palēnina. Lēnas lapas zaudē lietotājus (pētījumi rāda, ka 53% aiziet, ja vietne prasa vairāk par 3 sekundēm, lai ielādētos!), un APM palīdz noķert šīs problēmas *pirms* tās sāpin. Tas ir proaktīvs miers — mazāk “kāpēc tas ir salauzts?” momentu, vairāk “skatieties, cik tas darbojas gludi!” uzvaru.
+Iedomājieties: jūsu aplikācija ir aizņemts restorāns. Bez veida izsekot, cik ilgi ņem pasūtījumi vai kur virtuvē ir aizkavēšanās, jūs minat, kāpēc klienti aiziet neapmierināti. APM ir jūsu pavārs palīgs—tas vēro katru soli, no ienākošiem pieprasījumiem līdz datubāzes vaicājumiem, un atzīmē visu, kas palēnina jūs. Lēnas lapas zaudē lietotājus (pētījumi saka, ka 53% izlec, ja vietne ielādējas vairāk par 3 sekundēm!), un APM palīdz noķert šīs problēmas *pirms* tās sāp. Tas ir proaktīvs miers—mazāk “kāpēc tas ir salauzts?” momentu, vairāk “skatieties, cik gludi tas darbojas!” uzvaru.
 
-## Instalēšana
+## Instalācija
 
 Sāciet ar Composer:
 
@@ -17,48 +17,65 @@ composer require flightphp/apm
 ```
 
 Jums būs nepieciešams:
-- **PHP 7.4+**: Uztur saderību ar LTS Linux distribūcijām, vienlaikus atbalstot mūsdienīgu PHP.
+- **PHP 7.4+**: Saglabā saderību ar LTS Linux izdali, vienlaikus atbalstot mūsdienīgu PHP.
 - **[FlightPHP Core](https://github.com/flightphp/core) v3.15+**: Vieglais ietvars, ko mēs uzlabojam.
+
+## Atbalstītās datubāzes
+
+FlightPHP APM pašlaik atbalsta šādas datubāzes metrikas glabāšanai:
+
+- **SQLite3**: Vienkārša, failā balstīta, un lieliska lokālai izstrādei vai mazām aplikācijām. Noklusētā opcija lielākajā daļā iestatījumu.
+- **MySQL/MariaDB**: Ideāla lielākiem projektiem vai produkcijas vidēm, kur nepieciešama izturīga, mērogojama glabāšana.
+
+Jūs varat izvēlēties savu datubāzes tipu konfigurācijas solī (skatiet zemāk). Pārliecinieties, ka jūsu PHP vide ir instalējusi nepieciešamās paplašinājumus (piemēram, `pdo_sqlite` vai `pdo_mysql`).
 
 ## Sākšana
 
-Šeit ir jūsu soli-pa-solim ceļš uz APM lieliskumu:
+Šeit ir jūsu solis-pa-solim ceļš uz APM lieliskumu:
 
 ### 1. Reģistrējiet APM
 
 Ievietojiet to savā `index.php` vai `services.php` failā, lai sāktu izsekošanu:
 
 ```php
-use flight\apm\logger\LoggerFactory;
+use flight\apm\logger\LoggerFactory; // Importē konfigurācijas izveides rīku
 use flight\Apm;
 
-$ApmLogger = LoggerFactory::create(__DIR__ . '/../../.runway-config.json');
-$Apm = new Apm($ApmLogger);
-$Apm->bindEventsToFlightInstance($app);  // Kas notiek šeit?
-// - `LoggerFactory::create()` paņem jūsu konfigurāciju (vairāk par to drīz) un iestata žurnālu — pēc noklusējuma SQLite.
-// - `Apm` ir zvaigzne — tas klausās Flight notikumus (pieprasījumus, maršrutus, kļūdas utt.) un savāc metrikus.
-// - `bindEventsToFlightInstance($app)` saista visu ar jūsu Flight aplikāciju.
+$ApmLogger = LoggerFactory::create(__DIR__ . '/../../.runway-config.json'); // Izveido loggeri no konfigurācijas
+$Apm = new Apm($ApmLogger); // Izveido APM objektu
+$Apm->bindEventsToFlightInstance($app); // Saistiet ar Flight instanci
 
-**Profesionāls Padoms: Paraugu Ņemšana**
-Ja jūsu aplikācija ir aizņemta, žurnālošana *katram* pieprasījumam var pārkraut sistēmu. Izmantojiet paraugu ātrumu (no 0.0 līdz 1.0):
+// Ja pievienojat datubāzes savienojumu
+// Tas jābūt PdoWrapper vai PdoQueryCapture no Tracy Extensions
+$pdo = new PdoWrapper('mysql:host=localhost;dbname=example', 'user', 'pass', null, true); // <-- True nepieciešams, lai iespējotu izsekošanu APM.
+$Apm->addPdoConnection($pdo);
+```
+
+**Kas notiek šeit?**
+- `LoggerFactory::create()` paņem jūsu konfigurāciju (vairāk par to drīz) un iestata loggeri—pēc noklusējuma SQLite.
+- `Apm` ir zvaigzne—tas klausās Flight notikumus (pieprasījumi, maršruti, kļūdas utt.) un savāc metrikas.
+- `bindEventsToFlightInstance($app)` saista to visu ar jūsu Flight aplikāciju.
+
+**Profesionāls padoms: Paraugu ņemšana**
+Ja jūsu aplikācija ir aizņemta, žurnālošana *katram* pieprasījumam var pārslogot lietas. Izmantojiet paraugu ņemšanas līmeni (0.0 līdz 1.0):
 
 ```php
-$Apm = new Apm($ApmLogger, 0.1);  // Žurnālo 10% pieprasījumu
+$Apm = new Apm($ApmLogger, 0.1); // Žurnālo 10% pieprasījumu
 ```
 
 Tas uztur veiktspēju asu, vienlaikus sniedzot stabilus datus.
 
 ### 2. Konfigurējiet to
 
-Izpildiet šo, lai izveidotu `.runway-config.json`:
+Izpildiet to, lai izveidotu `.runway-config.json`:
 
 ```bash
 php vendor/bin/runway apm:init
 ```
 
 **Kas tas dara?**
-- Palaid maģiju, kas jautā, no kurienes nāk izejmateriālu metriki (avots) un kur dodas apstrādātie dati (galamērķis).
-- Noklusējums ir SQLite — piem., `sqlite:/tmp/apm_metrics.sqlite` avotam, cits galamērķim.
+- Palaid maģistru, kas jautā, no kurienes nāk izejmateriāla metrikas (avots) un kur iet apstrādātie dati (mērķis).
+- Noklusētā ir SQLite—piemēram, `sqlite:/tmp/apm_metrics.sqlite` avotam, cits mērķim.
 - Jūs saņemsiet konfigurāciju, piemēram:
   ```json
   {
@@ -73,10 +90,10 @@ php vendor/bin/runway apm:init
 
 > Šis process arī jautās, vai vēlaties palaist migrācijas šim iestatījumam. Ja jūs to iestatāt pirmo reizi, atbilde ir jā.
 
-**Kāpēc divas atrašanās vietas?**
-Neapstrādātās metrikas uzkrājas ātri (domājiet par nefiltrētiem žurnāliem). Darbinieks apstrādā tās strukturētā galamērķī paneļa darbībai. Tas uztur lietas kārtīgas!
+**Kāpēc divas vietas?**
+Neapstrādātās metrikas sakrājas ātri (domājiet nefiltrētus žurnālus). Darbinieks tās apstrādā strukturētā mērķī priekš paneļa. Tas uztur lietas kārtīgas!
 
-### 3. Apstrādājiet metrikas ar Darbinieku
+### 3. Apstrādājiet metrikas ar darbinieku
 
 Darbinieks pārvērš neapstrādātās metrikas par paneļa gataviem datiem. Izpildiet to vienreiz:
 
@@ -85,47 +102,47 @@ php vendor/bin/runway apm:worker
 ```
 
 **Kas tas dara?**
-- Lasīt no jūsu avota (piem., `apm_metrics.sqlite`).
-- Apstrādā līdz 100 metriku (noklusējuma partijas izmērs) jūsu galamērķī.
-- Apstājas, kad pabeigts vai ja nav metrikas atlikušas.
+- Lasīt no jūsu avota (piemēram, `apm_metrics.sqlite`).
+- Apstrādā līdz 100 metriku (noklusētā partijas lielums) jūsu mērķī.
+- Pārtrauc, kad pabeigts vai ja nav metrikas.
 
-**Uzturiet to Darbojošos**
-Reālām aplikācijām jūs vēlaties nepārtrauktu apstrādi. Šeit ir jūsu iespējas:
+**Uzturiet to darbināšanā**
+Produkcijas aplikācijām jūs gribēsiet nepārtrauktu apstrādi. Šeit ir jūsu opcijas:
 
-- **Dēmona Režīms**:
+- **Dēmona režīms**:
   ```bash
   php vendor/bin/runway apm:worker --daemon
   ```
-  Darbojas mūžīgi, apstrādājot metrikas, kad tās ienāk. Lieliski piemērots attīstībai vai maziem iestatījumiem.
+  Darbojas mūžīgi, apstrādājot metrikas, kad tās nāk. Lieliski attīstībai vai maziem iestatījumiem.
 
 - **Crontab**:
   Pievienojiet to savam crontab (`crontab -e`):
   ```bash
   * * * * * php /path/to/project/vendor/bin/runway apm:worker
   ```
-  Palaid katru minūti — perfekti piemērots produkcijai.
+  Palaid katru minūti—ideāli produkcijai.
 
 - **Tmux/Screen**:
   Sāciet atdalāmu sesiju:
   ```bash
   tmux new -s apm-worker
   php vendor/bin/runway apm:worker --daemon
-  # Ctrl+B, tad D, lai atdalītos; `tmux attach -t apm-worker`, lai atkal pievienotos
+  # Ctrl+B, tad D, lai atdalītos; `tmux attach -t apm-worker`, lai pievienotos atpakaļ
   ```
-  Uztur to darbojošos pat, ja jūs izlogojaties.
+  Uztur to darbināšanā pat, ja jūs izlogojaties.
 
-- **Pielāgotas Izmaiņas**:
+- **Pielāgotas izmaiņas**:
   ```bash
   php vendor/bin/runway apm:worker --batch_size 50 --max_messages 1000 --timeout 300
   ```
-  - `--batch_size 50`: Apstrādā 50 metrikas vienā reizē.
-  - `--max_messages 1000`: Apstāties pēc 1000 metriku.
+  - `--batch_size 50`: Apstrādāj 50 metrikas vienlaikus.
+  - `--max_messages 1000`: Pārtrauc pēc 1000 metriku.
   - `--timeout 300`: Iziet pēc 5 minūtēm.
 
-**Kāpēc tas ir nepieciešams?**
+**Kāpēc to darīt?**
 Bez darbinieka jūsu panelis ir tukšs. Tas ir tilts starp neapstrādātiem žurnāliem un izmantojamiem ieskatiem.
 
-### 4. Palaidiet Paneli
+### 4. Palaidiet paneli
 
 Skatiet jūsu aplikācijas vitālos rādītājus:
 
@@ -145,170 +162,184 @@ php vendor/bin/runway apm:dashboard --host 0.0.0.0 --port 8080 --php-path=/usr/l
 - `--port 8080`: Izmanto citu portu, ja 8001 ir aizņemts.
 - `--php-path`: Norāda uz PHP, ja tas nav jūsu PATH.
 
-Iet uz URL pārlūkā un izpētiet!
+Atveriet URL pārlūkā un izpētiet!
 
-#### Produkcijas Režīms
+#### Produkcijas režīms
 
-Produkcijā jums var nākties izmēģināt dažas tehnikas, lai paneli palaistu, jo iespējams ir ugunsmūri un citas drošības mēra. Šeit ir dažas iespējas:
+Produkcijā jums var nākties izmēģināt dažas tehnikas, lai paneli palaistu, jo, iespējams, ir ugunsmūri un citas drošības mērvienības. Šeit ir dažas opcijas:
 
-- **Izmantojiet Reverso Proxy**: Iestatiet Nginx vai Apache, lai pārsūtītu pieprasījumus uz paneli.
-- **SSH Tunelis**: Ja jūs varat SSH uz serveri, izmantojiet `ssh -L 8080:localhost:8001 youruser@yourserver`, lai tunelētu paneli uz savu lokālo mašīnu.
+- **Izmantojiet apgriezto starpniekserveri**: Iestatiet Nginx vai Apache, lai pārsūtītu pieprasījumus uz paneli.
+- **SSH Tunelis**: Ja jūs varat SSH uz serveri, izmantojiet `ssh -L 8080:localhost:8001 youruser@yourserver`, lai tunelētu paneli uz jūsu lokālo mašīnu.
 - **VPN**: Ja jūsu serveris ir aiz VPN, pievienojieties tam un piekļūstiet panelim tieši.
-- **Konfigurējiet Ugunsmūri**: Atveriet portu 8001 jūsu IP vai servera tīkla. (vai jebkuru portu, ko esat iestatījis).
-- **Konfigurējiet Apache/Nginx**: Ja jums ir tīmekļa serveris priekš aplikācijas, jūs varat konfigurēt to uz domēna vai apakšdomēna. Ja jūs to darāt, jūs iestatīsiet dokumenta sakni uz `/path/to/your/project/vendor/flightphp/apm/dashboard`.
+- **Konfigurējiet Ugunsmūri**: Atveriet portu 8001 jūsu IP vai servera tīklam. (vai kādu portu, ko esat iestatījis).
+- **Konfigurējiet Apache/Nginx**: Ja jums ir tīmekļa serveris priekš aplikācijas, jūs varat konfigurēt to uz domēna vai apakšdomēna. Ja jūs to darāt, jūs iestatīsiet dokumenta sakni uz `/path/to/your/project/vendor/flightphp/apm/dashboard`
 
 #### Vēlaties citu paneli?
 
-Jūs varat izveidot savu paneli, ja vēlaties! Skatiet vendor/flightphp/apm/src/apm/presenter direktoriju idejām, kā prezentēt datus jūsu panelim!
+Jūs varat izveidot savu paneli, ja vēlaties! Skatiet `vendor/flightphp/apm/src/apm/presenter` direktoriju idejām, kā prezentēt datus jūsu panelim!
 
-## Paneļa Funkcijas
+## Paneļa funkcijas
 
-Panelis ir jūsu APM galvenā mītne — šeit ir, ko jūs redzēsiet:
+Panelis ir jūsu APM štābs—šeit ir, ko jūs redzēsiet:
 
-- **Pieprasījumu Žurnāls**: Katrs pieprasījums ar laika zīmogu, URL, atbildes kodu un kopējo laiku. Klikšķiniet “Detaļas” uz vidēm, vaicājumiem un kļūdām.
-- **Lēnākie Pieprasījumi**: Top 5 pieprasījumi, kas patērē laiku (piem., “/api/heavy” uz 2.5s).
-- **Lēnākie Maršruti**: Top 5 maršruti pēc vidējā laika — lieliski, lai pamanītu modeļus.
-- **Kļūdu Līmenis**: Procentuāli neveiksmīgi pieprasījumi (piem., 2.3% 500s).
-- **Latentuma Percentili**: 95. (p95) un 99. (p99) atbildes laiki — ziniet savus sliktākos scenārijus.
-- **Atbildes Kodu Diagramma**: Vizualizējiet 200s, 404s, 500s laika gaitā.
-- **Ilgi Vaicājumi/Vidēm**: Top 5 lēni datubāzes zvani un vidēm slāņi.
-- **Keša Sit/Miss**: Cik bieži jūsu kešs glābj dienu.
+- **Pieprasījumu žurnāls**: Katrs pieprasījums ar laika zīmogu, URL, atbildes kodu un kopējo laiku. Nospiediet “Detaļas”, lai redzētu vidutēji, vaicājumus un kļūdas.
+- **Lēnākie pieprasījumi**: Top 5 pieprasījumi, kas tērē laiku (piemēram, “/api/heavy” ar 2.5s).
+- **Lēnākie maršruti**: Top 5 maršruti pēc vidējā laika—lieliski, lai pamanītu modeļus.
+- **Kļūdu līmenis**: Procentuāli no neveiksmīgiem pieprasījumiem (piemēram, 2.3% 500s).
+- **Latentuma procentiļi**: 95. (p95) un 99. (p99) atbildes laiki—ziniet jūsu sliktākos scenārijus.
+- **Atbildes kodu diagramma**: Visualizēj 200s, 404s, 500s laika gaitā.
+- **Ilgi vaicājumi/Vidutēji**: Top 5 lēni datubāzes zvani un vidutēji slāņi.
+- **Kešs Hit/Miss**: Cik bieži jūsu kešs glābj dienu.
 
 **Papildu**:
-- Filtrējiet pēc “Pēdējā Stundas,” “Pēdējās Dienas” vai “Pēdējās Nedēļas.”
-- Pārslēdziet tumšo režīmu uz vēlo nakšu sesijām.
+- Filtrēj pēc “Pēdējā stunda,” “Pēdējā diena,” vai “Pēdējā nedēļa.”
+- Pārslēdz tumšo režīmu priekš vēlu nakts sesijām.
 
 **Piemērs**:
 Pieprasījums uz `/users` var parādīt:
-- Kopējais Laiks: 150ms
-- Vidēm: `AuthMiddleware->handle` (50ms)
+- Kopējais laiks: 150ms
+- Vidutēji: `AuthMiddleware->handle` (50ms)
 - Vaicājums: `SELECT * FROM users` (80ms)
-- Kešs: Sit on `user_list` (5ms)
+- Kešs: Hit uz `user_list` (5ms)
 
-## Pievienošana Pielāgotu Notikumu
+## Pievienošana pielāgotu notikumu
 
-Izsekot jebko — piemēram, API zvanu vai maksājumu procesu:
+Izsekot jebko—piemēram, API zvanu vai maksājuma procesu:
 
 ```php
-use flight\apm\CustomEvent;
+use flight\apm\CustomEvent; // Importē pielāgotu notikumu klasi
 
 $app->eventDispatcher()->trigger('apm.custom', new CustomEvent('api_call', [
     'endpoint' => 'https://api.example.com/users',
     'response_time' => 0.25,
     'status' => 200
-]));  // Kur tas parādās?
-// In paneļa pieprasījuma detaļās zem “Custom Events” — paplašināms ar glīti JSON formatējumu.
+]));
+```
 
-**Lietošanas Piemērs**:
+**Kur tas parādās?**
+Paneļa pieprasījumu detaļās zem “Pielāgotu notikumu”—paplašināms ar skaistu JSON formatēšanu.
+
+**Lietošanas gadījums**:
 ```php
-$start = microtime(true);
+$start = microtime(true); // Sāk laika mērīšanu
 $apiResponse = file_get_contents('https://api.example.com/data');
 $app->eventDispatcher()->trigger('apm.custom', new CustomEvent('external_api', [
     'url' => 'https://api.example.com/data',
-    'time' => microtime(true) - $start,
-    'success' => $apiResponse !== false
-]));  // Tagad jūs redzēsiet, vai tas API vilcin jūsu aplikāciju!
+    'time' => microtime(true) - $start, // Izrēķina laiku
+    'success' => $apiResponse !== false // Pārbauda, vai veiksmīgs
+]));
 ```
+Tagad jūs redzēsiet, ja šis API velk jūsu aplikāciju lejā!
 
-## Datubāzes Monitorings
+## Datubāzes uzraudzība
 
 Izsekot PDO vaicājumus šādi:
 
 ```php
-use flight\database\PdoWrapper;
+use flight\database\PdoWrapper; // Importē PDO iesvētītāju
 
-$pdo = new PdoWrapper('sqlite:/path/to/db.sqlite');
-$Apm->addPdoConnection($pdo);  // Ko jūs saņemat?
-// - Vaicājuma tekstu (piem., `SELECT * FROM users WHERE id = ?`)
-// - Izpildes laiku (piem., 0.015s)
-// - Rindu skaitu (piem., 42)
+$pdo = new PdoWrapper('sqlite:/path/to/db.sqlite', null, null, null, true); // <-- True nepieciešams, lai iespējotu izsekošanu APM.
+$Apm->addPdoConnection($pdo);
+```
+
+**Ko jūs saņemat**:
+- Vaicājuma tekstu (piemēram, `SELECT * FROM users WHERE id = ?`)
+- Izpildes laiku (piemēram, 0.015s)
+- Rindu skaitu (piemēram, 42)
 
 **Brīdinājums**:
-// - **Neobligāti**: Izlaidiet to, ja jums nav vajadzīgs DB izsekošana.
-// - **PdoWrapper Only**: Kodola PDO vēl nav pieķerts — gaidiet!
-// - **Veiktspējas Brīdinājums**: Žurnālošana katram vaicājumam DB-smagā vietnē var palēnināt lietas. Izmantojiet paraugu ņemšanu (`$Apm = new Apm($ApmLogger, 0.1)`), lai samazinātu slodzi.
+- **Neobligāti**: Izlaidiet to, ja jums nav nepieciešama DB izsekošana.
+- **Tikai PdoWrapper**: Kodola PDO vēl nav pieslēgts—gaidiet!
+- **Veiktspējas brīdinājums**: Žurnālošana katra vaicājuma DB-smagā vietnē var palēnināt lietas. Izmantojiet paraugu ņemšanu (`$Apm = new Apm($ApmLogger, 0.1)`), lai samazinātu slodzi.
 
-**Piemērs Izvade**:
+**Piemērs izvade**:
 - Vaicājums: `SELECT name FROM products WHERE price > 100`
 - Laiks: 0.023s
 - Rindas: 15
 
-## Darbinieka Iespējas
+## Darbinieka opcijas
 
-Pielāgojiet darbinieku pēc vēlēšanās:
+Pielāgojiet darbinieku pēc savas gaumes:
 
-- `--timeout 300`: Apstājas pēc 5 minūtēm — labs testēšanai.
-- `--max_messages 500`: Ierobežo līdz 500 metriku — uztur to galīgu.
-- `--batch_size 200`: Apstrādā 200 vienā reizē — līdzsvaro ātrumu un atmiņu.
-- `--daemon`: Darbojas nepārtraukti — ideāli piemērots tiešraides monitorēšanai.
+- `--timeout 300`: Pārtrauc pēc 5 minūtēm—labi testēšanai.
+- `--max_messages 500`: Ierobežo pie 500 metriku—padara to galīgu.
+- `--batch_size 200`: Apstrādā 200 vienlaikus—balansē ātrumu un atmiņu.
+- `--daemon`: Darbojas nepārtraukti—ideāli dzīvei uzraudzībai.
 
 **Piemērs**:
 ```bash
 php vendor/bin/runway apm:worker --daemon --batch_size 100 --timeout 3600
 ```
-Darbojas stundu, apstrādājot 100 metrikas vienā reizē.
+Darbojas stundu, apstrādājot 100 metrikas vienlaikus.
 
-## Pieprasījuma ID Aplikācijā
+## Pieprasījuma ID aplikācijā
 
 Katram pieprasījumam ir unikāls pieprasījuma ID izsekošanai. Jūs varat izmantot šo ID savā aplikācijā, lai saistītu žurnālus un metrikas. Piemēram, jūs varat pievienot pieprasījuma ID kļūdas lapai:
 
 ```php
 Flight::map('error', function($message) {
-	// Saņemiet pieprasījuma ID no atbildes galvenes X-Flight-Request-Id
+	// Iegūstiet pieprasījuma ID no atbildes galvenes X-Flight-Request-Id
 	$requestId = Flight::response()->getHeader('X-Flight-Request-Id');
 
-	// Turklāt jūs varētu to saņemt no Flight mainīgā
-	// Šī metode nedarbosies labi Swoole vai citās asinhronās platformās.
+	// Turklāt jūs varētu to iegūt no Flight mainīgā
+	// Šī metode nedarbosies labi swoole vai citās async platformās.
 	// $requestId = Flight::get('apm.request_id');
 	
-	echo "Kļūda: $message (Pieprasījuma ID: $requestId)";
+	echo "Error: $message (Request ID: $requestId)"; // Izdrukā kļūdu ar ID
 });
 ```
 
 ## Atjaunināšana
 
-Ja jūs atjauninat uz jaunāku APM versiju, iespējams, ka ir datubāzes migrācijas, kas jāpalaid. Jūs varat to izdarīt, izpildot šo komandu:
+Ja jūs atjauninat uz jaunāku APM versiju, var būt, ka ir datubāzes migrācijas, kas jāpalaiž. Jūs varat to izdarīt, izpildot šo komandu:
 
 ```bash
 php vendor/bin/runway apm:migrate
 ```
-Šis palaids visas nepieciešamās migrācijas, lai atjauninātu datubāzes shēmu uz jaunāko versiju.
+Šī palaist visas nepieciešamās migrācijas, lai atjauninātu datubāzes shēmu uz jaunāko versiju.
 
-**Piezīme:** Ja jūsu APM datubāze ir liela, šīs migrācijas var prasīt laiku. Jūs varētu vēlēties palaist šo komandu ārpus maksimālās slodzes stundām.
+**Piezīme:** Ja jūsu APM datubāze ir liela izmērā, šīs migrācijas var prasīt laiku. Jūs varētu vēlēties palaist šo komandu ārpus maksimālās slodzes laikiem.
 
-## Tīrīšana Veco Datu
+## Veco datu iztīrīšana
 
-Lai uzturētu datubāzi kārtīgu, jūs varat tīrīt vecos datus. Tas ir īpaši noderīgi, ja jūs vadāt aizņemtu aplikāciju un vēlaties uzturēt datubāzes izmēru pārvaldāmu.
+Lai uzturētu datubāzi kārtīgu, jūs varat iztīrīt vecos datus. Tas ir īpaši noderīgi, ja jūs darbojat aizņemtu aplikāciju un vēlaties uzturēt datubāzes izmēru pārvaldāmu.
 Jūs varat to izdarīt, izpildot šo komandu:
 
 ```bash
 php vendor/bin/runway apm:purge
 ```
-Šis izdzēsīs visus datus, kas vecāki par 30 dienām no datubāzes. Jūs varat pielāgot dienu skaitu, pievienojot citu vērtību `--days` opcijai:
+Šī noņems visus datus vecākus par 30 dienām no datubāzes. Jūs varat pielāgot dienu skaitu, nododot citu vērtību `--days` opcijai:
 
 ```bash
 php vendor/bin/runway apm:purge --days 7
 ```
-Šis izdzēsīs visus datus, kas vecāki par 7 dienām no datubāzes.
+Šī noņems visus datus vecākus par 7 dienām no datubāzes.
 
-## Problēmu Novēršana
+## Problēmu novēršana
 
 Iestrēdzis? Mēģiniet šos:
 
-- **Nav Paneļa Datu?**
+- **Nav datu panelī?**
   - Vai darbinieks darbojas? Pārbaudiet `ps aux | grep apm:worker`.
-  - Konfigurācijas ceļi atbilst? Pārbaudiet `.runway-config.json` DSN norādes uz reāliem failiem.
-  - Izpildiet `php vendor/bin/runway apm:worker` manuāli, lai apstrādātu gaidošās metrikas.
+  - Konfigurācijas ceļi atbilst? Pārbaudiet `.runway-config.json` DSN, kas norāda uz reāliem failiem.
+  - Izpildiet `php vendor/bin/runway apm:worker` manuāli, lai apstrādātu gaidāmās metrikas.
 
-- **Darbinieka Kļūdas?**
-  - Ielūkojieties jūsu SQLite failos (piem., `sqlite3 /tmp/apm_metrics.sqlite "SELECT * FROM apm_metrics_log LIMIT 5"`).
-  - Pārbaudiet PHP žurnālus uz steka trasēm.
+- **Darbinieka kļūdas?**
+  - Apskatiet jūsu SQLite failus (piemēram, `sqlite3 /tmp/apm_metrics.sqlite "SELECT * FROM apm_metrics_log LIMIT 5"`).
+  - Pārbaudiet PHP žurnālus uz steka izsekojumiem.
 
-- **Panelis Neuzsākas?**
+- **Panelis nekurasies?**
   - Ports 8001 ir aizņemts? Izmantojiet `--port 8080`.
   - PHP nav atrasts? Izmantojiet `--php-path /usr/bin/php`.
   - Ugunsmūris bloķē? Atveriet portu vai izmantojiet `--host localhost`.
 
-- **Pārāk Lēns?**
-  - Samaziniet paraugu ātrumu: `$Apm = new Apm($ApmLogger, 0.05)` (5%).
-  - Samaziniet partijas izmēru: `--batch_size 20`.
+- **Pārāk lēns?**
+  - Samaziniet paraugu līmeni: `$Apm = new Apm($ApmLogger, 0.05)` (5%).
+  - Samaziniet partijas lielumu: `--batch_size 20`.
+
+- **Netiek izsekotas izņēmumi/kļūdas?**
+  - Ja jums ir [Tracy](https://tracy.nette.org/) iespējots jūsu projektā, tas pārrakstīs Flight kļūdu apstrādi. Jums būs jādeaktivizē Tracy un jāpārliecinās, ka `Flight::set('flight.handle_errors', true);` ir iestatīts.
+
+- **Netiek izsekoti datubāzes vaicājumi?**
+  - Pārliecinieties, ka jūs izmantojat `PdoWrapper` priekš datubāzes savienojumiem.
+  - Pārliecinieties, ka pēdējais arguments konstruktorā ir `true`.
