@@ -28,12 +28,8 @@
         }
     },
     "scripts": {
-        "pre-install-cmd": [
-            "composer check-platform-reqs"
-        ],
-        "pre-update-cmd": [
-            "composer check-platform-reqs"
-        ],
+        "pre-install-cmd": ["composer check-platform-reqs"],
+        "pre-update-cmd": ["composer check-platform-reqs"],
         "start": "[ -x \"$(command -v php8.2)\" ] && php8.2 -S localhost:8000 -t public || php -S localhost:8000 -t public",
         "rector": "rector"
     },
