@@ -138,7 +138,7 @@ Flight::route('/user/[0-9]+', function () {
 Although this method is available, it is recommended to use named parameters, or 
 named parameters with regular expressions, as they are more readable and easier to maintain.
 
-### Named Parameters and Regex
+### Named Parameters
 You can specify named parameters in your routes which will be passed along to
 your callback function. **This is more for readability of the route than anything
 else. Please see the section below on important caveat.**
