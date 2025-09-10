@@ -18,7 +18,7 @@ return [
     'click_here' => 'ここをクリック',
     'need_to_view_single_page' => '単一ページで表示する必要がありますか？',
     'media' => 'メディア',
-	'version' => 'バージョン',
-	'guides' => 'ガイド',
-	'flight_for_ai' => 'Flight は AI による開発者体験に最適化されています。<a href="/learn/ai">詳細はこちら</a>.'
+    'version' => 'バージョン',
+    'guides' => 'ガイド',
+    'flight_for_ai' => 'Flight は AI による開発者体験に最適化されています。<a href="/learn/ai">詳細はこちら</a>.'
 ];

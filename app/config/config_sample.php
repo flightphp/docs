@@ -55,12 +55,12 @@ if (Debugger::$showBar) {
     new TracyExtensionLoader($app);
 }
 
-/* 
+/*
  * This is where you will store database credentials, api credentials
  * and other sensitive information. This file will not be tracked by git
  * as you shouldn't be pushing sensitive information to a public or private
  * repository.
- * 
+ *
  * What you store here is totally up to you.
  */
 

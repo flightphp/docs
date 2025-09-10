@@ -1,6 +1,6 @@
 <?php
 
-namespace app\utils; 
+namespace app\utils;
 
 use flight\adapter\SwooleAsyncRequest;
 use flight\adapter\SwooleAsyncResponse;
@@ -10,8 +10,8 @@ use Swoole\HTTP\Server as SwooleServer;
 use Swoole\HTTP\Request as SwooleRequest;
 use Swoole\HTTP\Response as SwooleResponse;
 
-class SwooleServerDriver {
-
+class SwooleServerDriver
+{
     //use ConnectionPoolTrait;
 
     /** @var SwooleServer */
@@ -20,7 +20,8 @@ class SwooleServerDriver {
     /** @var Engine */
     protected $app;
 
-    public function __construct(string $host, int $port, Engine $app) {
+    public function __construct(string $host, int $port, Engine $app)
+    {
         $this->Swoole = new SwooleServer($host, $port);
         $this->app = $app;
 
@@ -29,7 +30,8 @@ class SwooleServerDriver {
         $this->bindHttpEvent();
     }
 
-    protected function setDefault() {
+    protected function setDefault()
+    {
         // A bunch of default settings for the Swoole server.
         // You can customize these settings based on your needs.
         $this->Swoole->set([
@@ -49,20 +51,21 @@ class SwooleServerDriver {
             'worker_num'            => 4, // Each worker holds a connection pool
         ]);
 
-		// Custom little hack
-		// Makes it so the app doesn't stop when it runs.
-		$app = $this->app;
-		$app->map('stop', function (?int $code = null) use ($app) {
-			if ($code !== null) {
-				$app->response()->status($code);
-			}
-		});
+        // Custom little hack
+        // Makes it so the app doesn't stop when it runs.
+        $app = $this->app;
+        $app->map('stop', function (?int $code = null) use ($app) {
+            if ($code !== null) {
+                $app->response()->status($code);
+            }
+        });
     }
 
-    protected function bindHttpEvent() {
+    protected function bindHttpEvent()
+    {
         $app = $this->app;
         $AsyncBridge = new AsyncBridge($app);
-        $this->Swoole->on("Start", function(SwooleServer $server) {
+        $this->Swoole->on("Start", function (SwooleServer $server) {
             echo "Swoole http server is started at http://127.0.0.1:9501\n";
         });
 
@@ -77,13 +80,14 @@ class SwooleServerDriver {
         });
     }
 
-    protected function bindWorkerEvents() {
+    protected function bindWorkerEvents()
+    {
         // You can use this to set custom events for the workers, such as creating connection pools.
-        $createPools = function() {
+        $createPools = function () {
             // Create connection pools for each worker
             // This is useful for managing database connections or other resources that need to be shared across requests.
         };
-        $closePools = function() {
+        $closePools = function () {
             // Close connection pools for each worker
             // This is useful for cleaning up resources when the worker stops or encounters an error.
         };
@@ -92,7 +96,8 @@ class SwooleServerDriver {
         $this->Swoole->on('WorkerError', $closePools);
     }
 
-    public function start() {
+    public function start()
+    {
         $this->Swoole->start();
     }
 }

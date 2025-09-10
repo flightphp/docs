@@ -6,19 +6,24 @@ namespace app\utils;
 
 use Flight;
 
-class Translator {
-    public function __construct(protected string $language = 'en', protected string $version = 'v3') {
+class Translator
+{
+    public function __construct(protected string $language = 'en', protected string $version = 'v3')
+    {
     }
 
-	public function setLanguage(string $language): void {
-		$this->language = $language;
-	}
+    public function setLanguage(string $language): void
+    {
+        $this->language = $language;
+    }
 
-	public function setVersion(string $version): void {
-		$this->version = $version;
-	}
+    public function setVersion(string $version): void
+    {
+        $this->version = $version;
+    }
 
-    public function translate(string $translationKey) {
+    public function translate(string $translationKey)
+    {
         $translationContent = $this->getTranslationFileContents();
         $language = $this->language;
 
@@ -30,7 +35,8 @@ class Translator {
         return $translationContent[$language][$translationKey];
     }
 
-    protected function getTranslationFileContents(): array {
+    protected function getTranslationFileContents(): array
+    {
         $translationFilePath = __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'translations' . DIRECTORY_SEPARATOR;
         $translationFile = $translationFilePath . $this->language . '.php';
         $translationContent = [];
@@ -44,7 +50,8 @@ class Translator {
         return $translationContent;
     }
 
-    public static function getLanguageFromRequest(): string {
+    public static function getLanguageFromRequest(): string
+    {
         $current_language = Flight::get('current_script_language');
 
         if ($current_language !== null) {
@@ -83,9 +90,10 @@ class Translator {
         return $languageAbbreviation;
     }
 
-    public function getMarkdownLanguageFile(string $file): string {
+    public function getMarkdownLanguageFile(string $file): string
+    {
         $language = $this->language;
-		$ds = DIRECTORY_SEPARATOR;
+        $ds = DIRECTORY_SEPARATOR;
         $markdownFilePath = __DIR__ . $ds . '..' . $ds . '..' . $ds . 'content' . $ds . $this->version . $ds;
         $markdownFile = $markdownFilePath . $language . $ds . $file;
 

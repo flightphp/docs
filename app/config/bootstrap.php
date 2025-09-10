@@ -55,7 +55,7 @@ require_once __DIR__ . $ds . 'routes.php';
  * Need caching? You can setup a Redis service
  * Need to send email? You can setup a mailgun/sendgrid/whatever service to send emails.
  * Need to send SMS? You can setup a Twilio service.
- * 
+ *
  * All the services and how they are configured are setup in the services file.
  * In many cases, services are all attached to something called a "services container"
  * or more simply, a "container". The container manages if you should share the same
@@ -69,9 +69,9 @@ require_once __DIR__ . $ds . 'services.php';
 // "start" processing everything. This is where the magic happens.
 
 // This is where swoole will start listening for requests and processing them.
-if(!defined("NOT_SWOOLE")) {
+if (!defined("NOT_SWOOLE")) {
     // Require the SwooleServerDriver class since we're running in Swoole mode.
-    require_once(__DIR__.'/../utils/SwooleServerDriver.php');
+    require_once(__DIR__ . '/../utils/SwooleServerDriver.php');
 
     Swoole\Runtime::enableCoroutine();
     $Swoole_Server = new app\utils\SwooleServerDriver('127.0.0.1', 9501, $app);
@@ -81,7 +81,7 @@ if(!defined("NOT_SWOOLE")) {
 }
 /*
  .----..---.  .--.  .----.  .---.     .---. .-. .-.  .--.  .---.    .----. .-. .-..----. .----..-.  .-.
-{ {__ {_   _}/ {} \ | {}  }{_   _}   {_   _}| {_} | / {} \{_   _}   | {}  }| { } || {}  }| {}  }\ \/ / 
-.-._} } | | /  /\  \| .-. \  | |       | |  | { } |/  /\  \ | |     | .--' | {_} || .--' | .--'  }  {  
-`----'  `-' `-'  `-'`-' `-'  `-'       `-'  `-' `-'`-'  `-' `-'     `-'    `-----'`-'    `-'     `--'  
+{ {__ {_   _}/ {} \ | {}  }{_   _}   {_   _}| {_} | / {} \{_   _}   | {}  }| { } || {}  }| {}  }\ \/ /
+.-._} } | | /  /\  \| .-. \  | |       | |  | { } |/  /\  \ | |     | .--' | {_} || .--' | .--'  }  {
+`----'  `-' `-'  `-'`-' `-'  `-'       `-'  `-' `-'`-'  `-' `-'     `-'    `-----'`-'    `-'     `--'
 */

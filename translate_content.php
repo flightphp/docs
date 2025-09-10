@@ -6,9 +6,9 @@
 $chatgpt_key = getenv('CHATGPT_KEY');
 
 $filenames_to_skip = [
-	// 'awesome_plugins.md',
-	// 'session.md',
-	// 'middleware.md',
+    // 'awesome_plugins.md',
+    // 'session.md',
+    // 'middleware.md',
 ];
 
 if (empty($chatgpt_key)) {
@@ -36,7 +36,7 @@ $fromDate = $opts['from-date'] ?? 0;
 
 // in case i'm an idiot and do date-from instead....
 if (isset($opts['date-from'])) {
-	$fromDate = $opts['date-from'];
+    $fromDate = $opts['date-from'];
 }
 
 if ($fromDate) {
@@ -57,10 +57,10 @@ foreach ($files as $file) {
         continue;
     }
 
-	if(in_array(basename($file), $filenames_to_skip)) {
-		echo "  **Skipping file because it's in the skip list**" . PHP_EOL;
-		continue;
-	}
+    if (in_array(basename($file), $filenames_to_skip)) {
+        echo "  **Skipping file because it's in the skip list**" . PHP_EOL;
+        continue;
+    }
 
     foreach ($languages as $languageAbbreviation) {
         $full_response = '';
@@ -95,12 +95,12 @@ foreach ($files as $file) {
 
             $response = json_decode($response, true);
 
-			$content = $response['choices'][0]['message']['content'] ?? '';
+            $content = $response['choices'][0]['message']['content'] ?? '';
 
-			if (empty($content)) {
-				echo "  **Skipping file because it received an empty response**" . PHP_EOL;
-				break;
-			}
+            if (empty($content)) {
+                echo "  **Skipping file because it received an empty response**" . PHP_EOL;
+                break;
+            }
 
             $full_response .= $content;
 
@@ -118,11 +118,11 @@ foreach ($files as $file) {
             mkdir($directory, 0775, true);
         }
 
-		if(!$full_response) {
-			echo "  **Skipping file because it's received an empty response**" . PHP_EOL;
-			continue;
-		}
-		
+        if (!$full_response) {
+            echo "  **Skipping file because it's received an empty response**" . PHP_EOL;
+            continue;
+        }
+
         file_put_contents($translatedFilePath, $full_response);
         echo "  Updated: " . $translatedFilePath . PHP_EOL;
     }

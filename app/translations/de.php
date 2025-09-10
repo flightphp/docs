@@ -18,7 +18,7 @@ return [
     'click_here' => 'Klicke hier',
     'need_to_view_single_page' => 'Möchten Sie die Dokumentation auf einer einzigen Seite anzeigen?',
     'media' => 'Medien',
-	'version' => 'Version',
-	'guides' => 'Anleitungen',
-	'flight_for_ai' => 'Flight ist für ein KI-gestütztes Entwicklererlebnis optimiert. <a href="/learn/ai">Mehr erfahren</a>.'
+    'version' => 'Version',
+    'guides' => 'Anleitungen',
+    'flight_for_ai' => 'Flight ist für ein KI-gestütztes Entwicklererlebnis optimiert. <a href="/learn/ai">Mehr erfahren</a>.'
 ];

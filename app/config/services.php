@@ -9,8 +9,8 @@ use Latte\Essential\TranslatorExtension;
 use Latte\Loaders\FileLoader;
 use flight\Cache;
 
-/** 
- * @var array $config 
+/**
+ * @var array $config
  * @var CustomEngine $app
  */
 

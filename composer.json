@@ -31,12 +31,14 @@
         "pre-install-cmd": ["composer check-platform-reqs"],
         "pre-update-cmd": ["composer check-platform-reqs"],
         "start": "[ -x \"$(command -v php8.2)\" ] && php8.2 -S localhost:8000 -t public || php -S localhost:8000 -t public",
-        "rector": "rector"
+        "format": ["rector", "phpcbf"],
+        "lint": ["phpstan --memory-limit=256M", "phpcs"]
     },
     "require-dev": {
         "flightphp/tracy-extensions": "^0.2.7",
         "phpstan/extension-installer": "^1.4",
         "phpstan/phpstan": "^2.1",
-        "rector/rector": "^2.1"
+        "rector/rector": "^2.1",
+        "squizlabs/php_codesniffer": "^3.13"
     }
 }

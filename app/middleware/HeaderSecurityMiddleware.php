@@ -6,10 +6,12 @@ namespace app\middleware;
 
 use Flight;
 
-class HeaderSecurityMiddleware {
+class HeaderSecurityMiddleware
+{
     public static string $nonce = '';
 
-    public function before() {
+    public function before()
+    {
         if (empty(self::$nonce)) {
             $nonce = base64_encode(openssl_random_pseudo_bytes(16));
             self::$nonce = $nonce;
@@ -26,28 +28,29 @@ class HeaderSecurityMiddleware {
         Flight::response()->header('Permissions-Policy', 'geolocation=()');
     }
 
-	public function after() {
-		$executedRoute = Flight::router()->executedRoute;
-		$language = $executedRoute->params['language'] ?? '';
-		$version = $executedRoute->params['version'] ?? '';
-		$domain = ENVIRONMENT !== 'development' ? Flight::request()->host : 'localhost';
-		if($language !== '') {
-			setcookie('language', (string) $language, [
-				'expires' => time() + (86400 * 30),
-				'path' => '/',
-				'domain' => $domain,
-				'secure' => ENVIRONMENT !== 'development',
-				'httponly' => true
-			]); // 86400 = 1 day
-		}
-		if($version !== '') {
-			setcookie('version', (string) $version, [
-				'expires' => time() + (86400 * 30),
-				'path' => '/',
-				'domain' => $domain,
-				'secure' => ENVIRONMENT !== 'development',
-				'httponly' => true
-			]); // 86400 = 1 day
-		}
-	}
+    public function after()
+    {
+        $executedRoute = Flight::router()->executedRoute;
+        $language = $executedRoute->params['language'] ?? '';
+        $version = $executedRoute->params['version'] ?? '';
+        $domain = ENVIRONMENT !== 'development' ? Flight::request()->host : 'localhost';
+        if ($language !== '') {
+            setcookie('language', (string) $language, [
+                'expires' => time() + (86400 * 30),
+                'path' => '/',
+                'domain' => $domain,
+                'secure' => ENVIRONMENT !== 'development',
+                'httponly' => true
+            ]); // 86400 = 1 day
+        }
+        if ($version !== '') {
+            setcookie('version', (string) $version, [
+                'expires' => time() + (86400 * 30),
+                'path' => '/',
+                'domain' => $domain,
+                'secure' => ENVIRONMENT !== 'development',
+                'httponly' => true
+            ]); // 86400 = 1 day
+        }
+    }
 }
