@@ -40,7 +40,7 @@ class Text {
 	 * @param string $section_file_path [description]
 	 * @return string
 	 */
-	public static function generateAndConvertHeaderListFromHtml(string $markdown_html, array &$heading_data = [], string $section_file_path): string {
+	public static function generateAndConvertHeaderListFromHtml(string $markdown_html, array &$heading_data, string $section_file_path): string {
 		$heading_data = [];
 		$last_h2_key = null;
 
