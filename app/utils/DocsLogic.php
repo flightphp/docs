@@ -23,8 +23,8 @@ class DocsLogic {
 		$sections = [];
 		foreach ($files as $file) {
 			if (
-				substr($file, -3) === '.md' &&
-				substr($file, -9) !== '__test.md'
+				str_ends_with($file, '.md') &&
+				!str_ends_with($file, '__test.md')
 			) {
 				$sections[] = basename($file, '.md');
 			}

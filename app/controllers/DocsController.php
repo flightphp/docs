@@ -216,7 +216,7 @@ class DocsController {
     public function searchGet(string $language, string $version) {
         $query = $this->app->request()->query['query'];
         $language_directory_to_grep = self::CONTENT_DIR . $version . self::DS . $language . self::DS;
-        $grep_command = 'grep -r -i -n --color=never --include="*.md" '.escapeshellarg($query).' '.escapeshellarg($language_directory_to_grep);
+        $grep_command = 'grep -r -i -n --color=never --include="*.md" '.escapeshellarg((string) $query).' '.escapeshellarg($language_directory_to_grep);
         exec($grep_command, $grep_output);
 
         $files_found = [];

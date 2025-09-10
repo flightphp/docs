@@ -24,7 +24,7 @@ $app->register('latte', LatteEngine::class, [], function (LatteEngine $latte) us
     $translator = $app->translator();
 
     $translatorExtension = new TranslatorExtension(
-        [$translator, 'translate'],
+        $translator->translate(...),
     );
 
     $latte->addExtension($translatorExtension);

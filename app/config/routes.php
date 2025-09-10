@@ -104,7 +104,7 @@ $app->map('notFound', function () use ($app): void {
 	try {
 		$app->response()->send();
 		exit;
-	} catch (\Swoole\ExitException $e) {
+	} catch (\Swoole\ExitException) {
 		// Swoole will throw an ExitException when exiting, we can ignore it.
 	}
 });
