@@ -40,20 +40,57 @@ class Text {
 	 * @param string $section_file_path [description]
 	 * @return string
 	 */
-    public static function generateAndConvertHeaderListFromHtml(string $markdown_html, array &$heading_data = [], $heading_tag = 'h1', string $section_file_path): string {
-        $markdown_html = preg_replace_callback('/(\<' . $heading_tag . '(.*?))\>(.*)(<\/' . $heading_tag . '>)/i', function ($matches) use (&$heading_data, $section_file_path) {
-            if (! stripos($matches[0], 'id=')) {
-                $title = strip_tags($matches[3]);
-                $slugged_title = Text::slugify($title);
-                $heading_data[$slugged_title] = ['title' => $title, 'id' => $slugged_title, 'type' => $matches[2]];
-                $matches[0] = $matches[1] . $matches[2] . ' id="' . $slugged_title . '">' . $title . ' <a href="/'.$section_file_path.'#' . $slugged_title . '" class="bi bi-link-45deg" title="Permalink to this heading"></a>' . $matches[4];
-            }
+	public static function generateAndConvertHeaderListFromHtml(string $markdown_html, array &$heading_data = [], string $section_file_path): string {
+		$heading_data = [];
+		$last_h2_key = null;
 
-            return $matches[0];
-        }, $markdown_html);
+		// First, process h2s and h3s in order
+		$markdown_html = preg_replace_callback('/(<h[23](.*?))>(.*)(<\/h[23]>)/i', function ($matches) use (&$heading_data, &$last_h2_key, $section_file_path) {
+			$tag = '';
+			if (stripos($matches[0], '<h2') === 0) {
+				$tag = 'h2';
+			} elseif (stripos($matches[0], '<h3') === 0) {
+				$tag = 'h3';
+			}
+			$title = strip_tags($matches[3]);
+			$slugged_title = Text::slugify($title);
+			$id_attr = 'id="' . $slugged_title . '"';
+			$permalink = ' <a href="/'.$section_file_path.'#' . $slugged_title . '" class="bi bi-link-45deg" title="Permalink to this heading"></a>';
 
-        return $markdown_html;
-    }
+			if ($tag === 'h2') {
+				$heading_data[$slugged_title] = [
+					'title' => $title,
+					'id' => $slugged_title,
+					'type' => $matches[2],
+					'children' => []
+				];
+				$last_h2_key = $slugged_title;
+				// Add id and permalink to h2
+				$new_html = $matches[1] . $matches[2] . ' ' . $id_attr . '>' . $title . $permalink . $matches[4];
+			} elseif ($tag === 'h3' && $last_h2_key !== null) {
+				// Add h3 as child of last h2
+				$heading_data[$last_h2_key]['children'][] = [
+					'title' => $title,
+					'id' => $slugged_title,
+					'type' => $matches[2]
+				];
+				// Add id and permalink to h3
+				$new_html = $matches[1] . $matches[2] . ' ' . $id_attr . '>' . $title . $permalink . $matches[4];
+			} else {
+				// If h3 appears before any h2, treat as top-level (rare)
+				$heading_data[$slugged_title] = [
+					'title' => $title,
+					'id' => $slugged_title,
+					'type' => $matches[2],
+					'children' => []
+				];
+				$new_html = $matches[1] . $matches[2] . ' ' . $id_attr . '>' . $title . $permalink . $matches[4];
+			}
+			return $new_html;
+		}, $markdown_html);
+
+		return $markdown_html;
+	}
 
 	/**
 	 * Adds classes to elements in the html for styling

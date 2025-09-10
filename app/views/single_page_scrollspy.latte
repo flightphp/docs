@@ -3,14 +3,47 @@
 {block content}
 <div class="row">
     <div class="col-md-3">
+        {ifset $learn_sections}
+        <div class="mb-3">
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="learnSectionDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    {ifset $current_learn_section}
+                        {ucwords(str_replace('_', ' ', $current_learn_section))}
+                    {else}
+                        Choose a Learn Section
+                    {/ifset}
+                </button>
+                <ul class="dropdown-menu w-100" aria-labelledby="learnSectionDropdown">
+                    {foreach $learn_sections as $section}
+                        <li>
+                            <a class="dropdown-item{if $section === $current_learn_section} active{/if}" href="/learn/{$section}">
+                                {ucwords(str_replace('_', ' ', $section))}
+                            </a>
+                        </li>
+                    {/foreach}
+                </ul>
+            </div>
+        </div>
+        {/ifset}
         <nav id="navbar-learn" class="sticky-top flex-column align-items-stretch pe-4 border-end">
             <nav class="nav nav-pills flex-column">
                 {foreach $heading_data as $heading}
-                <a
-                    class="nav-link" href="#{$heading['id']}"
-                    data-target="#{$heading['id']}">
-                    {$heading['title']|noescape}
-                </a>
+                    <a
+                        class="nav-link" href="{$url}#{$heading['id']}"
+                        data-target="#{$heading['id']}">
+                        {$heading['title']|noescape}
+                    </a>
+                    {if isset($heading['children']) && $heading['children']}
+                        <nav class="nav nav-pills flex-column ms-3">
+                            {foreach $heading['children'] as $subheading}
+                                <a
+                                    class="nav-link nav-link-sm" href="{$url}#{$subheading['id']}"
+                                    data-target="#{$subheading['id']}">
+                                    {$subheading['title']|noescape}
+                                </a>
+                            {/foreach}
+                        </nav>
+                    {/if}
                 {/foreach}
             </nav>
         </nav>

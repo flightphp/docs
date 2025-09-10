@@ -1,3 +1,62 @@
+/* Improve learn section dropdown appearance */
+.dropdown-menu {
+    background: #fff;
+    border: 1px solid #C3C6CA;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    z-index: 1050;
+}
+
+.dropdown-menu .dropdown-item {
+    color: #323232;
+    padding: 10px 20px;
+    font-size: 15px;
+}
+
+.dropdown-menu .dropdown-item.active,
+.dropdown-menu .dropdown-item:active {
+    background-color: #0B6CCD;
+    color: #fff;
+}
+
+[data-bs-theme="dark"] .dropdown-menu {
+    background: #33363A;
+    border: 1px solid #33373a;
+}
+
+[data-bs-theme="dark"] .dropdown-menu .dropdown-item {
+    color: #fff;
+}
+
+[data-bs-theme="dark"] .dropdown-menu .dropdown-item.active,
+[data-bs-theme="dark"] .dropdown-menu .dropdown-item:active {
+    background-color: #0B6CCD;
+    color: #fff;
+}
+#navbar-learn {
+    /* ...existing code... */
+    /* Custom skinny scrollbar for scrollspy area */
+    scrollbar-width: thin;
+    scrollbar-color: #C3C6CA #F3F3F3;
+}
+
+#navbar-learn::-webkit-scrollbar {
+    width: 6px;
+    background: #F3F3F3;
+}
+#navbar-learn::-webkit-scrollbar-thumb {
+    background: #C3C6CA;
+    border-radius: 4px;
+}
+
+[data-bs-theme="dark"] #navbar-learn {
+    scrollbar-color: #33373a #212529;
+}
+[data-bs-theme="dark"] #navbar-learn::-webkit-scrollbar {
+    background: #212529;
+}
+[data-bs-theme="dark"] #navbar-learn::-webkit-scrollbar-thumb {
+    background: #33373a;
+}
 body {
     background: #f3f3f3;
 }
@@ -71,6 +130,11 @@ pre {
 
     #learn .menu {
         display: none;
+    }
+
+    /* Hide h3 scrollspy links in sidebar on mobile */
+    #navbar-learn .nav-pills .nav-link-sm {
+        display: none !important;
     }
 }
 
@@ -204,6 +268,11 @@ nav.navbar {
 
 #navbar-learn {
     margin-left: -30px;
+    max-height: calc(100vh - 40px); /* 40px for some top/bottom margin */
+    overflow-y: auto;
+    /* Keep sticky behavior for Bootstrap sticky-top */
+    position: sticky;
+    top: 20px;
 
     .nav-pills .nav-link.active,
     .nav-pills .show>.nav-link {
@@ -221,7 +290,6 @@ nav.navbar {
         padding-bottom: 13px;
         padding-left: 60px;
         font-size: 15px;
-
     }
 
     a.nav-link {
