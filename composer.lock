@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "616a179db91b415e8d12bd2376edfb92",
+    "content-hash": "55420d6066ecc11ed1fefe9703904a0e",
     "packages": [
         {
             "name": "adhocore/cli",
@@ -756,16 +756,16 @@
     "packages-dev": [
         {
             "name": "flightphp/tracy-extensions",
-            "version": "v0.2.6",
+            "version": "v0.2.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/flightphp/tracy-extensions.git",
-                "reference": "0488323812c8a11a57c1f60fd9416ec2a46d3cb6"
+                "reference": "4150ea7dc9bbb56fa089e7a4662f68011a771256"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/flightphp/tracy-extensions/zipball/0488323812c8a11a57c1f60fd9416ec2a46d3cb6",
-                "reference": "0488323812c8a11a57c1f60fd9416ec2a46d3cb6",
+                "url": "https://api.github.com/repos/flightphp/tracy-extensions/zipball/4150ea7dc9bbb56fa089e7a4662f68011a771256",
+                "reference": "4150ea7dc9bbb56fa089e7a4662f68011a771256",
                 "shasum": ""
             },
             "require": {
@@ -795,9 +795,9 @@
             "description": "A few Flight specific extensions for Tracy Debugger to help debug your code quickly.",
             "support": {
                 "issues": "https://github.com/flightphp/tracy-extensions/issues",
-                "source": "https://github.com/flightphp/tracy-extensions/tree/v0.2.6"
+                "source": "https://github.com/flightphp/tracy-extensions/tree/v0.2.7"
             },
-            "time": "2025-05-26T16:33:00+00:00"
+            "time": "2025-09-03T13:47:57+00:00"
         },
         {
             "name": "phpstan/extension-installer",
@@ -907,16 +907,16 @@
         },
         {
             "name": "rector/rector",
-            "version": "2.1.2",
+            "version": "2.1.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/rectorphp/rector.git",
-                "reference": "40a71441dd73fa150a66102f5ca1364c44fc8fff"
+                "reference": "729aabc0ec66e700ef164e26454a1357f222a2f3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rectorphp/rector/zipball/40a71441dd73fa150a66102f5ca1364c44fc8fff",
-                "reference": "40a71441dd73fa150a66102f5ca1364c44fc8fff",
+                "url": "https://api.github.com/repos/rectorphp/rector/zipball/729aabc0ec66e700ef164e26454a1357f222a2f3",
+                "reference": "729aabc0ec66e700ef164e26454a1357f222a2f3",
                 "shasum": ""
             },
             "require": {
@@ -955,7 +955,7 @@
             ],
             "support": {
                 "issues": "https://github.com/rectorphp/rector/issues",
-                "source": "https://github.com/rectorphp/rector/tree/2.1.2"
+                "source": "https://github.com/rectorphp/rector/tree/2.1.6"
             },
             "funding": [
                 {
@@ -963,18 +963,18 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-07-17T19:30:06+00:00"
+            "time": "2025-09-05T15:43:08+00:00"
         }
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {},
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
         "php": "^8.2",
         "ext-json": "*"
     },
-    "platform-dev": [],
+    "platform-dev": {},
     "plugin-api-version": "2.6.0"
 }
