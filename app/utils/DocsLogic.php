@@ -22,7 +22,10 @@ class DocsLogic {
 		$files = scandir($baseDir);
 		$sections = [];
 		foreach ($files as $file) {
-			if (substr($file, -3) === '.md') {
+			if (
+				substr($file, -3) === '.md' &&
+				substr($file, -9) !== '__test.md'
+			) {
 				$sections[] = basename($file, '.md');
 			}
 		}
