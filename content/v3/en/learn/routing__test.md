@@ -582,18 +582,17 @@ Flight::route('/@filename', function($filename) {
 	// or
 	Flight::response()->setRealHeader('Content-Disposition', 'attachment; filename="'.$fileNameSafe.'"');
 
-	$fileData = file_get_contents('/some/path/to/files/'.$fileNameSafe);
+	$filePath = '/some/path/to/files/'.$fileNameSafe;
 
-	// Error catching and whatnot
-	if(empty($fileData)) {
+	if (!is_readable($filePath)) {
 		Flight::halt(404, 'File not found');
 	}
 
 	// manually set the content length if you'd like
-	header('Content-Length: '.filesize($filename));
+	header('Content-Length: '.filesize($filePath));
 
-	// Stream the data to the client
-	echo $fileData;
+	// Stream the file to the client as it's read
+	readfile($filePath);
 
 // This is the magic line here
 })->stream();
