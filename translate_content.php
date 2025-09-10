@@ -57,7 +57,7 @@ foreach ($files as $file) {
         continue;
     }
 
-    if (in_array(basename($file), $filenames_to_skip)) {
+    if (in_array(basename((string) $file), $filenames_to_skip)) {
         echo "  **Skipping file because it's in the skip list**" . PHP_EOL;
         continue;
     }
