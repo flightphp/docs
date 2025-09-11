@@ -5,8 +5,9 @@ namespace app\utils;
 use app\middleware\HeaderSecurityMiddleware;
 use DOMDocument;
 use DOMXPath;
+use flight\Engine;
 
-class DocsLogic
+final readonly class DocsLogic
 {
     /**
      * Returns a list of all learn section names (without .md extension).
@@ -50,13 +51,9 @@ class DocsLogic
         'id'
     ];
 
-    /**
-     * DocsLogic constructor.
-     *
-     * @param CustomEngine $app Flight Engine
-     */
-    public function __construct(protected $app)
+    public function __construct(protected CustomEngine $app)
     {
+        // ...
     }
 
     /**

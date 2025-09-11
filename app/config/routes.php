@@ -5,6 +5,7 @@ use app\middleware\HeaderSecurityMiddleware;
 use app\utils\DocsLogic;
 use app\utils\Translator;
 use app\utils\CustomEngine;
+use flight\Container;
 use flight\net\Router;
 
 /** @var CustomEngine $app */
@@ -95,11 +96,13 @@ $app->map('notFound', function () use ($app): void {
     $url = $app->request()->url;
     $version = preg_match('~/(v\d)/~', $url, $matches) === 1 ? $matches[1] : 'v3';
 
-    (new DocsLogic($app))->renderPage('not_found.latte', [
+    Container::getInstance()->get(DocsLogic::class)->renderPage('not_found.latte', [
         'title' => '404 Not Found',
         'version' => $version
     ]);
+
     echo $app->request()->url;
+
     try {
         $app->response()->send();
         exit;

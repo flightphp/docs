@@ -6,6 +6,9 @@
  * for every request made to the application.
  */
 
+use app\utils\CustomEngine;
+use flight\Container;
+
 $ds = DIRECTORY_SEPARATOR;
 require_once __DIR__ . $ds . '..' . $ds . '..' . $ds . 'vendor' . $ds . 'autoload.php';
 
@@ -15,7 +18,8 @@ if (file_exists(__DIR__ . $ds . 'config.php') === false) {
 
 // It is better practice to not use static methods for everything. It makes your
 // app much more difficult to unit test easily.
-$app = Flight::app();
+$app = Container::getInstance()->get(CustomEngine::class);
+Flight::setEngine($app);
 
 /*
  * Load the config file

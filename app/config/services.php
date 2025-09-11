@@ -8,13 +8,14 @@ use Latte\Engine as LatteEngine;
 use Latte\Essential\TranslatorExtension;
 use Latte\Loaders\FileLoader;
 use flight\Cache;
+use flight\Container;
 
 /**
  * @var array $config
  * @var CustomEngine $app
  */
 
- // This translates some common parts of the page, not the content
+// This translates some common parts of the page, not the content
 $app->register('translator', Translator::class);
 
 // Templating Engine used to render the views
@@ -42,3 +43,5 @@ $app->register('parsedown', Parsedown::class);
 $ApmLogger = LoggerFactory::create(__DIR__ . '/../../.runway-config.json');
 $Apm = new Apm($ApmLogger);
 $Apm->bindEventsToFlightInstance($app);
+
+Container::getInstance()->singleton($app);
