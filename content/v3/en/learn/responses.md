@@ -208,7 +208,7 @@ Flight::json(['id' => 123], 200, JSON_PRETTY_PRINT);
 
 ### JSON and Stop Execution (v3.10.0)
 
-If you want to send a JSON response and stop execution, you can use the `jsonHalt` method.
+If you want to send a JSON response and stop execution, you can use the `jsonHalt()` method.
 This is useful for cases where you are checking for maybe some type of authorization and if
 the user is not authorized, you can send a JSON response immediately, clear the existing body
 content and stop execution.
@@ -290,8 +290,10 @@ Calling `halt` will discard any response content up to that point. If you want t
 the framework and output the current response, use the `stop` method:
 
 ```php
-Flight::stop();
+Flight::stop($httpStatusCode = null);
 ```
+
+> **Note:** `Flight::stop()` has some odd behavior such as it will output the response but continue executing your script. You can use `exit` or `return` after calling `Flight::stop()` to prevent further execution, but it is generally recommended to use `Flight::halt()`. 
 
 ## Clearing Response Data
 
