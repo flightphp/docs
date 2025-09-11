@@ -10,7 +10,7 @@ use flight\core\EventDispatcher;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 
-class DocsController
+final readonly class DocsController
 {
     /** @var string */
     private const DS = DIRECTORY_SEPARATOR;
@@ -25,7 +25,7 @@ class DocsController
      *
      * @param CustomEngine $app Flight Engine
      */
-    public function __construct(protected $app)
+    public function __construct(private CustomEngine $app)
     {
         $this->DocsLogic = new DocsLogic($app);
     }
@@ -266,7 +266,7 @@ class DocsController
             $count = count($files_found[$file_path]);
             $final_search[] = [
                 'search_result' => $data[0]['page_name'] . ' ("' . $query . '" ' . $count . 'x)',
-                'url' => '/' . $language . '/' . $version . '/' . str_replace([ $language_directory_to_grep, '.md', '_', '\\' ], [ '', '', '-', '/' ], $file_path),
+                'url' => '/' . $language . '/' . $version . '/' . str_replace([$language_directory_to_grep, '.md', '_', '\\'], ['', '', '-', '/'], $file_path),
                 'hits' => $count
             ];
         }
