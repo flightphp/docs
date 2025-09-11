@@ -19,8 +19,10 @@ setlocale(LC_ALL, 'en_US.UTF-8');
  * Set some flight variables
  */
 $app ??= Flight::app();
+$ds ??= DIRECTORY_SEPARATOR;
+$rootDir ??= __DIR__ . $ds . '..' . $ds . '..';
 
-$app->path(__DIR__ . $ds . '..' . $ds . '..');
+$app->path($rootDir);
 $app->set('flight.base_url', '/'); // if this is in a subdirectory, you'll need to change this
 $app->set('flight.case_sensitive', false); // if you want case sensitive routes, set this to true
 $app->set('flight.log_errors', true); // if you want to log errors, set this to true
