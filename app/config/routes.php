@@ -39,6 +39,7 @@ $router->group('', function (Router $router) use ($app) {
         } else {
             $version = 'v3';
         }
+
         $app->redirect("/$language/$version/");
     });
 
@@ -90,7 +91,6 @@ $router->group('', function (Router $router) use ($app) {
 $app->map('notFound', function () use ($app): void {
     // Clear out anything that may have been generated
     $app->response()->clearBody()->status(404);
-
 
     // pull the version out of the URL
     $url = $app->request()->url;
