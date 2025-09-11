@@ -53,6 +53,14 @@ $router->group('', function (Router $router) use ($app) {
      * Core routes
      */
     $app->group('/@language:[a-z]{2}/@version:[a-z0-9]{2}', function (Router $router) use ($app): void {
+        $router->map('/*', static function (string $language): true {
+            if (!defined('LANGUAGE')) {
+                define('LANGUAGE', $language);
+            }
+
+            return true;
+        });
+
         $router->get('/', [DocsController::class, 'aboutGet'], false, 'about');
         $router->get('/single-page', [DocsController::class, 'singlePageGet'], false, 'single_page');
         $router->get('/about', [DocsController::class, 'aboutGet']);
