@@ -13,7 +13,7 @@ final class HeaderSecurityMiddleware
      */
     public static string $nonce = '';
 
-    public function before()
+    public function before(): void
     {
         if (empty(self::$nonce)) {
             $nonce = base64_encode(openssl_random_pseudo_bytes(16));
@@ -36,7 +36,7 @@ final class HeaderSecurityMiddleware
         Flight::response()->header('Permissions-Policy', 'geolocation=()');
     }
 
-    public function after()
+    public function after(): void
     {
         $executedRoute = Flight::router()->executedRoute;
         $language = $executedRoute?->params['language'] ?? '';
