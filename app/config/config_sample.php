@@ -18,9 +18,7 @@ setlocale(LC_ALL, 'en_US.UTF-8');
 /*
  * Set some flight variables
  */
-if (empty($app)) {
-    $app = Flight::app();
-}
+$app ??= Flight::app();
 
 $app->path(__DIR__ . $ds . '..' . $ds . '..');
 $app->set('flight.base_url', '/'); // if this is in a subdirectory, you'll need to change this
