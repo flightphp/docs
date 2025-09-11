@@ -42,23 +42,26 @@ final class HeaderSecurityMiddleware
         $language = $executedRoute?->params['language'] ?? '';
         $version = $executedRoute?->params['version'] ?? '';
         $domain = ENVIRONMENT !== 'development' ? Flight::request()->host : 'localhost';
+        $oneDay = time() + (86400 * 30);
+
         if ($language !== '') {
-            setcookie('language', (string) $language, [
-                'expires' => time() + (86400 * 30),
+            setcookie('language', $language, [
+                'expires' => $oneDay,
                 'path' => '/',
                 'domain' => $domain,
                 'secure' => ENVIRONMENT !== 'development',
-                'httponly' => true
-            ]); // 86400 = 1 day
+                'httponly' => true,
+            ]);
         }
+
         if ($version !== '') {
-            setcookie('version', (string) $version, [
-                'expires' => time() + (86400 * 30),
+            setcookie('version', $version, [
+                'expires' => $oneDay,
                 'path' => '/',
                 'domain' => $domain,
                 'secure' => ENVIRONMENT !== 'development',
                 'httponly' => true
-            ]); // 86400 = 1 day
+            ]);
         }
     }
 }
