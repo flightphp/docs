@@ -16,6 +16,6 @@ use app\utils\Translator;
  * @method Parsedown parsedown()
  * @method Translator translator()
  */
-class CustomEngine extends Engine
+final class CustomEngine extends Engine
 {
 }
