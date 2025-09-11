@@ -7,6 +7,7 @@
  */
 
 use app\utils\CustomEngine;
+use app\utils\SwooleServerDriver;
 use flight\Container;
 
 $ds = DIRECTORY_SEPARATOR;
@@ -71,12 +72,13 @@ require_once __DIR__ . $ds . 'services.php';
 
 // This is where swoole will start listening for requests and processing them.
 if (!defined("NOT_SWOOLE")) {
-    // Require the SwooleServerDriver class since we're running in Swoole mode.
-    require_once(__DIR__ . '/../utils/SwooleServerDriver.php');
+    if (!class_exists('Swoole\Runtime')) {
+        throw new Exception('Swoole is not installed. Please install Swoole or define the NOT_SWOOLE constant in public/index.php to run without Swoole.');
+    }
 
-    Swoole\Runtime::enableCoroutine();
-    $Swoole_Server = new app\utils\SwooleServerDriver('127.0.0.1', 9501, $app);
-    $Swoole_Server->start();
+    call_user_func('Swoole\Runtime', 'enableCoroutine');
+    $swooleServerDriver = new app\utils\SwooleServerDriver('127.0.0.1', 9501, $app);
+    $swooleServerDriver->start();
 } else {
     $app->start();
 }
