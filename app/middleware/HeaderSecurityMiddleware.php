@@ -8,6 +8,9 @@ use Flight;
 
 final class HeaderSecurityMiddleware
 {
+    /**
+     * A number or string used only once.
+     */
     public static string $nonce = '';
 
     public function before()
