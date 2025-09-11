@@ -5,7 +5,6 @@ namespace app\utils;
 use app\middleware\HeaderSecurityMiddleware;
 use DOMDocument;
 use DOMXPath;
-use Latte\Engine as LatteEngine;
 
 final readonly class DocsLogic
 {
@@ -24,7 +23,7 @@ final readonly class DocsLogic
         'id',
     ];
 
-    public function __construct(protected CustomEngine $app, private LatteEngine $latte)
+    public function __construct(private CustomEngine $app)
     {
         // ...
     }
@@ -75,7 +74,7 @@ final readonly class DocsLogic
         $params['url'] = $request->getScheme() . '://' . $request->getHeader('Host') . $uri;
         $params['nonce'] = HeaderSecurityMiddleware::$nonce;
         $startTime = microtime(true);
-        $this->latte->render($latte_file, $params);
+        $this->app->latte()->render($latte_file, $params);
         $executionTime = microtime(true) - $startTime;
         $this->app->eventDispatcher()->trigger('flight.view.rendered', $latte_file . ':' . $uri, $executionTime);
     }
