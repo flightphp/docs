@@ -6,7 +6,7 @@ namespace app\middleware;
 
 use Flight;
 
-class HeaderSecurityMiddleware
+final class HeaderSecurityMiddleware
 {
     public static string $nonce = '';
 
