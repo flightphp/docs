@@ -5,6 +5,7 @@ namespace app\utils;
 use app\middleware\HeaderSecurityMiddleware;
 use DOMDocument;
 use DOMXPath;
+use Latte\Engine as LatteEngine;
 
 final readonly class DocsLogic
 {
@@ -23,7 +24,7 @@ final readonly class DocsLogic
         'id',
     ];
 
-    public function __construct(protected CustomEngine $app)
+    public function __construct(protected CustomEngine $app, private LatteEngine $latte)
     {
         // ...
     }
@@ -61,7 +62,7 @@ final readonly class DocsLogic
      * @param string $latte_file The path to the Latte template file to be rendered.
      * @param array $params An optional array of parameters to be passed to the template.
      */
-    public function renderPage(string $latte_file, array $params = [])
+    public function renderPage(string $latte_file, array $params = []): void
     {
         $request = $this->app->request();
         $uri = $request->url;
@@ -70,12 +71,11 @@ final readonly class DocsLogic
             $uri = substr($uri, 0, strpos($uri, '?'));
         }
 
-
         // Here we can set variables that will be available on any page
         $params['url'] = $request->getScheme() . '://' . $request->getHeader('Host') . $uri;
         $params['nonce'] = HeaderSecurityMiddleware::$nonce;
         $startTime = microtime(true);
-        $this->app->latte()->render($latte_file, $params);
+        $this->latte->render($latte_file, $params);
         $executionTime = microtime(true) - $startTime;
         $this->app->eventDispatcher()->trigger('flight.view.rendered', $latte_file . ':' . $uri, $executionTime);
     }

@@ -45,3 +45,4 @@ $Apm = new Apm($ApmLogger);
 $Apm->bindEventsToFlightInstance($app);
 
 Container::getInstance()->singleton($app);
+Container::getInstance()->singleton($app->latte());
