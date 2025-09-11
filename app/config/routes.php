@@ -12,7 +12,6 @@ use flight\net\Router;
 
 // This acts like a global middleware
 $router->group('', function (Router $router) use ($app) {
-
     /*
      * Specific routes
      */
@@ -82,7 +81,7 @@ $router->group('', function (Router $router) use ($app) {
             $router->get('/@plugin_name', [DocsController::class, 'pluginGet'], false, 'plugin');
         });
     });
-}, [ new HeaderSecurityMiddleware() ]);
+}, [HeaderSecurityMiddleware::class]);
 
 /*
  * 404 Handler
