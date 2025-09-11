@@ -10,6 +10,7 @@ class Translator
 {
     public function __construct(protected string $language = 'en', protected string $version = 'v3')
     {
+        // ...
     }
 
     public function setLanguage(string $language): void
@@ -93,14 +94,13 @@ class Translator
     public function getMarkdownLanguageFile(string $file): string
     {
         $language = $this->language;
-        $ds = DIRECTORY_SEPARATOR;
-        $markdownFilePath = __DIR__ . $ds . '..' . $ds . '..' . $ds . 'content' . $ds . $this->version . $ds;
-        $markdownFile = $markdownFilePath . $language . $ds . $file;
+        $markdownFilePath = __DIR__ . "/../../content/{$this->version}/";
+        $markdownFile = "{$markdownFilePath}{$language}/{$file}";
 
         // fallback to english if it doesn't exist in the language
         if (file_exists($markdownFile) === false) {
             $language = 'en';
-            $markdownFile = $markdownFilePath . $language . $ds . $file;
+            $markdownFile = "{$markdownFilePath}{$language}/{$file}";
         }
 
         if (file_exists($markdownFile) === false) {
