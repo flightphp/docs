@@ -77,7 +77,7 @@ if (!defined("NOT_SWOOLE")) {
     }
 
     call_user_func('Swoole\Runtime', 'enableCoroutine');
-    $swooleServerDriver = new app\utils\SwooleServerDriver('127.0.0.1', 9501, $app);
+    $swooleServerDriver = new SwooleServerDriver('127.0.0.1', 9501, $app);
     $swooleServerDriver->start();
 } else {
     $app->start();
