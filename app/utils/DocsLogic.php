@@ -173,12 +173,19 @@ final readonly class DocsLogic
         $cacheHit = true;
         $cacheKey = $sub_section_underscored . '_html_' . $language . '_' . $version;
         $markdown_html = $app->cache()->retrieve($cacheKey);
+
         if ($markdown_html === null) {
             $cacheHit = false;
             $markdown_html = $app->parsedown()->text($Translator->getMarkdownLanguageFile('/' . $section_file_path . '/' . $sub_section_underscored . '.md'));
 
             $heading_data = [];
-            $markdown_html = Text::generateAndConvertHeaderListFromHtml($markdown_html, $heading_data, $section_file_path . '/' . $sub_section);
+
+            $markdown_html = Text::generateAndConvertHeaderListFromHtml(
+                $markdown_html,
+                $heading_data,
+                $section_file_path . '/' . $sub_section,
+            );
+
             $markdown_html = Text::addClassesToElements($markdown_html);
             $app->cache()->store($sub_section_underscored . '_heading_data_' . $language . '_' . $version, $heading_data, 86400); // 1 day
             $app->cache()->store($cacheKey, $markdown_html, 86400); // 1 day
