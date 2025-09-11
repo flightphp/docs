@@ -47,7 +47,8 @@ Debugger::$strictMode = true; // display all errors
 // Debugger::$strictMode = E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED; // all errors except deprecated notices
 
 if (Debugger::$showBar) {
-    $app->set('flight.content_length', false); // if Debugger bar is visible, then content-length can not be set by Flight
+    // if Debugger bar is visible, then content-length can not be set by Flight
+    $app->set('flight.content_length', false);
     new TracyExtensionLoader($app);
 }
 
