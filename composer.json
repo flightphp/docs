@@ -33,7 +33,7 @@
         "pre-update-cmd": ["composer check-platform-reqs"],
         "start": "[ -x \"$(command -v php8.2)\" ] && php8.2 -S localhost:8000 -t public || php -S localhost:8000 -t public",
         "format": ["rector", "phpcbf"],
-        "lint": ["phpstan --memory-limit=256M", "phpcs"]
+        "lint": ["phpstan --memory-limit=256M", "phpcs", "rector --dry-run"]
     },
     "require-dev": {
         "flightphp/tracy-extensions": "^0.2.7",
