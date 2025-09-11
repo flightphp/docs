@@ -5,10 +5,29 @@ namespace app\utils;
 use app\middleware\HeaderSecurityMiddleware;
 use DOMDocument;
 use DOMXPath;
-use flight\Engine;
 
 final readonly class DocsLogic
 {
+    private const AVAILABLE_LANGUAGES = [
+        'en',
+        'es',
+        'fr',
+        'lv',
+        'pt',
+        'de',
+        'ru',
+        'zh',
+        'ja',
+        'ko',
+        'uk',
+        'id',
+    ];
+
+    public function __construct(protected CustomEngine $app)
+    {
+        // ...
+    }
+
     /**
      * Returns a list of all learn section names (without .md extension).
      *
@@ -34,26 +53,6 @@ final readonly class DocsLogic
         }
         sort($sections);
         return $sections;
-    }
-
-    const AVAILABLE_LANGUAGES = [
-        'en',
-        'es',
-        'fr',
-        'lv',
-        'pt',
-        'de',
-        'ru',
-        'zh',
-        'ja',
-        'ko',
-        'uk',
-        'id'
-    ];
-
-    public function __construct(protected CustomEngine $app)
-    {
-        // ...
     }
 
     /**
