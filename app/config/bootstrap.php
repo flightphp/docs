@@ -9,6 +9,7 @@
 use app\utils\CustomEngine;
 use app\utils\SwooleServerDriver;
 use flight\Container;
+use flight\Engine;
 
 require_once __DIR__ . '/../../vendor/autoload.php';
 
@@ -27,10 +28,10 @@ Flight::setEngine($app);
  * will be returned by the require statement where you can assign it to a var.
  */
 $config = require __DIR__ . '/config.php';
-$app->set('config', $config);
+Flight::set('config', $config);
 
 // Whip out the ol' router and we'll pass that to the routes file
-$router = $app->router();
+$router = Flight::router();
 
 /*
  * Load the routes file. the $router variable above is passed into the routes.php
@@ -76,10 +77,16 @@ if (!defined("NOT_SWOOLE")) {
     }
 
     call_user_func('Swoole\Runtime', 'enableCoroutine');
-    $swooleServerDriver = new SwooleServerDriver('127.0.0.1', 9501, $app);
+
+    $swooleServerDriver = new SwooleServerDriver(
+        '127.0.0.1',
+        9501,
+        Container::getInstance()->get(Engine::class)
+    );
+
     $swooleServerDriver->start();
 } else {
-    $app->start();
+    Flight::start();
 }
 /*
  .----..---.  .--.  .----.  .---.     .---. .-. .-.  .--.  .---.    .----. .-. .-..----. .----..-.  .-.
