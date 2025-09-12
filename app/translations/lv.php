@@ -18,7 +18,7 @@ return [
     'click_here' => 'Spied šeit',
     'need_to_view_single_page' => 'Vai nepieciešams skatīt vienas lapas dokumentāciju?',
     'media' => 'Mediji',
-	'version' => 'Versija',
-	'guides' => 'Rokasgrāmatas',
-	'flight_for_ai' => 'Flight ir optimizēts AI atbalstītai izstrādātāju pieredzei. <a href="/learn/ai">Uzzināt vairāk</a>.'
+    'version' => 'Versija',
+    'guides' => 'Rokasgrāmatas',
+    'flight_for_ai' => 'Flight ir optimizēts AI atbalstītai izstrādātāju pieredzei. <a href="/learn/ai">Uzzināt vairāk</a>.'
 ];

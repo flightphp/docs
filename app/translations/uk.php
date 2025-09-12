@@ -18,7 +18,7 @@ return [
     'click_here' => 'Натисніть тут',
     'need_to_view_single_page' => 'Потрібно переглянути як одну сторінку?',
     'media' => 'Медіа',
-	'version' => 'Версія',
-	'guides' => 'Посібники',
-	'flight_for_ai' => 'Flight оптимізовано для роботи з AI для розробників. <a href="/learn/ai">Дізнатися більше</a>.',
+    'version' => 'Версія',
+    'guides' => 'Посібники',
+    'flight_for_ai' => 'Flight оптимізовано для роботи з AI для розробників. <a href="/learn/ai">Дізнатися більше</a>.',
 ];

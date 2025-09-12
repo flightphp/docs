@@ -10,11 +10,13 @@ use app\utils\Translator;
 
 /**
  * This is only for autocomplete help.
- * 
+ *
  * @method Cache cache()
  * @method LatteEngine latte()
  * @method Parsedown parsedown()
  * @method Translator translator()
  */
-class CustomEngine extends Engine {
+final class CustomEngine extends Engine
+{
+    // ...
 }

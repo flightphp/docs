@@ -18,7 +18,7 @@ return [
     'click_here' => 'Klik di sini',
     'need_to_view_single_page' => 'Perlu melihat dalam satu halaman?',
     'media' => 'Media',
-	'version' => 'Versi',
-	'guides' => 'Panduan',
-	'flight_for_ai' => 'Flight dioptimalkan untuk pengalaman pengembang berbasis AI. <a href="/learn/ai">Pelajari lebih lanjut</a>.'
+    'version' => 'Versi',
+    'guides' => 'Panduan',
+    'flight_for_ai' => 'Flight dioptimalkan untuk pengalaman pengembang berbasis AI. <a href="/learn/ai">Pelajari lebih lanjut</a>.'
 ];
