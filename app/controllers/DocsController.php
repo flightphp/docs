@@ -165,7 +165,7 @@ final readonly class DocsController
      * @param string $language The language of the page.
      * @param string $version The version of the page.
      */
-    public function singlePageGet(string $language, string $version)
+    public function singlePageGet(string $language, string $version): void
     {
         $app = $this->app;
 
@@ -199,13 +199,17 @@ final readonly class DocsController
         $cacheStartTime = microtime(true);
         $cacheKey = 'single_page_html_' . $language . '_' . $version;
         $markdown_html = $app->cache()->retrieve($cacheKey);
+
         if ($markdown_html === null) {
             $cacheHit = false;
             $markdown_html = '';
+
             foreach ($sections as $section) {
                 $slugged_section = Text::slugify($section);
                 $markdown_html .= '<h1><a href="/' . $section . '" id="' . $slugged_section . '">' . ucwords($section) . '</a> <a href="/' . $section . '#' . $slugged_section . '" class="bi bi-link-45deg" title="Permalink to this heading"></a></h1>';
-                $markdown_html .= $app->parsedown()->text($Translator->getMarkdownLanguageFile($section . '.md'));
+                $section_file_name = $section . '.md';
+                $markdown_language_file = $Translator->getMarkdownLanguageFile($section_file_name);
+                $markdown_html .= $app->parsedown()->text($markdown_language_file);
             }
 
             $app->cache()->store($cacheKey, $markdown_html, 86400); // 1 day
@@ -228,12 +232,13 @@ final readonly class DocsController
      */
     public function searchGet(string $language, string $version)
     {
-        $query = $this->app->request()->query['query'];
-        $language_directory_to_grep = self::CONTENT_DIR . $version . self::DS . $language . self::DS;
-        $grep_command = 'grep -r -i -n --color=never --include="*.md" ' . escapeshellarg((string) $query) . ' ' . escapeshellarg($language_directory_to_grep);
+        $query = strval($this->app->request()->query['query']);
+        $language_directory_to_grep = self::CONTENT_DIR . $version . self::DS . $language;
+        $grep_command = 'grep -r -i -n --color=never --include="*.md" ' . escapeshellarg($query) . ' ' . escapeshellarg($language_directory_to_grep);
         exec($grep_command, $grep_output);
 
         $files_found = [];
+
         foreach ($grep_output as $line) {
             $line_parts = explode(':', $line);
             // Catch the windows C drive letter
@@ -262,11 +267,19 @@ final readonly class DocsController
         }
 
         $final_search = [];
+
         foreach ($files_found as $file_path => $data) {
             $count = count($files_found[$file_path]);
+            $final_file_path = str_replace([$language_directory_to_grep, '.md', '_', '\\'], ['', '', '-', '/'], $file_path);
+
+            if (str_contains($final_file_path, $language)) {
+                $final_file_path_parts = explode('/', $final_file_path);
+                $final_file_path = $final_file_path_parts[count($final_file_path_parts) - 1];
+            }
+
             $final_search[] = [
                 'search_result' => $data[0]['page_name'] . ' ("' . $query . '" ' . $count . 'x)',
-                'url' => '/' . $language . '/' . $version . '/' . str_replace([$language_directory_to_grep, '.md', '_', '\\'], ['', '', '-', '/'], $file_path),
+                'url' => "/{$language}/{$version}/" . $final_file_path,
                 'hits' => $count
             ];
         }
