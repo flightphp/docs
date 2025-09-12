@@ -11,7 +11,6 @@ use flight\Cache;
 use flight\Container;
 
 /**
- * @var array $config
  * @var CustomEngine $app
  */
 
@@ -21,7 +20,7 @@ $app->register('translator', Translator::class);
 // Templating Engine used to render the views
 $app->register('latte', LatteEngine::class, [], function (LatteEngine $latte) use ($app): void {
     $latte->setTempDirectory(__DIR__ . '/../cache/');
-    $latte->setLoader(new FileLoader(__DIR__ . '/../views/'));
+    $latte->setLoader(new FileLoader(__DIR__ . '/../views'));
     $translator = $app->translator();
 
     $translatorExtension = new TranslatorExtension(
@@ -46,3 +45,4 @@ $Apm->bindEventsToFlightInstance($app);
 
 Container::getInstance()->singleton($app);
 Container::getInstance()->singleton($app->latte());
+Container::getInstance()->singleton($app->cache());
