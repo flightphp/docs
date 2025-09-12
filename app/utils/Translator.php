@@ -95,7 +95,7 @@ class Translator
     {
         $language = $this->language;
         $markdownFilePath = __DIR__ . "/../../content/{$this->version}/";
-        $markdownFile = "{$markdownFilePath}{$language}/{$file}";
+        $markdownFile = str_contains($file, 'content') ? $file : "{$markdownFilePath}{$language}/{$file}";
 
         // fallback to english if it doesn't exist in the language
         if (file_exists($markdownFile) === false) {
