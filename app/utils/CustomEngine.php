@@ -18,4 +18,5 @@ use app\utils\Translator;
  */
 final class CustomEngine extends Engine
 {
+    // ...
 }
