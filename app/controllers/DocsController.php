@@ -6,19 +6,13 @@ use app\utils\CustomEngine;
 use app\utils\DocsLogic;
 use app\utils\Text;
 use Exception;
-use flight\core\EventDispatcher;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 
 final readonly class DocsController
 {
-    /** @var string */
-    private const DS = DIRECTORY_SEPARATOR;
-
-    /** @var string Path to the base content directory */
-    protected const CONTENT_DIR = __DIR__ . self::DS . '..' . self::DS . '..' . self::DS . 'content' . self::DS;
-
-    protected DocsLogic $DocsLogic;
+    protected const CONTENT_DIR = __DIR__ . '/../../content/';
+    protected DocsLogic $docsLogic;
 
     /**
      * DocsController constructor.
@@ -27,7 +21,7 @@ final readonly class DocsController
      */
     public function __construct(private CustomEngine $app)
     {
-        $this->DocsLogic = new DocsLogic($app);
+        $this->docsLogic = new DocsLogic($app);
     }
 
     /**
@@ -38,7 +32,7 @@ final readonly class DocsController
      */
     public function licenseGet(string $language, string $version)
     {
-        $this->DocsLogic->compileSinglePage($language, $version, 'license');
+        $this->docsLogic->compileSinglePage($language, $version, 'license');
     }
 
     /**
@@ -47,9 +41,9 @@ final readonly class DocsController
      * @param string $language The language in which the page is requested.
      * @param string $version The version of the page to retrieve.
      */
-    public function aboutGet(string $language, string $version)
+    public function aboutGet(string $language, string $version): void
     {
-        $this->DocsLogic->compileSinglePage($language, $version, 'about');
+        $this->docsLogic->compileSinglePage($language, $version, 'about');
     }
 
     /**
@@ -58,9 +52,9 @@ final readonly class DocsController
      * @param string $language The language in which the page is requested.
      * @param string $version The version of the page to retrieve.
      */
-    public function examplesGet(string $language, string $version)
+    public function examplesGet(string $language, string $version): void
     {
-        $this->DocsLogic->compileSinglePage($language, $version, 'examples');
+        $this->docsLogic->compileSinglePage($language, $version, 'examples');
     }
 
     /**
@@ -69,12 +63,12 @@ final readonly class DocsController
      * @param string $language The language in which the page is requested.
      * @param string $version The version of the page to retrieve.
      */
-    public function installGet(string $language, string $version)
+    public function installGet(string $language, string $version): void
     {
         if ($version === 'v2') {
-            $this->DocsLogic->compileSinglePage($language, $version, 'install');
+            $this->docsLogic->compileSinglePage($language, $version, 'install');
         } else {
-            $this->DocsLogic->compileScrollspyPage($language, $version, 'install', 'install');
+            $this->docsLogic->compileScrollspyPage($language, $version, 'install', 'install');
         }
     }
 
@@ -84,12 +78,12 @@ final readonly class DocsController
      * @param string $language The language in which the page is requested.
      * @param string $version The version of the page to retrieve.
      */
-    public function learnGet(string $language, string $version)
+    public function learnGet(string $language, string $version): void
     {
         if ($version === 'v2') {
-            $this->DocsLogic->compileScrollspyPage($language, $version, 'learn', 'learn');
+            $this->docsLogic->compileScrollspyPage($language, $version, 'learn', 'learn');
         } else {
-            $this->DocsLogic->compileSinglePage($language, $version, 'learn');
+            $this->docsLogic->compileSinglePage($language, $version, 'learn');
         }
     }
 
@@ -99,9 +93,9 @@ final readonly class DocsController
      * @param string $language The language in which the page is requested.
      * @param string $version The version of the page to retrieve.
      */
-    public function learnSectionsGet(string $language, string $version, string $section_name)
+    public function learnSectionsGet(string $language, string $version, string $section_name): void
     {
-        $this->DocsLogic->compileScrollspyPage($language, $version, 'learn', $section_name);
+        $this->docsLogic->compileScrollspyPage($language, $version, 'learn', $section_name);
     }
 
     /**
@@ -110,9 +104,9 @@ final readonly class DocsController
      * @param string $language The language in which the page is requested.
      * @param string $version The version of the page to retrieve.
      */
-    public function mediaGet(string $language, string $version)
+    public function mediaGet(string $language, string $version): void
     {
-        $this->DocsLogic->compileSinglePage($language, $version, 'media');
+        $this->docsLogic->compileSinglePage($language, $version, 'media');
     }
 
     /**
@@ -121,9 +115,9 @@ final readonly class DocsController
      * @param string $language The language in which the page is requested.
      * @param string $version The version of the page to retrieve.
      */
-    public function guidesGet(string $language, string $version)
+    public function guidesGet(string $language, string $version): void
     {
-        $this->DocsLogic->compileSinglePage($language, $version, 'guides');
+        $this->docsLogic->compileSinglePage($language, $version, 'guides');
     }
 
     /**
@@ -132,9 +126,9 @@ final readonly class DocsController
      * @param string $language The language in which the page is requested.
      * @param string $version The version of the page to retrieve.
      */
-    public function guidesSectionsGet(string $language, string $version, string $section_name)
+    public function guidesSectionsGet(string $language, string $version, string $section_name): void
     {
-        $this->DocsLogic->compileScrollspyPage($language, $version, 'guides', $section_name);
+        $this->docsLogic->compileScrollspyPage($language, $version, 'guides', $section_name);
     }
 
     /**
@@ -143,9 +137,9 @@ final readonly class DocsController
      * @param string $language The language in which the page is requested.
      * @param string $version The version of the page to retrieve.
      */
-    public function awesomePluginsGet(string $language, string $version)
+    public function awesomePluginsGet(string $language, string $version): void
     {
-        $this->DocsLogic->compileScrollspyPage($language, $version, 'awesome_plugins', 'awesome_plugins');
+        $this->docsLogic->compileScrollspyPage($language, $version, 'awesome_plugins', 'awesome_plugins');
     }
 
     /**
@@ -154,9 +148,9 @@ final readonly class DocsController
      * @param string $language The language in which the page is requested.
      * @param string $version The version of the page to retrieve.
      */
-    public function pluginGet(string $language, string $version, string $plugin_name)
+    public function pluginGet(string $language, string $version, string $plugin_name): void
     {
-        $this->DocsLogic->compileScrollspyPage($language, $version, 'awesome_plugins', $plugin_name);
+        $this->docsLogic->compileScrollspyPage($language, $version, 'awesome_plugins', $plugin_name);
     }
 
     /**
@@ -170,12 +164,12 @@ final readonly class DocsController
         $app = $this->app;
 
         // Check if the language is valid
-        if ($this->DocsLogic->checkValidLanguage($language) === false) {
+        if ($this->docsLogic->checkValidLanguage($language) === false) {
             $language = 'en';
         }
 
         // Check if the version is valid
-        if ($this->DocsLogic->checkValidVersion($version) === false) {
+        if ($this->docsLogic->checkValidVersion($version) === false) {
             $version = 'v3';
         }
 
@@ -193,7 +187,7 @@ final readonly class DocsController
             $sections[] = $section;
         }
 
-        $Translator = $this->DocsLogic->setupTranslatorService($language, $version);
+        $Translator = $this->docsLogic->setupTranslatorService($language, $version);
 
         $cacheHit = true;
         $cacheStartTime = microtime(true);
@@ -217,7 +211,7 @@ final readonly class DocsController
 
         $app->eventDispatcher()->trigger('flight.cache.checked', 'single_page_get_' . $cacheKey, $cacheHit, microtime(true) - $cacheStartTime);
 
-        $this->DocsLogic->renderPage('single_page.latte', [
+        $this->docsLogic->renderPage('single_page.latte', [
             'page_title' => 'single_page_documentation',
             'markdown' => $markdown_html,
             'version' => $version,
@@ -230,10 +224,10 @@ final readonly class DocsController
      * @param string $language The language of the documentation.
      * @param string $version The version of the documentation.
      */
-    public function searchGet(string $language, string $version)
+    public function searchGet(string $language, string $version): void
     {
         $query = strval($this->app->request()->query['query']);
-        $language_directory_to_grep = self::CONTENT_DIR . $version . self::DS . $language;
+        $language_directory_to_grep = self::CONTENT_DIR . $version . '/' . $language;
         $grep_command = 'grep -r -i -n --color=never --include="*.md" ' . escapeshellarg($query) . ' ' . escapeshellarg($language_directory_to_grep);
         exec($grep_command, $grep_output);
 
@@ -245,7 +239,7 @@ final readonly class DocsController
             if ($line_parts[0] === 'C') {
                 array_shift($line_parts);
             }
-            $file_path = str_replace('/', self::DS, $line_parts[0]);
+            $file_path = str_replace('/', '/', $line_parts[0]);
             $line_number = $line_parts[1];
             $line_content = $line_parts[2];
 
@@ -292,10 +286,8 @@ final readonly class DocsController
 
     /**
      * Handles the POST request to update this repo from a webhook from GitHub
-     *
-     * @return void
      */
-    public function updateStuffPost()
+    public function updateStuffPost(): void
     {
         $secret = $this->app->get('config')['github_webhook_secret'];
         $request = $this->app->request();
