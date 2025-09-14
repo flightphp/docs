@@ -39,9 +39,9 @@ $app->register('cache', Cache::class, [__DIR__ . '/../cache/'], function (Cache 
 $app->register('parsedown', Parsedown::class);
 
 // Register the APM
-$ApmLogger = LoggerFactory::create(__DIR__ . '/../../.runway-config.json');
-$Apm = new Apm($ApmLogger);
-$Apm->bindEventsToFlightInstance($app);
+$logger = LoggerFactory::create(__DIR__ . '/../../.runway-config.json');
+$apm = new Apm($logger);
+$apm->bindEventsToFlightInstance($app);
 
 Container::getInstance()->singleton($app);
 Container::getInstance()->singleton($app->latte());
