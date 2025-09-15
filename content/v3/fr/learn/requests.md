@@ -1,4 +1,4 @@
-# Requêtes
+# Demandes
 
 Flight encapsule la requête HTTP dans un seul objet, que vous pouvez accéder en faisant :
 
@@ -16,18 +16,18 @@ Voici un exemple pour obtenir un paramètre de chaîne de requête :
 Flight::route('/search', function(){
 	$keyword = Flight::request()->query['keyword'];
 	echo "You are searching for: $keyword";
-	// interroger une base de données ou autre chose avec le $keyword
+	// interrogez une base de données ou autre chose avec $keyword
 });
 ```
 
-Voici un exemple d'un formulaire avec une méthode POST :
+Voici un exemple pour peut-être un formulaire avec une méthode POST :
 
 ```php
 Flight::route('POST /submit', function(){
 	$name = Flight::request()->data['name'];
 	$email = Flight::request()->data['email'];
 	echo "You submitted: $name, $email";
-	// enregistrer dans une base de données ou autre chose avec le $name et $email
+	// enregistrez dans une base de données ou autre chose avec $name et $email
 });
 ```
 
@@ -39,7 +39,7 @@ L'objet de requête fournit les propriétés suivantes :
 - **url** - L'URL demandée
 - **base** - Le sous-répertoire parent de l'URL
 - **method** - La méthode de requête (GET, POST, PUT, DELETE)
-- **referrer** - L'URL du référent
+- **referrer** - L'URL de référence
 - **ip** - L'adresse IP du client
 - **ajax** - Si la requête est une requête AJAX
 - **scheme** - Le protocole du serveur (http, https)
@@ -47,7 +47,7 @@ L'objet de requête fournit les propriétés suivantes :
 - **type** - Le type de contenu
 - **length** - La longueur du contenu
 - **query** - Paramètres de la chaîne de requête
-- **data** - Données de publication ou données JSON
+- **data** - Données POST ou JSON
 - **cookies** - Données de cookies
 - **files** - Fichiers téléchargés
 - **secure** - Si la connexion est sécurisée
@@ -128,7 +128,7 @@ $uploadedFile = Flight::request()->files['myFile'];
 
 ## Traitement des téléchargements de fichiers (v3.12.0)
 
-Vous pouvez traiter les téléchargements de fichiers en utilisant le framework avec des méthodes d'aide. Cela revient essentiellement à extraire les données de fichier de la requête et à les déplacer vers un nouvel emplacement.
+Vous pouvez traiter les téléchargements de fichiers en utilisant le framework avec quelques méthodes d'aide. Cela revient essentiellement à extraire les données de fichier de la requête et à les déplacer vers un nouvel emplacement.
 
 ```php
 Flight::route('POST /upload', function(){
@@ -151,7 +151,7 @@ Flight::route('POST /upload', function(){
 });
 ```
 
-> **Note de sécurité :** Toujours valider et assainir les entrées utilisateur, surtout lors de la gestion des téléchargements de fichiers. Toujours valider les types d'extensions que vous autorisez à être téléchargées, mais vous devriez également valider les "octets magiques" du fichier pour vous assurer qu'il s'agit réellement du type de fichier que l'utilisateur prétend qu'il est. Il y a [articles](https://dev.to/yasuie/php-file-upload-check-uploaded-files-with-magic-bytes-54oe) [and](https://amazingalgorithms.com/snippets/php/detecting-the-mime-type-of-an-uploaded-file-using-magic-bytes/) [libraries](https://github.com/RikudouSage/MimeTypeDetector) disponibles pour aider avec cela.
+> **Note de sécurité :** Toujours valider et assainir les entrées utilisateur, surtout lors du traitement des téléchargements de fichiers. Toujours valider les types d'extensions que vous autorisez à être téléchargées, mais vous devriez également valider les "octets magiques" du fichier pour vous assurer qu'il s'agit réellement du type de fichier que l'utilisateur prétend. Il y a [articles](https://dev.to/yasuie/php-file-upload-check-uploaded-files-with-magic-bytes-54oe) [and](https://amazingalgorithms.com/snippets/php/detecting-the-mime-type-of-an-uploaded-file-using-magic-bytes/) [libraries](https://github.com/RikudouSage/MimeTypeDetector) disponibles pour aider avec cela.
 
 ## En-têtes de requête
 
@@ -186,9 +186,9 @@ $method = Flight::request()->method; // appelle en fait getMethod()
 $method = Flight::request()->getMethod();
 ```
 
-**Note :** La méthode `getMethod()` récupère d'abord la méthode à partir de `$_SERVER['REQUEST_METHOD']`, puis elle peut être remplacée par `$_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE']` si elle existe ou `$_REQUEST['_method']` si elle existe.
+**Note :** La méthode `getMethod()` récupère d'abord la méthode à partir de `$_SERVER['REQUEST_METHOD']`, puis elle peut être écrasée par `$_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE']` si elle existe ou `$_REQUEST['_method']` si elle existe.
 
-## URL de requête
+## URLs de requête
 
 Il y a quelques méthodes d'aide pour assembler des parties d'une URL pour votre commodité.
 
@@ -211,7 +211,7 @@ $url = Flight::request()->getBaseUrl();
 // https://example.com
 ```
 
-## Analyse de la requête
+## Analyse de requête
 
 Vous pouvez passer une URL à la méthode `parseQuery()` pour analyser la chaîne de requête en un tableau associatif :
 

@@ -15,6 +15,16 @@ Learn how to create a functional blog application with Flight PHP. This guide wa
 
 This tutorial is perfect for beginners who want to see how all the pieces fit together in a real application.
 
+### [Unit Testing and SOLID Principles](/guides/unit-testing)
+
+This guide covers the fundamentals of unit testing in Flight PHP applications. It includes:
+- Setting up PHPUnit
+- Writing testable code using SOLID principles
+- Mocking dependencies
+- Common pitfalls to avoid
+- Scaling your tests as your application grows
+This tutorial is ideal for developers looking to improve code quality and maintainability.
+
 ## Unofficial Guides
 
 While these guides are not officially maintained by the Flight team, they are valuable resources created by the community. They cover various topics and use cases, providing additional insights into using Flight PHP.

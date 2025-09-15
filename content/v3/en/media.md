@@ -4,6 +4,7 @@ We've tried to track down what we can of the various types of media around the i
 
 ## Articles and Write-ups
 
+- [Unit Testing and SOLID Principles](/learn/unit-testing-and-solid-principles) by Brian Fenton (2015?)
 - [PHP Web Framework Flight](https://www.ojambo.com/php-web-framework-flight) by [ojambo](https://www.ojambo.com/) (2025)
 - [Define, Generate, and Implement: An API-First Approach with OpenAPI Generator and FlightPHP](https://dev.to/danielsc/define-generate-and-implement-an-api-first-approach-with-openapi-generator-and-flightphp-1fb3) by [Daniel Schreiber](https://github.com/daniel-sc) (2025)
 - [Best PHP Micro Frameworks for 2024](https://dev.to/n0nag0n/best-php-micro-frameworks-for-2024-19h6) by [n0nag0n](https://github.com/n0nag0n) (2024)

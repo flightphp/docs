@@ -1,45 +1,55 @@
-# Leitfäden
+# Anleitungen
 
-Flight PHP ist so konzipiert, dass es einfach und dennoch leistungsstark ist, und unsere Leitfäden helfen Ihnen, Schritt für Schritt echte Anwendungen zu erstellen. Diese praktischen Tutorials führen Sie durch vollständige Projekte, um zu demonstrieren, wie Flight effektiv eingesetzt werden kann.
+Flight PHP ist so konzipiert, dass es einfach und doch leistungsstark ist, und unsere Anleitungen helfen Ihnen, reale Anwendungen schrittweise zu erstellen. Diese praktischen Tutorials führen Sie durch vollständige Projekte, um zu demonstrieren, wie Flight effektiv eingesetzt werden kann.
 
-## Offizielle Leitfäden
+## Offizielle Anleitungen
 
-### [Einen Blog erstellen](/guides/blog)
-Erfahren Sie, wie Sie eine funktionale Bloganwendung mit Flight PHP erstellen. Dieser Leitfaden führt Sie durch:
+### [Erstellen eines Blogs](/guides/blog)
+Lernen Sie, wie Sie eine funktionale Blog-Anwendung mit Flight PHP erstellen. Diese Anleitung führt Sie durch:
 - Einrichten einer Projektstruktur
 - Arbeiten mit Vorlagen unter Verwendung von Latte
-- Implementierung von Routen für Beiträge
+- Implementieren von Routen für Beiträge
 - Speichern und Abrufen von Daten
-- Verarbeiten von Formularübermittlungen
+- Behandlung von Formularübermittlungen
 - Grundlegende Fehlerbehandlung
 
-Dieses Tutorial ist perfekt für Anfänger, die sehen möchten, wie die einzelnen Teile in einer echten Anwendung zusammenpassen.
+Dieses Tutorial eignet sich perfekt für Anfänger, die sehen möchten, wie alle Teile in einer realen Anwendung zusammenpassen.
 
-## Unoffizielle Leitfäden
+### [Einheitstests und SOLID-Prinzipien](/guides/unit-testing)
 
-Obwohl diese Leitfäden nicht offiziell vom Flight-Team verwaltet werden, sind sie wertvolle Ressourcen, die von der Community erstellt wurden. Sie decken verschiedene Themen und Anwendungsfälle ab und bieten zusätzliche Einblicke in die Verwendung von Flight PHP.
+Diese Anleitung behandelt die Grundlagen der Einheitstests in Flight PHP-Anwendungen. Dazu gehören:
+- Einrichten von PHPUnit
+- Schreiben von testbarem Code unter Verwendung der SOLID-Prinzipien
+- Simulieren von Abhängigkeiten
+- Häufige Fehlerfallen, die vermieden werden sollten
+- Skalieren Ihrer Tests, wenn Ihre Anwendung wächst
+Dieses Tutorial ist ideal für Entwickler, die die Codequalität und -wartbarkeit verbessern möchten.
+
+## Unoffizielle Anleitungen
+
+Obwohl diese Anleitungen nicht offiziell vom Flight-Team gepflegt werden, sind sie wertvolle Ressourcen, die von der Community erstellt wurden. Sie decken verschiedene Themen und Anwendungsfälle ab und bieten zusätzliche Einblicke in die Nutzung von Flight PHP.
 
 ### [Erstellen einer RESTful API mit Flight Framework](https://dev.to/n0nag0n/creating-a-restful-api-with-flight-framework-56lj)
 
-Dieser Leitfaden führt Sie durch die Erstellung einer RESTful API mit dem Flight PHP Framework. Er behandelt die Grundlagen des Einrichtens einer API, das Definieren von Routen und das Zurückgeben von JSON-Antworten.
+Diese Anleitung führt Sie durch das Erstellen einer RESTful API unter Verwendung des Flight PHP-Frameworks. Sie behandelt die Grundlagen der API-Einrichtung, Definieren von Routen und Rückgabe von JSON-Antworten.
 
-### [Einen einfachen Blog erstellen](https://dev.to/n0nag0n/building-a-simple-blog-with-flight-part-1-4ap8)
+### [Erstellen eines einfachen Blogs](https://dev.to/n0nag0n/building-a-simple-blog-with-flight-part-1-4ap8)
 
-Dieser Leitfaden führt Sie durch die Erstellung eines einfachen Blogs mit dem Flight PHP Framework. Er hat tatsächlich 2 Teile: einen, um die Grundlagen abzudecken, und den anderen, um fortgeschrittenere Themen und Verfeinerungen für einen produktionsbereiten Blog abzudecken.
+Diese Anleitung führt Sie durch das Erstellen eines grundlegenden Blogs unter Verwendung des Flight PHP-Frameworks. Es gibt tatsächlich zwei Teile: Einen für die Grundlagen und einen weiteren für fortgeschrittene Themen und Verbesserungen für einen produktionsreifen Blog.
 
-- [Einen einfachen Blog mit Flight erstellen - Teil 1](https://dev.to/n0nag0n/building-a-simple-blog-with-flight-part-1-4ap8) - Einstieg in einen einfachen Blog.
-- [Einen einfachen Blog mit Flight erstellen - Teil 2](https://dev.to/n0nag0n/building-a-simple-blog-with-flight-part-2-5acb) - Verfeinern des Blogs für die Produktion.
+- [Erstellen eines einfachen Blogs mit Flight - Teil 1](https://dev.to/n0nag0n/building-a-simple-blog-with-flight-part-1-4ap8) - Einstieg in einen einfachen Blog.
+- [Erstellen eines einfachen Blogs mit Flight - Teil 2](https://dev.to/n0nag0n/building-a-simple-blog-with-flight-part-2-5acb) - Verfeinern des Blogs für die Produktion.
 
-### [Einen Pokémon API in PHP erstellen: Ein Leitfaden für Anfänger](https://dev.to/n0nag0n/building-a-pokemon-api-in-php-a-beginners-guide-3an8)
+### [Erstellen einer Pokémon API in PHP: Ein Leitfaden für Anfänger](https://dev.to/n0nag0n/building-a-pokemon-api-in-php-a-beginners-guide-3an8)
 
-Dieser unterhaltsame Leitfaden führt Sie durch die Erstellung einer einfachen Pokémon API mit Flight PHP. Er behandelt die Grundlagen des Einrichtens einer API, das Definieren von Routen und das Zurückgeben von JSON-Antworten.
+Diese unterhaltsame Anleitung führt Sie durch das Erstellen einer einfachen Pokémon API unter Verwendung von Flight PHP. Sie behandelt die Grundlagen der API-Einrichtung, Definieren von Routen und Rückgabe von JSON-Antworten.
 
-## Mitwirken
+## Beitrag leisten
 
-Haben Sie eine Idee für einen Leitfaden? Einen Fehler gefunden? Wir begrüßen Beiträge! Unsere Leitfäden werden im [FlightPHP-Dokumentationsrepository](https://github.com/flightphp/docs) verwaltet.
+Haben Sie eine Idee für eine Anleitung? Einen Fehler gefunden? Wir freuen uns über Beiträge! Unsere Anleitungen werden im [FlightPHP-Dokumentationsrepository](https://github.com/flightphp/docs) gepflegt.
 
-Wenn Sie etwas Interessantes mit Flight erstellt haben und es als Leitfaden teilen möchten, reichen Sie bitte einen Pull-Request ein. Ihr Wissen zu teilen hilft der Flight-Community, zu wachsen.
+Falls Sie etwas Interessantes mit Flight erstellt haben und es als Anleitung teilen möchten, reichen Sie bitte einen Pull-Request ein. Das Teilen Ihres Wissens hilft der Flight-Community zu wachsen.
 
-## Suchen Sie API-Dokumentation?
+## Suche nach API-Dokumentation?
 
-Wenn Sie nach spezifischen Informationen zu den Kernfunktionen und -methoden von Flight suchen, schauen Sie im Lernbereich unserer Dokumentation vorbei.
+Falls Sie spezifische Informationen zu Flights Kernfunktionen und Methoden suchen, schauen Sie in den Learn-Bereich unserer Dokumentation.

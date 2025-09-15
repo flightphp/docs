@@ -1,45 +1,55 @@
 # Ceļveži
 
-Flight PHP ir izstrādāts, lai būtu vienkāršs, taču jaudīgs, un mūsu ceļveži palīdzēs jums soli pa solim izveidot reāls pasaules lietojumprogrammas. Šie praktiskie pamācības pavada jūs cauri pilnīgām projekta izstrādēm, lai parādītu, kā Flight var tikt efektīvi izmantots.
+Flight PHP ir izstrādāts, lai būtu vienkāršs, bet spēcīgs, un mūsu ceļveži palīdzēs jums izveidot reālas pasaules aplikācijas solis pa solim. Šie praktiskie pamācību materiāli vada jūs cauri pilnīgiem projektiem, lai demonstrētu, kā Flight var tikt izmantots efektīvi.
 
-## Oficiālie Ceļveži
+## Oficiālie ceļveži
 
-### [Emuāra izveide](/guides/blog)
-Uzziniet, kā izveidot funkcionālu emuāra lietojumprogrammu ar Flight PHP. Šis ceļvedis pavada jūs cauri:
-- Projekta struktūras izveidei
-- Darbs ar veidnēm, izmantojot Latte
-- Ceļu īstenošana ierakstiem
-- Datu glabāšana un iegūšana
-- Formu iesniegumu apstrāde
-- Pamata kļūdu apstrāde
+### [Būvējot emu blogu](/guides/blog)
+Uzziniet, kā izveidot funkcionējošu bloga aplikāciju ar Flight PHP. Šis ceļvedis vada jūs cauri:
+- Projekta struktūras izveidošanai
+- Darbam ar veidnēm, izmantojot Latte
+- Maršrutu ieviešanai ierakstiem
+- Datu glabāšanai un izgūšanai
+- Formu iesniegumu apstrādei
+- Pamata kļūdu apstrādei
 
-Šī pamācība ir ideāla iesācējiem, kuri vēlas redzēt, kā visas sastāvdaļas saskan reālā lietojumprogrammā.
+Šī pamācība ir ideāla iesācējiem, kuri vēlas redzēt, kā visi elementi sader kopā reālā aplikācijā.
 
-## Neoficiālie Ceļveži
+### [Vienības testēšana un SOLID principi](/guides/unit-testing)
 
-Lai gan šie ceļveži oficiāli netiek uzturēti Flight komandas, tie ir vērtīgi resursi, ko izveidojusi kopiena. Tie aptver dažādas tēmas un lietošanas gadījumus, sniedzot papildu ieskatus flight PHP izmantošanā.
+Šis ceļvedis aptver vienības testēšanas pamatus Flight PHP aplikācijās. Tajā ietilpst:
+- PHPUnit iestatīšana
+- Testējama koda rakstīšana, izmantojot SOLID principus
+- Atkarību mockošana
+- Biežās kļūdas, kuras izvairīties
+- Testu mērogošana, kad jūsu aplikācija aug
+Šī pamācība ir ideāla izstrādātājiem, kuri vēlas uzlabot koda kvalitāti un uzturējamību.
 
-### [RESTful API izveide ar Flight Framework](https://dev.to/n0nag0n/creating-a-restful-api-with-flight-framework-56lj)
+## Neoficiālie ceļveži
 
-Šis ceļvedis pavada jūs cauri RESTful API izveidošanai, izmantojot Flight PHP framework. Tas aptver pamatus API izveidošanai, ceļu definēšanai un JSON atbilžu atgriešanai.
+Kaut arī šie ceļveži netiek oficiāli uzturēti Flight komandas, tie ir vērtīgi resursi, kurus izveidojusi kopiena. Tie aptver dažādas tēmas un lietošanas gadījumus, sniedzot papildu ieskatus Flight PHP izmantošanā.
 
-### [Vienkārša emuāra izveide](https://dev.to/n0nag0n/building-a-simple-blog-with-flight-part-1-4ap8)
+### [Creating a RESTful API with Flight Framework](https://dev.to/n0nag0n/creating-a-restful-api-with-flight-framework-56lj)
 
-Šis ceļvedis pavada jūs cauri vienkārša emuāra izveidei, izmantojot Flight PHP framework. Tam faktiski ir 2 daļas: viena, lai aptvertu pamatus, un otra, lai aptvertu sarežģītas tēmas un uzlabojumus ražošanai gatavam emuāram.
+Šis ceļvedis vada jūs cauri RESTful API izveidošanai, izmantojot Flight PHP framework. Tajā tiek apskatīti API iestatīšanas pamati, maršrutu definēšana un JSON atbilžu atgriešana.
 
-- [Vienkārša emuāra izveide ar Flight - 1. daļa](https://dev.to/n0nag0n/building-a-simple-blog-with-flight-part-1-4ap8) - Sākam ar vienkāršu emuāru.
-- [Vienkārša emuāra izveide ar Flight - 2. daļa](https://dev.to/n0nag0n/building-a-simple-blog-with-flight-part-2-5acb) - Uzlabojam emuāru ražošanai.
+### [Building a Simple Blog](https://dev.to/n0nag0n/building-a-simple-blog-with-flight-part-1-4ap8)
 
-### [Pokémon API izveide PHP: Iesācēju ceļvedis](https://dev.to/n0nag0n/building-a-pokemon-api-in-php-a-beginners-guide-3an8)
+Šis ceļvedis vada jūs cauri vienkārša bloga izveidošanai, izmantojot Flight PHP framework. Tajā faktiski ir 2 daļas: viena, lai aptvertu pamatus, un otra, lai apskatītu vairāk uzlabotus tēmus un uzlabojumus ražošanas gatavam blogam.
 
-Šis jautrais ceļvedis pavada jūs, izveidojot vienkāršu Pokémon API, izmantojot Flight PHP. Tas aptver pamatus API izveidošanai, ceļu definēšanai un JSON atbilžu atgriešanai.
+- [Building a Simple Blog with Flight - Part 1](https://dev.to/n0nag0n/building-a-simple-blog-with-flight-part-1-4ap8) - Sākt ar vienkāršu blogu.
+- [Building a Simple Blog with Flight - Part 2](https://dev.to/n0nag0n/building-a-simple-blog-with-flight-part-2-5acb) - Bloga uzlabošana ražošanai.
 
-## Līdzdalība
+### [Building a Pokémon API in PHP: A Beginner's Guide](https://dev.to/n0nag0n/building-a-pokemon-api-in-php-a-beginners-guide-3an8)
 
-Vai jums ir ideja par ceļvedi? Atrasts kļūda? Mēs sveicam ieguldījumus! Mūsu ceļveži tiek uzturēti [FlightPHP dokumentācijas krātuvē](https://github.com/flightphp/docs).
+Šis aizraujošais ceļvedis vada jūs cauri vienkārša Pokémon API izveidošanai, izmantojot Flight PHP. Tajā tiek apskatīti API iestatīšanas pamati, maršrutu definēšana un JSON atbilžu atgriešana.
 
-Ja jūs esat izveidojis kaut ko interesantu ar Flight un vēlaties to dalīties kā ceļvedis, lūdzu, iesniedziet pull pieprasījumu. Dalīšanās ar jūsu zināšanām palīdz Flight kopienai augt.
+## Iesaistīšanās
+
+Vai jums ir ideja par ceļvedi? Atrasts kļūda? Mēs priecājamies par ieguldījumiem! Mūsu ceļveži tiek uzturēti [FlightPHP dokumentācijas repozitorijā](https://github.com/flightphp/docs).
+
+Ja jūs esat izveidojis kaut ko interesantu ar Flight un vēlaties to dalīties kā ceļvedi, lūdzu, iesniedziet pull request. Daloties ar savām zināšanām, jūs palīdzat Flight kopienai augt.
 
 ## Meklējat API dokumentāciju?
 
-Ja meklējat specifisku informāciju par Flight kodolu funkcijām un metodēm, pārbaudiet mūsu dokumentācijas Mācību sadaļu.
+Ja jūs meklējat specifisku informāciju par Flight galvenajām funkcijām un metodēm, apskatiet Learn sadaļu mūsu dokumentācijā.

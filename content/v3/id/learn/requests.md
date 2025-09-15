@@ -1,6 +1,6 @@
 # Permintaan
 
-Flight mengenkapsulasi permintaan HTTP menjadi satu objek, yang dapat diakses dengan:
+Flight merangkum permintaan HTTP menjadi satu objek, yang dapat diakses dengan cara:
 
 ```php
 $request = Flight::request();
@@ -8,7 +8,7 @@ $request = Flight::request();
 
 ## Kasus Penggunaan Tipikal
 
-Saat Anda bekerja dengan permintaan dalam aplikasi web, biasanya Anda ingin mengambil header, atau parameter `$_GET` atau `$_POST`, atau mungkin bahkan badan permintaan mentah. Flight menyediakan antarmuka sederhana untuk melakukan semua hal ini.
+Saat Anda bekerja dengan permintaan dalam aplikasi web, biasanya Anda ingin mengekstrak header, atau parameter `$_GET` atau `$_POST`, atau mungkin badan permintaan mentah. Flight menyediakan antarmuka sederhana untuk melakukan semua hal ini.
 
 Berikut adalah contoh mendapatkan parameter string query:
 
@@ -16,11 +16,11 @@ Berikut adalah contoh mendapatkan parameter string query:
 Flight::route('/search', function(){
 	$keyword = Flight::request()->query['keyword'];
 	echo "You are searching for: $keyword";
-	// query database atau sesuatu yang lain dengan $keyword
+	// query sebuah database atau sesuatu yang lain dengan $keyword
 });
 ```
 
-Berikut adalah contoh mungkin formulir dengan metode POST:
+Berikut adalah contoh mungkin dari formulir dengan metode POST:
 
 ```php
 Flight::route('POST /submit', function(){
@@ -44,7 +44,7 @@ Objek permintaan menyediakan properti berikut:
 - **ajax** - Apakah permintaan adalah permintaan AJAX
 - **scheme** - Protokol server (http, https)
 - **user_agent** - Informasi browser
-- **type** - Jenis konten
+- **type** - Tipe konten
 - **length** - Panjang konten
 - **query** - Parameter string query
 - **data** - Data POST atau data JSON
@@ -72,7 +72,7 @@ $id = Flight::request()->query->id;
 
 ## Badan Permintaan Mentah
 
-Untuk mendapatkan badan permintaan HTTP mentah, misalnya saat berhadapan dengan permintaan PUT, Anda dapat melakukan:
+Untuk mendapatkan badan permintaan HTTP mentah, misalnya saat menangani permintaan PUT, Anda dapat melakukan:
 
 ```php
 $body = Flight::request()->getBody();
@@ -80,7 +80,7 @@ $body = Flight::request()->getBody();
 
 ## Input JSON
 
-Jika Anda mengirim permintaan dengan jenis `application/json` dan data `{"id": 123}`, itu akan tersedia dari properti `data`:
+Jika Anda mengirim permintaan dengan tipe `application/json` dan data `{"id": 123}`, itu akan tersedia dari properti `data`:
 
 ```php
 $id = Flight::request()->data->id;
@@ -126,9 +126,9 @@ Anda dapat mengakses file yang diunggah melalui properti `files`:
 $uploadedFile = Flight::request()->files['myFile'];
 ```
 
-## Pemrosesan Unggah File (v3.12.0)
+## Memproses Pengunggahan File (v3.12.0)
 
-Anda dapat memroses unggah file menggunakan framework dengan beberapa metode bantu. Pada dasarnya, itu berarti menarik data file dari permintaan, dan memindahkannya ke lokasi baru.
+Anda dapat memproses pengunggahan file menggunakan kerangka kerja dengan beberapa metode bantu. Pada dasarnya, itu berarti menarik data file dari permintaan, dan memindahkannya ke lokasi baru.
 
 ```php
 Flight::route('POST /upload', function(){
@@ -151,7 +151,7 @@ Flight::route('POST /upload', function(){
 });
 ```
 
-> **Catatan Keamanan:** Selalu validasi dan sanitasi input pengguna, terutama saat berhadapan dengan unggah file. Selalu validasi jenis ekstensi yang akan Anda izinkan untuk diunggah, tetapi Anda juga harus validasi "magic bytes" file untuk memastikan itu benar-benar jenis file yang diklaim pengguna. Ada [articles](https://dev.to/yasuie/php-file-upload-check-uploaded-files-with-magic-bytes-54oe) [and](https://amazingalgorithms.com/snippets/php/detecting-the-mime-type-of-an-uploaded-file-using-magic-bytes/) [libraries](https://github.com/RikudouSage/MimeTypeDetector) yang tersedia untuk membantu dengan ini.
+> **Catatan Keamanan:** Selalu validasi dan sanitasi input pengguna, terutama saat menangani pengunggahan file. Selalu validasi tipe ekstensi yang akan Anda izinkan untuk diunggah, tetapi Anda juga harus validasi "magic bytes" dari file untuk memastikan itu benar-benar tipe file yang diklaim pengguna. Ada [articles](https://dev.to/yasuie/php-file-upload-check-uploaded-files-with-magic-bytes-54oe) [and](https://amazingalgorithms.com/snippets/php/detecting-the-mime-type-of-an-uploaded-file-using-magic-bytes/) [libraries](https://github.com/RikudouSage/MimeTypeDetector) yang tersedia untuk membantu dengan ini.
 
 ## Header Permintaan
 
@@ -182,7 +182,7 @@ $body = Flight::request()->getBody();
 Anda dapat mengakses metode permintaan menggunakan properti `method` atau metode `getMethod()`:
 
 ```php
-$method = Flight::request()->method; // sebenarnya memanggil getMethod()
+$method = Flight::request()->method; // actually calls getMethod()
 $method = Flight::request()->getMethod();
 ```
 
@@ -190,7 +190,7 @@ $method = Flight::request()->getMethod();
 
 ## URL Permintaan
 
-Ada beberapa metode bantu untuk menyusun bagian-bagian URL untuk kenyamanan Anda.
+Ada beberapa metode bantu untuk menyusun bagian-bagian URL untuk kemudahan Anda.
 
 ### URL Lengkap
 
@@ -207,7 +207,7 @@ Anda dapat mengakses URL dasar menggunakan metode `getBaseUrl()`:
 
 ```php
 $url = Flight::request()->getBaseUrl();
-// Perhatikan, tidak ada garis miring akhir.
+// Notice, no trailing slash.
 // https://example.com
 ```
 
