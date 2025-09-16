@@ -37,12 +37,15 @@ final readonly class DocsLogic
      */
     public function getLearnSectionNames(string $version = 'v3', string $language = 'en'): array
     {
-        $baseDir = __DIR__ . '/../../content/' . $version . '/' . $language . '/learn/';
+        $baseDir = __DIR__ . "/../../content/{$version}/{$language}/learn/";
+
         if (!is_dir($baseDir)) {
             return [];
         }
+
         $files = scandir($baseDir);
         $sections = [];
+
         foreach ($files as $file) {
             if (
                 str_ends_with($file, '.md') &&
@@ -51,7 +54,9 @@ final readonly class DocsLogic
                 $sections[] = basename($file, '.md');
             }
         }
+
         sort($sections);
+
         return $sections;
     }
 
@@ -71,12 +76,12 @@ final readonly class DocsLogic
         }
 
         // Here we can set variables that will be available on any page
-        $params['url'] = $request->getScheme() . '://' . $request->getHeader('Host') . $uri;
+        $params['url'] = "{$request->getScheme()}://{$request->getHeader('Host')}{$uri}";
         $params['nonce'] = HeaderSecurityMiddleware::$nonce;
         $startTime = microtime(true);
         $this->app->latte()->render($latte_file, $params);
         $executionTime = microtime(true) - $startTime;
-        $this->app->eventDispatcher()->trigger('flight.view.rendered', $latte_file . ':' . $uri, $executionTime);
+        $this->app->eventDispatcher()->trigger('flight.view.rendered', "{$latte_file}:{$uri}", $executionTime);
     }
 
     /**
@@ -91,6 +96,7 @@ final readonly class DocsLogic
         $Translator = $this->app->translator();
         $Translator->setLanguage($language);
         $Translator->setVersion($version);
+
         return $Translator;
     }
 
@@ -100,10 +106,8 @@ final readonly class DocsLogic
      * @param string $language The language of the page to compile.
      * @param string $version The version of the page to compile.
      * @param string $section The section of the page to compile.
-     *
-     * @return void
      */
-    public function compileSinglePage(string $language, string $version, string $section)
+    public function compileSinglePage(string $language, string $version, string $section): void
     {
         $app = $this->app;
 
@@ -123,6 +127,7 @@ final readonly class DocsLogic
         $cacheHit = true;
         $cacheKey = $section . '_html_' . $language . '_' . $version;
         $markdown_html = $app->cache()->retrieve($cacheKey);
+
         if ($markdown_html === null) {
             $cacheHit = false;
             $markdown_html = $app->parsedown()->text($Translator->getMarkdownLanguageFile($section . '.md'));
@@ -131,7 +136,6 @@ final readonly class DocsLogic
         }
 
         $app->eventDispatcher()->trigger('flight.cache.checked', 'compile_single_page_' . $cacheKey, $cacheHit, microtime(true) - $cacheStartTime);
-
         $markdown_html = $this->wrapContentInDiv($markdown_html);
 
         $this->renderPage('single_page.latte', [
@@ -149,7 +153,7 @@ final readonly class DocsLogic
      * @param string $section The main section of the documentation.
      * @param string $sub_section The sub-section of the documentation.
      */
-    public function compileScrollspyPage(string $language, string $version, string $section, string $sub_section)
+    public function compileScrollspyPage(string $language, string $version, string $section, string $sub_section): void
     {
         $app = $this->app;
 
@@ -167,7 +171,7 @@ final readonly class DocsLogic
 
         $section_file_path = str_replace('_', '-', $section);
         $sub_section_underscored = str_replace('-', '_', $sub_section);
-        $heading_data = $app->cache()->retrieve($sub_section_underscored . '_heading_data_' . $language . '_' . $version);
+        $heading_data = $app->cache()->retrieve("{$sub_section_underscored}_heading_data_{$language}_{$version}");
 
         $cacheStartTime = microtime(true);
         $cacheHit = true;
@@ -176,7 +180,7 @@ final readonly class DocsLogic
 
         if ($markdown_html === null) {
             $cacheHit = false;
-            $markdown_html = $app->parsedown()->text($Translator->getMarkdownLanguageFile('/' . $section_file_path . '/' . $sub_section_underscored . '.md'));
+            $markdown_html = $app->parsedown()->text($Translator->getMarkdownLanguageFile("/{$section_file_path}/{$sub_section_underscored}.md"));
 
             $heading_data = [];
 
@@ -187,11 +191,22 @@ final readonly class DocsLogic
             );
 
             $markdown_html = Text::addClassesToElements($markdown_html);
-            $app->cache()->store($sub_section_underscored . '_heading_data_' . $language . '_' . $version, $heading_data, 86400); // 1 day
+
+            $app->cache()->store(
+                "{$sub_section_underscored}_heading_data_{$language}_{$version}",
+                $heading_data,
+                86400
+            ); // 1 day
+
             $app->cache()->store($cacheKey, $markdown_html, 86400); // 1 day
         }
 
-        $app->eventDispatcher()->trigger('flight.cache.checked', 'compile_scrollspy_page_' . $cacheKey, $cacheHit, microtime(true) - $cacheStartTime);
+        $app->eventDispatcher()->trigger(
+            'flight.cache.checked',
+            "compile_scrollspy_page_{$cacheKey}",
+            $cacheHit,
+            microtime(true) - $cacheStartTime
+        );
 
         // pull the title out of the first h1 tag
         $page_title = '';
