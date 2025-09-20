@@ -25,7 +25,7 @@ specific order are two features that were inspired by Slim. Slim v3 came out gea
 - Flight is geared towards simplicity and ease of use.
 - One of Flight's core features is that it does it's best to maintain backwards compatibility. Slim v3 to v4 was a breaking change.
 - Flight is meant for developers who are venturing into the land of frameworks for the first time.
-- Flight can also do enterprise level applications, but it does not have as many examples and tutorials as Slim does.
+- Slim can also do enterprise level applications, but it does not have as many examples and tutorials as Flight does.
   It will also require more discipline on the part of the developer to keep things organized and well-structured.
 - Flight gives the developer more control over the application, whereas Slim can sneak in some magic behind the scenes.
 - Flight has a simple [PdoWrapper](/awesome-plugins/pdo-wrapper) that can be used to interact with your database. Slim requires you to use 
