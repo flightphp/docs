@@ -36,7 +36,7 @@ PHP 5.3.
 - Flight has dark mode on their documentation site. (mic drop)
 - Fat-Free has some modules that are woefully unmaintained.
 - Flight has a simple [PdoWrapper](/awesome-plugins/pdo-wrapper) that is a touch more simple than Fat-Free's built in `DB\SQL` class.
-- Flight has a [permissions plugin](/awesome-plugins/permissions) that can be used to secure your application. Slim requires you to use 
+- Flight has a [permissions plugin](/awesome-plugins/permissions) that can be used to secure your application. Fat Free requires you to use 
   a third-party library.
 - Flight has an ORM called [active-record](/awesome-plugins/active-record) which feels more like an ORM than Fat-Free's Mapper.
   The added benefit of `active-record` is that you can define relationships between records for automatic joins where Fat-Free's Mapper
