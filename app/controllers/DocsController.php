@@ -6,165 +6,172 @@ use app\utils\CustomEngine;
 use app\utils\DocsLogic;
 use app\utils\Text;
 use Exception;
-use flight\core\EventDispatcher;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 
-class DocsController {
+final readonly class DocsController
+{
+    protected const CONTENT_DIR = __DIR__ . '/../../content/';
+    protected DocsLogic $docsLogic;
 
-	/** @var string */
-    private const DS = DIRECTORY_SEPARATOR;
-
-	/** @var string Path to the base content directory */
-    protected const CONTENT_DIR = __DIR__ . self::DS . '..' . self::DS . '..' . self::DS . 'content' . self::DS;
-
-	protected DocsLogic $DocsLogic;
-
-	/**
-	 * DocsController constructor.
-	 *
-	 * @param CustomEngine $app Flight Engine
-	 */
-    public function __construct(protected $app) {
-		$this->DocsLogic = new DocsLogic($app);
+    /**
+     * DocsController constructor.
+     *
+     * @param CustomEngine $app Flight Engine
+     */
+    public function __construct(private CustomEngine $app)
+    {
+        $this->docsLogic = new DocsLogic($app);
     }
 
-	/**
-	 * Handles the retrieval of the license page.
-	 *
-	 * @param string $language The language in which the page is requested.
-	 * @param string $version The version of the page to retrieve.
-	 */
-    public function licenseGet(string $language, string $version) {
-        $this->DocsLogic->compileSinglePage($language, $version, 'license');
+    /**
+     * Handles the retrieval of the license page.
+     *
+     * @param string $language The language in which the page is requested.
+     * @param string $version The version of the page to retrieve.
+     */
+    public function licenseGet(string $language, string $version)
+    {
+        $this->docsLogic->compileSinglePage($language, $version, 'license');
     }
 
-	/**
-	 * Handles the retrieval of the about page.
-	 *
-	 * @param string $language The language in which the page is requested.
-	 * @param string $version The version of the page to retrieve.
-	 */
-    public function aboutGet(string $language, string $version) {
-        $this->DocsLogic->compileSinglePage($language, $version, 'about');
+    /**
+     * Handles the retrieval of the about page.
+     *
+     * @param string $language The language in which the page is requested.
+     * @param string $version The version of the page to retrieve.
+     */
+    public function aboutGet(string $language, string $version): void
+    {
+        $this->docsLogic->compileSinglePage($language, $version, 'about');
     }
 
-	/**
-	 * Handles the retrieval of the examples page.
-	 *
-	 * @param string $language The language in which the page is requested.
-	 * @param string $version The version of the page to retrieve.
-	 */
-    public function examplesGet(string $language, string $version) {
-        $this->DocsLogic->compileSinglePage($language, $version, 'examples');
+    /**
+     * Handles the retrieval of the examples page.
+     *
+     * @param string $language The language in which the page is requested.
+     * @param string $version The version of the page to retrieve.
+     */
+    public function examplesGet(string $language, string $version): void
+    {
+        $this->docsLogic->compileSinglePage($language, $version, 'examples');
     }
 
-	/**
-	 * Handles the retrieval of the install page.
-	 * 
-	 * @param string $language The language in which the page is requested.
-	 * @param string $version The version of the page to retrieve.
-	 */
-    public function installGet(string $language, string $version) {
-		if($version === 'v2') {
-			$this->DocsLogic->compileSinglePage($language, $version, 'install');
-		} else {
-        	$this->DocsLogic->compileScrollspyPage($language, $version, 'install', 'install');
-		}
+    /**
+     * Handles the retrieval of the install page.
+     *
+     * @param string $language The language in which the page is requested.
+     * @param string $version The version of the page to retrieve.
+     */
+    public function installGet(string $language, string $version): void
+    {
+        if ($version === 'v2') {
+            $this->docsLogic->compileSinglePage($language, $version, 'install');
+        } else {
+            $this->docsLogic->compileScrollspyPage($language, $version, 'install', 'install');
+        }
     }
 
-	/**
-	 * Handles the retrieval of the learn page.
-	 *
-	 * @param string $language The language in which the page is requested.
-	 * @param string $version The version of the page to retrieve.
-	 */
-    public function learnGet(string $language, string $version) {
-		if($version === 'v2') {
-			$this->DocsLogic->compileScrollspyPage($language, $version, 'learn', 'learn');
-		} else {
-			$this->DocsLogic->compileSinglePage($language, $version, 'learn');
-		}
+    /**
+     * Handles the retrieval of the learn page.
+     *
+     * @param string $language The language in which the page is requested.
+     * @param string $version The version of the page to retrieve.
+     */
+    public function learnGet(string $language, string $version): void
+    {
+        if ($version === 'v2') {
+            $this->docsLogic->compileScrollspyPage($language, $version, 'learn', 'learn');
+        } else {
+            $this->docsLogic->compileSinglePage($language, $version, 'learn');
+        }
     }
 
-	/**
-	 * Handles the retrieval of the section within the learn page.
-	 *
-	 * @param string $language The language in which the page is requested.
-	 * @param string $version The version of the page to retrieve.
-	 */
-    public function learnSectionsGet(string $language, string $version, string $section_name) {
-        $this->DocsLogic->compileScrollspyPage($language, $version, 'learn', $section_name);
+    /**
+     * Handles the retrieval of the section within the learn page.
+     *
+     * @param string $language The language in which the page is requested.
+     * @param string $version The version of the page to retrieve.
+     */
+    public function learnSectionsGet(string $language, string $version, string $section_name): void
+    {
+        $this->docsLogic->compileScrollspyPage($language, $version, 'learn', $section_name);
     }
 
-	/**
-	 * Handles the retrieval of the media page.
-	 *
-	 * @param string $language The language in which the page is requested.
-	 * @param string $version The version of the page to retrieve.
-	 */
-    public function mediaGet(string $language, string $version) {
-        $this->DocsLogic->compileSinglePage($language, $version, 'media');
+    /**
+     * Handles the retrieval of the media page.
+     *
+     * @param string $language The language in which the page is requested.
+     * @param string $version The version of the page to retrieve.
+     */
+    public function mediaGet(string $language, string $version): void
+    {
+        $this->docsLogic->compileSinglePage($language, $version, 'media');
     }
 
-	/**
-	 * Handles the retrieval of the guide page.
-	 *
-	 * @param string $language The language in which the page is requested.
-	 * @param string $version The version of the page to retrieve.
-	 */
-    public function guidesGet(string $language, string $version) {
-		$this->DocsLogic->compileSinglePage($language, $version, 'guides');
+    /**
+     * Handles the retrieval of the guide page.
+     *
+     * @param string $language The language in which the page is requested.
+     * @param string $version The version of the page to retrieve.
+     */
+    public function guidesGet(string $language, string $version): void
+    {
+        $this->docsLogic->compileSinglePage($language, $version, 'guides');
     }
 
-	/**
-	 * Handles the retrieval of the section within the learn page.
-	 *
-	 * @param string $language The language in which the page is requested.
-	 * @param string $version The version of the page to retrieve.
-	 */
-    public function guidesSectionsGet(string $language, string $version, string $section_name) {
-        $this->DocsLogic->compileScrollspyPage($language, $version, 'guides', $section_name);
+    /**
+     * Handles the retrieval of the section within the learn page.
+     *
+     * @param string $language The language in which the page is requested.
+     * @param string $version The version of the page to retrieve.
+     */
+    public function guidesSectionsGet(string $language, string $version, string $section_name): void
+    {
+        $this->docsLogic->compileScrollspyPage($language, $version, 'guides', $section_name);
     }
 
-	/**
-	 * Handles the retrieval of the awesome plugins page.
-	 *
-	 * @param string $language The language in which the page is requested.
-	 * @param string $version The version of the page to retrieve.
-	 */
-    public function awesomePluginsGet(string $language, string $version) {
-        $this->DocsLogic->compileScrollspyPage($language, $version, 'awesome_plugins', 'awesome_plugins');
+    /**
+     * Handles the retrieval of the awesome plugins page.
+     *
+     * @param string $language The language in which the page is requested.
+     * @param string $version The version of the page to retrieve.
+     */
+    public function awesomePluginsGet(string $language, string $version): void
+    {
+        $this->docsLogic->compileScrollspyPage($language, $version, 'awesome_plugins', 'awesome_plugins');
     }
 
-	/**
-	 * Handles the retrieval of the section within the awesome plugins page.
-	 *
-	 * @param string $language The language in which the page is requested.
-	 * @param string $version The version of the page to retrieve.
-	 */
-    public function pluginGet(string $language, string $version, string $plugin_name) {
-        $this->DocsLogic->compileScrollspyPage($language, $version, 'awesome_plugins', $plugin_name);
+    /**
+     * Handles the retrieval of the section within the awesome plugins page.
+     *
+     * @param string $language The language in which the page is requested.
+     * @param string $version The version of the page to retrieve.
+     */
+    public function pluginGet(string $language, string $version, string $plugin_name): void
+    {
+        $this->docsLogic->compileScrollspyPage($language, $version, 'awesome_plugins', $plugin_name);
     }
 
-	/**
-	 * This is if you want all documentation to be viewable in a single page
-	 *
-	 * @param string $language The language of the page.
-	 * @param string $version The version of the page.
-	 */
-    public function singlePageGet(string $language, string $version) {
+    /**
+     * This is if you want all documentation to be viewable in a single page
+     *
+     * @param string $language The language of the page.
+     * @param string $version The version of the page.
+     */
+    public function singlePageGet(string $language, string $version): void
+    {
         $app = $this->app;
 
-		// Check if the language is valid
-		if ($this->DocsLogic->checkValidLanguage($language) === false) {
-			$language = 'en';
-		}
+        // Check if the language is valid
+        if ($this->docsLogic->checkValidLanguage($language) === false) {
+            $language = 'en';
+        }
 
-		// Check if the version is valid
-		if ($this->DocsLogic->checkValidVersion($version) === false) {
-			$version = 'v3';
-		}
+        // Check if the version is valid
+        if ($this->docsLogic->checkValidVersion($version) === false) {
+            $version = 'v3';
+        }
 
         // recursively look through all the content files, and pull out each section and render it
         $sections = [];
@@ -180,53 +187,59 @@ class DocsController {
             $sections[] = $section;
         }
 
-		$Translator = $this->DocsLogic->setupTranslatorService($language, $version);
+        $Translator = $this->docsLogic->setupTranslatorService($language, $version);
 
-		$cacheHit = true;
-		$cacheStartTime = microtime(true);
-		$cacheKey = 'single_page_html_' . $language . '_' . $version;
-		$markdown_html = $app->cache()->retrieve($cacheKey);
-		if ($markdown_html === null) {
-			$cacheHit = false;
-			$markdown_html = '';
-			foreach ($sections as $section) {
+        $cacheHit = true;
+        $cacheStartTime = microtime(true);
+        $cacheKey = 'single_page_html_' . $language . '_' . $version;
+        $markdown_html = $app->cache()->retrieve($cacheKey);
+
+        if ($markdown_html === null) {
+            $cacheHit = false;
+            $markdown_html = '';
+
+            foreach ($sections as $section) {
                 $slugged_section = Text::slugify($section);
                 $markdown_html .= '<h1><a href="/' . $section . '" id="' . $slugged_section . '">' . ucwords($section) . '</a> <a href="/' . $section . '#' . $slugged_section . '" class="bi bi-link-45deg" title="Permalink to this heading"></a></h1>';
-                $markdown_html .= $app->parsedown()->text($Translator->getMarkdownLanguageFile($section . '.md'));
+                $section_file_name = $section . '.md';
+                $markdown_language_file = $Translator->getMarkdownLanguageFile($section_file_name);
+                $markdown_html .= $app->parsedown()->text($markdown_language_file);
             }
 
-			$app->cache()->store($cacheKey, $markdown_html, 86400); // 1 day
-		}
+            $app->cache()->store($cacheKey, $markdown_html, 86400); // 1 day
+        }
 
-		$app->eventDispatcher()->trigger('flight.cache.checked', 'single_page_get_'.$cacheKey, $cacheHit, microtime(true) - $cacheStartTime);
+        $app->eventDispatcher()->trigger('flight.cache.checked', 'single_page_get_' . $cacheKey, $cacheHit, microtime(true) - $cacheStartTime);
 
-        $this->DocsLogic->renderPage('single_page.latte', [
+        $this->docsLogic->renderPage('single_page.latte', [
             'page_title' => 'single_page_documentation',
             'markdown' => $markdown_html,
-			'version' => $version,
+            'version' => $version,
         ]);
     }
 
-	/**
-	 * Handles the GET request for searching documentation.
-	 *
-	 * @param string $language The language of the documentation.
-	 * @param string $version The version of the documentation.
-	 */
-    public function searchGet(string $language, string $version) {
-        $query = $this->app->request()->query['query'];
-        $language_directory_to_grep = self::CONTENT_DIR . $version . self::DS . $language . self::DS;
-        $grep_command = 'grep -r -i -n --color=never --include="*.md" '.escapeshellarg($query).' '.escapeshellarg($language_directory_to_grep);
+    /**
+     * Handles the GET request for searching documentation.
+     *
+     * @param string $language The language of the documentation.
+     * @param string $version The version of the documentation.
+     */
+    public function searchGet(string $language, string $version): void
+    {
+        $query = strval($this->app->request()->query['query']);
+        $language_directory_to_grep = self::CONTENT_DIR . $version . '/' . $language;
+        $grep_command = 'grep -r -i -n --color=never --include="*.md" ' . escapeshellarg($query) . ' ' . escapeshellarg($language_directory_to_grep);
         exec($grep_command, $grep_output);
 
         $files_found = [];
-        foreach($grep_output as $line) {
+
+        foreach ($grep_output as $line) {
             $line_parts = explode(':', $line);
             // Catch the windows C drive letter
-            if($line_parts[0] === 'C') {
+            if ($line_parts[0] === 'C') {
                 array_shift($line_parts);
             }
-            $file_path = str_replace('/', self::DS, $line_parts[0]);
+            $file_path = str_replace('/', '/', $line_parts[0]);
             $line_number = $line_parts[1];
             $line_content = $line_parts[2];
 
@@ -236,7 +249,7 @@ class DocsController {
 
             // pull the title from the first header tag in the markdown file.
             preg_match('/# (.+)/', $file_contents, $matches);
-            if(empty($matches[1])) {
+            if (empty($matches[1])) {
                 continue;
             }
             $title = $matches[1];
@@ -248,11 +261,19 @@ class DocsController {
         }
 
         $final_search = [];
-        foreach($files_found as $file_path => $data) {
+
+        foreach ($files_found as $file_path => $data) {
             $count = count($files_found[$file_path]);
+            $final_file_path = str_replace([$language_directory_to_grep, '.md', '_', '\\'], ['', '', '-', '/'], $file_path);
+
+            if (str_contains($final_file_path, $language)) {
+                $final_file_path_parts = explode('/', $final_file_path);
+                $final_file_path = $final_file_path_parts[count($final_file_path_parts) - 1];
+            }
+
             $final_search[] = [
-                'search_result' => $data[0]['page_name'].' ("'.$query.'" '.$count.'x)',
-                'url' => '/'.$language.'/'.$version.'/'.str_replace([ $language_directory_to_grep, '.md', '_', '\\' ], [ '', '', '-', '/' ], $file_path),
+                'search_result' => $data[0]['page_name'] . ' ("' . $query . '" ' . $count . 'x)',
+                'url' => "/{$language}/{$version}/" . $final_file_path,
                 'hits' => $count
             ];
         }
@@ -263,12 +284,11 @@ class DocsController {
         $this->app->json($final_search);
     }
 
-	/**
-	 * Handles the POST request to update this repo from a webhook from GitHub
-	 *
-	 * @return void
-	 */
-    public function updateStuffPost() {
+    /**
+     * Handles the POST request to update this repo from a webhook from GitHub
+     */
+    public function updateStuffPost(): void
+    {
         $secret = $this->app->get('config')['github_webhook_secret'];
         $request = $this->app->request();
         $signature_header = $request->getVar('HTTP_X_HUB_SIGNATURE');
@@ -286,6 +306,6 @@ class DocsController {
 
         // it was successful. Pull the latest changes and update the composer dependencies
         exec('cd /var/www/flightphp-docs/ && git pull && /usr/bin/php82 /usr/local/bin/composer install --no-progress -o --no-dev && rm -rf app/cache/*', $output);
-		echo join("\n", $output);
+        echo join("\n", $output);
     }
 }

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="vendor/squizlabs/php_codesniffer/phpcs.xsd">
+  <description />
+  <arg name="colors" />
+  <arg name="tab-width" value="4" />
+  <file>public/index.php</file>
+  <file>app/</file>
+  <file>rector.php</file>
+  <file>swoole_server.php</file>
+  <file>translate_content.php</file>
+  <exclude-pattern>vendor</exclude-pattern>
+  <exclude-pattern>app/cache</exclude-pattern>
+
+  <rule ref="PSR12" />
+</ruleset>

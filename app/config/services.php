@@ -8,23 +8,23 @@ use Latte\Engine as LatteEngine;
 use Latte\Essential\TranslatorExtension;
 use Latte\Loaders\FileLoader;
 use flight\Cache;
+use flight\Container;
 
-/** 
- * @var array $config 
+/**
  * @var CustomEngine $app
  */
 
- // This translates some common parts of the page, not the content
+// This translates some common parts of the page, not the content
 $app->register('translator', Translator::class);
 
 // Templating Engine used to render the views
 $app->register('latte', LatteEngine::class, [], function (LatteEngine $latte) use ($app): void {
     $latte->setTempDirectory(__DIR__ . '/../cache/');
-    $latte->setLoader(new FileLoader(__DIR__ . '/../views/'));
+    $latte->setLoader(new FileLoader(__DIR__ . '/../views'));
     $translator = $app->translator();
 
     $translatorExtension = new TranslatorExtension(
-        [$translator, 'translate'],
+        $translator->translate(...),
     );
 
     $latte->addExtension($translatorExtension);
@@ -39,6 +39,10 @@ $app->register('cache', Cache::class, [__DIR__ . '/../cache/'], function (Cache 
 $app->register('parsedown', Parsedown::class);
 
 // Register the APM
-$ApmLogger = LoggerFactory::create(__DIR__ . '/../../.runway-config.json');
-$Apm = new Apm($ApmLogger);
-$Apm->bindEventsToFlightInstance($app);
+$logger = LoggerFactory::create(__DIR__ . '/../../.runway-config.json');
+$apm = new Apm($logger);
+$apm->bindEventsToFlightInstance($app);
+
+Container::getInstance()->singleton($app);
+Container::getInstance()->singleton($app->latte());
+Container::getInstance()->singleton($app->cache());

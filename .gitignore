@@ -9,3 +9,4 @@ app/cache/
 biome.*
 .runway-config.json
 apm.db*
+apm_fallback.log
