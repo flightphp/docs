@@ -29,7 +29,7 @@ these modules, when you actually could just use another library or write your ow
 - Flight is geared towards simplicity and ease of use.
 - One of Flight's core features is that it does it's best to maintain backwards compatibility. Laravel causes [much frustration](https://www.google.com/search?q=laravel+breaking+changes+major+version+complaints&sca_esv=6862a9c407df8d4e&sca_upv=1&ei=t72pZvDeI4ivptQP1qPMwQY&ved=0ahUKEwiwlurYuNCHAxWIl4kEHdYRM2gQ4dUDCBA&uact=5&oq=laravel+breaking+changes+major+version+complaints&gs_lp=Egxnd3Mtd2l6LXNlcnAiMWxhcmF2ZWwgYnJlYWtpbmcgY2hhbmdlcyBtYWpvciB2ZXJzaW9uIGNvbXBsYWludHMyChAAGLADGNYEGEcyChAAGLADGNYEGEcyChAAGLADGNYEGEcyChAAGLADGNYEGEcyChAAGLADGNYEGEcyChAAGLADGNYEGEcyChAAGLADGNYEGEcyChAAGLADGNYEGEdIjAJQAFgAcAF4AZABAJgBAKABAKoBALgBA8gBAJgCAaACB5gDAIgGAZAGCJIHATGgBwA&sclient=gws-wiz-serp) between major versions.
 - Flight is meant for developers who are venturing into the land of frameworks for the first time.
-- Flight has no dependencies, whereas [Laravel has an atrocious amount of dependencies](https://github.com/laravel/framework/blob/11.x/composer.json)
+- Flight has no dependencies, whereas [Laravel has an atrocious amount of dependencies](https://github.com/laravel/framework/blob/12.x/composer.json)
 - Flight can also do enterprise level applications, but it does not have as much boilerplate code as Laravel does.
   It will also require more discipline on the part of the developer to keep things organized and well-structured.
 - Flight gives the developer more control over the application, whereas Laravel has gobs of magic behind the scenes that can be frustrating.
