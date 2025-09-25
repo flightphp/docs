@@ -346,6 +346,11 @@ class DocsLogic {
             $line_number = $line_parts[1];
             $line_content = $line_parts[2];
 
+			// Skip test files
+			if (substr($file_path, -9) === '__test.md') {
+				continue;
+			}
+
             $file_contents = file_exists($file_path)
                 ? file_get_contents($file_path)
                 : '';
