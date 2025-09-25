@@ -20,5 +20,7 @@ return [
     'media' => 'Media',
 	'version' => 'Version',
 	'guides' => 'Guides',
-	'flight_for_ai' => 'Flight is optimized for AI-powered developer experience. <a href="/learn/ai">Learn more</a>.'
+	'flight_for_ai' => 'Flight is optimized for AI-powered developer experience. <a href="/learn/ai">Learn more</a>.',
+	'search_page_title' => 'Search',
+	'search_results' => 'Search Results for "{query}"',
 ];

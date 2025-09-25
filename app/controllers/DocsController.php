@@ -6,17 +6,10 @@ use app\utils\CustomEngine;
 use app\utils\DocsLogic;
 use app\utils\Text;
 use Exception;
-use flight\core\EventDispatcher;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 
 class DocsController {
-
-	/** @var string */
-    private const DS = DIRECTORY_SEPARATOR;
-
-	/** @var string Path to the base content directory */
-    protected const CONTENT_DIR = __DIR__ . self::DS . '..' . self::DS . '..' . self::DS . 'content' . self::DS;
 
 	protected DocsLogic $DocsLogic;
 
@@ -118,6 +111,26 @@ class DocsController {
     }
 
 	/**
+	 * Handles GET requests for searching documentation.
+	 *
+	 * @param string $language The language of the documentation to search.
+	 * @param string $version The version of the documentation to search.
+	 * @return mixed The search results or response.
+	 */
+	public function searchGet(string $language, string $version) {
+		$query = $this->app->request()->query['q'] ?? '';
+		
+		$finalSearch = $this->DocsLogic->runSearch($query, $language, $version);
+
+		$this->DocsLogic->renderPage('search.latte', [
+			'query' => $query,
+			'version' => $version,
+			'language' => $language,
+			'results' => $finalSearch,
+		]);
+	}
+
+	/**
 	 * Handles the retrieval of the section within the learn page.
 	 *
 	 * @param string $language The language in which the page is requested.
@@ -168,7 +181,7 @@ class DocsController {
 
         // recursively look through all the content files, and pull out each section and render it
         $sections = [];
-        $language_directory = self::CONTENT_DIR . '/' . $version . '/' . $language . '/';
+        $language_directory = DocsLogic::CONTENT_DIR . '/' . $version . '/' . $language . '/';
         $files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($language_directory));
 
         foreach ($files as $file) {
@@ -204,6 +217,7 @@ class DocsController {
             'page_title' => 'single_page_documentation',
             'markdown' => $markdown_html,
 			'version' => $version,
+			'language' => $language
         ]);
     }
 
@@ -213,54 +227,10 @@ class DocsController {
 	 * @param string $language The language of the documentation.
 	 * @param string $version The version of the documentation.
 	 */
-    public function searchGet(string $language, string $version) {
+    public function quickSearchGet(string $language, string $version) {
         $query = $this->app->request()->query['query'];
-        $language_directory_to_grep = self::CONTENT_DIR . $version . self::DS . $language . self::DS;
-        $grep_command = 'grep -r -i -n --color=never --include="*.md" '.escapeshellarg($query).' '.escapeshellarg($language_directory_to_grep);
-        exec($grep_command, $grep_output);
-
-        $files_found = [];
-        foreach($grep_output as $line) {
-            $line_parts = explode(':', $line);
-            // Catch the windows C drive letter
-            if($line_parts[0] === 'C') {
-                array_shift($line_parts);
-            }
-            $file_path = str_replace('/', self::DS, $line_parts[0]);
-            $line_number = $line_parts[1];
-            $line_content = $line_parts[2];
-
-            $file_contents = file_exists($file_path)
-                ? file_get_contents($file_path)
-                : '';
-
-            // pull the title from the first header tag in the markdown file.
-            preg_match('/# (.+)/', $file_contents, $matches);
-            if(empty($matches[1])) {
-                continue;
-            }
-            $title = $matches[1];
-            $files_found[$file_path][] = [
-                'line_number' => $line_number,
-                'line_content' => $line_content,
-                'page_name' => $title
-            ];
-        }
-
-        $final_search = [];
-        foreach($files_found as $file_path => $data) {
-            $count = count($files_found[$file_path]);
-            $final_search[] = [
-                'search_result' => $data[0]['page_name'].' ("'.$query.'" '.$count.'x)',
-                'url' => '/'.$language.'/'.$version.'/'.str_replace([ $language_directory_to_grep, '.md', '_', '\\' ], [ '', '', '-', '/' ], $file_path),
-                'hits' => $count
-            ];
-        }
-
-        // sort by descending order by putting $b first
-        usort($final_search, fn($a, $b) => $b['hits'] <=> $a['hits']);
-
-        $this->app->json($final_search);
+        $searchData = $this->DocsLogic->runSearch($query, $language, $version);
+        $this->app->json($searchData);
     }
 
 	/**

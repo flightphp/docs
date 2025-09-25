@@ -20,5 +20,7 @@ return [
     'media' => 'Медиа',
 	'version' => 'Версия',
 	'guides' => 'Руководства',
-	'flight_for_ai' => 'Flight оптимизирован для работы с искусственным интеллектом. <a href="/learn/ai">Узнать больше</a>.',
+    	'flight_for_ai' => 'Flight оптимизирован для работы с искусственным интеллектом. <a href="/learn/ai">Узнать больше</a>.',
+        'search_page_title' => 'Поиск',
+        'search_results' => 'Результаты поиска "{query}"',
 ];

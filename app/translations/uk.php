@@ -21,4 +21,6 @@ return [
 	'version' => 'Версія',
 	'guides' => 'Посібники',
 	'flight_for_ai' => 'Flight оптимізовано для роботи з AI для розробників. <a href="/learn/ai">Дізнатися більше</a>.',
+    'search_page_title' => 'Пошук',
+    'search_results' => 'Результати пошуку для "{query}"',
 ];

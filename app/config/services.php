@@ -28,6 +28,7 @@ $app->register('latte', LatteEngine::class, [], function (LatteEngine $latte) us
     );
 
     $latte->addExtension($translatorExtension);
+	$latte->addExtension(new Latte\Bridges\Tracy\TracyExtension);
 });
 
 // Cache for storing parsedown and other things

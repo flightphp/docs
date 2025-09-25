@@ -66,6 +66,7 @@ $router->group('', function (Router $router) use ($app) {
 		$router->get('/examples', [DocsController::class, 'examplesGet'], false, 'examples');
 		$router->get('/media', [DocsController::class, 'mediaGet'], false, 'media');
 		$router->get('/search', [DocsController::class, 'searchGet'], false, 'search');
+		$router->get('/quick-search', [DocsController::class, 'quickSearchGet'], false, 'quick_search');
 
 		$router->group('/learn', function (Router $router): void {
 			$router->get('', [DocsController::class, 'learnGet'], false, 'learn');
@@ -95,12 +96,14 @@ $app->map('notFound', function () use ($app): void {
 	// pull the version out of the URL
 	$url = $app->request()->url;
 	$version = preg_match('~/(v\d)/~', $url, $matches) === 1 ? $matches[1] : 'v3';
+	$language = preg_match('~^/([a-z]{2})/~', $url, $matches) === 1 ? $matches[1] : 'en';
 
     (new DocsLogic($app))->renderPage('not_found.latte', [
 		'title' => '404 Not Found',
-		'version' => $version
+		'version' => $version,
+		'language' => $language,
 	]);
-	echo $app->request()->url;
+	
 	try {
 		$app->response()->send();
 		exit;

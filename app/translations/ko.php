@@ -20,5 +20,7 @@ return [
     'media' => '미디어',
 	'version' => '버전',
 	'guides' => '가이드',
-	'flight_for_ai' => 'Flight는 AI 기반 개발자 경험에 최적화되어 있습니다. <a href="/learn/ai">자세히 알아보기</a>.'
+    'flight_for_ai' => 'Flight는 AI 기반 개발자 경험에 최적화되어 있습니다. <a href="/learn/ai">자세히 알아보기</a>.',
+    'search_page_title' => '검색',
+    'search_results' => '"{query}" 검색 결과',
 ];

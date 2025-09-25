@@ -23,7 +23,7 @@
                         document.getElementById("autocomplete").value;
 
                     query = encodeURIComponent(autoCompleteValue);
-                    const searchUrl = {{Flight::getUrl('search')}};
+                    const searchUrl = {{Flight::getUrl('quick_search')}};
 
                     // Fetch Data from external Source
                     const source = await fetch(searchUrl + "?query=" + query);
@@ -44,6 +44,7 @@
         debounce: 300,
         placeHolder: {{_'search_the_docs'}},
         highlight: true,
+		submit: true,
         resultsList: {
             maxResults: 10,
             noResults: false,
@@ -55,7 +56,6 @@
             input: {
                 selection(event) {
                     const selection = event.detail.selection.value;
-                    console.log(selection);
                     window.location.href = selection.url;
                 },
             },

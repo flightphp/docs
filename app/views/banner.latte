@@ -16,7 +16,10 @@
         <span class="fs-1 d-none d-md-block">
             {_'subtitle'|noescape}
         </span>
-        <input class="m-2" id="autocomplete" autocomplete="off" />
+		<form class="d-inline" action="/{$language}/{$version}/search" method="get" id="searchForm">
+			<input class="m-2" name="q"id="autocomplete" autocomplete="off" value="{$q ?? ''}" />
+			<input type="submit" class="d-none" />
+		</form>
     </div>
     <div class="col-md-4 d-none d-md-block">
         <img

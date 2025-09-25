@@ -20,5 +20,7 @@ return [
     'media' => 'Mediji',
 	'version' => 'Versija',
 	'guides' => 'Rokasgrāmatas',
-	'flight_for_ai' => 'Flight ir optimizēts AI atbalstītai izstrādātāju pieredzei. <a href="/learn/ai">Uzzināt vairāk</a>.'
+	'flight_for_ai' => 'Flight ir optimizēts AI atbalstītai izstrādātāju pieredzei. <a href="/learn/ai">Uzzināt vairāk</a>.',
+    'search_page_title' => 'Meklēt',
+    'search_results' => 'Meklēšanas rezultāti: "{query}"',
 ];

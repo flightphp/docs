@@ -20,5 +20,7 @@ return [
     'media' => '媒体',
 	'version' => '版本',
 	'guides' => '指南',
-	'flight_for_ai' => 'Flight 已针对 AI 驱动的开发者体验进行了优化。<a href="/learn/ai">了解更多</a>.'
+	'flight_for_ai' => 'Flight 已针对 AI 驱动的开发者体验进行了优化。<a href="/learn/ai">了解更多</a>.',
+    'search_page_title' => '搜索',
+    'search_results' => '“{query}”的搜索结果',
 ];

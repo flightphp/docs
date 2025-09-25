@@ -21,4 +21,6 @@ return [
 	'version' => 'Versión',
 	'guides' => 'Guías',
 	'flight_for_ai' => 'Flight está optimizado para una experiencia de desarrollador potenciada por IA. <a href="/learn/ai">Aprende más</a>.',
+	'search_page_title' => 'Buscar',
+	'search_results' => 'Resultados de la búsqueda para "{query}"',
 ];

@@ -168,7 +168,7 @@ html[data-bs-theme="dark"] .autoComplete_wrapper>ul {
     background-color: #4b5055;
 }
 
-html[data-bs-theme="dark"] .autoComplete_wrapper>ul>li {
+html[data-bs-theme="dark"] .autoComplete_wrapper>ul>li, html[data-bs-theme="dark"] p {
     color: white;
 }
 

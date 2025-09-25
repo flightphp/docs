@@ -20,5 +20,7 @@ return [
     'media' => 'Media',
 	'version' => 'Versi',
 	'guides' => 'Panduan',
-	'flight_for_ai' => 'Flight dioptimalkan untuk pengalaman pengembang berbasis AI. <a href="/learn/ai">Pelajari lebih lanjut</a>.'
+	'flight_for_ai' => 'Flight dioptimalkan untuk pengalaman pengembang berbasis AI. <a href="/learn/ai">Pelajari lebih lanjut</a>.',
+    'search_page_title' => 'Cari',
+    'search_results' => 'Hasil pencarian untuk "{query}"',
 ];

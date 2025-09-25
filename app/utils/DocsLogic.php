@@ -7,31 +7,12 @@ use DOMDocument;
 use DOMXPath;
 
 class DocsLogic {
-	/**
-	 * Returns a list of all learn section names (without .md extension).
-	 *
-	 * @param string $version The docs version (e.g., 'v3').
-	 * @param string $language The docs language (e.g., 'en').
-	 * @return array List of section names
-	 */
-	public function getLearnSectionNames(string $version = 'v3', string $language = 'en'): array {
-		$baseDir = __DIR__ . '/../../content/' . $version . '/' . $language . '/learn/';
-		if (!is_dir($baseDir)) {
-			return [];
-		}
-		$files = scandir($baseDir);
-		$sections = [];
-		foreach ($files as $file) {
-			if (
-				substr($file, -3) === '.md' &&
-				substr($file, -9) !== '__test.md'
-			) {
-				$sections[] = basename($file, '.md');
-			}
-		}
-		sort($sections);
-		return $sections;
-	}
+
+	/** @var string */
+    private const DS = DIRECTORY_SEPARATOR;
+
+	/** @var string Path to the base content directory */
+    public const CONTENT_DIR = __DIR__ . self::DS . '..' . self::DS . '..' . self::DS . 'content' . self::DS;
 
 	const AVAILABLE_LANGUAGES = [
 		'en',
@@ -58,6 +39,32 @@ class DocsLogic {
 	}
 
 	/**
+	 * Returns a list of all learn section names (without .md extension).
+	 *
+	 * @param string $version The docs version (e.g., 'v3').
+	 * @param string $language The docs language (e.g., 'en').
+	 * @return array List of section names
+	 */
+	public function getLearnSectionNames(string $version = 'v3', string $language = 'en'): array {
+		$baseDir = __DIR__ . '/../../content/' . $version . '/' . $language . '/learn/';
+		if (!is_dir($baseDir)) {
+			return [];
+		}
+		$files = scandir($baseDir);
+		$sections = [];
+		foreach ($files as $file) {
+			if (
+				substr($file, -3) === '.md' &&
+				substr($file, -9) !== '__test.md'
+			) {
+				$sections[] = basename($file, '.md');
+			}
+		}
+		sort($sections);
+		return $sections;
+	}
+
+	/**
 	 * Renders a page using the specified Latte template file and parameters.
 	 *
 	 * @param string $latte_file The path to the Latte template file to be rendered.
@@ -75,6 +82,8 @@ class DocsLogic {
         // Here we can set variables that will be available on any page
         $params['url'] = $request->getScheme() . '://' . $request->getHeader('Host') . $uri;
         $params['nonce'] = HeaderSecurityMiddleware::$nonce;
+		$params['q'] = $request->query['q'] ?? '';
+
 		$startTime = microtime(true);
         $this->app->latte()->render($latte_file, $params);
 		$executionTime = microtime(true) - $startTime;
@@ -138,6 +147,7 @@ class DocsLogic {
             'page_title' => $section,
             'markdown' => $markdown_html,
 			'version' => $version,
+			'language' => $language,
         ]);
     }
 
@@ -204,6 +214,7 @@ class DocsLogic {
 			'heading_data' => $heading_data,
 			'relative_uri' => '/'.$section_file_path,
 			'version' => $version,
+			'language' => $language,
 		];
 
 		// Only add learn_sections dropdown if section is 'learn', sub_section is not 'learn', and version is 'v3'
@@ -301,5 +312,134 @@ class DocsLogic {
 	 */
 	public function checkValidVersion(string $version): bool {
 		return in_array($version, ['v3', 'v2'], true) === true;
+	}
+
+	/**
+	 * Executes a search based on the provided query, language, and version.
+	 *
+	 * @param string $query    The search query string.
+	 * @param string $language The language code for the search (default: 'en').
+	 * @param string $version  The documentation version to search in (default: 'v3').
+	 * @return array           An array of search results.
+	 */
+	public function runSearch(string $query, string $language = 'en', string $version = 'v3'): array {
+
+		// if the query is less than 3 characters, return empty array
+		if (strlen($query) < 3) {
+			return [
+				'error' => 'Search query must be at least 3 characters long.',
+			];
+		}
+
+		$language_directory_to_grep = self::CONTENT_DIR . $version . self::DS . $language . self::DS;
+        $grep_command = 'grep -r -i -n --color=never --include="*.md" '.escapeshellarg($query).' '.escapeshellarg($language_directory_to_grep);
+        exec($grep_command, $grep_output);
+
+        $files_found = [];
+        foreach($grep_output as $line) {
+            $line_parts = explode(':', $line);
+            // Catch the windows C drive letter
+            if($line_parts[0] === 'C') {
+                array_shift($line_parts);
+            }
+            $file_path = str_replace('/', self::DS, $line_parts[0]);
+            $line_number = $line_parts[1];
+            $line_content = $line_parts[2];
+
+            $file_contents = file_exists($file_path)
+                ? file_get_contents($file_path)
+                : '';
+
+            // pull the title from the first header tag in the markdown file.
+            preg_match('/# (.+)/', $file_contents, $matches);
+            if(empty($matches[1])) {
+                continue;
+            }
+            $title = $matches[1];
+
+			// convert markdown to html and then strip tags to get plain text
+			$file_contents = strip_tags($this->app->parsedown()->text($file_contents));
+
+			// need to pull out the first 300 characters of the markdown file $file_contents that contains the search term
+			// after skipping the first # heading
+			// only do the starting and ending positions at word boundaries
+			// so we don't cut off in the middle of a word
+
+			$found_pos = stripos($file_contents, $query);
+			if ($found_pos === false) {
+				continue;
+			}
+
+			// Candidate window centered (approx) around the match
+			$start_candidate = max(0, $found_pos - 200);
+			$file_len = strlen($file_contents);
+
+			// Find first space at or after start_candidate in a safe way
+			$search_offset = min(max(0, $start_candidate), max(0, $file_len - 1));
+			$space_pos = strpos($file_contents, ' ', $search_offset);
+			if ($space_pos === false) {
+				$start_pos = 0;
+			} else {
+				$start_pos = $space_pos;
+			}
+
+			// Determine end position safely: try to find a space at start_pos + 400,
+			// but if that offset is past the string, just use the string end.
+			$end_search_offset = $start_pos + 400;
+			if ($end_search_offset >= $file_len) {
+				$end_pos = $file_len;
+			} else {
+				$end_pos = strpos($file_contents, ' ', $end_search_offset);
+				if ($end_pos === false) {
+					$end_pos = $file_len;
+				}
+			}
+
+			$end_pos = min($end_pos, $file_len);
+			$start_pos = max(0, $end_pos - 400);
+
+			// Ensure start_pos is a valid offset for strpos()
+			$search_offset2 = min(max(0, $start_pos), max(0, $file_len - 1));
+			$space_pos2 = strpos($file_contents, ' ', $search_offset2);
+			if ($space_pos2 === false) {
+				$start_pos = 0;
+			} else {
+				$start_pos = $space_pos2;
+			}
+
+			$excerpt = substr($file_contents, $start_pos, 400);
+			$excerpt = preg_replace('/# .+/', '', $excerpt); // remove any
+			$excerpt = '...' . trim($excerpt);
+			if (strlen($excerpt) > 400) {
+				$excerpt = substr($excerpt, 0, 397) . '...';
+			}
+
+			// bold the search term in the excerpt
+			$excerpt = preg_replace('/(' . preg_quote($query, '/') . ')/i', '<b class="text-info">$1</b>', $excerpt);
+
+            $files_found[$file_path][] = [
+                'line_number' => $line_number,
+                'line_content' => $line_content,
+                'page_name' => $title,
+				'excerpt' => $excerpt,
+            ];
+        }
+
+        $final_search = [];
+        foreach($files_found as $file_path => $data) {
+            $count = count($files_found[$file_path]);
+            $final_search[] = [
+				'page_name' => $data[0]['page_name'],
+                'search_result' => $data[0]['page_name'].' ("'.$query.'" '.$count.'x)',
+                'url' => '/'.$language.'/'.$version.'/'.str_replace([ $language_directory_to_grep, '.md', '_', '\\' ], [ '', '', '-', '/' ], $file_path),
+                'hits' => $count,
+				'excerpt' => $data[0]['excerpt'],
+            ];
+        }
+
+        // sort by descending order by putting $b first
+        usort($final_search, fn($a, $b) => $b['hits'] <=> $a['hits']);
+
+		return $final_search;
 	}
 }

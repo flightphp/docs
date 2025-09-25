@@ -18,7 +18,7 @@ class Translator {
 		$this->version = $version;
 	}
 
-    public function translate(string $translationKey) {
+    public function translate(string $translationKey, ...$params) {
         $translationContent = $this->getTranslationFileContents();
         $language = $this->language;
 
@@ -27,7 +27,16 @@ class Translator {
             $language = 'en';
         }
 
-        return $translationContent[$language][$translationKey];
+		$translation = $translationContent[$language][$translationKey];
+
+		if (count($params) > 0) {
+			// search for any of the keys in $params and replace them in the translation string
+			foreach ($params as $key => $value) {
+				$translation = str_replace('{' . $key . '}', $value, $translation);
+			}
+		}
+
+        return $translation;
     }
 
     protected function getTranslationFileContents(): array {

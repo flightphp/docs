@@ -1,0 +1,23 @@
+{extends 'layout.latte'}
+
+{block page_title}<title>{_'search_page_title'} - Flight PHP Framework</title>{/block}
+
+{block content}
+<h1>{_'search_results', query: $query}</h1>
+
+{if count($results) === 0}
+	<p>{_'no_results_found'}</p>
+{elseif !empty($results['error'])}
+	<p class="text-danger">{$results['error']}</p>
+{else}
+	<ul class="list-group">
+		{foreach $results as $result}
+			<li class="list-group-item">
+				<a href="{$result['url']}"><strong>{$result['page_name']}</strong></a>
+				<p class="text-muted fst-italic">{$result['url']}</p>
+				<p>{$result['excerpt']|noescape}</p>
+			</li>
+		{/foreach}
+	</ul>
+{/if}
+{/block}

@@ -33,11 +33,11 @@
                 ]}
 
                 {foreach $navItems as $item}
-				{continueIf in_array($item[1], ['media', 'examples', 'awesome_plugins']) && $version === 'v2'}
+				{continueIf in_array($item[1], ['media', 'examples', 'awesome_plugins', 'guides']) && $version === 'v2'}
                 <li class="nav-item">
                     <a
                         n:class="($item[0][0] && strpos(Flight::request()->url, $item[0][0]) !== false) || (strlen(Flight::request()->url) === 6 && isset($item[0][1]) === true) ? 'active', nav-link"
-                        href="{Flight::getUrl($item[1])}">
+                        href="{Flight::getUrl($item[1], ['version' => $version, 'language' => $language])}">
                         {_$item[1]}
                     </a>
                 </li>

@@ -17,11 +17,13 @@
         </script>
         {include 'links.latte'}
 
+		{block page_title}
         <title>
             {if isset($page_title)}{_$page_title} -{/if}
             {isset($custom_page_title) ? $custom_page_title.' - '}
             Flight PHP Framework
         </title>
+		{/block}
 
         {include 'opengraph.latte'}
     </head>

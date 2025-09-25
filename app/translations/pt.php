@@ -20,5 +20,7 @@ return [
     'media' => 'Mídia',
 	'version' => 'Versão',
 	'guides' => 'Guias',
-	'flight_for_ai' => 'Flight é otimizado para uma experiência de desenvolvedor com IA. <a href="/learn/ai">Saiba mais</a>.'
+	'flight_for_ai' => 'Flight é otimizado para uma experiência de desenvolvedor com IA. <a href="/learn/ai">Saiba mais</a>.',
+    'search_page_title' => 'Pesquisar',
+    'search_results' => 'Resultados da pesquisa para "{query}"',
 ];
