@@ -2,7 +2,7 @@
 
 ## Overview
 
-	The Dependency Injection Container (DIC) is a powerful enhancement that allows you to manage
+The Dependency Injection Container (DIC) is a powerful enhancement that allows you to manage
 your application's dependencies. 
 
 ## Understanding
@@ -357,3 +357,9 @@ gets the job done with the same benefits!
 - [Configuration](/learn/configuration) - Learn how to configure Flight for your application.
 - [Routing](/learn/routing) - Learn how to define routes for your application and how dependency injection works with controllers.
 - [Middleware](/learn/middleware) - Learn how to create middleware for your application and how dependency injection works with middleware.
+
+## Troubleshooting
+- If you are having issues with your container, make sure that you are passing the correct class names to the container.
+
+## Changelog
+- v3.7.0 - Added ability to register a DIC handler to Flight.
