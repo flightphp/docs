@@ -156,6 +156,49 @@ class My_Controller {
 ## Troubleshooting
 - If you can't seem to figure out why your namespaced classes aren't being found, remember to use `Flight::path()` to the root directory in your project, not your `app/` or `src/` directory or equivalent.
 
+### Class Not Found (autoloading not working)
+
+There could be a couple reasons for this one not happening. Below are some examples but make sure you also check out the [autoloading](/learn/autoloading) section.
+
+#### Incorrect File Name
+The most common is that the class name doesn't match the file name.
+
+If you have a class named `MyClass` then the file should be named `MyClass.php`. If you have a class named `MyClass` and the file is named `myclass.php` 
+then the autoloader won't be able to find it.
+
+#### Incorrect Namespace
+If you are using namespaces, then the namespace should match the directory structure.
+
+```php
+// ...code...
+
+// if your MyController is in the app/controllers directory and it's namespaced
+// this will not work.
+Flight::route('/hello', 'MyController->hello');
+
+// you'll need to pick one of these options
+Flight::route('/hello', 'app\controllers\MyController->hello');
+// or if you have a use statement up top
+
+use app\controllers\MyController;
+
+Flight::route('/hello', [ MyController::class, 'hello' ]);
+// also can be written
+Flight::route('/hello', MyController::class.'->hello');
+// also...
+Flight::route('/hello', [ 'app\controllers\MyController', 'hello' ]);
+```
+
+#### `path()` not defined
+
+In the skeleton app, this is defined inside the `config.php` file, but in order for your classes to be found, you need to make sure that the `path()`
+method is defined (probably to the root of your directory) before you try to use it.
+
+```php
+// Add a path to the autoloader
+Flight::path(__DIR__.'/../');
+```
+
 ## Changelog
 - v3.7.2 - You can use Pascal_Snake_Case for your class names by running `Loader::setV2ClassLoading(false);`
 - v2.0 - Autoload functionality added.

@@ -1,122 +1,175 @@
 # PdoWrapper PDO Helper Class
 
-Flight comes with a helper class for PDO. It allows you to easily query your database
-with all the prepared/execute/fetchAll() wackiness. It greatly simplifies how you can 
-query your database. Each row result is returned as a Flight Collection class which
-allows you to access your data via array syntax or object syntax.
+## Overview
 
-## Registering the PDO Helper Class
+The `PdoWrapper` class in Flight is a friendly helper for working with databases using PDO. It simplifies common database tasks, adds some handy methods for fetching results, and returns results as [Collections](/learn/collections) for easy access. It also supports query logging and application performance monitoring (APM) for advanced use cases.
+
+## Understanding
+
+Working with databases in PHP can be a bit verbose, especially when using PDO directly. `PdoWrapper` extends PDO and adds methods that make querying, fetching, and handling results much easier. Instead of juggling prepared statements and fetch modes, you get simple methods for common tasks, and every row is returned as a Collection, so you can use array or object notation.
+
+You can register the `PdoWrapper` as a shared service in Flight, and then use it anywhere in your app via `Flight::db()`.
+
+## Basic Usage
+
+### Registering the PDO Helper
+
+First, register the `PdoWrapper` class with Flight:
 
 ```php
-// Register the PDO helper class
-Flight::register('db', \flight\database\PdoWrapper::class, ['mysql:host=localhost;dbname=cool_db_name', 'user', 'pass', [
-		PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES \'utf8mb4\'',
-		PDO::ATTR_EMULATE_PREPARES => false,
-		PDO::ATTR_STRINGIFY_FETCHES => false,
-		PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
-	]
+Flight::register('db', \flight\database\PdoWrapper::class, [
+    'mysql:host=localhost;dbname=cool_db_name', 'user', 'pass', [
+        PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES \'utf8mb4\'',
+        PDO::ATTR_EMULATE_PREPARES => false,
+        PDO::ATTR_STRINGIFY_FETCHES => false,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+    ]
 ]);
 ```
 
-## Usage
-This object extends PDO so all the normal PDO methods are available. The following methods are added to make querying the database easier:
+Now you can use `Flight::db()` anywhere to get your database connection.
 
-### `runQuery(string $sql, array $params = []): PDOStatement`
-Use this for INSERTS, UPDATES, or if you plan on using a SELECT in a while loop
+### Running Queries
+
+#### `runQuery()`
+
+`function runQuery(string $sql, array $params = []): PDOStatement`
+
+Use this for INSERTs, UPDATEs, or when you want to fetch results manually:
 
 ```php
 $db = Flight::db();
-$statement = $db->runQuery("SELECT * FROM table WHERE something = ?", [ $something ]);
-while($row = $statement->fetch()) {
-	// ...
+$statement = $db->runQuery("SELECT * FROM users WHERE status = ?", ['active']);
+while ($row = $statement->fetch()) {
+    // $row is an array
 }
-
-// Or writing to the database
-$db->runQuery("INSERT INTO table (name) VALUES (?)", [ $name ]);
-$db->runQuery("UPDATE table SET name = ? WHERE id = ?", [ $name, $id ]);
 ```
 
-### `fetchField(string $sql, array $params = []): mixed`
-Pulls the first field from the query
+You can also use it for writes:
 
 ```php
-$db = Flight::db();
-$count = $db->fetchField("SELECT COUNT(*) FROM table WHERE something = ?", [ $something ]);
+$db->runQuery("INSERT INTO users (name) VALUES (?)", ['Alice']);
+$db->runQuery("UPDATE users SET name = ? WHERE id = ?", ['Bob', 1]);
 ```
 
-### `fetchRow(string $sql, array $params = []): array`
-Pulls one row from the query
+#### `fetchField()`
+
+`function fetchField(string $sql, array $params = []): mixed`
+
+Get a single value from the database:
 
 ```php
-$db = Flight::db();
-$row = $db->fetchRow("SELECT id, name FROM table WHERE id = ?", [ $id ]);
-echo $row['name'];
+$count = Flight::db()->fetchField("SELECT COUNT(*) FROM users WHERE status = ?", ['active']);
+```
+
+#### `fetchRow()`
+
+`function fetchRow(string $sql, array $params = []): Collection`
+
+Get a single row as a Collection (array/object access):
+
+```php
+$user = Flight::db()->fetchRow("SELECT * FROM users WHERE id = ?", [123]);
+echo $user['name'];
 // or
-echo $row->name;
+echo $user->name;
 ```
 
-### `fetchAll(string $sql, array $params = []): array`
-Pulls all rows from the query
+#### `fetchAll()`
+
+`function fetchAll(string $sql, array $params = []): array<Collection>`
+
+Get all rows as an array of Collections:
 
 ```php
-$db = Flight::db();
-$rows = $db->fetchAll("SELECT id, name FROM table WHERE something = ?", [ $something ]);
-foreach($rows as $row) {
-	echo $row['name'];
-	// or
-	echo $row->name;
+$users = Flight::db()->fetchAll("SELECT * FROM users WHERE status = ?", ['active']);
+foreach ($users as $user) {
+    echo $user['name'];
+    // or
+    echo $user->name;
 }
 ```
 
-## Note with `IN()` syntax
-This also has a helpful wrapper for `IN()` statements. You can simply pass a single question mark as a placeholder for `IN()` and then an array of values. Here is an example of what that might look like:
+### Using `IN()` Placeholders
+
+You can use a single `?` in an `IN()` clause and pass an array or comma-separated string:
 
 ```php
-$db = Flight::db();
-$name = 'Bob';
-$company_ids = [1,2,3,4,5];
-$rows = $db->fetchAll("SELECT id, name FROM table WHERE name = ? AND company_id IN (?)", [ $name, $company_ids ]);
+$ids = [1, 2, 3];
+$users = Flight::db()->fetchAll("SELECT * FROM users WHERE id IN (?)", [$ids]);
+// or
+$users = Flight::db()->fetchAll("SELECT * FROM users WHERE id IN (?)", ['1,2,3']);
 ```
 
-## Full Example
+## Advanced Usage
+
+### Query Logging & APM
+
+If you want to track query performance, enable APM tracking when registering:
 
 ```php
-// Example route and how you would use this wrapper
+Flight::register('db', \flight\database\PdoWrapper::class, [
+    'mysql:host=localhost;dbname=cool_db_name', 'user', 'pass', [/* options */], true // last param enables APM
+]);
+```
+
+After running queries, you can log them manually but the APM will log them automatically if enabled:
+
+```php
+Flight::db()->logQueries();
+```
+
+This will trigger an event (`flight.db.queries`) with connection and query metrics, which you can listen for using Flight's event system.
+
+### Full Example
+
+```php
 Flight::route('/users', function () {
-	// Get all users
-	$users = Flight::db()->fetchAll('SELECT * FROM users');
+    // Get all users
+    $users = Flight::db()->fetchAll('SELECT * FROM users');
 
-	// Stream all users
-	$statement = Flight::db()->runQuery('SELECT * FROM users');
-	while ($user = $statement->fetch()) {
-		echo $user['name'];
-		// or echo $user->name;
-	}
+    // Stream all users
+    $statement = Flight::db()->runQuery('SELECT * FROM users');
+    while ($user = $statement->fetch()) {
+        echo $user['name'];
+    }
 
-	// Get a single user
-	$user = Flight::db()->fetchRow('SELECT * FROM users WHERE id = ?', [123]);
+    // Get a single user
+    $user = Flight::db()->fetchRow('SELECT * FROM users WHERE id = ?', [123]);
 
-	// Get a single value
-	$count = Flight::db()->fetchField('SELECT COUNT(*) FROM users');
+    // Get a single value
+    $count = Flight::db()->fetchField('SELECT COUNT(*) FROM users');
 
-	// Special IN() syntax to help out (make sure IN is in caps)
-	$users = Flight::db()->fetchAll('SELECT * FROM users WHERE id IN (?)', [[1,2,3,4,5]]);
-	// you could also do this
-	$users = Flight::db()->fetchAll('SELECT * FROM users WHERE id IN (?)', [ '1,2,3,4,5']);
+    // Special IN() syntax
+    $users = Flight::db()->fetchAll('SELECT * FROM users WHERE id IN (?)', [[1,2,3,4,5]]);
+    $users = Flight::db()->fetchAll('SELECT * FROM users WHERE id IN (?)', ['1,2,3,4,5']);
 
-	// Insert a new user
-	Flight::db()->runQuery("INSERT INTO users (name, email) VALUES (?, ?)", ['Bob', 'bob@example.com']);
-	$insert_id = Flight::db()->lastInsertId();
+    // Insert a new user
+    Flight::db()->runQuery("INSERT INTO users (name, email) VALUES (?, ?)", ['Bob', 'bob@example.com']);
+    $insert_id = Flight::db()->lastInsertId();
 
-	// Update a user
-	Flight::db()->runQuery("UPDATE users SET name = ? WHERE id = ?", ['Bob', 123]);
+    // Update a user
+    Flight::db()->runQuery("UPDATE users SET name = ? WHERE id = ?", ['Bob', 123]);
 
-	// Delete a user
-	Flight::db()->runQuery("DELETE FROM users WHERE id = ?", [123]);
+    // Delete a user
+    Flight::db()->runQuery("DELETE FROM users WHERE id = ?", [123]);
 
-	// Get the number of affected rows
-	$statement = Flight::db()->runQuery("UPDATE users SET name = ? WHERE name = ?", ['Bob', 'Sally']);
-	$affected_rows = $statement->rowCount();
-
+    // Get the number of affected rows
+    $statement = Flight::db()->runQuery("UPDATE users SET name = ? WHERE name = ?", ['Bob', 'Sally']);
+    $affected_rows = $statement->rowCount();
 });
 ```
+
+## See Also
+
+- [Collections](/learn/collections) - Learn how to use the Collection class for easy data access.
+
+## Troubleshooting
+
+- If you get an error about database connection, check your DSN, username, password, and options.
+- All rows are returned as Collections—if you need a plain array, use `$collection->getData()`.
+- For `IN (?)` queries, make sure to pass an array or comma-separated string.
+
+## Changelog
+
+- v3.2.0 - Initial release of PdoWrapper with basic query and fetch methods.
