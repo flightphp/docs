@@ -10,7 +10,7 @@
 				<div class="dropdown">
 					<button class="btn btn-info dropdown-toggle" type="button" id="learnSectionDropdown" data-bs-toggle="dropdown" aria-expanded="false">
 						{ifset $current_learn_section}
-							{ucwords(str_replace('_', ' ', $current_learn_section))}
+							{ucwords(str_replace('-', ' ', $current_learn_section))}
 						{else}
 							Choose a Learn Section
 						{/ifset}
