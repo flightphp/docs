@@ -89,25 +89,27 @@ Flight::start();
 
 ### Latte
 
-If you have Latte installed in your project, you can use the Latte panel to analyze your templates. You can pass in the Latte instance to the `TracyExtensionLoader` constructor with the `latte` key in the second parameter.
+_PHP 8.1+ is required for this section._
+
+If you have Latte installed in your project, Tracy has a native integration with Latte to analyze your templates. You simple register the extension with your Latte instance.
 
 ```php
-
-use Latte\Engine;
 
 require 'vendor/autoload.php';
 
 $app = Flight::app();
 
-$app->register('latte', Engine::class, [], function($latte) {
-	$latte->setTempDirectory(__DIR__ . '/temp');
+$app->map('render', function($template, $data, $block = null) {
+	$latte = new Latte\Engine;
 
-	// this is where you add the Latte Panel to Tracy
-	$latte->addExtension(new Latte\Bridges\Tracy\TracyExtension);
+	// other configurations...
+
+	// only add the extension if Tracy Debug Bar is enabled
+	if(Debugger::$showBar === true) {
+		// this is where you add the Latte Panel to Tracy
+		$latte->addExtension(new Latte\Bridges\Tracy\TracyExtension);
+	}
+
+	$latte->render($template, $data, $block);
 });
-
-if(Debugger::$showBar === true) {
-	// This needs to be false or Tracy can't actually render :(
-	Flight::set('flight.content_length', false);
-	new TracyExtensionLoader(Flight::app());
-}
+```

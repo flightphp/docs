@@ -1,11 +1,101 @@
 # HTML Views and Templates
 
-Flight provides some basic templating functionality by default. 
+## Overview
+
+Flight provides some basic HTML templating functionality by default. Templating is a very effective way for you to disconnect your application logic from your presentation layer.
+
+## Understanding
+
+When you are building an application, you'll likely have HTML that you'll want to deliver back to the end user. PHP by itself is a templating language, but it is _very_ easy to wrap up business logic like database calls, API calls, etc into your HTML file and make testing and decoupling a very difficult process. By pushing data into a template and letting the template render itself, it becomes much easier to decouple and unit test your code. You will thank us if you use templates!
+
+## Basic Usage
 
 Flight allows you to swap out the default view engine simply by registering your
 own view class. Scroll down to see examples of how to use Smarty, Latte, Blade, and more!
 
-## Built-in View Engine
+### Latte
+
+<span class="badge bg-info">recommended</span>
+
+Here's how you would use the [Latte](https://latte.nette.org/)
+template engine for your views.
+
+#### Installation
+
+```bash
+composer require latte/latte
+```
+
+#### Basic Configuration
+
+The main idea is that you overwrite the `render` method to use Latte instead of the default PHP renderer.
+
+```php
+// overwrite the render method to use latte instead of the default PHP renderer
+Flight::map('render', function(string $template, array $data, ?string $block): void {
+	$latte = new Latte\Engine;
+
+	// Where latte specifically stores its cache
+	$latte->setTempDirectory(__DIR__ . '/../cache/');
+	
+	$finalPath = Flight::get('flight.views.path') . $template;
+
+	$latte->render($finalPath, $data, $block);
+});
+```
+
+#### Using Latte in Flight
+
+Now that you can render with Latte, you can do something like this:
+
+```html
+<!-- app/views/home.latte -->
+<html>
+  <head>
+	<title>{$title ? $title . ' - '}My App</title>
+	<link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+	<h1>Hello, {$name}!</h1>
+  </body>
+</html>
+```
+
+```php
+// routes.php
+Flight::route('/@name', function ($name) {
+	Flight::render('home.latte', [
+		'title' => 'Home Page',
+		'name' => $name
+	]);
+});
+```
+
+When you visit `/Bob` in your browser, the output would be:
+
+```html
+<html>
+  <head>
+	<title>Home Page - My App</title>
+	<link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+	<h1>Hello, Bob!</h1>
+  </body>
+</html>
+```
+
+#### Further Reading
+
+A more complex example of using Latte with layouts is shown in the [awesome plugins](/awesome-plugins/latte) section of this documentation.
+
+You can learn more about Latte's full capabilities including translation and language capabilities by reading the [official documentation](https://latte.nette.org/en/).
+
+### Built-in View Engine
+
+<span class="badge bg-warning">deprecated</span>
+
+> **Note:** While this is still the default functionality and still technically works.
 
 To display a view template call the `render` method with the name 
 of the template file and optional template data:
@@ -50,7 +140,7 @@ set an alternate path for your templates by setting the following config:
 Flight::set('flight.views.path', '/path/to/views');
 ```
 
-### Layouts
+#### Layouts
 
 It is common for websites to have a single layout template file with interchanging
 content. To render content to be used in a layout, you can pass in an optional
@@ -109,7 +199,7 @@ The output would be:
 </html>
 ```
 
-## Smarty
+### Smarty
 
 Here's how you would use the [Smarty](http://www.smarty.net/)
 template engine for your views:
@@ -143,32 +233,7 @@ Flight::map('render', function(string $template, array $data): void {
 });
 ```
 
-## Latte
-
-Here's how you would use the [Latte](https://latte.nette.org/)
-template engine for your views:
-
-```php
-// Register Latte as the view class
-// Also pass a callback function to configure Latte on load
-Flight::register('view', Latte\Engine::class, [], function (Latte\Engine $latte) {
-  // This is where Latte will cache your templates to speed things up
-	// One neat thing about Latte is that it automatically refreshes your
-	// cache when you make changes to your templates!
-	$latte->setTempDirectory(__DIR__ . '/../cache/');
-
-	// Tell Latte where the root directory for your views will be at.
-	$latte->setLoader(new \Latte\Loaders\FileLoader(__DIR__ . '/../views/'));
-});
-
-// And wrap it up so you can use Flight::render() correctly
-Flight::map('render', function(string $template, array $data): void {
-  // This is like $latte_engine->render($template, $data);
-  echo Flight::view()->render($template, $data);
-});
-```
-
-## Blade
+### Blade
 
 Here's how you would use the [Blade](https://laravel.com/docs/8.x/blade) template engine for your views:
 
@@ -224,4 +289,14 @@ The output would be:
 Hello, Bob!
 ```
 
-By following these steps, you can integrate the Blade template engine with Flight and use it to render your views. 
+## See Also
+- [Extending](/learn/extending) - How to overwrite the `render` method to use a different template engine.
+- [Routing](/learn/routing) - How to map routes to controllers and render views.
+- [Responses](/learn/responses) - How to customize HTTP responses.
+- [Why a Framework?](/learn/why-frameworks) - How templates fit into the big picture.
+
+## Troubleshooting
+- If you have a redirect in your middleware, but your app doesn't seem to be redirecting, make sure you add an `exit;` statement in your middleware.
+
+## Changelog
+- v2.0 - Initial release.

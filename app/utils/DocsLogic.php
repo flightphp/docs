@@ -41,27 +41,42 @@ class DocsLogic {
 	/**
 	 * Returns a list of all learn section names (without .md extension).
 	 *
-	 * @param string $version The docs version (e.g., 'v3').
-	 * @param string $language The docs language (e.g., 'en').
 	 * @return array List of section names
 	 */
-	public function getLearnSectionNames(string $version = 'v3', string $language = 'en'): array {
-		$baseDir = __DIR__ . '/../../content/' . $version . '/' . $language . '/learn/';
-		if (!is_dir($baseDir)) {
-			return [];
-		}
-		$files = scandir($baseDir);
-		$sections = [];
-		foreach ($files as $file) {
-			if (
-				substr($file, -3) === '.md' &&
-				substr($file, -9) !== '__test.md'
-			) {
-				$sections[] = basename($file, '.md');
-			}
-		}
-		sort($sections);
-		return $sections;
+	public function getLearnSectionNames(): array {
+		return [
+			'Core Components' => [
+				[ 'url' => '/learn/routing', 'title' => 'Routing' ],
+				[ 'url' => '/learn/middleware', 'title' => 'Middleware' ],
+				[ 'url' => '/learn/autoloading', 'title' => 'Autoloading' ],
+				[ 'url' => '/learn/requests', 'title' => 'Requests' ],
+				[ 'url' => '/learn/responses', 'title' => 'Responses' ],
+				[ 'url' => '/learn/templates', 'title' => 'HTML Templates' ],
+				[ 'url' => '/learn/security', 'title' => 'Security' ],
+				[ 'url' => '/learn/configuration', 'title' => 'Configuration' ],
+				[ 'url' => '/learn/events', 'title' => 'Event Manager' ],
+				[ 'url' => '/learn/extending', 'title' => 'Extending Flight' ],
+				[ 'url' => '/learn/filtering', 'title' => 'Method Hooks and Filtering' ],
+				[ 'url' => '/learn/dependency-injection-container', 'title' => 'Dependency Injection' ],
+			],
+			'Utility Classes' => [
+				[ 'url' => '/learn/collections', 'title' => 'Collections' ],
+				[ 'url' => '/learn/json', 'title' => 'JSON Wrapper' ],
+				[ 'url' => '/learn/pdo-wrapper', 'title' => 'PDO Wrapper' ],
+				[ 'url' => '/learn/uploaded-file', 'title' => 'Uploaded File Handler' ],
+			],
+			'Important Concepts' => [
+				[ 'url' => '/learn/why-frameworks', 'title' => 'Why a Framework?' ],
+				[ 'url' => '/learn/flight-vs-another-framework', 'title' => 'Flight vs Others' ],
+			],
+			'Other Topics' => [
+				[ 'url' => '/learn/unit-testing', 'title' => 'Unit Testing' ],
+				[ 'url' => '/learn/ai', 'title' => 'AI & Developer Experience' ],
+				[ 'url' => '/learn/api', 'title' => 'Framework API' ],
+				[ 'url' => '/learn/migrating-to-v3', 'title' => 'Migrating v2 -> v3' ],
+				[ 'url' => '/learn/troubleshooting', 'title' => 'Troubleshooting' ],
+			]
+		];
 	}
 
 	/**
@@ -219,7 +234,7 @@ class DocsLogic {
 
 		// Only add learn_sections dropdown if section is 'learn', sub_section is not 'learn', and version is 'v3'
 		if ($section === 'learn' && $sub_section !== 'learn' && $version === 'v3') {
-			$params['learn_sections'] = $this->getLearnSectionNames($version, $language);
+			$params['learn_sections'] = $this->getLearnSectionNames();
 			$params['current_learn_section'] = $sub_section;
 		}
 
@@ -248,6 +263,7 @@ class DocsLogic {
 				&& (
 					$element->nodeName === 'p'
 					|| $element->nodeName === 'pre'
+					|| $element->nodeName === 'ul'
 				)
 			) {
 				if (is_null($div)) {

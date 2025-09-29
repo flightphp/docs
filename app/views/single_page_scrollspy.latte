@@ -3,29 +3,34 @@
 {block content}
 <div class="row">
     <div class="col-md-3">
-        {ifset $learn_sections}
-        <div class="mb-3">
-            <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle w-100" type="button" id="learnSectionDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                    {ifset $current_learn_section}
-                        {ucwords(str_replace('_', ' ', $current_learn_section))}
-                    {else}
-                        Choose a Learn Section
-                    {/ifset}
-                </button>
-                <ul class="dropdown-menu w-100" aria-labelledby="learnSectionDropdown">
-                    {foreach $learn_sections as $section}
-                        <li>
-                            <a class="dropdown-item{if $section === $current_learn_section} active{/if}" href="/learn/{$section}">
-                                {ucwords(str_replace('_', ' ', $section))}
-                            </a>
-                        </li>
-                    {/foreach}
-                </ul>
-            </div>
-        </div>
-        {/ifset}
         <nav id="navbar-learn" class="sticky-top flex-column align-items-stretch pe-4 border-end">
+			{ifset $learn_sections}
+			<p>Learn Sections</p>
+			<div class="mb-3">
+				<div class="dropdown">
+					<button class="btn btn-info dropdown-toggle" type="button" id="learnSectionDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+						{ifset $current_learn_section}
+							{ucwords(str_replace('_', ' ', $current_learn_section))}
+						{else}
+							Choose a Learn Section
+						{/ifset}
+					</button>
+					<ul class="dropdown-menu w-100" aria-labelledby="learnSectionDropdown">
+						{foreach $learn_sections as $section_title => $sections}
+							<li class="dropdown-item disabled"><h5>{$section_title}</h5></li>
+							{foreach $sections as $section}
+							<li>
+								<a class="dropdown-item{if basename($section['url']) === $current_learn_section} active{/if}" href="{$section['url']}">
+									{$section['title']}
+								</a>
+							</li>
+							{/foreach}
+						{/foreach}
+					</ul>
+				</div>
+			</div>
+			<hr>
+			{/ifset}
             <nav class="nav nav-pills flex-column">
                 {foreach $heading_data as $heading}
                     <a

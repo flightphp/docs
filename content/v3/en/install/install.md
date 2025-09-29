@@ -1,8 +1,11 @@
-# Installation
+# Installation Instructions
 
-## Download the files
+There are some basic pre-requisites before you can install Flight. Namely you will need to:
 
-Make sure you have PHP installed on your system. If not, click [here](#installing-php) for instructions on how to install it for your system.
+1. [Install PHP on your system](#installing-php)
+2. [Install Composer](https://getcomposer.org) for the best developer experience.
+
+## Basic Install
 
 If you're using [Composer](https://getcomposer.org), you can run the following
 command:
@@ -11,8 +14,20 @@ command:
 composer require flightphp/core
 ```
 
-OR you can [download the files](https://github.com/flightphp/core/archive/master.zip)
+This will only put the Flight core files on your system. You will need to define the project structure, [layout](/learn/templates), [dependencies](/learn/dependency-injection-container), [configs](/learn/configuration), [autoloading](/learn/autoloading), etc. This method ensures that no other dependencies besides Flight are installed.
+
+You can also [download the files](https://github.com/flightphp/core/archive/master.zip)
  directly and extract them to your web directory.
+
+## Recommended Install
+
+It is highly recommended to start with the [flightphp/skeleton](https://github.com/flightphp/skeleton) app for any new projects. Installation is a breeze.
+
+```bash
+composer create-project flightphp/skeleton my-project/
+```
+
+This will set up your project structure, configure autoloading with namespaces, setup a config, and provide other tools like [Tracy](/awesome-plugins/tracy), [Tracy Extensions](/awesome-plugins/tracy-extensions), and [Runway](/awesome-plugins/runway)
 
 ## Configure your Web Server
 
@@ -22,6 +37,8 @@ This is by far the simplest way to get up and running. You can use the built-in 
 
 ```bash
 php -S localhost:8000
+# or with the skeleton app
+composer start
 ```
 
 Then open your browser and go to `http://localhost:8000`.
@@ -30,6 +47,8 @@ If you want to make the document root of your project a different directory (Ex:
 
 ```bash
 php -S localhost:8000 -t public/
+# with the skeleton app, this is already configured
+composer start
 ```
 
 Then open your browser and go to `http://localhost:8000`.
@@ -74,6 +93,8 @@ server {
 
 ## Create your `index.php` file
 
+If you are doing a basic install, you will need to have some code to get you started.
+
 ```php
 <?php
 
@@ -90,6 +111,8 @@ Flight::route('/', function () {
 // Finally, start the framework.
 Flight::start();
 ```
+
+With the skeleton app, this is already configured and handled in your `app/config/routes.php` file. Services are configured in `app/config/services.php`
 
 ## Installing PHP
 

@@ -28,7 +28,7 @@ specific order are two features that were inspired by Slim. Slim v3 came out gea
 - Flight can also do enterprise level applications, but it does not have as many examples and tutorials as Slim does.
   It will also require more discipline on the part of the developer to keep things organized and well-structured.
 - Flight gives the developer more control over the application, whereas Slim can sneak in some magic behind the scenes.
-- Flight has a simple [PdoWrapper](/awesome-plugins/pdo-wrapper) that can be used to interact with your database. Slim requires you to use 
+- Flight has a simple [PdoWrapper](/learn/pdo-wrapper) that can be used to interact with your database. Slim requires you to use 
   a third-party library.
 - Flight has a [permissions plugin](/awesome-plugins/permissions) that can be used to secure your application. Slim requires you to use 
   a third-party library.

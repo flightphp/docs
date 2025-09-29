@@ -73,11 +73,7 @@ class DocsController {
 	 * @param string $version The version of the page to retrieve.
 	 */
     public function learnGet(string $language, string $version) {
-		if($version === 'v2') {
-			$this->DocsLogic->compileScrollspyPage($language, $version, 'learn', 'learn');
-		} else {
-			$this->DocsLogic->compileSinglePage($language, $version, 'learn');
-		}
+		$this->DocsLogic->compileScrollspyPage($language, $version, 'learn', 'learn');
     }
 
 	/**

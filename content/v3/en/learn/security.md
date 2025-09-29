@@ -1,17 +1,34 @@
 # Security
 
+## Overview
+
 Security is a big deal when it comes to web applications. You want to make sure that your application is secure and that your users' data is 
 safe. Flight provides a number of features to help you secure your web applications.
 
-## Headers
+## Understanding
+
+There are a number of common security threats that you should be aware of when building web applications. Some of the most common threats
+include:
+- Cross Site Request Forgery (CSRF)
+- Cross Site Scripting (XSS)
+- SQL Injection
+- Cross Origin Resource Sharing (CORS)
+
+[Templates](/learn/templates) help with XSS by escaping output by default so you don't have to remember to do that. [Sessions](/awesome-plugins/session) can help with CSRF by storing a CSRF token in the user's session as outlined below. Using prepared statements with PDO can help prevent SQL injection attacks (or using handy methods in the [PdoWrapper](/learn/pdo-wrapper) class). CORS can be handled with a simple hook before `Flight::start()` is called.
+
+All of these methods work together to help keep your web applications secure. It should always be at the forefront of your mind to learn and understand security best practices.
+
+## Basic Usage
+
+### Headers
 
 HTTP headers are one of the easiest ways to secure your web applications. You can use headers to prevent clickjacking, XSS, and other attacks. 
 There are several ways that you can add these headers to your application.
 
 Two great websites to check for the security of your headers are [securityheaders.com](https://securityheaders.com/) and 
-[observatory.mozilla.org](https://observatory.mozilla.org/).
+[observatory.mozilla.org](https://observatory.mozilla.org/). After you setup the below code, you can easily verify that your headers are working with those two websites.
 
-### Add By Hand
+#### Add By Hand
 
 You can manually add these headers by using the `header` method on the `Flight\Response` object.
 ```php
@@ -39,9 +56,9 @@ Flight::response()->header('Strict-Transport-Security', 'max-age=31536000; inclu
 Flight::response()->header('Permissions-Policy', 'geolocation=()');
 ```
 
-These can be added at the top of your `bootstrap.php` or `index.php` files.
+These can be added at the top of your `routes.php` or `index.php` files.
 
-### Add as a Filter
+#### Add as a Filter
 
 You can also add them in a filter/hook like the following: 
 
@@ -58,26 +75,36 @@ Flight::before('start', function() {
 });
 ```
 
-### Add as a Middleware
+#### Add as a Middleware
 
-You can also add them as a middleware class. This is a good way to keep your code clean and organized.
+You can also add them as a middleware class which provides the greatest flexibility for which routes to apply this to. In general, these headers should be applied to all HTML and API responses.
 
 ```php
-// app/middleware/SecurityHeadersMiddleware.php
+// app/middlewares/SecurityHeadersMiddleware.php
 
-namespace app\middleware;
+namespace app\middlewares;
+
+use flight\Engine;
 
 class SecurityHeadersMiddleware
 {
+	protected Engine $app;
+
+	public function __construct(Engine $app)
+	{
+		$this->app = $app;
+	}
+
 	public function before(array $params): void
 	{
-		Flight::response()->header('X-Frame-Options', 'SAMEORIGIN');
-		Flight::response()->header("Content-Security-Policy", "default-src 'self'");
-		Flight::response()->header('X-XSS-Protection', '1; mode=block');
-		Flight::response()->header('X-Content-Type-Options', 'nosniff');
-		Flight::response()->header('Referrer-Policy', 'no-referrer-when-downgrade');
-		Flight::response()->header('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
-		Flight::response()->header('Permissions-Policy', 'geolocation=()');
+		$response = $this->app->response();
+		$response->header('X-Frame-Options', 'SAMEORIGIN');
+		$response->header("Content-Security-Policy", "default-src 'self'");
+		$response->header('X-XSS-Protection', '1; mode=block');
+		$response->header('X-Content-Type-Options', 'nosniff');
+		$response->header('Referrer-Policy', 'no-referrer-when-downgrade');
+		$response->header('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
+		$response->header('Permissions-Policy', 'geolocation=()');
 	}
 }
 
@@ -88,26 +115,25 @@ class SecurityHeadersMiddleware
 Flight::group('', function(Router $router) {
 	$router->get('/users', [ 'UserController', 'getUsers' ]);
 	// more routes
-}, [ new SecurityHeadersMiddleware() ]);
+}, [ SecurityHeadersMiddleware::class ]);
 ```
 
-
-## Cross Site Request Forgery (CSRF)
+### Cross Site Request Forgery (CSRF)
 
 Cross Site Request Forgery (CSRF) is a type of attack where a malicious website can make a user's browser send a request to your website. 
 This can be used to perform actions on your website without the user's knowledge. Flight does not provide a built-in CSRF protection 
 mechanism, but you can easily implement your own by using middleware.
 
-### Setup
+#### Setup
 
 First you need to generate a CSRF token and store it in the user's session. You can then use this token in your forms and check it when 
-the form is submitted.
+the form is submitted. We'll use the [flightphp/session](/awesome-plugins/session) plugin to manage sessions.
 
 ```php
 // Generate a CSRF token and store it in the user's session
 // (assuming you've created a session object at attached it to Flight)
 // see the session documentation for more information
-Flight::register('session', \Ghostff\Session\Session::class);
+Flight::register('session', flight\Session::class);
 
 // You only need to generate a single token per session (so it works 
 // across multiple tabs and requests for the same user)
@@ -115,6 +141,8 @@ if(Flight::session()->get('csrf_token') === null) {
 	Flight::session()->set('csrf_token', bin2hex(random_bytes(32)) );
 }
 ```
+
+##### Using the default PHP Flight Template
 
 ```html
 <!-- Use the CSRF token in your form -->
@@ -124,16 +152,24 @@ if(Flight::session()->get('csrf_token') === null) {
 </form>
 ```
 
-#### Using Latte
+##### Using Latte
 
 You can also set a custom function to output the CSRF token in your Latte templates.
 
 ```php
-// Set a custom function to output the CSRF token
-// Note: View has been configured with Latte as the view engine
-Flight::view()->addFunction('csrf', function() {
-	$csrfToken = Flight::session()->get('csrf_token');
-	return new \Latte\Runtime\Html('<input type="hidden" name="csrf_token" value="' . $csrfToken . '">');
+
+Flight::map('render', function(string $template, array $data, ?string $block): void {
+	$latte = new Latte\Engine;
+
+	// other configurations...
+
+	// Set a custom function to output the CSRF token
+	$latte->addFunction('csrf', function() {
+		$csrfToken = Flight::session()->get('csrf_token');
+		return new \Latte\Runtime\Html('<input type="hidden" name="csrf_token" value="' . $csrfToken . '">');
+	});
+
+	$latte->render($finalPath, $data, $block);
 });
 ```
 
@@ -146,11 +182,49 @@ And now in your Latte templates you can use the `csrf()` function to output the 
 </form>
 ```
 
-Short and simple right?
+#### Check the CSRF Token
 
-### Check the CSRF Token
+You can check the CSRF token using several methods.
 
-You can check the CSRF token using event filters:
+##### Middleware
+
+```php
+// app/middlewares/CsrfMiddleware.php
+
+namespace app\middleware;
+
+use flight\Engine;
+
+class CsrfMiddleware
+{
+	protected Engine $app;
+
+	public function __construct(Engine $app)
+	{
+		$this->app = $app;
+	}
+
+	public function before(array $params): void
+	{
+		if($this->app->request()->method == 'POST') {
+			$token = $this->app->request()->data->csrf_token;
+			if($token !== $this->app->session()->get('csrf_token')) {
+				$this->app->halt(403, 'Invalid CSRF token');
+			}
+		}
+	}
+}
+
+// index.php or wherever you have your routes
+use app\middlewares\CsrfMiddleware;
+
+Flight::group('', function(Router $router) {
+	$router->get('/users', [ 'UserController', 'getUsers' ]);
+	// more routes
+}, [ CsrfMiddleware::class ]);
+```
+
+##### Event Filters
 
 ```php
 // This middleware checks if the request is a POST request and if it is, it checks if the CSRF token is valid
@@ -168,39 +242,12 @@ Flight::before('start', function() {
 });
 ```
 
-Or you can use a middleware class:
+### Cross Site Scripting (XSS)
 
-```php
-// app/middleware/CsrfMiddleware.php
-
-namespace app\middleware;
-
-class CsrfMiddleware
-{
-	public function before(array $params): void
-	{
-		if(Flight::request()->method == 'POST') {
-			$token = Flight::request()->data->csrf_token;
-			if($token !== Flight::session()->get('csrf_token')) {
-				Flight::halt(403, 'Invalid CSRF token');
-			}
-		}
-	}
-}
-
-// index.php or wherever you have your routes
-Flight::group('', function(Router $router) {
-	$router->get('/users', [ 'UserController', 'getUsers' ]);
-	// more routes
-}, [ new CsrfMiddleware() ]);
-```
-
-## Cross Site Scripting (XSS)
-
-Cross Site Scripting (XSS) is a type of attack where a malicious website can inject code into your website. Most of these opportunities come 
+Cross Site Scripting (XSS) is a type of attack where a malicious form input can inject code into your website. Most of these opportunities come 
 from form values that your end users will fill out. You should **never** trust output from your users! Always assume all of them are the 
 best hackers in the world. They can inject malicious JavaScript or HTML into your page. This code can be used to steal information from your 
-users or perform actions on your website. Using Flight's view class, you can easily escape output to prevent XSS attacks.
+users or perform actions on your website. Using Flight's view class or another templating engine like [Latte](/awesome-plugins/latte), you can easily escape output to prevent XSS attacks.
 
 ```php
 // Let's assume the user is clever as tries to use this as their name
@@ -214,11 +261,11 @@ Flight::view()->set('name', $name);
 Flight::view()->render('template', ['name' => $name]);
 ```
 
-## SQL Injection
+### SQL Injection
 
 SQL Injection is a type of attack where a malicious user can inject SQL code into your database. This can be used to steal information 
 from your database or perform actions on your database. Again you should **never** trust input from your users! Always assume they are 
-out for blood. You can use prepared statements in your `PDO` objects will  prevent SQL injection.
+out for blood. You can use prepared statements in your `PDO` objects will prevent SQL injection.
 
 ```php
 // Assuming you have Flight::db() registered as your PDO object
@@ -231,17 +278,29 @@ $users = Flight::db()->fetchAll('SELECT * FROM users WHERE username = :username'
 
 // You can do the same thing with a PDO object with ? placeholders
 $statement = Flight::db()->fetchAll('SELECT * FROM users WHERE username = ?', [ $username ]);
-
-// Just promise you will never EVER do something like this...
-$users = Flight::db()->fetchAll("SELECT * FROM users WHERE username = '{$username}' LIMIT 5");
-// because what if $username = "' OR 1=1; -- "; 
-// After the query is build it looks like this
-// SELECT * FROM users WHERE username = '' OR 1=1; -- LIMIT 5
-// It looks strange, but it's a valid query that will work. In fact,
-// it's a very common SQL injection attack that will return all users.
 ```
 
-## CORS
+#### Insecure Example
+
+The below is why we use SQL prepared statements to protect from innocent examples like the below:
+
+```php
+// end user fills out a web form.
+// for the value of the form, the hacker puts in something like this:
+$username = "' OR 1=1; -- ";
+
+$sql = "SELECT * FROM users WHERE username = '$username' LIMIT 5";
+$users = Flight::db()->fetchAll($sql);
+// After the query is build it looks like this
+// SELECT * FROM users WHERE username = '' OR 1=1; -- LIMIT 5
+
+// It looks strange, but it's a valid query that will work. In fact,
+// it's a very common SQL injection attack that will return all users.
+
+var_dump($users); // this will dump all users in the database, not just the one single username
+```
+
+### CORS
 
 Cross-Origin Resource Sharing (CORS) is a mechanism that allows many resources (e.g., fonts, JavaScript, etc.) on a web page to be 
 requested from another domain outside the domain from which the resource originated. Flight does not have built in functionality, 
@@ -311,13 +370,13 @@ $CorsUtil = new CorsUtil();
 Flight::before('start', [ $CorsUtil, 'setupCors' ]);
 ```
 
-## Error Handling
-Hide sensitive error details in production to avoid leaking info to attackers.
+### Error Handling
+Hide sensitive error details in production to avoid leaking info to attackers. On production, log errors instead of displaying them with `display_errors` set to `0`.
 
 ```php
 // In your bootstrap.php or index.php
 
-// in flightphp/skeleton, this is in app/config/config.php
+// add this to your app/config/config.php
 $environment = ENVIRONMENT;
 if ($environment === 'production') {
     ini_set('display_errors', 0); // Disable error display
@@ -330,8 +389,8 @@ if ($environment === 'production') {
 Flight::halt(403, 'Access denied');
 ```
 
-## Input Sanitization
-Never trust user input. Sanitize it before processing to prevent malicious data from sneaking in.
+### Input Sanitization
+Never trust user input. Sanitize it using [filter_var](https://www.php.net/manual/en/function.filter-var.php) before processing to prevent malicious data from sneaking in.
 
 ```php
 
@@ -343,8 +402,8 @@ $clean_input = filter_var(Flight::request()->data->input, FILTER_SANITIZE_STRING
 $clean_email = filter_var(Flight::request()->data->email, FILTER_SANITIZE_EMAIL);
 ```
 
-## Password Hashing
-Store passwords securely and verify them safely using PHP’s built-in functions.
+### Password Hashing
+Store passwords securely and verify them safely using PHP’s built-in functions like [password_hash](https://www.php.net/manual/en/function.password-hash.php) and [password_verify](https://www.php.net/manual/en/function.password-verify.php). Passwords should never be stored in plain text, nor should they be encrypted with reversible methods. Hashing ensures that even if your database is compromised, the actual passwords remain protected.
 
 ```php
 $password = Flight::request()->data->password;
@@ -357,12 +416,12 @@ if (password_verify($password, $stored_hash)) {
 }
 ```
 
-## Rate Limiting
-Protect against brute force attacks by limiting request rates with a cache.
+### Rate Limiting
+Protect against brute force attacks or denial-of-service attacks by limiting request rates with a cache.
 
 ```php
 // Assuming you have flightphp/cache installed and registered
-// Using flightphp/cache in a middleware
+// Using flightphp/cache in a filter
 Flight::before('start', function() {
     $cache = Flight::cache();
     $ip = Flight::request()->ip;
@@ -377,10 +436,20 @@ Flight::before('start', function() {
 });
 ```
 
-## Conclusion
+## See Also
+- [Sessions](/awesome-plugins/session) - How to manage user sessions securely.
+- [Templates](/learn/templates) - Using templates to auto-escape output and prevent XSS.
+- [PDO Wrapper](/learn/pdo-wrapper) - Simplified database interactions with prepared statements.
+- [Middleware](/learn/middleware) - How to use middleware for simplifying the process of adding security headers.
+- [Responses](/learn/responses) - How to customize HTTP responses with secure headers.
+- [Requests](/learn/requests) - How to handle and sanitize user input.
+- [filter_var](https://www.php.net/manual/en/function.filter-var.php) - PHP function for input sanitization.
+- [password_hash](https://www.php.net/manual/en/function.password-hash.php) - PHP function for secure password hashing.
+- [password_verify](https://www.php.net/manual/en/function.password-verify.php) - PHP function for verifying hashed passwords.
 
-Security is a big deal and it's important to make sure your web applications are secure. Flight provides a number of features to help you 
-secure your web applications, but it's important to always be vigilant and make sure you're doing everything you can to keep your users' 
-data safe. Always assume the worst and never trust input from your users. Always escape output and use prepared statements to prevent SQL 
-injection. Always use middleware to protect your routes from CSRF and CORS attacks. If you do all of these things, you'll be well on your 
-way to building secure web applications.
+## Troubleshooting
+- Refer to the "See Also" section above for troubleshooting information related to issues with components of the Flight Framework.
+
+## Changelog
+- v3.1.0 - Added sections on CORS, Error Handling, Input Sanitization, Password Hashing, and Rate Limiting.
+- v2.0 - Added escaping for default views to prevent XSS.

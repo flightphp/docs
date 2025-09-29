@@ -94,7 +94,7 @@ pre {
     background: #3c434b;
 }
 
-[data-bs-theme="dark"] pre[class*=language-] {
+[data-bs-theme="dark"] pre[class*=language-], [data-bs-theme="dark"] .flight-block pre {
     background: #212529;
 }
 
@@ -358,6 +358,7 @@ div.flight-block {
 
     pre {
         background-color: #FFFFFF;
+		padding: 5px;
     }
 
     p:last-child {
@@ -400,13 +401,10 @@ div.flight-block {
         object-fit: cover;
     }
 
-    .fligth-title-video {
+    .flight-title-video {
         font-size: 30px;
     }
 
-    a {
-        font-size: 20px;
-    }
 }
 
 [data-bs-theme="dark"] .flight-block-video {

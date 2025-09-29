@@ -134,7 +134,7 @@ Run `composer test` to verify the route behaves as expected. For more on [reques
 
 For more complex scenarios, use [dependency injection](/learn/dependency-injection-container) (DI) to make controllers testable. Avoid Flight’s globals (e.g., `Flight::set()`, `Flight::map()`, `Flight::register()`) as they act like global state, requiring mocks for every test. Instead, use Flight’s DI container, [DICE](https://github.com/Level-2/Dice), [PHP-DI](https://php-di.org/) or manual DI.
 
-Let’s use [`flight\database\PdoWrapper`](/awesome-plugins/pdo-wrapper) instead of raw PDO. This wrapper is much easier to mock and unit test!
+Let’s use [`flight\database\PdoWrapper`](/learn/pdo-wrapper) instead of raw PDO. This wrapper is much easier to mock and unit test!
 
 Here’s a controller that saves a user to a database and sends a welcome email:
 
@@ -168,7 +168,7 @@ class UserController {
 ```
 
 **Key Points**:
-- The controller depends on a [`PdoWrapper`](/awesome-plugins/pdo-wrapper) instance and a `MailerInterface` (a pretend third-party email service).
+- The controller depends on a [`PdoWrapper`](/learn/pdo-wrapper) instance and a `MailerInterface` (a pretend third-party email service).
 - Dependencies are injected via the constructor, avoiding globals.
 
 ### Testing the Controller with Mocks

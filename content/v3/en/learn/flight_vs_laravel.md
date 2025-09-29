@@ -15,7 +15,7 @@ these modules, when you actually could just use another library or write your ow
 
 - Laravel has a **huge ecosystem** of developers and modules that can be used to solve common problems.
 - Laravel has a full-featured ORM that can be used to interact with your database.
-- Laravel has an insane amount of documentation and tutorials that can be used to learn the framework.
+- Laravel has an _insane_ amount of documentation and tutorials that can be used to learn the framework. That can be good for digging into the nitty gritty or bad because there is just so much to go through.
 - Laravel has a built-in authentication system that can be used to secure your application.
 - Laravel has podcasts, conferences, meetings, videos, and other resources that can be used to learn the framework.
 - Laravel is geared towards a seasoned developer who is looking to build a full-featured, enterprise web application.

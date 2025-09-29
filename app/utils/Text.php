@@ -53,10 +53,15 @@ class Text {
 				$tag = 'h3';
 			}
 			$title = strip_tags($matches[3]);
+			$rawTitle = $matches[3];
 			$slugged_title = Text::slugify($title);
 			$id_attr = 'id="' . $slugged_title . '"';
 			$permalink = ' <a href="/'.$section_file_path.'#' . $slugged_title . '" class="bi bi-link-45deg" title="Permalink to this heading"></a>';
 
+			// if the $rawTitle has a <a> tag in it, skip the permalink cause it is a link...
+			if(strpos($rawTitle, '<a') !== false) {
+				$permalink = '';
+			}
 			if ($tag === 'h2') {
 				$heading_data[$slugged_title] = [
 					'title' => $title,
@@ -66,7 +71,6 @@ class Text {
 				];
 				$last_h2_key = $slugged_title;
 				// Add id and permalink to h2
-				$new_html = $matches[1] . $matches[2] . ' ' . $id_attr . '>' . $title . $permalink . $matches[4];
 			} elseif ($tag === 'h3' && $last_h2_key !== null) {
 				// Add h3 as child of last h2
 				$heading_data[$last_h2_key]['children'][] = [
@@ -75,7 +79,6 @@ class Text {
 					'type' => $matches[2]
 				];
 				// Add id and permalink to h3
-				$new_html = $matches[1] . $matches[2] . ' ' . $id_attr . '>' . $title . $permalink . $matches[4];
 			} else {
 				// If h3 appears before any h2, treat as top-level (rare)
 				$heading_data[$slugged_title] = [
@@ -84,8 +87,9 @@ class Text {
 					'type' => $matches[2],
 					'children' => []
 				];
-				$new_html = $matches[1] . $matches[2] . ' ' . $id_attr . '>' . $title . $permalink . $matches[4];
 			}
+			$new_html = $matches[1] . $matches[2] . ' ' . $id_attr . '>' . $rawTitle . $permalink . $matches[4];
+
 			return $new_html;
 		}, $markdown_html);
 

@@ -16,23 +16,19 @@ There are some basic configuration options to get started. You can read more abo
 
 ```php
 
-use Latte\Engine as LatteEngine;
-
 require 'vendor/autoload.php';
 
 $app = Flight::app();
 
-$app->register('latte', LatteEngine::class, [], function(LatteEngine $latte) use ($app) {
+$app->map('render', function(string $template, array $data, ?string $block): void {
+	$latte = new Latte\Engine;
 
-	// This is where Latte will cache your templates to speed things up
-	// One neat thing about Latte is that it automatically refreshes your
-	// cache when you make changes to your templates!
+	// Where latte specifically stores its cache
 	$latte->setTempDirectory(__DIR__ . '/../cache/');
+	
+	$finalPath = Flight::get('flight.views.path') . $template;
 
-	// Tell Latte where the root directory for your views will be at.
-	// $app->get('flight.views.path') is set in the config.php file
-	//   You could also just do something like `__DIR__ . '/../views/'`
-	$latte->setLoader(new \Latte\Loaders\FileLoader($app->get('flight.views.path')));
+	$latte->render($finalPath, $data, $block);
 });
 ```
 
@@ -84,7 +80,7 @@ Then when you go to render this inside your function or controller, you would do
 ```php
 // simple route
 Flight::route('/', function () {
-	Flight::latte()->render('home.latte', [
+	Flight::render('home.latte', [
 		'title' => 'Home Page'
 	]);
 });
@@ -97,7 +93,7 @@ class HomeController
 {
 	public function index()
 	{
-		Flight::latte()->render('home.latte', [
+		Flight::render('home.latte', [
 			'title' => 'Home Page'
 		]);
 	}
@@ -105,3 +101,29 @@ class HomeController
 ```
 
 See the [Latte Documentation](https://latte.nette.org/en/guide) for more information on how to use Latte to it's fullest potential!
+
+## Debugging with Tracy
+
+_PHP 8.1+ is required for this section._
+
+You can also use [Tracy](https://tracy.nette.org/en/) to help with debugging your Latte template files right out of the box! If you already have Tracy installed, you need to add the Latte extension to Tracy.
+
+```php
+// services.php
+use Tracy\Debugger;
+
+$app->map('render', function(string $template, array $data, ?string $block): void {
+	$latte = new Latte\Engine;
+
+	// Where latte specifically stores its cache
+	$latte->setTempDirectory(__DIR__ . '/../cache/');
+	
+	$finalPath = Flight::get('flight.views.path') . $template;
+
+	// This will only add the extension if the Tracy Debug Bar is enabled
+	if (Debugger::$showBar === true) {
+		// this is where you add the Latte Panel to Tracy
+		$latte->addExtension(new Latte\Bridges\Tracy\TracyExtension);
+	}
+	$latte->render($finalPath, $data, $block);
+});

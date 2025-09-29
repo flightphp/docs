@@ -1,10 +1,16 @@
 # Autoloading
 
+## Overview
+
 Autoloading is a concept in PHP where you specific a directory or directories to load classes from. This is much more beneficial than using `require` or `include` to load classes. It is also a requirement for using Composer packages.
+
+## Understanding
 
 By default any `Flight` class is autoloaded for your automatically thanks to composer. However, if you want to autoload your own classes, you can use the `Flight::path()` method to specify a directory to load classes from.
 
-## Basic Example
+Using an autoloader can help simplify your code in a significant way. Instead of having files start with a myriad of `include` or `require` statements at the top to capture all classes that are used in that file, you can instead dynamically call your classes and they will be included automatically.
+
+## Basic Usage
 
 Let's assume we have a directory tree like the following:
 
@@ -46,7 +52,6 @@ Flight::path(__DIR__.'/../app/utils/');
 // no namespacing required
 
 // All autoloaded classes are recommended to be Pascal Case (each word capitalized, no spaces)
-// As of 3.7.2, you can use Pascal_Snake_Case for your class names by running Loader::setV2ClassLoading(false);
 class MyController {
 
 	public function index() {
@@ -119,6 +124,7 @@ This will allow you to use underscores in your class names.
 This is not recommended, but it is available for those who need it.
 
 ```php
+use flight\core\Loader;
 
 /**
  * public/index.php
@@ -142,3 +148,14 @@ class My_Controller {
 	}
 }
 ```
+
+## See Also
+- [Routing](/learn/routing) - How to map routes to controllers and render views.
+- [Why a Framework?](/learn/why-frameworks) - Understanding the benefits of using a framework like Flight.
+
+## Troubleshooting
+- If you can't seem to figure out why your namespaced classes aren't being found, remember to use `Flight::path()` to the root directory in your project, not your `app/` or `src/` directory or equivalent.
+
+## Changelog
+- v3.7.2 - You can use Pascal_Snake_Case for your class names by running `Loader::setV2ClassLoading(false);`
+- v2.0 - Autoload functionality added.

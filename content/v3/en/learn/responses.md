@@ -1,10 +1,18 @@
 # Responses
 
-Flight helps generate part of the response headers for you, but you hold most of the control over what you send back to the user. Sometimes you can access the `Response` object directly, but most of the time you'll use the `Flight` instance to send a response.
+## Overview
 
-## Sending a Basic Response
+Flight helps generate part of the response headers for you, but you hold most of the control over what you send back to the user. Most of the time you'll access the `response()` object directly, but Flight has some helper methods to set some of the response headers for you.
 
-Flight uses ob_start() to buffer the output. This means you can use `echo` or `print` to send a response to the user and Flight will capture it and send it back to the user with the appropriate headers.
+## Understanding
+
+After the user sends their [request](/learn/requests) request to your application, you need to generate a proper response for them. They have sent you information like the language the prefer, if they can handle certain types of compression, their user agent, etc and after processing everything it's time to send them back a proper response. This can be setting headers, outputting a body of HTML or JSON for them, or redirecting them to a page.  
+
+## Basic Usage
+
+### Sending a Response Body
+
+Flight uses `ob_start()` to buffer the output. This means you can use `echo` or `print` to send a response to the user and Flight will capture it and send it back to the user with the appropriate headers.
 
 ```php
 
@@ -34,42 +42,89 @@ Flight::route('/', function() {
 });
 ```
 
-## Status Codes
+### JSON
 
-You can set the status code of the response by using the `status` method:
+Flight provides support for sending JSON and JSONP responses. To send a JSON response you
+pass some data to be JSON encoded:
 
 ```php
-Flight::route('/@id', function($id) {
-	if($id == 123) {
-		Flight::response()->status(200);
-		echo "Hello, World!";
-	} else {
-		Flight::response()->status(403);
-		echo "Forbidden";
+Flight::route('/@companyId/users', function(int $companyId) {
+	// somehow pull out your users from a database for example
+	$users = Flight::db()->fetchAll("SELECT id, first_name, last_name FROM users WHERE company_id = ?", [ $companyId ]);
+
+	Flight::json($users);
+});
+// [{"id":1,"first_name":"Bob","last_name":"Jones"}, /* more users */ ]
+```
+
+> **Note:** By default, Flight will send a `Content-Type: application/json` header with the response. It will also use the flags `JSON_THROW_ON_ERROR` and `JSON_UNESCAPED_SLASHES` when encoding the JSON.
+
+#### JSON with Status Code
+
+You can also pass in a status code as the second argument:
+
+```php
+Flight::json(['id' => 123], 201);
+```
+
+#### JSON with Pretty Print
+
+You can also pass in an argument to the last position to enable pretty printing:
+
+```php
+Flight::json(['id' => 123], 200, true, 'utf-8', JSON_PRETTY_PRINT);
+```
+
+#### Changing JSON Argument Order
+
+`Flight::json()` is a very legacy method, but the goal of Flight is to maintain backwards compatibility
+for projects. It's actually very simple if you want to redo the order of the arguments to use a simpler 
+syntax, you can just remap the JSON method [like any other Flight method](/learn/extending):
+
+```php
+Flight::map('json', function($data, $code = 200, $options = 0) {
+
+	// now you don't have to `true, 'utf-8'` when using the json() method!
+	Flight::_json($data, $code, true, 'utf-8', $options);
+}
+
+// And now it can be used like this
+Flight::json(['id' => 123], 200, JSON_PRETTY_PRINT);
+```
+
+#### JSON and Stopping Execution
+
+_v3.10.0_
+
+If you want to send a JSON response and stop execution, you can use the `jsonHalt()` method.
+This is useful for cases where you are checking for maybe some type of authorization and if
+the user is not authorized, you can send a JSON response immediately, clear the existing body
+content and stop execution.
+
+```php
+Flight::route('/users', function() {
+	$authorized = someAuthorizationCheck();
+	// Check if the user is authorized
+	if($authorized === false) {
+		Flight::jsonHalt(['error' => 'Unauthorized'], 401);
+		// no exit; needed here.
 	}
+
+	// Continue with the rest of the route
 });
 ```
 
-If you want to get the current status code, you can use the `status` method without any arguments:
+Before v3.10.0, you would have to do something like this:
 
 ```php
-Flight::response()->status(); // 200
-```
+Flight::route('/users', function() {
+	$authorized = someAuthorizationCheck();
+	// Check if the user is authorized
+	if($authorized === false) {
+		Flight::halt(401, json_encode(['error' => 'Unauthorized']));
+	}
 
-## Setting a Response Body
-
-You can set the response body by using the `write` method, however, if you echo or print anything, 
-it will be captured and sent as the response body via output buffering.
-
-```php
-Flight::route('/', function() {
-	Flight::response()->write("Hello, World!");
-});
-
-// same as
-
-Flight::route('/', function() {
-	echo "Hello, World!";
+	// Continue with the rest of the route
 });
 ```
 
@@ -86,6 +141,8 @@ Flight::route('/', function() {
 	}
 });
 ```
+
+The use case above is likely not common, however it could be more common if this was used in a [middleware](/learn/middleware).
 
 ### Running a Callback on the Response Body
 
@@ -108,7 +165,7 @@ You can add multiple callbacks and they will be run in the order they were added
 
 **Note:** Route callbacks will not work if you are using the `flight.v2.output_buffering` configuration option.
 
-### Specific Route Callback
+#### Specific Route Callback
 
 If you wanted this to only apply to a specific route, you could add the callback in the route itself:
 
@@ -125,9 +182,9 @@ Flight::route('/users', function() {
 });
 ```
 
-### Middleware Option
+#### Middleware Option
 
-You can also use middleware to apply the callback to all routes via middleware:
+You can also use [middleware](/learn/middleware) to apply the callback to all routes via middleware:
 
 ```php
 // MinifyMiddleware.php
@@ -152,12 +209,33 @@ Flight::group('/users', function() {
 }, [ new MinifyMiddleware() ]);
 ```
 
-## Setting a Response Header
+### Status Codes
+
+You can set the status code of the response by using the `status` method:
+
+```php
+Flight::route('/@id', function($id) {
+	if($id == 123) {
+		Flight::response()->status(200);
+		echo "Hello, World!";
+	} else {
+		Flight::response()->status(403);
+		echo "Forbidden";
+	}
+});
+```
+
+If you want to get the current status code, you can use the `status` method without any arguments:
+
+```php
+Flight::response()->status(); // 200
+```
+
+### Setting a Response Header
 
 You can set a header such as content type of the response by using the `header` method:
 
 ```php
-
 // This will send "Hello, World!" to the user's browser in plain text
 Flight::route('/', function() {
 	Flight::response()->header('Content-Type', 'text/plain');
@@ -167,81 +245,81 @@ Flight::route('/', function() {
 });
 ```
 
-## JSON
+### Redirect
 
-Flight provides support for sending JSON and JSONP responses. To send a JSON response you
-pass some data to be JSON encoded:
-
-```php
-Flight::json(['id' => 123]);
-```
-
-> **Note:** By default, Flight will send a `Content-Type: application/json` header with the response. It will also use the constants `JSON_THROW_ON_ERROR` and `JSON_UNESCAPED_SLASHES` when encoding the JSON.
-
-### JSON with Status Code
-
-You can also pass in a status code as the second argument:
+You can redirect the current request by using the `redirect()` method and passing
+in a new URL:
 
 ```php
-Flight::json(['id' => 123], 201);
-```
+Flight::route('/login', function() {
+	$username = Flight::request()->data->username;
+	$password = Flight::request()->data->password;
+	$passwordConfirm = Flight::request()->data->password_confirm;
 
-### JSON with Pretty Print
-
-You can also pass in an argument to the last position to enable pretty printing:
-
-```php
-Flight::json(['id' => 123], 200, true, 'utf-8', JSON_PRETTY_PRINT);
-```
-
-If you are changing options passed into `Flight::json()` and want a simpler syntax, you can 
-just remap the JSON method:
-
-```php
-Flight::map('json', function($data, $code = 200, $options = 0) {
-	Flight::_json($data, $code, true, 'utf-8', $options);
-}
-
-// And now it can be used like this
-Flight::json(['id' => 123], 200, JSON_PRETTY_PRINT);
-```
-
-### JSON and Stop Execution (v3.10.0)
-
-If you want to send a JSON response and stop execution, you can use the `jsonHalt()` method.
-This is useful for cases where you are checking for maybe some type of authorization and if
-the user is not authorized, you can send a JSON response immediately, clear the existing body
-content and stop execution.
-
-```php
-Flight::route('/users', function() {
-	$authorized = someAuthorizationCheck();
-	// Check if the user is authorized
-	if($authorized === false) {
-		Flight::jsonHalt(['error' => 'Unauthorized'], 401);
+	if($password !== $passwordConfirm) {
+		Flight::redirect('/new/location');
+		return; // this is necessary so functionality below doesn't execute
 	}
 
-	// Continue with the rest of the route
+	// add the new user...
+	Flight::db()->runQuery("INSERT INTO users ....");
+	Flight::redirect('/admin/dashboard');
 });
 ```
 
-Before v3.10.0, you would have to do something like this:
+> **Note:** By default Flight sends a HTTP 303 ("See Other") status code. You can optionally set a
+custom code:
 
 ```php
-Flight::route('/users', function() {
-	$authorized = someAuthorizationCheck();
-	// Check if the user is authorized
-	if($authorized === false) {
-		Flight::halt(401, json_encode(['error' => 'Unauthorized']));
-	}
+Flight::redirect('/new/location', 301); // permanent
+```
 
-	// Continue with the rest of the route
-});
+### Stopping Route Execution
+
+You can stop the framework and immediately exit at any point by calling the `halt` method:
+
+```php
+Flight::halt();
+```
+
+You can also specify an optional `HTTP` status code and message:
+
+```php
+Flight::halt(200, 'Be right back...');
+```
+
+Calling `halt` will discard any response content up to that point and stop all execution. 
+If you want to stop the framework and output the current response, use the `stop` method:
+
+```php
+Flight::stop($httpStatusCode = null);
+```
+
+> **Note:** `Flight::stop()` has some odd behavior such as it will output the response but continue executing your script which might not be what you are after. You can use `exit` or `return` after calling `Flight::stop()` to prevent further execution, but it is generally recommended to use `Flight::halt()`. 
+
+This will save the header key and value to the response object. At the end of the request lifecycle
+it will build the headers and send a response.
+
+## Advanced Usage
+
+### Sending a Header Immediately
+
+There may be times when you need to do something custom with the header and you need to send the header
+on that very line of code you're working with. If you are setting a [streamed route](/learn/routing),
+this is what you would need. That is achievable through `response()->setRealHeader()`.
+
+```php
+Flight::route('/', function() {
+	Flight::response()->setRealHeader('Content-Type: text/plain');
+	echo 'Streaming response...';
+	sleep(5);
+	echo 'Done!';
+})->stream();
 ```
 
 ### JSONP
 
-For JSONP requests you, can optionally pass in the query parameter name you are
+For JSONP requests, you can optionally pass in the query parameter name you are
 using to define your callback function:
 
 ```php
@@ -256,46 +334,9 @@ my_func({"id":123});
 
 If you don't pass in a query parameter name it will default to `jsonp`.
 
-## Redirect to another URL
+> **Note:** If you are still using JSONP requests in 2025 and beyond, hop in the chat and tell us why! We love hearing some good battle/horror stories!
 
-You can redirect the current request by using the `redirect()` method and passing
-in a new URL:
-
-```php
-Flight::redirect('/new/location');
-```
-
-By default Flight sends a HTTP 303 ("See Other") status code. You can optionally set a
-custom code:
-
-```php
-Flight::redirect('/new/location', 401);
-```
-
-## Stopping
-
-You can stop the framework at any point by calling the `halt` method:
-
-```php
-Flight::halt();
-```
-
-You can also specify an optional `HTTP` status code and message:
-
-```php
-Flight::halt(200, 'Be right back...');
-```
-
-Calling `halt` will discard any response content up to that point. If you want to stop
-the framework and output the current response, use the `stop` method:
-
-```php
-Flight::stop($httpStatusCode = null);
-```
-
-> **Note:** `Flight::stop()` has some odd behavior such as it will output the response but continue executing your script. You can use `exit` or `return` after calling `Flight::stop()` to prevent further execution, but it is generally recommended to use `Flight::halt()`. 
-
-## Clearing Response Data
+### Clearing Response Data
 
 You can clear the response body and headers by using the `clear()` method. This will clear
 any headers assigned to the response, clear the response body, and set the status code to `200`.
@@ -304,7 +345,7 @@ any headers assigned to the response, clear the response body, and set the statu
 Flight::response()->clear();
 ```
 
-### Clearing Response Body Only
+#### Clearing Response Body Only
 
 If you only want to clear the response body, you can use the `clearBody()` method:
 
@@ -313,14 +354,14 @@ If you only want to clear the response body, you can use the `clearBody()` metho
 Flight::response()->clearBody();
 ```
 
-## HTTP Caching
+### HTTP Caching
 
 Flight provides built-in support for HTTP level caching. If the caching condition
 is met, Flight will return an HTTP `304 Not Modified` response. The next time the
 client requests the same resource, they will be prompted to use their locally
 cached version.
 
-### Route Level Caching
+#### Route Level Caching
 
 If you want to cache your whole response, you can use the `cache()` method and pass in time to cache.
 
@@ -369,12 +410,30 @@ Keep in mind that calling either `lastModified` or `etag` will both set and chec
 cache value. If the cache value is the same between requests, Flight will immediately
 send an `HTTP 304` response and stop processing.
 
-## Download a File (v3.12.0)
+### Download a File
 
-There is a helper method to download a file. You can use the `download` method and pass in the path.
+_v3.12.0_
+
+There is a helper method to stream a file to the end user. You can use the `download` method and pass in the path.
 
 ```php
 Flight::route('/download', function () {
   Flight::download('/path/to/file.txt');
 });
 ```
+
+## See Also
+- [Routing](/learn/routing) - How to map routes to controllers and render views.
+- [Requests](/learn/requests) - Understanding how to handle incoming requests.
+- [Middleware](/learn/middleware) - Using middleware with routes for authentication, logging, etc.
+- [Why a Framework?](/learn/why-frameworks) - Understanding the benefits of using a framework like Flight.
+- [Extending](/learn/extending) - How to extend Flight with your own functionality.
+
+## Troubleshooting
+- If you're having trouble with redirects not working, make sure you add a `return;` to the method.
+- `stop()` and `halt()` are not the same thing. `halt()` will stop execution immediately, while `stop()` will allow execution to continue.
+
+## Changelog
+- v3.12.0 - Added downloadFile helper method.
+- v3.10.0 - Added `jsonHalt`.
+- v1.0 - Initial release.

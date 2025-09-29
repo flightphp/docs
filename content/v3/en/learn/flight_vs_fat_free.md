@@ -35,7 +35,7 @@ PHP 5.3.
 - You have to use a search engine like Google to actually search the documentation site.
 - Flight has dark mode on their documentation site. (mic drop)
 - Fat-Free has some modules that are woefully unmaintained.
-- Flight has a simple [PdoWrapper](/awesome-plugins/pdo-wrapper) that is a touch more simple than Fat-Free's built in `DB\SQL` class.
+- Flight has a simple [PdoWrapper](/learn/pdo-wrapper) that is a touch more simple than Fat-Free's built in `DB\SQL` class.
 - Flight has a [permissions plugin](/awesome-plugins/permissions) that can be used to secure your application. Fat Free requires you to use 
   a third-party library.
 - Flight has an ORM called [active-record](/awesome-plugins/active-record) which feels more like an ORM than Fat-Free's Mapper.

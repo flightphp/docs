@@ -49,7 +49,7 @@ Debugging is crucial when you are developing in your local environment. There ar
 
 Databases are the core to most applications. This is how you store and retrieve data. Some database libraries are simply wrappers to write queries and some are full fledged ORMs.
 
-- <span class="badge bg-primary">official</span> [flightphp/core PdoWrapper](/awesome-plugins/pdo-wrapper) - Official Flight PDO Wrapper that's part of the core. This is a simple wrapper to help simplify the process of writing queries and executing them. It is not an ORM.
+- <span class="badge bg-primary">official</span> [flightphp/core PdoWrapper](/learn/pdo-wrapper) - Official Flight PDO Wrapper that's part of the core. This is a simple wrapper to help simplify the process of writing queries and executing them. It is not an ORM.
 - <span class="badge bg-primary">official</span> [flightphp/active-record](/awesome-plugins/active-record) - Official Flight ActiveRecord ORM/Mapper. Great little library for easily retrieving and storing data in your database.
 - [byjg/php-migration](/awesome-plugins/migrations) - Plugin to keep track of all database changes for your project.
 

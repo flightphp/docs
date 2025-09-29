@@ -1,16 +1,31 @@
-# What is Flight?
+# Flight PHP Framework
 
-Flight is a fast, simple, extensible framework for PHP—built for developers who want to get things done quickly, with zero fuss. Whether you're building a classic web app, a blazing-fast API, or experimenting with the latest AI-powered tools, Flight's low footprint and straightforward design make it a perfect fit.
+Flight is a fast, simple, extensible framework for PHP—built for developers who want to get things done quickly, with zero fuss. Whether you're building a classic web app, a blazing-fast API, or experimenting with the latest AI-powered tools, Flight's low footprint and straightforward design make it a perfect fit. Flight is meant to be lean, but can also handle enterprise architecture requirements.
 
 ## Why Choose Flight?
 
 - **Beginner Friendly:** Flight is a great starting point for new PHP developers. Its clear structure and simple syntax help you learn web development without getting lost in boilerplate.
 - **Loved by Pros:** Experienced devs love Flight for its flexibility and control. You can scale from a tiny prototype to a full-featured app without switching frameworks.
-- **AI Friendly:** Flight's minimal overhead and clean architecture make it ideal for integrating AI tools and APIs. Whether you're building smart chatbots, AI-driven dashboards, or just want to experiment, Flight gets out of your way so you can focus on what matters. [Learn more about using AI with Flight](/learn/ai)
+- **AI Friendly:** Flight's minimal overhead and clean architecture make it ideal for integrating AI tools and APIs. Whether you're building smart chatbots, AI-driven dashboards, or just want to experiment, Flight gets out of your way so you can focus on what matters. The [skeleton app](https://github.com/flightphp/skeleton) comes with pre-built instructions files for the major AI coding assistants out of the box! [Learn more about using AI with Flight](/learn/ai)
+
+## Video Overview
+
+<div class="flight-block-video">
+  <div class="row">
+    <div class="col-12 col-md-6 position-relative video-wrapper">
+      <iframe class="video-bg" width="100vw" height="315" src="https://www.youtube.com/embed/VCztp1QLC2c?si=W3fSWEKmoCIlC7Z5" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+    </div>
+    <div class="col-12 col-md-6 fs-5 text-center mt-5 pt-5">
+      <span class="flight-title-video">Simple enough, right?</span>
+      <br>
+      <a href="https://docs.flightphp.com/learn">Learn more</a> about Flight in the documentation!
+    </div>
+  </div>
+</div>
 
 ## Quick Start
 
-First, install it with Composer:
+To do a fast bare bones install, install it with Composer:
 
 ```bash
 composer require flightphp/core
@@ -31,7 +46,9 @@ Flight::route('/', function() {
 });
 
 Flight::route('/json', function() {
-  Flight::json(['hello' => 'world']);
+  Flight::json([
+	'hello' => 'world'
+  ]);
 });
 
 Flight::start();
@@ -39,24 +56,28 @@ Flight::start();
 
 That's it! You have a basic Flight application. You can now run this file with `php -S localhost:8000` and visit `http://localhost:8000` in your browser to see the output.
 
-<div class="flight-block-video">
-  <div class="row">
-    <div class="col-12 col-md-6 position-relative video-wrapper">
-      <iframe class="video-bg" width="100vw" height="315" src="https://www.youtube.com/embed/VCztp1QLC2c?si=W3fSWEKmoCIlC7Z5" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-    </div>
-    <div class="col-12 col-md-6 text-center mt-5 pt-5">
-      <span class="fligth-title-video">Simple enough, right?</span>
-      <br>
-      <a href="https://docs.flightphp.com/learn">Learn more about Flight in the documentation!</a>
-      <br>
-      <button href="/learn/ai" class="btn btn-primary mt-3">Discover how Flight makes AI easy</button>
-    </div>
-  </div>
-</div>
+## Skeleton/Boilerplate App
 
-## Is it fast?
+There's an example app to help you start your project with Flight. It has a structured layout, basic configs all set and handle composer scripts right out of the gate! Check out [flightphp/skeleton](https://github.com/flightphp/skeleton) for a ready-to-go project, or visit the [examples](examples) page for inspiration. Want to see how AI fits in? [Explore AI-powered examples](/learn/ai).
 
-Absolutely! Flight is one of the fastest PHP frameworks out there. Its lightweight core means less overhead and more speed—perfect for both traditional apps and modern AI-powered projects. You can see all the benchmarks at [TechEmpower](https://www.techempower.com/benchmarks/#section=data-r18&hw=ph&test=frameworks)
+## Installing the Skeleton App
+
+Easy enough!
+
+```bash
+# Create the new project
+composer create-project flightphp/skeleton my-project/
+# Enter your new project directory
+cd my-project/
+# Bring up the local dev-server to get started right away!
+composer start
+```
+
+It will create the project structure, setup the files you need, and you're ready to go!
+
+## High Performance
+
+Flight is one of the fastest PHP frameworks out there. Its lightweight core means less overhead and more speed—perfect for both traditional apps and modern AI-powered projects. You can see all the benchmarks at [TechEmpower](https://www.techempower.com/benchmarks/#section=data-r18&hw=ph&test=frameworks)
 
 See the benchmark below with some other popular PHP frameworks.
 
@@ -72,9 +93,10 @@ See the benchmark below with some other popular PHP frameworks.
 | Laravel     | 26,657     | 26,901  |
 | CodeIgniter | 20,628     | 19,901  |
 
-## Skeleton/Boilerplate App
 
-There's an example app to help you get started with Flight. Check out [flightphp/skeleton](https://github.com/flightphp/skeleton) for a ready-to-go project, or visit the [examples](examples) page for inspiration. Want to see how AI fits in? [Explore AI-powered examples](/learn/ai).
+## Flight and AI
+
+Curious how it handles AI? [Discover](/learn/ai) how Flight makes working with your favorite coding LLM easy!
 
 # Community
 
