@@ -73,7 +73,6 @@ class DocsLogic {
 				[ 'url' => '/learn/unit-testing', 'title' => 'Unit Testing' ],
 				[ 'url' => '/learn/ai', 'title' => 'AI & Developer Experience' ],
 				[ 'url' => '/learn/migrating-to-v3', 'title' => 'Migrating v2 -> v3' ],
-				[ 'url' => '/learn/troubleshooting', 'title' => 'Troubleshooting' ],
 			]
 		];
 	}

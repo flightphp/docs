@@ -1,81 +1,87 @@
 # AI & Developer Experience with Flight
 
-Flight is all about helping you build faster, smarter, and with less friction—especially when it comes to working with AI-powered tools and modern developer workflows. This page covers how Flight makes it easy to supercharge your projects with AI, and how to get started with the new AI helpers built right into the framework and skeleton project.
+## Overview
 
----
+Flight makes it easy to supercharge your PHP projects with AI-powered tools and modern developer workflows. With built-in commands for connecting to LLM (Large Language Model) providers and generating project-specific AI coding instructions, Flight helps you and your team get the most out of AI assistants like GitHub Copilot, Cursor, and Windsurf.
 
-## AI-Ready by Default: The Skeleton Project
+## Understanding
 
-The official [flightphp/skeleton](https://github.com/flightphp/skeleton) starter now comes with instructions and configuration for popular AI coding assistants:
+AI coding assistants are most helpful when they understand your project's context, conventions, and goals. Flight's AI helpers let you:
+- Connect your project to popular LLM providers (OpenAI, Grok, Claude, etc.)
+- Generate and update project-specific instructions for AI tools, so everyone gets consistent, relevant help
+- Keep your team aligned and productive, with less time spent explaining context
 
-- **GitHub Copilot**
-- **Cursor**
-- **Windsurf**
+These features are built into the Flight core CLI and the official [flightphp/skeleton](https://github.com/flightphp/skeleton) starter project.
 
-These tools are pre-configured with project-specific instructions, so you and your team can get the most relevant, context-aware help as you code. This means:
+## Basic Usage
 
-- AI assistants understand your project's goals, style, and requirements
-- Consistent guidance for all contributors
-- Less time spent explaining context, more time building
+### 1. Setting Up LLM Credentials
 
-> **Why does this matter?**
->
-> When your AI tools know your project's intent and conventions, they can help you scaffold features, refactor code, and avoid common mistakes—making you (and your team) more productive from day one.
+The `ai:init` command walks you through connecting your project to an LLM provider.
 
----
-
-## New AI Commands in Flight Core
-
-_v3.16.0+_
-
-Flight core now includes two powerful CLI commands to help you set up and steer your project with AI:
-
-### 1. `ai:init` — Connect to Your Favorite LLM Provider
-
-This command walks you through setting up credentials for an LLM (Large Language Model) provider, such as OpenAI, Grok, or Anthropic (Claude).
-
-**Example:**
 ```bash
 php runway ai:init
 ```
-You'll be prompted to select your provider, enter your API key, and choose a model. This makes it easy to connect your project to the latest AI services—no manual config required.
 
-### 2. `ai:generate-instructions` — Project-Aware AI Coding Instructions
+You'll be prompted to:
+- Choose your provider (OpenAI, Grok, Claude, etc.)
+- Enter your API key
+- Set the base URL and model name
 
-This command helps you create or update project-specific instructions for AI coding assistants. It asks you a few simple questions about your project (like what it's for, what database you use, team size, etc.), then uses your LLM provider to generate tailored instructions.
-
-If you already have instructions, it will update them to reflect the answers you provide. These instructions are automatically written to:
-- `.github/copilot-instructions.md` (for Github Copilot)
-- `.cursor/rules/project-overview.mdc` (for Cursor)
-- `.windsurfrules` (for Windsurf)
+This creates a `.runway-creds.json` file in your project root (and ensures it's in your `.gitignore`).
 
 **Example:**
+```
+Welcome to AI Init!
+Which LLM API do you want to use? [1] openai, [2] grok, [3] claude: 1
+Enter the base URL for the LLM API [https://api.openai.com]:
+Enter your API key for openai: sk-...
+Enter the model name you want to use (e.g. gpt-4, claude-3-opus, etc) [gpt-4o]:
+Credentials saved to .runway-creds.json
+```
+
+### 2. Generating Project-Specific AI Instructions
+
+The `ai:generate-instructions` command helps you create or update instructions for AI coding assistants, tailored to your project.
+
 ```bash
 php runway ai:generate-instructions
 ```
 
-> **Why is this helpful?**
->
-> With up-to-date, project-specific instructions, your AI tools can:
-> - Give better code suggestions
-> - Understand your project's unique needs
-> - Help onboard new contributors faster
-> - Reduce friction and confusion as your project evolves
+You'll answer a few questions about your project (description, database, templating, security, team size, etc.). Flight uses your LLM provider to generate instructions, then writes them to:
+- `.github/copilot-instructions.md` (for GitHub Copilot)
+- `.cursor/rules/project-overview.mdc` (for Cursor)
+- `.windsurfrules` (for Windsurf)
 
----
+**Example:**
+```
+Please describe what your project is for? My awesome API
+What database are you planning on using? MySQL
+What HTML templating engine will you plan on using (if any)? latte
+Is security an important element of this project? (y/n) y
+...
+AI instructions updated successfully.
+```
 
-## Not Just for Building AI Apps
+Now, your AI tools will give smarter, more relevant suggestions based on your project's real needs.
 
-While you can absolutely use Flight to build AI-powered features (like chatbots, smart APIs, or integrations), the real power is in how Flight helps you work better with AI tools as a developer. It's about:
+## Advanced Usage
 
-- **Boosting productivity** with AI-assisted coding
-- **Keeping your team aligned** with shared, evolving instructions
-- **Making onboarding easier** for new contributors
-- **Letting you focus on building**, not fighting your tools
+- You can customize the location of your credentials or instructions files using command options (see `--help` for each command).
+- The AI helpers are designed to work with any LLM provider that supports OpenAI-compatible APIs.
+- If you want to update your instructions as your project evolves, just rerun `ai:generate-instructions` and answer the prompts again.
 
----
+## See Also
 
-## Learn More & Get Started
+- [Flight Skeleton](https://github.com/flightphp/skeleton) – The official starter with AI integration
+- [Runway CLI](/awesome-plugins/runway) – More about the CLI tool powering these commands
 
-- See the [Flight Skeleton](https://github.com/flightphp/skeleton) for a ready-to-go, AI-friendly starter
-- Check out the rest of the [Flight documentation](/learn) for tips on building fast, modern PHP apps
+## Troubleshooting
+
+- If you see "Missing .runway-creds.json", run `php runway ai:init` first.
+- Make sure your API key is valid and has access to the selected model.
+- If instructions aren't updating, check file permissions in your project directory.
+
+## Changelog
+
+- v3.16.0 – Added `ai:init` and `ai:generate-instructions` CLI commands for AI integration.

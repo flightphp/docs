@@ -355,13 +355,13 @@ If I ran my above unit tests, they still pass! But because I wasn't testing for 
 ## Full Example
 
 You can find a full example of a Flight PHP project with unit tests on GitHub: [n0nag0n/flight-unit-tests-guide](https://github.com/n0nag0n/flight-unit-tests-guide).
-For more guides, see [Unit Testing and SOLID Principles](/learn/unit-testing-and-solid-principles) and [Troubleshooting](/learn/troubleshooting).
+For deeper understanding, see [Unit Testing and SOLID Principles](/learn/unit-testing-and-solid-principles).
 
 ## Common Pitfalls
 
 - **Over-Mocking**: Don’t mock every dependency; let some logic (e.g., controller validation) run to test real behavior. See [Unit Testing and SOLID Principles](/learn/unit-testing-and-solid-principles).
 - **Global State**: Using global PHP variables (e.g., [`$_SESSION`](https://www.php.net/manual/en/reserved.variables.session.php), [`$_COOKIE`](https://www.php.net/manual/en/reserved.variables.cookie.php)) heavily makes tests brittle. Same goes with `Flight::`. Refactor to pass dependencies explicitly.
-- **Complex Setup**: If test setup is cumbersome, your class may have too many dependencies or responsibilities violating the [SOLID principles](https://en.wikipedia.org/wiki/SOLID).
+- **Complex Setup**: If test setup is cumbersome, your class may have too many dependencies or responsibilities violating the [SOLID principles](/learn/unit-testing-and-solid-principles).
 
 ## Scaling with Unit Tests
 

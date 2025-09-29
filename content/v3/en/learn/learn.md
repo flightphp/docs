@@ -71,6 +71,8 @@ PDO at times can add more headache than necessary. This simple wrapper class can
 
 ### [Uploaded File Handler](/learn/uploaded-file)
 
+A simple class to help manage uploaded files and move them to a permanent location.
+
 ## Important Concepts
 
 ### [Why a Framework?](/learn/why-frameworks)
@@ -82,11 +84,12 @@ this guide will help you understand some of the major concepts surrounding a fra
 You can find the tutorial [here](https://git.php.fail/lubiana/no-framework-tutorial/src/branch/master/README.md).
 
 ### [Flight Compared to Other Frameworks](/learn/flight-vs-another-framework)
+
 If you are migrating from another framework such as Laravel, Slim, Fat-Free, or Symfony to Flight, this page will help you understand the differences between the two.
 
 ## Other Topics
 
-### [Unit Testing](/guides/unit-testing)
+### [Unit Testing](/learn/unit-testing)
 
 Follow this guide to learn how to unit test your Flight code to be rock solid.
 
@@ -95,7 +98,5 @@ Follow this guide to learn how to unit test your Flight code to be rock solid.
 Learn how Flight works with AI tools and modern developer workflows to help you code faster and smarter.
 
 ### [Migrating v2 -> v3](/learn/migrating-to-v3)
-Backwards compatibility has for the most part been maintained, but there are some changes that you should be aware of when migrating from v2 to v3.
 
-### [Troubleshooting](/learn/troubleshooting)
-There are some common issues that you may run into when using Flight.
+Backwards compatibility has for the most part been maintained, but there are some changes that you should be aware of when migrating from v2 to v3.
