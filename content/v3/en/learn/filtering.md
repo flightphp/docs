@@ -1,12 +1,21 @@
 # Filtering
 
-Flight allows you to filter methods before and after they are called. There are no
-predefined hooks you need to memorize. You can filter any of the default framework
+## Overview
+
+Flight allows you to filter [mapped methods](/learn/extending) before and after they are called. 
+
+## Understanding 
+There are no predefined hooks you need to memorize. You can filter any of the default framework
 methods as well as any custom methods that you've mapped.
 
 A filter function looks like this:
 
 ```php
+/**
+ * @param array $params The parameters passed to the method being filtered.
+ * @param string $output (v2 output buffering only) The output of the method being filtered.
+ * @return bool Return true/void or don't return to continue the chain, false to break the chain.
+ */
 function (array &$params, string &$output): bool {
   // Filter code
 }
@@ -88,5 +97,14 @@ Flight::before('start', function (array &$params, string &$output): bool {
 });
 ```
 
-Note, core methods such as `map` and `register` cannot be filtered because they
-are called directly and not invoked dynamically.
+> **Note:** Core methods such as `map` and `register` cannot be filtered because they
+are called directly and not invoked dynamically. See [Extending Flight](/learn/extending) for more information.
+
+## See Also
+- [Extending Flight](/learn/extending)
+
+## Troubleshooting
+- Make sure you are returning `false` from your filter functions if you want the chain to stop. If you don't return anything, the chain will continue.
+
+## Changelog
+- v2.0 - Initial Release.
