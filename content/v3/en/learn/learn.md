@@ -94,10 +94,6 @@ Follow this guide to learn how to unit test your Flight code to be rock solid.
 
 Learn how Flight works with AI tools and modern developer workflows to help you code faster and smarter.
 
-### [Framework API](/learn/api)
-
-Learn about the core methods of the framework.
-
 ### [Migrating v2 -> v3](/learn/migrating-to-v3)
 Backwards compatibility has for the most part been maintained, but there are some changes that you should be aware of when migrating from v2 to v3.
 
