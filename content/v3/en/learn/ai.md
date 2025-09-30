@@ -15,7 +15,7 @@ These features are built into the Flight core CLI and the official [flightphp/sk
 
 ## Basic Usage
 
-### 1. Setting Up LLM Credentials
+### Setting Up LLM Credentials
 
 The `ai:init` command walks you through connecting your project to an LLM provider.
 
@@ -40,7 +40,7 @@ Enter the model name you want to use (e.g. gpt-4, claude-3-opus, etc) [gpt-4o]:
 Credentials saved to .runway-creds.json
 ```
 
-### 2. Generating Project-Specific AI Instructions
+### Generating Project-Specific AI Instructions
 
 The `ai:generate-instructions` command helps you create or update instructions for AI coding assistants, tailored to your project.
 
