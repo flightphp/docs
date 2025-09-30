@@ -127,3 +127,45 @@ foreach ($files as $file) {
         echo "  Updated: " . $translatedFilePath . PHP_EOL;
     }
 }
+
+// --- Begin: Remove orphaned translated files ---
+
+// Build a set of all relative file paths in /en/
+$enFiles = [];
+foreach ($files as $file) {
+    // Get path relative to /content/v3/en/
+    $enFiles[] = ltrim(str_replace(realpath(__DIR__ . '/content/v3/en/'), '', realpath($file)), '/\\');
+}
+
+// For each language, scan its directory and remove files not present in $enFiles
+foreach ($languages as $languageAbbreviation) {
+    $langDir = __DIR__ . "/content/v3/{$languageAbbreviation}/";
+    if (!is_dir($langDir)) continue;
+
+    // Recursive iterator to find all .md files
+    $iterator = new RecursiveIteratorIterator(
+        new RecursiveDirectoryIterator($langDir, RecursiveDirectoryIterator::SKIP_DOTS)
+    );
+
+    foreach ($iterator as $translatedFile) {
+        if ($translatedFile->getExtension() !== 'md') continue;
+
+        // Get path relative to /content/v3/{lang}/
+        $relativePath = ltrim(str_replace(realpath($langDir), '', $translatedFile->getRealPath()), '/\\');
+
+        // If this file doesn't exist in /en/, delete it
+        if (!in_array($relativePath, $enFiles)) {
+            echo "Deleting orphaned file: {$translatedFile->getRealPath()}" . PHP_EOL;
+            unlink($translatedFile->getRealPath());
+
+            // Remove empty directories up the tree
+            $dir = dirname($translatedFile->getRealPath());
+            while ($dir !== $langDir && is_dir($dir) && count(glob("$dir/*")) === 0) {
+                rmdir($dir);
+                $dir = dirname($dir);
+            }
+        }
+    }
+}
+
+// --- End: Remove orphaned translated files ---
