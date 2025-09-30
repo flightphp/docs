@@ -1,18 +1,107 @@
 # HTML ビューとテンプレート
 
-Flight はデフォルトで基本的なテンプレーティング機能を提供します。
+## 概要
 
-Flight を使用すると、独自のビュークラスを登録するだけでデフォルトのビューエンジンを切り替えることができます。Smarty、Latte、Blade などの使用例を以下で確認してください！
+Flight はデフォルトで基本的な HTML テンプレート機能を備えています。テンプレートは、アプリケーションのロジックをプレゼンテーション層から分離する非常に効果的な方法です。
 
-## 組み込みビューエンジン
+## 理解
 
-ビュー テンプレートを表示するには、テンプレートファイルの名前とオプションのテンプレートデータを使って `render` メソッドを呼び出します：
+アプリケーションを構築する際、エンドユーザーに返す HTML を準備する必要があるでしょう。PHP 自体がテンプレート言語ですが、データベース呼び出し、API 呼び出しなどのビジネスロジックを HTML ファイルに混ぜ込んでしまうと、テストや分離が非常に困難になります。データをテンプレートに押し込み、テンプレート自身にレンダリングさせることで、コードの分離と単体テストがはるかに容易になります。テンプレートを使用すれば、私たちに感謝するはずです！
+
+## 基本的な使用方法
+
+Flight では、デフォルトのビューエンジンを置き換えるために、独自のビュー クラスを登録するだけで簡単に切り替えられます。Smarty、Latte、Blade などの使用例を見るには、下にスクロールしてください！
+
+### Latte
+
+<span class="badge bg-info">推奨</span>
+
+[Latte](https://latte.nette.org/) テンプレート エンジンをビューで使用する方法を以下に示します。
+
+#### インストール
+
+```bash
+composer require latte/latte
+```
+
+#### 基本的な設定
+
+主なアイデアは、`render` メソッドをオーバーライドして、デフォルトの PHP レンダラーではなく Latte を使用することです。
+
+```php
+// overwrite the render method to use latte instead of the default PHP renderer
+Flight::map('render', function(string $template, array $data, ?string $block): void {
+	$latte = new Latte\Engine;
+
+	// Where latte specifically stores its cache
+	$latte->setTempDirectory(__DIR__ . '/../cache/');
+	
+	$finalPath = Flight::get('flight.views.path') . $template;
+
+	$latte->render($finalPath, $data, $block);
+});
+```
+
+#### Flight での Latte の使用
+
+Latte でレンダリングできるようになったら、以下のようにできます：
+
+```html
+<!-- app/views/home.latte -->
+<html>
+  <head>
+	<title>{$title ? $title . ' - '}My App</title>
+	<link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+	<h1>Hello, {$name}!</h1>
+  </body>
+</html>
+```
+
+```php
+// routes.php
+Flight::route('/@name', function ($name) {
+	Flight::render('home.latte', [
+		'title' => 'Home Page',
+		'name' => $name
+	]);
+});
+```
+
+ブラウザで `/Bob` にアクセスすると、出力は次のようになります：
+
+```html
+<html>
+  <head>
+	<title>Home Page - My App</title>
+	<link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+	<h1>Hello, Bob!</h1>
+  </body>
+</html>
+```
+
+#### さらなる読み物
+
+Latte をレイアウトで使用するより複雑な例は、このドキュメントの [awesome plugins](/awesome-plugins/latte) セクションに示されています。
+
+Latte の完全な機能（翻訳や言語機能を含む）については、[公式ドキュメント](https://latte.nette.org/en/) を読んでください。
+
+### ビルトインのビュー エンジン
+
+<span class="badge bg-warning">非推奨</span>
+
+> **注意:** これは依然としてデフォルトの機能であり、技術的には動作します。
+
+ビュー テンプレートを表示するには、`render` メソッドをテンプレート ファイルの名前とオプションのテンプレート データで呼び出します：
 
 ```php
 Flight::render('hello.php', ['name' => 'Bob']);
 ```
 
-渡されたテンプレートデータは自動的にテンプレートに注入され、ローカル変数のように参照できます。テンプレートファイルは単純な PHP ファイルです。`hello.php` テンプレートファイルの内容が次のようである場合：
+渡したテンプレート データは自動的にテンプレートに注入され、ローカル変数のように参照できます。テンプレート ファイルは単なる PHP ファイルです。`hello.php` テンプレート ファイルの内容が以下のようである場合：
 
 ```php
 Hello, <?= $name ?>!
@@ -24,56 +113,56 @@ Hello, <?= $name ?>!
 Hello, Bob!
 ```
 
-また、set メソッドを使用してビュー変数を手動で設定することもできます：
+`set` メソッドを使用して、手動でビュー変数を設定することもできます：
 
 ```php
 Flight::view()->set('name', 'Bob');
 ```
 
-変数 `name` はすべてのビューで利用可能になりました。ですので、単純に次のようにできます：
+変数 `name` はすべてのビューで利用可能になります。したがって、以下のように単純に実行できます：
 
 ```php
 Flight::render('hello');
 ```
 
-render メソッドでテンプレートの名前を指定する際には、`.php` 拡張子を省略することもできます。
+`render` メソッドでテンプレート名を指定する際は、`.php` 拡張子を省略できます。
 
-デフォルトでは、Flight はテンプレートファイル用に `views` ディレクトリを探します。次の設定を行うことで、テンプレート用の別のパスを設定できます：
+デフォルトでは、Flight はテンプレート ファイルのために `views` ディレクトリを探します。テンプレートの代替パスを設定するには、以下の設定を実行します：
 
 ```php
 Flight::set('flight.views.path', '/path/to/views');
 ```
 
-### レイアウト
+#### レイアウト
 
-ウェブサイトには、入れ替え可能なコンテンツを持つ単一のレイアウトテンプレートファイルが一般的です。レイアウトで使用するコンテンツをレンダリングするには、`render` メソッドにオプションのパラメータを渡すことができます。
+ウェブサイトでは、交換可能なコンテンツを持つ単一のレイアウト テンプレート ファイルが一般的です。レイアウトで使用するコンテンツをレンダリングするには、`render` メソッドにオプションのパラメータを渡せます。
 
 ```php
 Flight::render('header', ['heading' => 'Hello'], 'headerContent');
 Flight::render('body', ['body' => 'World'], 'bodyContent');
 ```
 
-これにより、`headerContent` と `bodyContent` という名前の保存された変数を持つことができます。そして、次のようにしてレイアウトをレンダリングできます：
+ビューには、`headerContent` と `bodyContent` という名前の変数が保存されます。次に、レイアウトを以下のようにレンダリングできます：
 
 ```php
 Flight::render('layout', ['title' => 'Home Page']);
 ```
 
-テンプレートファイルが次のようである場合：
+テンプレート ファイルが以下のようである場合：
 
-`header.php`:
+`header.php`：
 
 ```php
 <h1><?= $heading ?></h1>
 ```
 
-`body.php`:
+`body.php`：
 
 ```php
 <div><?= $body ?></div>
 ```
 
-`layout.php`:
+`layout.php`：
 
 ```php
 <html>
@@ -100,16 +189,16 @@ Flight::render('layout', ['title' => 'Home Page']);
 </html>
 ```
 
-## Smarty
+### Smarty
 
-ビュー用の [Smarty](http://www.smarty.net/) テンプレートエンジンを使用する方法は以下の通りです：
+[Smarty](http://www.smarty.net/) テンプレート エンジンをビューで使用する方法を以下に示します：
 
 ```php
-// Smarty ライブラリを読み込みます
+// Load Smarty library
 require './Smarty/libs/Smarty.class.php';
 
-// Smarty をビュークラスとして登録します
-// Smarty をロード時に設定するためのコールバック関数も渡します
+// Register Smarty as the view class
+// Also pass a callback function to configure Smarty on load
 Flight::register('view', Smarty::class, [], function (Smarty $smarty) {
   $smarty->setTemplateDir('./templates/');
   $smarty->setCompileDir('./templates_c/');
@@ -117,14 +206,14 @@ Flight::register('view', Smarty::class, [], function (Smarty $smarty) {
   $smarty->setCacheDir('./cache/');
 });
 
-// テンプレートデータを割り当てます
+// Assign template data
 Flight::view()->assign('name', 'Bob');
 
-// テンプレートを表示します
+// Display the template
 Flight::view()->display('hello.tpl');
 ```
 
-完全性のために、Flight のデフォルトの render メソッドをオーバーライドする必要があります：
+完全性を期すために、Flight のデフォルトの `render` メソッドもオーバーライドしてください：
 
 ```php
 Flight::map('render', function(string $template, array $data): void {
@@ -133,48 +222,25 @@ Flight::map('render', function(string $template, array $data): void {
 });
 ```
 
-## Latte
+### Blade
 
-ビュー用の [Latte](https://latte.nette.org/) テンプレートエンジンを使用する方法は以下の通りです：
+[Blade](https://laravel.com/docs/8.x/blade) テンプレート エンジンをビューで使用する方法を以下に示します：
 
-```php
-// Latte をビュークラスとして登録します
-// Latte をロード時に設定するためのコールバック関数も渡します
-Flight::register('view', Latte\Engine::class, [], function (Latte\Engine $latte) {
-  // ここが Latte がテンプレートをキャッシュして速度を向上させる場所です
-	// Latte の一つの素晴らしい点は、テンプレートに変更を加えると自動的にキャッシュを更新することです！
-	$latte->setTempDirectory(__DIR__ . '/../cache/');
-
-	// ビューのルートディレクトリがどこになるかを Latte に教えます
-	$latte->setLoader(new \Latte\Loaders\FileLoader(__DIR__ . '/../views/'));
-});
-
-// Flight::render() を正しく使用できるようにラップします
-Flight::map('render', function(string $template, array $data): void {
-  // これは $latte_engine->render($template, $data)のようなものです
-  echo Flight::view()->render($template, $data);
-});
-```
-
-## Blade
-
-ビュー用の [Blade](https://laravel.com/docs/8.x/blade) テンプレートエンジンを使用する方法は以下の通りです：
-
-まず、Composer を使用して BladeOne ライブラリをインストールする必要があります：
+まず、Composer 経由で BladeOne ライブラリをインストールする必要があります：
 
 ```bash
 composer require eftec/bladeone
 ```
 
-次に、Flight で BladeOne をビュークラスとして設定できます：
+次に、Flight で BladeOne をビュー クラスとして設定できます：
 
 ```php
 <?php
-// BladeOne ライブラリを読み込みます
+// Load BladeOne library
 use eftec\bladeone\BladeOne;
 
-// BladeOne をビュークラスとして登録します
-// BladeOne をロード時に設定するためのコールバック関数も渡します
+// Register BladeOne as the view class
+// Also pass a callback function to configure BladeOne on load
 Flight::register('view', BladeOne::class, [], function (BladeOne $blade) {
   $views = __DIR__ . '/../views';
   $cache = __DIR__ . '/../cache';
@@ -183,14 +249,14 @@ Flight::register('view', BladeOne::class, [], function (BladeOne $blade) {
   $blade->setCompiledPath($cache);
 });
 
-// テンプレートデータを割り当てます
+// Assign template data
 Flight::view()->share('name', 'Bob');
 
-// テンプレートを表示します
+// Display the template
 echo Flight::view()->run('hello', []);
 ```
 
-完全性のために、Flight のデフォルトの render メソッドもオーバーライドする必要があります：
+完全性を期すために、Flight のデフォルトの `render` メソッドもオーバーライドしてください：
 
 ```php
 <?php
@@ -199,7 +265,7 @@ Flight::map('render', function(string $template, array $data): void {
 });
 ```
 
-この例では、hello.blade.php テンプレートファイルは次のようになります：
+この例では、`hello.blade.php` テンプレート ファイルは以下のように見えるかもしれません：
 
 ```php
 <?php
@@ -212,4 +278,14 @@ Hello, {{ $name }}!
 Hello, Bob!
 ```
 
-これらの手順に従うことで、Blade テンプレートエンジンを Flight に統合し、ビューをレンダリングすることができます。
+## 関連項目
+- [拡張](/learn/extending) - 異なるテンプレート エンジンを使用するために `render` メソッドをオーバーライドする方法。
+- [ルーティング](/learn/routing) - ルートをコントローラーにマッピングし、ビューをレンダリングする方法。
+- [レスポンス](/learn/responses) - HTTP レスポンスをカスタマイズする方法。
+- [フレームワークとは？](/learn/why-frameworks) - テンプレートが全体像にどのように適合するか。
+
+## トラブルシューティング
+- ミドルウェアにリダイレクトがあるのに、アプリがリダイレクトされない場合は、ミドルウェアに `exit;` 文を追加してください。
+
+## 変更履歴
+- v2.0 - 初期リリース。

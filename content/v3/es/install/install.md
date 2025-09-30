@@ -1,40 +1,61 @@
-# Instalación
+# Instrucciones de Instalación
 
-## Descargar los archivos
+Hay algunos prerrequisitos básicos antes de que puedas instalar Flight. Específicamente, necesitarás:
 
-Asegúrate de tener PHP instalado en tu sistema. Si no lo tienes, haz clic [aquí](#instalar-php) para obtener instrucciones sobre cómo instalarlo en tu sistema.
+1. [Instalar PHP en tu sistema](#instalando-php)
+2. [Instalar Composer](https://getcomposer.org) para la mejor experiencia de desarrollo.
 
-Si estás utilizando [Composer](https://getcomposer.org), puedes ejecutar el siguiente comando:
+## Instalación Básica
+
+Si estás usando [Composer](https://getcomposer.org), puedes ejecutar el siguiente
+comando:
 
 ```bash
 composer require flightphp/core
 ```
 
-O puedes [descargar los archivos](https://github.com/flightphp/core/archive/master.zip) directamente y extraerlos en tu directorio web.
+Esto solo colocará los archivos principales de Flight en tu sistema. Necesitarás definir la estructura del proyecto, [diseño](/learn/templates), [dependencias](/learn/dependency-injection-container), [configuraciones](/learn/configuration), [carga automática](/learn/autoloading), etc. Este método asegura que no se instalen otras dependencias además de Flight.
 
-## Configurar tu Servidor Web
+También puedes [descargar los archivos](https://github.com/flightphp/core/archive/master.zip)
+directamente y extraerlos a tu directorio web.
+
+## Instalación Recomendada
+
+Se recomienda altamente comenzar con la aplicación [flightphp/skeleton](https://github.com/flightphp/skeleton) para cualquier proyecto nuevo. La instalación es muy sencilla.
+
+```bash
+composer create-project flightphp/skeleton my-project/
+```
+
+Esto configurará la estructura de tu proyecto, configurará la carga automática con espacios de nombres, configurará una configuración y proporcionará otras herramientas como [Tracy](/awesome-plugins/tracy), [Extensiones de Tracy](/awesome-plugins/tracy-extensions) y [Runway](/awesome-plugins/runway).
+
+## Configura tu Servidor Web
 
 ### Servidor de Desarrollo PHP Integrado
 
-Esta es la forma más sencilla de poner en marcha. Puedes utilizar el servidor integrado para ejecutar tu aplicación e incluso usar SQLite como base de datos (si sqlite3 está instalado en tu sistema) ¡y no requiere mucho más! Simplemente ejecuta el siguiente comando una vez que PHP esté instalado:
+Esta es, con mucho, la forma más simple de comenzar. Puedes usar el servidor integrado para ejecutar tu aplicación e incluso usar SQLite para una base de datos (siempre y cuando sqlite3 esté instalado en tu sistema) y no requerir mucho más. Solo ejecuta el siguiente comando una vez que PHP esté instalado:
 
 ```bash
 php -S localhost:8000
+# o con la aplicación skeleton
+composer start
 ```
 
 Luego abre tu navegador e ingresa a `http://localhost:8000`.
 
-Si deseas establecer como directorio raíz de tu proyecto un directorio diferente (por ejemplo, tu proyecto es `~/myproject`, pero tu directorio raíz es `~/myproject/public/`), puedes ejecutar el siguiente comando una vez que te encuentres en el directorio `~/myproject`:
+Si quieres hacer que la raíz de documentos de tu proyecto sea un directorio diferente (Ej: tu proyecto es `~/myproject`, pero tu raíz de documentos es `~/myproject/public/`), puedes ejecutar el siguiente comando una vez que estés en el directorio `~/myproject`:
 
 ```bash
 php -S localhost:8000 -t public/
+# con la aplicación skeleton, esto ya está configurado
+composer start
 ```
 
 Luego abre tu navegador e ingresa a `http://localhost:8000`.
 
 ### Apache
 
-Asegúrate de que Apache ya esté instalado en tu sistema. Si no lo está, busca cómo instalar Apache en tu sistema.
+Asegúrate de que Apache ya esté instalado en tu sistema. Si no, busca en Google cómo instalar Apache en tu sistema.
 
 Para Apache, edita tu archivo `.htaccess` con lo siguiente:
 
@@ -48,8 +69,8 @@ RewriteRule ^(.*)$ index.php [QSA,L]
 > **Nota**: Si necesitas usar flight en un subdirectorio, agrega la línea
 > `RewriteBase /subdir/` justo después de `RewriteEngine On`.
 
-> **Nota**: Si deseas proteger todos los archivos del servidor, como un archivo db o env.
-> Coloca lo siguiente en tu archivo `.htaccess`:
+> **Nota**: Si quieres proteger todos los archivos del servidor, como un archivo db o env.
+> Pon esto en tu archivo `.htaccess`:
 
 ```apacheconf
 RewriteEngine On
@@ -58,9 +79,9 @@ RewriteRule ^(.*)$ index.php
 
 ### Nginx
 
-Asegúrate de que Nginx ya esté instalado en tu sistema. Si no lo está, busca cómo instalar Nginx en tu sistema.
+Asegúrate de que Nginx ya esté instalado en tu sistema. Si no, busca en Google cómo instalar Nginx en tu sistema.
 
-Para Nginx, agrega lo siguiente a la declaración de tu servidor:
+Para Nginx, agrega lo siguiente a tu declaración de servidor:
 
 ```nginx
 server {
@@ -72,41 +93,43 @@ server {
 
 ## Crea tu archivo `index.php`
 
+Si estás haciendo una instalación básica, necesitarás algo de código para comenzar.
+
 ```php
 <?php
 
-// Si estás utilizando Composer, require el autoloader.
+// Si estás usando Composer, requiere el cargador automático.
 require 'vendor/autoload.php';
-// si no estás utilizando Composer, carga el framework directamente
+// si no estás usando Composer, carga el framework directamente
 // require 'flight/Flight.php';
 
 // Luego define una ruta y asigna una función para manejar la solicitud.
 Flight::route('/', function () {
-  echo '¡hola mundo!';
+  echo 'hello world!';
 });
 
 // Finalmente, inicia el framework.
 Flight::start();
 ```
 
-## Instalación de PHP
+Con la aplicación skeleton, esto ya está configurado y manejado en tu archivo `app/config/routes.php`. Los servicios se configuran en `app/config/services.php`.
 
-Si ya tienes `php` instalado en tu sistema, puedes saltarte estas instrucciones y pasar a [la sección de descarga](#descargar-los-archivos)
+## Instalando PHP
 
-¡Claro! Aquí tienes las instrucciones para instalar PHP en macOS, Windows 10/11, Ubuntu y Rocky Linux. También incluiré detalles sobre cómo instalar diferentes versiones de PHP.
+Si ya tienes `php` instalado en tu sistema, salta estas instrucciones y ve a [la sección de descarga](#download-the-files).
 
 ### **macOS**
 
-#### **Instalar PHP usando Homebrew**
+#### **Instalando PHP usando Homebrew**
 
-1. **Instalar Homebrew** (si aún no está instalado):
+1. **Instala Homebrew** (si no está ya instalado):
    - Abre Terminal y ejecuta:
      ```bash
      /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
      ```
 
-2. **Instalar PHP**:
-   - Instalar la última versión:
+2. **Instala PHP**:
+   - Instala la versión más reciente:
      ```bash
      brew install php
      ```
@@ -116,8 +139,8 @@ Si ya tienes `php` instalado en tu sistema, puedes saltarte estas instrucciones 
      brew install shivammathur/php/php@8.1
      ```
 
-3. **Cambiar entre versiones de PHP**:
-   - Desvincula la versión actual y enlaza la versión deseada:
+3. **Cambia entre versiones de PHP**:
+   - Desvincula la versión actual y vincula la versión deseada:
      ```bash
      brew unlink php
      brew link --overwrite --force php@8.1
@@ -129,48 +152,48 @@ Si ya tienes `php` instalado en tu sistema, puedes saltarte estas instrucciones 
 
 ### **Windows 10/11**
 
-#### **Instalar PHP manualmente**
+#### **Instalando PHP manualmente**
 
-1. **Descargar PHP**:
-   - Visita [PHP for Windows](https://windows.php.net/download/) y descarga la última versión o una específica (por ejemplo, 7.4, 8.0) como un archivo zip no seguro para subprocesos.
+1. **Descarga PHP**:
+   - Visita [PHP for Windows](https://windows.php.net/download/) y descarga la versión más reciente o una específica (p.ej., 7.4, 8.0) como un archivo zip no seguro para hilos.
 
-2. **Extraer PHP**:
-   - Extrae el archivo zip descargado en `C:\php`.
+2. **Extrae PHP**:
+   - Extrae el archivo zip descargado a `C:\php`.
 
-3. **Agregar PHP al PATH del sistema**:
+3. **Agrega PHP al PATH del sistema**:
    - Ve a **Propiedades del Sistema** > **Variables de Entorno**.
-   - En **Variables del sistema**, encuentra **Path** y haz clic en **Editar**.
-   - Agrega la ruta `C:\php` (o donde hayas extraído PHP).
+   - Bajo **Variables del sistema**, encuentra **Path** y haz clic en **Editar**.
+   - Agrega la ruta `C:\php` (o dondequiera que hayas extraído PHP).
    - Haz clic en **Aceptar** para cerrar todas las ventanas.
 
-4. **Configurar PHP**:
+4. **Configura PHP**:
    - Copia `php.ini-development` a `php.ini`.
-   - Edita `php.ini` para configurar PHP según sea necesario (por ejemplo, configurar `extension_dir`, habilitar extensiones).
+   - Edita `php.ini` para configurar PHP según sea necesario (p.ej., estableciendo `extension_dir`, habilitando extensiones).
 
-5. **Verificar la instalación de PHP**:
+5. **Verifica la instalación de PHP**:
    - Abre el Símbolo del sistema y ejecuta:
      ```cmd
      php -v
      ```
 
-#### **Instalar Múltiples Versiones de PHP**
+#### **Instalando Múltiples Versiones de PHP**
 
-1. **Repite los pasos anteriores** para cada versión, colocando cada una en un directorio separado (por ejemplo, `C:\php7`, `C:\php8`).
+1. **Repite los pasos anteriores** para cada versión, colocándolas en un directorio separado (p.ej., `C:\php7`, `C:\php8`).
 
-2. **Cambiar entre versiones** ajustando la variable PATH del sistema para que apunte al directorio de la versión deseada.
+2. **Cambia entre versiones** ajustando la variable PATH del sistema para apuntar al directorio de la versión deseada.
 
 ### **Ubuntu (20.04, 22.04, etc.)**
 
-#### **Instalar PHP usando apt**
+#### **Instalando PHP usando apt**
 
-1. **Actualizar listas de paquetes**:
+1. **Actualiza las listas de paquetes**:
    - Abre Terminal y ejecuta:
      ```bash
      sudo apt update
      ```
 
-2. **Instalar PHP**:
-   - Instalar la última versión de PHP:
+2. **Instala PHP**:
+   - Instala la versión más reciente de PHP:
      ```bash
      sudo apt install php
      ```
@@ -179,19 +202,19 @@ Si ya tienes `php` instalado en tu sistema, puedes saltarte estas instrucciones 
      sudo apt install php8.1
      ```
 
-3. **Instalar módulos adicionales** (opcional):
+3. **Instala módulos adicionales** (opcional):
    - Por ejemplo, para instalar soporte para MySQL:
      ```bash
      sudo apt install php8.1-mysql
      ```
 
-4. **Cambiar entre versiones de PHP**:
+4. **Cambia entre versiones de PHP**:
    - Usa `update-alternatives`:
      ```bash
      sudo update-alternatives --set php /usr/bin/php8.1
      ```
 
-5. **Verificar la versión instalada**:
+5. **Verifica la versión instalada**:
    - Ejecuta:
      ```bash
      php -v
@@ -199,22 +222,22 @@ Si ya tienes `php` instalado en tu sistema, puedes saltarte estas instrucciones 
 
 ### **Rocky Linux**
 
-#### **Instalar PHP usando yum/dnf**
+#### **Instalando PHP usando yum/dnf**
 
-1. **Habilitar el repositorio EPEL**:
+1. **Habilita el repositorio EPEL**:
    - Abre Terminal y ejecuta:
      ```bash
      sudo dnf install epel-release
      ```
 
-2. **Instalar el repositorio de Remi**:
+2. **Instala el repositorio de Remi**:
    - Ejecuta:
      ```bash
      sudo dnf install https://rpms.remirepo.net/enterprise/remi-release-8.rpm
      sudo dnf module reset php
      ```
 
-3. **Instalar PHP**:
+3. **Instala PHP**:
    - Para instalar la versión predeterminada:
      ```bash
      sudo dnf install php
@@ -224,7 +247,7 @@ Si ya tienes `php` instalado en tu sistema, puedes saltarte estas instrucciones 
      sudo dnf module install php:remi-7.4
      ```
 
-4. **Cambiar entre versiones de PHP**:
+4. **Cambia entre versiones de PHP**:
    - Usa el comando de módulo `dnf`:
      ```bash
      sudo dnf module reset php
@@ -232,7 +255,7 @@ Si ya tienes `php` instalado en tu sistema, puedes saltarte estas instrucciones 
      sudo dnf install php
      ```
 
-5. **Verificar la versión instalada**:
+5. **Verifica la versión instalada**:
    - Ejecuta:
      ```bash
      php -v
@@ -240,6 +263,6 @@ Si ya tienes `php` instalado en tu sistema, puedes saltarte estas instrucciones 
 
 ### **Notas Generales**
 
-- Para entornos de desarrollo, es importante configurar los ajustes de PHP según los requerimientos de tu proyecto.
-- Al cambiar entre versiones de PHP, asegúrate de que todas las extensiones relevantes de PHP estén instaladas para la versión específica que deseas utilizar.
-- Reinicia tu servidor web (Apache, Nginx, etc.) después de cambiar de versión de PHP o actualizar configuraciones para aplicar los cambios.
+- Para entornos de desarrollo, es importante configurar las opciones de PHP según los requisitos de tu proyecto. 
+- Al cambiar versiones de PHP, asegúrate de que todas las extensiones relevantes de PHP estén instaladas para la versión específica que pretendes usar.
+- Reinicia tu servidor web (Apache, Nginx, etc.) después de cambiar versiones de PHP o actualizar configuraciones para aplicar los cambios.

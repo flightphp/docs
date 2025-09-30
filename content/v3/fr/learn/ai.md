@@ -1,81 +1,87 @@
-# IA et Expérience Développeur avec Flight
+# IA & Expérience Développeur avec Flight
 
-Flight est conçu pour vous aider à construire plus rapidement, plus intelligemment et avec moins de friction – surtout quand il s'agit de travailler avec des outils alimentés par l'IA et des flux de travail de développement modernes. Cette page explique comment Flight facilite le renforcement de vos projets avec l'IA, et comment commencer avec les nouveaux assistants IA intégrés directement dans le framework et le projet squelette.
+## Aperçu
 
----
+Flight facilite le renforcement de vos projets PHP avec des outils alimentés par l'IA et des flux de travail de développement modernes. Avec des commandes intégrées pour se connecter aux fournisseurs de LLM (Large Language Model) et générer des instructions de codage IA spécifiques au projet, Flight vous aide, vous et votre équipe, à tirer le meilleur parti des assistants IA comme GitHub Copilot, Cursor et Windsurf.
 
-## Prêt pour l'IA par Défaut : Le Projet Squelette
+## Compréhension
 
-Le starter officiel [flightphp/skeleton](https://github.com/flightphp/skeleton) inclut désormais des instructions et une configuration pour les assistants de codage IA populaires :
+Les assistants de codage IA sont les plus utiles lorsqu'ils comprennent le contexte, les conventions et les objectifs de votre projet. Les aides IA de Flight vous permettent de :
+- Connecter votre projet à des fournisseurs de LLM populaires (OpenAI, Grok, Claude, etc.)
+- Générer et mettre à jour des instructions spécifiques au projet pour les outils IA, afin que tout le monde reçoive une aide cohérente et pertinente
+- Maintenir votre équipe alignée et productive, avec moins de temps passé à expliquer le contexte
 
-- **GitHub Copilot**
-- **Cursor**
-- **Windsurf**
+Ces fonctionnalités sont intégrées au CLI principal de Flight et au projet de démarrage officiel [flightphp/skeleton](https://github.com/flightphp/skeleton).
 
-Ces outils sont pré-configurés avec des instructions spécifiques au projet, afin que vous et votre équipe puissiez obtenir une aide pertinente et contextuelle pendant que vous codez. Cela signifie :
+## Utilisation de Base
 
-- Les assistants IA comprennent les objectifs, le style et les exigences de votre projet
-- Des conseils cohérents pour tous les contributeurs
-- Moins de temps passé à expliquer le contexte, plus de temps à construire
+### 1. Configuration des Identifiants LLM
 
-> **Pourquoi cela importe-t-il ?**
->
-> Lorsque vos outils IA connaissent l'intention et les conventions de votre projet, ils peuvent vous aider à créer des structures, à refactoriser le code et à éviter les erreurs courantes – rendant vous (et votre équipe) plus productifs dès le premier jour.
+La commande `ai:init` vous guide pour connecter votre projet à un fournisseur de LLM.
 
----
-
-## Nouvelles Commandes IA dans Flight Core
-
-_v3.16.0+_
-
-Flight core inclut désormais deux puissantes commandes CLI pour vous aider à configurer et à diriger votre projet avec l'IA :
-
-### 1. `ai:init` — Connectez-vous à Votre Fournisseur de LLM Préféré
-
-Cette commande vous guide pour configurer les identifiants d'un fournisseur de LLM (Modèle de Langage de Grande Taille), comme OpenAI, Grok ou Anthropic (Claude).
-
-**Exemple :**
 ```bash
 php runway ai:init
 ```
-Vous serez invité à sélectionner votre fournisseur, à entrer votre clé API et à choisir un modèle. Cela rend facile la connexion de votre projet aux derniers services IA – sans configuration manuelle requise.
 
-### 2. `ai:generate-instructions` — Instructions de Codage IA Conscientes du Projet
+Vous serez invité à :
+- Choisir votre fournisseur (OpenAI, Grok, Claude, etc.)
+- Entrer votre clé API
+- Définir l'URL de base et le nom du modèle
 
-Cette commande vous aide à créer ou à mettre à jour des instructions spécifiques au projet pour les assistants de codage IA. Elle vous pose quelques questions simples sur votre projet (comme à quoi il sert, quelle base de données vous utilisez, la taille de l'équipe, etc.), puis utilise votre fournisseur de LLM pour générer des instructions adaptées.
-
-Si vous avez déjà des instructions, elle les mettra à jour pour refléter les réponses que vous fournissez. Ces instructions sont automatiquement écrites dans :
-- `.github/copilot-instructions.md` (pour Github Copilot)
-- `.cursor/rules/project-overview.mdc` (pour Cursor)
-- `.windsurfrules` (pour Windsurf)
+Cela crée un fichier `.runway-creds.json` à la racine de votre projet (et s'assure qu'il est dans votre `.gitignore`).
 
 **Exemple :**
+```
+Welcome to AI Init!
+Which LLM API do you want to use? [1] openai, [2] grok, [3] claude: 1
+Enter the base URL for the LLM API [https://api.openai.com]:
+Enter your API key for openai: sk-...
+Enter the model name you want to use (e.g. gpt-4, claude-3-opus, etc) [gpt-4o]:
+Credentials saved to .runway-creds.json
+```
+
+### 2. Génération d'Instructions IA Spécifiques au Projet
+
+La commande `ai:generate-instructions` vous aide à créer ou mettre à jour des instructions pour les assistants de codage IA, adaptées à votre projet.
+
 ```bash
 php runway ai:generate-instructions
 ```
 
-> **Pourquoi cela est-il utile ?**
->
-> Avec des instructions à jour et spécifiques au projet, vos outils IA peuvent :
-> - Fournir de meilleures suggestions de code
-> - Comprendre les besoins uniques de votre projet
-> - Aider à intégrer plus rapidement les nouveaux contributeurs
-> - Réduire les frictions et la confusion au fil de l'évolution de votre projet
+Vous répondrez à quelques questions sur votre projet (description, base de données, templating, sécurité, taille de l'équipe, etc.). Flight utilise votre fournisseur de LLM pour générer des instructions, puis les écrit dans :
+- `.github/copilot-instructions.md` (pour GitHub Copilot)
+- `.cursor/rules/project-overview.mdc` (pour Cursor)
+- `.windsurfrules` (pour Windsurf)
 
----
+**Exemple :**
+```
+Please describe what your project is for? My awesome API
+What database are you planning on using? MySQL
+What HTML templating engine will you plan on using (if any)? latte
+Is security an important element of this project? (y/n) y
+...
+AI instructions updated successfully.
+```
 
-## Pas Seulement pour Construire des Applications IA
+Maintenant, vos outils IA fourniront des suggestions plus intelligentes et plus pertinentes basées sur les besoins réels de votre projet.
 
-Bien que vous puissiez absolument utiliser Flight pour créer des fonctionnalités alimentées par l'IA (comme des chatbots, des API intelligentes ou des intégrations), la véritable force réside dans la manière dont Flight vous aide à travailler mieux avec les outils IA en tant que développeur. Il s'agit de :
+## Utilisation Avancée
 
-- **Améliorer la productivité** avec un codage assisté par l'IA
-- **Maintenir votre équipe alignée** avec des instructions partagées et évolutives
-- **Faciliter l'intégration** pour les nouveaux contributeurs
-- **Vous permettre de vous concentrer sur la construction**, et non sur la lutte contre vos outils
+- Vous pouvez personnaliser l'emplacement de vos fichiers d'identifiants ou d'instructions en utilisant des options de commande (voir `--help` pour chaque commande).
+- Les aides IA sont conçues pour fonctionner avec n'importe quel fournisseur de LLM qui prend en charge les API compatibles avec OpenAI.
+- Si vous souhaitez mettre à jour vos instructions au fur et à mesure que votre projet évolue, relancez simplement `ai:generate-instructions` et répondez aux invites à nouveau.
 
----
+## Voir Aussi
 
-## En Apprendre Plus et Commencer
+- [Flight Skeleton](https://github.com/flightphp/skeleton) – Le démarrage officiel avec intégration IA
+- [Runway CLI](/awesome-plugins/runway) – Plus d'informations sur l'outil CLI qui alimente ces commandes
 
-- Consultez le [Flight Skeleton](https://github.com/flightphp/skeleton) pour un starter prêt à l'emploi et adapté à l'IA
-- Jetez un œil au reste de la [documentation de Flight](/learn) pour des conseils sur la création d'applications PHP rapides et modernes
+## Dépannage
+
+- Si vous voyez "Missing .runway-creds.json", exécutez d'abord `php runway ai:init`.
+- Assurez-vous que votre clé API est valide et a accès au modèle sélectionné.
+- Si les instructions ne se mettent pas à jour, vérifiez les permissions des fichiers dans votre répertoire de projet.
+
+## Journal des Modifications
+
+- v3.16.0 – Ajout des commandes CLI `ai:init` et `ai:generate-instructions` pour l'intégration IA.

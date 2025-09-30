@@ -1,68 +1,78 @@
 # フィルタリング
 
-Flightは、メソッドが呼び出される前後にフィルタリングを行うことができます。覚える必要のある事前定義されたフックはありません。デフォルトのフレームワークメソッドやマップしたカスタムメソッドのいずれに対してもフィルタリングを行うことができます。
+## 概要
 
-フィルタ関数は次のようになります：
+Flight は、[マップされたメソッド](/learn/extending) が呼び出される前と後にフィルタリングを許可します。
+
+## 理解
+覚える必要のある事前定義されたフックはありません。デフォルトのフレームワーク メソッドのいずれか、またはマップしたカスタム メソッドのいずれかをフィルタリングできます。
+
+フィルター関数は以下のようになります：
 
 ```php
+/**
+ * @param array $params The parameters passed to the method being filtered.
+ * @param string $output (v2 output buffering only) The output of the method being filtered.
+ * @return bool Return true/void or don't return to continue the chain, false to break the chain.
+ */
 function (array &$params, string &$output): bool {
-  // フィルタコード
+  // Filter code
 }
 ```
 
-渡された変数を使用して、入力パラメータや出力を操作することができます。
+渡された変数を使用して、入力パラメータと/または出力を操作できます。
 
-メソッドの前にフィルタを実行するには、次のようにします：
+メソッドの前にフィルターを実行するには：
 
 ```php
 Flight::before('start', function (array &$params, string &$output): bool {
-  // 何かを行う
+  // Do something
 });
 ```
 
-メソッドの後にフィルタを実行するには、次のようにします：
+メソッドの後にフィルターを実行するには：
 
 ```php
 Flight::after('start', function (array &$params, string &$output): bool {
-  // 何かを行う
+  // Do something
 });
 ```
 
-任意のメソッドに複数のフィルタを追加することができます。宣言された順序通りに呼び出されます。
+任意のメソッドに必要な数のフィルターを追加できます。それらは宣言された順序で呼び出されます。
 
-以下はフィルタリングプロセスの例です：
+フィルタリング プロセスの例を以下に示します：
 
 ```php
-// カスタムメソッドをマップ
+// Map a custom method
 Flight::map('hello', function (string $name) {
   return "Hello, $name!";
 });
 
-// フィルタを追加
+// Add a before filter
 Flight::before('hello', function (array &$params, string &$output): bool {
-  // パラメータを操作する
+  // Manipulate the parameter
   $params[0] = 'Fred';
   return true;
 });
 
-// フィルタを追加
+// Add an after filter
 Flight::after('hello', function (array &$params, string &$output): bool {
-  // 出力を操作する
+  // Manipulate the output
   $output .= " Have a nice day!";
   return true;
 });
 
-// カスタムメソッドを呼び出す
+// Invoke the custom method
 echo Flight::hello('Bob');
 ```
 
-これにより次のように表示されます：
+これは以下を表示するはずです：
 
 ```
 Hello Fred! Have a nice day!
 ```
 
-複数のフィルタを定義している場合は、フィルタ関数のいずれかで `false` を返すことで、チェーンを中断することができます：
+複数のフィルターを定義している場合、フィルター関数のいずれかで `false` を返すことでチェーンを中断できます：
 
 ```php
 Flight::before('start', function (array &$params, string &$output): bool {
@@ -73,15 +83,25 @@ Flight::before('start', function (array &$params, string &$output): bool {
 Flight::before('start', function (array &$params, string &$output): bool {
   echo 'two';
 
-  // これによりチェーンが終了します
+  // This will end the chain
   return false;
 });
 
-// これは呼び出されません
+// This will not get called
 Flight::before('start', function (array &$params, string &$output): bool {
   echo 'three';
   return true;
 });
 ```
 
-`map` や `register` などのコアメソッドは、直接呼び出されて動的に呼び出されないため、フィルタリングすることはできません。
+> **Note:** Core methods such as `map` and `register` cannot be filtered because they
+are called directly and not invoked dynamically. See [Extending Flight](/learn/extending) for more information.
+
+## 関連項目
+- [Extending Flight](/learn/extending)
+
+## トラブルシューティング
+- チェーンを停止したい場合、フィルター関数から `false` を返すようにしてください。何も返さない場合、チェーンは続行されます。
+
+## 変更履歴
+- v2.0 - 初回リリース。

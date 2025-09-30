@@ -1,81 +1,87 @@
-# AI & 开发者体验与 Flight
+# 使用 Flight 的 AI 与开发者体验
 
-Flight 旨在帮助您更快、更智能地构建，并减少摩擦——尤其是在使用 AI 驱动工具和现代开发者工作流程时。本页介绍了 Flight 如何轻松地为您的项目注入 AI 动力，以及如何开始使用框架和骨架项目中内置的新 AI 助手。
+## 概述
 
----
+Flight 让您轻松使用 AI 驱动的工具和现代开发者工作流程来增强您的 PHP 项目。凭借内置命令连接到 LLM（大型语言模型）提供商并生成项目特定的 AI 编码指令，Flight 帮助您和您的团队充分利用像 GitHub Copilot、Cursor 和 Windsurf 这样的 AI 助手。
 
-## 默认支持 AI：骨架项目
+## 理解
 
-官方 [flightphp/skeleton](https://github.com/flightphp/skeleton) 入门项目现在包含了流行 AI 编码助手的说明和配置：
+AI 编码助手在理解您项目的上下文、约定和目标时最为有用。Flight 的 AI 助手让您能够：
+- 将您的项目连接到流行的 LLM 提供商（OpenAI、Grok、Claude 等）
+- 生成和更新项目特定的 AI 工具指令，以便每个人都能获得一致、相关的帮助
+- 保持团队一致性和生产力，减少解释上下文的时间
 
-- **GitHub Copilot**
-- **Cursor**
-- **Windsurf**
+这些功能内置于 Flight 核心 CLI 和官方 [flightphp/skeleton](https://github.com/flightphp/skeleton) 启动项目中。
 
-这些工具预先配置了项目特定的说明，因此您和您的团队可以在编码时获得最相关、基于上下文的帮助。这意味着：
+## 基本用法
 
-- AI 助手了解您的项目目标、风格和要求
-- 为所有贡献者提供一致的指导
-- 减少解释上下文的时间，更多时间用于构建
+### 1. 设置 LLM 凭据
 
-> **为什么这很重要？**
->
-> 当您的 AI 工具了解您的项目意图和约定时，它们可以帮助您构建功能、重构代码，并避免常见错误——从第一天起让您（和您的团队）更高效。
+`ai:init` 命令将引导您将项目连接到 LLM 提供商。
 
----
-
-## Flight 核心中的新 AI 命令
-
-_v3.16.0+_
-
-Flight 核心现在包括两个强大的 CLI 命令，以帮助您使用 AI 设置和引导您的项目：
-
-### 1. `ai:init` — 连接到您喜欢的 LLM 提供者
-
-此命令将引导您设置 LLM（大型语言模型）提供者的凭据，例如 OpenAI、Grok 或 Anthropic（Claude）。
-
-**示例：**
 ```bash
 php runway ai:init
 ```
-您将被提示选择您的提供者、输入您的 API 密钥并选择一个模型。这使得轻松地将您的项目连接到最新的 AI 服务——无需手动配置。
 
-### 2. `ai:generate-instructions` — 项目感知 AI 编码说明
+您将被提示：
+- 选择您的提供商（OpenAI、Grok、Claude 等）
+- 输入您的 API 密钥
+- 设置基础 URL 和模型名称
 
-此命令帮助您创建或更新项目特定的 AI 编码助手说明。它会询问您几个关于您的项目的问题（例如它是做什么的、使用什么数据库、团队规模等），然后使用您的 LLM 提供者生成量身定制的说明。
-
-如果您已经有说明，它将根据您提供的答案更新它们。这些说明将自动写入：
-- `.github/copilot-instructions.md` (for Github Copilot)
-- `.cursor/rules/project-overview.mdc` (for Cursor)
-- `.windsurfrules` (for Windsurf)
+这会在您的项目根目录创建一个 `.runway-creds.json` 文件（并确保它在您的 `.gitignore` 中）。
 
 **示例：**
+```
+欢迎使用 AI Init！
+您想使用哪个 LLM API？[1] openai, [2] grok, [3] claude: 1
+输入 LLM API 的基础 URL [https://api.openai.com]:
+输入您的 openai API 密钥: sk-...
+输入您想使用的模型名称（例如 gpt-4, claude-3-opus 等）[gpt-4o]:
+凭据已保存到 .runway-creds.json
+```
+
+### 2. 生成项目特定的 AI 指令
+
+`ai:generate-instructions` 命令帮助您创建或更新针对 AI 编码助手的指令，根据您的项目量身定制。
+
 ```bash
 php runway ai:generate-instructions
 ```
 
-> **为什么这有帮助？**
->
-> 通过最新的、特定项目的说明，您的 AI 工具可以：
-> - 提供更好的代码建议
-> - 了解您项目的独特需求
-> - 帮助新贡献者更快上手
-> - 减少摩擦和混淆，因为您的项目不断演进
+您将回答一些关于您项目的问题（描述、数据库、模板、安全、团队规模等）。Flight 使用您的 LLM 提供商生成指令，然后将它们写入：
+- `.github/copilot-instructions.md`（用于 GitHub Copilot）
+- `.cursor/rules/project-overview.mdc`（用于 Cursor）
+- `.windsurfrules`（用于 Windsurf）
 
----
+**示例：**
+```
+请描述您的项目用途？我的awesome API
+您计划使用什么数据库？MySQL
+您计划使用什么 HTML 模板引擎（如果有）？latte
+安全是否是此项目的重要元素？(y/n) y
+...
+AI 指令更新成功。
+```
 
-## 不只是用于构建 AI 应用
+现在，您的 AI 工具将基于您项目的实际需求提供更智能、更相关的建议。
 
-虽然您绝对可以使用 Flight 来构建 AI 驱动的功能（如聊天机器人、智能 API 或集成），但真正的力量在于 Flight 如何帮助您作为开发者更好地使用 AI 工具。这是关于：
+## 高级用法
 
-- **通过 AI 辅助编码提升生产力**
-- **通过共享、不断演进的说明保持团队一致**
-- **为新贡献者简化入职**
-- **让您专注于构建，而非与工具斗争**
+- 您可以使用命令选项自定义凭据或指令文件的位置（请参阅每个命令的 `--help`）。
+- AI 助手设计用于与支持 OpenAI 兼容 API 的任何 LLM 提供商合作。
+- 如果您想随着项目的发展更新指令，只需重新运行 `ai:generate-instructions` 并再次回答提示。
 
----
+## 另请参阅
 
-## 了解更多并入门
+- [Flight Skeleton](https://github.com/flightphp/skeleton) – 带有 AI 集成的官方启动项目
+- [Runway CLI](/awesome-plugins/runway) – 更多关于驱动这些命令的 CLI 工具的信息
 
-- 查看 [Flight Skeleton](https://github.com/flightphp/skeleton) 以获取一个即用、AI 友好的入门项目
-- 查看 [Flight 文档](/learn) 的其余部分，以获取有关构建快速、现代 PHP 应用的提示
+## 故障排除
+
+- 如果看到“Missing .runway-creds.json”，请先运行 `php runway ai:init`。
+- 确保您的 API 密钥有效并有权访问选定的模型。
+- 如果指令未更新，请检查项目目录中的文件权限。
+
+## 更新日志
+
+- v3.16.0 – 添加了 `ai:init` 和 `ai:generate-instructions` CLI 命令，用于 AI 集成。

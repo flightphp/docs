@@ -1,64 +1,130 @@
 # flightphp/cache
 
-轻量、简单且独立的 PHP 文件缓存类
+Light, simple and standalone PHP in-file caching class forked from [Wruczek/PHP-File-Cache](https://github.com/Wruczek/PHP-File-Cache)
 
-**优点** 
-- 轻量、独立且简单
-- 所有代码在一个文件中 - 没有无意义的驱动程序。
-- 安全 - 每个生成的缓存文件都有带有 die 的 PHP 头，即使有人知道路径并且您的服务器配置不正确，也无法直接访问
-- 文档齐全且经过测试
-- 通过 flock 正确处理并发
-- 支持 PHP 7.4+
-- 在 MIT 许可下免费
+**Advantages** 
+- Light, standalone and simple
+- All code in one file - no pointless drivers.
+- Secure - every generated cache file have a php header with die, making direct access impossible even if someone knows the path and your server is not configured properly
+- Well documented and tested
+- Handles concurrency correctly via flock
+- Supports PHP 7.4+
+- Free under a MIT license
 
-此文档网站正在使用此库来缓存每个页面！
+This docs site is using this library to cache each of the pages!
 
-点击 [这里](https://github.com/flightphp/cache) 查看代码。
+Click [here](https://github.com/flightphp/cache) to view the code.
 
-## 安装
+## Installation
 
-通过 composer 安装：
+Install via composer:
 
 ```bash
 composer require flightphp/cache
 ```
 
-## 使用
+## Usage
 
-使用相当简单。这样会在缓存目录中保存缓存文件。
+Usage is fairly straightforward. This saves a cache file in the cache directory.
 
 ```php
 use flight\Cache;
 
 $app = Flight::app();
 
-// 您将将缓存存储的目录传递给构造函数
+// You pass the directory the cache will be stored in into the constructor
 $app->register('cache', Cache::class, [ __DIR__ . '/../cache/' ], function(Cache $cache) {
 
-	// 这确保只有在生产模式下才使用缓存
-	// ENVIRONMENT 是在引导文件或应用的其他地方设置的常量
+	// This ensures that the cache is only used when in production mode
+	// ENVIRONMENT is a constant that is set in your bootstrap file or elsewhere in your app
 	$cache->setDevMode(ENVIRONMENT === 'development');
 });
 ```
 
-然后您可以像这样在代码中使用它：
+### Get a Cache Value
+
+You use the `get()` method to get a cached value. If you want a convenience method that will refresh the cache if it is expired, you can use `refreshIfExpired()`.
 
 ```php
 
-// 获取缓存实例
+// Get cache instance
 $cache = Flight::cache();
 $data = $cache->refreshIfExpired('simple-cache-test', function () {
-    return date("H:i:s"); // 返回要缓存的数据
-}, 10); // 10 秒
+    return date("H:i:s"); // return data to be cached
+}, 10); // 10 seconds
 
-// 或
-$data = $cache->retrieve('simple-cache-test');
+// or
+$data = $cache->get('simple-cache-test');
 if(empty($data)) {
 	$data = date("H:i:s");
-	$cache->store('simple-cache-test', $data, 10); // 10 秒
+	$cache->set('simple-cache-test', $data, 10); // 10 seconds
 }
 ```
 
-## 文档
+### Store a Cache Value
 
-访问 [https://github.com/flightphp/cache](https://github.com/flightphp/cache) 获取完整文档，并确保查看 [examples](https://github.com/flightphp/cache/tree/master/examples) 文件夹。
+You use the `set()` method to store a value in the cache.
+
+```php
+Flight::cache()->set('simple-cache-test', 'my cached data', 10); // 10 seconds
+```
+
+### Erase a Cache Value
+
+You use the `delete()` method to erase a value in the cache.
+
+```php
+Flight::cache()->delete('simple-cache-test');
+```
+
+### Check if a Cache Value Exists
+
+You use the `exists()` method to check if a value exists in the cache.
+
+```php
+if(Flight::cache()->exists('simple-cache-test')) {
+	// do something
+}
+```
+
+### Clear the Cache
+You use the `flush()` method to clear the entire cache.
+
+```php
+Flight::cache()->flush();
+```
+
+### Pull out meta data with cache
+
+If you want to pull out timestamps and other meta data about a cache entry, make sure you pass `true` as the correct parameter.
+
+```php
+$data = $cache->refreshIfExpired("simple-cache-meta-test", function () {
+    echo "Refreshing data!" . PHP_EOL;
+    return date("H:i:s"); // return data to be cached
+}, 10, true); // true = return with metadata
+// or
+$data = $cache->get("simple-cache-meta-test", true); // true = return with metadata
+
+/*
+Example cached item retrieved with metadata:
+{
+    "time":1511667506, <-- save unix timestamp
+    "expire":10,       <-- expire time in seconds
+    "data":"04:38:26", <-- unserialized data
+    "permanent":false
+}
+
+Using metadata, we can, for example, calculate when item was saved or when it expires
+We can also access the data itself with the "data" key
+*/
+
+$expiresin = ($data["time"] + $data["expire"]) - time(); // get unix timestamp when data expires and subtract current timestamp from it
+$cacheddate = $data["data"]; // we access the data itself with the "data" key
+
+echo "Latest cache save: $cacheddate, expires in $expiresin seconds";
+```
+
+## Documentation
+
+Visit [https://github.com/flightphp/cache](https://github.com/flightphp/cache) to view the code. Make sure you see the [examples](https://github.com/flightphp/cache/tree/master/examples) folder for additional ways to use the cache.

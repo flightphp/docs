@@ -1,8 +1,17 @@
 # Roteamento
 
-> **Nota:** Quer entender mais sobre roteamento? Confira a página ["why a framework?"](/learn/why-frameworks) para uma explicação mais detalhada.
+## Visão Geral
+O roteamento no Flight PHP mapeia padrões de URL para funções de callback ou métodos de classe, permitindo o tratamento rápido e simples de requisições. Ele é projetado para overhead mínimo, uso amigável para iniciantes e extensibilidade sem dependências externas.
 
-O roteamento básico no Flight é feito ao combinar um padrão de URL com uma função de callback ou um array de uma classe e método.
+## Entendendo
+O roteamento é o mecanismo central que conecta requisições HTTP à lógica da sua aplicação no Flight. Ao definir rotas, você especifica como diferentes URLs acionam código específico, seja através de funções, métodos de classe ou ações de controlador. O sistema de roteamento do Flight é flexível, suportando padrões básicos, parâmetros nomeados, expressões regulares e recursos avançados como injeção de dependência e roteamento de recursos. Essa abordagem mantém seu código organizado e fácil de manter, enquanto permanece rápido e simples para iniciantes e extensível para usuários avançados.
+
+> **Nota:** Quer entender mais sobre roteamento? Confira a página ["por que um framework?](/learn/why-frameworks)" para uma explicação mais aprofundada.
+
+## Uso Básico
+
+### Definindo uma Rota Simples
+O roteamento básico no Flight é feito combinando um padrão de URL com uma função de callback ou um array de classe e método.
 
 ```php
 Flight::route('/', function(){
@@ -10,10 +19,10 @@ Flight::route('/', function(){
 });
 ```
 
-> As rotas são combinadas na ordem em que são definidas. A primeira rota que combinar com uma solicitação será invocada.
+> As rotas são combinadas na ordem em que são definidas. A primeira rota que combinar com uma requisição será invocada.
 
-### Callbacks/Funções
-O callback pode ser qualquer objeto que seja chamável. Então, você pode usar uma função regular:
+### Usando Funções como Callbacks
+O callback pode ser qualquer objeto que seja chamável. Então você pode usar uma função regular:
 
 ```php
 function hello() {
@@ -23,26 +32,36 @@ function hello() {
 Flight::route('/', 'hello');
 ```
 
-### Classes
-Você também pode usar um método estático de uma classe:
+### Usando Classes e Métodos como um Controlador
+Você também pode usar um método (estático ou não) de uma classe:
 
 ```php
-class Greeting {
-    public static function hello() {
+class GreetingController {
+    public function hello() {
         echo 'hello world!';
     }
 }
 
-Flight::route('/', [ 'Greeting','hello' ]);
+Flight::route('/', [ 'GreetingController','hello' ]);
+// ou
+Flight::route('/', [ GreetingController::class, 'hello' ]); // método preferido
+// ou
+Flight::route('/', [ 'GreetingController::hello' ]);
+// ou 
+Flight::route('/', [ 'GreetingController->hello' ]);
 ```
 
 Ou criando um objeto primeiro e depois chamando o método:
 
 ```php
-// Greeting.php
-class Greeting
+use flight\Engine;
+
+// GreetingController.php
+class GreetingController
 {
-    public function __construct() {
+	protected Engine $app
+    public function __construct(Engine $app) {
+		$this->app = $app;
         $this->name = 'John Doe';
     }
 
@@ -52,24 +71,177 @@ class Greeting
 }
 
 // index.php
-$greeting = new Greeting();
+$app = Flight::app();
+$greeting = new GreetingController($app);
 
 Flight::route('/', [ $greeting, 'hello' ]);
-// Você também pode fazer isso sem criar o objeto primeiro
-// Nota: Nenhum argumento será injetado no construtor
-Flight::route('/', [ 'Greeting', 'hello' ]);
-// Além disso, você pode usar esta sintaxe mais curta
-Flight::route('/', 'Greeting->hello');
-// ou
-Flight::route('/', Greeting::class.'->hello');
 ```
 
-#### Injeção de Dependência via DIC (Container de Injeção de Dependência)
-Se você quiser usar injeção de dependência via um container (PSR-11, PHP-DI, Dice, etc.), o único tipo de rotas onde isso está disponível é ou criando diretamente o objeto você mesmo e usando o container para criar seu objeto, ou você pode usar strings para definir a classe e o método a chamar. Você pode ir para a página [Injeção de Dependência](/learn/extending) para mais informações.
+> **Nota:** Por padrão, quando um controlador é chamado dentro do framework, a classe `flight\Engine` é sempre injetada, a menos que você especifique através de um [contêiner de injeção de dependência](/learn/dependency-injection-container)
+
+### Roteamento Específico de Método
+
+Por padrão, os padrões de rota são combinados contra todos os métodos de requisição. Você pode responder a métodos específicos colocando um identificador antes da URL.
+
+```php
+Flight::route('GET /', function () {
+  echo 'I received a GET request.';
+});
+
+Flight::route('POST /', function () {
+  echo 'I received a POST request.';
+});
+
+// Você não pode usar Flight::get() para rotas, pois esse é um método 
+//    para obter variáveis, não para criar uma rota.
+Flight::post('/', function() { /* code */ });
+Flight::patch('/', function() { /* code */ });
+Flight::put('/', function() { /* code */ });
+Flight::delete('/', function() { /* code */ });
+```
+
+Você também pode mapear múltiplos métodos para um único callback usando o delimitador `|`:
+
+```php
+Flight::route('GET|POST /', function () {
+  echo 'I received either a GET or a POST request.';
+});
+```
+
+### Usando o Objeto Router
+
+Adicionalmente, você pode obter o objeto Router, que tem alguns métodos auxiliares para você usar:
+
+```php
+
+$router = Flight::router();
+
+// mapeia todos os métodos assim como Flight::route()
+$router->map('/', function() {
+	echo 'hello world!';
+});
+
+// Requisição GET
+$router->get('/users', function() {
+	echo 'users';
+});
+$router->post('/users', 			function() { /* code */});
+$router->put('/users/update/@id', 	function() { /* code */});
+$router->delete('/users/@id', 		function() { /* code */});
+$router->patch('/users/@id', 		function() { /* code */});
+```
+
+### Expressões Regulares (Regex)
+Você pode usar expressões regulares em suas rotas:
+
+```php
+Flight::route('/user/[0-9]+', function () {
+  // Isso combinará com /user/1234
+});
+```
+
+Embora esse método esteja disponível, é recomendado usar parâmetros nomeados, ou parâmetros nomeados com expressões regulares, pois eles são mais legíveis e fáceis de manter.
+
+### Parâmetros Nomeados
+Você pode especificar parâmetros nomeados em suas rotas, que serão passados para a função de callback. **Isso é mais para legibilidade da rota do que qualquer outra coisa. Por favor, veja a seção abaixo sobre uma ressalva importante.**
+
+```php
+Flight::route('/@name/@id', function (string $name, string $id) {
+  echo "hello, $name ($id)!";
+});
+```
+
+Você também pode incluir expressões regulares com seus parâmetros nomeados usando o delimitador `:`:
+
+```php
+Flight::route('/@name/@id:[0-9]{3}', function (string $name, string $id) {
+  // Isso combinará com /bob/123
+  // Mas não combinará com /bob/12345
+});
+```
+
+> **Nota:** Combinar grupos de regex `()` com parâmetros posicionais não é suportado. Ex: `:'\(`
+
+#### Ressalva Importante
+
+Embora no exemplo acima pareça que `@name` está diretamente ligado à variável `$name`, não é. A ordem dos parâmetros na função de callback é o que determina o que é passado para ela. Se você trocar a ordem dos parâmetros na função de callback, as variáveis também serão trocadas. Aqui está um exemplo:
+
+```php
+Flight::route('/@name/@id', function (string $id, string $name) {
+  echo "hello, $name ($id)!";
+});
+```
+
+E se você acessar a seguinte URL: `/bob/123`, a saída seria `hello, 123 (bob)!`. 
+_Por favor, tenha cuidado_ ao configurar suas rotas e funções de callback!
+
+### Parâmetros Opcionais
+Você pode especificar parâmetros nomeados que são opcionais para combinação envolvendo segmentos em parênteses.
+
+```php
+Flight::route(
+  '/blog(/@year(/@month(/@day)))',
+  function(?string $year, ?string $month, ?string $day) {
+    // Isso combinará com as seguintes URLs:
+    // /blog/2012/12/10
+    // /blog/2012/12
+    // /blog/2012
+    // /blog
+  }
+);
+```
+
+Quaisquer parâmetros opcionais que não forem combinados serão passados como `NULL`.
+
+### Roteamento de Curinga
+A combinação é feita apenas em segmentos individuais de URL. Se você quiser combinar múltiplos segmentos, pode usar o curinga `*`.
+
+```php
+Flight::route('/blog/*', function () {
+  // Isso combinará com /blog/2000/02/01
+});
+```
+
+Para rotear todas as requisições para um único callback, você pode fazer:
+
+```php
+Flight::route('*', function () {
+  // Faça algo
+});
+```
+
+### Manipulador de 404 Não Encontrado
+
+Por padrão, se uma URL não puder ser encontrada, o Flight enviará uma resposta `HTTP 404 Not Found` que é muito simples e simples.
+Se você quiser ter uma resposta 404 mais personalizada, você pode [mapear](/learn/extending) seu próprio método `notFound`:
+
+```php
+Flight::map('notFound', function() {
+	$url = Flight::request()->url;
+
+	// Você também poderia usar Flight::render() com um template personalizado.
+    $output = <<<HTML
+		<h1>Meu 404 Não Encontrado Personalizado</h1>
+		<h3>A página que você solicitou {$url} não pôde ser encontrada.</h3>
+		HTML;
+
+	$this->response()
+		->clearBody()
+		->status(404)
+		->write($output)
+		->send();
+});
+```
+
+## Uso Avançado
+
+### Injeção de Dependência em Rotas
+Se você quiser usar injeção de dependência via um contêiner (PSR-11, PHP-DI, Dice, etc), o único tipo de rotas onde isso está disponível é criando o objeto diretamente você mesmo e usando o contêiner para criar seu objeto ou você pode usar strings para definir a classe e o método a chamar. Você pode ir à página [Injeção de Dependência](/learn/dependency-injection-container) para mais informações. 
 
 Aqui está um exemplo rápido:
 
 ```php
+
 use flight\database\PdoWrapper;
 
 // Greeting.php
@@ -89,7 +261,7 @@ class Greeting
 
 // index.php
 
-// Configure o container com os parâmetros que você precisa
+// Configure o contêiner com os parâmetros que você precisar
 // Veja a página de Injeção de Dependência para mais informações sobre PSR-11
 $dice = new \Dice\Dice();
 
@@ -103,12 +275,12 @@ $dice = $dice->addRule('flight\database\PdoWrapper', [
 	]
 ]);
 
-// Registre o manipulador do container
+// Registre o manipulador de contêiner
 Flight::registerContainerHandler(function($class, $params) use ($dice) {
 	return $dice->create($class, $params);
 });
 
-// Rotas como de costume
+// Rotas como normal
 Flight::route('/hello/@id', [ 'Greeting', 'hello' ]);
 // ou
 Flight::route('/hello/@id', 'Greeting->hello');
@@ -118,139 +290,9 @@ Flight::route('/hello/@id', 'Greeting::hello');
 Flight::start();
 ```
 
-## Roteamento por Método
-
-Por padrão, os padrões de rota são combinados com todos os métodos de solicitação. Você pode responder a métodos específicos colocando um identificador antes da URL.
-
-```php
-Flight::route('GET /', function () {
-  echo 'I received a GET request.';
-});
-
-Flight::route('POST /', function () {
-  echo 'I received a POST request.';
-});
-
-// Você não pode usar Flight::get() para rotas, pois isso é um método para obter variáveis, não para criar uma rota.
-// Flight::post('/', function() { /* code */ });
-// Flight::patch('/', function() { /* code */ });
-// Flight::put('/', function() { /* code */ });
-// Flight::delete('/', function() { /* code */ });
-```
-
-Você também pode mapear vários métodos para um único callback usando um delimitador `|`:
-
-```php
-Flight::route('GET|POST /', function () {
-  echo 'I received either a GET or a POST request.';
-});
-```
-
-Além disso, você pode obter o objeto Router, que tem alguns métodos auxiliares para você usar:
-
-```php
-$router = Flight::router();
-
-// mapeia todos os métodos
-$router->map('/', function() {
-	echo 'hello world!';
-});
-
-// solicitação GET
-$router->get('/users', function() {
-	echo 'users';
-});
-// $router->post();
-// $router->put();
-// $router->delete();
-// $router->patch();
-```
-
-## Expressões Regulares
-
-Você pode usar expressões regulares em suas rotas:
-
-```php
-Flight::route('/user/[0-9]+', function () {
-  // Isso irá combinar com /user/1234
-});
-```
-
-Embora este método esteja disponível, é recomendado usar parâmetros nomeados ou parâmetros nomeados com expressões regulares, pois eles são mais legíveis e fáceis de manter.
-
-## Parâmetros Nomeados
-
-Você pode especificar parâmetros nomeados em suas rotas que serão passados para sua função de callback. **Isso é mais para a legibilidade da rota do que qualquer outra coisa. Por favor, veja a seção abaixo sobre ressalva importante.**
-
-```php
-Flight::route('/@name/@id', function (string $name, string $id) {
-  echo "hello, $name ($id)!";
-});
-```
-
-Você também pode incluir expressões regulares com seus parâmetros nomeados usando o delimitador `:`:
-
-```php
-Flight::route('/@name/@id:[0-9]{3}', function (string $name, string $id) {
-  // Isso irá combinar com /bob/123
-  // Mas não irá combinar com /bob/12345
-});
-```
-
-> **Nota:** Combinar grupos de regex `()` com parâmetros posicionais não é suportado. :'\(
-
-### Ressalva Importante
-
-Embora no exemplo acima pareça que `@name` está diretamente ligado à variável `$name`, não está. A ordem dos parâmetros na função de callback é o que determina o que é passado para ela. Então, se você inverter a ordem dos parâmetros na função de callback, as variáveis também serão invertidas. Aqui está um exemplo:
-
-```php
-Flight::route('/@name/@id', function (string $id, string $name) {
-  echo "hello, $name ($id)!";
-});
-```
-
-E se você acessar a URL seguinte: `/bob/123`, a saída seria `hello, 123 (bob)!`. Por favor, tenha cuidado ao configurar suas rotas e funções de callback.
-
-## Parâmetros Opcionais
-
-Você pode especificar parâmetros nomeados que são opcionais para combinação ao envolver segmentos em parênteses.
-
-```php
-Flight::route(
-  '/blog(/@year(/@month(/@day)))',
-  function(?string $year, ?string $month, ?string $day) {
-    // Isso irá combinar com as seguintes URLs:
-    // /blog/2012/12/10
-    // /blog/2012/12
-    // /blog/2012
-    // /blog
-  }
-);
-```
-
-Quaisquer parâmetros opcionais que não forem combinados serão passados como `NULL`.
-
-## Coringas
-
-A combinação é feita apenas em segmentos individuais de URL. Se você quiser combinar vários segmentos, pode usar o curinga `*`.
-
-```php
-Flight::route('/blog/*', function () {
-  // Isso irá combinar com /blog/2000/02/01
-});
-```
-
-Para rotear todas as solicitações para um único callback, você pode fazer:
-
-```php
-Flight::route('*', function () {
-  // Faça algo
-});
-```
-
-## Passagem
-
-Você pode passar a execução para a próxima rota que combina retornando `true` da sua função de callback.
+### Passando Execução para a Próxima Rota
+<span class="badge bg-warning">Depreciado</span>
+Você pode passar a execução para a próxima rota combinada retornando `true` da sua função de callback.
 
 ```php
 Flight::route('/user/@name', function (string $name) {
@@ -266,62 +308,50 @@ Flight::route('/user/*', function () {
 });
 ```
 
-## Alias de Rotas
+Agora é recomendado usar [middleware](/learn/middleware) para lidar com casos de uso complexos como este.
 
-Você pode atribuir um alias a uma rota, para que a URL possa ser gerada dinamicamente mais tarde no seu código (como em um template, por exemplo).
+### Alias de Rota
+Ao atribuir um alias a uma rota, você pode chamar esse alias dinamicamente na sua aplicação para ser gerado mais tarde no seu código (ex: um link em um template HTML, ou gerando uma URL de redirecionamento).
 
 ```php
 Flight::route('/users/@id', function($id) { echo 'user:'.$id; }, false, 'user_view');
+// ou 
+Flight::route('/users/@id', function($id) { echo 'user:'.$id; })->setAlias('user_view');
 
 // mais tarde no código em algum lugar
-Flight::getUrl('user_view', [ 'id' => 5 ]); // irá retornar '/users/5'
+class UserController {
+	public function update() {
+
+		// código para salvar o usuário...
+		$id = $user['id']; // 5 por exemplo
+
+		$redirectUrl = Flight::getUrl('user_view', [ 'id' => $id ]); // retornará '/users/5'
+		Flight::redirect($redirectUrl);
+	}
+}
+
 ```
 
-Isso é especialmente útil se sua URL acontecer de mudar. No exemplo acima, digamos que users foi movido para `/admin/users/@id` em vez disso. Com aliasing no lugar, você não precisa mudar em nenhum lugar onde você referencia o alias, porque o alias agora retornará `/admin/users/5` como no exemplo acima.
+Isso é especialmente útil se a sua URL acontecer de mudar. No exemplo acima, digamos que users foi movido para `/admin/users/@id` em vez disso.
+Com o alias no lugar para a rota, você não precisa mais encontrar todas as URLs antigas no seu código e alterá-las porque o alias agora retornará `/admin/users/5` como no exemplo acima.
 
 O alias de rota ainda funciona em grupos também:
 
 ```php
 Flight::group('/users', function() {
     Flight::route('/@id', function($id) { echo 'user:'.$id; }, false, 'user_view');
+	// ou
+	Flight::route('/@id', function($id) { echo 'user:'.$id; })->setAlias('user_view');
 });
-
-
-// mais tarde no código em algum lugar
-Flight::getUrl('user_view', [ 'id' => 5 ]); // irá retornar '/users/5'
 ```
 
-## Informações de Rota
+### Inspecionando Informações de Rota
+Se você quiser inspecionar as informações da rota combinada, há 2 maneiras de fazer isso:
 
-Se você quiser inspecionar as informações da rota que combina, há 2 maneiras de fazer isso. Você pode usar a propriedade `executedRoute` ou pode solicitar que o objeto de rota seja passado para seu callback passando `true` como o terceiro parâmetro no método de rota. O objeto de rota sempre será o último parâmetro passado para sua função de callback.
+1. Você pode usar a propriedade `executedRoute` no objeto `Flight::router()`.
+2. Você pode solicitar que o objeto de rota seja passado para o seu callback passando `true` como o terceiro parâmetro no método de rota. O objeto de rota sempre será o último parâmetro passado para a sua função de callback.
 
-```php
-Flight::route('/', function(\flight\net\Route $route) {
-  // Array de métodos HTTP combinados
-  $route->methods;
-
-  // Array de parâmetros nomeados
-  $route->params;
-
-  // Expressão regular de combinação
-  $route->regex;
-
-  // Contém o conteúdo de qualquer '*' usado no padrão de URL
-  $route->splat;
-
-  // Mostra o caminho da URL....se você realmente precisar
-  $route->pattern;
-
-  // Mostra o que middleware é atribuído a isso
-  $route->middleware;
-
-  // Mostra o alias atribuído a esta rota
-  $route->alias;
-}, true);
-```
-
-Ou se você quiser inspecionar a última rota executada, você pode fazer:
-
+#### `executedRoute`
 ```php
 Flight::route('/', function() {
   $route = Flight::router()->executedRoute;
@@ -332,16 +362,16 @@ Flight::route('/', function() {
   // Array de parâmetros nomeados
   $route->params;
 
-  // Expressão regular de combinação
+  // Expressão regular combinada
   $route->regex;
 
   // Contém o conteúdo de qualquer '*' usado no padrão de URL
   $route->splat;
 
-  // Mostra o caminho da URL....se você realmente precisar
+  // Mostra o caminho da url....se você realmente precisar
   $route->pattern;
 
-  // Mostra o que middleware é atribuído a isso
+  // Mostra o middleware atribuído a isso
   $route->middleware;
 
   // Mostra o alias atribuído a esta rota
@@ -349,11 +379,37 @@ Flight::route('/', function() {
 });
 ```
 
-> **Nota:** A propriedade `executedRoute` só será definida após uma rota ter sido executada. Se você tentar acessá-la antes que uma rota tenha sido executada, ela será `NULL`. Você também pode usar executedRoute em middleware!
+> **Nota:** A propriedade `executedRoute` só será definida após uma rota ter sido executada. Se você tentar acessá-la antes de uma rota ter sido executada, ela será `NULL`. Você também pode usar executedRoute em [middleware](/learn/middleware)!
 
-## Agrupamento de Rotas
+#### Passando `true` na definição de rota
+```php
+Flight::route('/', function(\flight\net\Route $route) {
+  // Array de métodos HTTP combinados
+  $route->methods;
 
-Pode haver momentos em que você deseja agrupar rotas relacionadas (como `/api/v1`). Você pode fazer isso usando o método `group`:
+  // Array de parâmetros nomeados
+  $route->params;
+
+  // Expressão regular combinada
+  $route->regex;
+
+  // Contém o conteúdo de qualquer '*' usado no padrão de URL
+  $route->splat;
+
+  // Mostra o caminho da url....se você realmente precisar
+  $route->pattern;
+
+  // Mostra o middleware atribuído a isso
+  $route->middleware;
+
+  // Mostra o alias atribuído a esta rota
+  $route->alias;
+}, true);// <-- Este parâmetro true é o que faz isso acontecer
+```
+
+### Agrupamento de Rotas e Middleware
+Pode haver vezes em que você queira agrupar rotas relacionadas juntas (como `/api/v1`).
+Você pode fazer isso usando o método `group`:
 
 ```php
 Flight::group('/api/v1', function () {
@@ -372,7 +428,7 @@ Você pode até aninhar grupos de grupos:
 ```php
 Flight::group('/api', function () {
   Flight::group('/v1', function () {
-	// Flight::get() obtém variáveis, não define uma rota! Veja o contexto do objeto abaixo
+	// Flight::get() obtém variáveis, não define uma rota! Veja o contexto de objeto abaixo
 	Flight::route('GET /users', function () {
 	  // Combina com GET /api/v1/users
 	});
@@ -387,7 +443,7 @@ Flight::group('/api', function () {
   });
   Flight::group('/v2', function () {
 
-	// Flight::get() obtém variáveis, não define uma rota! Veja o contexto do objeto abaixo
+	// Flight::get() obtém variáveis, não define uma rota! Veja o contexto de objeto abaixo
 	Flight::route('GET /users', function () {
 	  // Combina com GET /api/v2/users
 	});
@@ -395,12 +451,13 @@ Flight::group('/api', function () {
 });
 ```
 
-### Agrupamento com Contexto de Objeto
+#### Agrupamento com Contexto de Objeto
 
-Você ainda pode usar agrupamento de rotas com o objeto `Engine` da seguinte forma:
+Você ainda pode usar agrupamento de rotas com o objeto `Engine` da seguinte maneira:
 
 ```php
-$app = new \flight\Engine();
+$app = Flight::app();
+
 $app->group('/api/v1', function (Router $router) {
 
   // use a variável $router
@@ -414,7 +471,9 @@ $app->group('/api/v1', function (Router $router) {
 });
 ```
 
-### Agrupamento com Middleware
+> **Nota:** Este é o método preferido de definir rotas e grupos com o objeto `$router`.
+
+#### Agrupamento com Middleware
 
 Você também pode atribuir middleware a um grupo de rotas:
 
@@ -426,10 +485,9 @@ Flight::group('/api/v1', function () {
 }, [ MyAuthMiddleware::class ]); // ou [ new MyAuthMiddleware() ] se você quiser usar uma instância
 ```
 
-Veja mais detalhes na página [group middleware](/learn/middleware#grouping-middleware).
+Veja mais detalhes na página [middleware de grupo](/learn/middleware#grouping-middleware).
 
-## Roteamento de Recursos
-
+### Roteamento de Recursos
 Você pode criar um conjunto de rotas para um recurso usando o método `resource`. Isso criará um conjunto de rotas para um recurso que segue as convenções RESTful.
 
 Para criar um recurso, faça o seguinte:
@@ -442,17 +500,17 @@ E o que acontecerá em segundo plano é que ele criará as seguintes rotas:
 
 ```php
 [
-      'index' => 'GET ',
-      'create' => 'GET /create',
-      'store' => 'POST ',
-      'show' => 'GET /@id',
-      'edit' => 'GET /@id/edit',
-      'update' => 'PUT /@id',
-      'destroy' => 'DELETE /@id'
+      'index' => 'GET /users',
+      'create' => 'GET /users/create',
+      'store' => 'POST /users',
+      'show' => 'GET /users/@id',
+      'edit' => 'GET /users/@id/edit',
+      'update' => 'PUT /users/@id',
+      'destroy' => 'DELETE /users/@id'
 ]
 ```
 
-E seu controlador ficará assim:
+E o seu controlador usará os seguintes métodos:
 
 ```php
 class UsersController
@@ -489,33 +547,36 @@ class UsersController
 
 > **Nota**: Você pode visualizar as rotas recém-adicionadas com `runway` executando `php runway routes`.
 
-### Personalizando Rotas de Recursos
+#### Personalizando Rotas de Recursos
 
 Há algumas opções para configurar as rotas de recursos.
 
-#### Base de Alias
+##### Base de Alias
 
-Você pode configurar o `aliasBase`. Por padrão, o alias é a última parte da URL especificada. Por exemplo, `/users/` resultaria em um `aliasBase` de `users`. Quando essas rotas são criadas, os aliases são `users.index`, `users.create`, etc. Se você quiser mudar o alias, defina o `aliasBase` para o valor desejado.
+Você pode configurar o `aliasBase`. Por padrão, o alias é a última parte da URL especificada.
+Por exemplo, `/users/` resultaria em um `aliasBase` de `users`. Quando essas rotas são criadas, os aliases são `users.index`, `users.create`, etc. Se você quiser alterar o alias, defina o `aliasBase` para o valor que deseja.
 
 ```php
 Flight::resource('/users', UsersController::class, [ 'aliasBase' => 'user' ]);
 ```
 
-#### Only e Except
+##### Only e Except
 
-Você também pode especificar quais rotas você quer criar usando as opções `only` e `except`.
+Você também pode especificar quais rotas deseja criar usando as opções `only` e `except`.
 
 ```php
+// Lista branca apenas desses métodos e lista negra do resto
 Flight::resource('/users', UsersController::class, [ 'only' => [ 'index', 'show' ] ]);
 ```
 
 ```php
+// Lista negra apenas desses métodos e lista branca do resto
 Flight::resource('/users', UsersController::class, [ 'except' => [ 'create', 'store', 'edit', 'update', 'destroy' ] ]);
 ```
 
-Essas são basicamente opções de lista branca e lista negra, para que você possa especificar quais rotas você quer criar.
+Essas são basicamente opções de lista branca e lista negra para que você possa especificar quais rotas deseja criar.
 
-#### Middleware
+##### Middleware
 
 Você também pode especificar middleware para ser executado em cada uma das rotas criadas pelo método `resource`.
 
@@ -523,29 +584,35 @@ Você também pode especificar middleware para ser executado em cada uma das rot
 Flight::resource('/users', UsersController::class, [ 'middleware' => [ MyAuthMiddleware::class ] ]);
 ```
 
-## Streaming
+### Respostas em Streaming
 
-Agora você pode transmitir respostas para o cliente usando o método `streamWithHeaders()`. Isso é útil para enviar arquivos grandes, processos de longa duração ou gerar respostas grandes. Transmitir uma rota é tratado de forma um pouco diferente de uma rota regular.
+Você agora pode transmitir respostas para o cliente usando `stream()` ou `streamWithHeaders()`. 
+Isso é útil para enviar arquivos grandes, processos de longa duração ou gerar respostas grandes. 
+Transmitir uma rota é tratado um pouco diferente de uma rota regular.
 
-> **Nota:** Respostas de streaming só estão disponíveis se você tiver [`flight.v2.output_buffering`](/learn/migrating-to-v3#output_buffering) definido como false.
+> **Nota:** Respostas em streaming só estão disponíveis se você tiver [`flight.v2.output_buffering`](/learn/migrating-to-v3#output_buffering) definido como `false`.
 
-### Stream com Cabeçalhos Manuais
+#### Stream com Cabeçalhos Manuais
 
-Você pode transmitir uma resposta para o cliente usando o método `stream()` em uma rota. Se você fizer isso, você deve definir todos os métodos manualmente antes de enviar qualquer coisa para o cliente. Isso é feito com a função `header()` do PHP ou o método `Flight::response()->setRealHeader()`.
+Você pode transmitir uma resposta para o cliente usando o método `stream()` em uma rota. Se você 
+fizer isso, deve definir todos os cabeçalhos manualmente antes de produzir qualquer coisa para o cliente.
+Isso é feito com a função php `header()` ou o método `Flight::response()->setRealHeader()`.
 
 ```php
 Flight::route('/@filename', function($filename) {
 
-	// obviamente você sanitizaria o caminho e o que seja.
+	$response = Flight::response();
+
+	// obviamente você sanitizaria o caminho e o que mais.
 	$fileNameSafe = basename($filename);
 
 	// Se você tiver cabeçalhos adicionais para definir aqui após a rota ter sido executada
-	// você deve defini-los antes que qualquer coisa seja ecoada.
-	// Eles devem ser uma chamada bruta para a função header() ou 
+	// você deve defini-los antes de qualquer coisa ser ecoada.
+	// Eles devem ser todos uma chamada crua para a função header() ou 
 	// uma chamada para Flight::response()->setRealHeader()
 	header('Content-Disposition: attachment; filename="'.$fileNameSafe.'"');
 	// ou
-	Flight::response()->setRealHeader('Content-Disposition', 'attachment; filename="'.$fileNameSafe.'"');
+	$response->setRealHeader('Content-Disposition: attachment; filename="'.$fileNameSafe.'"');
 
 	$filePath = '/some/path/to/files/'.$fileNameSafe;
 
@@ -553,8 +620,10 @@ Flight::route('/@filename', function($filename) {
 		Flight::halt(404, 'File not found');
 	}
 
-	// defina manualmente o comprimento do conteúdo se você quiser
+	// defina manualmente o comprimento do conteúdo se quiser
 	header('Content-Length: '.filesize($filePath));
+	// ou
+	$response->setRealHeader('Content-Length: '.filesize($filePath));
 
 	// Transmita o arquivo para o cliente enquanto ele é lido
 	readfile($filePath);
@@ -563,7 +632,7 @@ Flight::route('/@filename', function($filename) {
 })->stream();
 ```
 
-### Stream com Cabeçalhos
+#### Stream com Cabeçalhos
 
 Você também pode usar o método `streamWithHeaders()` para definir os cabeçalhos antes de começar a transmitir.
 
@@ -573,7 +642,7 @@ Flight::route('/stream-users', function() {
 	// você pode adicionar quaisquer cabeçalhos adicionais que quiser aqui
 	// você só deve usar header() ou Flight::response()->setRealHeader()
 
-	// no entanto, como você puxa seus dados, apenas como um exemplo...
+	// no entanto, da maneira que você puxa seus dados, apenas como exemplo...
 	$users_stmt = Flight::db()->query("SELECT id, first_name, last_name FROM users");
 
 	echo '{';
@@ -589,7 +658,7 @@ Flight::route('/stream-users', function() {
 	}
 	echo '}';
 
-// Esta é como você definirá os cabeçalhos antes de começar a transmitir.
+// É assim que você definirá os cabeçalhos antes de começar a transmitir.
 })->streamWithHeaders([
 	'Content-Type' => 'application/json',
 	'Content-Disposition' => 'attachment; filename="users.json"',
@@ -597,3 +666,43 @@ Flight::route('/stream-users', function() {
 	'status' => 200
 ]);
 ```
+
+## Veja Também
+- [Middleware](/learn/middleware) - Usando middleware com rotas para autenticação, logging, etc.
+- [Injeção de Dependência](/learn/dependency-injection-container) - Simplificando a criação e gerenciamento de objetos em rotas.
+- [Por que um Framework?](/learn/why-frameworks) - Entendendo os benefícios de usar um framework como o Flight.
+- [Estendendo](/learn/extending) - Como estender o Flight com sua própria funcionalidade, incluindo o método `notFound`.
+- [php.net: preg_match](https://www.php.net/manual/en/function.preg-match.php) - Função PHP para combinação de expressões regulares.
+
+## Solução de Problemas
+- Parâmetros de rota são combinados por ordem, não por nome. Certifique-se de que a ordem dos parâmetros do callback corresponda à definição da rota.
+- Usar `Flight::get()` não define uma rota; use `Flight::route('GET /...')` para roteamento ou o contexto do objeto Router em grupos (ex: `$router->get(...)`).
+- A propriedade executedRoute só é definida após uma rota ser executada; ela é NULL antes da execução.
+- Streaming requer que a funcionalidade de buffer de saída legado do Flight seja desabilitada (`flight.v2.output_buffering = false`).
+- Para injeção de dependência, apenas certas definições de rota suportam instanciação baseada em contêiner.
+
+### 404 Não Encontrado ou Comportamento Inesperado de Rota
+
+Se você estiver vendo um erro 404 Não Encontrado (mas você jura pela sua vida que ele está realmente lá e não é um erro de digitação), isso na verdade pode ser um problema 
+com você retornando um valor no seu endpoint de rota em vez de apenas ecoá-lo. A razão para isso é intencional, mas pode surpreender alguns desenvolvedores.
+
+```php
+
+Flight::route('/hello', function(){
+	// Isso pode causar um erro 404 Não Encontrado
+	return 'Hello World';
+});
+
+// O que você provavelmente quer
+Flight::route('/hello', function(){
+	echo 'Hello World';
+});
+
+```
+
+A razão para isso é por causa de um mecanismo especial incorporado no roteador que trata a saída de retorno como um sinal para "ir para a próxima rota". 
+Você pode ver o comportamento documentado na seção [Roteamento](/learn/routing#passing).
+
+## Changelog
+- v3: Adicionado roteamento de recursos, alias de rota e suporte a streaming, grupos de rota e suporte a middleware.
+- v1: A vasta maioria dos recursos básicos disponíveis.

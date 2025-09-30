@@ -1,149 +1,117 @@
 # Pieprasījumi
 
-Flight encapsē HTTP pieprasījumu vienā objektā, ko var piekļūt, darot:
+## Pārskats
+
+Flight ietver HTTP pieprasījumu vienā objektā, ko var piekļūt, veicot:
 
 ```php
 $request = Flight::request();
 ```
 
-## Tipiski lietošanas gadījumi
+## Saprašana
 
-Kad jūs strādājat ar pieprasījumu tīmekļa lietotnē, parasti jūs vēlaties izvilkt galveni, vai `$_GET` vai `$_POST` parametru, vai varbūt pat izejošo pieprasījuma ķermeni. Flight nodrošina vienkāršu interfeisu, lai izdarītu visas šīs lietas.
+HTTP pieprasījumi ir viens no galvenajiem aspektiem, kas jāizprot par HTTP dzīves ciklu. Lietotājs veic darbību tīmekļa pārlūkprogrammā vai HTTP klientā, un viņi nosūta virkni galvenes, ķermeņa, URL utt. uz jūsu projektu. Jūs varat uztvert šīs galvenes (pārlūkprogrammas valodu, kādu kompresijas veidu viņi var apstrādāt, lietotāja aģentu utt.) un uztvert ķermeni un URL, kas nosūtīts uz jūsu Flight lietojumprogrammu. Šie pieprasījumi ir būtiski jūsu lietojumprogrammai, lai saprastu, ko darīt tālāk.
 
-Šeit ir piemērs, kā iegūt vaicājuma virknes parametru:
+## Pamata izmantošana
+
+PHP ir vairākas superglobālās mainīgās, tostarp `$_GET`, `$_POST`, `$_REQUEST`, `$_SERVER`, `$_FILES` un `$_COOKIE`. Flight abstraktē šīs prom uz ērtām [Kolekcijām](/learn/collections). Jūs varat piekļūt `query`, `data`, `cookies` un `files` īpašībām kā masīviem vai objektiem.
+
+> **Piezīme:** Ir **ĻOTI** atvairīts izmantot šīs superglobālās mainīgās savā projektā, un tām jāatsaucas caur `request()` objektu.
+
+> **Piezīme:** Nav pieejama abstrakcija `$_ENV`.
+
+### `$_GET`
+
+Jūs varat piekļūt `$_GET` masīvam caur `query` īpašību:
 
 ```php
+// GET /search?keyword=something
 Flight::route('/search', function(){
 	$keyword = Flight::request()->query['keyword'];
-	echo "You are searching for: $keyword";
-	// vaicājiet datu bāzi vai kaut ko citu ar $keyword
+	// or
+	$keyword = Flight::request()->query->keyword;
+	echo "Jūs meklējat: $keyword";
+	// vaicāt datubāzi vai kaut ko citu ar $keyword
 });
 ```
 
-Šeit ir piemērs, varbūt formai ar POST metodi:
+### `$_POST`
+
+Jūs varat piekļūt `$_POST` masīvam caur `data` īpašību:
 
 ```php
 Flight::route('POST /submit', function(){
 	$name = Flight::request()->data['name'];
 	$email = Flight::request()->data['email'];
-	echo "You submitted: $name, $email";
-	// saglabājiet datu bāzē vai kaut ko citu ar $name un $email
+	// or
+	$name = Flight::request()->data->name;
+	$email = Flight::request()->data->email;
+	echo "Jūs iesniedzāt: $name, $email";
+	// saglabāt datubāzē vai kaut ko citu ar $name un $email
 });
 ```
 
-## Pieprasījuma objekta īpašības
-
-Pieprasījuma objekts nodrošina šādas īpašības:
-
-- **body** - Neapstrādātais HTTP pieprasījuma ķermenis
-- **url** - Pieprasītais URL
-- **base** - URL vecāka apakšdirektorija
-- **method** - Pieprasījuma metode (GET, POST, PUT, DELETE)
-- **referrer** - Atsaucēja URL
-- **ip** - Klienta IP adrese
-- **ajax** - Vai pieprasījums ir AJAX pieprasījums
-- **scheme** - Servera protokols (http, https)
-- **user_agent** - Pārskata informācija
-- **type** - Satura tips
-- **length** - Satura garums
-- **query** - Vaicājuma virknes parametri
-- **data** - Post dati vai JSON dati
-- **cookies** - Sīkdatņu dati
-- **files** - Augšupielādētie faili
-- **secure** - Vai savienojums ir drošs
-- **accept** - HTTP pieņemšanas parametri
-- **proxy_ip** - Proksija IP adrese klienta. Skenē `$_SERVER` masīvu pēc `HTTP_CLIENT_IP`, `HTTP_X_FORWARDED_FOR`, `HTTP_X_FORWARDED`, `HTTP_X_CLUSTER_CLIENT_IP`, `HTTP_FORWARDED_FOR`, `HTTP_FORWARDED` šādā secībā.
-- **host** - Pieprasījuma resursdators nosaukums
-- **servername** - SERVER_NAME no `$_SERVER`
-
-Jūs varat piekļūt `query`, `data`, `cookies` un `files` īpašībām kā masīviem vai objektiem.
-
-Tātad, lai iegūtu vaicājuma virknes parametru, jūs varat darīt:
-
-```php
-$id = Flight::request()->query['id'];
-```
-
-Vai jūs varat darīt:
-
-```php
-$id = Flight::request()->query->id;
-```
-
-## Neapstrādātais pieprasījuma ķermenis
-
-Lai iegūtu neapstrādāto HTTP pieprasījuma ķermeni, piemēram, kad strādājat ar PUT pieprasījumiem, jūs varat darīt:
-
-```php
-$body = Flight::request()->getBody();
-```
-
-## JSON ievade
-
-Ja jūs sūtāt pieprasījumu ar tipu `application/json` un datiem `{"id": 123}`, tas būs pieejams no `data` īpašības:
-
-```php
-$id = Flight::request()->data->id;
-```
-
-## `$_GET`
-
-Jūs varat piekļūt `$_GET` masīvam caur `query` īpašību:
-
-```php
-$id = Flight::request()->query['id'];
-```
-
-## `$_POST`
-
-Jūs varat piekļūt `$_POST` masīvam caur `data` īpašību:
-
-```php
-$id = Flight::request()->data['id'];
-```
-
-## `$_COOKIE`
+### `$_COOKIE`
 
 Jūs varat piekļūt `$_COOKIE` masīvam caur `cookies` īpašību:
 
 ```php
-$myCookieValue = Flight::request()->cookies['myCookieName'];
+Flight::route('GET /login', function(){
+	$savedLogin = Flight::request()->cookies['myLoginCookie'];
+	// or
+	$savedLogin = Flight::request()->cookies->myLoginCookie;
+	// pārbaudīt, vai tas tiešām ir saglabāts vai nē, un ja tas ir, automātiski ielogoties
+	if($savedLogin) {
+		Flight::redirect('/dashboard');
+		return;
+	}
+});
 ```
 
-## `$_SERVER`
+Lai iegūtu palīdzību ar jaunu sīkfailu vērtību iestatīšanu, skatiet [overclokk/cookie](/awesome-plugins/php-cookie)
 
-Ir īssavienojums, lai piekļūtu `$_SERVER` masīvam caur `getVar()` metodi:
+### `$_SERVER`
+
+Ir pieejams saīsinājums, lai piekļūtu `$_SERVER` masīvam caur `getVar()` metodi:
 
 ```php
+
 $host = Flight::request()->getVar('HTTP_HOST');
 ```
 
-## Piekļuve augšupielādētajiem failiem caur `$_FILES`
+### `$_FILES`
 
-Jūs varat piekļūt augšupielādētajiem failiem caur `files` īpašību:
+Jūs varat piekļūt augšupielādētiem failiem caur `files` īpašību:
 
 ```php
-$uploadedFile = Flight::request()->files['myFile'];
+// raw access to $_FILES property. See below for recommended approach
+$uploadedFile = Flight::request()->files['myFile']; 
+// or
+$uploadedFile = Flight::request()->files->myFile;
 ```
 
-## Failu augšupielādes apstrāde (v3.12.0)
+Skatiet [Uploaded File Handler](/learn/uploaded-file) vairāk informācijas.
 
-Jūs varat apstrādāt failu augšupielādes, izmantojot ietvaru ar dažām palīgmētiņām. Tas galvenokārt samazina līdz faila datu izvilkšanai no pieprasījuma un pārvietošanai uz jaunu vietu.
+#### Failu augšupielādes apstrāde
+
+_v3.12.0_
+
+Jūs varat apstrādāt failu augšupielādi, izmantojot ietvaru ar dažām palīgmēģīnēm. Tas būtībā samazinās līdz faila datu izvilkšanai no pieprasījuma un tā pārvietošanai uz jaunu atrašanās vietu.
 
 ```php
 Flight::route('POST /upload', function(){
-	// Ja jums bija ievades lauks kā <input type="file" name="myFile">
+	// If you had an input field like <input type="file" name="myFile">
 	$uploadedFileData = Flight::request()->getUploadedFiles();
 	$uploadedFile = $uploadedFileData['myFile'];
 	$uploadedFile->moveTo('/path/to/uploads/' . $uploadedFile->getClientFilename());
 });
 ```
 
-Ja jums ir vairāki faili augšupielādēti, jūs varat tos iziet cauri:
+Ja jums ir vairāki augšupielādēti faili, jūs varat tos iterēt:
 
 ```php
 Flight::route('POST /upload', function(){
-	// Ja jums bija ievades lauks kā <input type="file" name="myFiles[]">
+	// If you had an input field like <input type="file" name="myFiles[]">
 	$uploadedFiles = Flight::request()->getUploadedFiles()['myFiles'];
 	foreach ($uploadedFiles as $uploadedFile) {
 		$uploadedFile->moveTo('/path/to/uploads/' . $uploadedFile->getClientFilename());
@@ -151,50 +119,90 @@ Flight::route('POST /upload', function(){
 });
 ```
 
-> **Drošības piezīme:** Vienmēr validējiet un sanitizējiet lietotāja ievadi, īpaši, kad strādājat ar failu augšupielādēm. Vienmēr validējiet pieļaujamo paplašinājumu tipus, bet jums arī vajadzētu validēt "magic bytes" faila, lai nodrošinātu, ka tas patiešām ir tāds faila tips, ko lietotājs apgalvo. Ir [articles](https://dev.to/yasuie/php-file-upload-check-uploaded-files-with-magic-bytes-54oe) [and](https://amazingalgorithms.com/snippets/php/detecting-the-mime-type-of-an-uploaded-file-using-magic-bytes/) [libraries](https://github.com/RikudouSage/MimeTypeDetector) pieejamas, lai palīdzētu ar to.
+> **Drošības piezīme:** Vienmēr validējiet un sanitizējiet lietotāja ievadi, īpaši, kad darbojaties ar failu augšupielādi. Vienmēr validējiet paplašinājumu tipus, kurus atļausit augšupielādēt, bet jums arī vajadzētu validēt faila "burvju baitus", lai nodrošinātu, ka tas tiešām ir tāds faila tips, kādu lietotājs apgalvo. Ir pieejami [raksti](https://dev.to/yasuie/php-file-upload-check-uploaded-files-with-magic-bytes-54oe) [un](https://amazingalgorithms.com/snippets/php/detecting-the-mime-type-of-an-uploaded-file-using-magic-bytes/) [bibliotēkas](https://github.com/RikudouSage/MimeTypeDetector), lai palīdzētu ar to.
 
-## Pieprasījuma galvenes
+### Pieprasījuma ķermenis
+
+Lai iegūtu neapstrādātu HTTP pieprasījuma ķermeni, piemēram, kad darbojaties ar POST/PUT pieprasījumiem,
+jūs varat to darīt:
+
+```php
+Flight::route('POST /users/xml', function(){
+	$xmlBody = Flight::request()->getBody();
+	// do something with the XML that was sent.
+});
+```
+
+### JSON ķermenis
+
+Ja jūs saņemat pieprasījumu ar satura tipu `application/json` un piemēra datiem `{"id": 123}`
+tas būs pieejams no `data` īpašības:
+
+```php
+$id = Flight::request()->data->id;
+```
+
+### Pieprasījuma galvenes
 
 Jūs varat piekļūt pieprasījuma galvenēm, izmantojot `getHeader()` vai `getHeaders()` metodi:
 
 ```php
-// Varbūt jums vajadzīga Authorization galvene
+
+// Maybe you need Authorization header
 $host = Flight::request()->getHeader('Authorization');
-// vai
+// or
 $host = Flight::request()->header('Authorization');
 
-// Ja jums vajadzīgas visas galvenes
+// If you need to grab all headers
 $headers = Flight::request()->getHeaders();
-// vai
+// or
 $headers = Flight::request()->headers();
 ```
 
-## Pieprasījuma ķermenis
-
-Jūs varat piekļūt neapstrādātajam pieprasījuma ķermenim, izmantojot `getBody()` metodi:
-
-```php
-$body = Flight::request()->getBody();
-```
-
-## Pieprasījuma metode
+### Pieprasījuma metode
 
 Jūs varat piekļūt pieprasījuma metodei, izmantojot `method` īpašību vai `getMethod()` metodi:
 
 ```php
-$method = Flight::request()->method; // faktiski izsauc getMethod()
+$method = Flight::request()->method; // actually populated by getMethod()
 $method = Flight::request()->getMethod();
 ```
 
-**Piezīme:** `getMethod()` metode vispirms izvelk metodi no `$_SERVER['REQUEST_METHOD']`, pēc tam to var pārdefinēt ar `$_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE']`, ja tā eksistē, vai `$_REQUEST['_method']`, ja tā eksistē.
+**Piezīme:** `getMethod()` metode vispirms izvelk metodi no `$_SERVER['REQUEST_METHOD']`, tad to var pārrakstīt 
+`$_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE']`, ja tas pastāv, vai `$_REQUEST['_method']`, ja tas pastāv.
 
-## Pieprasījuma URL
+## Pieprasījuma objekta īpašības
 
-Ir daži palīgmētiņi, lai saliktu URL daļas jūsu ērtībai.
+Pieprasījuma objekts nodrošina šādas īpašības:
 
-### Pilnais URL
+- **body** - Neapstrādāts HTTP pieprasījuma ķermenis
+- **url** - Pieprasītais URL
+- **base** - URL vecāka apakšdirektorija
+- **method** - Pieprasījuma metode (GET, POST, PUT, DELETE)
+- **referrer** - Atsauce URL
+- **ip** - Klienta IP adrese
+- **ajax** - Vai pieprasījums ir AJAX pieprasījums
+- **scheme** - Servera protokols (http, https)
+- **user_agent** - Pārlūkprogrammas informācija
+- **type** - Satura tips
+- **length** - Satura garums
+- **query** - Vaicājuma virknes parametri
+- **data** - POST dati vai JSON dati
+- **cookies** - Sīkfailu dati
+- **files** - Augšupielādētie faili
+- **secure** - Vai savienojums ir drošs
+- **accept** - HTTP pieņemšanas parametri
+- **proxy_ip** - Klienta proxy IP adrese. Skenē `$_SERVER` masīvu pēc `HTTP_CLIENT_IP`, `HTTP_X_FORWARDED_FOR`, `HTTP_X_FORWARDED`, `HTTP_X_CLUSTER_CLIENT_IP`, `HTTP_FORWARDED_FOR`, `HTTP_FORWARDED` tajā secībā.
+- **host** - Pieprasījuma resursa nosaukums
+- **servername** - SERVER_NAME no `$_SERVER`
 
-Jūs varat piekļūt pilnajam pieprasījuma URL, izmantojot `getFullUrl()` metodi:
+## URL palīgmēģinātājas
+
+Ir dažas palīgmēģinātājas, lai saliktu URL daļas jūsu ērtībai.
+
+### Pilns URL
+
+Jūs varat piekļūt pilnam pieprasījuma URL, izmantojot `getFullUrl()` metodi:
 
 ```php
 $url = Flight::request()->getFullUrl();
@@ -206,9 +214,10 @@ $url = Flight::request()->getFullUrl();
 Jūs varat piekļūt bāzes URL, izmantojot `getBaseUrl()` metodi:
 
 ```php
+// http://example.com/path/to/something/cool?query=yes+thanks
 $url = Flight::request()->getBaseUrl();
-// Pamaniet, bez gala slīpsvītras.
 // https://example.com
+// Notice, no trailing slash.
 ```
 
 ## Vaicājuma parsēšana
@@ -219,3 +228,17 @@ Jūs varat nodot URL uz `parseQuery()` metodi, lai parsētu vaicājuma virkni as
 $query = Flight::request()->parseQuery('https://example.com/some/path?foo=bar');
 // ['foo' => 'bar']
 ```
+
+## Skatīt arī
+- [Routing](/learn/routing) - Skatiet, kā kartēt maršrutus uz kontrolieriem un renderēt skatus.
+- [Responses](/learn/responses) - Kā pielāgot HTTP atbildes.
+- [Why a Framework?](/learn/why-frameworks) - Kā pieprasījumi iederas lielajā attēlā.
+- [Collections](/learn/collections) - Darbs ar datu kolekcijām.
+- [Uploaded File Handler](/learn/uploaded-file) - Failu augšupielādes apstrāde.
+
+## Traucējummeklēšana
+- `request()->ip` un `request()->proxy_ip` var atšķirties, ja jūsu tīmekļa serveris ir aiz proxy, slodzes līdzsvara utt. 
+
+## Izmaiņu žurnāls
+- v3.12.0 - Pievienota iespēja apstrādāt failu augšupielādi caur pieprasījuma objektu.
+- v1.0 - Sākotnējā izlaišana.

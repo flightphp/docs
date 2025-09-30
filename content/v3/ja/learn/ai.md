@@ -1,81 +1,87 @@
-# AI と開発者体験 with Flight
+# Flight での AI と開発者エクスペリエンス
 
-Flight は、より速く、より賢く、摩擦を少なくして構築するのを助けるものです。特に、AI 駆動のツールや現代の開発ワークフローで作業する場合です。このページでは、Flight がプロジェクトを AI で強化しやすくする方法、そしてフレームワークとスケルトンプロジェクトに組み込まれた新しい AI ヘルパーの使い方を説明します。
+## 概要
 
----
+Flight は、AI 駆動のツールと現代的な開発者ワークフローで PHP プロジェクトを強化することを容易にします。LLM (Large Language Model) プロバイダへの接続のための組み込みコマンドと、プロジェクト固有の AI コーディング指示を生成するためのコマンドにより、Flight は GitHub Copilot、Cursor、Windsurf などの AI アシスタントを最大限に活用するのに役立ちます。
 
-## AI-Ready by Default: The Skeleton Project
+## 理解
 
-公式の [flightphp/skeleton](https://github.com/flightphp/skeleton) スターターには、以下の人気の AI コーディングアシスタントの指示と設定が含まれています：
+AI コーディングアシスタントは、プロジェクトのコンテキスト、慣習、目標を理解しているときに最も役立ちます。Flight の AI ヘルパーを使用すると、次のことができます：
+- プロジェクトを人気の LLM プロバイダ (OpenAI、Grok、Claude など) に接続
+- AI ツール向けのプロジェクト固有の指示を生成および更新し、一貫性のある関連性の高いヘルプを提供
+- チームを揃え、生産性を維持し、コンテキストの説明に費やす時間を減らす
 
-- **GitHub Copilot**
-- **Cursor**
-- **Windsurf**
+これらの機能は、Flight コア CLI と公式の [flightphp/skeleton](https://github.com/flightphp/skeleton) スタータープロジェクトに組み込まれています。
 
-これらのツールは、プロジェクト固有の指示で事前に設定されているため、コードを書く際に最も関連性が高く、文脈を考慮した助けを得られます。つまり：
+## 基本的な使用方法
 
-- AI アシスタントは、プロジェクトの目標、スタイル、要件を理解します
-- すべての貢献者に対して一貫したガイダンスを提供します
-- 文脈を説明する時間を減らし、構築する時間を増やします
+### 1. LLM 認証情報の設定
 
-> **なぜこれが重要ですか？**
->
-> AI ツールがプロジェクトの意図と規約を知っている場合、機能のスキャフォールディング、コードのリファクタリング、一般的なミスの回避を助けてくれます。これにより、初日からあなた（とあなたのチーム）がより生産的になります。
+`ai:init` コマンドは、プロジェクトを LLM プロバイダに接続するための手順を案内します。
 
----
-
-## New AI Commands in Flight Core
-
-_v3.16.0+_
-
-Flight core には、プロジェクトを設定し、AI で導くのに役立つ 2 つの強力な CLI コマンドが含まれています：
-
-### 1. `ai:init` — Connect to Your Favorite LLM Provider
-
-このコマンドは、OpenAI、Grok、または Anthropic (Claude) などの LLM (Large Language Model) プロバイダーの資格情報を設定する手順を案内します。
-
-**Example:**
 ```bash
 php runway ai:init
 ```
-プロバイダーの選択、API キーの入力、モデルの選択を求められます。これにより、プロジェクトを最新の AI サービスに簡単に接続できます—手動設定は不要です。
 
-### 2. `ai:generate-instructions` — Project-Aware AI Coding Instructions
+プロンプトで次のように求められます：
+- プロバイダを選択 (OpenAI、Grok、Claude など)
+- API キーを入力
+- ベース URL とモデル名を設定
 
-このコマンドは、プロジェクト固有の指示を AI コーディングアシスタント用に作成または更新します。プロジェクトの用途、使用するデータベース、チームの規模など、いくつかの簡単な質問をします。その後、LLM プロバイダーを使用して、調整された指示を生成します。
+これにより、プロジェクトルートに `.runway-creds.json` ファイルが作成され (`.gitignore` に追加されることを確認)、。
 
-指示がすでに存在する場合、提供した回答を反映して更新します。これらの指示は自動的に以下に書き込まれます：
-- `.github/copilot-instructions.md` (for Github Copilot)
-- `.cursor/rules/project-overview.mdc` (for Cursor)
-- `.windsurfrules` (for Windsurf)
+**例:**
+```
+Welcome to AI Init!
+どの LLM API を使用しますか？ [1] openai, [2] grok, [3] claude: 1
+LLM API のベース URL を入力 [https://api.openai.com]:
+openai の API キーを入力: sk-...
+使用するモデル名を入力 (例: gpt-4, claude-3-opus など) [gpt-4o]:
+.runway-creds.json に認証情報を保存しました
+```
 
-**Example:**
+### 2. プロジェクト固有の AI 指示の生成
+
+`ai:generate-instructions` コマンドは、プロジェクトに合わせて調整された AI コーディングアシスタント向けの指示を作成または更新するのに役立ちます。
+
 ```bash
 php runway ai:generate-instructions
 ```
 
-> **なぜこれが役立つのですか？**
->
-> 最新のプロジェクト固有の指示があれば、AI ツールは次のようにできます：
-> - より良いコードの提案を提供します
-> - プロジェクトの独自のニーズを理解します
-> - 新しい貢献者のオンボーディングを速めます
-> - プロジェクトが進化するにつれて、摩擦と混乱を減らします
+プロジェクトについて (説明、データベース、テンプレート、セキュリティ、チームサイズなど) のいくつかの質問に答えます。Flight は LLM プロバイダを使用して指示を生成し、次のファイルに書き込みます：
+- `.github/copilot-instructions.md` (GitHub Copilot 用)
+- `.cursor/rules/project-overview.mdc` (Cursor 用)
+- `.windsurfrules` (Windsurf 用)
 
----
+**例:**
+```
+プロジェクトの目的を説明してください？ My awesome API
+どのデータベースを使用する予定ですか？ MySQL
+どの HTML テンプレートエンジンを使用する予定ですか (該当する場合)？ latte
+このプロジェクトでセキュリティが重要な要素ですか？ (y/n) y
+...
+AI 指示を正常に更新しました。
+```
 
-## Not Just for Building AI Apps
+これで、AI ツールはプロジェクトの実ニーズに基づいた、より賢く関連性の高い提案を提供します。
 
-AI 駆動の機能（例：チャットボット、スマート API、または統合）を構築するために Flight を使用することもできますが、真の強みは、開発者として AI ツールをより良く活用する点にあります。それは：
+## 高度な使用方法
 
-- **生産性を向上させる** AI 支援コーディング
-- **チームを揃える** 共有され、進化する指示
-- **新しい貢献者のオンボーディングを容易にする**
-- **構築に集中し、ツールとの戦いを避ける**
+- コマンドオプションを使用して、認証情報や指示ファイルの場所をカスタマイズできます (各コマンドの `--help` を参照)。
+- AI ヘルパーは、OpenAI 互換 API をサポートする任意の LLM プロバイダで動作するように設計されています。
+- プロジェクトが進化したら指示を更新したい場合、`ai:generate-instructions` を再実行してプロンプトに答えてください。
 
----
+## 関連項目
 
-## Learn More & Get Started
+- [Flight Skeleton](https://github.com/flightphp/skeleton) – AI 統合付きの公式スターター
+- [Runway CLI](/awesome-plugins/runway) – これらのコマンドを駆動する CLI ツールの詳細
 
-- See the [Flight Skeleton](https://github.com/flightphp/skeleton) for a ready-to-go, AI-friendly starter
-- Check out the rest of the [Flight documentation](/learn) for tips on building fast, modern PHP apps
+## トラブルシューティング
+
+- 「Missing .runway-creds.json」が表示された場合、まず `php runway ai:init` を実行してください。
+- API キーが有効で、選択したモデルにアクセス可能であることを確認してください。
+- 指示が更新されない場合、プロジェクトディレクトリのファイルパーミッションを確認してください。
+
+## 変更履歴
+
+- v3.16.0 – AI 統合のための `ai:init` と `ai:generate-instructions` CLI コマンドを追加。

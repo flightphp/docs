@@ -1,29 +1,32 @@
-# Vol Flight vs Slim
+# Flight vs Slim
 
-## Qu'est-ce que Slim?
-[Slim](https://slimframework.com) est un micro-framework PHP qui vous aide à écrire rapidement des applications web et des APIs simples mais puissantes.
+## Qu'est-ce que Slim ?
+[Slim](https://slimframework.com) est un micro-framework PHP qui vous aide à écrire rapidement des applications web simples mais puissantes et des API.
 
-Beaucoup des inspirations pour certaines fonctionnalités de la v3 de Vol sont en fait venues de Slim. Regrouper les routes et exécuter des middlewares dans un ordre spécifique sont deux fonctionnalités qui ont été inspirées par Slim. Slim v3 est sorti orienté vers la simplicité, mais il y a eu des [avis divergents](https://github.com/slimphp/Slim/issues/2770) concernant la v4.
+Beaucoup d'inspirations pour certaines fonctionnalités de la version 3 de Flight proviennent en fait de Slim. La regroupement des routes et l'exécution du middleware dans un ordre spécifique sont deux fonctionnalités inspirées de Slim. Slim v3 est sorti avec un accent sur la simplicité, mais il y a eu des [avis mitigés](https://github.com/slimphp/Slim/issues/2770) concernant la v4.
 
-## Avantages par rapport à Vol
+## Avantages par rapport à Flight
 
-- Slim a une communauté plus large de développeurs, qui à leur tour créent des modules pratiques pour vous aider à ne pas réinventer la roue.
-- Slim suit de nombreuses interfaces et normes communes dans la communauté PHP, ce qui augmente l'interopérabilité.
-- Slim a une documentation décente et des tutoriels qui peuvent être utilisés pour apprendre le framework (rien ne vaut Laravel ou Symfony cependant).
-- Slim dispose de diverses ressources telles que des tutoriels YouTube et des articles en ligne qui peuvent être utilisés pour apprendre le framework.
-- Slim vous permet d'utiliser les composants que vous souhaitez pour gérer les fonctionnalités de routage de base car il est conforme à PSR-7.
+- Slim dispose d'une communauté plus large de développeurs, qui à leur tour créent des modules pratiques pour vous aider à ne pas réinventer la roue.
+- Slim suit de nombreuses interfaces et normes courantes dans la communauté PHP, ce qui augmente l'interopérabilité.
+- Slim a une documentation décente et des tutoriels qui peuvent être utilisés pour apprendre le framework (rien de comparable à Laravel ou Symfony cependant).
+- Slim offre divers ressources comme des tutoriels YouTube et des articles en ligne qui peuvent être utilisés pour apprendre le framework.
+- Slim vous permet d'utiliser les composants que vous voulez pour gérer les fonctionnalités de routage de base, car il est conforme à PSR-7.
 
-## Inconvénients par rapport à Vol
+## Inconvénients par rapport à Flight
 
-- Étonnamment, Slim n'est pas aussi rapide que vous pourriez le penser pour un micro-framework. Consultez les [benchmarks TechEmpower](https://www.techempower.com/benchmarks/#hw=ph&test=fortune&section=data-r22&l=zik073-cn3) pour plus d'informations.
-- Vol est destiné à un développeur qui cherche à construire une application web légère, rapide et facile à utiliser.
-- Vol n'a pas de dépendances, alors que [Slim a quelques dépendances](https://github.com/slimphp/Slim/blob/4.x/composer.json) que vous devez installer.
-- Vol est orienté vers la simplicité et la facilité d'utilisation.
-- Une des fonctionnalités principales de Vol est qu'il fait de son mieux pour maintenir la compatibilité ascendante. Le passage de Slim v3 à v4 était un changement majeur.
-- Vol est destiné aux développeurs qui se lancent dans l'univers des frameworks pour la première fois.
-- Vol peut également être utilisé pour des applications de niveau entreprise, mais il n'a pas autant d'exemples et de tutoriels que Slim. Cela nécessitera également plus de discipline de la part du développeur pour maintenir les choses organisées et bien structurées.
-- Vol donne au développeur plus de contrôle sur l'application, tandis que Slim peut introduire de la magie en coulisses.
-- Vol dispose d'un simple [PdoWrapper](/awesome-plugins/pdo-wrapper) qui peut être utilisé pour interagir avec votre base de données. Slim vous oblige à utiliser une bibliothèque tierce.
-- Vol possède un plugin de [permissions](/awesome-plugins/permissions) qui peut être utilisé pour sécuriser votre application. Slim vous oblige à utiliser une bibliothèque tierce.
-- Vol a un ORM appelé [active-record](/awesome-plugins/active-record) qui peut être utilisé pour interagir avec votre base de données. Slim vous oblige à utiliser une bibliothèque tierce.
-- Vol a une application CLI appelée [runway](/awesome-plugins/runway) qui peut être utilisée pour exécuter votre application à partir de la ligne de commande. Slim ne le fait pas.
+- Étonnamment, Slim n'est pas aussi rapide que vous pourriez le penser pour un micro-framework. Consultez les 
+  [benchmarks TechEmpower](https://www.techempower.com/benchmarks/#hw=ph&test=fortune&section=data-r22&l=zik073-cn3) 
+  pour plus d'informations.
+- Flight est conçu pour un développeur qui cherche à construire une application web légère, rapide et facile à utiliser.
+- Flight n'a aucune dépendance, alors que [Slim a quelques dépendances](https://github.com/slimphp/Slim/blob/4.x/composer.json) que vous devez installer.
+- Flight est conçu pour la simplicité et la facilité d'utilisation.
+- L'une des fonctionnalités principales de Flight est qu'il fait de son mieux pour maintenir la compatibilité arrière. Le passage de Slim v3 à v4 a été un changement cassant.
+- Flight est destiné aux développeurs qui s'aventurent pour la première fois dans le monde des frameworks.
+- Flight peut également gérer des applications de niveau entreprise, mais il n'a pas autant d'exemples et de tutoriels que Slim.
+  Cela nécessitera également plus de discipline de la part du développeur pour garder les choses organisées et bien structurées.
+- Flight donne au développeur plus de contrôle sur l'application, alors que Slim peut introduire de la magie en coulisses.
+- Flight dispose d'un simple [PdoWrapper](/learn/pdo-wrapper) qui peut être utilisé pour interagir avec votre base de données. Slim nécessite l'utilisation d'une bibliothèque tierce.
+- Flight a un plugin [permissions](/awesome-plugins/permissions) qui peut être utilisé pour sécuriser votre application. Slim nécessite l'utilisation d'une bibliothèque tierce.
+- Flight a un ORM appelé [active-record](/awesome-plugins/active-record) qui peut être utilisé pour interagir avec votre base de données. Slim nécessite l'utilisation d'une bibliothèque tierce.
+- Flight a une application CLI appelée [runway](/awesome-plugins/runway) qui peut être utilisée pour exécuter votre application depuis la ligne de commande. Slim n'en a pas.

@@ -1,31 +1,32 @@
-# Flug vs. Schlank
+# Flight vs Slim
 
-## Was ist Schlank?
-[Slim](https://slimframework.com) ist ein PHP-Mikrorahmenwerk, das Ihnen hilft, schnell einfache, aber leistungsstarke Webanwendungen und APIs zu erstellen.
+## Was ist Slim?
+[Slim](https://slimframework.com) ist ein PHP-Micro-Framework, das Ihnen hilft, schnell einfache, aber leistungsstarke Webanwendungen und APIs zu schreiben.
 
-Eine Menge der Inspiration für einige der v3-Funktionen von Flug kam tatsächlich von Schlank. Das Gruppieren von Routen und das Ausführen von Middleware in einer bestimmten Reihenfolge sind zwei Funktionen, die von Schlank inspiriert wurden. Schlank v3 wurde mit Blick auf Einfachheit entwickelt, aber es gab [gemischte Bewertungen](https://github.com/slimphp/Slim/issues/2770) bezüglich v4.
+Viel Inspiration für einige der v3-Funktionen von Flight stammt tatsächlich von Slim. Das Gruppieren von Routen und das Ausführen von Middleware in einer spezifischen Reihenfolge sind zwei Funktionen, die von Slim inspiriert wurden. Slim v3 wurde mit dem Fokus auf Einfachheit veröffentlicht, aber es gibt [gemischte Bewertungen](https://github.com/slimphp/Slim/issues/2770) bezüglich v4.
 
-## Vorteile im Vergleich zu Flug
+## Vorteile im Vergleich zu Flight
 
-- Schlank hat eine größere Entwicklergemeinschaft, die wiederum nützliche Module erstellt, um Ihnen zu helfen, das Rad nicht neu zu erfinden.
-- Schlank folgt vielen Schnittstellen und Standards, die in der PHP-Community üblich sind, was die Interoperabilität erhöht.
-- Schlank hat eine anständige Dokumentation und Tutorials, die verwendet werden können, um das Framework zu erlernen (im Vergleich zu Laravel oder Symfony jedoch nichts).
-- Schlank verfügt über verschiedene Ressourcen wie YouTube-Tutorials und Online-Artikel, die verwendet werden können, um das Framework zu erlernen.
-- Schlank lässt Sie die Komponenten verwenden, die Sie möchten, um die Kernroutingfunktionen zu behandeln, da es PSR-7-konform ist.
+- Slim hat eine größere Community von Entwicklern, die im Gegenzug nützliche Module erstellen, um zu vermeiden, das Rad neu zu erfinden.
+- Slim folgt vielen Interfaces und Standards, die in der PHP-Community üblich sind, was die Interoperabilität erhöht.
+- Slim hat anständige Dokumentation und Tutorials, die verwendet werden können, um das Framework zu lernen (nichts im Vergleich zu Laravel oder Symfony).
+- Slim hat verschiedene Ressourcen wie YouTube-Tutorials und Online-Artikel, die verwendet werden können, um das Framework zu lernen.
+- Slim lässt Sie beliebige Komponenten verwenden, um die Kern-Routing-Funktionen zu handhaben, da es PSR-7-konform ist.
 
-## Nachteile im Vergleich zu Flug
+## Nachteile im Vergleich zu Flight
 
-- Überraschenderweise ist Schlank nicht so schnell, wie man denken würde, für ein Mikro-Rahmenwerk. Sehen Sie sich die 
+- Überraschenderweise ist Slim nicht so schnell, wie man für ein Micro-Framework denken würde. Sehen Sie sich die 
   [TechEmpower-Benchmarks](https://www.techempower.com/benchmarks/#hw=ph&test=fortune&section=data-r22&l=zik073-cn3) 
   für weitere Informationen an.
-- Flug zielt auf einen Entwickler ab, der eine leichtgewichtige, schnelle und benutzerfreundliche Webanwendung erstellen möchte.
-- Flug hat keine Abhängigkeiten, während [Schlank einige Abhängigkeiten hat](https://github.com/slimphp/Slim/blob/4.x/composer.json), die Sie installieren müssen.
-- Flug zielt auf Einfachheit und Benutzerfreundlichkeit ab.
-- Eine der Kernfunktionen von Flug ist, dass es sein Bestes tut, um Abwärtskompatibilität zu gewährleisten. Der Wechsel von Slim v3 zu v4 war ein einschneidender Wechsel.
-- Flug ist für Entwickler gedacht, die sich zum ersten Mal in die Welt der Frameworks wagen.
-- Flug kann auch Unternehmensanwendungen bewältigen, aber es hat nicht so viele Beispiele und Tutorials wie Schlank. Es erfordert auch mehr Disziplin seitens des Entwicklers, um Dinge organisiert und gut strukturiert zu halten.
-- Flug gibt dem Entwickler mehr Kontrolle über die Anwendung, während sich Schlank hinter den Kulissen etwas Magie einschleichen kann.
-- Flug hat ein einfaches [PdoWrapper](/awesome-plugins/pdo-wrapper), das verwendet werden kann, um mit Ihrer Datenbank zu interagieren. Schlank erfordert die Verwendung einer Bibliothek von Drittanbietern.
-- Flug hat ein [Berechtigungs-Plugin](/awesome-plugins/permissions), das verwendet werden kann, um Ihre Anwendung abzusichern. Schlank erfordert die Verwendung einer Bibliothek von Drittanbietern.
-- Flug hat ein ORM namens [active-record](/awesome-plugins/active-record), das verwendet werden kann, um mit Ihrer Datenbank zu interagieren. Schlank erfordert die Verwendung einer Bibliothek von Drittanbietern.
-- Flug hat eine CLI-Anwendung namens [runway](/awesome-plugins/runway), die verwendet werden kann, um Ihre Anwendung von der Befehlszeile aus auszuführen. Schlank nicht.
+- Flight ist auf Entwickler ausgerichtet, die eine leichte, schnelle und einfach zu bedienende Webanwendung erstellen möchten.
+- Flight hat keine Abhängigkeiten, während [Slim einige Abhängigkeiten hat](https://github.com/slimphp/Slim/blob/4.x/composer.json), die Sie installieren müssen.
+- Flight ist auf Einfachheit und Benutzerfreundlichkeit ausgerichtet.
+- Eine der Kernfunktionen von Flight ist, dass es sein Bestes tut, um Abwärtskompatibilität zu wahren. Slim v3 zu v4 war eine Breaking Change.
+- Flight ist für Entwickler gedacht, die zum ersten Mal in die Welt der Frameworks eintauchen.
+- Flight kann auch Enterprise-Level-Anwendungen umsetzen, hat aber nicht so viele Beispiele und Tutorials wie Slim.
+  Es erfordert auch mehr Disziplin vom Entwickler, um Dinge organisiert und gut strukturiert zu halten.
+- Flight gibt dem Entwickler mehr Kontrolle über die Anwendung, während Slim hinter den Kulissen etwas Magie einbauen kann.
+- Flight hat einen einfachen [PdoWrapper](/learn/pdo-wrapper), der verwendet werden kann, um mit Ihrer Datenbank zu interagieren. Slim erfordert die Verwendung einer Drittanbieter-Bibliothek.
+- Flight hat ein [Permissions-Plugin](/awesome-plugins/permissions), das verwendet werden kann, um Ihre Anwendung zu sichern. Slim erfordert die Verwendung einer Drittanbieter-Bibliothek.
+- Flight hat ein ORM namens [active-record](/awesome-plugins/active-record), das verwendet werden kann, um mit Ihrer Datenbank zu interagieren. Slim erfordert die Verwendung einer Drittanbieter-Bibliothek.
+- Flight hat eine CLI-Anwendung namens [runway](/awesome-plugins/runway), die verwendet werden kann, um Ihre Anwendung von der Kommandozeile aus auszuführen. Slim hat das nicht.

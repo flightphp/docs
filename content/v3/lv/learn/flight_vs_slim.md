@@ -1,35 +1,32 @@
 # Flight pret Slim
 
 ## Kas ir Slim?
-[Slim](https://slimframework.com) ir PHP mikrostruktūra, kas palīdz ātri izveidot vienkāršas, bet jaudīgas tīmekļa lietojumprogrammas un API.
+[Slim](https://slimframework.com) ir PHP mikro ietvars, kas palīdz jums ātri rakstīt vienkāršas, bet spēcīgas tīmekļa lietojumprogrammas un API.
 
-Daudz no iedvesmas v3 funkciju lidojumam patiešām nāca no Slīma. Ceļu grupēšana un vidējā programmatūra izpilde konkrētā secībā ir divas funkcijas, kas tika iedvesmotas no Slīma. Slīma v3 tika izlaista orientējoties uz vienkāršību, bet ir bijis [dažādi vērtējumi](https://github.com/slimphp/Slim/issues/2770) attiecībā uz v4.
+Liela daļa iedvesmas dažām no Flight 3. versijas funkcijām faktiski nāca no Slim. Maršrutu grupēšana un starpprogrammatūras izpilde noteiktā secībā ir divas funkcijas, kas tika iedvesmotas no Slim. Slim 3. versija iznāca ar mērķi uz vienkāršību, bet attiecībā uz 4. versiju ir bijušas [pretrunīgas atsauksmes](https://github.com/slimphp/Slim/issues/2770).
 
-## Plusi salīdzinot ar Lidojumu
+## Priekšrocības salīdzinājumā ar Flight
 
-- Slīmam ir lielāka attīstītāju kopiena, kas savukārt izveido noderīgas moduļus, lai palīdzētu jums neuzgriezt riteni.
-- Slīms seko daudziem interfeisiem un standartiem, kas ir kopīgi PHP kopienā, palielinot savstarpējo saderību.
-- Slīmam ir pieņemama dokumentācija un pamācības, kas var tikt izmantotas, lai iemācītos pamatus (nekas salīdzinot ar Laravel vai Symfony tomēr).
-- Slīmam ir dažādi resursi, piemēram YouTube pamācības un tiešsaistes raksti, kas var tikt izmantoti, lai iemācītos pamatus.
-- Slīms ļauj jums izmantot jebkurus komponentus, ko vēlaties, lai apstrādātu galvenās maršrutēšanas funkcijas, jo tas atbilst PSR-7.
+- Slim ir lielāka izstrādātāju kopiena, kuri savukārt izveido noderīgus moduļus, lai palīdzētu jums neizgudrot ratu no jauna.
+- Slim ievēro daudzas saskarnes un standartus, kas ir izplatīti PHP kopienā, kas palielina savietojamību.
+- Slim ir labas dokumentācijas un apmācību materiāli, ko var izmantot, lai mācītos ietvaru (nekas salīdzinājumā ar Laravel vai Symfony gan).
+- Slim ir dažādi resursi, piemēram, YouTube apmācības un tiešsaistes raksti, ko var izmantot, lai mācītos ietvaru.
+- Slim ļauj izmantot jebkuru komponentu, ko vēlaties, lai apstrādātu galvenās maršrutēšanas funkcijas, jo tas atbilst PSR-7.
 
-## Mīnusi salīdzinot ar lidojumu
+## Trūkumi salīdzinājumā ar Flight
 
-- Pārsteidzoši, Slīms nav tik ātrs, cik varētu domāt par mikrostruktūru. Skatiet
-  [TechEmpower pārbaudes](https://www.techempower.com/benchmarks/#hw=ph&test=fortune&section=data-r22&l=zik073-cn3)
-  plašākai informācijai.
-- Lidojums ir orientēts uz izstrādātāju, kas vēlas izveidot vieglu, ātru un viegli lietojamu tīmekļa lietojumprogrammu.
-- Lidojumam nav atkarību, bet [Slimam ir dažas atkarības](https://github.com/slimphp/Slim/blob/4.x/composer.json), kas jāinstalē.
-- Lidojums ir orientēts uz vienkāršību un lietojamību.
-- Viena no Lidojuma pamatfunkcijām ir tā, ka tas cenšas labāk uzturēt atpakaļējo saderību. Slīma no v3 līdz v4 bija pārtraucošs pārmaiņas.
-- Lidojums paredzēts izstrādātājiem, kuri ienāk ietvaros pirmo reizi.
-- Lidojumam ir iespējamas lielas mēroga programmas, bet tam nav tik daudz piemēru un pamācību kā Slīmam.
-  Tas prasīs arī vairāk disciplīnas no izstrādātāja puses, lai saglabātu lietas kārtībā un labi strukturētu.
-- Lidojums ļauj izstrādātājam vairāk kontroles pār lietojumprogrammu, turpretī Slīms var slīpt aizkulises kāds maģija.
-- Lidojumam ir vienkāršs [PdoWrapper](/awesome-plugins/pdo-wrapper), kas var tikt izmantots, lai mijiedarbotos ar jūsu datu bāzi. Slīmam ir jāizmanto
-  trešās puses bibliotēka.
-- Lidojumu var izmantot atļauju spraudnis](/awesome-plugins/permissions), lai nodrošinātu lietojumprogrammu. Slīmam ir nepieciešams izmantot
-  trešās puses bibliotēka.
-- Lidojumam ir ORM, kas saucas [active-record](/awesome-plugins/active-record), kas var tikt izmantots, lai mijiedarbotos ar jūsu datu bāzi. Slīmam ir jāizmanto
-  trešās puses bibliotēka.
-- Lidojumam ir CLI lietojumprogramma, kas saucas [runway](/awesome-plugins/runway), kas var tikt izmantota, lai palaistu jūsu lietojumprogrammu no komandrindas. Slīmam nav.
+- Pārsteidzoši, Slim nav tik ātrs, kā jūs domājat, ka tas būtu mikro-ietvaram. Skatiet 
+  [TechEmpower etalonus](https://www.techempower.com/benchmarks/#hw=ph&test=fortune&section=data-r22&l=zik073-cn3) 
+  vairāk informācijas.
+- Flight ir paredzēts izstrādātājam, kurš vēlas izveidot vieglu, ātru un viegli lietojamu tīmekļa lietojumprogrammu.
+- Flight nav atkarību, savukārt [Slim ir dažas atkarības](https://github.com/slimphp/Slim/blob/4.x/composer.json), kuras jums jāinstalē.
+- Flight ir paredzēts vienkāršībai un vieglai lietošanai.
+- Viena no Flight galvenajām funkcijām ir tā, ka tā dara visu iespējamo, lai uzturētu atpakaļsaderību. Slim no 3. uz 4. versiju bija salauzta izmaiņa.
+- Flight ir paredzēts izstrādātājiem, kuri pirmo reizi dodas ietvaru pasaulē.
+- Flight var veikt arī uzņēmējdarbības līmeņa lietojumprogrammas, bet tam nav tik daudz piemēru un apmācību kā Slim.
+  Tas arī prasīs lielāku disciplīnu no izstrādātāja puses, lai saglabātu lietas organizētas un labi strukturētas.
+- Flight dod izstrādātājam lielāku kontroli pār lietojumprogrammu, savukārt Slim var ieviesies dažus burvjus aizkulisēs.
+- Flight ir vienkāršs [PdoWrapper](/learn/pdo-wrapper), ko var izmantot, lai mijiedarbotos ar jūsu datubāzi. Slim prasa izmantot trešās puses bibliotēku.
+- Flight ir atļauju spraudnis [/awesome-plugins/permissions], ko var izmantot, lai nodrošinātu jūsu lietojumprogrammu. Slim prasa izmantot trešās puses bibliotēku.
+- Flight ir ORM, ko sauc par [active-record](/awesome-plugins/active-record), ko var izmantot, lai mijiedarbotos ar jūsu datubāzi. Slim prasa izmantot trešās puses bibliotēku.
+- Flight ir CLI lietojumprogramma, ko sauc par [runway](/awesome-plugins/runway), ko var izmantot, lai palaistu jūsu lietojumprogrammu no komandrindas. Slim to nedara.

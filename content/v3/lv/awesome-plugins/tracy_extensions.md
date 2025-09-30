@@ -1,32 +1,32 @@
-Tracy Flight Paneļu Paplašinājumi
+Tracy Flight Panel Extensions
 =====
 
 Šis ir paplašinājumu kopums, lai darbs ar Flight būtu nedaudz bagātāks.
 
 - Flight - Analizēt visas Flight mainīgās.
-- Datubāze - Analizēt visus vaicājumus, kas ir izpildīti lapā (ja pareizi tiek uzsākta datubāzes savienojuma ierosināšana)
-- Pieprasījums - Analizēt visas `$_SERVER` mainīgās un pārbaudīt visus globālos slodzes datus (`$_GET`, `$_POST`, `$_FILES`)
+- Datubāze - Analizēt visus vaicājumus, kas ir palikuši izpildīti lapā (ja pareizi inicializējat datubāzes savienojumu).
+- Pieprasījums - Analizēt visas `$_SERVER` mainīgās un izpētīt visus globālos slodzi (`$_GET`, `$_POST`, `$_FILES`).
 - Sesija - Analizēt visas `$_SESSION` mainīgās, ja sesijas ir aktīvas.
 
-Šis ir Paneelis
+Šis ir Panelis
 
 ![Flight Bar](https://raw.githubusercontent.com/flightphp/tracy-extensions/master/flight-tracy-bar.png)
 
-Un katrs panelis parāda ļoti noderīgu informāciju par jūsu lietotni!
+Un katrs panelis parāda ļoti noderīgu informāciju par jūsu lietojumprogrammu!
 
 ![Flight Data](https://raw.githubusercontent.com/flightphp/tracy-extensions/master/flight-var-data.png)
 ![Flight Database](https://raw.githubusercontent.com/flightphp/tracy-extensions/master/flight-db.png)
 ![Flight Request](https://raw.githubusercontent.com/flightphp/tracy-extensions/master/flight-request.png)
 
-Noklikšķiniet [šeit](https://github.com/flightphp/tracy-extensions), lai apskatītu kodu.
+Noklikšķiniet [šeit](https://github.com/flightphp/tracy-extensions), lai skatītu kodu.
 
-Instalēšana
+Installation
 -------
-Izpildiet `composer require flightphp/tracy-extensions --dev` un jūs esat ceļā!
+Izpildiet `composer require flightphp/tracy-extensions --dev`, un jūs esat ceļā!
 
-Konfigurācija
+Configuration
 -------
-Konfigurācijai, kas jums jāveic, lai sāktu darbu, ir ļoti maz. Jums būs jāuzsāk Tracy atkļūdotājs pirms šī izmantošanas [https://tracy.nette.org/en/guide](https://tracy.nette.org/en/guide):
+Ir ļoti maz konfigurācijas, kas jums jāveic, lai to sāktu. Jums būs jāinicializē Tracy atkļūdotājs pirms šī izmantošanas [https://tracy.nette.org/en/guide](https://tracy.nette.org/en/guide):
 
 ```php
 <?php
@@ -34,36 +34,35 @@ Konfigurācijai, kas jums jāveic, lai sāktu darbu, ir ļoti maz. Jums būs jā
 use Tracy\Debugger;
 use flight\debug\tracy\TracyExtensionLoader;
 
-// sāknēšanas kods
+// bootstrap code
 require __DIR__ . '/vendor/autoload.php';
 
 Debugger::enable();
-// Jūs varat norādīt savu vidi ar Debugger::enable(Debugger::DEVELOPMENT)
+// Jums var būt jānorāda jūsu vide ar Debugger::enable(Debugger::DEVELOPMENT)
 
-// ja jūs izmantojat datubāzes savienojumus savā lietotnē, tur ir 
-// nepieciešams PDO apvalks, ko izmantot TIKAI ATTĪSTĪBAS VIDĒ (ne produkcijā, lūdzu!)
-// Tam ir tādi paši parametri kā regulārai PDO savienojumam
+// ja jūs izmantojat datubāzes savienojumus savā lietojumprogrammā, ir nepieciešams PDO apvalks, ko izmantot TIKAI ATTĪSTĪBAS VIDĒ (nevis ražošanā, lūdzu!)
+// Tam ir tie paši parametri kā regulāram PDO savienojumam
 $pdo = new PdoQueryCapture('sqlite:test.db', 'user', 'pass');
-// vai, ja jūs pievienojat to Flight framework
+// vai arī, ja jūs pievienojat to Flight framework
 Flight::register('db', PdoQueryCapture::class, ['sqlite:test.db', 'user', 'pass']);
-// tagad, kad jūs veicat vaicājumu, tas noķers laiku, vaicājumu un parametrus
+// tagad, kad vienreiz izpildīsiet vaicājumu, tas uztvers laiku, vaicājumu un parametrus
 
-// Tas savieno punktus
+// Šis savieno punktus
 if(Debugger::$showBar === true) {
-	// Šim jābūt nepatiesam, pretējā gadījumā Tracy nevarēs renderēt :(
+	// Šim jābūt false, vai Tracy nevarēs faktiski renderēt :(
 	Flight::set('flight.content_length', false);
 	new TracyExtensionLoader(Flight::app());
 }
 
-// vairāk kods
+// vairāk koda
 
 Flight::start();
 ```
 
-## Papildu Konfigurācija
+## Additional Configuration
 
-### Sesijas Dati
-Ja jums ir pielāgots sesijas apdarinātājs (piemēram, ghostff/session), jūs varat nodot jebkuru sesijas datu masīvu uz Tracy, un tas automātiski izvadīs to jums. Jūs nododat to ar `session_data` atslēgu otrajā parametrā uz `TracyExtensionLoader` konstruktoru.
+### Session Data
+Ja jums ir pielāgots sesijas apstrādātājs (piemēram, ghostff/session), jūs varat nodot jebkuru sesijas datu masīvu Tracy, un tas automātiski izvadīs to jums. Jūs to nododiet ar `session_data` atslēgu otrajā parametru no `TracyExtensionLoader` konstruktora.
 
 ```php
 
@@ -77,7 +76,7 @@ $app = Flight::app();
 $app->register('session', Session::class);
 
 if(Debugger::$showBar === true) {
-	// Šim jābūt nepatiesam, pretējā gadījumā Tracy nevarēs renderēt :(
+	// Šim jābūt false, vai Tracy nevarēs faktiski renderēt :(
 	Flight::set('flight.content_length', false);
 	new TracyExtensionLoader(Flight::app(), [ 'session_data' => Flight::session()->getAll() ]);
 }
@@ -89,26 +88,27 @@ Flight::start();
 
 ### Latte
 
-Ja jums ir instalēts Latte jūsu projektā, jūs varat izmantot Latte paneli, lai analizētu savus veidnes. Jūs varat nodot Latte instanci uz `TracyExtensionLoader` konstruktoru ar `latte` atslēgu otrajā parametrā.
+_PHP 8.1+ ir nepieciešams šai sadaļai._
+
+Ja jums ir Latte instalēts jūsu projektā, Tracy ir iebūvēta integrācija ar Latte, lai analizētu jūsu veidnes. Jūs vienkārši reģistrējat paplašinājumu ar jūsu Latte instanci.
 
 ```php
-
-use Latte\Engine;
 
 require 'vendor/autoload.php';
 
 $app = Flight::app();
 
-$app->register('latte', Engine::class, [], function($latte) {
-	$latte->setTempDirectory(__DIR__ . '/temp');
+$app->map('render', function($template, $data, $block = null) {
+	$latte = new Latte\Engine;
 
-	// šeit jūs pievienojat Latte Paneli uz Tracy
-	$latte->addExtension(new Latte\Bridges\Tracy\TracyExtension);
+	// citas konfigurācijas...
+
+	// pievienojiet paplašinājumu tikai tad, ja Tracy Debug Bar ir iespējots
+	if(Debugger::$showBar === true) {
+		// šeit jūs pievienojat Latte Paneli Tracy
+		$latte->addExtension(new Latte\Bridges\Tracy\TracyExtension);
+	}
+
+	$latte->render($template, $data, $block);
 });
-
-if(Debugger::$showBar === true) {
-	// Šim jābūt nepatiesam, pretējā gadījumā Tracy nevarēs renderēt :(
-	Flight::set('flight.content_length', false);
-	new TracyExtensionLoader(Flight::app());
-}
 ```

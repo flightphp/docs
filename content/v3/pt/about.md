@@ -1,22 +1,37 @@
-# O que é Flight?
+# Flight PHP Framework
 
-Flight é um framework rápido, simples e extensível para PHP—construído para desenvolvedores que querem realizar tarefas rapidamente, sem complicações. Seja você construindo um aplicativo web clássico, uma API ultrarrápida ou experimentando as mais recentes ferramentas alimentadas por IA, o baixo consumo de recursos e o design direto do Flight o tornam uma escolha perfeita.
+Flight é um framework rápido, simples e extensível para PHP — criado para desenvolvedores que querem fazer as coisas rapidamente, sem complicações. Seja você construindo um app web clássico, uma API ultrarrápida ou experimentando com as ferramentas mais recentes impulsionadas por IA, o design de baixa pegada e direto ao ponto do Flight o torna uma escolha perfeita. Flight é projetado para ser enxuto, mas também pode lidar com requisitos de arquitetura empresarial.
 
-## Por que escolher Flight?
+## Por que Escolher Flight?
 
-- **Amigável para iniciantes:** Flight é um ótimo ponto de partida para novos desenvolvedores PHP. Sua estrutura clara e sintaxe simples ajudam você a aprender desenvolvimento web sem se perder em códigos desnecessários.
-- **Adorado por profissionais:** Desenvolvedores experientes adoram Flight por sua flexibilidade e controle. Você pode escalar de um protótipo pequeno para um aplicativo completo sem precisar mudar de framework.
-- **Amigável para IA:** O baixo overhead e a arquitetura limpa do Flight o tornam ideal para integrar ferramentas e APIs de IA. Seja você construindo chatbots inteligentes, painéis impulsionados por IA ou apenas querendo experimentar, Flight sai do caminho para você se concentrar no que importa. [Saiba mais sobre o uso de IA com Flight](/learn/ai)
+- **Amigável para Iniciantes:** Flight é um ótimo ponto de partida para novos desenvolvedores PHP. Sua estrutura clara e sintaxe simples ajudam você a aprender desenvolvimento web sem se perder em códigos desnecessários.
+- **Adorado por Profissionais:** Desenvolvedores experientes amam o Flight pela sua flexibilidade e controle. Você pode escalar de um protótipo pequeno para um app completo sem trocar de framework.
+- **Amigável para IA:** A sobrecarga mínima e a arquitetura limpa do Flight o tornam ideal para integrar ferramentas e APIs de IA. Seja construindo chatbots inteligentes, painéis impulsionados por IA ou apenas experimentando, o Flight sai do caminho para que você se concentre no que importa. O [skeleton app](https://github.com/flightphp/skeleton) vem com arquivos de instruções pré-construídos para os principais assistentes de codificação de IA prontos para uso! [Saiba mais sobre o uso de IA com Flight](/learn/ai)
+
+## Visão Geral em Vídeo
+
+<div class="flight-block-video">
+  <div class="row">
+    <div class="col-12 col-md-6 position-relative video-wrapper">
+      <iframe class="video-bg" width="100vw" height="315" src="https://www.youtube.com/embed/VCztp1QLC2c?si=W3fSWEKmoCIlC7Z5" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+    </div>
+    <div class="col-12 col-md-6 fs-5 text-center mt-5 pt-5">
+      <span class="flight-title-video">Simples o suficiente, certo?</span>
+      <br>
+      <a href="https://docs.flightphp.com/learn">Saiba mais</a> sobre Flight na documentação!
+    </div>
+  </div>
+</div>
 
 ## Início Rápido
 
-Primeiro, instale-o com Composer:
+Para fazer uma instalação básica e rápida, instale com Composer:
 
 ```bash
 composer require flightphp/core
 ```
 
-Ou você pode baixar um zip do repositório [aqui](https://github.com/flightphp/core). Em seguida, você terá um arquivo básico `index.php` como o seguinte:
+Ou você pode baixar um zip do repositório [aqui](https://github.com/flightphp/core). Então, você terá um arquivo básico `index.php` como o seguinte:
 
 ```php
 <?php
@@ -31,32 +46,38 @@ Flight::route('/', function() {
 });
 
 Flight::route('/json', function() {
-  Flight::json(['hello' => 'world']);
+  Flight::json([
+	'hello' => 'world'
+  ]);
 });
 
 Flight::start();
 ```
 
-Pronto! Você tem um aplicativo básico do Flight. Agora, você pode executar este arquivo com `php -S localhost:8000` e visitar `http://localhost:8000` no seu navegador para ver a saída.
+Isso é tudo! Você tem uma aplicação básica do Flight. Agora, você pode executar este arquivo com `php -S localhost:8000` e visitar `http://localhost:8000` no seu navegador para ver a saída.
 
-<div class="flight-block-video">
-  <div class="row">
-    <div class="col-12 col-md-6 position-relative video-wrapper">
-      <iframe class="video-bg" width="100vw" height="315" src="https://www.youtube.com/embed/VCztp1QLC2c?si=W3fSWEKmoCIlC7Z5" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-    </div>
-    <div class="col-12 col-md-6 text-center mt-5 pt-5">
-      <span class="fligth-title-video">Simples o suficiente, não?</span>
-      <br>
-      <a href="https://docs.flightphp.com/learn">Saiba mais sobre Flight na documentação!</a>
-      <br>
-      <button href="/learn/ai" class="btn btn-primary mt-3">Descubra como Flight facilita a IA</button>
-    </div>
-  </div>
-</div>
+## App Skeleton/Boilerplate
 
-## É rápido?
+Há um app de exemplo para ajudar você a iniciar seu projeto com Flight. Ele tem uma estrutura organizada, configurações básicas já definidas e lida com scripts do Composer diretamente! Confira [flightphp/skeleton](https://github.com/flightphp/skeleton) para um projeto pronto para uso, ou visite a página de [exemplos](examples) para inspiração. Quer ver como a IA se encaixa? [Explore exemplos impulsionados por IA](/learn/ai).
 
-Absolutamente! Flight é um dos frameworks PHP mais rápidos por aí. Seu núcleo leve significa menos overhead e mais velocidade—perfeito para aplicativos tradicionais e projetos modernos impulsionados por IA. Você pode ver todos os benchmarks em [TechEmpower](https://www.techempower.com/benchmarks/#section=data-r18&hw=ph&test=frameworks)
+## Instalando o App Skeleton
+
+Fácil o suficiente!
+
+```bash
+# Crie o novo projeto
+composer create-project flightphp/skeleton my-project/
+# Entre no diretório do seu novo projeto
+cd my-project/
+# Inicie o servidor de desenvolvimento local para começar imediatamente!
+composer start
+```
+
+Isso criará a estrutura do projeto, configurará os arquivos necessários e você estará pronto para começar!
+
+## Alto Desempenho
+
+Flight é um dos frameworks PHP mais rápidos disponíveis. Seu núcleo leve significa menos sobrecarga e mais velocidade — perfeito para apps tradicionais e projetos modernos impulsionados por IA. Você pode ver todos os benchmarks em [TechEmpower](https://www.techempower.com/benchmarks/#section=data-r18&hw=ph&test=frameworks).
 
 Veja o benchmark abaixo com alguns outros frameworks PHP populares.
 
@@ -72,9 +93,10 @@ Veja o benchmark abaixo com alguns outros frameworks PHP populares.
 | Laravel     | 26,657     | 26,901  |
 | CodeIgniter | 20,628     | 19,901  |
 
-## Aplicativo Esqueleto/Modelo
 
-Há um exemplo de aplicativo para ajudar você a começar com Flight. Confira [flightphp/skeleton](https://github.com/flightphp/skeleton) para um projeto pronto para uso, ou visite a página de [exemplos](examples) para inspiração. Quer ver como a IA se encaixa? [Explore exemplos impulsionados por IA](/learn/ai).
+## Flight e IA
+
+Curioso sobre como ele lida com IA? [Descubra](/learn/ai) como Flight facilita o trabalho com o seu LLM de codificação favorito!
 
 # Comunidade
 
@@ -91,14 +113,14 @@ E no Discord
 Existem duas maneiras de contribuir para Flight:
 
 1. Contribua para o framework principal visitando o [repositório principal](https://github.com/flightphp/core).
-2. Ajude a melhorar os documentos! Este site de documentação é hospedado no [Github](https://github.com/flightphp/docs). Se você encontrar um erro ou quiser melhorar algo, sinta-se à vontade para enviar um pull request. Adoramos atualizações e novas ideias—especialmente em torno de IA e novas tecnologias!
+2. Ajude a melhorar os docs! Este site de documentação é hospedado no [Github](https://github.com/flightphp/docs). Se você encontrar um erro ou quiser melhorar algo, sinta-se à vontade para enviar um pull request. Adoramos atualizações e novas ideias — especialmente em torno de IA e novas tecnologias!
 
 # Requisitos
 
 Flight requer PHP 7.4 ou superior.
 
-**Nota:** PHP 7.4 é suportado porque, no momento da escrita (2024), o PHP 7.4 é a versão padrão para algumas distribuições Linux LTS. Forçar uma mudança para PHP >8 causaria muitos problemas para esses usuários. O framework também suporta PHP >8.
+**Nota:** PHP 7.4 é suportado porque, no momento da escrita (2024), o PHP 7.4 é a versão padrão para algumas distribuições Linux LTS. Forçar uma mudança para PHP >8 causaria problemas para esses usuários. O framework também suporta PHP >8.
 
 # Licença
 
-Flight é lançado sob a [licença MIT](https://github.com/flightphp/core/blob/master/LICENSE).
+Flight é liberado sob a [licença MIT](https://github.com/flightphp/core/blob/master/LICENSE).

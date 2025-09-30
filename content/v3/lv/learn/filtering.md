@@ -1,89 +1,107 @@
 # Filtrēšana
 
-Lidojums ļauj jums filtrēt metodes pirms un pēc to izsaukšanas. Nav iepriekš definētu āķu, ko jums vajadzētu iemācīties atmiņā. Jūs varat filtrēt jebkuru noklusējuma ietvaru metodi, kā arī jebkuras pielāgotas metodes, ko esat atainojis.
+## Pārskats
 
-Filtrēšanas funkcija izskatās šādi:
+Flight ļauj jums filtrēt [kartētos metodes](/learn/extending) pirms un pēc to izsaukšanas.
+
+## Saprašana
+Nav iepriekš definētu āķu, kurus jums vajadzētu iegaumēt. Jūs varat filtrēt jebkuru no noklusējuma ietvara metodēm, kā arī jebkuru pielāgotu metožu, kuras esat kartējuši.
+
+Filtra funkcija izskatās šādi:
 
 ```php
+/**
+ * @param array $params Metodei, kas tiek filtrēta, nodotie parametri.
+ * @param string $output (tikai v2 izvades buferizēšana) Metodes, kas tiek filtrēta, izvade.
+ * @return bool Atgrieziet true/void vai neatgrieziet, lai turpinātu ķēdi, false, lai pārtrauktu ķēdi.
+ */
 function (array &$params, string &$output): bool {
-  // Filtrēšanas kods
+  // Filtra kods
 }
 ```
 
-Izmantojot padotos mainīgos, jūs varat manipulēt ievades parametrus un/vai izvadi.
+Izmantojot nodotās mainīgās, jūs varat manipulēt ar ievades parametriem un/vai izvadi.
 
-Jūs varat ļaut filtram darboties pirms metodes, izmantojot:
+Jūs varat likt filtram darboties pirms metodes, izdarot:
 
 ```php
 Flight::before('start', function (array &$params, string &$output): bool {
-  // Darīt kaut ko
+  // Dariet kaut ko
 });
 ```
 
-Jūs varat ļaut filtram darboties pēc metodes, izmantojot:
+Jūs varat likt filtram darboties pēc metodes, izdarot:
 
 ```php
 Flight::after('start', function (array &$params, string &$output): bool {
-  // Darīt kaut ko
+  // Dariet kaut ko
 });
 ```
 
-Jūs varat pievienot tik daudz filtrus, cik vēlaties, jebkurai metodai. Tie tiks izsaukti tādā secībā, kādā tie ir deklarēti.
+Jūs varat pievienot tik daudz filtru, cik vēlaties, jebkurai metodei. Tie tiks izsaukti secībā, kādā tie ir deklarēti.
 
-Šeit ir piemērs par filtrēšanas procesu:
+Šeit ir filtrēšanas procesa piemērs:
 
 ```php
-// Atainot pielāgotu metodi
+// Kartējiet pielāgotu metodi
 Flight::map('hello', function (string $name) {
-  return "Sveiki, $name!";
+  return "Hello, $name!";
 });
 
-// Pievienot pirms filtru
+// Pievienojiet pirms filtra
 Flight::before('hello', function (array &$params, string &$output): bool {
-  // Manipulēt parametru
-  $params[0] = 'Jānis';
+  // Manipulējiet parametru
+  $params[0] = 'Fred';
   return true;
 });
 
-// Pievienot pēc filtra
+// Pievienojiet pēc filtra
 Flight::after('hello', function (array &$params, string &$output): bool {
-  // Manipulēt izvadi
-  $output .= " Jums laimīgu dienu!";
+  // Manipulējiet izvadi
+  $output .= " Have a nice day!";
   return true;
 });
 
-// Izsaukt pielāgoto metodi
-echo Flight::hello('Roberts');
+// Izsauciet pielāgoto metodi
+echo Flight::hello('Bob');
 ```
 
-Tas vajadzētu parādīt:
+Šim vajadzētu parādīt:
 
 ```
-Sveiki Jānis! Jums laimīgu dienu!
+Hello Fred! Have a nice day!
 ```
 
-Ja esat definējis vairākus filtrus, jūs varat pārtraukt ķēdi, atgriežot `false`
+Ja esat definējuši vairākus filtrus, jūs varat pārtraukt ķēdi, atgriežot `false`
 jebkurā no jūsu filtra funkcijām:
 
 ```php
 Flight::before('start', function (array &$params, string &$output): bool {
-  echo 'viens';
+  echo 'one';
   return true;
 });
 
 Flight::before('start', function (array &$params, string &$output): bool {
-  echo 'divi';
+  echo 'two';
 
-  // Tas pārtrauks ķēdi
+  // Tas beigs ķēdi
   return false;
 });
 
 // Tas netiks izsaukts
 Flight::before('start', function (array &$params, string &$output): bool {
-  echo 'trīs';
+  echo 'three';
   return true;
 });
 ```
 
-Piezīme, pamata metodes, piemēram, `map` un `register`, nevar būt filtri, jo
-tos izsauc tieši, nevis dinamiski.
+> **Piezīme:** Kodola metodes, piemēram, `map` un `register`, nevar tikt filtrētas, jo tās tiek izsauktas tieši un ne dinamiski. Skatiet [Extending Flight](/learn/extending), lai iegūtu vairāk informācijas.
+
+## Skatīt arī
+- [Extending Flight](/learn/extending)
+
+## Traucējummeklēšana
+- Pārliecinieties, ka atgriežat `false` no savām filtra funkcijām, ja vēlaties, lai ķēde apstātos. Ja neatgriežat neko, ķēde turpināsies.
+
+## Izmaiņu žurnāls
+- v2.0 - Sākotnējais izdevums.

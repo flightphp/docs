@@ -1,149 +1,117 @@
 # Запросы
 
-Flight инкапсулирует HTTP-запрос в один объект, который можно получить следующим образом:
+## Обзор
+
+Flight инкапсулирует HTTP-запрос в один объект, к которому можно получить доступ следующим образом:
 
 ```php
 $request = Flight::request();
 ```
 
-## Типичные сценарии использования
+## Понимание
 
-При работе с запросом в веб-приложении обычно вам захочется извлечь заголовок, параметр из `$_GET` или `$_POST`, или, возможно, сырой тело запроса. Flight предоставляет простой интерфейс для выполнения всех этих действий.
+HTTP-запросы — это один из ключевых аспектов, которые нужно понять о жизненном цикле HTTP. Пользователь выполняет действие в веб-браузере или HTTP-клиенте, и они отправляют серию заголовков, тело, URL и т.д. в ваш проект. Вы можете захватывать эти заголовки (язык браузера, тип сжатия, который они могут обрабатывать, пользовательский агент и т.д.) и захватывать тело и URL, отправляемые в ваше приложение Flight. Эти запросы необходимы для вашего приложения, чтобы понять, что делать дальше.
 
-Вот пример получения параметра строки запроса:
+## Базовое использование
+
+PHP имеет несколько суперглобальных переменных, включая `$_GET`, `$_POST`, `$_REQUEST`, `$_SERVER`, `$_FILES` и `$_COOKIE`. Flight абстрагирует их в удобные [Collections](/learn/collections). Вы можете обращаться к свойствам `query`, `data`, `cookies` и `files` как к массивам или объектам.
+
+> **Примечание:** **СТРОГО** не рекомендуется использовать эти суперглобальные переменные в вашем проекте, и их следует ссылаться через объект `request()`.
+
+> **Примечание:** Нет доступной абстракции для `$_ENV`.
+
+### `$_GET`
+
+Вы можете получить доступ к массиву `$_GET` через свойство `query`:
 
 ```php
+// GET /search?keyword=something
 Flight::route('/search', function(){
 	$keyword = Flight::request()->query['keyword'];
-	echo "You are searching for: $keyword";
-	// запрос к базе данных или что-то другое с $keyword
+	// или
+	$keyword = Flight::request()->query->keyword;
+	echo "Вы ищете: $keyword";
+	// запрос к базе данных или что-то еще с $keyword
 });
 ```
 
-Вот пример, возможно, формы с методом POST:
+### `$_POST`
+
+Вы можете получить доступ к массиву `$_POST` через свойство `data`:
 
 ```php
 Flight::route('POST /submit', function(){
 	$name = Flight::request()->data['name'];
 	$email = Flight::request()->data['email'];
-	echo "You submitted: $name, $email";
-	// сохранение в базу данных или что-то другое с $name и $email
+	// или
+	$name = Flight::request()->data->name;
+	$email = Flight::request()->data->email;
+	echo "Вы отправили: $name, $email";
+	// сохранить в базу данных или что-то еще с $name и $email
 });
 ```
 
-## Свойства объекта запроса
-
-Объект запроса предоставляет следующие свойства:
-
-- **body** - Сырой HTTP-тело запроса
-- **url** - URL, который запрашивается
-- **base** - Родительский подкаталог URL
-- **method** - Метод запроса (GET, POST, PUT, DELETE)
-- **referrer** - URL-ссылка
-- **ip** - IP-адрес клиента
-- **ajax** - Является ли запрос AJAX-запросом
-- **scheme** - Протокол сервера (http, https)
-- **user_agent** - Информация о браузере
-- **type** - Тип содержимого
-- **length** - Длина содержимого
-- **query** - Параметры строки запроса
-- **data** - Данные POST или JSON
-- **cookies** - Данные cookie
-- **files** - Загруженные файлы
-- **secure** - Является ли соединение безопасным
-- **accept** - Параметры HTTP accept
-- **proxy_ip** - IP-адрес прокси клиента. Сканирует массив `$_SERVER` для `HTTP_CLIENT_IP`, `HTTP_X_FORWARDED_FOR`, `HTTP_X_FORWARDED`, `HTTP_X_CLUSTER_CLIENT_IP`, `HTTP_FORWARDED_FOR`, `HTTP_FORWARDED` в этом порядке.
-- **host** - Имя хоста запроса
-- **servername** - SERVER_NAME из `$_SERVER`
-
-Вы можете обращаться к свойствам `query`, `data`, `cookies` и `files` как к массивам или объектам.
-
-Итак, чтобы получить параметр строки запроса, вы можете сделать:
-
-```php
-$id = Flight::request()->query['id'];
-```
-
-Или вы можете сделать:
-
-```php
-$id = Flight::request()->query->id;
-```
-
-## Сырое тело запроса
-
-Чтобы получить сырое HTTP-тело запроса, например, при работе с запросами PUT, вы можете сделать:
-
-```php
-$body = Flight::request()->getBody();
-```
-
-## JSON-вход
-
-Если вы отправляете запрос с типом `application/json` и данными `{"id": 123}`, он будет доступен из свойства `data`:
-
-```php
-$id = Flight::request()->data->id;
-```
-
-## `$_GET`
-
-Вы можете получить доступ к массиву `$_GET` через свойство `query`:
-
-```php
-$id = Flight::request()->query['id'];
-```
-
-## `$_POST`
-
-Вы можете получить доступ к массиву `$_POST` через свойство `data`:
-
-```php
-$id = Flight::request()->data['id'];
-```
-
-## `$_COOKIE`
+### `$_COOKIE`
 
 Вы можете получить доступ к массиву `$_COOKIE` через свойство `cookies`:
 
 ```php
-$myCookieValue = Flight::request()->cookies['myCookieName'];
+Flight::route('GET /login', function(){
+	$savedLogin = Flight::request()->cookies['myLoginCookie'];
+	// или
+	$savedLogin = Flight::request()->cookies->myLoginCookie;
+	// проверить, действительно ли сохранено, и если да, автоматически войти
+	if($savedLogin) {
+		Flight::redirect('/dashboard');
+		return;
+	}
+});
 ```
 
-## `$_SERVER`
+Для помощи по установке новых значений cookie см. [overclokk/cookie](/awesome-plugins/php-cookie)
+
+### `$_SERVER`
 
 Доступен ярлык для доступа к массиву `$_SERVER` через метод `getVar()`:
 
 ```php
+
 $host = Flight::request()->getVar('HTTP_HOST');
 ```
 
-## Доступ к загруженным файлам через `$_FILES`
+### `$_FILES`
 
 Вы можете получить доступ к загруженным файлам через свойство `files`:
 
 ```php
-$uploadedFile = Flight::request()->files['myFile'];
+// сырой доступ к свойству $_FILES. См. ниже рекомендуемый подход
+$uploadedFile = Flight::request()->files['myFile']; 
+// или
+$uploadedFile = Flight::request()->files->myFile;
 ```
 
-## Обработка загрузки файлов (v3.12.0)
+См. [Uploaded File Handler](/learn/uploaded-file) для получения дополнительной информации.
 
-Вы можете обработать загрузку файлов с помощью фреймворка с помощью вспомогательных методов. Это в основном сводится к извлечению данных файла из запроса и перемещению его в новое место.
+#### Обработка загрузки файлов
+
+_v3.12.0_
+
+Вы можете обрабатывать загрузку файлов с помощью фреймворка, используя некоторые вспомогательные методы. По сути, это сводится к извлечению данных файла из запроса и перемещению его в новое место.
 
 ```php
 Flight::route('POST /upload', function(){
-	// Если у вас было поле ввода вроде <input type="file" name="myFile">
+	// Если у вас есть поле ввода вроде <input type="file" name="myFile">
 	$uploadedFileData = Flight::request()->getUploadedFiles();
 	$uploadedFile = $uploadedFileData['myFile'];
 	$uploadedFile->moveTo('/path/to/uploads/' . $uploadedFile->getClientFilename());
 });
 ```
 
-Если у вас загружено несколько файлов, вы можете перебирать их:
+Если у вас загружено несколько файлов, вы можете пройтись по ним в цикле:
 
 ```php
 Flight::route('POST /upload', function(){
-	// Если у вас было поле ввода вроде <input type="file" name="myFiles[]">
+	// Если у вас есть поле ввода вроде <input type="file" name="myFiles[]">
 	$uploadedFiles = Flight::request()->getUploadedFiles()['myFiles'];
 	foreach ($uploadedFiles as $uploadedFile) {
 		$uploadedFile->moveTo('/path/to/uploads/' . $uploadedFile->getClientFilename());
@@ -151,13 +119,33 @@ Flight::route('POST /upload', function(){
 });
 ```
 
-> **Примечание по безопасности:** Всегда проверяйте и очищайте пользовательский ввод, особенно при работе с загрузкой файлов. Всегда проверяйте типы расширений, которые вы разрешите загружать, но также проверяйте "магические байты" файла, чтобы убедиться, что это именно тот тип файла, который пользователь указал. Есть [статьи](https://dev.to/yasuie/php-file-upload-check-uploaded-files-with-magic-bytes-54oe) [и](https://amazingalgorithms.com/snippets/php/detecting-the-mime-type-of-an-uploaded-file-using-magic-bytes/) [библиотеки](https://github.com/RikudouSage/MimeTypeDetector), которые помогут с этим.
+> **Примечание по безопасности:** Всегда проверяйте и очищайте пользовательский ввод, особенно при работе с загрузкой файлов. Всегда проверяйте типы расширений, которые вы разрешаете загружать, но также проверяйте "магические байты" файла, чтобы убедиться, что это действительно тип файла, который утверждает пользователь. Есть [статьи](https://dev.to/yasuie/php-file-upload-check-uploaded-files-with-magic-bytes-54oe) [и](https://amazingalgorithms.com/snippets/php/detecting-the-mime-type-of-an-uploaded-file-using-magic-bytes/) [библиотеки](https://github.com/RikudouSage/MimeTypeDetector), доступные для помощи в этом.
 
-## Заголовки запроса
+### Тело запроса
+
+Чтобы получить сырое тело HTTP-запроса, например, при работе с POST/PUT-запросами, вы можете сделать:
+
+```php
+Flight::route('POST /users/xml', function(){
+	$xmlBody = Flight::request()->getBody();
+	// сделать что-то с отправленным XML.
+});
+```
+
+### JSON-тело
+
+Если вы получаете запрос с типом содержимого `application/json` и примерами данных `{"id": 123}`, оно будет доступно из свойства `data`:
+
+```php
+$id = Flight::request()->data->id;
+```
+
+### Заголовки запроса
 
 Вы можете получить доступ к заголовкам запроса с помощью метода `getHeader()` или `getHeaders()`:
 
 ```php
+
 // Возможно, вам нужен заголовок Authorization
 $host = Flight::request()->getHeader('Authorization');
 // или
@@ -169,49 +157,66 @@ $headers = Flight::request()->getHeaders();
 $headers = Flight::request()->headers();
 ```
 
-## Тело запроса
-
-Вы можете получить доступ к сыром телу запроса с помощью метода `getBody()`:
-
-```php
-$body = Flight::request()->getBody();
-```
-
-## Метод запроса
+### Метод запроса
 
 Вы можете получить доступ к методу запроса с помощью свойства `method` или метода `getMethod()`:
 
 ```php
-$method = Flight::request()->method; // фактически вызывает getMethod()
+$method = Flight::request()->method; // фактически заполняется getMethod()
 $method = Flight::request()->getMethod();
 ```
 
 **Примечание:** Метод `getMethod()` сначала извлекает метод из `$_SERVER['REQUEST_METHOD']`, затем он может быть перезаписан `$_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE']`, если он существует, или `$_REQUEST['_method']`, если он существует.
 
-## URL запроса
+## Свойства объекта запроса
+
+Объект запроса предоставляет следующие свойства:
+
+- **body** - Сырое тело HTTP-запроса
+- **url** - Запрашиваемый URL
+- **base** - Родительская поддиректория URL
+- **method** - Метод запроса (GET, POST, PUT, DELETE)
+- **referrer** - URL реферера
+- **ip** - IP-адрес клиента
+- **ajax** - Является ли запрос AJAX-запросом
+- **scheme** - Протокол сервера (http, https)
+- **user_agent** - Информация о браузере
+- **type** - Тип содержимого
+- **length** - Длина содержимого
+- **query** - Параметры строки запроса
+- **data** - Данные POST или JSON-данные
+- **cookies** - Данные cookie
+- **files** - Загруженные файлы
+- **secure** - Является ли соединение защищенным
+- **accept** - Параметры HTTP accept
+- **proxy_ip** - IP-адрес прокси клиента. Сканирует массив `$_SERVER` на наличие `HTTP_CLIENT_IP`, `HTTP_X_FORWARDED_FOR`, `HTTP_X_FORWARDED`, `HTTP_X_CLUSTER_CLIENT_IP`, `HTTP_FORWARDED_FOR`, `HTTP_FORWARDED` в этом порядке.
+- **host** - Имя хоста запроса
+- **servername** - SERVER_NAME из `$_SERVER`
+
+## Вспомогательные методы для URL
 
 Есть несколько вспомогательных методов для сборки частей URL для вашего удобства.
 
 ### Полный URL
 
-Вы можете получить полный URL запроса с помощью метода `getFullUrl()`:
+Вы можете получить доступ к полному URL запроса с помощью метода `getFullUrl()`:
 
 ```php
 $url = Flight::request()->getFullUrl();
 // https://example.com/some/path?foo=bar
 ```
-
 ### Базовый URL
 
-Вы можете получить базовый URL с помощью метода `getBaseUrl()`:
+Вы можете получить доступ к базовому URL с помощью метода `getBaseUrl()`:
 
 ```php
+// http://example.com/path/to/something/cool?query=yes+thanks
 $url = Flight::request()->getBaseUrl();
-// Обратите внимание, без конечного слеша.
 // https://example.com
+// Обратите внимание, нет завершающего слеша.
 ```
 
-## Разбор строки запроса
+## Разбор запроса
 
 Вы можете передать URL методу `parseQuery()`, чтобы разобрать строку запроса в ассоциативный массив:
 
@@ -219,3 +224,17 @@ $url = Flight::request()->getBaseUrl();
 $query = Flight::request()->parseQuery('https://example.com/some/path?foo=bar');
 // ['foo' => 'bar']
 ```
+
+## См. также
+- [Routing](/learn/routing) - Узнайте, как сопоставлять маршруты с контроллерами и рендерить представления.
+- [Responses](/learn/responses) - Как настраивать HTTP-ответы.
+- [Why a Framework?](/learn/why-frameworks) - Как запросы вписываются в общую картину.
+- [Collections](/learn/collections) - Работа с коллекциями данных.
+- [Uploaded File Handler](/learn/uploaded-file) - Обработка загрузки файлов.
+
+## Устранение неисправностей
+- `request()->ip` и `request()->proxy_ip` могут отличаться, если ваш веб-сервер находится за прокси, балансировщиком нагрузки и т.д. 
+
+## Журнал изменений
+- v3.12.0 - Добавлена возможность обработки загрузки файлов через объект запроса.
+- v1.0 - Первоначальный выпуск.

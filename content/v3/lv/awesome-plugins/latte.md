@@ -1,10 +1,10 @@
-# Kafija
+# Latte
 
-[Kafija](https://latte.nette.org/en/guide) ir pilnīgi aprīkota veidnes dzinējs, kurš ir ļoti viegli lietojams un jūtas tuvāk PHP sintaksei nekā Twig vai Smarty. To ir arī ļoti viegli paplašināt un pievienot savus filtrus un funkcijas.
+[Latte](https://latte.nette.org/en/guide) ir pilnvērtīgs veidņu dz motor, kas ir ļoti viegli lietojams un jūtas tuvāk PHP sintaksei nekā Twig vai Smarty. To ir arī ļoti viegli paplašināt un pievienot savus filtrus un funkcijas.
 
-## Uzstādīšana
+## Instalācija
 
-Uzstādiet ar komponistu.
+Instalējiet ar composer.
 
 ```bash
 composer require latte/latte
@@ -12,40 +12,36 @@ composer require latte/latte
 
 ## Pamata konfigurācija
 
-Ir dažas pamata konfigurācijas iespējas, ar kurām sākt. Jūs varat lasīt vairāk par tām [Kafijas dokumentācijā](https://latte.nette.org/en/guide).
+Ir dažas pamata konfigurācijas opcijas, lai sāktu. Jūs varat lasīt vairāk par tām [Latte dokumentācijā](https://latte.nette.org/en/guide).
 
 ```php
-
-use Latte\Engine as LatteEngine;
 
 require 'vendor/autoload.php';
 
 $app = Flight::app();
 
-$app->register('latte', LatteEngine::class, [], function(LatteEngine $latte) use ($app) {
+$app->map('render', function(string $template, array $data, ?string $block): void {
+	$latte = new Latte\Engine;
 
-	// Šeit Kafija saglabās jūsu veidnes, lai paātrinātu lietas
-	// Viena jauka lieta par Kafiju ir tā, ka tā automātiski atsvaidzina jūsu
-	// kešatmiņu, kad padarāt izmaiņas veidnēs!
+	// Kur latte specifiski glabā savu kešu
 	$latte->setTempDirectory(__DIR__ . '/../cache/');
+	
+	$finalPath = Flight::get('flight.views.path') . $template;
 
-	// Pateiciet Kafijai, kur būs jūsu skatu saknes direktorija.
-	// $app->get('flight.views.path') ir iestatīts failā config.php
-	// Jūs varētu arī vienkārši izdarīt kaut ko tādu kā `__DIR__ . '/../views/'`
-	$latte->setLoader(new \Latte\Loaders\FileLoader($app->get('flight.views.path')));
+	$latte->render($finalPath, $data, $block);
 });
 ```
 
 ## Vienkāršs izkārtojuma piemērs
 
-Šeit ir vienkāršs izkārtojuma faila piemērs. Šis fails tiks izmantots, lai iesaiņotu visus jūsu citus skatus.
+Šeit ir vienkāršs izkārtojuma faila piemērs. Šis ir fails, kas tiks izmantots, lai aptvertu visas jūsu citas skatus.
 
 ```html
 <!-- app/views/layout.latte -->
 <!doctype html>
 <html lang="en">
 	<head>
-		<title>{$title ? $title . ' - '}Mans App</title>
+		<title>{$title ? $title . ' - '}My App</title>
 		<link rel="stylesheet" href="style.css">
 	</head>
 	<body>
@@ -55,41 +51,41 @@ $app->register('latte', LatteEngine::class, [], function(LatteEngine $latte) use
 			</nav>
 		</header>
 		<div id="content">
-			<!-- Šeit ir burvība -->
+			<!-- Šī ir maģija šeit -->
 			{block content}{/block}
 		</div>
 		<div id="footer">
-			&copy; Autortiesības
+			&copy; Copyright
 		</div>
 	</body>
 </html>
 ```
 
-Un tagad mums ir jūsu fails, kas tiks renderēts iekšējā šajā satura blokā:
+Un tagad mums ir jūsu fails, kas tiks renderēts tajā satura blokā:
 
 ```html
 <!-- app/views/home.latte -->
-<!-- Tas stāsta Kafijai, ka šis fails ir "iekšā" layout.latte failā -->
+<!-- Tas pasaka Latte, ka šis fails ir "iekšā" layout.latte failā -->
 {extends layout.latte}
 
-<!-- Šis ir saturs, kurš tiks renderēts iekšējā izkārtojumā iekšējā satura blokā -->
+<!-- Šis ir saturs, kas tiks renderēts izkārtojumā satura blokā -->
 {block content}
-	<h1>Mājas lapā</h1>
-	<p>Laipni lūdzam mans app!</p>
+	<h1>Sākumlapa</h1>
+	<p>Sveiki manā lietotnē!</p>
 {/block}
 ```
 
-Tad, kad jūs ejat renderēt to iekšā savā funkcijā vai kontrolierī, jūs darītu kaut kas tāds:
+Pēc tam, kad jūs dodaties renderēt to savā funkcijā vai kontrolierī, jūs darītu kaut ko šādu:
 
 ```php
 // vienkāršs maršruts
 Flight::route('/', function () {
-	Flight::latte()->render('home.latte', [
-		'title' => 'Mājas Lapā'
+	Flight::render('home.latte', [
+		'title' => 'Sākumlapa'
 	]);
 });
 
-// vai, ja izmantojat kontrolieri
+// vai ja jūs izmantojat kontrollieri
 Flight::route('/', [HomeController::class, 'index']);
 
 // HomeController.php
@@ -97,11 +93,38 @@ class HomeController
 {
 	public function index()
 	{
-		Flight::latte()->render('home.latte', [
-			'title' => 'Mājas Lapā'
+		Flight::render('home.latte', [
+			'title' => 'Sākumlapa'
 		]);
 	}
 }
 ```
 
-Skatiet [Kafijas dokumentāciju](https://latte.nette.org/en/guide), lai iegūtu vairāk informācijas par to, kā izmantot Kafiju tā pilnīgākajā potenciālā!
+Skatiet [Latte dokumentāciju](https://latte.nette.org/en/guide), lai iegūtu vairāk informācijas par to, kā izmantot Latte pilnā potenciālā!
+
+## Kļūdu labošana ar Tracy
+
+_PHP 8.1+ ir nepieciešams šai sadaļai._
+
+Jūs varat izmantot arī [Tracy](https://tracy.nette.org/en/), lai palīdzētu ar jūsu Latte veidņu failu kļūdu labošanu tieši no kastes! Ja jums jau ir instalēts Tracy, jums jāpievieno Latte paplašinājums Tracy.
+
+```php
+// services.php
+use Tracy\Debugger;
+
+$app->map('render', function(string $template, array $data, ?string $block): void {
+	$latte = new Latte\Engine;
+
+	// Kur latte specifiski glabā savu kešu
+	$latte->setTempDirectory(__DIR__ . '/../cache/');
+	
+	$finalPath = Flight::get('flight.views.path') . $template;
+
+	// Tas pievienos paplašinājumu tikai tad, ja ir iespējota Tracy atkļūdošanas josla
+	if (Debugger::$showBar === true) {
+		// šeit jūs pievienojat Latte paneli Tracy
+		$latte->addExtension(new Latte\Bridges\Tracy\TracyExtension);
+	}
+	$latte->render($finalPath, $data, $block);
+});
+```

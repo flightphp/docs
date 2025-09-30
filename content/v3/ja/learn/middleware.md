@@ -1,33 +1,67 @@
-# ルートミドルウェア
+# ミドルウェア
 
-Flightはルートとグループルートのミドルウェアをサポートします。ミドルウェアはルートコールバックの前（または後）に実行される関数です。これは、コードにAPI認証チェックを追加したり、ユーザーがルートにアクセスする権限を持っていることを検証したりするのに最適な方法です。
+## 概要
 
-## 基本的なミドルウェア
+Flight はルートおよびグループルートのミドルウェアをサポートします。ミドルウェアは、アプリケーションの一部で、ルートコールバックの前（または後）にコードが実行される場所です。これは、コードに API 認証チェックを追加する優れた方法です。また、ユーザーがルートにアクセスする権限があるかを検証することもできます。
 
-以下は基本的な例です：
+## 理解
+
+ミドルウェアはアプリを大幅に簡素化できます。複雑な抽象クラス継承やメソッドオーバーライドの代わりに、ミドルウェアを使用することで、カスタムのアプリロジックをルートに割り当ててルートを制御できます。ミドルウェアはサンドイッチのようなものだと考えられます。外側にパンがあり、その中にレタス、トマト、肉、チーズなどの層があります。そして、各リクエストがサンドイッチを一口かじるようなもので、外側の層から食べてコアに向かっていくイメージです。
+
+ミドルウェアの動作の視覚的な例を以下に示します。その後、この機能の実践的な例を示します。
+
+```text
+ユーザー リクエストが URL /api に到達 ----> 
+	Middleware->before() が実行 ----->
+		/api にアタッチされたコールバック/メソッドが実行され、レスポンスが生成 ------>
+	Middleware->after() が実行 ----->
+ユーザーがサーバーからレスポンスを受信
+```
+
+そして、実践的な例はこちらです：
+
+```text
+ユーザーが URL /dashboard に移動
+	LoggedInMiddleware->before() が実行
+		before() が有効なログインモッションをチェック
+			有効な場合、何もしないで実行を続行
+			無効な場合、ユーザーを /login にリダイレクト
+				/api にアタッチされたコールバック/メソッドが実行され、レスポンスが生成
+	LoggedInMiddleware->after() に何も定義されていないため、実行を続行
+ユーザーがサーバーからダッシュボードの HTML を受信
+```
+
+### 実行順序
+
+ミドルウェア関数は、ルートに追加された順序で実行されます。この実行は、[Slim Framework がこれを扱う方法](https://www.slimframework.com/docs/v4/concepts/middleware.html#how-does-middleware-work) に似ています。
+
+`before()` メソッドは追加された順序で実行され、`after()` メソッドは逆順で実行されます。
+
+例: Middleware1->before()、Middleware2->before()、Middleware2->after()、Middleware1->after()。
+
+## 基本的な使用方法
+
+ミドルウェアは、匿名関数やクラス（推奨）を含む任意のコールバックメソッドとして使用できます。
+
+### 匿名関数
+
+簡単な例を以下に示します：
 
 ```php
-// 匿名の関数だけを供給した場合、ルートコールバックの前に実行されます。
-// 「after」のミドルウェア関数はありません。クラスを使用した場合のみ利用可能です（以下を参照）。
 Flight::route('/path', function() { echo ' Here I am!'; })->addMiddleware(function() {
 	echo 'Middleware first!';
 });
 
 Flight::start();
 
-// これは「Middleware first! Here I am!」を出力します。
+// これは "Middleware first! Here I am!" を出力します
 ```
 
-ミドルウェアに関するいくつかの重要な注意点があります。使用する前に把握しておくべきです：
-- ミドルウェア関数は、ルートに追加された順序で実行されます。実行方法は[Slim Framework](https://www.slimframework.com/docs/v4/concepts/middleware.html#how-does-middleware-work)が扱うものと似ています。
-   - Beforeは追加された順序で実行され、Afterは逆順で実行されます。
-- ミドルウェア関数がfalseを返した場合、すべての実行が停止され、403 Forbiddenエラーがスローされます。おそらくFlight::redirect()などの方法でより柔軟に処理したいでしょう。
-- ルートのパラメータが必要な場合、それらはミドルウェア関数に単一の配列として渡されます。（`function($params) { ... }` または `public function before($params) {}`）。これを行う理由は、パラメータをグループ化し、そのグループ内でパラメータの順序が変わる可能性があるため、ミドルウェア関数が壊れないようにするためです。この方法で、位置ではなく名前でアクセスできます。
-- ミドルウェアの名前だけを渡した場合、[dependency injection container](dependency-injection-container)によって自動的に実行され、必要なパラメータでミドルウェアが実行されます。依存注入コンテナが登録されていない場合、`flight\Engine`インスタンスが`__construct()`に渡されます。
+> **注意:** 匿名関数を使用する場合、解釈されるのは `before()` メソッドのみです。匿名クラスで `after()` 動作を**定義できません**。
 
-## ミドルウェアクラス
+### クラスの使用
 
-ミドルウェアはクラスとして登録することもできます。「after」の機能が必要な場合、**クラスを使用しなければなりません**。
+ミドルウェアはクラスとして登録できます（推奨されます）。「after」機能が必要な場合は、**クラスを使用する必要があります**。
 
 ```php
 class MyMiddleware {
@@ -41,43 +75,245 @@ class MyMiddleware {
 }
 
 $MyMiddleware = new MyMiddleware();
-Flight::route('/path', function() { echo ' Here I am! '; })->addMiddleware($MyMiddleware); // または ->addMiddleware([ $MyMiddleware, $MyMiddleware2 ]);
+Flight::route('/path', function() { echo ' Here I am! '; })->addMiddleware($MyMiddleware); 
+// また ->addMiddleware([ $MyMiddleware, $MyMiddleware2 ]) も可能です
 
 Flight::start();
 
-// これは「Middleware first! Here I am! Middleware last!」を表示します。
+// これは "Middleware first! Here I am! Middleware last!" を表示します
 ```
 
-## ミドルウェアエラーの処理
+ミドルウェアのクラス名のみを定義し、クラスをインスタンス化することもできます。
 
-認証ミドルウェアがあり、ユーザーが認証されていない場合にログイン画面にリダイレクトしたいとします。いくつかのオプションがあります：
+```php
+Flight::route('/path', function() { echo ' Here I am! '; })->addMiddleware(MyMiddleware::class); 
+```
 
-1. ミドルウェア関数からfalseを返し、Flightが自動的に403 Forbiddenエラーを返す方法ですが、カスタマイズできません。
-1. `Flight::redirect()`を使用してユーザーをログイン画面にリダイレクトします。
-1. ミドルウェア内でカスタムエラーを作成し、ルートの実行を停止します。
+> **注意:** ミドルウェアの名前のみを渡す場合、[依存性注入コンテナ](dependency-injection-container) によって自動的に実行され、ミドルウェアは必要なパラメータで実行されます。依存性注入コンテナが登録されていない場合、デフォルトで `__construct(Engine $app)` に `flight\Engine` インスタンスが渡されます。
 
-### 基本的な例
+### パラメータ付きルートの使用
 
-以下はシンプルなreturn false; の例です：
+ルートからパラメータが必要な場合、それらはミドルウェア関数に単一の配列として渡されます。（`function($params) { ... }` または `public function before($params) { ... }`）。その理由は、パラメータをグループ化し、一部のグループでパラメータの順序が異なり、誤ったパラメータを参照してミドルウェア関数を壊す可能性があるためです。この方法では、位置ではなく名前でアクセスできます。
+
+```php
+use flight\Engine;
+
+class RouteSecurityMiddleware {
+
+	protected Engine $app;
+
+	public function __construct(Engine $app) {
+		$this->app = $app;
+	}
+
+	public function before(array $params) {
+		$clientId = $params['clientId'];
+
+		// jobId は渡される場合とされない場合があります
+		$jobId = $params['jobId'] ?? 0;
+
+		// job ID がない場合、何も検索する必要がないかもしれません
+		if($jobId === 0) {
+			return;
+		}
+
+		// データベースで何らかの検索を実行
+		$isValid = !!$this->app->db()->fetchField("SELECT 1 FROM client_jobs WHERE client_id = ? AND job_id = ?", [ $clientId, $jobId ]);
+
+		if($isValid !== true) {
+			$this->app->halt(400, 'You are blocked, muahahaha!');
+		}
+	}
+}
+
+// routes.php
+$router->group('/client/@clientId/job/@jobId', function(Router $router) {
+
+	// 下記のグループも親のミドルウェアを受け取ります
+	// ただし、パラメータはミドルウェアに単一の配列として渡されます
+	$router->group('/job/@jobId', function(Router $router) {
+		$router->get('', [ JobController::class, 'view' ]);
+		$router->put('', [ JobController::class, 'update' ]);
+		$router->delete('', [ JobController::class, 'delete' ]);
+		// さらにルート...
+	});
+}, [ RouteSecurityMiddleware::class ]);
+```
+
+### ミドルウェア付きのルートグループ化
+
+ルートグループを追加し、そのグループ内のすべてのルートに同じミドルウェアを適用できます。これは、ヘッダーの API キーをチェックする Auth ミドルウェアなどでルートをグループ化する必要がある場合に便利です。
+
+```php
+
+// グループメソッドの最後に追加
+Flight::group('/api', function() {
+
+	// この「空」のルートは実際には /api に一致します
+	Flight::route('', function() { echo 'api'; }, false, 'api');
+	// これは /api/users に一致します
+    Flight::route('/users', function() { echo 'users'; }, false, 'users');
+	// これは /api/users/1234 に一致します
+	Flight::route('/users/@id', function($id) { echo 'user:'.$id; }, false, 'user_view');
+}, [ new ApiAuthMiddleware() ]);
+```
+
+すべてのルートにグローバルなミドルウェアを適用したい場合、「空」のグループを追加できます：
+
+```php
+
+// グループメソッドの最後に追加
+Flight::group('', function() {
+
+	// これは依然として /users です
+	Flight::route('/users', function() { echo 'users'; }, false, 'users');
+	// これは依然として /users/1234 です
+	Flight::route('/users/@id', function($id) { echo 'user:'.$id; }, false, 'user_view');
+}, [ ApiAuthMiddleware::class ]); // または [ new ApiAuthMiddleware() ]、同じです
+```
+
+### 一般的な使用例
+
+#### API キー検証
+`/api` ルートを保護するために API キーが正しいかを検証したい場合、ミドルウェアで簡単に処理できます。
+
+```php
+use flight\Engine;
+
+class ApiMiddleware {
+
+	protected Engine $app;
+
+	public function __construct(Engine $app) {
+		$this->app = $app;
+	}
+	
+	public function before(array $params) {
+		$authorizationHeader = $this->app->request()->getHeader('Authorization');
+		$apiKey = str_replace('Bearer ', '', $authorizationHeader);
+
+		// データベースで API キーを検索
+		$apiKeyHash = hash('sha256', $apiKey);
+		$hasValidApiKey = !!$this->db()->fetchField("SELECT 1 FROM api_keys WHERE hash = ? AND valid_date >= NOW()", [ $apiKeyHash ]);
+
+		if($hasValidApiKey !== true) {
+			$this->app->jsonHalt(['error' => 'Invalid API Key']);
+		}
+	}
+}
+
+// routes.php
+$router->group('/api', function(Router $router) {
+	$router->get('/users', [ ApiController::class, 'getUsers' ]);
+	$router->get('/companies', [ ApiController::class, 'getCompanies' ]);
+	// さらにルート...
+}, [ ApiMiddleware::class ]);
+```
+
+これで、設定した API キー検証ミドルウェアによってすべての API ルートが保護されます！ルータグループにさらにルートを追加すると、即座に同じ保護が適用されます！
+
+#### ログインバリデーション
+
+ログインユーザーのみが利用可能なルートを保護したいですか？ミドルウェアで簡単に実現できます！
+
+```php
+use flight\Engine;
+
+class LoggedInMiddleware {
+
+	protected Engine $app;
+
+	public function __construct(Engine $app) {
+		$this->app = $app;
+	}
+
+	public function before(array $params) {
+		$session = $this->app->session();
+		if($session->get('logged_in') !== true) {
+			$this->app->redirect('/login');
+			exit;
+		}
+	}
+}
+
+// routes.php
+$router->group('/admin', function(Router $router) {
+	$router->get('/dashboard', [ DashboardController::class, 'index' ]);
+	$router->get('/clients', [ ClientController::class, 'index' ]);
+	// さらにルート...
+}, [ LoggedInMiddleware::class ]);
+```
+
+#### ルートパラメータ検証
+
+ユーザーが URL の値を変更してアクセスすべきでないデータにアクセスするのを防ぎたいですか？ミドルウェアで解決できます！
+
+```php
+use flight\Engine;
+
+class RouteSecurityMiddleware {
+
+	protected Engine $app;
+
+	public function __construct(Engine $app) {
+		$this->app = $app;
+	}
+
+	public function before(array $params) {
+		$clientId = $params['clientId'];
+		$jobId = $params['jobId'];
+
+		// データベースで何らかの検索を実行
+		$isValid = !!$this->app->db()->fetchField("SELECT 1 FROM client_jobs WHERE client_id = ? AND job_id = ?", [ $clientId, $jobId ]);
+
+		if($isValid !== true) {
+			$this->app->halt(400, 'You are blocked, muahahaha!');
+		}
+	}
+}
+
+// routes.php
+$router->group('/client/@clientId/job/@jobId', function(Router $router) {
+	$router->get('', [ JobController::class, 'view' ]);
+	$router->put('', [ JobController::class, 'update' ]);
+	$router->delete('', [ JobController::class, 'delete' ]);
+	// さらにルート...
+}, [ RouteSecurityMiddleware::class ]);
+```
+
+## ミドルウェア実行の処理
+
+認証ミドルウェアがあり、認証されていない場合にユーザーをログインページにリダイレクトしたいとします。いくつかのオプションがあります：
+
+1. ミドルウェア関数から false を返し、Flight が自動的に 403 Forbidden エラーを返しますが、カスタマイズはできません。
+1. `Flight::redirect()` を使用してユーザーをログインページにリダイレクトできます。
+1. ミドルウェア内でカスタムエラーを作成し、ルートの実行を停止できます。
+
+### シンプルでストレート
+
+簡単な `return false;` の例を以下に示します：
+
 ```php
 class MyMiddleware {
 	public function before($params) {
-		if (isset($_SESSION['user']) === false) {
+		$hasUserKey = Flight::session()->exists('user');
+		if ($hasUserKey === false) {
 			return false;
 		}
 
-		// trueの場合、すべてが続行されます
+		// true の場合、すべて続行されます
 	}
 }
 ```
 
-### リダイレクト例
+### リダイレクトの例
 
-以下はユーザーをログイン画面にリダイレクトする例です：
+ユーザーをログインページにリダイレクトする例を以下に示します：
 ```php
 class MyMiddleware {
 	public function before($params) {
-		if (isset($_SESSION['user']) === false) {
+		$hasUserKey = Flight::session()->exists('user');
+		if ($hasUserKey === false) {
 			Flight::redirect('/login');
 			exit;
 		}
@@ -85,13 +321,13 @@ class MyMiddleware {
 }
 ```
 
-### カスタムエラー例
+### カスタムエラーの例
 
-APIを構築していて、JSONエラーをスローする必要がある場合、以下のようにできます：
+API を構築していて JSON エラーをスローする必要があるとします。以下のようにできます：
 ```php
 class MyMiddleware {
 	public function before($params) {
-		$authorization = Flight::request()->headers['Authorization'];
+		$authorization = Flight::request()->getHeader('Authorization');
 		if(empty($authorization)) {
 			Flight::jsonHalt(['error' => 'You must be logged in to access this page.'], 403);
 			// または
@@ -104,32 +340,16 @@ class MyMiddleware {
 }
 ```
 
-## グループ化されたミドルウェア
+## 関連項目
+- [ルーティング](/learn/routing) - ルートをコントローラーにマッピングし、ビューをレンダリングする方法。
+- [リクエスト](/learn/requests) - 受信リクエストの処理方法の理解。
+- [レスポンス](/learn/responses) - HTTP レスポンスのカスタマイズ方法。
+- [依存性注入](/learn/dependency-injection-container) - ルートでのオブジェクト作成と管理の簡素化。
+- [なぜフレームワークか？](/learn/why-frameworks) - Flight のようなフレームワークを使用する利点の理解。
+- [ミドルウェア実行戦略の例](https://www.slimframework.com/docs/v4/concepts/middleware.html#how-does-middleware-work)
 
-ルートグループを追加し、そのグループ内のすべてのルートに同じミドルウェアを適用できます。これは、ヘッダーのAPIキーをチェックするAuthミドルウェアで一連のルートをグループ化する必要がある場合に便利です。
+## トラブルシューティング
+- ミドルウェアにリダイレクトがあるのにアプリがリダイレクトされない場合、ミドルウェアに `exit;` 文を追加してください。
 
-```php
-// groupメソッドの最後に追加
-Flight::group('/api', function() {
-
-	// これは/apiに一致します
-	Flight::route('', function() { echo 'api'; }, false, 'api');
-	// これは/api/usersに一致します
-    Flight::route('/users', function() { echo 'users'; }, false, 'users');
-	// これは/api/users/1234に一致します
-	Flight::route('/users/@id', function($id) { echo 'user:'.$id; }, false, 'user_view');
-}, [ new ApiAuthMiddleware() ]);
-```
-
-すべてのルートにグローバルミドルウェアを適用したい場合、空のグループを追加できます：
-
-```php
-// groupメソッドの最後に追加
-Flight::group('', function() {
-
-	// これはまだ/usersです
-	Flight::route('/users', function() { echo 'users'; }, false, 'users');
-	// これはまだ/users/1234です
-	Flight::route('/users/@id', function($id) { echo 'user:'.$id; }, false, 'user_view');
-}, [ ApiAuthMiddleware::class ]); // または [ new ApiAuthMiddleware() ]、同じです
-```
+## 変更履歴
+- v3.1: ミドルウェアのサポートを追加。

@@ -1,38 +1,38 @@
-# Единичное тестирование в Flight PHP с PHPUnit
+# Unit Testing в Flight PHP с PHPUnit
 
-Этот гид вводит единичное тестирование в Flight PHP с использованием [PHPUnit](https://phpunit.de/), предназначенный для начинающих, которые хотят понять *почему* единичное тестирование важно и как его применять на практике. Мы сосредоточимся на тестировании *поведения* — обеспечении того, что ваше приложение делает то, что ожидается, например, отправляет электронное письмо или сохраняет запись — вместо тривиальных расчётов. Мы начнём с простого [route handler](/learn/routing) и перейдём к более сложному [controller](/learn/routing), включив [dependency injection](/learn/dependency-injection-container) (DI) и имитацию внешних сервисов.
+Этот гид вводит в unit testing в Flight PHP с использованием [PHPUnit](https://phpunit.de/), предназначен для начинающих, которые хотят понять *почему* unit testing важен и как применять его на практике. Мы сосредоточимся на тестировании *поведения* — обеспечении того, что ваше приложение делает то, что ожидается, например, отправка email или сохранение записи — вместо тривиальных вычислений. Мы начнем с простого [route handler](/learn/routing) и перейдем к более сложному [controller](/learn/routing), включая [dependency injection](/learn/dependency-injection-container) (DI) и mocking сторонних сервисов.
 
-## Почему проводить единичное тестирование?
+## Почему Unit Test?
 
-Единичное тестирование гарантирует, что ваш код работает так, как ожидается, обнаруживая ошибки до их попадания в производство. Это особенно полезно в Flight, где лёгкий роутинг и гибкость могут привести к сложным взаимодействиям. Для одиночных разработчиков или команд, тесты действуют как защитная сеть, документируя ожидаемое поведение и предотвращая регрессии при повторном обращении к коду. Они также улучшают дизайн: код, который трудно тестировать, часто указывает на чрезмерную сложность или тесную связь классов.
+Unit testing обеспечивает, что ваш код ведет себя как ожидается, ловит баги до того, как они попадут в production. Это особенно ценно в Flight, где легковесный routing и гибкость могут привести к сложным взаимодействиям. Для solo-разработчиков или команд unit tests действуют как safety net, документируя ожидаемое поведение и предотвращая регрессии при возвращении к коду позже. Они также улучшают дизайн: код, который трудно тестировать, часто сигнализирует о чрезмерной сложности или тесной связанности классов.
 
-В отличие от простых примеров (например, тестирование `x * y = z`), мы сосредоточимся на реальных сценариях, таких как проверка ввода, сохранение данных или срабатывание действий, как отправка электронных писем. Наша цель — сделать тестирование доступным и значимым.
+В отличие от простых примеров (например, тестирование `x * y = z`), мы сосредоточимся на реальном поведении, таком как валидация ввода, сохранение данных или запуск действий вроде email. Наша цель — сделать тестирование доступным и значимым.
 
-## Общие принципы руководства
+## Общие Руководящие Принципы
 
-1. **Тестируйте поведение, а не реализацию**: Сосредоточьтесь на результатах (например, "электронное письмо отправлено" или "запись сохранена"), а не на внутренних деталях. Это делает тесты устойчивыми к рефакторингу.
-2. **Перестаньте использовать `Flight::`**: Статические методы Flight очень удобны, но усложняют тестирование. Привыкайте использовать переменную `$app` из `$app = Flight::app();`. `$app` имеет все те же методы, что и `Flight::`. Вы всё ещё сможете использовать `$app->route()` или `$this->app->json()` в вашем контроллере и т.д. Также используйте реальный роутер Flight с `$router = $app->router()` и затем `$router->get()`, `$router->post()`, `$router->group()` и т.д. Смотрите [Routing](/learn/routing).
-3. **Делайте тесты быстрыми**: Быстрые тесты поощряют частое выполнение. Избегайте медленных операций, таких как вызовы базы данных, в единичных тестах. Если тест медленный, это признак, что вы пишете интеграционный тест, а не единичный. Интеграционные тесты включают реальные базы данных, реальные HTTP-вызовы, реальную отправку электронных писем и т.д. У них есть своё место, но они медленные и могут быть ненадёжными, то есть иногда падать по неизвестным причинам. 
-4. **Используйте описательные имена**: Имена тестов должны чётко описывать тестируемое поведение. Это улучшает читаемость и поддерживаемость.
-5. **Избегайте глобальных переменных как чумы**: Минимизируйте использование `$app->set()` и `$app->get()`, так как они действуют как глобальное состояние, требуя имитации в каждом тесте. Предпочтите DI или контейнер DI (смотрите [Dependency Injection Container](/learn/dependency-injection-container)). Даже использование `$app->map()` технически является "глобальным" и должно избегаться в пользу DI. Используйте библиотеку сессий, такую как [flightphp/session](https://github.com/flightphp/session), чтобы вы могли имитировать объект сессии в тестах. **Не** обращайтесь напрямую к [`$_SESSION`](https://www.php.net/manual/en/reserved.variables.session.php) в вашем коде, так как это вводит глобальную переменную, усложняя тестирование.
-6. **Используйте Dependency Injection**: Внедряйте зависимости (например, [`PDO`](https://www.php.net/manual/en/class.pdo.php), сервисы отправки почты) в контроллеры, чтобы изолировать логику и упростить имитацию. Если у класса слишком много зависимостей, рассмотрите рефакторинг его в меньшие классы, каждый с одной ответственностью, следуя [SOLID principles](https://en.wikipedia.org/wiki/SOLID).
-7. **Имитируйте внешние сервисы**: Имитируйте базы данных, HTTP-клиенты (cURL) или сервисы отправки почты, чтобы избежать внешних вызовов. Тестируйте один или два уровня в глубину, но позвольте основной логике работать. Например, если ваше приложение отправляет SMS, вы **НЕ** хотите реально отправлять SMS каждый раз при запуске тестов, так как это накапливает расходы (и замедляет процесс). Вместо этого имитируйте сервис SMS и просто проверьте, что ваш код вызвал сервис SMS с правильными параметрами.
-8. **Стремитесь к высокому покрытию, а не к совершенству**: 100% покрытие строк — хорошо, но это не значит, что всё в коде тестируется правильно (прочитайте о [branch/path coverage in PHPUnit](https://localheinz.com/articles/2023/03/22/collecting-line-branch-and-path-coverage-with-phpunit/)). Приоритизируйте критические поведения (например, регистрацию пользователя, ответы API и захват неудачных ответов).
-9. **Используйте контроллеры для маршрутов**: В определениях маршрутов используйте контроллеры, а не замыкания. Экземпляр `flight\Engine $app` по умолчанию внедряется в каждый контроллер через конструктор. В тестах используйте `$app = new Flight\Engine()`, чтобы создать экземпляр Flight в тесте, внедрить его в контроллер и вызвать методы напрямую (например, `$controller->register()`). Смотрите [Extending Flight](/learn/extending) и [Routing](/learn/routing).
-10. **Выберите стиль имитации и придерживайтесь его**: PHPUnit поддерживает несколько стилей имитации (например, prophecy, встроенные имитаторы), или вы можете использовать анонимные классы, которые имеют свои преимущества, такие как автодополнение кода, сбои при изменении определения метода и т.д. Просто будьте последовательны в тестах. Смотрите [PHPUnit Mock Objects](https://docs.phpunit.de/en/12.3/test-doubles.html#test-doubles).
-11. **Используйте `protected` видимость для методов/свойств, которые вы хотите тестировать в подклассах**: Это позволяет переопределять их в подклассах тестов без того, чтобы делать их публичными, что особенно полезно для имитаторов анонимных классов.
+1. **Тестируйте Поведение, Не Реализацию**: Сосредоточьтесь на результатах (например, «email отправлен» или «запись сохранена») вместо внутренних деталей. Это делает тесты устойчивыми к рефакторингу.
+2. **Перестаньте использовать `Flight::`**: Статические методы Flight невероятно удобны, но усложняют тестирование. Вы должны привыкнуть использовать переменную `$app` из `$app = Flight::app();`. `$app` имеет все те же методы, что и `Flight::`. Вы все еще сможете использовать `$app->route()` или `$this->app->json()` в вашем controller и т.д. Также вы должны использовать реальный Flight router с `$router = $app->router()` и затем вы сможете использовать `$router->get()`, `$router->post()`, `$router->group()` и т.д. См. [Routing](/learn/routing).
+3. **Держите Тесты Быстрыми**: Быстрые тесты поощряют частое выполнение. Избегайте медленных операций, таких как вызовы базы данных в unit tests. Если у вас есть медленный тест, это признак, что вы пишете integration test, а не unit test. Integration tests — это когда вы действительно вовлекаете реальные базы данных, реальные HTTP-вызовы, реальную отправку email и т.д. У них есть свое место, но они медленные и могут быть flaky, то есть иногда падают по неизвестной причине. 
+4. **Используйте Описательные Имена**: Имена тестов должны четко описывать тестируемое поведение. Это улучшает читаемость и поддерживаемость.
+5. **Избегайте Globals Как Чумы**: Минимизируйте использование `$app->set()` и `$app->get()`, поскольку они действуют как global state, требуя mocks в каждом тесте. Предпочитайте DI или DI container (см. [Dependency Injection Container](/learn/dependency-injection-container)). Даже использование метода `$app->map()` технически является "global" и должно избегаться в пользу DI. Используйте библиотеку сессий, такую как [flightphp/session](https://github.com/flightphp/session), чтобы вы могли mock объект сессии в ваших тестах. **Не** вызывайте [`$_SESSION`](https://www.php.net/manual/en/reserved.variables.session.php) напрямую в вашем коде, поскольку это внедряет global variable в ваш код, усложняя тестирование.
+6. **Используйте Dependency Injection**: Внедряйте зависимости (например, [`PDO`](https://www.php.net/manual/en/class.pdo.php), mailers) в controllers для изоляции логики и упрощения mocking. Если у вас есть класс с слишком многими зависимостями, рассмотрите рефакторинг его в меньшие классы, каждый с одной ответственностью, следуя [SOLID principles](https://en.wikipedia.org/wiki/SOLID).
+7. **Mock Сторонние Сервисы**: Mock базы данных, HTTP-клиенты (cURL) или email-сервисы, чтобы избежать внешних вызовов. Тестируйте на один-два уровня в глубину, но позволяйте вашей основной логике работать. Например, если ваше приложение отправляет SMS, вы **НЕ** хотите реально отправлять SMS каждый раз, когда запускаете тесты, потому что эти расходы накопятся (и это будет медленнее). Вместо этого mock сервис SMS и просто проверьте, что ваш код вызвал сервис SMS с правильными параметрами.
+8. **Стремитесь к Высокому Покрытию, Не к Совершенству**: 100% покрытие строк хорошо, но это не значит, что все в вашем коде протестировано правильно (погуглите [branch/path coverage в PHPUnit](https://localheinz.com/articles/2023/03/22/collecting-line-branch-and-path-coverage-with-phpunit/)). Приоритизируйте критические поведения (например, регистрацию пользователя, ответы API и захват неудачных ответов).
+9. **Используйте Controllers для Routes**: В ваших определениях routes используйте controllers, а не closures. `flight\Engine $app` по умолчанию внедряется в каждый controller через конструктор. В тестах используйте `$app = new Flight\Engine()` для инстанцирования Flight в тесте, внедрите его в ваш controller и вызывайте методы напрямую (например, `$controller->register()`). См. [Extending Flight](/learn/extending) и [Routing](/learn/routing).
+10. **Выберите Стиль Mocking и Придерживайтесь Его**: PHPUnit поддерживает несколько стилей mocking (например, prophecy, встроенные mocks), или вы можете использовать anonymous classes, которые имеют свои преимущества, такие как code completion, поломка при изменении определения метода и т.д. Просто будьте последовательны в ваших тестах. См. [PHPUnit Mock Objects](https://docs.phpunit.de/en/12.3/test-doubles.html#test-doubles).
+11. **Используйте `protected` visibility для методов/свойств, которые вы хотите тестировать в подклассах**: Это позволяет переопределять их в тестовых подклассах без их публичности, это особенно полезно для anonymous class mocks.
 
 ## Настройка PHPUnit
 
-Сначала настройте [PHPUnit](https://phpunit.de/) в вашем проекте Flight PHP с помощью Composer для лёгкого тестирования. Смотрите [PHPUnit Getting Started guide](https://phpunit.readthedocs.io/en/12.3/installation.html) для деталей.
+Сначала настройте [PHPUnit](https://phpunit.de/) в вашем проекте Flight PHP с использованием Composer для удобного тестирования. См. [PHPUnit Getting Started guide](https://phpunit.readthedocs.io/en/12.3/installation.html) для более подробной информации.
 
-1. В каталоге вашего проекта выполните:
+1. В директории вашего проекта запустите:
    ```bash
    composer require --dev phpunit/phpunit
    ```
-   Это установит последнюю версию PHPUnit как зависимость для разработки.
+   Это установит последнюю версию PHPUnit как development dependency.
 
-2. Создайте каталог `tests` в корне вашего проекта для файлов тестов.
+2. Создайте директорию `tests` в корне вашего проекта для файлов тестов.
 
 3. Добавьте скрипт теста в `composer.json` для удобства:
    ```json
@@ -54,11 +54,11 @@
    </phpunit>
    ```
 
-Теперь, когда тесты настроены, вы можете запустить `composer test` для выполнения тестов.
+Теперь, когда ваши тесты собраны, вы можете запустить `composer test` для выполнения тестов.
 
-## Тестирование простого обработчика маршрута
+## Тестирование Простого Route Handler
 
-Давайте начнём с базового [route](/learn/routing), который проверяет ввод email пользователя. Мы протестируем его поведение: возвращение сообщения об успехе для валидных email и ошибки для невалидных. Для проверки email мы используем [`filter_var`](https://www.php.net/manual/en/function.filter-var.php).
+Давайте начнем с базового [route](/learn/routing), который валидирует email-ввод пользователя. Мы протестируем его поведение: возвращение сообщения об успехе для валидных email и ошибки для невалидных. Для валидации email мы используем [`filter_var`](https://www.php.net/manual/en/function.filter-var.php).
 
 ```php
 // index.php
@@ -69,16 +69,16 @@ class UserController {
 	protected $app;
 
 	public function __construct(flight\Engine $app) {
-		$this->app = $app;  // Это присваивает экземпляр приложения
+		$this->app = $app;
 	}
 
 	public function register() {
 		$email = $this->app->request()->data->email;
 		$responseArray = [];
 		if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-			$responseArray = ['status' => 'error', 'message' => 'Invalid email'];  // Это устанавливает массив ответа для ошибки
+			$responseArray = ['status' => 'error', 'message' => 'Invalid email'];
 		} else {
-			$responseArray = ['status' => 'success', 'message' => 'Valid email'];  // Это устанавливает массив ответа для успеха
+			$responseArray = ['status' => 'success', 'message' => 'Valid email'];
 		}
 
 		$this->app->json($responseArray);
@@ -86,7 +86,7 @@ class UserController {
 }
 ```
 
-Чтобы протестировать это, создайте файл теста. Смотрите [Unit Testing and SOLID Principles](/learn/unit-testing-and-solid-principles) для большего о структуре тестов:
+Чтобы протестировать это, создайте файл теста. См. [Unit Testing and SOLID Principles](/learn/unit-testing-and-solid-principles) для большего количества информации о структурировании тестов:
 
 ```php
 // tests/UserControllerTest.php
@@ -97,9 +97,9 @@ use flight\Engine;
 class UserControllerTest extends TestCase {
 
     public function testValidEmailReturnsSuccess() {
-		$app = new Engine();  // Создаёт новый экземпляр Engine
+		$app = new Engine();
 		$request = $app->request();
-		$request->data->email = 'test@example.com';  // Симулирует данные POST
+		$request->data->email = 'test@example.com'; // Simulate POST data
 		$UserController = new UserController($app);
 		$UserController->register($request->data->email);
         $response = $app->response()->getBody();
@@ -111,7 +111,7 @@ class UserControllerTest extends TestCase {
     public function testInvalidEmailReturnsError() {
 		$app = new Engine();
 		$request = $app->request();
-		$request->data->email = 'invalid-email';  // Симулирует данные POST
+		$request->data->email = 'invalid-email'; // Simulate POST data
 		$UserController = new UserController($app);
 		$UserController->register($request->data->email);
 		$response = $app->response()->getBody();
@@ -122,21 +122,21 @@ class UserControllerTest extends TestCase {
 }
 ```
 
-**Ключевые моменты**:
-- Мы симулируем данные POST с помощью класса request. Не используйте глобальные переменные, такие как `$_POST`, `$_GET` и т.д., так как это усложняет тестирование (вам придётся всегда сбрасывать эти значения, иначе другие тесты могут сломаться).
-- Все контроллеры по умолчанию получают экземпляр `flight\Engine`, даже без настройки контейнера DI. Это упрощает прямое тестирование контроллеров.
-- Здесь нет использования `Flight::` вообще, что делает код проще для тестирования.
+**Ключевые Моменты**:
+- Мы симулируем POST-данные с использованием request class. Не используйте globals вроде `$_POST`, `$_GET` и т.д., поскольку это усложняет тестирование (вы всегда должны сбрасывать эти значения, иначе другие тесты могут сломаться).
+- Все controllers по умолчанию будут иметь инстанс `flight\Engine`, внедренный в них, даже без настройки DIC container. Это делает гораздо проще тестировать controllers напрямую.
+- Нет использования `Flight::` вообще, что делает код проще для тестирования.
 - Тесты проверяют поведение: правильный статус и сообщение для валидных/невалидных email.
 
-Запустите `composer test`, чтобы проверить, что маршрут работает как ожидается. Для большего о [requests](/learn/requests) и [responses](/learn/responses) в Flight смотрите релевантные документы.
+Запустите `composer test`, чтобы проверить, что route ведет себя как ожидается. Для большего количества информации о [requests](/learn/requests) и [responses](/learn/responses) в Flight см. соответствующие docs.
 
-## Использование Dependency Injection для тестируемых контроллеров
+## Использование Dependency Injection для Testable Controllers
 
-Для более сложных сценариев используйте [dependency injection](/learn/dependency-injection-container) (DI), чтобы сделать контроллеры тестируемыми. Избегайте глобалов Flight (например, `Flight::set()`, `Flight::map()`, `Flight::register()`), так как они действуют как глобальное состояние, требуя имитации для каждого теста. Вместо этого используйте контейнер DI Flight, [DICE](https://github.com/Level-2/Dice), [PHP-DI](https://php-di.org/) или ручную DI.
+Для более сложных сценариев используйте [dependency injection](/learn/dependency-injection-container) (DI), чтобы сделать controllers testable. Избегайте globals Flight (например, `Flight::set()`, `Flight::map()`, `Flight::register()`), поскольку они действуют как global state, требуя mocks для каждого теста. Вместо этого используйте DI container Flight, [DICE](https://github.com/Level-2/Dice), [PHP-DI](https://php-di.org/) или manual DI.
 
-Давайте используем [`flight\database\PdoWrapper`](/awesome-plugins/pdo-wrapper) вместо raw PDO. Этот обёртка гораздо проще имитировать и тестировать!
+Давайте используем [`flight\database\PdoWrapper`](/learn/pdo-wrapper) вместо raw PDO. Этот wrapper гораздо проще mock и unit test!
 
-Вот контроллер, который сохраняет пользователя в базу данных и отправляет приветственное электронное письмо:
+Вот controller, который сохраняет пользователя в базу данных и отправляет welcome email:
 
 ```php
 use flight\database\PdoWrapper;
@@ -147,15 +147,15 @@ class UserController {
     protected $mailer;
 
     public function __construct(Engine $app, PdoWrapper $db, MailerInterface $mailer) {
-        $this->app = $app;  // Это присваивает экземпляр приложения
-        $this->db = $db;  // Это присваивает базу данных
-        $this->mailer = $mailer;  // Это присваивает сервис почты
+        $this->app = $app;
+        $this->db = $db;
+        $this->mailer = $mailer;
     }
 
     public function register() {
 		$email = $this->app->request()->data->email;
 		if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-			// Это добавляет возврат, чтобы остановить выполнение для единичного тестирования
+			// adding the return here helps unit testing to stop execution
 			return $this->app->jsonHalt(['status' => 'error', 'message' => 'Invalid email']);
 		}
 
@@ -167,13 +167,13 @@ class UserController {
 }
 ```
 
-**Ключевые моменты**:
-- Контроллер зависит от экземпляра [`PdoWrapper`](/awesome-plugins/pdo-wrapper) и `MailerInterface` (предполагаемый внешний сервис электронных писем).
-- Зависимости внедряются через конструктор, избегая глобалов.
+**Ключевые Моменты**:
+- Controller зависит от инстанса [`PdoWrapper`](/learn/pdo-wrapper) и `MailerInterface` (предполагаемый сторонний email-сервис).
+- Зависимости внедряются через конструктор, избегая globals.
 
-### Тестирование контроллера с имитациями
+### Тестирование Controller с Mocks
 
-Теперь протестируем поведение `UserController`: проверку email, сохранение в базу данных и отправку электронных писем. Мы имитируем базу данных и сервис почты, чтобы изолировать контроллер.
+Теперь протестируем поведение `UserController`: валидацию email, сохранение в базу данных и отправку email. Мы замоким базу данных и mailer, чтобы изолировать controller.
 
 ```php
 // tests/UserControllerDICTest.php
@@ -182,19 +182,19 @@ use PHPUnit\Framework\TestCase;
 class UserControllerDICTest extends TestCase {
     public function testValidEmailSavesAndSendsEmail() {
 
-		// Иногда смешивание стилей имитации бывает необходимо
-		// Здесь мы используем встроенную имитацию PHPUnit для PDOStatement
+		// Иногда смешивание стилей mocking необходимо
+		// Здесь мы используем встроенный mock PHPUnit для PDOStatement
 		$statementMock = $this->createMock(PDOStatement::class);
 		$statementMock->method('execute')->willReturn(true);
-		// Используем анонимный класс для имитации PdoWrapper
+		// Используя anonymous class для mocking PdoWrapper
         $mockDb = new class($statementMock) extends PdoWrapper {
 			protected $statementMock;
 			public function __construct($statementMock) {
 				$this->statementMock = $statementMock;
 			}
 
-			// При имитации таким образом, мы не совершаем реального вызова базы данных.
-			// Мы можем дополнительно настроить эту имитацию, чтобы симулировать сбои и т.д.
+			// Когда мы моким его таким образом, мы не делаем реальный вызов базы данных.
+			// Мы можем дополнительно настроить это, чтобы изменить mock PDOStatement для симуляции сбоев и т.д.
             public function runQuery(string $sql, array $params = []): PDOStatement {
                 return $this->statementMock;
             }
@@ -219,22 +219,22 @@ class UserControllerDICTest extends TestCase {
 
     public function testInvalidEmailSkipsSaveAndEmail() {
 		 $mockDb = new class() extends PdoWrapper {
-			// Пустой конструктор обходит конструктор родителя
+			// An empty constructor bypasses the parent constructor
 			public function __construct() {}
             public function runQuery(string $sql, array $params = []): PDOStatement {
-                throw new Exception('Должен быть вызван');
+                throw new Exception('Should not be called');
             }
         };
         $mockMailer = new class implements MailerInterface {
             public $sentEmail = null;
             public function sendWelcome($email): bool {
-                throw new Exception('Должен быть вызван');
+                throw new Exception('Should not be called');
             }
         };
 		$app = new Engine();
 		$app->request()->data->email = 'invalid-email';
 
-		// Нужно сопоставить jsonHalt, чтобы избежать выхода
+		// Need to map jsonHalt to avoid exiting
 		$app->map('jsonHalt', function($data) use ($app) {
 			$app->json($data, 400);
 		});
@@ -248,14 +248,14 @@ class UserControllerDICTest extends TestCase {
 }
 ```
 
-**Ключевые моменты**:
-- Мы имитируем `PdoWrapper` и `MailerInterface`, чтобы избежать реальных вызовов базы данных или электронных писем.
-- Тесты проверяют поведение: валидные email запускают вставку в базу данных и отправку электронных писем; невалидные пропускают оба.
-- Имитируйте внешние зависимости (например, `PdoWrapper`, `MailerInterface`), позволяя логике контроллера работать.
+**Ключевые Моменты**:
+- Мы моким `PdoWrapper` и `MailerInterface`, чтобы избежать реальных вызовов базы данных или email.
+- Тесты проверяют поведение: валидные email запускают вставки в базу данных и отправку email; невалидные email пропускают оба.
+- Mock сторонние зависимости (например, `PdoWrapper`, `MailerInterface`), позволяя логике controller работать.
 
-### Избыточная имитация
+### Слишком Много Mocking
 
-Будьте осторожны, чтобы не имитировать слишком много вашего кода. Дам пример ниже, почему это может быть плохо, используя наш `UserController`. Мы изменим проверку на метод `isEmailValid` (с использованием `filter_var`) и другие новые добавления в отдельный метод `registerUser`.
+Будьте осторожны, чтобы не mock слишком много вашего кода. Позвольте мне дать пример ниже, почему это может быть плохой идеей, используя наш `UserController`. Мы изменим эту проверку на метод под названием `isEmailValid` (используя `filter_var`) и другие новые добавления в отдельный метод под названием `registerUser`.
 
 ```php
 use flight\database\PdoWrapper;
@@ -276,7 +276,7 @@ class UserControllerDICV2 {
     public function register() {
 		$email = $this->app->request()->data->email;
 		if (!$this->isEmailValid($email)) {
-			// Это добавляет возврат, чтобы остановить выполнение для единичного тестирования
+			// adding the return here helps unit testing to stop execution
 			return $this->app->jsonHalt(['status' => 'error', 'message' => 'Invalid email']);
 		}
 
@@ -286,7 +286,7 @@ class UserControllerDICV2 {
     }
 
 	protected function isEmailValid($email) {
-		return filter_var($email, FILTER_VALIDATE_EMAIL) !== false;  // Это проверяет валидность email
+		return filter_var($email, FILTER_VALIDATE_EMAIL) !== false;
 	}
 
 	protected function registerUser($email) {
@@ -296,7 +296,7 @@ class UserControllerDICV2 {
 }
 ```
 
-И теперь переимитированный единичный тест, который на самом деле ничего не тестирует:
+И теперь overmocked unit test, который на самом деле ничего не тестирует:
 
 ```php
 use PHPUnit\Framework\TestCase;
@@ -305,20 +305,20 @@ class UserControllerTest extends TestCase {
     public function testValidEmailSavesAndSendsEmail() {
 		$app = new Engine();
 		$app->request()->data->email = 'test@example.com';
-		// Мы пропускаем дополнительное внедрение зависимостей, так как это "просто"
+		// we are skipping the extra dependency injection here cause it's "easy"
         $controller = new class($app) extends UserControllerDICV2 {
 			protected $app;
-			// Обходим зависимости в конструкторе
+			// Bypass the deps in the construct
 			public function __construct($app) {
 				$this->app = $app;
 			}
 
-			// Мы просто заставим это быть валидным.
+			// We'll just force this to be valid.
 			protected function isEmailValid($email) {
-				return true;  // Всегда возвращает true, обходя реальную проверку
+				return true; // Always return true, bypassing real validation
 			}
 
-			// Обходим реальные вызовы DB и почты
+			// Bypass the actual DB and mailer calls
 			protected function registerUser($email) {
 				return false;
 			}
@@ -332,41 +332,41 @@ class UserControllerTest extends TestCase {
 }
 ```
 
-Ура, у нас есть единичные тесты и они проходят! Но подождите, что если я действительно изменю внутреннюю логику `isEmailValid` или `registerUser`? Мои тесты всё равно пройдут, потому что я имитировал всю функциональность. Дам вам пример.
+Ура, у нас есть unit tests и они проходят! Но подождите, что если я на самом деле изменю внутреннюю работу `isEmailValid` или `registerUser`? Мои тесты все равно пройдут, потому что я замокил всю функциональность. Позвольте мне показать, что я имею в виду.
 
 ```php
 // UserControllerDICV2.php
 class UserControllerDICV2 {
 
-	// ... другие методы ...
+	// ... other methods ...
 
 	protected function isEmailValid($email) {
-		// Изменённая логика
+		// Changed logic
 		$validEmail = filter_var($email, FILTER_VALIDATE_EMAIL) !== false;
-		// Теперь оно должно иметь только конкретный домен
+		// Now it should only have a specific domain
 		$validDomain = strpos($email, '@example.com') !== false; 
 		return $validEmail && $validDomain;
 	}
 }
 ```
 
-Если я запущу мои вышеуказанные единичные тесты, они всё равно пройдут! Но поскольку я не тестировал поведение (не позволил некоторому коду работать), у меня может быть ошибка, ожидающая в производстве. Тесты должны быть модифицированы, чтобы учитывать новое поведение, и также противоположное, когда поведение не такое, как ожидается.
+Если я запущу свои unit tests выше, они все равно пройдут! Но потому что я не тестировал поведение (на самом деле позволяя некоторому коду работать), я потенциально закодировал баг, ожидающий проявления в production. Тест должен быть модифицирован, чтобы учесть новое поведение, и также противоположность, когда поведение не то, что мы ожидаем.
 
-## Полный пример
+## Полный Пример
 
-Вы можете найти полный пример проекта Flight PHP с единичными тестами на GitHub: [n0nag0n/flight-unit-tests-guide](https://github.com/n0nag0n/flight-unit-tests-guide).
-Для большего гидов смотрите [Unit Testing and SOLID Principles](/learn/unit-testing-and-solid-principles) и [Troubleshooting](/learn/troubleshooting).
+Вы можете найти полный пример проекта Flight PHP с unit tests на GitHub: [n0nag0n/flight-unit-tests-guide](https://github.com/n0nag0n/flight-unit-tests-guide).
+Для более глубокого понимания см. [Unit Testing and SOLID Principles](/learn/unit-testing-and-solid-principles).
 
-## Распространённые ловушки
+## Распространенные Ошибки
 
-- **Избыточная имитация**: Не имитируйте каждую зависимость; позвольте некоторой логике (например, проверке в контроллере) работать, чтобы тестировать реальное поведение. Смотрите [Unit Testing and SOLID Principles](/learn/unit-testing-and-solid-principles).
-- **Глобальное состояние**: Использование глобальных переменных PHP (например, [`$_SESSION`](https://www.php.net/manual/en/reserved.variables.session.php), [`$_COOKIE`](https://www.php.net/manual/en/reserved.variables.cookie.php)) сильно делает тесты хрупкими. То же касается и `Flight::`. Рефакторите, чтобы передавать зависимости явно.
-- **Сложная настройка**: Если настройка теста громоздкая, ваш класс может иметь слишком много зависимостей или ответственностей, нарушающих [SOLID principles](https://en.wikipedia.org/wiki/SOLID).
+- **Over-Mocking**: Не мокайте каждую зависимость; позвольте некоторой логике (например, валидации в controller) работать, чтобы тестировать реальное поведение. См. [Unit Testing and SOLID Principles](/learn/unit-testing-and-solid-principles).
+- **Global State**: Использование global PHP-переменных (например, [`$_SESSION`](https://www.php.net/manual/en/reserved.variables.session.php), [`$_COOKIE`](https://www.php.net/manual/en/reserved.variables.cookie.php)) сильно делает тесты хрупкими. То же самое с `Flight::`. Рефакторьте, чтобы передавать зависимости явно.
+- **Сложная Настройка**: Если настройка теста громоздкая, ваш класс может иметь слишком много зависимостей или ответственностей, нарушая [SOLID principles](/learn/unit-testing-and-solid-principles).
 
-## Масштабирование с единичными тестами
+## Масштабирование с Unit Tests
 
-Единичные тесты сияют в больших проектах или при повторном обращении к коду через месяцы. Они документируют поведение и ловят регрессии, экономя время на переобучении вашего приложения. Для одиночных разработчиков тестируйте критические пути (например, регистрацию пользователя, обработку платежей). Для команд тесты обеспечивают последовательное поведение при вкладах. Смотрите [Why Frameworks?](/learn/why-frameworks) для большего о преимуществах использования фреймворков и тестов.
+Unit tests сияют в больших проектах или при возвращении к коду через месяцы. Они документируют поведение и ловят регрессии, спасая вас от повторного изучения вашего app. Для solo devs тестируйте критические пути (например, регистрацию пользователя, обработку платежей). Для команд тесты обеспечивают последовательное поведение среди вкладов. См. [Why Frameworks?](/learn/why-frameworks) для большего количества информации о преимуществах использования фреймворков и тестов.
 
-Поделитесь своими советами по тестированию в репозитории документации Flight PHP!
+Внесите свои собственные советы по тестированию в репозиторий документации Flight PHP!
 
 _Написано [n0nag0n](https://github.com/n0nag0n) 2025_

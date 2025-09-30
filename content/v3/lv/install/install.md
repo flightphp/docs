@@ -1,42 +1,63 @@
-# Instalācija
+# Instalēšanas instrukcijas
 
-## Lejupielādējiet failus
+Ir daži pamatpriekšnoteikumi, pirms varat instalēt Flight. Galvenokārt jums būs jā:
 
-Pārliecinieties, ka jūsu sistēmā ir instalēts PHP. Ja tas nav, noklikšķiniet [šeit](#installing-php), lai iegūtu norādes par to, kā to instalēt savai sistēmai.
+1. [Instalē PHP sistēmā](#instalēšanas-php)
+2. [Instalē Composer](https://getcomposer.org) labākai izstrādātāju pieredzei.
 
-Ja izmantojat [Composer](https://getcomposer.org), varat izpildīt šādu komandu:
+## Pamatinstalēšana
+
+Ja izmantojat [Composer](https://getcomposer.org), varat izpildīt šādu
+komandu:
 
 ```bash
 composer require flightphp/core
 ```
 
-VAI arī varat failus [lejupielādēt šeit](https://github.com/flightphp/core/archive/master.zip) tieši un izpauzēt tos savā tīmekļa katalogā.
+Tas tikai ievietos Flight kodola failus jūsu sistēmā. Jums būs jādefinē projekta struktūra, [izkārtojums](/learn/templates), [atkarības](/learn/dependency-injection-container), [konfigurācijas](/learn/configuration), [automātiskā ielāde](/learn/autoloading) utt. Šī metode nodrošina, ka nav instalētas citas atkarības, izņemot Flight.
+
+Varat arī [lejupielādēt failus](https://github.com/flightphp/core/archive/master.zip)
+tieši un izvilkt tos savā tīmekļa direktorijā.
+
+## Ieteicamā instalēšana
+
+Ir augsti ieteicams sākt ar [flightphp/skeleton](https://github.com/flightphp/skeleton) lietotni jebkuram jaunam projektam. Instalēšana ir viegla.
+
+```bash
+composer create-project flightphp/skeleton my-project/
+```
+
+Tas iestatīs jūsu projekta struktūru, konfigurēs automātisko ielādi ar vārdtelpām, iestatīs konfigurāciju un nodrošinās citas rīkus, piemēram, [Tracy](/awesome-plugins/tracy), [Tracy Extensions](/awesome-plugins/tracy-extensions) un [Runway](/awesome-plugins/runway).
 
 ## Konfigurējiet savu tīmekļa serveri
 
-### Iebūvētais PHP attīstības serveris
+### Iebūvētais PHP izstrādes serveris
 
-Šis ir pa tālu vienkāršākais veids, kā sākt darbu. Jūs varat izmantot iebūvēto serveri, lai palaistu savu lietotni un pat izmantotu SQLite datu bāzi (pilnībā atbalstīts sqlite3 jūsu sistēmā) un neprasītu pilnīgi neko! Vienkārši izpildiet šo komandu, kad PHP ir instalēts:
+Šī ir vienkāršākā metode, lai sāktu darbu. Varat izmantot iebūvēto serveri, lai palaistu savu lietotni un pat izmantot SQLite datubāzei (tik ilgi, kamēr sqlite3 ir instalēts jūsu sistēmā), un neprasīt gandrīz neko! Vienreiz instalējot PHP, vienkārši izpildiet šādu komandu:
 
 ```bash
 php -S localhost:8000
+# vai ar skeleton lietotni
+composer start
 ```
 
-Tad atveriet pārlūkprogrammu un dodieties uz `http://localhost:8000`.
+Pēc tam atveriet pārlūku un dodieties uz `http://localhost:8000`.
 
-Ja jūs vēlaties padarīt savas projekta dokumentu saknes mapes citu direktoriju (Piem.: jūsu projekts ir `~/mansprojekts`, bet jūsu dokumentu sakne ir `~/mansprojekts/public/`), tad varat izpildīt šo komandu, kad atrodaties `~/mansprojekts` direktorijā:
+Ja vēlaties padarīt sava projekta dokumenta saknes direktoriju citu direktoriju (Piem.: jūsu projekts ir `~/myproject`, bet jūsu dokumenta sakne ir `~/myproject/public/`), varat izpildīt šādu komandu, atrodoties `~/myproject` direktorijā:
 
 ```bash
 php -S localhost:8000 -t public/
+# ar skeleton lietotni tas jau ir konfigurēts
+composer start
 ```
 
-Tad atveriet pārlūkprogrammu un dodieties uz `http://localhost:8000`.
+Pēc tam atveriet pārlūku un dodieties uz `http://localhost:8000`.
 
 ### Apache
 
-Pārliecinieties, ka Apache jau ir instalēts jūsu sistēmā. Ja nē, meklējiet, kā instalēt Apache savā sistēmā.
+Pārliecinieties, ka Apache jau ir instalēts jūsu sistēmā. Ja nē, meklējiet Google, kā instalēt Apache jūsu sistēmā.
 
-Attiecībā uz Apache rediģējiet savu `.htaccess` failu ar šādiem ierakstiem:
+Apache gadījumā rediģējiet savu `.htaccess` failu ar šādu:
 
 ```apacheconf
 RewriteEngine On
@@ -45,11 +66,11 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ index.php [QSA,L]
 ```
 
-> **Piezīme**: Ja jums ir jāizmanto Flight apakšdirektorijā, pievienojiet rindu
-> `RewriteBase /apaksmappe/` tieši pēc `RewriteEngine On`.
+> **Piezīme**: Ja nepieciešams izmantot flight apakšdirektorijā, pievienojiet rindu
+> `RewriteBase /subdir/` tieši pēc `RewriteEngine On`.
 
-> **Piezīme**: Ja vēlaties aizsargāt visus servera failus, piem., datu bāzes vai env failus.
-> Ievietojiet šo savā `.htaccess` failā:
+> **Piezīme**: Ja vēlaties aizsargāt visus servera failus, piemēram, db vai env failu.
+> Ievietojiet to savā `.htaccess` failā:
 
 ```apacheconf
 RewriteEngine On
@@ -58,9 +79,9 @@ RewriteRule ^(.*)$ index.php
 
 ### Nginx
 
-Pārliecinieties, ka Nginx jau ir instalēts jūsu sistēmā. Ja nē, meklējiet, kā instalēt Nginx savā sistēmā.
+Pārliecinieties, ka Nginx jau ir instalēts jūsu sistēmā. Ja nē, meklējiet Google, kā instalēt Nginx jūsu sistēmā.
 
-Attiecībā uz Nginx pievienojiet šo savā servera norādē:
+Nginx gadījumā pievienojiet šādu savai servera deklarācijai:
 
 ```nginx
 server {
@@ -72,35 +93,37 @@ server {
 
 ## Izveidojiet savu `index.php` failu
 
+Ja veicat pamatinstalēšanu, jums būs nepieciešams kāds kods, lai sāktu.
+
 ```php
 <?php
 
-// Ja izmantojat Composer, pieprasiet autoloāderi.
+// Ja izmantojat Composer, iekļaujiet autoloader.
 require 'vendor/autoload.php';
-// ja nelietojat Composer, ielādējiet framework tieši
+// ja neizmantojat Composer, ielādējiet framework tieši
 // require 'flight/Flight.php';
 
-// Pēc tam definējiet maršrutu un piešķiriet funkciju, kas apstrādā pieprasījumu.
+// Tad definējiet maršrutu un piešķiriet funkciju, lai apstrādātu pieprasījumu.
 Flight::route('/', function () {
-  echo 'sveika pasaule!';
+  echo 'hello world!';
 });
 
-// Beigās startējiet framework.
+// Visbeidzot, palaidiet framework.
 Flight::start();
 ```
 
+Ar skeleton lietotni tas jau ir konfigurēts un apstrādāts jūsu `app/config/routes.php` failā. Pakalpojumi ir konfigurēti `app/config/services.php`.
+
 ## PHP instalēšana
 
-Ja jums jau ir instalēts `php` jūsu sistēmā, droši turpiniet šīs norādes un pārietiet uz [lejupielādes sadaļu](#download-the-files)
-
-Protams! Šeit ir norādes, kā instalēt PHP uz macOS, Windows 10/11, Ubuntu un Rocky Linux. Arī iekļauti būs detalizēti ieteikumi par dažādu PHP versiju instalēšanu.
+Ja jums jau ir instalēts `php` jūsu sistēmā, izlaidiet šīs instrukcijas un pārejiet uz [lejupielādes sadaļu](#download-the-files).
 
 ### **macOS**
 
-#### **PHP instalēšana izmantojot Homebrew**
+#### **PHP instalēšana, izmantojot Homebrew**
 
 1. **Instalējiet Homebrew** (ja vēl nav instalēts):
-   - Atveriet termināli un izpildiet:
+   - Atveriet Termināli un izpildiet:
      ```bash
      /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
      ```
@@ -110,14 +133,14 @@ Protams! Šeit ir norādes, kā instalēt PHP uz macOS, Windows 10/11, Ubuntu un
      ```bash
      brew install php
      ```
-   - Lai instalētu konkrētu versiju, piemēram, PHP 8.1:
+   - Lai instalētu specifisku versiju, piemēram, PHP 8.1:
      ```bash
      brew tap shivammathur/php
      brew install shivammathur/php/php@8.1
      ```
 
 3. **Pārslēdzieties starp PHP versijām**:
-   - Atslēdziet pašreizējo versiju un pievienojiet vēlamo versiju:
+   - Atvienojiet pašreizējo versiju un saistiet vēlamo versiju:
      ```bash
      brew unlink php
      brew link --overwrite --force php@8.1
@@ -129,64 +152,64 @@ Protams! Šeit ir norādes, kā instalēt PHP uz macOS, Windows 10/11, Ubuntu un
 
 ### **Windows 10/11**
 
-#### **PHP manuālā instalācija**
+#### **PHP instalēšana manuāli**
 
 1. **Lejupielādējiet PHP**:
-   - Apmeklējiet [PHP Windows versijas](https://windows.php.net/download/) un lejupielādējiet jaunāko vai konkrētu versiju (piem., 7.4, 8.0) kā zip failu bez pavedieniem.
+   - Apmeklējiet [PHP for Windows](https://windows.php.net/download/) un lejupielādējiet jaunāko vai specifisku versiju (piem., 7.4, 8.0) kā ne-vītu drošu zip failu.
 
-2. **Izpakošana PHP**:
-   - Izpako lejupielādēto zip failu uz `C:\php`.
+2. **Izvelciet PHP**:
+   - Izvelciet lejupielādēto zip failu uz `C:\php`.
 
 3. **Pievienojiet PHP sistēmas PATH**:
-   - Dodies uz **Sistēmas īpašības** > **Vides mainīgie**.
-   - Sadaļā **Sistēmas mainīgie** atradīt **Ceļš** un noklikšķiniet uz **Rediģēt**.
-   - Pievienojiet ceļu `C:\php` (vai kur izpakojāt PHP).
-   - Noklikšķiniet uz **Labi**, lai aizvērtu visus logus.
+   - Dodieties uz **Sistēmas īpašībām** > **Vides mainīgajiem**.
+   - Sadaļā **Sistēmas mainīgie**, atrast **Path** un noklikšķiniet **Rediģēt**.
+   - Pievienojiet ceļu `C:\php` (vai kur izvelcāt PHP).
+   - Noklikšķiniet **Labi**, lai aizvērtu visus logus.
 
 4. **Konfigurējiet PHP**:
    - Kopējiet `php.ini-development` uz `php.ini`.
-   - Rediģējiet `php.ini`, lai konfigurētu PHP pēc nepieciešamības (piem., iestatiet `extension_dir`, aktivizējiet paplašinājumus).
+   - Rediģējiet `php.ini`, lai konfigurētu PHP pēc vajadzības (piem., iestatiet `extension_dir`, iespējiet paplašinājumus).
 
-5. **Pārbaudiet PHP instalāciju**:
-   - Atveriet komandrindu un izpildiet:
+5. **Pārbaudiet PHP instalēšanu**:
+   - Atveriet Komandu uzvedni un izpildiet:
      ```cmd
      php -v
      ```
 
 #### **Vairāku PHP versiju instalēšana**
 
-1. **Atkārtojiet iepriekšminētos soļus** katrai versijai, ievietojot katru atsevišķā mapē (piem., `C:\php7`, `C:\php8`).
+1. **Atkārtojiet iepriekšējos soļus** katrai versijai, izvietojot katru atsevišķā direktorijā (piem., `C:\php7`, `C:\php8`).
 
 2. **Pārslēdzieties starp versijām**, pielāgojot sistēmas PATH mainīgo, lai norādītu uz vēlamo versijas direktoriju.
 
-### **Ubuntu (20.04, 22.04, utt.)**
+### **Ubuntu (20.04, 22.04 utt.)**
 
 #### **PHP instalēšana, izmantojot apt**
 
-1. **Atjauniniet pakotņu sarakstus**:
-   - Atveriet termināli un izpildiet:
+1. **Atjauniniet paketes sarakstus**:
+   - Atveriet Termināli un izpildiet:
      ```bash
      sudo apt update
      ```
 
 2. **Instalējiet PHP**:
-   - Uzstādiet jaunāko PHP versiju:
+   - Instalējiet jaunāko PHP versiju:
      ```bash
      sudo apt install php
      ```
-   - Lai instalētu konkrētu versiju, piemēram, PHP 8.1:
+   - Lai instalētu specifisku versiju, piemēram, PHP 8.1:
      ```bash
      sudo apt install php8.1
      ```
 
-3. **Instalējiet papildu moduļus** (nav obligāti):
+3. **Instalējiet papildu moduļus** (pēc izvēles):
    - Piemēram, lai instalētu MySQL atbalstu:
      ```bash
      sudo apt install php8.1-mysql
      ```
 
 4. **Pārslēdzieties starp PHP versijām**:
-   - Lietojiet `update-alternatives`:
+   - Izmantojiet `update-alternatives`:
      ```bash
      sudo update-alternatives --set php /usr/bin/php8.1
      ```
@@ -202,12 +225,12 @@ Protams! Šeit ir norādes, kā instalēt PHP uz macOS, Windows 10/11, Ubuntu un
 #### **PHP instalēšana, izmantojot yum/dnf**
 
 1. **Iespējojiet EPEL repozitoriju**:
-   - Atveriet termināli un izpildiet:
+   - Atveriet Termināli un izpildiet:
      ```bash
      sudo dnf install epel-release
      ```
 
-2. **Uzstādiet Remi repozitoriju**:
+2. **Instalējiet Remi's repozitoriju**:
    - Izpildiet:
      ```bash
      sudo dnf install https://rpms.remirepo.net/enterprise/remi-release-8.rpm
@@ -215,11 +238,11 @@ Protams! Šeit ir norādes, kā instalēt PHP uz macOS, Windows 10/11, Ubuntu un
      ```
 
 3. **Instalējiet PHP**:
-   - Lai instalētu noklusējuma versiju:
+   - Lai instalētu noklusēto versiju:
      ```bash
      sudo dnf install php
      ```
-   - Lai instalētu konkrētu versiju, piemēram, PHP 7.4:
+   - Lai instalētu specifisku versiju, piemēram, PHP 7.4:
      ```bash
      sudo dnf module install php:remi-7.4
      ```
@@ -240,6 +263,6 @@ Protams! Šeit ir norādes, kā instalēt PHP uz macOS, Windows 10/11, Ubuntu un
 
 ### **Vispārīgas piezīmes**
 
-- Lai izstrādes vidēs būtu svarīgi konfigurēt PHP iestatījumus atbilstoši jūsu projekta prasībām. 
-- Nomainot PHP versijas, pārliecinieties, ka visi attiecīgie PHP paplašinājumi ir instalēti attiecīgajai versijai, kuru plānojat izmantot.
-- Pēc PHP versiju maiņas vai konfigurāciju atjaunošanas, restartējiet savu tīmekļa serveri (Apache, Nginx, u.c.), lai piemērotu izmaiņas.
+- Izstrādes vidēs ir svarīgi konfigurēt PHP iestatījumus saskaņā ar jūsu projekta prasībām. 
+- Pārslēdzoties uz PHP versijām, pārliecinieties, ka visas attiecīgās PHP paplašinājumi ir instalēti specifiskajai versijai, ko plānojat izmantot.
+- Pārsāciet savu tīmekļa serveri (Apache, Nginx utt.) pēc PHP versiju pārslēgšanas vai konfigurāciju atjaunināšanas, lai piemērotu izmaiņas.

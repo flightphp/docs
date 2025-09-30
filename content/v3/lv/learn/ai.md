@@ -1,81 +1,87 @@
-# AI & Izstrādātāja pieredze ar Flight
+# AI & Izstrādātāju pieredze ar Flight
 
-Flight ir viss par to, lai palīdzētu jums būvēt ātrāk, gudrāk un ar mazāku berzi — it īpaši, strādājot ar AI darbinātiem rīkiem un mūsdienīgiem izstrādātāju darba plūsmām. Šī lapa aptver, kā Flight padara viegli uzlabot jūsu projektus ar AI, un kā sākt ar jaunajiem AI palīgiem, kas iebūvēti tieši ietvarā un skeleton projektā.
+## Pārskats
 
----
+Flight padara viegli uzlabot jūsu PHP projektus ar AI vadītiem rīkiem un mūsdienīgām izstrādātāju darba plūsmām. Ar iebūvētiem komandām savienojumam ar LLM (Large Language Model) sniedzējiem un ģenerēšanai projektu specifiskām AI kodēšanas instrukcijām, Flight palīdz jums un jūsu komandai gūt maksimālu labumu no AI asistentiem, piemēram, GitHub Copilot, Cursor un Windsurf.
 
-## AI gatavs pēc noklusējuma: Skeleton projekts
+## Saprašana
 
-Oficiālais [flightphp/skeleton](https://github.com/flightphp/skeleton) iesācējs tagad nāk ar instrukcijām un konfigurāciju populāriem AI kodēšanas palīgiem:
+AI kodēšanas asistenti ir visnoderīgākie, kad tie saprot jūsu projekta kontekstu, konvencijas un mērķus. Flight AI palīgi ļauj jums:
+- Savienot savu projektu ar populāriem LLM sniedzējiem (OpenAI, Grok, Claude utt.)
+- Ģenerēt un atjaunināt projektu specifiskas instrukcijas AI rīkiem, lai visi saņemtu konsekventu, relevantu palīdzību
+- Turēt savu komandu saskaņotu un produktīvu, ar mazāk laika iztērēts konteksta skaidrošanai
 
-- **GitHub Copilot**
-- **Cursor**
-- **Windsurf**
+Šīs funkcijas ir iebūvētas Flight kodola CLI un oficiālajā [flightphp/skeleton](https://github.com/flightphp/skeleton) sākuma projektā.
 
-Šie rīki ir iepriekš konfigurēti ar projekta specifiskām instrukcijām, tāpēc jūs un jūsu komanda varat saņemt visvairāk atbilstošu, konteksta izpratni palīdzību, kodējot. Tas nozīmē:
+## Pamata lietošana
 
-- AI palīgi saprot jūsu projekta mērķus, stilu un prasības
-- Vienota vadlīnija visiem dalībniekiem
-- Mazāk laika pavadīts, lai izskaidrotu kontekstu, vairāk laika būvējot
+### 1. LLM akreditīvu iestatīšana
 
-> **Kāpēc tas ir svarīgi?**
->
-> Kad jūsu AI rīki zina jūsu projekta nodomu un konvencijas, tie var palīdzēt izveidot funkcijas, pārstrukturēt kodu un izvairīties no izplatītām kļūdām — padarot jūs (un jūsu komandu) produktīvāku no pirmās dienas.
+`ai:init` komanda ved jūs cauri jūsu projekta savienojumam ar LLM sniedzēju.
 
----
-
-## Jaunas AI komandas Flight kodolā
-
-_v3.16.0+_
-
-Flight kodols tagad ietver divas spēcīgas CLI komandas, lai palīdzētu jums iestatīt un vadīt jūsu projektu ar AI:
-
-### 1. `ai:init` — Pieslēgties jūsu mīļākajam LLM sniedzējam
-
-Šī komanda vada jūs cauri akreditāciju iestatīšanai LLM (Liela Valoda Modelis) sniedzējam, piemēram, OpenAI, Grok vai Anthropic (Claude).
-
-**Piemērs:**
 ```bash
 php runway ai:init
 ```
-Jūs tiksiet aicināts izvēlēties savu sniedzēju, ievadīt savu API atslēgu un izvēlēties modeli. Tas padara viegli pieslēgt jūsu projektu jaunākajiem AI pakalpojumiem — bez manuālas konfigurācijas nepieciešamības.
 
-### 2. `ai:generate-instructions` — Projekta izpratnes AI kodēšanas instrukcijas
+Jums tiks uzdots:
+- Izvēlēties savu sniedzēju (OpenAI, Grok, Claude utt.)
+- Ievadīt savu API atslēgu
+- Iestatīt bāzes URL un modeļa nosaukumu
 
-Šī komanda palīdz izveidot vai atjaunot projekta specifiskās instrukcijas AI kodēšanas palīgiem. Tā uzdod jums dažus vienkāršus jautājumus par jūsu projektu (piemēram, kam tas ir paredzēts, kādu datu bāzi izmantojat, komandas lielumu utt.), pēc tam izmanto jūsu LLM sniedzēju, lai izveidotu pielāgotas instrukcijas.
-
-Ja jums jau ir instrukcijas, tas tās atjaunina, lai atspoguļotu jūsu sniegtās atbildes. Šīs instrukcijas tiek automātiski ierakstītas:
-- `.github/copilot-instructions.md` (for Github Copilot)
-- `.cursor/rules/project-overview.mdc` (for Cursor)
-- `.windsurfrules` (for Windsurf)
+Tas izveido `.runway-creds.json` failu jūsu projekta saknē (un nodrošina, ka tas ir jūsu `.gitignore`).
 
 **Piemērs:**
+```
+Welcome to AI Init!
+Which LLM API do you want to use? [1] openai, [2] grok, [3] claude: 1
+Enter the base URL for the LLM API [https://api.openai.com]:
+Enter your API key for openai: sk-...
+Enter the model name you want to use (e.g. gpt-4, claude-3-opus, etc) [gpt-4o]:
+Credentials saved to .runway-creds.json
+```
+
+### 2. Projekta specifisko AI instrukciju ģenerēšana
+
+`ai:generate-instructions` komanda palīdz jums izveidot vai atjaunināt instrukcijas AI kodēšanas asistentiem, pielāgotas jūsu projektam.
+
 ```bash
 php runway ai:generate-instructions
 ```
 
-> **Kāpēc tas ir noderīgi?**
->
-> Ar atjauninātu, projekta specifisku instrukciju, jūsu AI rīki var:
-> - Dot labākus koda ieteikumus
-> - Saprast jūsu projekta unikālās vajadzības
-> - Palīdzēt jauniem dalībniekiem ātrāk iepazīties
-> - Samazināt berzi un neskaidrības, kad jūsu projekts attīstās
+Jūs atbildēsiet uz dažiem jautājumiem par savu projektu (apraksts, datubāze, veidnes, drošība, komandas lielums utt.). Flight izmanto jūsu LLM sniedzēju, lai ģenerētu instrukcijas, tad ieraksta tās:
+- `.github/copilot-instructions.md` (GitHub Copilot)
+- `.cursor/rules/project-overview.mdc` (Cursor)
+- `.windsurfrules` (Windsurf)
 
----
+**Piemērs:**
+```
+Please describe what your project is for? My awesome API
+What database are you planning on using? MySQL
+What HTML templating engine will you plan on using (if any)? latte
+Is security an important element of this project? (y/n) y
+...
+AI instructions updated successfully.
+```
 
-## Ne tikai AI lietotņu veidošanai
+Tagad jūsu AI rīki sniegs gudrākus, relevantākus ieteikumus, balstoties uz jūsu projekta reālajām vajadzībām.
 
-Kaut arī jūs varat izmantot Flight, lai izveidotu AI darbinātas funkcijas (piemēram, čatbotus, gudras API vai integrācijas), īstā jauda ir tajā, kā Flight palīdz jums strādāt labāk ar AI rīkiem kā izstrādātājam. Tas ir par:
+## Uzlabota lietošana
 
-- **Palielinot produktivitāti** ar AI atbalstītu kodēšanu
-- **Turēt komandu saskaņotu** ar kopīgām, attīstošām instrukcijām
-- **Padarīt iesācēju vieglāku** jauniem dalībniekiem
-- **Ļaujot jums koncentrēties uz būvniecību**, nevis cīņu ar rīkiem
+- Jūs varat pielāgot jūsu akreditīvu vai instrukciju failu atrašanās vietu, izmantojot komandas opcijas (skat. `--help` katrai komandai).
+- AI palīgi ir paredzēti darbam ar jebkuru LLM sniedzēju, kas atbalsta OpenAI saderīgās API.
+- Ja vēlaties atjaunināt savas instrukcijas, kad jūsu projekts attīstās, vienkārši palaidiet atkārtoti `ai:generate-instructions` un atbildiet uz uzvednēm vēlreiz.
 
----
+## Skatīt arī
 
-## Uzziniet vairāk un sāciet
+- [Flight Skeleton](https://github.com/flightphp/skeleton) – Oficiālais sākuma projekts ar AI integrāciju
+- [Runway CLI](/awesome-plugins/runway) – Vairāk par CLI rīku, kas nodrošina šīs komandas
 
-- Skatiet [Flight Skeleton](https://github.com/flightphp/skeleton) par gatavu, AI draudzīgu iesācēju
-- Pārbaudiet pārējo [Flight dokumentāciju](/learn) padomiem, kā būvēt ātru, mūsdienīgu PHP lietotnes
+## Traucējummeklēšana
+
+- Ja redzat "Missing .runway-creds.json", vispirms palaidiet `php runway ai:init`.
+- Pārliecinieties, ka jūsu API atslēga ir derīga un tai ir piekļuve izvēlētajam modelim.
+- Ja instrukcijas neatjaunojas, pārbaudiet failu atļaujas jūsu projektu direktorijā.
+
+## Izmaiņu žurnāls
+
+- v3.16.0 – Pievienotas `ai:init` un `ai:generate-instructions` CLI komandas AI integrācijai.

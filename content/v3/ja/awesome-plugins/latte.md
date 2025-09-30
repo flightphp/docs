@@ -1,43 +1,40 @@
-# ラッテ
+# Latte
 
-[ラッテ](https://latte.nette.org/en/guide) は、非常に使いやすく、Twig や Smarty よりも PHP 構文に近いテンプレートエンジンです。フル機能を備えており、独自のフィルタや関数を追加することも非常に簡単です。
+[Latte](https://latte.nette.org/en/guide) は、非常に使いやすく、Twig や Smarty よりも PHP 構文に近いフル機能のテンプレートエンジンです。また、拡張して独自のフィルターや関数を追加することも非常に簡単です。
 
 ## インストール
 
-Composer を使用してインストールします。
+Composer でインストールします。
 
 ```bash
 composer require latte/latte
 ```
 
-## 基本的な設定
+## 基本設定
 
-始めるための基本的な設定オプションがあります。[ラッテドキュメント](https://latte.nette.org/en/guide) で詳細を確認できます。
+開始するための基本的な設定オプションがあります。これらについての詳細は、[Latte ドキュメント](https://latte.nette.org/en/guide) を参照してください。
 
 ```php
-
-use Latte\Engine as LatteEngine;
 
 require 'vendor/autoload.php';
 
 $app = Flight::app();
 
-$app->register('latte', LatteEngine::class, [], function(LatteEngine $latte) use ($app) {
+$app->map('render', function(string $template, array $data, ?string $block): void {
+	$latte = new Latte\Engine;
 
-	// ここがラッテがテンプレートをキャッシュして処理を高速化する場所です
-	// ラッテの素晴らしい点の1つは、テンプレートを変更すると自動的にキャッシュを更新します！
+	// Latte がキャッシュを格納する場所
 	$latte->setTempDirectory(__DIR__ . '/../cache/');
+	
+	$finalPath = Flight::get('flight.views.path') . $template;
 
-	// ビューのルートディレクトリを示す Latte の設定
-	// $app->get('flight.views.path') は config.php ファイルで設定されています
-	//   または `__DIR__ . '/../views/'` のようなものも行えます
-	$latte->setLoader(new \Latte\Loaders\FileLoader($app->get('flight.views.path')));
+	$latte->render($finalPath, $data, $block);
 });
 ```
 
-## シンプルなレイアウトの例
+## シンプルなレイアウト例
 
-以下はレイアウトファイルのシンプルな例です。このファイルは他のすべてのビューを囲むために使用されます。
+ここにレイアウトファイルのシンプルな例を示します。これは、他のすべてのビューをラップするために使用されるファイルです。
 
 ```html
 <!-- app/views/layout.latte -->
@@ -50,45 +47,45 @@ $app->register('latte', LatteEngine::class, [], function(LatteEngine $latte) use
 	<body>
 		<header>
 			<nav>
-				<!-- ここにナビゲーション要素が入ります -->
+				<!-- ここにナビゲーション要素を配置 -->
 			</nav>
 		</header>
 		<div id="content">
-			<!-- これが魔法です -->
+			<!-- ここが魔法の部分です -->
 			{block content}{/block}
 		</div>
 		<div id="footer">
-			&copy; 著作権
+			&copy; Copyright
 		</div>
 	</body>
 </html>
 ```
 
-そして、コンテンツブロック内でレンダリングされるファイルがあります:
+そして、content ブロック内にレンダリングされるファイルです：
 
 ```html
 <!-- app/views/home.latte -->
-<!-- このファイルが layout.latte ファイル内にあることを Latte に伝えます -->
+<!-- これにより、Latte にこのファイルが layout.latte ファイルの「内部」であることを伝えます -->
 {extends layout.latte}
 
-<!-- レイアウト内のコンテンツブロック内に表示されるコンテンツです -->
+<!-- レイアウト内の content ブロック内にレンダリングされるコンテンツです -->
 {block content}
 	<h1>ホームページ</h1>
-	<p>アプリへようこそ！</p>
+	<p>私のアプリへようこそ！</p>
 {/block}
 ```
 
-次に、この内容を関数またはコントローラ内でレンダリングする際には、次のように行います:
+次に、関数やコントローラー内でこれをレンダリングする場合、以下のようにします：
 
 ```php
 // シンプルなルート
 Flight::route('/', function () {
-	Flight::latte()->render('home.latte', [
-		'title' => 'ホームページ'
+	Flight::render('home.latte', [
+		'title' => 'Home Page'
 	]);
 });
 
-// もしくはコントローラを使用している場合
+// またはコントローラーを使用する場合
 Flight::route('/', [HomeController::class, 'index']);
 
 // HomeController.php
@@ -96,11 +93,38 @@ class HomeController
 {
 	public function index()
 	{
-		Flight::latte()->render('home.latte', [
-			'title' => 'ホームページ'
+		Flight::render('home.latte', [
+			'title' => 'Home Page'
 		]);
 	}
 }
 ```
 
-ラッテを最大限に活用するための詳細については、[Latte Documentation](https://latte.nette.org/en/guide) を参照してください。
+Latte を最大限に活用する方法の詳細については、[Latte ドキュメント](https://latte.nette.org/en/guide) を参照してください！
+
+## Tracy を使用したデバッグ
+
+_このセクションには PHP 8.1+ が必要です。_
+
+[Tracy](https://tracy.nette.org/en/) を使用して、Latte テンプレートファイルをすぐにデバッグすることもできます！ すでに Tracy をインストールしている場合、Tracy に Latte 拡張を追加する必要があります。
+
+```php
+// services.php
+use Tracy\Debugger;
+
+$app->map('render', function(string $template, array $data, ?string $block): void {
+	$latte = new Latte\Engine;
+
+	// Latte がキャッシュを格納する場所
+	$latte->setTempDirectory(__DIR__ . '/../cache/');
+	
+	$finalPath = Flight::get('flight.views.path') . $template;
+
+	// Tracy デバッグバーが有効な場合のみ拡張を追加します
+	if (Debugger::$showBar === true) {
+		// ここで Tracy に Latte パネルを追加します
+		$latte->addExtension(new Latte\Bridges\Tracy\TracyExtension);
+	}
+	$latte->render($finalPath, $data, $block);
+});
+```

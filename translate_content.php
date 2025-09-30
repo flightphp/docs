@@ -8,7 +8,7 @@ $chatgpt_key = getenv('CHATGPT_KEY');
 $filenames_to_skip = [
 	// 'awesome_plugins.md',
 	// 'session.md',
-	// 'middleware.md',
+	// 'about.md',
 ];
 
 if (empty($chatgpt_key)) {
@@ -81,7 +81,7 @@ foreach ($files as $file) {
             curl_setopt($ch, CURLOPT_POST, true);
 
             curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
-                "model" => "grok-3-mini",
+                "model" => "grok-4-fast-non-reasoning",
                 "messages" => $messages
             ]));
 

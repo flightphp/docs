@@ -1,7 +1,6 @@
-
 # Latte
 
-[Latte](https://latte.nette.org/en/guide) - это полнофункциональный движок шаблонов, который очень прост в использовании и ближе к синтаксису PHP, чем Twig или Smarty. Также очень легко расширяем и добавляем собственные фильтры и функции.
+[Latte](https://latte.nette.org/en/guide) — это полнофункциональный шаблонизатор, который очень прост в использовании и ближе к синтаксису PHP, чем Twig или Smarty. Его также очень легко расширять и добавлять собственные фильтры и функции.
 
 ## Установка
 
@@ -11,85 +10,82 @@
 composer require latte/latte
 ```
 
-## Основная конфигурация
+## Базовая настройка
 
-Есть несколько основных опций конфигурации, с которых можно начать. Вы можете узнать больше о них в [Документации по Latte](https://latte.nette.org/en/guide).
+Есть несколько базовых опций настройки для начала работы. Подробнее о них можно прочитать в [Документации Latte](https://latte.nette.org/en/guide).
 
 ```php
-use Latte\Engine as LatteEngine;
 
 require 'vendor/autoload.php';
 
 $app = Flight::app();
 
-$app->register('latte', LatteEngine::class, [], function(LatteEngine $latte) use ($app) {
+$app->map('render', function(string $template, array $data, ?string $block): void {
+	$latte = new Latte\Engine;
 
-	// Здесь Latte будет кэшировать ваши шаблоны для ускорения работы
-	// Одна из хороших вещей в Latte заключается в том, что он автоматически обновляет ваш
-	// кэш при внесении изменений в ваши шаблоны!
+	// Где latte специально хранит свой кэш
 	$latte->setTempDirectory(__DIR__ . '/../cache/');
+	
+	$finalPath = Flight::get('flight.views.path') . $template;
 
-	// Скажите Latte, где будет базовый каталог для ваших представлений.
-	// $app->get('flight.views.path') устанавливается в файле config.php
-	//   Вы также можете просто сделать что-то вроде `__DIR__ . '/../views/'`
-	$latte->setLoader(new \Latte\Loaders\FileLoader($app->get('flight.views.path')));
+	$latte->render($finalPath, $data, $block);
 });
 ```
 
 ## Простой пример макета
 
-Вот простой пример файла макета. Этот файл будет использоваться для оформления всех ваших других представлений.
+Вот простой пример файла макета. Это файл, который будет использоваться для обертки всех ваших других представлений.
 
 ```html
 <!-- app/views/layout.latte -->
 <!doctype html>
 <html lang="en">
 	<head>
-		<title>{$title ? $title . ' - '}Мое приложение</title>
+		<title>{$title ? $title . ' - '}My App</title>
 		<link rel="stylesheet" href="style.css">
 	</head>
 	<body>
 		<header>
 			<nav>
-				<!-- ваши элементы навигации здесь -->
+				<!-- your nav elements here -->
 			</nav>
 		</header>
 		<div id="content">
-			<!-- Вот где волшебство -->
+			<!-- This is the magic right here -->
 			{block content}{/block}
 		</div>
 		<div id="footer">
-			&copy; Авторские права
+			&copy; Copyright
 		</div>
 	</body>
 </html>
 ```
 
-И теперь у нас есть ваш файл, который будет отображаться внутри этого блока контента:
+А теперь у нас есть ваш файл, который будет отображаться внутри этого блока content:
 
 ```html
 <!-- app/views/home.latte -->
-<!-- Это говорит Latte, что этот файл "внутри" файла layout.latte -->
+<!-- This tells Latte that this file is "inside" the layout.latte file -->
 {extends layout.latte}
 
-<!-- Это содержимое, которое будет отображаться в макете внутри блока контента -->
+<!-- This is the content that will be rendered inside the layout inside the content block -->
 {block content}
-	<h1>Домашняя страница</h1>
-	<p>Добро пожаловать в мое приложение!</p>
+	<h1>Home Page</h1>
+	<p>Welcome to my app!</p>
 {/block}
 ```
 
-Затем, когда вы будете рендерить это внутри вашей функции или контроллера, вы сделаете что-то вроде этого:
+Затем, когда вы будете отображать это внутри своей функции или контроллера, вы сделаете что-то вроде этого:
 
 ```php
-// простой маршрут
+// simple route
 Flight::route('/', function () {
-	Flight::latte()->render('home.latte', [
-		'title' => 'Домашняя страница'
+	Flight::render('home.latte', [
+		'title' => 'Home Page'
 	]);
 });
 
-// или если вы используете контроллер
+// or if you're using a controller
 Flight::route('/', [HomeController::class, 'index']);
 
 // HomeController.php
@@ -97,11 +93,37 @@ class HomeController
 {
 	public function index()
 	{
-		Flight::latte()->render('home.latte', [
-			'title' => 'Домашняя страница'
+		Flight::render('home.latte', [
+			'title' => 'Home Page'
 		]);
 	}
 }
 ```
 
-Смотрите [Документацию по Latte](https://latte.nette.org/en/guide) для получения дополнительной информации о том, как использовать Latte в полной мере!
+Смотрите [Документацию Latte](https://latte.nette.org/en/guide) для получения дополнительной информации о том, как использовать Latte на полную мощность!
+
+## Отладка с Tracy
+
+_Требуется PHP 8.1+ для этого раздела._
+
+Вы также можете использовать [Tracy](https://tracy.nette.org/en/) для помощи в отладке ваших файлов шаблонов Latte прямо из коробки! Если у вас уже установлен Tracy, вам нужно добавить расширение Latte к Tracy.
+
+```php
+// services.php
+use Tracy\Debugger;
+
+$app->map('render', function(string $template, array $data, ?string $block): void {
+	$latte = new Latte\Engine;
+
+	// Где latte специально хранит свой кэш
+	$latte->setTempDirectory(__DIR__ . '/../cache/');
+	
+	$finalPath = Flight::get('flight.views.path') . $template;
+
+	// This will only add the extension if the Tracy Debug Bar is enabled
+	if (Debugger::$showBar === true) {
+		// this is where you add the Latte Panel to Tracy
+		$latte->addExtension(new Latte\Bridges\Tracy\TracyExtension);
+	}
+	$latte->render($finalPath, $data, $block);
+});

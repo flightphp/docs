@@ -1,47 +1,63 @@
 # Configuration
 
-Vous pouvez personnaliser certains comportements de Flight en définissant des valeurs de configuration à travers la méthode `set`.
+## Aperçu 
+
+Flight fournit un moyen simple de configurer divers aspects du framework pour répondre aux besoins de votre application. Certains sont définis par défaut, mais vous pouvez les remplacer au besoin. Vous pouvez également définir vos propres variables pour les utiliser dans toute votre application.
+
+## Comprendre
+
+Vous pouvez personnaliser certains comportements de Flight en définissant des valeurs de configuration
+via la méthode `set`.
 
 ```php
 Flight::set('flight.log_errors', true);
 ```
 
-## Paramètres de configuration disponibles
+Dans le fichier `app/config/config.php`, vous pouvez voir toutes les variables de configuration par défaut disponibles.
 
-La liste suivante présente tous les paramètres de configuration disponibles :
+## Utilisation de base
 
-- **flight.base_url** `?string` - Remplace l'URL de base de la requête. (par défaut : null)
-- **flight.case_sensitive** `bool` - Correspondance sensible à la casse pour les URLs. (par défaut : false)
-- **flight.handle_errors** `bool` - Autoriser Flight à gérer toutes les erreurs en interne. (par défaut : true)
-- **flight.log_errors** `bool` - Enregistrer les erreurs dans le fichier journal d'erreurs du serveur web. (par défaut : false)
+### Options de configuration Flight
+
+Voici une liste de toutes les options de configuration disponibles :
+
+- **flight.base_url** `?string` - Remplacer l'URL de base de la requête si Flight s'exécute dans un sous-répertoire. (par défaut : null)
+- **flight.case_sensitive** `bool` - Correspondance sensible à la casse pour les URL. (par défaut : false)
+- **flight.handle_errors** `bool` - Permettre à Flight de gérer toutes les erreurs en interne. (par défaut : true)
+  - Si vous voulez que Flight gère les erreurs au lieu du comportement par défaut de PHP, cela doit être true.
+  - Si vous avez [Tracy](/awesome-plugins/tracy) installé, vous voulez définir cela à false pour que Tracy puisse gérer les erreurs.
+  - Si vous avez le plugin [APM](/awesome-plugins/apm) installé, vous voulez définir cela à true pour que l'APM puisse journaliser les erreurs.
+- **flight.log_errors** `bool` - Journaliser les erreurs dans le fichier de journal des erreurs du serveur web. (par défaut : false)
+  - Si vous avez [Tracy](/awesome-plugins/tracy) installé, Tracy journalisera les erreurs en fonction des configurations de Tracy, pas de cette configuration.
 - **flight.views.path** `string` - Répertoire contenant les fichiers de modèle de vue. (par défaut : ./views)
-- **flight.views.extension** `string` - Extension du fichier de modèle de vue. (par défaut : .php)
+- **flight.views.extension** `string` - Extension des fichiers de modèle de vue. (par défaut : .php)
 - **flight.content_length** `bool` - Définir l'en-tête `Content-Length`. (par défaut : true)
-- **flight.v2.output_buffering** `bool` - Utiliser la mise en mémoire tampon de sortie héritée. Voir [migration vers v3](migration-to-v3). (par défaut : false)
+  - Si vous utilisez [Tracy](/awesome-plugins/tracy), cela doit être défini à false pour que Tracy puisse s'afficher correctement.
+- **flight.v2.output_buffering** `bool` - Utiliser le tamponnage de sortie legacy. Voir [migration vers v3](migrating-to-v3). (par défaut : false)
 
-## Configuration du Chargeur
+### Configuration du chargeur
 
-Il y a également un autre paramètre de configuration pour le chargeur. Cela vous permettra de charger automatiquement les classes avec `_` dans le nom de la classe.
+Il y a en outre une autre option de configuration pour le chargeur. Cela vous permettra 
+de charger automatiquement les classes avec `_` dans le nom de la classe.
 
 ```php
-// Activer le chargement de classe avec des tirets bas
-// Par défaut à true
+// Activer le chargement de classes avec des underscores
+// Par défaut true
 Loader::$v2ClassLoading = false;
 ```
 
-## Variables
+### Variables
 
-Flight vous permet de sauvegarder des variables afin qu'elles puissent être utilisées n'importe où dans votre application.
+Flight vous permet de sauvegarder des variables pour qu'elles puissent être utilisées n'importe où dans votre application.
 
 ```php
-// Sauvegardez votre variable
+// Sauvegarder votre variable
 Flight::set('id', 123);
 
 // Ailleurs dans votre application
 $id = Flight::get('id');
 ```
-
-Pour vérifier si une variable a été définie, vous pouvez faire :
+Pour voir si une variable a été définie, vous pouvez faire :
 
 ```php
 if (Flight::has('id')) {
@@ -55,24 +71,21 @@ Vous pouvez effacer une variable en faisant :
 // Efface la variable id
 Flight::clear('id');
 
-// Effacer toutes les variables
+// Efface toutes les variables
 Flight::clear();
 ```
 
-Flight utilise également des variables à des fins de configuration.
+> **Note :** Le fait que vous puissiez définir une variable ne signifie pas que vous devriez le faire. Utilisez cette fonctionnalité avec parcimonie. La raison est que tout ce qui est stocké ici devient une variable globale. Les variables globales sont mauvaises car elles peuvent être modifiées de n'importe où dans votre application, rendant difficile la traque des bugs. De plus, cela peut compliquer des choses comme [les tests unitaires](/guides/unit-testing).
 
-```php
-Flight::set('flight.log_errors', true);
-```
+### Erreurs et exceptions
 
-## Gestion des Erreurs
+Toutes les erreurs et exceptions sont capturées par Flight et passées à la méthode `error`.
+si `flight.handle_errors` est défini à true.
 
-### Erreurs et Exceptions
+Le comportement par défaut est d'envoyer une réponse générique `HTTP 500 Internal Server Error`
+avec des informations d'erreur.
 
-Toutes les erreurs et exceptions sont capturées par Flight et transmises à la méthode `error`.
-Le comportement par défaut est d'envoyer une réponse générique `HTTP 500 Erreur Interne du Serveur` avec des informations sur l'erreur.
-
-Vous pouvez remplacer ce comportement selon vos besoins :
+Vous pouvez [remplacer](/learn/extending) ce comportement pour vos propres besoins :
 
 ```php
 Flight::map('error', function (Throwable $error) {
@@ -81,20 +94,36 @@ Flight::map('error', function (Throwable $error) {
 });
 ```
 
-Par défaut, les erreurs ne sont pas enregistrées dans le serveur web. Vous pouvez activer cela en modifiant la configuration :
+Par défaut, les erreurs ne sont pas journalisées sur le serveur web. Vous pouvez activer cela en
+modifiant la configuration :
 
 ```php
 Flight::set('flight.log_errors', true);
 ```
 
-### Introuvable
+#### 404 Non trouvé
 
-Lorsqu'une URL est introuvable, Flight appelle la méthode `notFound`. Le comportement par défaut est d'envoyer une réponse `HTTP 404 Non Trouvé` avec un message simple.
+Quand une URL ne peut pas être trouvée, Flight appelle la méthode `notFound`. Le comportement
+par défaut est d'envoyer une réponse `HTTP 404 Not Found` avec un message simple.
 
-Vous pouvez remplacer ce comportement selon vos besoins :
+Vous pouvez [remplacer](/learn/extending) ce comportement pour vos propres besoins :
 
 ```php
 Flight::map('notFound', function () {
-  // Gérer l'introuvable
+  // Gérer non trouvé
 });
 ```
+
+## Voir aussi
+- [Étendre Flight](/learn/extending) - Comment étendre et personnaliser les fonctionnalités de base de Flight.
+- [Tests unitaires](/guides/unit-testing) - Comment écrire des tests unitaires pour votre application Flight.
+- [Tracy](/awesome-plugins/tracy) - Un plugin pour la gestion avancée des erreurs et le débogage.
+- [Extensions Tracy](/awesome-plugins/tracy_extensions) - Extensions pour intégrer Tracy avec Flight.
+- [APM](/awesome-plugins/apm) - Un plugin pour la surveillance des performances de l'application et le suivi des erreurs.
+
+## Dépannage
+- Si vous avez des problèmes pour trouver toutes les valeurs de votre configuration, vous pouvez faire `var_dump(Flight::get());`
+
+## Journal des modifications
+- v3.5.0 - Ajout de la configuration pour `flight.v2.output_buffering` pour supporter le comportement de tamponnage de sortie legacy.
+- v2.0 - Configurations de base ajoutées.

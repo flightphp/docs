@@ -1,10 +1,10 @@
 # Médias
 
-Nous avons essayé de retrouver ce que nous pouvions des différents types de médias sur internet autour de Flight. Voir ci-dessous pour différents ressources que vous pouvez utiliser pour en apprendre plus sur Flight.
+Nous avons essayé de recenser ce que nous pouvions des différents types de médias disponibles sur Internet concernant Flight. Voir ci-dessous pour différents ressources que vous pouvez utiliser pour en apprendre plus sur Flight.
 
-## Articles et écrits
+## Articles et Rédactions
 
-- [Unit Testing and SOLID Principles](/learn/unit-testing-and-solid-principles) par Brian Fenton (2015?)
+- [Unit Testing and SOLID Principles](/learn/unit-testing-and-solid-principles) par Brian Fenton (2015 ?)
 - [PHP Web Framework Flight](https://www.ojambo.com/php-web-framework-flight) par [ojambo](https://www.ojambo.com/) (2025)
 - [Define, Generate, and Implement: An API-First Approach with OpenAPI Generator and FlightPHP](https://dev.to/danielsc/define-generate-and-implement-an-api-first-approach-with-openapi-generator-and-flightphp-1fb3) par [Daniel Schreiber](https://github.com/daniel-sc) (2025)
 - [Best PHP Micro Frameworks for 2024](https://dev.to/n0nag0n/best-php-micro-frameworks-for-2024-19h6) par [n0nag0n](https://github.com/n0nag0n) (2024)
@@ -23,7 +23,7 @@ Nous avons essayé de retrouver ce que nous pouvions des différents types de m�
 - [Trying Out New PHP Framework (Flight)](https://scaledimages.com/post/2017-09-20-trying-out-new-php-framework-flight/) par Leon (2017)
 - [Setting up FlightPHP to work with Backbonejs](https://timothytocci.com/category/flightphp/) par [Timothy Tocci](https://timothytocci.com/author/timothytocci/) (2015)
 
-## Vidéos et tutoriels
+## Vidéos et Tutoriels
 
 - [Build a Flight PHP App with MVC & MariaDB in 10 Minutes! (Beginner Friendly)](https://www.youtube.com/watch?v=IsfueIUlfxI) par [ojamboshop](https://www.youtube.com/@ojamboshop) (2025)
 - [Create a REST API for IoT Devices Using PHP & FlightPHP - ESP32 API](https://www.youtube.com/watch?v=VpsuaIH0EiU) par [IoT Craft Hub](https://www.youtube.com/@IoTCraftHub) (2024)
@@ -39,3 +39,7 @@ Nous avons essayé de retrouver ce que nous pouvions des différents types de m�
 - [Teste Micro Frameworks PHP - Flight PHP, Lumen, Slim 3 e Laravel](https://www.youtube.com/watch?v=QRL1W4ofsqE) par [Codemarket](https://www.youtube.com/@Codemarket) (2016)
 - [Tutorial 1 Flight PHP - Instalación](https://www.youtube.com/watch?v=0sfsQfingB8) par [absagg](https://www.youtube.com/@absagg) (2014)
 - [Tutorial 2 Flight PHP - Route parte 1](https://www.youtube.com/watch?v=Rgmxy9w1MZI) par [absagg](https://www.youtube.com/@absagg) (2014)
+
+## Manque-t-il quelque chose ?
+
+Manquons-nous quelque chose que vous avez écrit ou enregistré ? Faites-le nous savoir avec un issue ou une pull request !

@@ -1,16 +1,16 @@
-Tracy Flight Panel Extensions
+Розширення панелі Tracy Flight
 =====
 
-Це набір розширень, щоб зробити роботу з Flight трохи багатшою.
+Це набір розширень, які роблять роботу з Flight трохи багатшою.
 
-- Flight - Аналізувати всі змінні Flight.
-- Database - Аналізувати всі запити, які виконувалися на сторінці (якщо ви правильно ініціалізували підключення до бази даних).
-- Request - Аналізувати всі змінні `$_SERVER` і перевіряти всі глобальні дані (`$_GET`, `$_POST`, `$_FILES`).
-- Session - Аналізувати всі змінні `$_SESSION`, якщо сесії активні.
+- Flight - Аналізує всі змінні Flight.
+- Database - Аналізує всі запити, які виконувалися на сторінці (якщо ви правильно ініціалізували з'єднання з базою даних)
+- Request - Аналізує всі змінні `$_SERVER` та перевіряє всі глобальні навантаження (`$_GET`, `$_POST`, `$_FILES`)
+- Session - Аналізує всі змінні `$_SESSION`, якщо сесії активні.
 
 Це панель
 
-![Flight Бар](https://raw.githubusercontent.com/flightphp/tracy-extensions/master/flight-tracy-bar.png)
+![Flight Bar](https://raw.githubusercontent.com/flightphp/tracy-extensions/master/flight-tracy-bar.png)
 
 І кожна панель відображає дуже корисну інформацію про ваш додаток!
 
@@ -18,15 +18,15 @@ Tracy Flight Panel Extensions
 ![Flight Database](https://raw.githubusercontent.com/flightphp/tracy-extensions/master/flight-db.png)
 ![Flight Request](https://raw.githubusercontent.com/flightphp/tracy-extensions/master/flight-request.png)
 
-Натисніть [тут](https://github.com/flightphp/tracy-extensions), щоб переглянути код.
+Клікніть [тут](https://github.com/flightphp/tracy-extensions), щоб переглянути код.
 
-Installation
+Встановлення
 -------
-Виконайте `composer require flightphp/tracy-extensions --dev` і ви готові!
+Виконайте `composer require flightphp/tracy-extensions --dev`, і ви готові!
 
-Configuration
+Конфігурація
 -------
-Для початку вам потрібно дуже мало конфігурації. Вам потрібно ініціалізувати налагоджувач Tracy перед використанням [https://tracy.nette.org/en/guide](https://tracy.nette.org/en/guide):
+Потрібно виконати дуже мало налаштувань, щоб запустити це. Вам потрібно ініціалізувати налагоджувач Tracy перед використанням [https://tracy.nette.org/en/guide](https://tracy.nette.org/en/guide):
 
 ```php
 <?php
@@ -34,41 +34,41 @@ Configuration
 use Tracy\Debugger;
 use flight\debug\tracy\TracyExtensionLoader;
 
-// код завантаження
+// bootstrap code
 require __DIR__ . '/vendor/autoload.php';
 
 Debugger::enable();
-// Ви можете вказати ваше середовище за допомогою Debugger::enable(Debugger::DEVELOPMENT)
+// You may need to specify your environment with Debugger::enable(Debugger::DEVELOPMENT)
 
-// якщо ви використовуєте підключення до бази даних у вашому додатку, є 
-// необхідний обгортка PDO для використання ТІЛЬКИ В РОЗРОБЦІ (не в продакшні, будь ласка!)
-// Вона має ті самі параметри, що й звичайне підключення PDO
+// if you use database connections in your app, there is a 
+// required PDO wrapper to use ONLY IN DEVELOPMENT (not production please!)
+// It has the same parameters as a regular PDO connection
 $pdo = new PdoQueryCapture('sqlite:test.db', 'user', 'pass');
-// або якщо ви прикріплюєте це до фреймворку Flight
+// or if you attach this to the Flight framework
 Flight::register('db', PdoQueryCapture::class, ['sqlite:test.db', 'user', 'pass']);
-// тепер щоразу, коли ви робите запит, він зафіксує час, запит і параметри
+// now whenever you make a query it will capture the time, query, and parameters
 
-// Це з'єднує точки
+// This connects the dots
 if(Debugger::$showBar === true) {
-	// Це потрібно встановити на false, інакше Tracy не зможе відобразитися :(
+	// This needs to be false or Tracy can't actually render :(
 	Flight::set('flight.content_length', false);
 	new TracyExtensionLoader(Flight::app());
 }
 
-// більше коду
+// more code
 
 Flight::start();
 ```
 
-## Additional Configuration
+## Додаткова конфігурація
 
-### Session Data
-Якщо у вас є власний обробник сесій (наприклад, ghostff/session), ви можете передати будь-який масив даних сесії до Tracy, і він автоматично виведе його. Ви передаєте його за допомогою ключа `session_data` у другому параметрі конструктора `TracyExtensionLoader`.
+### Дані сесії
+Якщо у вас є власний обробник сесій (наприклад, ghostff/session), ви можете передати будь-який масив даних сесії до Tracy, і він автоматично виведе його для вас. Ви передаєте його за допомогою ключа `session_data` у другому параметрі конструктора `TracyExtensionLoader`.
 
 ```php
 
 use Ghostff\Session\Session;
-// або use flight\Session;
+// or use flight\Session;
 
 require 'vendor/autoload.php';
 
@@ -77,38 +77,39 @@ $app = Flight::app();
 $app->register('session', Session::class);
 
 if(Debugger::$showBar === true) {
-	// Це потрібно встановити на false, інакше Tracy не зможе відобразитися :(
+	// This needs to be false or Tracy can't actually render :(
 	Flight::set('flight.content_length', false);
 	new TracyExtensionLoader(Flight::app(), [ 'session_data' => Flight::session()->getAll() ]);
 }
 
-// маршрути та інші речі...
+// routes and other things...
 
 Flight::start();
 ```
 
 ### Latte
 
-Якщо у вашому проєкті встановлено Latte, ви можете використовувати панель Latte для аналізу ваших шаблонів. Ви можете передати екземпляр Latte до конструктора `TracyExtensionLoader` за допомогою ключа `latte` у другому параметрі.
+_Для цього розділу потрібен PHP 8.1+._
+
+Якщо у вашому проекті встановлено Latte, Tracy має нативну інтеграцію з Latte для аналізу ваших шаблонів. Ви просто реєструєте розширення з вашим екземпляром Latte.
 
 ```php
-
-use Latte\Engine;
 
 require 'vendor/autoload.php';
 
 $app = Flight::app();
 
-$app->register('latte', Engine::class, [], function($latte) {
-	$latte->setTempDirectory(__DIR__ . '/temp');
+$app->map('render', function($template, $data, $block = null) {
+	$latte = new Latte\Engine;
 
-	// тут ви додаєте панель Latte до Tracy
-	$latte->addExtension(new Latte\Bridges\Tracy\TracyExtension);
+	// other configurations...
+
+	// only add the extension if Tracy Debug Bar is enabled
+	if(Debugger::$showBar === true) {
+		// this is where you add the Latte Panel to Tracy
+		$latte->addExtension(new Latte\Bridges\Tracy\TracyExtension);
+	}
+
+	$latte->render($template, $data, $block);
 });
-
-if(Debugger::$showBar === true) {
-	// Це потрібно встановити на false, інакше Tracy не зможе відобразитися :(
-	Flight::set('flight.content_length', false);
-	new TracyExtensionLoader(Flight::app());
-}
 ```

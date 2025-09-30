@@ -1,10 +1,10 @@
 # Latte
 
-[Latte](https://latte.nette.org/en/guide) es un motor de plantillas completo que es muy fácil de usar y se siente más cercano a una sintaxis de PHP que Twig o Smarty. También es muy fácil de extender y agregar tus propios filtros y funciones.
+[Latte](https://latte.nette.org/en/guide) es un motor de plantillas completo que es muy fácil de usar y se siente más cercano a la sintaxis de PHP que Twig o Smarty. También es muy fácil de extender y agregar tus propios filtros y funciones.
 
 ## Instalación
 
-Instalar con composer.
+Instala con composer.
 
 ```bash
 composer require latte/latte
@@ -16,34 +16,30 @@ Hay algunas opciones de configuración básicas para comenzar. Puedes leer más 
 
 ```php
 
-use Latte\Engine as LatteEngine;
-
 require 'vendor/autoload.php';
 
 $app = Flight::app();
 
-$app->register('latte', LatteEngine::class, [], function(LatteEngine $latte) use ($app) {
+$app->map('render', function(string $template, array $data, ?string $block): void {
+	$latte = new Latte\Engine;
 
-	// Aquí es donde Latte almacenará en caché tus plantillas para acelerar las cosas
-	// ¡Una cosa genial sobre Latte es que actualiza automáticamente tu caché
-	// cuando realizas cambios en tus plantillas!
+	// Dónde Latte almacena específicamente su caché
 	$latte->setTempDirectory(__DIR__ . '/../cache/');
+	
+	$finalPath = Flight::get('flight.views.path') . $template;
 
-	// Indica a Latte dónde estará el directorio raíz de tus vistas.
-	// $app->get('flight.views.path') se establece en el archivo config.php
-	// También podrías hacer algo como `__DIR__ . '/../views/'`
-	$latte->setLoader(new \Latte\Loaders\FileLoader($app->get('flight.views.path')));
+	$latte->render($finalPath, $data, $block);
 });
 ```
 
-## Ejemplo de Diseño Simple
+## Ejemplo Simple de Diseño
 
-Aquí tienes un ejemplo simple de un archivo de diseño. Este es el archivo que se utilizará para envolver todas tus otras vistas.
+Aquí hay un ejemplo simple de un archivo de diseño. Este es el archivo que se usará para envolver todas tus otras vistas.
 
 ```html
 <!-- app/views/layout.latte -->
 <!doctype html>
-<html lang="es">
+<html lang="en">
 	<head>
 		<title>{$title ? $title . ' - '}Mi App</title>
 		<link rel="stylesheet" href="style.css">
@@ -59,7 +55,7 @@ Aquí tienes un ejemplo simple de un archivo de diseño. Este es el archivo que 
 			{block content}{/block}
 		</div>
 		<div id="footer">
-			&copy; Derechos de Autor
+			&copy; Copyright
 		</div>
 	</body>
 </html>
@@ -72,19 +68,19 @@ Y ahora tenemos tu archivo que se va a renderizar dentro de ese bloque de conten
 <!-- Esto le dice a Latte que este archivo está "dentro" del archivo layout.latte -->
 {extends layout.latte}
 
-<!-- Este es el contenido que se renderizará dentro del diseño dentro del bloque de contenido -->
+<!-- Este es el contenido que se renderizará dentro del diseño en el bloque de contenido -->
 {block content}
 	<h1>Página de Inicio</h1>
 	<p>¡Bienvenido a mi app!</p>
 {/block}
 ```
 
-Luego, cuando vayas a renderizar esto dentro de tu función o controlador, harías algo así:
+Luego, cuando vayas a renderizar esto dentro de tu función o controlador, harías algo como esto:
 
 ```php
 // ruta simple
 Flight::route('/', function () {
-	Flight::latte()->render('home.latte', [
+	Flight::render('home.latte', [
 		'title' => 'Página de Inicio'
 	]);
 });
@@ -97,11 +93,38 @@ class HomeController
 {
 	public function index()
 	{
-		Flight::latte()->render('home.latte', [
+		Flight::render('home.latte', [
 			'title' => 'Página de Inicio'
 		]);
 	}
 }
 ```
 
-¡Consulta la [Documentación de Latte](https://latte.nette.org/en/guide) para obtener más información sobre cómo utilizar Latte al máximo!
+¡Consulta la [Documentación de Latte](https://latte.nette.org/en/guide) para obtener más información sobre cómo usar Latte a su máximo potencial!
+
+## Depuración con Tracy
+
+_Se requiere PHP 8.1+ para esta sección._
+
+¡También puedes usar [Tracy](https://tracy.nette.org/en/) para ayudar con la depuración de tus archivos de plantillas Latte directamente de la caja! Si ya tienes Tracy instalado, necesitas agregar la extensión de Latte a Tracy.
+
+```php
+// services.php
+use Tracy\Debugger;
+
+$app->map('render', function(string $template, array $data, ?string $block): void {
+	$latte = new Latte\Engine;
+
+	// Dónde Latte almacena específicamente su caché
+	$latte->setTempDirectory(__DIR__ . '/../cache/');
+	
+	$finalPath = Flight::get('flight.views.path') . $template;
+
+	// Esto solo agregará la extensión si la Barra de Depuración de Tracy está habilitada
+	if (Debugger::$showBar === true) {
+		// aquí es donde agregas el Panel de Latte a Tracy
+		$latte->addExtension(new Latte\Bridges\Tracy\TracyExtension);
+	}
+	$latte->render($finalPath, $data, $block);
+});
+```

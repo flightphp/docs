@@ -1,30 +1,30 @@
 # Unit Testing in Flight PHP mit PHPUnit
 
-Dieser Leitfaden führt in das Unit Testing in Flight PHP mit [PHPUnit](https://phpunit.de/) ein, für Anfänger, die verstehen wollen, *warum* Unit Testing wichtig ist und wie man es praktisch anwendet. Wir konzentrieren uns auf das Testen von *Verhalten* – sicherzustellen, dass Ihre Anwendung das tut, was erwartet wird, wie das Versenden einer E-Mail oder das Speichern eines Datensatzes – anstatt triviale Berechnungen. Wir beginnen mit einem einfachen [route handler](/learn/routing) und gehen zu einem komplexeren [controller](/learn/routing) über, unter Einbeziehung von [dependency injection](/learn/dependency-injection-container) (DI) und dem Mocking von Drittanbieter-Diensten.
+Dieser Leitfaden führt Unit Testing in Flight PHP mit [PHPUnit](https://phpunit.de/) ein, gerichtet an Anfänger, die verstehen möchten, *warum* Unit Testing wichtig ist und wie man es praktisch anwendet. Wir konzentrieren uns auf das Testen von *Verhalten* – das Sicherstellen, dass Ihre Anwendung das tut, was Sie erwarten, wie das Senden einer E-Mail oder das Speichern eines Datensatzes – anstelle von trivialen Berechnungen. Wir beginnen mit einem einfachen [Route Handler](/learn/routing) und gehen zu einem komplexeren [Controller](/learn/routing) über, unter Einbeziehung von [Dependency Injection](/learn/dependency-injection-container) (DI) und dem Mocken von Drittanbieter-Services.
 
-## Warum Unit Testen?
+## Warum Unit Tests?
 
-Unit Testing stellt sicher, dass Ihr Code so verhält, wie erwartet, und Fehlern vorbeugt, bevor sie in die Produktion gelangen. Es ist besonders wertvoll in Flight, wo leichte Routing und Flexibilität zu komplexen Interaktionen führen können. Für Solo-Entwickler oder Teams dienen Unit Tests als Sicherheitsnetz, dokumentieren erwartetes Verhalten und verhindern Regressionen, wenn Sie später auf den Code zurückgreifen. Sie verbessern auch das Design: Schwierig zu testender Code deutet oft auf übermäßig komplexe oder eng gekoppelte Klassen hin.
+Unit Testing stellt sicher, dass Ihr Code wie erwartet verhält, und fängt Bugs ab, bevor sie in die Produktion gelangen. Es ist besonders wertvoll in Flight, wo leichte Routing und Flexibilität zu komplexen Interaktionen führen können. Für Solo-Entwickler oder Teams dienen Unit Tests als Sicherheitsnetz, dokumentieren erwartetes Verhalten und verhindern Regressionen, wenn Sie später Code erneut betrachten. Sie verbessern auch das Design: Schwierig zu testender Code signalisiert oft übermäßig komplexe oder eng gekoppelte Klassen.
 
-Im Gegensatz zu einfachen Beispielen (z. B. das Testen von `x * y = z`) konzentrieren wir uns auf reale Verhaltensweisen, wie die Validierung von Eingaben, das Speichern von Daten oder das Auslösen von Aktionen wie E-Mails. Unser Ziel ist es, das Testen zugänglich und sinnvoll zu machen.
+Im Gegensatz zu simplistischen Beispielen (z. B. Testen von `x * y = z`) konzentrieren wir uns auf reale Verhaltensweisen, wie die Validierung von Eingaben, das Speichern von Daten oder das Auslösen von Aktionen wie E-Mails. Unser Ziel ist es, Testing zugänglich und sinnvoll zu machen.
 
-## Allgemeine Leitlinien
+## Allgemeine Leitprinzipien
 
-1. **Testen Sie Verhalten, nicht Implementierung**: Konzentrieren Sie sich auf Ergebnisse (z. B. „E-Mail gesendet“ oder „Datensatz gespeichert“), anstatt auf interne Details. Das macht Tests robust gegen Refactorings.
-2. **Stop using `Flight::`**: Flight’s statische Methoden sind sehr praktisch, machen aber das Testen schwierig. Gewöhnen Sie sich an die Verwendung der `$app`-Variable von `$app = Flight::app();`. `$app` hat alle gleichen Methoden wie `Flight::`. Sie können weiterhin `$app->route()` oder `$this->app->json()` in Ihrem Controller usw. verwenden. Verwenden Sie auch den echten Flight-Router mit `$router = $app->router()` und dann `$router->get()`, `$router->post()`, `$router->group()` usw. Siehe [Routing](/learn/routing).
-3. **Halten Sie Tests schnell**: Schnelle Tests fördern eine häufige Ausführung. Vermeiden Sie langsame Operationen wie Datenbankaufrufe in Unit Tests. Wenn ein Test langsam ist, ist das ein Hinweis, dass Sie einen Integrationstest schreiben, nicht einen Unit Test. Integrationstests beinhalten echte Datenbanken, echte HTTP-Aufrufe, echtes E-Mail-Versenden usw. Sie haben ihren Platz, sind aber langsam und können fehleranfällig sein, d. h. sie versagen manchmal aus unbekannten Gründen.
-4. **Verwenden Sie beschreibende Namen**: Testnamen sollten klar das getestete Verhalten beschreiben. Das verbessert Lesbarkeit und Wartbarkeit.
-5. **Vermeiden Sie Globals wie die Pest**: Minimieren Sie die Verwendung von `$app->set()` und `$app->get()`, da sie wie globaler Zustand wirken und in jedem Test gemockt werden müssen. Ziehen Sie DI oder einen DI-Container vor (siehe [Dependency Injection Container](/learn/dependency-injection-container)). Sogar die Verwendung von `$app->map()` ist technisch ein „Global“ und sollte zugunsten von DI vermieden werden. Verwenden Sie eine Session-Bibliothek wie [flightphp/session](https://github.com/flightphp/session), damit Sie das Session-Objekt in Ihren Tests mocken können. **Do not** call [`$_SESSION`](https://www.php.net/manual/en/reserved.variables.session.php) direkt in Ihrem Code, da das eine globale Variable injiziert und das Testen erschwert.
-6. **Verwenden Sie Dependency Injection**: Injizieren Sie Abhängigkeiten (z. B. [`PDO`](https://www.php.net/manual/en/class.pdo.php), Mailer) in Controller, um Logik zu isolieren und das Mocking zu vereinfachen. Wenn eine Klasse zu viele Abhängigkeiten hat, überlegen Sie, sie in kleinere Klassen umzustrukturieren, die jeweils eine einzelne Verantwortung haben, gemäß [SOLID-Prinzipien](https://en.wikipedia.org/wiki/SOLID).
-7. **Mocken Sie Drittanbieter-Dienste**: Mocken Sie Datenbanken, HTTP-Clients (cURL) oder E-Mail-Dienste, um externe Aufrufe zu vermeiden. Testen Sie eine oder zwei Schichten tief, aber lassen Sie Ihre Kernlogik laufen. Zum Beispiel, wenn Ihre App eine Textnachricht sendet, möchten Sie **NICHT** wirklich eine Textnachricht bei jedem Testlauf senden, da das Kosten verursacht (und langsamer ist). Stattdessen mocken Sie den Textnachrichten-Dienst und überprüfen nur, ob Ihr Code den Dienst mit den richtigen Parametern aufgerufen hat.
-8. **Zielen Sie auf hohe Abdeckung, nicht auf Perfektion**: 100% Zeilenabdeckung ist gut, bedeutet aber nicht unbedingt, dass alles im Code richtig getestet wird (recherchieren Sie [branch/path coverage in PHPUnit](https://localheinz.com/articles/2023/03/22/collecting-line-branch-and-path-coverage-with-phpunit/)). Priorisieren Sie kritische Verhaltensweisen (z. B. Benutzerregistrierung, API-Antworten und das Erfassen fehlerhafter Antworten).
-9. **Verwenden Sie Controller für Routes**: In Ihren Routinedefinitionen verwenden Sie Controller, nicht Closures. Die `flight\Engine $app` wird standardmäßig in jeden Controller über den Konstruktor injiziert. In Tests verwenden Sie `$app = new Flight\Engine()`, injizieren es in Ihren Controller und rufen Methoden direkt auf (z. B. `$controller->register()`). Siehe [Extending Flight](/learn/extending) und [Routing](/learn/routing).
-10. **Wählen Sie einen Mocking-Stil und halten Sie ihn bei**: PHPUnit unterstützt mehrere Mocking-Stile (z. B. prophecy, eingebaute Mocks) oder Sie können anonyme Klassen verwenden, die Vorteile wie Code-Vervollständigung haben, oder wenn Sie die Methodendefinition ändern. Seien Sie einfach konsistent in Ihren Tests. Siehe [PHPUnit Mock Objects](https://docs.phpunit.de/en/12.3/test-doubles.html#test-doubles).
-11. **Verwenden Sie `protected` Sichtbarkeit für Methoden/Eigenschaften, die Sie in Unterklassen testen möchten**: Das ermöglicht es, sie in Test-Unterklassen zu überschreiben, ohne sie public zu machen, was besonders für anonyme Klass-Mocks nützlich ist.
+1. **Verhalten testen, nicht Implementierung**: Konzentrieren Sie sich auf Ergebnisse (z. B. „E-Mail gesendet“ oder „Datensatz gespeichert“) anstelle interner Details. Das macht Tests robust gegenüber Refactoring.
+2. **Vermeiden Sie `Flight::`**: Flights statische Methoden sind bequem, machen Testing aber schwierig. Gewöhnen Sie sich daran, die `$app`-Variable aus `$app = Flight::app();` zu verwenden. `$app` hat alle Methoden, die `Flight::` hat. Sie können immer noch `$app->route()` oder `$this->app->json()` in Ihrem Controller usw. verwenden. Verwenden Sie auch den echten Flight-Router mit `$router = $app->router()` und dann können Sie `$router->get()`, `$router->post()`, `$router->group()` usw. nutzen. Siehe [Routing](/learn/routing).
+3. **Halten Sie Tests schnell**: Schnelle Tests fördern häufige Ausführung. Vermeiden Sie langsame Operationen wie Datenbankaufrufe in Unit Tests. Wenn Sie einen langsamen Test haben, ist das ein Zeichen, dass Sie einen Integration Test schreiben, keinen Unit Test. Integration Tests beinhalten echte Datenbanken, echte HTTP-Aufrufe, echtes E-Mail-Versenden usw. Sie haben ihren Platz, sind aber langsam und können unzuverlässig sein, was bedeutet, dass sie manchmal aus unbekannten Gründen fehlschlagen. 
+4. **Verwenden Sie beschreibende Namen**: Testnamen sollten das getestete Verhalten klar beschreiben. Das verbessert Lesbarkeit und Wartbarkeit.
+5. **Vermeiden Sie Globals wie die Pest**: Minimieren Sie die Nutzung von `$app->set()` und `$app->get()`, da sie wie globaler Zustand wirken und in jedem Test Mocks erfordern. Bevorzugen Sie DI oder einen DI-Container (siehe [Dependency Injection Container](/learn/dependency-injection-container)). Sogar die Verwendung der Methode `$app->map()` ist technisch „global“ und sollte zugunsten von DI vermieden werden. Verwenden Sie eine Session-Bibliothek wie [flightphp/session](https://github.com/flightphp/session), damit Sie das Session-Objekt in Ihren Tests mocken können. **Rufen Sie** [`$_SESSION`](https://www.php.net/manual/en/reserved.variables.session.php) nicht direkt in Ihrem Code auf, da das eine globale Variable in Ihren Code injiziert und das Testing erschwert.
+6. **Verwenden Sie Dependency Injection**: Injizieren Sie Abhängigkeiten (z. B. [`PDO`](https://www.php.net/manual/en/class.pdo.php), Mailer) in Controller, um Logik zu isolieren und das Mocken zu vereinfachen. Wenn eine Klasse zu viele Abhängigkeiten hat, überlegen Sie, sie in kleinere Klassen umzustrukturieren, die jeweils eine einzige Verantwortung haben und den [SOLID-Prinzipien](https://en.wikipedia.org/wiki/SOLID) folgen.
+7. **Mocken Sie Drittanbieter-Services**: Mocken Sie Datenbanken, HTTP-Clients (cURL) oder E-Mail-Services, um externe Aufrufe zu vermeiden. Testen Sie eine oder zwei Ebenen tief, lassen Sie aber Ihre Kernlogik laufen. Zum Beispiel, wenn Ihre App eine SMS sendet, wollen Sie **NICHT** wirklich eine SMS bei jedem Testlauf senden, da die Kosten steigen (und es langsamer wird). Stattdessen mocken Sie den SMS-Service und überprüfen nur, ob Ihr Code den SMS-Service mit den richtigen Parametern aufgerufen hat.
+8. **Streben Sie hohe Abdeckung an, nicht Perfektion**: 100% Zeilenabdeckung ist gut, bedeutet aber nicht, dass alles in Ihrem Code so getestet wird, wie es sein sollte (recherchieren Sie [Branch/Path Coverage in PHPUnit](https://localheinz.com/articles/2023/03/22/collecting-line-branch-and-path-coverage-with-phpunit/)). Priorisieren Sie kritische Verhaltensweisen (z. B. Benutzerregistrierung, API-Antworten und das Erfassen fehlgeschlagener Antworten).
+9. **Verwenden Sie Controller für Routes**: In Ihren Route-Definitionen verwenden Sie Controller, keine Closures. Die `flight\Engine $app` wird standardmäßig über den Konstruktor in jeden Controller injiziert. In Tests verwenden Sie `$app = new Flight\Engine()`, um Flight innerhalb eines Tests zu instanziieren, injizieren Sie es in Ihren Controller und rufen Methoden direkt auf (z. B. `$controller->register()`). Siehe [Extending Flight](/learn/extending) und [Routing](/learn/routing).
+10. **Wählen Sie einen Mocking-Stil und halten Sie sich daran**: PHPUnit unterstützt mehrere Mocking-Stile (z. B. prophecy, eingebaute Mocks), oder Sie können anonyme Klassen verwenden, die eigene Vorteile haben wie Code-Vervollständigung, Brechen, wenn Sie die Methodendefinition ändern usw. Seien Sie einfach konsistent in Ihren Tests. Siehe [PHPUnit Mock Objects](https://docs.phpunit.de/en/12.3/test-doubles.html#test-doubles).
+11. **Verwenden Sie `protected` Sichtbarkeit für Methoden/Eigenschaften, die Sie in Subklassen testen möchten**: Das erlaubt es, sie in Test-Subklassen zu überschreiben, ohne sie public zu machen, was besonders nützlich für anonyme Klassen-Mocks ist.
 
-## Einrichtung von PHPUnit
+## Einrichten von PHPUnit
 
-Richten Sie zuerst [PHPUnit](https://phpunit.de/) in Ihrem Flight PHP-Projekt mit Composer für einfache Tests ein. Siehe den [PHPUnit Getting Started guide](https://phpunit.readthedocs.io/en/12.3/installation.html) für mehr Details.
+Richten Sie zuerst [PHPUnit](https://phpunit.de/) in Ihrem Flight PHP-Projekt mit Composer ein, für einfaches Testing. Siehe den [PHPUnit Getting Started Guide](https://phpunit.readthedocs.io/en/12.3/installation.html) für mehr Details.
 
 1. In Ihrem Projektverzeichnis ausführen:
    ```bash
@@ -32,11 +32,11 @@ Richten Sie zuerst [PHPUnit](https://phpunit.de/) in Ihrem Flight PHP-Projekt mi
    ```
    Das installiert die neueste PHPUnit als Entwicklungsabhängigkeit.
 
-2. Erstellen Sie ein `tests`-Verzeichnis in der Projektwurzel für Testdateien.
+2. Erstellen Sie ein `tests`-Verzeichnis in der Wurzel Ihres Projekts für Testdateien.
 
-3. Fügen Sie ein Test-Skript zu `composer.json` für die Bequemlichkeit hinzu:
+3. Fügen Sie ein Test-Skript zu `composer.json` für Bequemlichkeit hinzu:
    ```json
-   // other composer.json content
+   // andere composer.json-Inhalte
    "scripts": {
        "test": "phpunit --configuration phpunit.xml"
    }
@@ -54,11 +54,11 @@ Richten Sie zuerst [PHPUnit](https://phpunit.de/) in Ihrem Flight PHP-Projekt mi
    </phpunit>
    ```
 
-Jetzt können Sie `composer test` ausführen, um Tests auszuführen.
+Nun können Sie, wenn Ihre Tests aufgebaut sind, `composer test` ausführen, um Tests auszuführen.
 
 ## Testen eines einfachen Route Handlers
 
-Lassen Sie uns mit einer grundlegenden [route](/learn/routing) beginnen, die eine E-Mail-Eingabe eines Benutzers validiert. Wir testen ihr Verhalten: Eine Erfolgsmeldung für gültige E-Mails und einen Fehler für ungültige. Für die E-Mail-Validierung verwenden wir [`filter_var`](https://www.php.net/manual/en/function.filter-var.php).
+Lassen Sie uns mit einer grundlegenden [Route](/learn/routing) beginnen, die die E-Mail-Eingabe eines Benutzers validiert. Wir testen ihr Verhalten: Rückgabe einer Erfolgsnachricht für gültige E-Mails und einer Fehlermeldung für ungültige. Für die E-Mail-Validierung verwenden wir [`filter_var`](https://www.php.net/manual/en/function.filter-var.php).
 
 ```php
 // index.php
@@ -76,9 +76,9 @@ class UserController {
 		$email = $this->app->request()->data->email;
 		$responseArray = [];
 		if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-			$responseArray = ['status' => 'error', 'message' => 'Invalid email'];
+			$responseArray = ['status' => 'error', 'message' => 'Ungültige E-Mail'];
 		} else {
-			$responseArray = ['status' => 'success', 'message' => 'Valid email'];
+			$responseArray = ['status' => 'success', 'message' => 'Gültige E-Mail'];
 		}
 
 		$this->app->json($responseArray);
@@ -94,53 +94,55 @@ use PHPUnit\Framework\TestCase;
 use Flight;
 use flight\Engine;
 
+// Kommentar: Testklasse für UserController
 class UserControllerTest extends TestCase {
 
     public function testValidEmailReturnsSuccess() {
 		$app = new Engine();
 		$request = $app->request();
-		$request->data->email = 'test@example.com'; // POST-Daten simulieren
+		$request->data->email = 'test@example.com'; // Simulate POST data
 		$UserController = new UserController($app);
 		$UserController->register($request->data->email);
         $response = $app->response()->getBody();
 		$output = json_decode($response, true);
         $this->assertEquals('success', $output['status']);
-        $this->assertEquals('Valid email', $output['message']);
+        $this->assertEquals('Gültige E-Mail', $output['message']);
     }
 
     public function testInvalidEmailReturnsError() {
 		$app = new Engine();
 		$request = $app->request();
-		$request->data->email = 'invalid-email'; // POST-Daten simulieren
+		$request->data->email = 'invalid-email'; // Simulate POST data
 		$UserController = new UserController($app);
 		$UserController->register($request->data->email);
 		$response = $app->response()->getBody();
 		$output = json_decode($response, true);
 		$this->assertEquals('error', $output['status']);
-		$this->assertEquals('Invalid email', $output['message']);
+		$this->assertEquals('Ungültige E-Mail', $output['message']);
 	}
 }
 ```
 
 **Wichtige Punkte**:
-- Wir simulieren POST-Daten mit der Request-Klasse. Verwenden Sie keine Globals wie `$_POST`, `$_GET` usw., da das das Testen komplizierter macht (Sie müssen diese Werte immer zurücksetzen, sonst könnten andere Tests fehlschlagen).
-- Alle Controller haben standardmäßig eine `flight\Engine`-Instanz injiziert, auch ohne einen DIC-Container einzurichten. Das macht es viel einfacher, Controller direkt zu testen.
-- Es gibt keine `Flight::`-Verwendung, was den Code leichter testbar macht.
-- Tests überprüfen Verhalten: Korrekten Status und Nachricht für gültige/ungültige E-Mails.
+- Wir simulieren POST-Daten mit der Request-Klasse. Verwenden Sie keine Globals wie `$_POST`, `$_GET` usw., da das Testing komplizierter macht (Sie müssen diese Werte immer zurücksetzen, oder andere Tests könnten fehlschlagen).
+- Alle Controller haben standardmäßig die `flight\Engine`-Instanz injiziert, auch ohne einen DIC-Container einzurichten. Das macht es viel einfacher, Controller direkt zu testen.
+- Es gibt keine `Flight::`-Nutzung, was den Code einfacher testbar macht.
+- Tests überprüfen Verhalten: Korrekter Status und Nachricht für gültige/ungültige E-Mails.
 
-Führen Sie `composer test` aus, um zu überprüfen, ob die Route wie erwartet verhält. Für mehr über [requests](/learn/requests) und [responses](/learn/responses) in Flight, siehe die relevanten Docs.
+Führen Sie `composer test` aus, um zu überprüfen, ob die Route wie erwartet verhält. Für mehr über [Requests](/learn/requests) und [Responses](/learn/responses) in Flight siehe die relevanten Docs.
 
-## Verwenden von Dependency Injection für testbare Controller
+## Verwendung von Dependency Injection für testbare Controller
 
-Für komplexere Szenarien verwenden Sie [dependency injection](/learn/dependency-injection-container) (DI), um Controller testbar zu machen. Vermeiden Sie Flight’s Globals (z. B. `Flight::set()`, `Flight::map()`, `Flight::register()`), da sie wie globaler Zustand wirken und in jedem Test gemockt werden müssen. Verwenden Sie stattdessen Flight’s DI-Container, [DICE](https://github.com/Level-2/Dice), [PHP-DI](https://php-di.org/) oder manuelles DI.
+Für komplexere Szenarien verwenden Sie [Dependency Injection](/learn/dependency-injection-container) (DI), um Controller testbar zu machen. Vermeiden Sie Flights Globals (z. B. `Flight::set()`, `Flight::map()`, `Flight::register()`), da sie wie globaler Zustand wirken und Mocks für jeden Test erfordern. Stattdessen verwenden Sie Flights DI-Container, [DICE](https://github.com/Level-2/Dice), [PHP-DI](https://php-di.org/) oder manuelles DI.
 
-Verwenden Sie [`flight\database\PdoWrapper`](/awesome-plugins/pdo-wrapper) anstelle von raw PDO. Dieser Wrapper ist viel einfacher zu mocken und für Unit Tests zu verwenden!
+Lassen Sie uns [`flight\database\PdoWrapper`](/learn/pdo-wrapper) anstelle von raw PDO verwenden. Dieser Wrapper ist viel einfacher zu mocken und für Unit Tests!
 
 Hier ist ein Controller, der einen Benutzer in eine Datenbank speichert und eine Willkommens-E-Mail sendet:
 
 ```php
 use flight\database\PdoWrapper;
 
+// Kommentar: Controller mit DI für Datenbank und Mailer
 class UserController {
     protected $app;
     protected $db;
@@ -155,46 +157,47 @@ class UserController {
     public function register() {
 		$email = $this->app->request()->data->email;
 		if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-			// Hinzufügen des Returns hier hilft beim Unit Testing, die Ausführung zu stoppen
-			return $this->app->jsonHalt(['status' => 'error', 'message' => 'Invalid email']);
+			// adding the return here helps unit testing to stop execution
+			return $this->app->jsonHalt(['status' => 'error', 'message' => 'Ungültige E-Mail']);
 		}
 
 		$this->db->runQuery('INSERT INTO users (email) VALUES (?)', [$email]);
 		$this->mailer->sendWelcome($email);
 
-		return $this->app->json(['status' => 'success', 'message' => 'User registered']);
+		return $this->app->json(['status' => 'success', 'message' => 'Benutzer registriert']);
     }
 }
 ```
 
 **Wichtige Punkte**:
-- Der Controller hängt von einer [`PdoWrapper`](/awesome-plugins/pdo-wrapper)-Instanz und einer `MailerInterface` (einem vorgetäuschten Drittanbieter-E-Mail-Dienst) ab.
-- Abhängigkeiten werden über den Konstruktor injiziert, um Globals zu vermeiden.
+- Der Controller hängt von einer [`PdoWrapper`](/learn/pdo-wrapper)-Instanz und einer `MailerInterface` ab (ein fingierter Drittanbieter-E-Mail-Service).
+- Abhängigkeiten werden über den Konstruktor injiziert, Globals werden vermieden.
 
 ### Testen des Controllers mit Mocks
 
-Nun testen wir das Verhalten von `UserController`: Validierung von E-Mails, Speichern in der Datenbank und Senden von E-Mails. Wir mocken die Datenbank und den Mailer, um den Controller zu isolieren.
+Nun testen wir das Verhalten des `UserController`: Validierung von E-Mails, Speichern in der Datenbank und Senden von E-Mails. Wir mocken die Datenbank und den Mailer, um den Controller zu isolieren.
 
 ```php
 // tests/UserControllerDICTest.php
 use PHPUnit\Framework\TestCase;
 
+// Kommentar: Testklasse mit DI und Mocks
 class UserControllerDICTest extends TestCase {
     public function testValidEmailSavesAndSendsEmail() {
 
-		// Manchmal ist das Mischen von Mocking-Stilen notwendig
-		// Hier verwenden wir PHPUnit's eingebaugenes Mock für PDOStatement
+		// Sometimes mixing mocking styles is necessary
+		// Here we use PHPUnit's built-in mock for PDOStatement
 		$statementMock = $this->createMock(PDOStatement::class);
 		$statementMock->method('execute')->willReturn(true);
-		// Verwenden einer anonymen Klasse, um PdoWrapper zu mocken
+		// Using an anonymous class to mock PdoWrapper
         $mockDb = new class($statementMock) extends PdoWrapper {
 			protected $statementMock;
 			public function __construct($statementMock) {
 				$this->statementMock = $statementMock;
 			}
 
-			// Wenn wir es so mocken, wird kein echter Datenbankaufruf gemacht.
-			// Wir können das weiter einrichten, um das PDOStatement-Mock zu simulieren, z. B. Fehler
+			// When we mock it this way, we are not really making a database call.
+			// We can further setup this to alter the PDOStatement mock to simulate failures, etc.
             public function runQuery(string $sql, array $params = []): PDOStatement {
                 return $this->statementMock;
             }
@@ -213,13 +216,13 @@ class UserControllerDICTest extends TestCase {
 		$response = $app->response()->getBody();
 		$result = json_decode($response, true);
         $this->assertEquals('success', $result['status']);
-        $this->assertEquals('User registered', $result['message']);
+        $this->assertEquals('Benutzer registriert', $result['message']);
         $this->assertEquals('test@example.com', $mockMailer->sentEmail);
     }
 
     public function testInvalidEmailSkipsSaveAndEmail() {
 		 $mockDb = new class() extends PdoWrapper {
-			// Ein leerer Konstruktor umgeht den Elternkonstruktor
+			// An empty constructor bypasses the parent constructor
 			public function __construct() {}
             public function runQuery(string $sql, array $params = []): PDOStatement {
                 throw new Exception('Sollte nicht aufgerufen werden');
@@ -234,7 +237,7 @@ class UserControllerDICTest extends TestCase {
 		$app = new Engine();
 		$app->request()->data->email = 'invalid-email';
 
-		// jsonHalt muss gemappt werden, um das Beenden zu vermeiden
+		// Need to map jsonHalt to avoid exiting
 		$app->map('jsonHalt', function($data) use ($app) {
 			$app->json($data, 400);
 		});
@@ -243,19 +246,19 @@ class UserControllerDICTest extends TestCase {
         $response = $app->response()->getBody();
         $result = json_decode($response, true);
         $this->assertEquals('error', $result['status']);
-        $this->assertEquals('Invalid email', $result['message']);
+        $this->assertEquals('Ungültige E-Mail', $result['message']);
     }
 }
 ```
 
 **Wichtige Punkte**:
 - Wir mocken `PdoWrapper` und `MailerInterface`, um echte Datenbank- oder E-Mail-Aufrufe zu vermeiden.
-- Tests überprüfen Verhalten: Gültige E-Mails lösen Datenbankeinträge und E-Mail-Versand aus; ungültige E-Mails überspringen beides.
-- Mocken Sie Drittanbieter-Abhängigkeiten (z. B. `PdoWrapper`, `MailerInterface`), lassen Sie die Logik des Controllers laufen.
+- Tests überprüfen Verhalten: Gültige E-Mails lösen Datenbank-Inserts und E-Mail-Versand aus; ungültige E-Mails überspringen beides.
+- Mocken Sie Drittanbieter-Abhängigkeiten (z. B. `PdoWrapper`, `MailerInterface`) und lassen Sie die Logik des Controllers laufen.
 
-### Zu viel Mocking
+### Zu viel Mocken
 
-Seien Sie vorsichtig, nicht zu viel zu mocken. Hier ein Beispiel, warum das problematisch sein könnte, anhand unseres `UserController`. Wir ändern die Überprüfung in eine Methode namens `isEmailValid` (mit `filter_var`) und die anderen neuen Ergänzungen in eine separate Methode namens `registerUser`.
+Seien Sie vorsichtig, nicht zu viel von Ihrem Code zu mocken. Lassen Sie mich ein Beispiel unten geben, warum das schlecht sein könnte, mit unserem `UserController`. Wir ändern diese Überprüfung in eine Methode namens `isEmailValid` (mit `filter_var`) und die anderen neuen Ergänzungen in eine separate Methode namens `registerUser`.
 
 ```php
 use flight\database\PdoWrapper;
@@ -276,13 +279,13 @@ class UserControllerDICV2 {
     public function register() {
 		$email = $this->app->request()->data->email;
 		if (!$this->isEmailValid($email)) {
-			// Hinzufügen des Returns hier hilft beim Unit Testing, die Ausführung zu stoppen
-			return $this->app->jsonHalt(['status' => 'error', 'message' => 'Invalid email']);
+			// adding the return here helps unit testing to stop execution
+			return $this->app->jsonHalt(['status' => 'error', 'message' => 'Ungültige E-Mail']);
 		}
 
 		$this->registerUser($email);
 
-		$this->app->json(['status' => 'success', 'message' => 'User registered']);
+		$this->app->json(['status' => 'success', 'message' => 'Benutzer registriert']);
     }
 
 	protected function isEmailValid($email) {
@@ -296,29 +299,30 @@ class UserControllerDICV2 {
 }
 ```
 
-Und nun der übermockte Unit Test, der eigentlich nichts testet:
+Und nun der übermäßig gemockte Unit Test, der eigentlich nichts testet:
 
 ```php
 use PHPUnit\Framework\TestCase;
 
+// Kommentar: Übermäßig gemockter Test, der nichts überprüft
 class UserControllerTest extends TestCase {
     public function testValidEmailSavesAndSendsEmail() {
 		$app = new Engine();
 		$app->request()->data->email = 'test@example.com';
-		// Wir überspringen die extra Dependency Injection hier, da es "einfach" ist
+		// we are skipping the extra dependency injection here cause it's "easy"
         $controller = new class($app) extends UserControllerDICV2 {
 			protected $app;
-			// Umgehe die Abhängigkeiten im Konstruktor
+			// Bypass the deps in the construct
 			public function __construct($app) {
 				$this->app = $app;
 			}
 
-			// Wir erzwingen einfach, dass es gültig ist.
+			// We'll just force this to be valid.
 			protected function isEmailValid($email) {
-				return true; // Immer true zurückgeben, um echte Validierung zu umgehen
+				return true; // Always return true, bypassing real validation
 			}
 
-			// Umgehe die tatsächlichen DB- und Mailer-Aufrufe
+			// Bypass the actual DB and mailer calls
 			protected function registerUser($email) {
 				return false;
 			}
@@ -327,12 +331,12 @@ class UserControllerTest extends TestCase {
 		$response = $app->response()->getBody();
 		$result = json_decode($response, true);
         $this->assertEquals('success', $result['status']);
-        $this->assertEquals('User registered', $result['message']);
+        $this->assertEquals('Benutzer registriert', $result['message']);
     }
 }
 ```
 
-Hurra, wir haben Unit Tests und sie bestehen! Aber warte, was, wenn ich die internen Abläufe von `isEmailValid` oder `registerUser` wirklich ändere? Die Tests bestehen immer noch, weil ich alle Funktionalität gemockt habe. Lassen Sie mich zeigen, was ich meine.
+Hurra, wir haben Unit Tests und sie laufen! Aber warte, was, wenn ich tatsächlich die internen Funktionen von `isEmailValid` oder `registerUser` ändere? Meine Tests laufen immer noch, weil ich alle Funktionalität gemockt habe. Lassen Sie mich zeigen, was ich meine.
 
 ```php
 // UserControllerDICV2.php
@@ -341,32 +345,32 @@ class UserControllerDICV2 {
 	// ... other methods ...
 
 	protected function isEmailValid($email) {
-		// Geänderte Logik
+		// Changed logic
 		$validEmail = filter_var($email, FILTER_VALIDATE_EMAIL) !== false;
-		// Nun sollte es nur eine spezifische Domain haben
+		// Now it should only have a specific domain
 		$validDomain = strpos($email, '@example.com') !== false; 
 		return $validEmail && $validDomain;
 	}
 }
 ```
 
-Wenn ich meine obigen Unit Tests ausführe, bestehen sie immer noch! Aber weil ich nicht auf Verhalten getestet habe (und etwas Code laufen lasse), habe ich potenziell einen Bug in der Produktion. Der Test sollte angepasst werden, um das neue Verhalten zu berücksichtigen, und auch das Gegenteil, wenn das Verhalten nicht das ist, was wir erwarten.
+Wenn ich meine obigen Unit Tests ausführe, laufen sie immer noch! Aber weil ich nicht für Verhalten getestet habe (tatsächlich etwas Code laufen lassen), habe ich potenziell einen Bug kodiert, der in der Produktion auftritt. Der Test sollte für das neue Verhalten angepasst werden und auch für den umgekehrten Fall, wenn das Verhalten nicht das ist, was wir erwarten.
 
 ## Vollständiges Beispiel
 
-Ein vollständiges Beispiel eines Flight PHP-Projekts mit Unit Tests finden Sie auf GitHub: [n0nag0n/flight-unit-tests-guide](https://github.com/n0nag0n/flight-unit-tests-guide).
-Für mehr Leitfäden, siehe [Unit Testing and SOLID Principles](/learn/unit-testing-and-solid-principles) und [Troubleshooting](/learn/troubleshooting).
+Sie finden ein vollständiges Beispiel eines Flight PHP-Projekts mit Unit Tests auf GitHub: [n0nag0n/flight-unit-tests-guide](https://github.com/n0nag0n/flight-unit-tests-guide).
+Für tieferes Verständnis siehe [Unit Testing and SOLID Principles](/learn/unit-testing-and-solid-principles).
 
 ## Häufige Fallstricke
 
-- **Über-Mocking**: Mocken Sie nicht jede Abhängigkeit; lassen Sie etwas Logik (z. B. Controller-Validierung) laufen, um reales Verhalten zu testen. Siehe [Unit Testing and SOLID Principles](/learn/unit-testing-and-solid-principles).
-- **Globaler Zustand**: Die starke Verwendung globaler PHP-Variablen (z. B. [`$_SESSION`](https://www.php.net/manual/en/reserved.variables.session.php), [`$_COOKIE`](https://www.php.net/manual/en/reserved.variables.cookie.php)) macht Tests empfindlich. Das Gleiche gilt für `Flight::`. Refactorisieren Sie, um Abhängigkeiten explizit zu übergeben.
-- **Komplizierte Einrichtung**: Wenn die Testeinrichtung umständlich ist, hat Ihre Klasse möglicherweise zu viele Abhängigkeiten oder Verantwortlichkeiten, die den [SOLID-Prinzipien](https://en.wikipedia.org/wiki/SOLID) widersprechen.
+- **Über-Mocken**: Mocken Sie nicht jede Abhängigkeit; lassen Sie etwas Logik (z. B. Controller-Validierung) laufen, um echtes Verhalten zu testen. Siehe [Unit Testing and SOLID Principles](/learn/unit-testing-and-solid-principles).
+- **Globaler Zustand**: Die starke Nutzung globaler PHP-Variablen (z. B. [`$_SESSION`](https://www.php.net/manual/en/reserved.variables.session.php), [`$_COOKIE`](https://www.php.net/manual/en/reserved.variables.cookie.php)) macht Tests spröde. Dasselbe gilt für `Flight::`. Refactoren Sie, um Abhängigkeiten explizit zu übergeben.
+- **Komplexe Einrichtung**: Wenn die Testeinrichtung umständlich ist, hat Ihre Klasse möglicherweise zu viele Abhängigkeiten oder Verantwortlichkeiten, die den [SOLID-Prinzipien](/learn/unit-testing-and-solid-principles) verletzen.
 
-## Skalierung mit Unit Tests
+## Skalieren mit Unit Tests
 
-Unit Tests leuchten in größeren Projekten oder wenn Sie nach Monaten auf Code zurückgreifen. Sie dokumentieren Verhalten und fangen Regressionen ab, was Sie davor schützt, Ihre App neu lernen zu müssen. Für Solo-Entwickler testen Sie kritische Pfade (z. B. Benutzeranmeldung, Zahlungsabwicklung). Für Teams stellen Tests ein konsistentes Verhalten über Beiträge hinweg sicher. Siehe [Why Frameworks?](/learn/why-frameworks) für mehr über die Vorteile von Frameworks und Tests.
+Unit Tests glänzen in größeren Projekten oder beim Wiederbesuch von Code nach Monaten. Sie dokumentieren Verhalten und fangen Regressionen ab, sparen Ihnen das erneute Lernen Ihrer App. Für Solo-Entwickler testen Sie kritische Pfade (z. B. Benutzeranmeldung, Zahlungsabwicklung). Für Teams stellen Tests konsistentes Verhalten über Beiträge hinweg sicher. Siehe [Why Frameworks?](/learn/why-frameworks) für mehr über die Vorteile von Frameworks und Tests.
 
-Teilen Sie Ihre eigenen Testtipps zum Flight PHP-Dokumentationsrepository bei!
+Beitragen Sie Ihre eigenen Testing-Tipps zum Flight PHP-Dokumentations-Repository!
 
 _Geschrieben von [n0nag0n](https://github.com/n0nag0n) 2025_

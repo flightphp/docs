@@ -1,18 +1,111 @@
 # HTML-Ansichten und Vorlagen
 
-Flight bietet standardmäßig einige grundlegende Template-Funktionalitäten an.
+## Überblick
 
-Flight ermöglicht es Ihnen, die standardmäßige Ansichtsengine einfach auszutauschen, indem Sie Ihre eigene Ansichts-Klasse registrieren. Scrollen Sie nach unten, um Beispiele für die Verwendung von Smarty, Latte, Blade und mehr zu sehen!
+Flight bietet standardmäßig einige grundlegende Funktionen für HTML-Templating. Templating ist eine sehr effektive Methode, um die Anwendungslogik von der Präsentationsschicht zu trennen.
 
-## Eingebaute Ansichtsengine
+## Verständnis
 
-Um eine Ansichts-Vorlage anzuzeigen, rufen Sie die Methode `render` mit dem Namen der Vorlagendatei und optionalen Vorlagendaten auf:
+Wenn Sie eine Anwendung erstellen, haben Sie wahrscheinlich HTML, das Sie an den Endbenutzer zurückliefern möchten. PHP ist an sich eine Templating-Sprache, aber es ist _sehr_ einfach, Geschäftslogik wie Datenbankaufrufe, API-Aufrufe usw. in Ihre HTML-Datei zu integrieren und das Testen und Entkoppeln zu einem sehr schwierigen Prozess zu machen. Indem Sie Daten in eine Vorlage schieben und die Vorlage sich selbst rendern lassen, wird es viel einfacher, Ihren Code zu entkoppeln und Unit-Tests durchzuführen. Sie werden uns dankbar sein, wenn Sie Vorlagen verwenden!
+
+## Grundlegende Verwendung
+
+Flight ermöglicht es Ihnen, den Standard-View-Engine einfach zu ersetzen, indem Sie Ihre eigene View-Klasse registrieren. Scrollen Sie nach unten, um Beispiele zu sehen, wie Sie Smarty, Latte, Blade und mehr verwenden können!
+
+### Latte
+
+<span class="badge bg-info">empfohlen</span>
+
+Hier ist, wie Sie den [Latte](https://latte.nette.org/)
+Template-Engine für Ihre Ansichten verwenden würden.
+
+#### Installation
+
+```bash
+composer require latte/latte
+```
+
+#### Grundlegende Konfiguration
+
+Die Hauptidee ist, dass Sie die `render`-Methode überschreiben, um Latte anstelle des Standard-PHP-Renders zu verwenden.
+
+```php
+// überschreiben der render-Methode, um Latte anstelle des Standard-PHP-Renders zu verwenden
+Flight::map('render', function(string $template, array $data, ?string $block): void {
+	$latte = new Latte\Engine;
+
+	// Wo Latte speziell seinen Cache speichert
+	$latte->setTempDirectory(__DIR__ . '/../cache/');
+	
+	$finalPath = Flight::get('flight.views.path') . $template;
+
+	$latte->render($finalPath, $data, $block);
+});
+```
+
+#### Verwendung von Latte in Flight
+
+Jetzt, da Sie mit Latte rendern können, können Sie etwas wie das tun:
+
+```html
+<!-- app/views/home.latte -->
+<html>
+  <head>
+	<title>{$title ? $title . ' - '}My App</title>
+	<link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+	<h1>Hello, {$name}!</h1>
+  </body>
+</html>
+```
+
+```php
+// routes.php
+Flight::route('/@name', function ($name) {
+	Flight::render('home.latte', [
+		'title' => 'Home Page',
+		'name' => $name
+	]);
+});
+```
+
+Wenn Sie `/Bob` in Ihrem Browser besuchen, wäre die Ausgabe:
+
+```html
+<html>
+  <head>
+	<title>Home Page - My App</title>
+	<link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+	<h1>Hello, Bob!</h1>
+  </body>
+</html>
+```
+
+#### Weiterführende Lektüre
+
+Ein komplexeres Beispiel zur Verwendung von Latte mit Layouts wird im Abschnitt [awesome plugins](/awesome-plugins/latte) dieser Dokumentation gezeigt.
+
+Sie können mehr über die vollen Fähigkeiten von Latte, einschließlich Übersetzung und Sprachfähigkeiten, erfahren, indem Sie die [offizielle Dokumentation](https://latte.nette.org/en/) lesen.
+
+### Eingebauter View-Engine
+
+<span class="badge bg-warning">veraltet</span>
+
+> **Hinweis:** Obwohl dies immer noch die Standardfunktionalität ist und technisch noch funktioniert.
+
+Um eine View-Vorlage anzuzeigen, rufen Sie die `render`-Methode mit dem Namen
+der Vorlagendatei und optionalen Vorlagendaten auf:
 
 ```php
 Flight::render('hello.php', ['name' => 'Bob']);
 ```
 
-Die Vorlagendaten, die Sie übergeben, werden automatisch in die Vorlage injiziert und können wie eine lokale Variable referenziert werden. Vorlagendateien sind einfach PHP-Dateien. Wenn der Inhalt der Datei `hello.php` ist:
+Die Vorlagendaten, die Sie übergeben, werden automatisch in die Vorlage injiziert und können
+wie eine lokale Variable referenziert werden. Vorlagendateien sind einfach PHP-Dateien. Wenn der
+Inhalt der `hello.php`-Vorlagendatei so aussieht:
 
 ```php
 Hello, <?= $name ?>!
@@ -24,36 +117,41 @@ Wäre die Ausgabe:
 Hello, Bob!
 ```
 
-Sie können auch manuell Ansichtsvariablen festlegen, indem Sie die Methode set verwenden:
+Sie können View-Variablen auch manuell mit der `set`-Methode festlegen:
 
 ```php
 Flight::view()->set('name', 'Bob');
 ```
 
-Die Variable `name` ist nun in all Ihren Ansichten verfügbar. Sie können also einfach Folgendes tun:
+Die Variable `name` ist jetzt in allen Ihren Views verfügbar. Also können Sie einfach tun:
 
 ```php
 Flight::render('hello');
 ```
 
-Beachten Sie, dass Sie beim Festlegen des Namens der Vorlage in der Methode render die Endung `.php` weglassen können.
+Beachten Sie, dass beim Angabe des Namens der Vorlage in der `render`-Methode die
+`.php`-Erweiterung weggelassen werden kann.
 
-Standardmäßig sucht Flight im Verzeichnis `views` nach Vorlagendateien. Sie können einen alternativen Pfad für Ihre Vorlagen festlegen, indem Sie die folgende Konfiguration setzen:
+Standardmäßig sucht Flight nach einem `views`-Verzeichnis für Vorlagendateien. Sie können
+einen alternativen Pfad für Ihre Vorlagen festlegen, indem Sie die folgende Konfiguration setzen:
 
 ```php
 Flight::set('flight.views.path', '/path/to/views');
 ```
 
-### Layouts
+#### Layouts
 
-Es ist üblich, dass Websites eine einzelne Layout-Vorlagendatei mit wechselndem Inhalt haben. Um Inhalte zu rendern, die in einem Layout verwendet werden sollen, können Sie einen optionalen Parameter an die Methode `render` übergeben.
+Es ist üblich, dass Websites eine einzige Layout-Vorlagendatei mit austauschbarem
+Inhalt haben. Um Inhalt zu rendern, der in einem Layout verwendet werden soll, können Sie einen optionalen
+Parameter an die `render`-Methode übergeben.
 
 ```php
 Flight::render('header', ['heading' => 'Hello'], 'headerContent');
 Flight::render('body', ['body' => 'World'], 'bodyContent');
 ```
 
-Ihre Ansicht hat dann die gespeicherten Variablen `headerContent` und `bodyContent`. Sie können dann Ihr Layout wie folgt rendern:
+Ihre View wird dann gespeicherte Variablen namens `headerContent` und `bodyContent` haben.
+Sie können dann Ihr Layout rendern, indem Sie tun:
 
 ```php
 Flight::render('layout', ['title' => 'Home Page']);
@@ -100,16 +198,17 @@ Wäre die Ausgabe:
 </html>
 ```
 
-## Smarty
+### Smarty
 
-So würden Sie die [Smarty](http://www.smarty.net/) Template-Engine für Ihre Ansichten verwenden:
+Hier ist, wie Sie den [Smarty](http://www.smarty.net/)
+Template-Engine für Ihre Ansichten verwenden würden:
 
 ```php
-// Smarty-Bibliothek laden
+// Laden der Smarty-Bibliothek
 require './Smarty/libs/Smarty.class.php';
 
-// Smarty als Ansichts-Klasse registrieren
-// Außerdem eine Callback-Funktion übergeben, um Smarty beim Laden zu konfigurieren
+// Registrieren von Smarty als View-Klasse
+// Auch Übergeben einer Callback-Funktion, um Smarty beim Laden zu konfigurieren
 Flight::register('view', Smarty::class, [], function (Smarty $smarty) {
   $smarty->setTemplateDir('./templates/');
   $smarty->setCompileDir('./templates_c/');
@@ -117,14 +216,14 @@ Flight::register('view', Smarty::class, [], function (Smarty $smarty) {
   $smarty->setCacheDir('./cache/');
 });
 
-// Vorlagendaten zuweisen
+// Zuweisen von Vorlagendaten
 Flight::view()->assign('name', 'Bob');
 
-// Die Vorlage anzeigen
+// Anzeigen der Vorlage
 Flight::view()->display('hello.tpl');
 ```
 
-Zur Vollständigkeit sollten Sie auch die standardmäßige Render-Methode von Flight überschreiben:
+Zur Vollständigkeit sollten Sie auch die Standard-`render`-Methode von Flight überschreiben:
 
 ```php
 Flight::map('render', function(string $template, array $data): void {
@@ -133,33 +232,9 @@ Flight::map('render', function(string $template, array $data): void {
 });
 ```
 
-## Latte
+### Blade
 
-So würden Sie die [Latte](https://latte.nette.org/) Template-Engine für Ihre Ansichten verwenden:
-
-```php
-// Latte als Ansichts-Klasse registrieren
-// Außerdem eine Callback-Funktion übergeben, um Latte beim Laden zu konfigurieren
-Flight::register('view', Latte\Engine::class, [], function (Latte\Engine $latte) {
-  // Hier wird Latte Ihre Vorlagen cachen, um die Dinge zu beschleunigen
-	// Eine nette Sache an Latte ist, dass es Ihren Cache automatisch aktualisiert,
-	// wenn Sie Änderungen an Ihren Vorlagen vornehmen!
-	$latte->setTempDirectory(__DIR__ . '/../cache/');
-
-	// Teilen Sie Latte mit, wo das Stammverzeichnis für Ihre Ansichten liegt.
-	$latte->setLoader(new \Latte\Loaders\FileLoader(__DIR__ . '/../views/'));
-});
-
-// Und schließen Sie es ab, damit Sie Flight::render() korrekt verwenden können
-Flight::map('render', function(string $template, array $data): void {
-  // Das ist wie $latte_engine->render($template, $data);
-  echo Flight::view()->render($template, $data);
-});
-```
-
-## Blade
-
-So würden Sie die [Blade](https://laravel.com/docs/8.x/blade) Template-Engine für Ihre Ansichten verwenden:
+Hier ist, wie Sie den [Blade](https://laravel.com/docs/8.x/blade) Template-Engine für Ihre Ansichten verwenden würden:
 
 Zuerst müssen Sie die BladeOne-Bibliothek über Composer installieren:
 
@@ -167,15 +242,15 @@ Zuerst müssen Sie die BladeOne-Bibliothek über Composer installieren:
 composer require eftec/bladeone
 ```
 
-Dann können Sie BladeOne als Ansichts-Klasse in Flight konfigurieren:
+Dann können Sie BladeOne als View-Klasse in Flight konfigurieren:
 
 ```php
 <?php
-// BladeOne-Bibliothek laden
+// Laden der BladeOne-Bibliothek
 use eftec\bladeone\BladeOne;
 
-// BladeOne als Ansichts-Klasse registrieren
-// Außerdem eine Callback-Funktion übergeben, um BladeOne beim Laden zu konfigurieren
+// Registrieren von BladeOne als View-Klasse
+// Auch Übergeben einer Callback-Funktion, um BladeOne beim Laden zu konfigurieren
 Flight::register('view', BladeOne::class, [], function (BladeOne $blade) {
   $views = __DIR__ . '/../views';
   $cache = __DIR__ . '/../cache';
@@ -184,14 +259,14 @@ Flight::register('view', BladeOne::class, [], function (BladeOne $blade) {
   $blade->setCompiledPath($cache);
 });
 
-// Vorlagendaten zuweisen
+// Zuweisen von Vorlagendaten
 Flight::view()->share('name', 'Bob');
 
-// Die Vorlage anzeigen
+// Anzeigen der Vorlage
 echo Flight::view()->run('hello', []);
 ```
 
-Zur Vollständigkeit sollten Sie auch die standardmäßige Render-Methode von Flight überschreiben:
+Zur Vollständigkeit sollten Sie auch die Standard-`render`-Methode von Flight überschreiben:
 
 ```php
 <?php
@@ -200,7 +275,7 @@ Flight::map('render', function(string $template, array $data): void {
 });
 ```
 
-In diesem Beispiel könnte die hello.blade.php-Vorlagendatei so aussehen:
+In diesem Beispiel könnte die Datei hello.blade.php so aussehen:
 
 ```php
 <?php
@@ -213,4 +288,14 @@ Die Ausgabe wäre:
 Hello, Bob!
 ```
 
-Indem Sie diese Schritte befolgen, können Sie die Blade-Template-Engine mit Flight integrieren und sie zum Rendern Ihrer Ansichten verwenden.
+## Siehe auch
+- [Erweitern](/learn/extending) - Wie man die `render`-Methode überschreibt, um einen anderen Template-Engine zu verwenden.
+- [Routing](/learn/routing) - Wie man Routen zu Controllern zuweist und Views rendert.
+- [Responses](/learn/responses) - Wie man HTTP-Antworten anpasst.
+- [Warum ein Framework?](/learn/why-frameworks) - Wie Vorlagen ins Gesamtbild passen.
+
+## Fehlerbehebung
+- Wenn Sie eine Weiterleitung in Ihrem Middleware haben, aber Ihre App scheint nicht weiterzuleiten, stellen Sie sicher, dass Sie eine `exit;`-Anweisung in Ihrem Middleware hinzufügen.
+
+## Changelog
+- v2.0 - Erste Veröffentlichung.

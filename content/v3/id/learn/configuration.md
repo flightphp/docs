@@ -1,38 +1,54 @@
 # Konfigurasi
 
-Anda dapat menyesuaikan perilaku tertentu dari Flight dengan menetapkan nilai konfigurasi melalui metode `set`.
+## Gambaran Umum 
+
+Flight menyediakan cara sederhana untuk mengonfigurasi berbagai aspek framework agar sesuai dengan kebutuhan aplikasi Anda. Beberapa diatur secara default, tetapi Anda dapat menimpa pengaturan tersebut sesuai kebutuhan. Anda juga dapat mengatur variabel sendiri untuk digunakan di seluruh aplikasi Anda.
+
+## Pemahaman
+
+Anda dapat menyesuaikan perilaku tertentu dari Flight dengan mengatur nilai konfigurasi
+melalui metode `set`.
 
 ```php
 Flight::set('flight.log_errors', true);
 ```
 
-## Pengaturan Konfigurasi Tersedia
+Dalam file `app/config/config.php`, Anda dapat melihat semua variabel konfigurasi default yang tersedia untuk Anda.
+
+## Penggunaan Dasar
+
+### Opsi Konfigurasi Flight
 
 Berikut adalah daftar semua pengaturan konfigurasi yang tersedia:
 
-- **flight.base_url** `?string` - Gantilah URL dasar dari permintaan. (default: null)
-- **flight.case_sensitive** `bool` - Pencocokan sensitif terhadap huruf untuk URL. (default: false)
-- **flight.handle_errors** `bool` - Izinkan Flight menangani semua kesalahan secara internal. (default: true)
+- **flight.base_url** `?string` - Timpa URL dasar dari permintaan jika Flight berjalan di subdirektori. (default: null)
+- **flight.case_sensitive** `bool` - Pencocokan sensitif huruf besar-kecil untuk URL. (default: false)
+- **flight.handle_errors** `bool` - Izinkan Flight untuk menangani semua kesalahan secara internal. (default: true)
+  - Jika Anda ingin Flight menangani kesalahan alih-alih perilaku PHP default, ini perlu diatur ke true.
+  - Jika Anda memiliki [Tracy](/awesome-plugins/tracy) yang terinstal, Anda ingin mengatur ini ke false agar Tracy dapat menangani kesalahan.
+  - Jika Anda memiliki plugin [APM](/awesome-plugins/apm) yang terinstal, Anda ingin mengatur ini ke true agar APM dapat mencatat kesalahan.
 - **flight.log_errors** `bool` - Catat kesalahan ke file log kesalahan server web. (default: false)
+  - Jika Anda memiliki [Tracy](/awesome-plugins/tracy) yang terinstal, Tracy akan mencatat kesalahan berdasarkan konfigurasi Tracy, bukan konfigurasi ini.
 - **flight.views.path** `string` - Direktori yang berisi file template tampilan. (default: ./views)
 - **flight.views.extension** `string` - Ekstensi file template tampilan. (default: .php)
 - **flight.content_length** `bool` - Atur header `Content-Length`. (default: true)
-- **flight.v2.output_buffering** `bool` - Gunakan buffering output tradisional. Lihat [migrasi ke v3](migrating-to-v3). (default: false)
+  - Jika Anda menggunakan [Tracy](/awesome-plugins/tracy), ini perlu diatur ke false agar Tracy dapat dirender dengan benar.
+- **flight.v2.output_buffering** `bool` - Gunakan buffering output legacy. Lihat [migrating to v3](migrating-to-v3). (default: false)
 
-## Konfigurasi Loader
+### Konfigurasi Loader
 
-Selain itu, ada pengaturan konfigurasi lain untuk loader. Ini akan memungkinkan Anda 
+Ada juga pengaturan konfigurasi lain untuk loader. Ini akan memungkinkan Anda 
 untuk memuat kelas secara otomatis dengan `_` dalam nama kelas.
 
 ```php
-// Aktifkan pemuatan kelas dengan garis bawah
-// Defaultnya adalah true
+// Aktifkan pemuatan kelas dengan underscore
+// Defaulted to true
 Loader::$v2ClassLoading = false;
 ```
 
-## Variabel
+### Variabel
 
-Flight memungkinkan Anda untuk menyimpan variabel sehingga dapat digunakan di mana saja dalam aplikasi Anda.
+Flight memungkinkan Anda menyimpan variabel agar dapat digunakan di mana saja dalam aplikasi Anda.
 
 ```php
 // Simpan variabel Anda
@@ -41,7 +57,7 @@ Flight::set('id', 123);
 // Di tempat lain dalam aplikasi Anda
 $id = Flight::get('id');
 ```
-Untuk melihat apakah sebuah variabel telah disetel, Anda dapat melakukan:
+Untuk melihat apakah variabel telah diatur, Anda dapat melakukan:
 
 ```php
 if (Flight::has('id')) {
@@ -52,28 +68,24 @@ if (Flight::has('id')) {
 Anda dapat menghapus variabel dengan melakukan:
 
 ```php
-// Menghapus variabel id
+// Hapus variabel id
 Flight::clear('id');
 
-// Menghapus semua variabel
+// Hapus semua variabel
 Flight::clear();
 ```
 
-Flight juga menggunakan variabel untuk tujuan konfigurasi.
-
-```php
-Flight::set('flight.log_errors', true);
-```
-
-## Penanganan Kesalahan
+> **Catatan:** Hanya karena Anda dapat mengatur variabel tidak berarti Anda harus melakukannya. Gunakan fitur ini secara hemat. Alasan mengapa adalah bahwa apa pun yang disimpan di sini menjadi variabel global. Variabel global buruk karena dapat diubah dari mana saja dalam aplikasi Anda, membuat sulit untuk melacak bug. Selain itu, ini dapat mempersulit hal-hal seperti [unit testing](/guides/unit-testing).
 
 ### Kesalahan dan Pengecualian
 
 Semua kesalahan dan pengecualian ditangkap oleh Flight dan diteruskan ke metode `error`.
-Perilaku default adalah mengirimkan respons `HTTP 500 Internal Server Error`
-dengan beberapa informasi kesalahan.
+jika `flight.handle_errors` diatur ke true.
 
-Anda dapat mengganti perilaku ini sesuai kebutuhan Anda:
+Perilaku default adalah mengirim respons `HTTP 500 Internal Server Error`
+umum dengan beberapa informasi kesalahan.
+
+Anda dapat [menimpa](/learn/extending) perilaku ini untuk kebutuhan Anda sendiri:
 
 ```php
 Flight::map('error', function (Throwable $error) {
@@ -82,22 +94,36 @@ Flight::map('error', function (Throwable $error) {
 });
 ```
 
-Secara default kesalahan tidak dicatat ke server web. Anda dapat mengaktifkan ini dengan
+Secara default, kesalahan tidak dicatat ke server web. Anda dapat mengaktifkan ini dengan
 mengubah konfigurasi:
 
 ```php
 Flight::set('flight.log_errors', true);
 ```
 
-### Tidak Ditemukan
+#### 404 Tidak Ditemukan
 
-Ketika sebuah URL tidak dapat ditemukan, Flight memanggil metode `notFound`. Perilaku default
-adalah mengirimkan respons `HTTP 404 Not Found` dengan pesan sederhana.
+Ketika URL tidak dapat ditemukan, Flight memanggil metode `notFound`. Perilaku
+default adalah mengirim respons `HTTP 404 Not Found` dengan pesan sederhana.
 
-Anda dapat mengganti perilaku ini sesuai kebutuhan Anda:
+Anda dapat [menimpa](/learn/extending) perilaku ini untuk kebutuhan Anda sendiri:
 
 ```php
 Flight::map('notFound', function () {
   // Tangani tidak ditemukan
 });
 ```
+
+## Lihat Juga
+- [Extending Flight](/learn/extending) - Cara memperluas dan menyesuaikan fungsionalitas inti Flight.
+- [Unit Testing](/guides/unit-testing) - Cara menulis unit test untuk aplikasi Flight Anda.
+- [Tracy](/awesome-plugins/tracy) - Plugin untuk penanganan kesalahan lanjutan dan debugging.
+- [Tracy Extensions](/awesome-plugins/tracy_extensions) - Ekstensi untuk mengintegrasikan Tracy dengan Flight.
+- [APM](/awesome-plugins/apm) - Plugin untuk pemantauan kinerja aplikasi dan pelacakan kesalahan.
+
+## Pemecahan Masalah
+- Jika Anda mengalami masalah untuk mengetahui semua nilai konfigurasi Anda, Anda dapat melakukan `var_dump(Flight::get());`
+
+## Changelog
+- v3.5.0 - Ditambahkan konfigurasi untuk `flight.v2.output_buffering` untuk mendukung perilaku buffering output legacy.
+- v2.0 - Konfigurasi inti ditambahkan.

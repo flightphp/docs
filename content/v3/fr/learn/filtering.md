@@ -1,24 +1,32 @@
 # Filtrage
 
-Flight vous permet de filtrer les méthodes avant et après leur appel. Il n'y a pas de
-crochets prédéfinis que vous devez mémoriser. Vous pouvez filtrer n'importe quelle des méthodes par défaut
-du framework ainsi que n'importe quelle méthode personnalisée que vous avez mappée.
+## Aperçu
+
+Flight vous permet de filtrer les [méthodes mappées](/learn/extending) avant et après leur appel.
+
+## Comprendre
+Il n'y a pas de hooks prédéfinis que vous devez mémoriser. Vous pouvez filtrer n'importe laquelle des méthodes par défaut du framework ainsi que n'importe quelles méthodes personnalisées que vous avez mappées.
 
 Une fonction de filtre ressemble à ceci :
 
 ```php
+/**
+ * @param array $params Les paramètres passés à la méthode filtrée.
+ * @param string $output (v2 buffering de sortie uniquement) La sortie de la méthode filtrée.
+ * @return bool Retournez true/vide ou ne retournez rien pour continuer la chaîne, false pour interrompre la chaîne.
+ */
 function (array &$params, string &$output): bool {
   // Code de filtre
 }
 ```
 
-En utilisant les variables passées en paramètre, vous pouvez manipuler les paramètres d'entrée et/ou la sortie.
+En utilisant les variables passées, vous pouvez manipuler les paramètres d'entrée et/ou la sortie.
 
 Vous pouvez faire exécuter un filtre avant une méthode en faisant :
 
 ```php
 Flight::before('start', function (array &$params, string &$output): bool {
-  // Faire quelque chose
+  // Faites quelque chose
 });
 ```
 
@@ -26,66 +34,75 @@ Vous pouvez faire exécuter un filtre après une méthode en faisant :
 
 ```php
 Flight::after('start', function (array &$params, string &$output): bool {
-  // Faire quelque chose
+  // Faites quelque chose
 });
 ```
 
-Vous pouvez ajouter autant de filtres que vous le souhaitez à n'importe quelle méthode. Ils seront appelés dans l'ordre où ils sont déclarés.
+Vous pouvez ajouter autant de filtres que vous voulez à n'importe quelle méthode. Ils seront appelés dans l'ordre où ils sont déclarés.
 
 Voici un exemple du processus de filtrage :
 
 ```php
-// Mapper une méthode personnalisée
+// Mappez une méthode personnalisée
 Flight::map('hello', function (string $name) {
-  return "Bonjour, $name!";
+  return "Hello, $name!";
 });
 
-// Ajouter un filtre avant
+// Ajoutez un filtre avant
 Flight::before('hello', function (array &$params, string &$output): bool {
-  // Manipuler le paramètre
+  // Manipulez le paramètre
   $params[0] = 'Fred';
   return true;
 });
 
-// Ajouter un filtre après
+// Ajoutez un filtre après
 Flight::after('hello', function (array &$params, string &$output): bool {
-  // Manipuler la sortie
-  $output .= " Passez une bonne journée !";
+  // Manipulez la sortie
+  $output .= " Have a nice day!";
   return true;
 });
 
-// Appeler la méthode personnalisée
+// Invoquez la méthode personnalisée
 echo Flight::hello('Bob');
 ```
 
 Cela devrait afficher :
 
 ```
-Bonjour Fred ! Passez une bonne journée !
+Hello Fred! Have a nice day!
 ```
 
-Si vous avez défini plusieurs filtres, vous pouvez interrompre la chaîne en renvoyant `false`
+Si vous avez défini plusieurs filtres, vous pouvez interrompre la chaîne en retournant `false`
 dans l'une de vos fonctions de filtre :
 
 ```php
 Flight::before('start', function (array &$params, string &$output): bool {
-  echo 'un';
+  echo 'one';
   return true;
 });
 
 Flight::before('start', function (array &$params, string &$output): bool {
-  echo 'deux';
+  echo 'two';
 
   // Cela mettra fin à la chaîne
   return false;
 });
 
-// Cela ne sera pas appelé
+// Ceci ne sera pas appelé
 Flight::before('start', function (array &$params, string &$output): bool {
-  echo 'trois';
+  echo 'three';
   return true;
 });
 ```
 
-Notez que les méthodes de base telles que `map` et `register` ne peuvent pas être filtrées car elles
-sont appelées directement et n'exécutent pas de manière dynamique.
+> **Note :** Les méthodes de base telles que `map` et `register` ne peuvent pas être filtrées car elles
+sont appelées directement et non invoquées dynamiquement. Voir [Extending Flight](/learn/extending) pour plus d'informations.
+
+## Voir aussi
+- [Extending Flight](/learn/extending)
+
+## Dépannage
+- Assurez-vous de retourner `false` depuis vos fonctions de filtre si vous voulez que la chaîne s'arrête. Si vous ne retournez rien, la chaîne continuera.
+
+## Journal des modifications
+- v2.0 - Version initiale.
