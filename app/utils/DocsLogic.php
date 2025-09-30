@@ -91,14 +91,20 @@ class DocsLogic {
             $uri = substr($uri, 0, strpos($uri, '?'));
         }
 
-		
-        // Here we can set variables that will be available on any page
-        $params['url'] = $request->getScheme() . '://' . $request->getHeader('Host') . $uri;
-        $params['nonce'] = HeaderSecurityMiddleware::$nonce;
-		$params['q'] = $request->query['q'] ?? '';
-
 		$startTime = microtime(true);
-        $this->app->latte()->render($latte_file, $params);
+		if(!empty($params['raw_markdown']) && (str_contains($request->header('Accept'), 'text/plain') || str_contains($request->header('Accept'), 'text/markdown'))) {
+			$this->app->response()->header('Content-Type', 'text/markdown; charset=utf-8');
+			$this->app->response()->write($params['raw_markdown']);
+		} else {
+			
+			// Here we can set variables that will be available on any page
+			$params['url'] = $request->getScheme() . '://' . $request->getHeader('Host') . $uri;
+			$params['nonce'] = HeaderSecurityMiddleware::$nonce;
+			$params['q'] = $request->query['q'] ?? '';
+
+			$this->app->latte()->render($latte_file, $params);
+		}
+		
 		$executionTime = microtime(true) - $startTime;
 		$this->app->eventDispatcher()->trigger('flight.view.rendered', $latte_file.':'.$uri, $executionTime);
     }
@@ -145,9 +151,10 @@ class DocsLogic {
 		$cacheHit = true;
 		$cacheKey = $section . '_html_' . $language . '_' . $version;
 		$markdown_html = $app->cache()->retrieve($cacheKey);
+		$rawMarkdown = $Translator->getMarkdownLanguageFile($section . '.md');
 		if ($markdown_html === null) {
 			$cacheHit = false;
-			$markdown_html = $app->parsedown()->text($Translator->getMarkdownLanguageFile($section . '.md'));
+			$markdown_html = $app->parsedown()->text($rawMarkdown);
 			$markdown_html = Text::addClassesToElements($markdown_html);
 			$app->cache()->store($cacheKey, $markdown_html, 86400); // 1 day
 		}
@@ -161,6 +168,7 @@ class DocsLogic {
             'markdown' => $markdown_html,
 			'version' => $version,
 			'language' => $language,
+			'raw_markdown' => $rawMarkdown,
         ]);
     }
 
@@ -195,9 +203,10 @@ class DocsLogic {
 		$cacheHit = true;
 		$cacheKey = $sub_section_underscored . '_html_' . $language . '_' . $version;
 		$markdown_html = $app->cache()->retrieve($cacheKey);
+		$rawMarkdown = $Translator->getMarkdownLanguageFile('/' . $section_file_path . '/' . $sub_section_underscored . '.md');
 		if ($markdown_html === null) {
 			$cacheHit = false;
-			$markdown_html = $app->parsedown()->text($Translator->getMarkdownLanguageFile('/' . $section_file_path . '/' . $sub_section_underscored . '.md'));
+			$markdown_html = $app->parsedown()->text($rawMarkdown);
 
 			$heading_data = [];
 			$markdown_html = Text::generateAndConvertHeaderListFromHtml($markdown_html, $heading_data, $section_file_path.'/'.$sub_section);
@@ -223,6 +232,7 @@ class DocsLogic {
 
 		$params = [
 			'custom_page_title' => ($page_title ? $page_title . ' - ' : '') . $Translator->translate($section),
+			'raw_markdown' => $rawMarkdown,
 			'markdown' => $markdown_html,
 			'heading_data' => $heading_data,
 			'relative_uri' => '/'.$section_file_path,
