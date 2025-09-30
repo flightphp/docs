@@ -54,7 +54,11 @@ class Text {
 			}
 			$title = strip_tags($matches[3]);
 			$rawTitle = $matches[3];
-			$slugged_title = 'heading-' . Text::slugify($title);
+			$slugged_title = Text::slugify($title);
+			// if $slugged_title starts with a number, prepend it with 'section-'
+			if (preg_match('/^\d/', $slugged_title)) {
+				$slugged_title = 'section-' . $slugged_title;
+			}
 			$id_attr = 'id="' . $slugged_title . '"';
 			$permalink = ' <a href="/'.$section_file_path.'#' . $slugged_title . '" class="bi bi-link-45deg" title="Permalink to this heading"></a>';
 
