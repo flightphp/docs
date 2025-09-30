@@ -54,7 +54,7 @@ class Text {
 			}
 			$title = strip_tags($matches[3]);
 			$rawTitle = $matches[3];
-			$slugged_title = Text::slugify($title);
+			$slugged_title = 'heading-' . Text::slugify($title);
 			$id_attr = 'id="' . $slugged_title . '"';
 			$permalink = ' <a href="/'.$section_file_path.'#' . $slugged_title . '" class="bi bi-link-45deg" title="Permalink to this heading"></a>';
 
