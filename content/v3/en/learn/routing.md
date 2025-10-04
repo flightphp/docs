@@ -129,7 +129,7 @@ Flight::route('GET /info', function() {
 
 `OPTIONS` requests are automatically handled by Flight for any defined route.
 - When an OPTIONS request is received, Flight responds with a `204 No Content` status and an `Allow` header listing all supported HTTP methods for that route.
-- You do not need to define a separate route for OPTIONS unless you want custom behavior or to modify the response.
+- You do not need to define a separate route for OPTIONS.
 
 ```php
 // For a route defined as:
