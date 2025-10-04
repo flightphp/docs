@@ -1,6 +1,6 @@
-# Requests
+# Permintaan
 
-## Overview
+## Gambaran Umum
 
 Flight merangkum permintaan HTTP ke dalam satu objek, yang dapat diakses dengan melakukan:
 
@@ -8,15 +8,15 @@ Flight merangkum permintaan HTTP ke dalam satu objek, yang dapat diakses dengan 
 $request = Flight::request();
 ```
 
-## Understanding
+## Pemahaman
 
-Permintaan HTTP adalah salah satu aspek inti yang perlu dipahami tentang siklus hidup HTTP. Pengguna melakukan tindakan pada peramban web atau klien HTTP, dan mereka mengirim serangkaian header, body, URL, dll ke proyek Anda. Anda dapat menangkap header ini (bahasa peramban, jenis kompresi yang dapat ditangani, agen pengguna, dll) dan menangkap body serta URL yang dikirim ke aplikasi Flight Anda. Permintaan ini sangat penting agar aplikasi Anda memahami apa yang harus dilakukan selanjutnya.
+Permintaan HTTP adalah salah satu aspek inti yang perlu dipahami tentang siklus hidup HTTP. Pengguna melakukan aksi pada browser web atau klien HTTP, dan mereka mengirim serangkaian header, body, URL, dll ke proyek Anda. Anda dapat menangkap header ini (bahasa browser, jenis kompresi yang dapat ditangani, agen pengguna, dll) dan menangkap body serta URL yang dikirim ke aplikasi Flight Anda. Permintaan ini sangat penting bagi aplikasi Anda untuk memahami apa yang harus dilakukan selanjutnya.
 
-## Basic Usage
+## Penggunaan Dasar
 
-PHP memiliki beberapa super globals termasuk `$_GET`, `$_POST`, `$_REQUEST`, `$_SERVER`, `$_FILES`, dan `$_COOKIE`. Flight mengabstraksikan ini menjadi [Collections](/learn/collections) yang berguna. Anda dapat mengakses properti `query`, `data`, `cookies`, dan `files` sebagai array atau objek.
+PHP memiliki beberapa super global termasuk `$_GET`, `$_POST`, `$_REQUEST`, `$_SERVER`, `$_FILES`, dan `$_COOKIE`. Flight mengabstraksikan ini menjadi [Collections](/learn/collections) yang berguna. Anda dapat mengakses properti `query`, `data`, `cookies`, dan `files` sebagai array atau objek.
 
-> **Catatan:** Sangat **TIDAK DISARANKAN** menggunakan super globals ini dalam proyek Anda dan sebaiknya dirujuk melalui objek `request()`.
+> **Catatan:** Sangat **TIDAK DISARANKAN** untuk menggunakan super global ini di proyek Anda dan seharusnya dirujuk melalui objek `request()`.
 
 > **Catatan:** Tidak ada abstraksi yang tersedia untuk `$_ENV`.
 
@@ -28,10 +28,10 @@ Anda dapat mengakses array `$_GET` melalui properti `query`:
 // GET /search?keyword=something
 Flight::route('/search', function(){
 	$keyword = Flight::request()->query['keyword'];
-	// atau
+	// or
 	$keyword = Flight::request()->query->keyword;
 	echo "Anda sedang mencari: $keyword";
-	// query database atau hal lain dengan $keyword
+	// query database atau sesuatu yang lain dengan $keyword
 });
 ```
 
@@ -43,11 +43,11 @@ Anda dapat mengakses array `$_POST` melalui properti `data`:
 Flight::route('POST /submit', function(){
 	$name = Flight::request()->data['name'];
 	$email = Flight::request()->data['email'];
-	// atau
+	// or
 	$name = Flight::request()->data->name;
 	$email = Flight::request()->data->email;
 	echo "Anda mengirimkan: $name, $email";
-	// simpan ke database atau hal lain dengan $name dan $email
+	// simpan ke database atau sesuatu yang lain dengan $name dan $email
 });
 ```
 
@@ -58,9 +58,9 @@ Anda dapat mengakses array `$_COOKIE` melalui properti `cookies`:
 ```php
 Flight::route('GET /login', function(){
 	$savedLogin = Flight::request()->cookies['myLoginCookie'];
-	// atau
+	// or
 	$savedLogin = Flight::request()->cookies->myLoginCookie;
-	// periksa apakah benar-benar tersimpan atau tidak dan jika ya, login otomatis
+	// periksa apakah benar-benar disimpan atau tidak dan jika ya, login otomatis
 	if($savedLogin) {
 		Flight::redirect('/dashboard');
 		return;
@@ -68,7 +68,7 @@ Flight::route('GET /login', function(){
 });
 ```
 
-Untuk bantuan dalam menetapkan nilai cookie baru, lihat [overclokk/cookie](/awesome-plugins/php-cookie)
+Untuk bantuan tentang pengaturan nilai cookie baru, lihat [overclokk/cookie](/awesome-plugins/php-cookie)
 
 ### `$_SERVER`
 
@@ -86,18 +86,17 @@ Anda dapat mengakses file yang diunggah melalui properti `files`:
 ```php
 // akses mentah ke properti $_FILES. Lihat di bawah untuk pendekatan yang direkomendasikan
 $uploadedFile = Flight::request()->files['myFile']; 
-// atau
+// or
 $uploadedFile = Flight::request()->files->myFile;
 ```
 
-Lihat [Uploaded File Handler](/learn/uploaded-file) untuk informasi lebih lanjut.
+Lihat [Uploaded File Handler](/learn/uploaded-file) untuk info lebih lanjut.
 
-#### Processing File Uploads
+#### Pemrosesan Unggahan File
 
 _v3.12.0_
 
-Anda dapat memproses unggahan file menggunakan framework dengan beberapa metode bantu. Ini pada dasarnya 
-berkurang untuk menarik data file dari permintaan, dan memindahkannya ke lokasi baru.
+Anda dapat memproses unggahan file menggunakan framework dengan beberapa metode pembantu. Pada dasarnya, ini merangkum menarik data file dari permintaan, dan memindahkannya ke lokasi baru.
 
 ```php
 Flight::route('POST /upload', function(){
@@ -120,9 +119,9 @@ Flight::route('POST /upload', function(){
 });
 ```
 
-> **Catatan Keamanan:** Selalu validasi dan sanitasi input pengguna, terutama saat berurusan dengan unggahan file. Selalu validasi jenis ekstensi yang akan diizinkan diunggah, tetapi Anda juga harus memvalidasi "magic bytes" file untuk memastikan itu benar-benar jenis file yang diklaim pengguna. Ada [artikel](https://dev.to/yasuie/php-file-upload-check-uploaded-files-with-magic-bytes-54oe) [dan](https://amazingalgorithms.com/snippets/php/detecting-the-mime-type-of-an-uploaded-file-using-magic-bytes/) [library](https://github.com/RikudouSage/MimeTypeDetector) yang tersedia untuk membantu dengan ini.
+> **Catatan Keamanan:** Selalu validasi dan sanitasi input pengguna, terutama saat berurusan dengan unggahan file. Selalu validasi jenis ekstensi yang akan diizinkan untuk diunggah, tetapi Anda juga harus memvalidasi "magic bytes" dari file untuk memastikan itu benar-benar jenis file yang diklaim pengguna. Ada [artikel](https://dev.to/yasuie/php-file-upload-check-uploaded-files-with-magic-bytes-54oe) [dan](https://amazingalgorithms.com/snippets/php/detecting-the-mime-type-of-an-uploaded-file-using-magic-bytes/) [library](https://github.com/RikudouSage/MimeTypeDetector) yang tersedia untuk membantu dengan ini.
 
-### Request Body
+### Body Permintaan
 
 Untuk mendapatkan body permintaan HTTP mentah, misalnya saat berurusan dengan permintaan POST/PUT,
 Anda dapat melakukan:
@@ -134,7 +133,7 @@ Flight::route('POST /users/xml', function(){
 });
 ```
 
-### JSON Body
+### Body JSON
 
 Jika Anda menerima permintaan dengan jenis konten `application/json` dan data contoh `{"id": 123}`
 itu akan tersedia dari properti `data`:
@@ -143,7 +142,7 @@ itu akan tersedia dari properti `data`:
 $id = Flight::request()->data->id;
 ```
 
-### Request Headers
+### Header Permintaan
 
 Anda dapat mengakses header permintaan menggunakan metode `getHeader()` atau `getHeaders()`:
 
@@ -151,16 +150,16 @@ Anda dapat mengakses header permintaan menggunakan metode `getHeader()` atau `ge
 
 // Mungkin Anda membutuhkan header Authorization
 $host = Flight::request()->getHeader('Authorization');
-// atau
+// or
 $host = Flight::request()->header('Authorization');
 
 // Jika Anda perlu mengambil semua header
 $headers = Flight::request()->getHeaders();
-// atau
+// or
 $headers = Flight::request()->headers();
 ```
 
-### Request Method
+### Metode Permintaan
 
 Anda dapat mengakses metode permintaan menggunakan properti `method` atau metode `getMethod()`:
 
@@ -172,9 +171,9 @@ $method = Flight::request()->getMethod();
 **Catatan:** Metode `getMethod()` pertama-tama menarik metode dari `$_SERVER['REQUEST_METHOD']`, kemudian dapat ditimpa 
 oleh `$_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE']` jika ada atau `$_REQUEST['_method']` jika ada.
 
-## Request Object Properties
+## Properti Objek Permintaan
 
-Objek request menyediakan properti berikut:
+Objek permintaan menyediakan properti berikut:
 
 - **body** - Body permintaan HTTP mentah
 - **url** - URL yang diminta
@@ -184,7 +183,7 @@ Objek request menyediakan properti berikut:
 - **ip** - Alamat IP klien
 - **ajax** - Apakah permintaan adalah permintaan AJAX
 - **scheme** - Protokol server (http, https)
-- **user_agent** - Informasi peramban
+- **user_agent** - Informasi browser
 - **type** - Jenis konten
 - **length** - Panjang konten
 - **query** - Parameter string query
@@ -197,11 +196,11 @@ Objek request menyediakan properti berikut:
 - **host** - Nama host permintaan
 - **servername** - SERVER_NAME dari `$_SERVER`
 
-## URL Helper Methods
+## Metode Pembantu
 
-Ada beberapa metode bantu untuk menyusun bagian-bagian URL untuk kenyamanan Anda.
+Ada beberapa metode pembantu untuk menyusun bagian dari URL, atau berurusan dengan header tertentu.
 
-### Full URL
+### URL Lengkap
 
 Anda dapat mengakses URL permintaan lengkap menggunakan metode `getFullUrl()`:
 
@@ -209,7 +208,8 @@ Anda dapat mengakses URL permintaan lengkap menggunakan metode `getFullUrl()`:
 $url = Flight::request()->getFullUrl();
 // https://example.com/some/path?foo=bar
 ```
-### Base URL
+
+### URL Dasar
 
 Anda dapat mengakses URL dasar menggunakan metode `getBaseUrl()`:
 
@@ -220,25 +220,49 @@ $url = Flight::request()->getBaseUrl();
 // Perhatikan, tidak ada slash akhir.
 ```
 
-## Query Parsing
+## Parsing Query
 
-Anda dapat meneruskan URL ke metode `parseQuery()` untuk mengurai string query menjadi array asosiatif:
+Anda dapat meneruskan URL ke metode `parseQuery()` untuk mem-parsing string query menjadi array asosiatif:
 
 ```php
 $query = Flight::request()->parseQuery('https://example.com/some/path?foo=bar');
 // ['foo' => 'bar']
 ```
 
-## See Also
+## Negosiasi Jenis Konten Accept
+
+_v3.17.2_
+
+Anda dapat menggunakan metode `negotiateContentType()` untuk menentukan jenis konten terbaik untuk merespons berdasarkan header `Accept` yang dikirim oleh klien.
+
+```php
+
+// Contoh header Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+// Yang di bawah ini mendefinisikan apa yang Anda dukung.
+$availableTypes = ['application/json', 'application/xml'];
+$typeToServe = Flight::request()->negotiateContentType($availableTypes);
+if ($typeToServe === 'application/json') {
+	// Layani respons JSON
+} elseif ($typeToServe === 'application/xml') {
+	// Layani respons XML
+} else {
+	// Default ke sesuatu yang lain atau lempar error
+}
+```
+
+> **Catatan:** Jika tidak ada jenis yang tersedia yang ditemukan dalam header `Accept`, metode akan mengembalikan `null`. Jika tidak ada header `Accept` yang didefinisikan, metode akan mengembalikan jenis pertama dalam array `$availableTypes`.
+
+## Lihat Juga
 - [Routing](/learn/routing) - Lihat cara memetakan rute ke controller dan render tampilan.
 - [Responses](/learn/responses) - Cara menyesuaikan respons HTTP.
-- [Why a Framework?](/learn/why-frameworks) - Bagaimana permintaan cocok ke dalam gambaran besar.
-- [Collections](/learn/collections) - Bekerja dengan koleksi data.
+- [Mengapa Framework?](/learn/why-frameworks) - Bagaimana permintaan cocok ke dalam gambaran besar.
+- [Collections](/learn/collections) - Bekerja dengan kumpulan data.
 - [Uploaded File Handler](/learn/uploaded-file) - Menangani unggahan file.
 
-## Troubleshooting
+## Pemecahan Masalah
 - `request()->ip` dan `request()->proxy_ip` bisa berbeda jika webserver Anda berada di belakang proxy, load balancer, dll. 
 
 ## Changelog
-- v3.12.0 - Ditambahkan kemampuan untuk menangani unggahan file melalui objek request.
+- v3.17.2 - Menambahkan negotiateContentType()
+- v3.12.0 - Menambahkan kemampuan untuk menangani unggahan file melalui objek permintaan.
 - v1.0 - Rilis awal.

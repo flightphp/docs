@@ -419,6 +419,8 @@ There is a helper method to stream a file to the end user. You can use the `down
 ```php
 Flight::route('/download', function () {
   Flight::download('/path/to/file.txt');
+  // As of v3.17.1 you can specify a custom filename for the download
+  Flight::download('/path/to/file.txt', 'custom_name.txt');
 });
 ```
 
@@ -434,6 +436,7 @@ Flight::route('/download', function () {
 - `stop()` and `halt()` are not the same thing. `halt()` will stop execution immediately, while `stop()` will allow execution to continue.
 
 ## Changelog
+- v3.17.1 - Added `$fileName` to `downloadFile()` method.
 - v3.12.0 - Added downloadFile helper method.
 - v3.10.0 - Added `jsonHalt`.
 - v1.0 - Initial release.

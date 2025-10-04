@@ -2,7 +2,7 @@
 
 ## 概述
 
-Flight 将 HTTP 请求封装到一个单一对象中，可以通过以下方式访问：
+Flight 将 HTTP 请求封装到一个对象中，可以通过以下方式访问：
 
 ```php
 $request = Flight::request();
@@ -10,13 +10,13 @@ $request = Flight::request();
 
 ## 理解
 
-HTTP 请求是理解 HTTP 生命周期的核心方面之一。用户在 Web 浏览器或 HTTP 客户端上执行一个操作，他们会向您的项目发送一系列头部、主体、URL 等。您可以捕获这些头部（浏览器的语言、他们能处理的压缩类型、用户代理等）并捕获发送到您的 Flight 应用程序的主体和 URL。这些请求对于您的应用程序了解下一步该做什么至关重要。
+HTTP 请求是理解 HTTP 生命周期的核心方面之一。用户在 Web 浏览器或 HTTP 客户端上执行操作，他们会向您的项目发送一系列头部、主体、URL 等。您可以捕获这些头部（浏览器的语言、他们能处理的压缩类型、用户代理等），并捕获发送到您的 Flight 应用程序的主体和 URL。这些请求对于您的应用程序了解下一步该做什么至关重要。
 
 ## 基本用法
 
 PHP 有几个超级全局变量，包括 `$_GET`、`$_POST`、`$_REQUEST`、`$_SERVER`、`$_FILES` 和 `$_COOKIE`。Flight 将这些抽象为方便的 [Collections](/learn/collections)。您可以像数组或对象一样访问 `query`、`data`、`cookies` 和 `files` 属性。
 
-> **注意：** 强烈不鼓励在您的项目中使用这些超级全局变量，应通过 `request()` 对象引用。
+> **注意：** 强烈不鼓励在您的项目中使用这些超级全局变量，应该通过 `request()` 对象来引用它们。
 
 > **注意：** `$_ENV` 没有可用的抽象。
 
@@ -60,7 +60,7 @@ Flight::route('GET /login', function(){
 	$savedLogin = Flight::request()->cookies['myLoginCookie'];
 	// 或
 	$savedLogin = Flight::request()->cookies->myLoginCookie;
-	// 检查是否真正保存，如果是则自动登录
+	// 检查是否真的保存了，如果是则自动登录
 	if($savedLogin) {
 		Flight::redirect('/dashboard');
 		return;
@@ -84,7 +84,7 @@ $host = Flight::request()->getVar('HTTP_HOST');
 您可以通过 `files` 属性访问上传的文件：
 
 ```php
-// 直接访问 $_FILES 属性。有关推荐方法，请参阅下文
+// 直接访问 $_FILES 属性。有关推荐方法，请参阅下方
 $uploadedFile = Flight::request()->files['myFile']; 
 // 或
 $uploadedFile = Flight::request()->files->myFile;
@@ -96,11 +96,11 @@ $uploadedFile = Flight::request()->files->myFile;
 
 _v3.12.0_
 
-您可以使用框架的一些辅助方法处理文件上传。基本上，它归结为从请求中拉取文件数据，并将其移动到新位置。
+您可以使用框架的一些辅助方法来处理文件上传。它基本上归结为从请求中拉取文件数据，并将其移动到新位置。
 
 ```php
 Flight::route('POST /upload', function(){
-	// 如果您有一个输入字段如 <input type="file" name="myFile">
+	// 如果您有一个像 <input type="file" name="myFile"> 这样的输入字段
 	$uploadedFileData = Flight::request()->getUploadedFiles();
 	$uploadedFile = $uploadedFileData['myFile'];
 	$uploadedFile->moveTo('/path/to/uploads/' . $uploadedFile->getClientFilename());
@@ -111,7 +111,7 @@ Flight::route('POST /upload', function(){
 
 ```php
 Flight::route('POST /upload', function(){
-	// 如果您有一个输入字段如 <input type="file" name="myFiles[]">
+	// 如果您有一个像 <input type="file" name="myFiles[]"> 这样的输入字段
 	$uploadedFiles = Flight::request()->getUploadedFiles()['myFiles'];
 	foreach ($uploadedFiles as $uploadedFile) {
 		$uploadedFile->moveTo('/path/to/uploads/' . $uploadedFile->getClientFilename());
@@ -119,11 +119,11 @@ Flight::route('POST /upload', function(){
 });
 ```
 
-> **安全注意：** 始终验证和清理用户输入，尤其是在处理文件上传时。始终验证您允许上传的扩展类型，但您还应该验证文件的“魔术字节”以确保它是用户声称的文件类型。有 [文章](https://dev.to/yasuie/php-file-upload-check-uploaded-files-with-magic-bytes-54oe) [和](https://amazingalgorithms.com/snippets/php/detecting-the-mime-type-of-an-uploaded-file-using-magic-bytes/) [库](https://github.com/RikudouSage/MimeTypeDetector) 可帮助处理此问题。
+> **安全注意：** 始终验证和清理用户输入，尤其是在处理文件上传时。始终验证您允许上传的扩展类型，但您还应该验证文件的“魔术字节”以确保它是用户声称的文件类型。有 [文章](https://dev.to/yasuie/php-file-upload-check-uploaded-files-with-magic-bytes-54oe) [和](https://amazingalgorithms.com/snippets/php/detecting-the-mime-type-of-an-uploaded-file-using-magic-bytes/) [库](https://github.com/RikudouSage/MimeTypeDetector) 可帮助您完成此操作。
 
 ### 请求主体
 
-要获取原始 HTTP 请求主体，例如在处理 POST/PUT 请求时，您可以这样做：
+要获取原始 HTTP 请求主体，例如在处理 POST/PUT 请求时，可以这样做：
 
 ```php
 Flight::route('POST /users/xml', function(){
@@ -193,9 +193,9 @@ $method = Flight::request()->getMethod();
 - **host** - 请求主机名
 - **servername** - 来自 `$_SERVER` 的 SERVER_NAME
 
-## URL 辅助方法
+## 辅助方法
 
-有一些辅助方法可以方便地组合 URL 的部分。
+有一些辅助方法可以拼凑 URL 的部分，或处理某些头部。
 
 ### 完整 URL
 
@@ -219,12 +219,35 @@ $url = Flight::request()->getBaseUrl();
 
 ## 查询解析
 
-您可以将 URL 传递给 `parseQuery()` 方法来解析查询字符串为关联数组：
+您可以将 URL 传递给 `parseQuery()` 方法，将查询字符串解析为关联数组：
 
 ```php
 $query = Flight::request()->parseQuery('https://example.com/some/path?foo=bar');
 // ['foo' => 'bar']
 ```
+
+## 协商内容接受类型
+
+_v3.17.2_
+
+您可以使用 `negotiateContentType()` 方法，根据客户端发送的 `Accept` 头部确定最佳响应内容类型。
+
+```php
+
+// 示例 Accept 头部：text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+// 下方定义您支持的内容。
+$availableTypes = ['application/json', 'application/xml'];
+$typeToServe = Flight::request()->negotiateContentType($availableTypes);
+if ($typeToServe === 'application/json') {
+	// 提供 JSON 响应
+} elseif ($typeToServe === 'application/xml') {
+	// 提供 XML 响应
+} else {
+	// 默认使用其他内容或抛出错误
+}
+```
+
+> **注意：** 如果在 `Accept` 头部中找不到任何可用类型，该方法将返回 `null`。如果没有定义 `Accept` 头部，该方法将返回 `$availableTypes` 数组中的第一个类型。
 
 ## 另请参阅
 - [Routing](/learn/routing) - 了解如何将路由映射到控制器并渲染视图。
@@ -237,5 +260,6 @@ $query = Flight::request()->parseQuery('https://example.com/some/path?foo=bar');
 - 如果您的 Web 服务器位于代理、负载均衡器等后面，`request()->ip` 和 `request()->proxy_ip` 可能不同。
 
 ## 更新日志
+- v3.17.2 - 添加了 negotiateContentType()
 - v3.12.0 - 添加了通过请求对象处理文件上传的能力。
 - v1.0 - 初始发布。

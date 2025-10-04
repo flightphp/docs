@@ -198,9 +198,9 @@ The request object provides the following properties:
 - **host** - The request host name
 - **servername** - The SERVER_NAME from `$_SERVER`
 
-## URL Helper Methods
+## Helper Methods
 
-There are a couple helper methods to piece together parts of a URL for your convenience.
+There are a couple helper methods to piece together parts of a URL, or deal with certain headers.
 
 ### Full URL
 
@@ -230,6 +230,29 @@ $query = Flight::request()->parseQuery('https://example.com/some/path?foo=bar');
 // ['foo' => 'bar']
 ```
 
+## Negotiate Content Accept Types
+
+_v3.17.2_
+
+You can use the `negotiateContentType()` method to determine the best content type to respond with based on the `Accept` header sent by the client.
+
+```php
+
+// Example Accept header: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+// The below defines what you support.
+$availableTypes = ['application/json', 'application/xml'];
+$typeToServe = Flight::request()->negotiateContentType($availableTypes);
+if ($typeToServe === 'application/json') {
+	// Serve JSON response
+} elseif ($typeToServe === 'application/xml') {
+	// Serve XML response
+} else {
+	// Default to something else or throw an error
+}
+```
+
+> **Note:** If none of the available types are found in the `Accept` header, the method will return `null`. If there is no `Accept` header defined, the method will return the first type in the `$availableTypes` array.
+
 ## See Also
 - [Routing](/learn/routing) - See how to map routes to controllers and render views.
 - [Responses](/learn/responses) - How to customize HTTP responses.
@@ -241,5 +264,6 @@ $query = Flight::request()->parseQuery('https://example.com/some/path?foo=bar');
 - `request()->ip` and `request()->proxy_ip` can be different if your webserver is behind a proxy, load balancer, etc. 
 
 ## Changelog
+- v3.17.2 - Added negotiateContentType()
 - v3.12.0 - Added ability to handle file uploads through the request object.
 - v1.0 - Initial release.

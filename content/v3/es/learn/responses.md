@@ -2,20 +2,19 @@
 
 ## Resumen
 
-Flight ayuda a generar parte de los encabezados de respuesta por ti, pero tú tienes la mayor parte del control sobre lo que envías de vuelta al usuario. La mayoría del tiempo accederás directamente al objeto `response()`, pero Flight tiene algunos métodos auxiliares para establecer algunos de los encabezados de respuesta por ti.
+Flight ayuda a generar parte de los encabezados de respuesta por ti, pero tú tienes la mayoría del control sobre lo que envías de vuelta al usuario. La mayoría del tiempo accederás directamente al objeto `response()`, pero Flight tiene algunos métodos auxiliares para configurar algunos de los encabezados de respuesta por ti.
 
 ## Comprensión
 
-Después de que el usuario envíe su [solicitud](/learn/requests) a tu aplicación, necesitas generar una respuesta adecuada para ellos. Te han enviado información como el idioma que prefieren, si pueden manejar ciertos tipos de compresión, su agente de usuario, etc., y después de procesar todo, es hora de enviarles de vuelta una respuesta adecuada. Esto puede ser establecer encabezados, generar un cuerpo de HTML o JSON para ellos, o redirigirlos a una página.
+Después de que el usuario envíe su [solicitud](/learn/requests) a tu aplicación, necesitas generar una respuesta adecuada para ellos. Te han enviado información como el idioma que prefieren, si pueden manejar ciertos tipos de compresión, su agente de usuario, etc., y después de procesar todo, es hora de enviarles una respuesta adecuada. Esto puede ser configurar encabezados, generar un cuerpo de HTML o JSON para ellos, o redirigirlos a una página.
 
-## Uso Básico
+## Uso básico
 
-### Envío de un Cuerpo de Respuesta
+### Envío de un cuerpo de respuesta
 
-Flight utiliza `ob_start()` para almacenar en búfer la salida. Esto significa que puedes usar `echo` o `print` para enviar una respuesta al usuario y Flight la capturará y la enviará de vuelta al usuario con los encabezados apropiados.
+Flight usa `ob_start()` para almacenar en búfer la salida. Esto significa que puedes usar `echo` o `print` para enviar una respuesta al usuario y Flight la capturará y la enviará de vuelta al usuario con los encabezados apropiados.
 
 ```php
-
 // Esto enviará "Hello, World!" al navegador del usuario
 Flight::route('/', function() {
 	echo "Hello, World!";
@@ -30,13 +29,12 @@ Flight::route('/', function() {
 Como alternativa, puedes llamar al método `write()` para agregar al cuerpo también.
 
 ```php
-
 // Esto enviará "Hello, World!" al navegador del usuario
 Flight::route('/', function() {
 	// verboso, pero a veces hace el trabajo cuando lo necesitas
 	Flight::response()->write("Hello, World!");
 
-	// si quieres recuperar el cuerpo que has establecido en este punto
+	// si quieres recuperar el cuerpo que has configurado en este punto
 	// puedes hacerlo así
 	$body = Flight::response()->getBody();
 });
@@ -44,7 +42,7 @@ Flight::route('/', function() {
 
 ### JSON
 
-Flight proporciona soporte para enviar respuestas JSON y JSONP. Para enviar una respuesta JSON, pasas algunos datos para ser codificados en JSON:
+Flight proporciona soporte para enviar respuestas JSON y JSONP. Para enviar una respuesta JSON, pasa algunos datos para que se codifiquen en JSON:
 
 ```php
 Flight::route('/@companyId/users', function(int $companyId) {
@@ -58,15 +56,15 @@ Flight::route('/@companyId/users', function(int $companyId) {
 
 > **Nota:** Por defecto, Flight enviará un encabezado `Content-Type: application/json` con la respuesta. También usará las banderas `JSON_THROW_ON_ERROR` y `JSON_UNESCAPED_SLASHES` al codificar el JSON.
 
-#### JSON con Código de Estado
+#### JSON con código de estado
 
-También puedes pasar un código de estado como el segundo argumento:
+También puedes pasar un código de estado como segundo argumento:
 
 ```php
 Flight::json(['id' => 123], 201);
 ```
 
-#### JSON con Impresión Bonita
+#### JSON con impresión bonita
 
 También puedes pasar un argumento en la última posición para habilitar la impresión bonita:
 
@@ -74,14 +72,14 @@ También puedes pasar un argumento en la última posición para habilitar la imp
 Flight::json(['id' => 123], 200, true, 'utf-8', JSON_PRETTY_PRINT);
 ```
 
-#### Cambiar el Orden de los Argumentos de JSON
+#### Cambiar el orden de los argumentos JSON
 
 `Flight::json()` es un método muy antiguo, pero el objetivo de Flight es mantener la compatibilidad hacia atrás para los proyectos. En realidad es muy simple si quieres rehacer el orden de los argumentos para usar una sintaxis más simple, puedes simplemente remapear el método JSON [como cualquier otro método de Flight](/learn/extending):
 
 ```php
 Flight::map('json', function($data, $code = 200, $options = 0) {
 
-	// ahora no tienes que `true, 'utf-8'` cuando uses el método json()!
+	// ahora no tienes que usar `true, 'utf-8'` al usar el método json()!
 	Flight::_json($data, $code, true, 'utf-8', $options);
 }
 
@@ -89,22 +87,22 @@ Flight::map('json', function($data, $code = 200, $options = 0) {
 Flight::json(['id' => 123], 200, JSON_PRETTY_PRINT);
 ```
 
-#### JSON y Detener la Ejecución
+#### JSON y detención de ejecución
 
 _v3.10.0_
 
-Si quieres enviar una respuesta JSON y detener la ejecución, puedes usar el método `jsonHalt()`. Esto es útil para casos en los que estás verificando tal vez algún tipo de autorización y si el usuario no está autorizado, puedes enviar una respuesta JSON inmediatamente, borrar el contenido del cuerpo existente y detener la ejecución.
+Si quieres enviar una respuesta JSON y detener la ejecución, puedes usar el método `jsonHalt()`. Esto es útil para casos en los que estás verificando quizás algún tipo de autorización y si el usuario no está autorizado, puedes enviar una respuesta JSON inmediatamente, limpiar el contenido del cuerpo existente y detener la ejecución.
 
 ```php
 Flight::route('/users', function() {
 	$authorized = someAuthorizationCheck();
-	// Verificar si el usuario está autorizado
+	// Verifica si el usuario está autorizado
 	if($authorized === false) {
 		Flight::jsonHalt(['error' => 'Unauthorized'], 401);
-		// no exit; necesario aquí.
+		// no se necesita exit; aquí.
 	}
 
-	// Continuar con el resto de la ruta
+	// Continúa con el resto de la ruta
 });
 ```
 
@@ -113,16 +111,16 @@ Antes de v3.10.0, tendrías que hacer algo como esto:
 ```php
 Flight::route('/users', function() {
 	$authorized = someAuthorizationCheck();
-	// Verificar si el usuario está autorizado
+	// Verifica si el usuario está autorizado
 	if($authorized === false) {
 		Flight::halt(401, json_encode(['error' => 'Unauthorized']));
 	}
 
-	// Continuar con el resto de la ruta
+	// Continúa con el resto de la ruta
 });
 ```
 
-### Limpiar un Cuerpo de Respuesta
+### Limpieza de un cuerpo de respuesta
 
 Si quieres limpiar el cuerpo de la respuesta, puedes usar el método `clearBody`:
 
@@ -138,7 +136,7 @@ Flight::route('/', function() {
 
 El caso de uso anterior probablemente no es común, sin embargo podría ser más común si se usara en un [middleware](/learn/middleware).
 
-### Ejecutar un Callback en el Cuerpo de Respuesta
+### Ejecución de un callback en el cuerpo de la respuesta
 
 Puedes ejecutar un callback en el cuerpo de la respuesta usando el método `addResponseBodyCallback`:
 
@@ -149,17 +147,17 @@ Flight::route('/users', function() {
 	Flight::render('users_table', ['users' => $users]);
 });
 
-// Esto comprimirá con gzip todas las respuestas para cualquier ruta
+// Esto comprime con gzip todas las respuestas para cualquier ruta
 Flight::response()->addResponseBodyCallback(function($body) {
 	return gzencode($body, 9);
 });
 ```
 
-Puedes agregar múltiples callbacks y se ejecutarán en el orden en que se agregaron. Dado que esto puede aceptar cualquier [callable](https://www.php.net/manual/en/language.types.callable.php), puede aceptar un array de clase `[ $class, 'method' ]`, un closure `$strReplace = function($body) { str_replace('hi', 'there', $body); };`, o un nombre de función `'minify'` si tuvieras una función para minificar tu código HTML por ejemplo.
+Puedes agregar múltiples callbacks y se ejecutarán en el orden en que se agregaron. Dado que esto puede aceptar cualquier [llamable](https://www.php.net/manual/en/language.types.callable.php), puede aceptar un array de clase `[ $class, 'method' ]`, una closure `$strReplace = function($body) { str_replace('hi', 'there', $body); };`, o un nombre de función `'minify'` si tuvieras una función para minificar tu código HTML por ejemplo.
 
 **Nota:** Los callbacks de ruta no funcionarán si estás usando la opción de configuración `flight.v2.output_buffering`.
 
-#### Callback de Ruta Específica
+#### Callback de ruta específica
 
 Si quisieras que esto solo se aplique a una ruta específica, podrías agregar el callback en la ruta misma:
 
@@ -169,14 +167,14 @@ Flight::route('/users', function() {
 	$users = $db->fetchAll("SELECT * FROM users");
 	Flight::render('users_table', ['users' => $users]);
 
-	// Esto comprimirá con gzip solo la respuesta para esta ruta
+	// Esto comprime con gzip solo la respuesta para esta ruta
 	Flight::response()->addResponseBodyCallback(function($body) {
 		return gzencode($body, 9);
 	});
 });
 ```
 
-#### Opción de Middleware
+#### Opción de middleware
 
 También puedes usar [middleware](/learn/middleware) para aplicar el callback a todas las rutas a través de middleware:
 
@@ -184,14 +182,14 @@ También puedes usar [middleware](/learn/middleware) para aplicar el callback a 
 // MinifyMiddleware.php
 class MinifyMiddleware {
 	public function before() {
-		// Aplicar el callback aquí en el objeto response().
+		// Aplica el callback aquí en el objeto response().
 		Flight::response()->addResponseBodyCallback(function($body) {
 			return $this->minify($body);
 		});
 	}
 
 	protected function minify(string $body): string {
-		// minificar el cuerpo de alguna manera
+		// minifica el cuerpo de alguna manera
 		return $body;
 	}
 }
@@ -203,9 +201,9 @@ Flight::group('/users', function() {
 }, [ new MinifyMiddleware() ]);
 ```
 
-### Códigos de Estado
+### Códigos de estado
 
-Puedes establecer el código de estado de la respuesta usando el método `status`:
+Puedes configurar el código de estado de la respuesta usando el método `status`:
 
 ```php
 Flight::route('/@id', function($id) {
@@ -219,15 +217,15 @@ Flight::route('/@id', function($id) {
 });
 ```
 
-Si quieres obtener el código de estado actual, puedes usar el método `status` sin ningún argumento:
+Si quieres obtener el código de estado actual, puedes usar el método `status` sin argumentos:
 
 ```php
 Flight::response()->status(); // 200
 ```
 
-### Establecer un Encabezado de Respuesta
+### Configuración de un encabezado de respuesta
 
-Puedes establecer un encabezado como el tipo de contenido de la respuesta usando el método `header`:
+Puedes configurar un encabezado como el tipo de contenido de la respuesta usando el método `header`:
 
 ```php
 // Esto enviará "Hello, World!" al navegador del usuario en texto plano
@@ -239,7 +237,7 @@ Flight::route('/', function() {
 });
 ```
 
-### Redirigir
+### Redirección
 
 Puedes redirigir la solicitud actual usando el método `redirect()` y pasando una nueva URL:
 
@@ -251,22 +249,22 @@ Flight::route('/login', function() {
 
 	if($password !== $passwordConfirm) {
 		Flight::redirect('/new/location');
-		return; // esto es necesario para que la funcionalidad de abajo no se ejecute
+		return; // esto es necesario para que la funcionalidad a continuación no se ejecute
 	}
 
-	// agregar el nuevo usuario...
+	// agrega el nuevo usuario...
 	Flight::db()->runQuery("INSERT INTO users ....");
 	Flight::redirect('/admin/dashboard');
 });
 ```
 
-> **Nota:** Por defecto Flight envía un código de estado HTTP 303 ("See Other"). Puedes establecer opcionalmente un código personalizado:
+> **Nota:** Por defecto, Flight envía un código de estado HTTP 303 ("See Other"). Puedes configurar opcionalmente un código personalizado:
 
 ```php
 Flight::redirect('/new/location', 301); // permanente
 ```
 
-### Detener la Ejecución de la Ruta
+### Detención de la ejecución de la ruta
 
 Puedes detener el framework y salir inmediatamente en cualquier punto llamando al método `halt`:
 
@@ -286,15 +284,15 @@ Llamar a `halt` descartará cualquier contenido de respuesta hasta ese punto y d
 Flight::stop($httpStatusCode = null);
 ```
 
-> **Nota:** `Flight::stop()` tiene un comportamiento extraño como que generará la respuesta pero continuará ejecutando tu script lo que podría no ser lo que buscas. Puedes usar `exit` o `return` después de llamar a `Flight::stop()` para prevenir la ejecución adicional, pero generalmente se recomienda usar `Flight::halt()`.
+> **Nota:** `Flight::stop()` tiene un comportamiento extraño, como que generará la respuesta pero continuará ejecutando tu script, lo cual podría no ser lo que buscas. Puedes usar `exit` o `return` después de llamar a `Flight::stop()` para prevenir la ejecución adicional, pero en general se recomienda usar `Flight::halt()`.
 
 Esto guardará la clave y el valor del encabezado en el objeto de respuesta. Al final del ciclo de vida de la solicitud, construirá los encabezados y enviará una respuesta.
 
-## Uso Avanzado
+## Uso avanzado
 
-### Envío de un Encabezado Inmediatamente
+### Envío de un encabezado inmediatamente
 
-Puede haber veces en las que necesites hacer algo personalizado con el encabezado y necesites enviar el encabezado en esa misma línea de código con la que estás trabajando. Si estás estableciendo una [ruta transmitida](/learn/routing), esto es lo que necesitarías. Eso se logra a través de `response()->setRealHeader()`.
+Puede haber veces en las que necesites hacer algo personalizado con el encabezado y necesites enviar el encabezado en esa misma línea de código con la que estás trabajando. Si estás configurando una [ruta transmitida](/learn/routing), esto es lo que necesitarías. Eso se logra a través de `response()->setRealHeader()`.
 
 ```php
 Flight::route('/', function() {
@@ -319,32 +317,32 @@ Entonces, al hacer una solicitud GET usando `?q=my_func`, deberías recibir la s
 my_func({"id":123});
 ```
 
-Si no pasas un nombre de parámetro de consulta, por defecto será `jsonp`.
+Si no pasas un nombre de parámetro de consulta, se usará `jsonp` por defecto.
 
-> **Nota:** Si todavía estás usando solicitudes JSONP en 2025 y más allá, únete al chat y cuéntanos por qué! Nos encanta escuchar algunas buenas historias de batalla/horror!
+> **Nota:** Si aún estás usando solicitudes JSONP en 2025 y más allá, únete al chat y cuéntanos por qué! ¡Nos encanta escuchar algunas buenas historias de batalla/horror!
 
-### Limpiar Datos de Respuesta
+### Limpieza de datos de respuesta
 
-Puedes limpiar el cuerpo de la respuesta y los encabezados usando el método `clear()`. Esto limpiará cualquier encabezado asignado a la respuesta, limpiará el cuerpo de la respuesta y establecerá el código de estado en `200`.
+Puedes limpiar el cuerpo de la respuesta y los encabezados usando el método `clear()`. Esto limpiará cualquier encabezado asignado a la respuesta, limpiará el cuerpo de la respuesta y configurará el código de estado en `200`.
 
 ```php
 Flight::response()->clear();
 ```
 
-#### Limpiar Solo el Cuerpo de Respuesta
+#### Limpieza solo del cuerpo de respuesta
 
 Si solo quieres limpiar el cuerpo de la respuesta, puedes usar el método `clearBody()`:
 
 ```php
-// Esto mantendrá cualquier encabezado establecido en el objeto response().
-// Flight::response()->clearBody();
+// Esto aún mantendrá cualquier encabezado configurado en el objeto response().
+Flight::response()->clearBody();
 ```
 
 ### Caché HTTP
 
 Flight proporciona soporte integrado para caché a nivel HTTP. Si se cumple la condición de caché, Flight devolverá una respuesta HTTP `304 Not Modified`. La próxima vez que el cliente solicite el mismo recurso, se le indicará que use su versión en caché localmente.
 
-#### Caché a Nivel de Ruta
+#### Caché a nivel de ruta
 
 Si quieres cachear toda tu respuesta, puedes usar el método `cache()` y pasar el tiempo para cachear.
 
@@ -364,9 +362,9 @@ Flight::route('/news', function () {
 });
 ```
 
-### Última Modificación
+### Última modificación
 
-Puedes usar el método `lastModified` y pasar un timestamp UNIX para establecer la fecha y hora en que una página fue modificada por última vez. El cliente continuará usando su caché hasta que el valor de última modificación cambie.
+Puedes usar el método `lastModified` y pasar una marca de tiempo UNIX para configurar la fecha y hora en que una página fue modificada por última vez. El cliente continuará usando su caché hasta que el valor de última modificación cambie.
 
 ```php
 Flight::route('/news', function () {
@@ -386,9 +384,9 @@ Flight::route('/news', function () {
 });
 ```
 
-Ten en cuenta que llamar a `lastModified` o `etag` establecerá y verificará ambos el valor de caché. Si el valor de caché es el mismo entre solicitudes, Flight enviará inmediatamente una respuesta `HTTP 304` y detendrá el procesamiento.
+Ten en cuenta que llamar a cualquiera de `lastModified` o `etag` configurará y verificará ambos el valor de caché. Si el valor de caché es el mismo entre solicitudes, Flight enviará inmediatamente una respuesta `HTTP 304` y detendrá el procesamiento.
 
-### Descargar un Archivo
+### Descarga de un archivo
 
 _v3.12.0_
 
@@ -397,21 +395,24 @@ Hay un método auxiliar para transmitir un archivo al usuario final. Puedes usar
 ```php
 Flight::route('/download', function () {
   Flight::download('/path/to/file.txt');
+  // A partir de v3.17.1 puedes especificar un nombre de archivo personalizado para la descarga
+  Flight::download('/path/to/file.txt', 'custom_name.txt');
 });
 ```
 
-## Ver También
-- [Routing](/learn/routing) - Cómo mapear rutas a controladores y renderizar vistas.
-- [Requests](/learn/requests) - Comprender cómo manejar solicitudes entrantes.
+## Ver también
+- [Enrutamiento](/learn/routing) - Cómo mapear rutas a controladores y renderizar vistas.
+- [Solicitudes](/learn/requests) - Comprender cómo manejar solicitudes entrantes.
 - [Middleware](/learn/middleware) - Usar middleware con rutas para autenticación, registro, etc.
-- [Why a Framework?](/learn/why-frameworks) - Comprender los beneficios de usar un framework como Flight.
-- [Extending](/learn/extending) - Cómo extender Flight con tu propia funcionalidad.
+- [¿Por qué un framework?](/learn/why-frameworks) - Comprender los beneficios de usar un framework como Flight.
+- [Extensión](/learn/extending) - Cómo extender Flight con tu propia funcionalidad.
 
-## Solución de Problemas
-- Si tienes problemas con redirecciones que no funcionan, asegúrate de agregar un `return;` al método.
+## Solución de problemas
+- Si tienes problemas con las redirecciones que no funcionan, asegúrate de agregar un `return;` al método.
 - `stop()` y `halt()` no son lo mismo. `halt()` detendrá la ejecución inmediatamente, mientras que `stop()` permitirá que la ejecución continúe.
 
-## Registro de Cambios
-- v3.12.0 - Agregado método auxiliar downloadFile.
+## Registro de cambios
+- v3.17.1 - Agregado `$fileName` al método `downloadFile()`.
+- v3.12.0 - Agregado método auxiliar `downloadFile`.
 - v3.10.0 - Agregado `jsonHalt`.
 - v1.0 - Lanzamiento inicial.

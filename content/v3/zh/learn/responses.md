@@ -2,17 +2,17 @@
 
 ## 概述
 
-Flight 会为您生成部分响应头，但您对发送回用户的内容拥有大部分控制权。大多数情况下，您将直接访问 `response()` 对象，但 Flight 提供了一些辅助方法来为您设置部分响应头。
+Flight 会帮助您生成部分响应头部，但您对发送回用户的内容拥有大部分控制权。大多数时候，您会直接访问 `response()` 对象，但 Flight 提供了一些辅助方法来为您设置部分响应头部。
 
 ## 理解
 
-在用户向您的应用程序发送 [request](/learn/requests) 请求后，您需要为他们生成适当的响应。他们发送给您的信息包括他们偏好的语言、是否支持某些类型的压缩、他们的用户代理等，在处理完一切后，是时候向他们发送适当的响应了。这可以是设置头、输出 HTML 或 JSON 主体，或者将他们重定向到某个页面。
+在用户向您的应用程序发送 [request](/learn/requests) 请求后，您需要为他们生成适当的响应。他们发送给您诸如他们偏好的语言、是否能处理某些类型的压缩、他们的用户代理等信息，在处理完一切后，是时候发送回适当的响应了。这可以是设置头部、输出 HTML 或 JSON 主体内容，或将他们重定向到某个页面。
 
 ## 基本用法
 
 ### 发送响应主体
 
-Flight 使用 `ob_start()` 来缓冲输出。这意味着您可以使用 `echo` 或 `print` 向用户发送响应，Flight 会捕获它并连同适当的头发送回用户。
+Flight 使用 `ob_start()` 来缓冲输出。这意味着您可以使用 `echo` 或 `print` 向用户发送响应，Flight 会捕获它并使用适当的头部发送回用户。
 
 ```php
 // 这将向用户的浏览器发送 "Hello, World!"
@@ -34,19 +34,19 @@ Flight::route('/', function() {
 	// 冗长，但有时在需要时能完成任务
 	Flight::response()->write("Hello, World!");
 
-	// 如果您想在此时检索已设置的主体
-	// 您可以这样做
+	// 如果您想在此时检索已设置的主体内容
+	// 您可以这样操作
 	$body = Flight::response()->getBody();
 });
 ```
 
 ### JSON
 
-Flight 提供支持发送 JSON 和 JSONP 响应。要发送 JSON 响应，您需要传递一些要进行 JSON 编码的数据：
+Flight 提供对发送 JSON 和 JSONP 响应的支持。要发送 JSON 响应，您需要传递一些要进行 JSON 编码的数据：
 
 ```php
 Flight::route('/@companyId/users', function(int $companyId) {
-	// 例如从数据库中拉取您的用户
+	// 例如，从数据库中提取用户
 	$users = Flight::db()->fetchAll("SELECT id, first_name, last_name FROM users WHERE company_id = ?", [ $companyId ]);
 
 	Flight::json($users);
@@ -54,7 +54,7 @@ Flight::route('/@companyId/users', function(int $companyId) {
 // [{"id":1,"first_name":"Bob","last_name":"Jones"}, /* 更多用户 */ ]
 ```
 
-> **注意：** 默认情况下，Flight 会发送 `Content-Type: application/json` 头与响应一起。它还会使用标志 `JSON_THROW_ON_ERROR` 和 `JSON_UNESCAPED_SLASHES` 来编码 JSON。
+> **注意：** 默认情况下，Flight 会发送 `Content-Type: application/json` 头部与响应一起。它还会使用标志 `JSON_THROW_ON_ERROR` 和 `JSON_UNESCAPED_SLASHES` 来编码 JSON。
 
 #### 带状态码的 JSON
 
@@ -75,16 +75,16 @@ Flight::json(['id' => 123], 200, true, 'utf-8', JSON_PRETTY_PRINT);
 #### 更改 JSON 参数顺序
 
 `Flight::json()` 是一个非常旧的方法，但 Flight 的目标是维护项目的向后兼容性。
-如果您想重新排序参数以使用更简单的语法，您可以像[任何其他 Flight 方法](/learn/extending)一样重新映射 JSON 方法：
+实际上，如果您想重新排列参数顺序以使用更简单的语法，您可以像 [任何其他 Flight 方法](/learn/extending) 一样重新映射 JSON 方法：
 
 ```php
 Flight::map('json', function($data, $code = 200, $options = 0) {
 
-	// 现在在使用 json() 方法时，您不必 `true, 'utf-8'` 了！
+	// 现在在使用 json() 方法时，您不必再使用 `true, 'utf-8'`！
 	Flight::_json($data, $code, true, 'utf-8', $options);
 }
 
-// 现在它可以这样使用
+// 现在可以这样使用
 Flight::json(['id' => 123], 200, JSON_PRETTY_PRINT);
 ```
 
@@ -98,10 +98,10 @@ _v3.10.0_
 ```php
 Flight::route('/users', function() {
 	$authorized = someAuthorizationCheck();
-	// 检查用户是否授权
+	// 检查用户是否已授权
 	if($authorized === false) {
 		Flight::jsonHalt(['error' => 'Unauthorized'], 401);
-		// 这里不需要 exit;
+		// 这里不需要 exit。
 	}
 
 	// 继续执行路由的其余部分
@@ -113,7 +113,7 @@ Flight::route('/users', function() {
 ```php
 Flight::route('/users', function() {
 	$authorized = someAuthorizationCheck();
-	// 检查用户是否授权
+	// 检查用户是否已授权
 	if($authorized === false) {
 		Flight::halt(401, json_encode(['error' => 'Unauthorized']));
 	}
@@ -155,7 +155,7 @@ Flight::response()->addResponseBodyCallback(function($body) {
 });
 ```
 
-您可以添加多个回调，它们将按添加顺序运行。因为这可以接受任何 [callable](https://www.php.net/manual/en/language.types.callable.php)，它可以接受类数组 `[ $class, 'method' ]`、闭包 `$strReplace = function($body) { str_replace('hi', 'there', $body); };`，或函数名 `'minify'`，例如如果您有一个函数来压缩您的 HTML 代码。
+您可以添加多个回调，它们将按添加顺序运行。因为这可以接受任何 [callable](https://www.php.net/manual/en/language.types.callable.php)，它可以接受类数组 `[ $class, 'method' ]`、闭包 `$strReplace = function($body) { str_replace('hi', 'there', $body); };`，或函数名 `'minify'`，例如如果您有一个函数来压缩 HTML 代码。
 
 **注意：** 如果您使用 `flight.v2.output_buffering` 配置选项，路由回调将不起作用。
 
@@ -225,9 +225,9 @@ Flight::route('/@id', function($id) {
 Flight::response()->status(); // 200
 ```
 
-### 设置响应头
+### 设置响应头部
 
-您可以使用 `header` 方法设置响应内容的类型等头：
+您可以使用 `header` 方法设置诸如响应内容类型的头部：
 
 ```php
 // 这将以纯文本形式向用户的浏览器发送 "Hello, World!"
@@ -280,7 +280,7 @@ Flight::halt();
 Flight::halt(200, 'Be right back...');
 ```
 
-调用 `halt` 将丢弃直到该点的任何响应内容并停止所有执行。
+调用 `halt` 将丢弃到该点的任何响应内容并停止所有执行。
 如果您想停止框架并输出当前响应，请使用 `stop` 方法：
 
 ```php
@@ -289,14 +289,13 @@ Flight::stop($httpStatusCode = null);
 
 > **注意：** `Flight::stop()` 有一些奇怪的行为，例如它会输出响应但继续执行您的脚本，这可能不是您想要的。您可以在调用 `Flight::stop()` 后使用 `exit` 或 `return` 来防止进一步执行，但一般推荐使用 `Flight::halt()`。
 
-这将保存头键和值到响应对象。在请求生命周期结束时，
-它将构建头并发送响应。
+这将保存头部键和值到响应对象。在请求生命周期结束时，它将构建头部并发送响应。
 
 ## 高级用法
 
-### 立即发送头
+### 立即发送头部
 
-有时您需要对头进行自定义操作，并在您正在处理的代码行上发送头。
+有时您需要对头部进行自定义操作，并在您正在处理的代码行上发送头部。
 如果您正在设置 [streamed route](/learn/routing)，这就是您需要的。通过 `response()->setRealHeader()` 可以实现。
 
 ```php
@@ -324,11 +323,11 @@ my_func({"id":123});
 
 如果您不传递查询参数名称，它将默认使用 `jsonp`。
 
-> **注意：** 如果您在 2025 年及以后仍在使用 JSONP 请求，请加入聊天告诉我们原因！我们喜欢听一些好的战斗/恐怖故事！
+> **注意：** 如果您在 2025 年及以后仍然使用 JSONP 请求，请加入聊天并告诉我们原因！我们喜欢听一些好的战斗/恐怖故事！
 
 ### 清空响应数据
 
-您可以使用 `clear()` 方法清空响应主体和头。这将清除分配给响应的任何头、清空响应主体，并将状态码设置为 `200`。
+您可以使用 `clear()` 方法清空响应主体和头部。这将清除分配给响应的任何头部、清空响应主体，并将状态码设置为 `200`。
 
 ```php
 Flight::response()->clear();
@@ -339,21 +338,19 @@ Flight::response()->clear();
 如果您只想清空响应主体，您可以使用 `clearBody()` 方法：
 
 ```php
-// 这将保留在 response() 对象上设置的任何头。
+// 这仍然会保留在 response() 对象上设置的任何头部。
 Flight::response()->clearBody();
 ```
 
 ### HTTP 缓存
 
-Flight 提供内置支持 HTTP 级别的缓存。如果满足缓存条件，
-Flight 将返回 HTTP `304 Not Modified` 响应。下次客户端请求相同资源时，他们将被提示使用本地缓存版本。
+Flight 提供内置支持 HTTP 级别的缓存。如果满足缓存条件，Flight 将返回 HTTP `304 Not Modified` 响应。下次客户端请求相同资源时，他们将被提示使用本地缓存版本。
 
 #### 路由级别缓存
 
 如果您想缓存整个响应，您可以使用 `cache()` 方法并传递缓存时间。
 
 ```php
-
 // 这将缓存响应 5 分钟
 Flight::route('/news', function () {
   Flight::response()->cache(time() + 300);
@@ -369,9 +366,7 @@ Flight::route('/news', function () {
 
 ### Last-Modified
 
-您可以使用 `lastModified` 方法并传递 UNIX 时间戳来设置页面最后修改的日期
-和时间。客户端将继续使用他们的缓存，直到
-最后修改值更改。
+您可以使用 `lastModified` 方法并传递 UNIX 时间戳来设置页面最后修改的日期和时间。客户端将持续使用他们的缓存，直到最后修改值更改。
 
 ```php
 Flight::route('/news', function () {
@@ -391,9 +386,7 @@ Flight::route('/news', function () {
 });
 ```
 
-请记住，调用 `lastModified` 或 `etag` 都会设置并检查
-缓存值。如果请求之间的缓存值相同，Flight 将立即
-发送 `HTTP 304` 响应并停止处理。
+请记住，调用 `lastModified` 或 `etag` 都会设置和检查缓存值。如果请求之间的缓存值相同，Flight 将立即发送 `HTTP 304` 响应并停止处理。
 
 ### 下载文件
 
@@ -404,6 +397,8 @@ _v3.12.0_
 ```php
 Flight::route('/download', function () {
   Flight::download('/path/to/file.txt');
+  // 从 v3.17.1 开始，您可以为下载指定自定义文件名
+  Flight::download('/path/to/file.txt', 'custom_name.txt');
 });
 ```
 
@@ -416,9 +411,10 @@ Flight::route('/download', function () {
 
 ## 故障排除
 - 如果重定向不起作用，请确保在方法中添加 `return;`。
-- `stop()` 和 `halt()` 不是一回事。`halt()` 将立即停止执行，而 `stop()` 将允许执行继续。
+- `stop()` 和 `halt()` 不是同一件事。`halt()` 将立即停止执行，而 `stop()` 将允许执行继续。
 
 ## 更新日志
+- v3.17.1 - 在 `downloadFile()` 方法中添加了 `$fileName`。
 - v3.12.0 - 添加了 downloadFile 辅助方法。
 - v3.10.0 - 添加了 `jsonHalt`。
 - v1.0 - 初始发布。

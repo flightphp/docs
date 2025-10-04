@@ -1,21 +1,21 @@
 # Responses
 
-## Overview
+## Überblick
 
 Flight hilft dabei, Teile der Response-Header für Sie zu generieren, aber Sie haben die meiste Kontrolle darüber, was Sie an den Benutzer zurücksenden. Meistens greifen Sie direkt auf das `response()`-Objekt zu, aber Flight bietet einige Hilfsmethoden, um einige der Response-Header für Sie zu setzen.
 
-## Understanding
+## Verständnis
 
-Nachdem der Benutzer seine [request](/learn/requests)-Anfrage an Ihre Anwendung gesendet hat, müssen Sie eine angemessene Response für sie generieren. Sie haben Ihnen Informationen wie die bevorzugte Sprache, ob sie bestimmte Kompressionstypen handhaben können, ihren User Agent usw. gesendet, und nach der Verarbeitung von allem ist es Zeit, eine angemessene Response zurückzusenden. Dies kann das Setzen von Headern sein, das Ausgeben eines HTML- oder JSON-Bodys für sie oder das Weiterleiten zu einer Seite.
+Nachdem der Benutzer seine [request](/learn/requests)-Anfrage an Ihre Anwendung gesendet hat, müssen Sie eine angemessene Response für sie generieren. Sie haben Ihnen Informationen wie die bevorzugte Sprache, ob sie bestimmte Kompressionstypen handhaben können, ihren User Agent usw. gesendet, und nach der Verarbeitung von allem ist es Zeit, ihnen eine angemessene Response zurückzusenden. Dies kann das Setzen von Headern, das Ausgeben eines HTML- oder JSON-Bodys für sie oder das Weiterleiten zu einer Seite sein.
 
-## Basic Usage
+## Grundlegende Verwendung
 
-### Sending a Response Body
+### Senden eines Response-Bodys
 
 Flight verwendet `ob_start()`, um die Ausgabe zu puffern. Das bedeutet, Sie können `echo` oder `print` verwenden, um eine Response an den Benutzer zu senden, und Flight wird sie erfassen und mit den entsprechenden Headern an den Benutzer zurücksenden.
 
 ```php
-// Dies wird "Hello, World!" an den Browser des Benutzers senden
+// Dies sendet "Hello, World!" an den Browser des Benutzers
 Flight::route('/', function() {
 	echo "Hello, World!";
 });
@@ -26,10 +26,10 @@ Flight::route('/', function() {
 // Hello, World!
 ```
 
-Als Alternative können Sie auch die `write()`-Methode aufrufen, um zum Body hinzuzufügen.
+Als Alternative können Sie die `write()`-Methode aufrufen, um zum Body hinzuzufügen.
 
 ```php
-// Dies wird "Hello, World!" an den Browser des Benutzers senden
+// Dies sendet "Hello, World!" an den Browser des Benutzers
 Flight::route('/', function() {
 	// ausführlich, aber erledigt den Job manchmal, wenn Sie es brauchen
 	Flight::response()->write("Hello, World!");
@@ -42,21 +42,21 @@ Flight::route('/', function() {
 
 ### JSON
 
-Flight bietet Unterstützung für das Senden von JSON- und JSONP-Responses. Um eine JSON-Response zu senden, übergeben Sie einige Daten, die JSON-kodiert werden sollen:
+Flight bietet Unterstützung für das Senden von JSON- und JSONP-Responses. Um eine JSON-Response zu senden, geben Sie einige Daten weiter, die JSON-kodiert werden sollen:
 
 ```php
 Flight::route('/@companyId/users', function(int $companyId) {
-	// irgendwie Ihre Benutzer aus einer Datenbank ziehen, z. B.
+	// holen Sie irgendwie Ihre Benutzer aus einer Datenbank, z.B.
 	$users = Flight::db()->fetchAll("SELECT id, first_name, last_name FROM users WHERE company_id = ?", [ $companyId ]);
 
 	Flight::json($users);
 });
-// [{"id":1,"first_name":"Bob","last_name":"Jones"}, /* more users */ ]
+// [{"id":1,"first_name":"Bob","last_name":"Jones"}, /* mehr Benutzer */ ]
 ```
 
-> **Note:** Standardmäßig sendet Flight einen `Content-Type: application/json`-Header mit der Response. Es verwendet auch die Flags `JSON_THROW_ON_ERROR` und `JSON_UNESCAPED_SLASHES`, wenn das JSON kodiert wird.
+> **Hinweis:** Standardmäßig sendet Flight einen `Content-Type: application/json`-Header mit der Response. Es verwendet auch die Flags `JSON_THROW_ON_ERROR` und `JSON_UNESCAPED_SLASHES` beim Kodieren des JSON.
 
-#### JSON with Status Code
+#### JSON mit Statuscode
 
 Sie können auch einen Statuscode als zweiten Argument übergeben:
 
@@ -64,17 +64,17 @@ Sie können auch einen Statuscode als zweiten Argument übergeben:
 Flight::json(['id' => 123], 201);
 ```
 
-#### JSON with Pretty Print
+#### JSON mit Pretty Print
 
-Sie können auch ein Argument an der letzten Position übergeben, um Pretty Printing zu aktivieren:
+Sie können auch ein Argument an die letzte Position übergeben, um Pretty Printing zu aktivieren:
 
 ```php
 Flight::json(['id' => 123], 200, true, 'utf-8', JSON_PRETTY_PRINT);
 ```
 
-#### Changing JSON Argument Order
+#### Ändern der JSON-Argument-Reihenfolge
 
-`Flight::json()` ist eine sehr alte Methode, aber das Ziel von Flight ist es, die Abwärtskompatibilität für Projekte aufrechtzuerhalten. Es ist eigentlich sehr einfach, wenn Sie die Reihenfolge der Argumente neu definieren möchten, um eine einfachere Syntax zu verwenden, können Sie die JSON-Methode einfach wie jede andere Flight-Methode [neu zuordnen](/learn/extending):
+`Flight::json()` ist eine sehr veraltete Methode, aber das Ziel von Flight ist es, die Abwärtskompatibilität für Projekte aufrechtzuerhalten. Es ist eigentlich sehr einfach, wenn Sie die Reihenfolge der Argumente neu gestalten möchten, um eine einfachere Syntax zu verwenden, können Sie die JSON-Methode einfach neu zuordnen [wie jede andere Flight-Methode](/learn/extending):
 
 ```php
 Flight::map('json', function($data, $code = 200, $options = 0) {
@@ -87,7 +87,7 @@ Flight::map('json', function($data, $code = 200, $options = 0) {
 Flight::json(['id' => 123], 200, JSON_PRETTY_PRINT);
 ```
 
-#### JSON and Stopping Execution
+#### JSON und Stoppen der Ausführung
 
 _v3.10.0_
 
@@ -120,7 +120,7 @@ Flight::route('/users', function() {
 });
 ```
 
-### Clearing a Response Body
+### Löschen eines Response-Bodys
 
 Wenn Sie den Response-Body löschen möchten, können Sie die `clearBody`-Methode verwenden:
 
@@ -134,9 +134,9 @@ Flight::route('/', function() {
 });
 ```
 
-Der obige Anwendungsfall ist wahrscheinlich nicht üblich, könnte jedoch häufiger vorkommen, wenn dies in einem [Middleware](/learn/middleware) verwendet wird.
+Der obige Anwendungsfall ist wahrscheinlich nicht üblich, könnte aber häufiger vorkommen, wenn dies in einem [Middleware](/learn/middleware) verwendet wird.
 
-### Running a Callback on the Response Body
+### Ausführen eines Callbacks auf dem Response-Body
 
 Sie können einen Callback auf dem Response-Body ausführen, indem Sie die `addResponseBodyCallback`-Methode verwenden:
 
@@ -153,11 +153,11 @@ Flight::response()->addResponseBodyCallback(function($body) {
 });
 ```
 
-Sie können mehrere Callbacks hinzufügen, und sie werden in der Reihenfolge ausgeführt, in der sie hinzugefügt wurden. Da dies jede [callable](https://www.php.net/manual/en/language.types.callable.php) akzeptieren kann, kann es ein Klass-Array `[ $class, 'method' ]`, eine Closure `$strReplace = function($body) { str_replace('hi', 'there', $body); };` oder einen Funktionsnamen `'minify'` akzeptieren, wenn Sie z. B. eine Funktion haben, um Ihren HTML-Code zu minimieren.
+Sie können mehrere Callbacks hinzufügen, und sie werden in der Reihenfolge ausgeführt, in der sie hinzugefügt wurden. Da dies jede [callable](https://www.php.net/manual/en/language.types.callable.php) akzeptieren kann, kann es ein Klassen-Array `[ $class, 'method' ]`, eine Closure `$strReplace = function($body) { str_replace('hi', 'there', $body); };` oder einen Funktionsnamen `'minify'` akzeptieren, wenn Sie z.B. eine Funktion haben, um Ihren HTML-Code zu minimieren.
 
-**Note:** Route-Callbacks funktionieren nicht, wenn Sie die Konfigurationsoption `flight.v2.output_buffering` verwenden.
+**Hinweis:** Route-Callbacks funktionieren nicht, wenn Sie die Konfigurationsoption `flight.v2.output_buffering` verwenden.
 
-#### Specific Route Callback
+#### Spezifischer Route-Callback
 
 Wenn Sie möchten, dass dies nur auf eine spezifische Route angewendet wird, können Sie den Callback direkt in der Route hinzufügen:
 
@@ -174,7 +174,7 @@ Flight::route('/users', function() {
 });
 ```
 
-#### Middleware Option
+#### Middleware-Option
 
 Sie können auch [Middleware](/learn/middleware) verwenden, um den Callback auf alle Routes über Middleware anzuwenden:
 
@@ -182,14 +182,14 @@ Sie können auch [Middleware](/learn/middleware) verwenden, um den Callback auf 
 // MinifyMiddleware.php
 class MinifyMiddleware {
 	public function before() {
-		// Den Callback hier auf dem response()-Objekt anwenden.
+		// Wenden Sie den Callback hier auf das response()-Objekt an.
 		Flight::response()->addResponseBodyCallback(function($body) {
 			return $this->minify($body);
 		});
 	}
 
 	protected function minify(string $body): string {
-		// den Body irgendwie minimieren
+		// minimieren Sie den Body irgendwie
 		return $body;
 	}
 }
@@ -201,7 +201,7 @@ Flight::group('/users', function() {
 }, [ new MinifyMiddleware() ]);
 ```
 
-### Status Codes
+### Statuscodes
 
 Sie können den Statuscode der Response mit der `status`-Methode setzen:
 
@@ -223,12 +223,12 @@ Wenn Sie den aktuellen Statuscode abrufen möchten, können Sie die `status`-Met
 Flight::response()->status(); // 200
 ```
 
-### Setting a Response Header
+### Setzen eines Response-Headers
 
 Sie können einen Header wie den Content-Type der Response mit der `header`-Methode setzen:
 
 ```php
-// Dies wird "Hello, World!" als Plain Text an den Browser des Benutzers senden
+// Dies sendet "Hello, World!" an den Browser des Benutzers als reinen Text
 Flight::route('/', function() {
 	Flight::response()->header('Content-Type', 'text/plain');
 	// oder
@@ -237,9 +237,9 @@ Flight::route('/', function() {
 });
 ```
 
-### Redirect
+### Weiterleitung
 
-Sie können die aktuelle Anfrage mit der `redirect()`-Methode weiterleiten und eine neue URL übergeben:
+Sie können die aktuelle Anfrage weiterleiten, indem Sie die `redirect()`-Methode verwenden und eine neue URL übergeben:
 
 ```php
 Flight::route('/login', function() {
@@ -252,19 +252,19 @@ Flight::route('/login', function() {
 		return; // dies ist notwendig, damit die Funktionalität unten nicht ausgeführt wird
 	}
 
-	// den neuen Benutzer hinzufügen...
+	// fügen Sie den neuen Benutzer hinzu...
 	Flight::db()->runQuery("INSERT INTO users ....");
 	Flight::redirect('/admin/dashboard');
 });
 ```
 
-> **Note:** Standardmäßig sendet Flight einen HTTP 303 ("See Other")-Statuscode. Sie können optional einen benutzerdefinierten Code setzen:
+> **Hinweis:** Standardmäßig sendet Flight einen HTTP 303 ("See Other")-Statuscode. Sie können optional einen benutzerdefinierten Code setzen:
 
 ```php
 Flight::redirect('/new/location', 301); // permanent
 ```
 
-### Stopping Route Execution
+### Stoppen der Route-Ausführung
 
 Sie können das Framework stoppen und sofort beenden, indem Sie die `halt`-Methode aufrufen:
 
@@ -278,19 +278,19 @@ Sie können auch einen optionalen `HTTP`-Statuscode und eine Nachricht angeben:
 Flight::halt(200, 'Be right back...');
 ```
 
-Das Aufrufen von `halt` verwirft jeglichen Response-Inhalt bis zu diesem Punkt und stoppt die gesamte Ausführung. Wenn Sie das Framework stoppen und die aktuelle Response ausgeben möchten, verwenden Sie die `stop`-Methode:
+Das Aufrufen von `halt` verwirft alle Response-Inhalte bis zu diesem Punkt und stoppt die gesamte Ausführung. Wenn Sie das Framework stoppen und die aktuelle Response ausgeben möchten, verwenden Sie die `stop`-Methode:
 
 ```php
 Flight::stop($httpStatusCode = null);
 ```
 
-> **Note:** `Flight::stop()` hat einiges seltsames Verhalten, wie z. B. dass es die Response ausgibt, aber die Ausführung Ihres Skripts fortsetzt, was möglicherweise nicht das ist, was Sie wollen. Sie können `exit` oder `return` nach dem Aufruf von `Flight::stop()` verwenden, um weitere Ausführung zu verhindern, aber es wird allgemein empfohlen, `Flight::halt()` zu verwenden.
+> **Hinweis:** `Flight::stop()` hat einiges seltsames Verhalten, wie z.B. dass es die Response ausgibt, aber die Ausführung Ihres Skripts fortsetzt, was möglicherweise nicht das ist, was Sie wollen. Sie können `exit` oder `return` nach dem Aufruf von `Flight::stop()` verwenden, um weitere Ausführung zu verhindern, aber es wird im Allgemeinen empfohlen, `Flight::halt()` zu verwenden.
 
 Dies speichert den Header-Schlüssel und -Wert im Response-Objekt. Am Ende des Request-Lebenszyklus wird es die Header aufbauen und eine Response senden.
 
-## Advanced Usage
+## Erweiterte Verwendung
 
-### Sending a Header Immediately
+### Sofortiges Senden eines Headers
 
 Es kann Fälle geben, in denen Sie etwas Benutzerdefiniertes mit dem Header tun müssen und den Header in genau dieser Code-Zeile senden müssen, an der Sie arbeiten. Wenn Sie eine [streamed route](/learn/routing) setzen, ist das, was Sie brauchen. Das ist durch `response()->setRealHeader()` erreichbar.
 
@@ -319,17 +319,17 @@ my_func({"id":123});
 
 Wenn Sie keinen Query-Parameter-Namen übergeben, wird standardmäßig `jsonp` verwendet.
 
-> **Note:** Wenn Sie 2025 und später immer noch JSONP-Anfragen verwenden, springen Sie in den Chat und erzählen Sie uns warum! Wir lieben es, gute Kampf-/Horror-Geschichten zu hören!
+> **Hinweis:** Wenn Sie 2025 und später immer noch JSONP-Anfragen verwenden, springen Sie in den Chat und erzählen Sie uns warum! Wir lieben es, gute Kampf-/Horror-Geschichten zu hören!
 
-### Clearing Response Data
+### Löschen von Response-Daten
 
-Sie können den Response-Body und die Header mit der `clear()`-Methode löschen. Dies löscht alle dem Response zugewiesenen Header, löscht den Response-Body und setzt den Statuscode auf `200`.
+Sie können den Response-Body und Header löschen, indem Sie die `clear()`-Methode verwenden. Dies löscht alle der Response zugewiesenen Header, löscht den Response-Body und setzt den Statuscode auf `200`.
 
 ```php
 Flight::response()->clear();
 ```
 
-#### Clearing Response Body Only
+#### Nur Response-Body löschen
 
 Wenn Sie nur den Response-Body löschen möchten, können Sie die `clearBody()`-Methode verwenden:
 
@@ -338,11 +338,11 @@ Wenn Sie nur den Response-Body löschen möchten, können Sie die `clearBody()`-
 Flight::response()->clearBody();
 ```
 
-### HTTP Caching
+### HTTP-Caching
 
-Flight bietet integrierte Unterstützung für HTTP-Level-Caching. Wenn die Caching-Bedingung erfüllt ist, wird Flight eine HTTP `304 Not Modified`-Response zurückgeben. Beim nächsten Mal, wenn der Client die gleiche Ressource anfordert, wird er aufgefordert, seine lokal gecachte Version zu verwenden.
+Flight bietet integrierte Unterstützung für HTTP-Level-Caching. Wenn die Caching-Bedingung erfüllt ist, wird Flight eine HTTP `304 Not Modified`-Response zurückgeben. Beim nächsten Mal, wenn der Client dieselbe Ressource anfordert, wird er aufgefordert, seine lokal gecachte Version zu verwenden.
 
-#### Route Level Caching
+#### Route-Level-Caching
 
 Wenn Sie Ihre gesamte Response cachen möchten, können Sie die `cache()`-Methode verwenden und eine Cache-Zeit übergeben.
 
@@ -363,7 +363,7 @@ Flight::route('/news', function () {
 
 ### Last-Modified
 
-Sie können die `lastModified`-Methode verwenden und einen UNIX-Timestamp übergeben, um das Datum und die Zeit zu setzen, zu der eine Seite zuletzt geändert wurde. Der Client wird seinen Cache weiterhin verwenden, bis der Last-Modified-Wert geändert wird.
+Sie können die `lastModified`-Methode verwenden und einen UNIX-Timestamp übergeben, um das Datum und die Zeit zu setzen, zu der eine Seite zuletzt geändert wurde. Der Client wird sein Cache weiterhin verwenden, bis der Last-Modified-Wert geändert wird.
 
 ```php
 Flight::route('/news', function () {
@@ -385,7 +385,7 @@ Flight::route('/news', function () {
 
 Beachten Sie, dass das Aufrufen von entweder `lastModified` oder `etag` beide den Cache-Wert setzt und prüft. Wenn der Cache-Wert zwischen den Anfragen gleich ist, wird Flight sofort eine `HTTP 304`-Response senden und die Verarbeitung stoppen.
 
-### Download a File
+### Herunterladen einer Datei
 
 _v3.12.0_
 
@@ -394,21 +394,24 @@ Es gibt eine Hilfsmethode, um eine Datei an den Endbenutzer zu streamen. Sie kö
 ```php
 Flight::route('/download', function () {
   Flight::download('/path/to/file.txt');
+  // Ab v3.17.1 können Sie einen benutzerdefinierten Dateinamen für das Download angeben
+  Flight::download('/path/to/file.txt', 'custom_name.txt');
 });
 ```
 
-## See Also
-- [Routing](/learn/routing) - Wie man Routes zu Controllern zuweist und Views rendert.
+## Siehe auch
+- [Routing](/learn/routing) - Wie man Routes auf Controller abbildet und Views rendert.
 - [Requests](/learn/requests) - Verständnis, wie man eingehende Anfragen handhabt.
 - [Middleware](/learn/middleware) - Verwendung von Middleware mit Routes für Authentifizierung, Logging usw.
-- [Why a Framework?](/learn/why-frameworks) - Verständnis der Vorteile der Verwendung eines Frameworks wie Flight.
-- [Extending](/learn/extending) - Wie man Flight mit eigener Funktionalität erweitert.
+- [Warum ein Framework?](/learn/why-frameworks) - Verständnis der Vorteile der Verwendung eines Frameworks wie Flight.
+- [Erweitern](/learn/extending) - Wie man Flight mit eigener Funktionalität erweitert.
 
-## Troubleshooting
-- Wenn Sie Probleme mit nicht funktionierenden Redirects haben, stellen Sie sicher, dass Sie ein `return;` zur Methode hinzufügen.
+## Fehlerbehebung
+- Wenn Sie Probleme mit nicht funktionierenden Weiterleitungen haben, stellen Sie sicher, dass Sie ein `return;` zur Methode hinzufügen.
 - `stop()` und `halt()` sind nicht dasselbe. `halt()` stoppt die Ausführung sofort, während `stop()` die Ausführung fortsetzt.
 
 ## Changelog
-- v3.12.0 - Added downloadFile helper method.
-- v3.10.0 - Added `jsonHalt`.
-- v1.0 - Initial release.
+- v3.17.1 - `$fileName` zu `downloadFile()`-Methode hinzugefügt.
+- v3.12.0 - `downloadFile`-Hilfsmethode hinzugefügt.
+- v3.10.0 - `jsonHalt` hinzugefügt.
+- v1.0 - Erste Veröffentlichung.

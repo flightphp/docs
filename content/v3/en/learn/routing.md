@@ -1,4 +1,3 @@
-
 # Routing
 
 ## Overview
@@ -108,6 +107,38 @@ You can also map multiple methods to a single callback by using a `|` delimiter:
 Flight::route('GET|POST /', function () {
   echo 'I received either a GET or a POST request.';
 });
+```
+
+### Special Handling for HEAD and OPTIONS Requests
+
+Flight provides built-in handling for `HEAD` and `OPTIONS` HTTP requests:
+
+#### HEAD Requests
+
+- **HEAD requests** are treated just like `GET` requests, but Flight automatically removes the response body before sending it to the client.
+- This means you can define a route for `GET`, and HEAD requests to the same URL will return only headers (no content), as expected by HTTP standards.
+
+```php
+Flight::route('GET /info', function() {
+    echo 'This is some info!';
+});
+// A HEAD request to /info will return the same headers, but no body.
+```
+
+#### OPTIONS Requests
+
+`OPTIONS` requests are automatically handled by Flight for any defined route.
+- When an OPTIONS request is received, Flight responds with a `204 No Content` status and an `Allow` header listing all supported HTTP methods for that route.
+- You do not need to define a separate route for OPTIONS unless you want custom behavior or to modify the response.
+
+```php
+// For a route defined as:
+Flight::route('GET|POST /users', function() { /* ... */ });
+
+// An OPTIONS request to /users will respond with:
+//
+// Status: 204 No Content
+// Allow: GET, POST, HEAD, OPTIONS
 ```
 
 ### Using the Router Object
@@ -236,6 +267,35 @@ Flight::map('notFound', function() {
 	$this->response()
 		->clearBody()
 		->status(404)
+		->write($output)
+		->send();
+});
+```
+
+### Method Not Found Handler
+
+By default, if a URL is found but the method is not allowed, Flight will send an `HTTP 405 Method Not Allowed` response that is very simple and plain (Ex: Method Not Allowed. Allowed Methods are: GET, POST). It will also include an `Allow` header with the allowed methods for that URL.
+
+If you want to have a more customized 405 response, you can [map](/learn/extending) your own `methodNotFound` method:
+
+```php
+use flight\net\Route;
+
+Flight::map('methodNotFound', function(Route $route) {
+	$url = Flight::request()->url;
+	$methods = implode(', ', $route->methods);
+
+	// You could also use Flight::render() with a custom template.
+	$output = <<<HTML
+		<h1>My Custom 405 Method Not Allowed</h1>
+		<h3>The method you have requested for {$url} is not allowed.</h3>
+		<p>Allowed Methods are: {$methods}</p>
+		HTML;
+
+	$this->response()
+		->clearBody()
+		->status(405)
+		->setHeader('Allow', $methods)
 		->write($output)
 		->send();
 });
@@ -703,7 +763,6 @@ If you are seeing a 404 Not Found error (but you swear on your life that it's re
 with you returning a value in your route endpoint instead of just echoing it. The reason for this is intentional but could sneak up on some developers.
 
 ```php
-
 Flight::route('/hello', function(){
 	// This might cause a 404 Not Found error
 	return 'Hello World';
@@ -713,7 +772,6 @@ Flight::route('/hello', function(){
 Flight::route('/hello', function(){
 	echo 'Hello World';
 });
-
 ```
 
 The reason for this is because of a special mechanism built into the router that handles the return output as a single to "go to the next route". 

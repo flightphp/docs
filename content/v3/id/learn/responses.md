@@ -1,18 +1,18 @@
 # Respons
 
-## Ikhtisar
+## Gambaran Umum
 
-Flight membantu menghasilkan sebagian header respons untuk Anda, tetapi Anda memegang sebagian besar kendali atas apa yang Anda kirim kembali ke pengguna. Sebagian besar waktu Anda akan mengakses objek `response()` secara langsung, tetapi Flight memiliki beberapa metode pembantu untuk mengatur sebagian header respons untuk Anda.
+Flight membantu menghasilkan sebagian header respons untuk Anda, tetapi Anda memegang sebagian besar kendali atas apa yang Anda kirim kembali ke pengguna. Sebagian besar waktu Anda akan mengakses objek `response()` secara langsung, tetapi Flight memiliki beberapa metode pembantu untuk mengatur beberapa header respons untuk Anda.
 
 ## Pemahaman
 
-Setelah pengguna mengirimkan [permintaan](/learn/requests) mereka ke aplikasi Anda, Anda perlu menghasilkan respons yang tepat untuk mereka. Mereka telah mengirimkan informasi seperti bahasa yang mereka sukai, apakah mereka dapat menangani jenis kompresi tertentu, agen pengguna mereka, dll. dan setelah memproses semuanya, saatnya mengirimkan respons yang tepat kembali kepada mereka. Ini bisa berupa pengaturan header, mengeluarkan isi HTML atau JSON untuk mereka, atau mengarahkan mereka ke halaman.
+Setelah pengguna mengirimkan [permintaan](/learn/requests) mereka ke aplikasi Anda, Anda perlu menghasilkan respons yang tepat untuk mereka. Mereka telah mengirimkan informasi seperti bahasa yang mereka sukai, apakah mereka dapat menangani jenis kompresi tertentu, agen pengguna mereka, dll., dan setelah memproses semuanya, saatnya mengirimkan respons yang tepat kembali kepada mereka. Ini bisa berupa pengaturan header, mengeluarkan body HTML atau JSON untuk mereka, atau mengarahkan mereka ke halaman.
 
 ## Penggunaan Dasar
 
-### Mengirimkan Isi Respons
+### Mengirim Body Respons
 
-Flight menggunakan `ob_start()` untuk membuffer output. Ini berarti Anda dapat menggunakan `echo` atau `print` untuk mengirimkan respons ke pengguna dan Flight akan menangkapnya serta mengirimkannya kembali ke pengguna dengan header yang sesuai.
+Flight menggunakan `ob_start()` untuk membuffer output. Ini berarti Anda dapat menggunakan `echo` atau `print` untuk mengirim respons ke pengguna dan Flight akan menangkapnya dan mengirimkannya kembali ke pengguna dengan header yang sesuai.
 
 ```php
 // Ini akan mengirim "Hello, World!" ke browser pengguna
@@ -26,7 +26,7 @@ Flight::route('/', function() {
 // Hello, World!
 ```
 
-Sebagai alternatif, Anda dapat memanggil metode `write()` untuk menambahkan ke isi juga.
+Sebagai alternatif, Anda dapat memanggil metode `write()` untuk menambahkan ke body juga.
 
 ```php
 // Ini akan mengirim "Hello, World!" ke browser pengguna
@@ -34,7 +34,7 @@ Flight::route('/', function() {
 	// verbose, tapi kadang-kadang diperlukan saat Anda membutuhkannya
 	Flight::response()->write("Hello, World!");
 
-	// jika Anda ingin mengambil isi yang telah Anda atur pada titik ini
+	// jika Anda ingin mengambil body yang telah Anda atur pada titik ini
 	// Anda bisa melakukannya seperti ini
 	$body = Flight::response()->getBody();
 });
@@ -76,7 +76,7 @@ Flight::json(['id' => 123], 200, true, 'utf-8', JSON_PRETTY_PRINT);
 #### Mengubah Urutan Argumen JSON
 
 `Flight::json()` adalah metode yang sangat lama, tetapi tujuan Flight adalah mempertahankan kompatibilitas mundur
-untuk proyek. Sebenarnya sangat sederhana jika Anda ingin mengubah urutan argumen untuk menggunakan sintaks yang lebih sederhana, 
+untuk proyek. Sebenarnya sangat sederhana jika Anda ingin mengubah urutan argumen untuk menggunakan sintaks yang lebih sederhana,
 Anda hanya perlu memetakan ulang metode JSON [seperti metode Flight lainnya](/learn/extending):
 
 ```php
@@ -96,7 +96,7 @@ _v3.10.0_
 
 Jika Anda ingin mengirim respons JSON dan menghentikan eksekusi, Anda dapat menggunakan metode `jsonHalt()`.
 Ini berguna untuk kasus di mana Anda memeriksa mungkin jenis otorisasi tertentu dan jika
-pengguna tidak diotorisasi, Anda dapat mengirim respons JSON segera, membersihkan isi badan
+pengguna tidak diotorisasi, Anda dapat mengirim respons JSON segera, membersihkan konten body
 yang ada dan menghentikan eksekusi.
 
 ```php
@@ -105,10 +105,10 @@ Flight::route('/users', function() {
 	// Periksa apakah pengguna diotorisasi
 	if($authorized === false) {
 		Flight::jsonHalt(['error' => 'Unauthorized'], 401);
-		// tidak ada exit; diperlukan di sini.
+		// no exit; needed here.
 	}
 
-	// Lanjutkan dengan sisa rute
+	// Lanjutkan dengan sisa route
 });
 ```
 
@@ -122,13 +122,13 @@ Flight::route('/users', function() {
 		Flight::halt(401, json_encode(['error' => 'Unauthorized']));
 	}
 
-	// Lanjutkan dengan sisa rute
+	// Lanjutkan dengan sisa route
 });
 ```
 
-### Membersihkan Isi Respons
+### Membersihkan Body Respons
 
-Jika Anda ingin membersihkan isi respons, Anda dapat menggunakan metode `clearBody`:
+Jika Anda ingin membersihkan body respons, Anda dapat menggunakan metode `clearBody`:
 
 ```php
 Flight::route('/', function() {
@@ -142,9 +142,9 @@ Flight::route('/', function() {
 
 Kasus penggunaan di atas mungkin tidak umum, namun bisa lebih umum jika ini digunakan dalam [middleware](/learn/middleware).
 
-### Menjalankan Callback pada Isi Respons
+### Menjalankan Callback pada Body Respons
 
-Anda dapat menjalankan callback pada isi respons dengan menggunakan metode `addResponseBodyCallback`:
+Anda dapat menjalankan callback pada body respons dengan menggunakan metode `addResponseBodyCallback`:
 
 ```php
 Flight::route('/users', function() {
@@ -153,19 +153,19 @@ Flight::route('/users', function() {
 	Flight::render('users_table', ['users' => $users]);
 });
 
-// Ini akan mengompresi gzip semua respons untuk rute apa pun
+// Ini akan mengompresi gzip semua respons untuk route apa pun
 Flight::response()->addResponseBodyCallback(function($body) {
 	return gzencode($body, 9);
 });
 ```
 
-Anda dapat menambahkan beberapa callback dan mereka akan dijalankan dalam urutan mereka ditambahkan. Karena ini dapat menerima [callable](https://www.php.net/manual/en/language.types.callable.php) apa pun, ini dapat menerima array kelas `[ $class, 'method' ]`, closure `$strReplace = function($body) { str_replace('hi', 'there', $body); };`, atau nama fungsi `'minify'` jika Anda memiliki fungsi untuk meminimalkan kode html Anda misalnya.
+Anda dapat menambahkan beberapa callback dan mereka akan dijalankan dalam urutan yang ditambahkan. Karena ini dapat menerima [callable](https://www.php.net/manual/en/language.types.callable.php) apa pun, ini dapat menerima array kelas `[ $class, 'method' ]`, closure `$strReplace = function($body) { str_replace('hi', 'there', $body); };`, atau nama fungsi `'minify'` jika Anda memiliki fungsi untuk meminify kode html Anda misalnya.
 
-**Catatan:** Callback rute tidak akan berfungsi jika Anda menggunakan opsi konfigurasi `flight.v2.output_buffering`.
+**Catatan:** Callback route tidak akan bekerja jika Anda menggunakan opsi konfigurasi `flight.v2.output_buffering`.
 
-#### Callback Rute Spesifik
+#### Callback Route Spesifik
 
-Jika Anda ingin ini hanya berlaku untuk rute spesifik, Anda dapat menambahkan callback di dalam rute itu sendiri:
+Jika Anda ingin ini hanya berlaku untuk route spesifik, Anda dapat menambahkan callback di route itu sendiri:
 
 ```php
 Flight::route('/users', function() {
@@ -173,7 +173,7 @@ Flight::route('/users', function() {
 	$users = $db->fetchAll("SELECT * FROM users");
 	Flight::render('users_table', ['users' => $users]);
 
-	// Ini akan mengompresi gzip hanya respons untuk rute ini
+	// Ini akan mengompresi gzip hanya respons untuk route ini
 	Flight::response()->addResponseBodyCallback(function($body) {
 		return gzencode($body, 9);
 	});
@@ -182,7 +182,7 @@ Flight::route('/users', function() {
 
 #### Opsi Middleware
 
-Anda juga dapat menggunakan [middleware](/learn/middleware) untuk menerapkan callback ke semua rute melalui middleware:
+Anda juga dapat menggunakan [middleware](/learn/middleware) untuk menerapkan callback ke semua route melalui middleware:
 
 ```php
 // MinifyMiddleware.php
@@ -195,7 +195,7 @@ class MinifyMiddleware {
 	}
 
 	protected function minify(string $body): string {
-		// minimalkan isi dengan cara tertentu
+		// minify body entah bagaimana
 		return $body;
 	}
 }
@@ -243,9 +243,9 @@ Flight::route('/', function() {
 });
 ```
 
-### Pengalihan
+### Redirect
 
-Anda dapat mengalihkan permintaan saat ini dengan menggunakan metode `redirect()` dan meneruskan
+Anda dapat mengarahkan ulang permintaan saat ini dengan menggunakan metode `redirect()` dan meneruskan
 URL baru:
 
 ```php
@@ -272,9 +272,9 @@ kustom:
 Flight::redirect('/new/location', 301); // permanen
 ```
 
-### Menghentikan Eksekusi Rute
+### Menghentikan Eksekusi Route
 
-Anda dapat menghentikan framework dan langsung keluar pada titik mana pun dengan memanggil metode `halt`:
+Anda dapat menghentikan framework dan segera keluar pada titik mana pun dengan memanggil metode `halt`:
 
 ```php
 Flight::halt();
@@ -293,9 +293,9 @@ Jika Anda ingin menghentikan framework dan mengeluarkan respons saat ini, gunaka
 Flight::stop($httpStatusCode = null);
 ```
 
-> **Catatan:** `Flight::stop()` memiliki perilaku aneh seperti itu akan mengeluarkan respons tetapi melanjutkan eksekusi skrip Anda yang mungkin bukan yang Anda inginkan. Anda dapat menggunakan `exit` atau `return` setelah memanggil `Flight::stop()` untuk mencegah eksekusi lebih lanjut, tetapi umumnya direkomendasikan untuk menggunakan `Flight::halt()`. 
+> **Catatan:** `Flight::stop()` memiliki perilaku aneh seperti itu akan mengeluarkan respons tetapi melanjutkan eksekusi skrip Anda yang mungkin bukan yang Anda inginkan. Anda dapat menggunakan `exit` atau `return` setelah memanggil `Flight::stop()` untuk mencegah eksekusi lebih lanjut, tetapi umumnya disarankan untuk menggunakan `Flight::halt()`. 
 
-Ini akan menyimpan kunci header dan nilai ke objek respons. Pada akhir siklus hidup permintaan
+Ini akan menyimpan kunci dan nilai header ke objek respons. Pada akhir siklus hidup permintaan
 ini akan membangun header dan mengirim respons.
 
 ## Penggunaan Lanjutan
@@ -303,7 +303,7 @@ ini akan membangun header dan mengirim respons.
 ### Mengirim Header Segera
 
 Mungkin ada saat-saat ketika Anda perlu melakukan sesuatu yang kustom dengan header dan Anda perlu mengirim header
-pada baris kode yang sama yang sedang Anda kerjakan. Jika Anda mengatur [rute streaming](/learn/routing),
+pada baris kode yang sama yang Anda kerjakan. Jika Anda mengatur [route yang di-stream](/learn/routing),
 ini yang Anda butuhkan. Itu dapat dicapai melalui `response()->setRealHeader()`.
 
 ```php
@@ -324,7 +324,7 @@ gunakan untuk mendefinisikan fungsi callback Anda:
 Flight::jsonp(['id' => 123], 'q');
 ```
 
-Jadi, saat melakukan permintaan GET menggunakan `?q=my_func`, Anda seharusnya menerima output:
+Jadi, saat membuat permintaan GET menggunakan `?q=my_func`, Anda seharusnya menerima output:
 
 ```javascript
 my_func({"id":123});
@@ -332,20 +332,20 @@ my_func({"id":123});
 
 Jika Anda tidak meneruskan nama parameter query, itu akan default ke `jsonp`.
 
-> **Catatan:** Jika Anda masih menggunakan permintaan JSONP pada tahun 2025 dan seterusnya, masuk ke chat dan beri tahu kami mengapa! Kami suka mendengar cerita pertempuran/horor yang bagus!
+> **Catatan:** Jika Anda masih menggunakan permintaan JSONP pada 2025 dan seterusnya, lompat ke chat dan beri tahu kami mengapa! Kami suka mendengar cerita pertempuran/horor yang bagus!
 
 ### Membersihkan Data Respons
 
-Anda dapat membersihkan isi respons dan header dengan menggunakan metode `clear()`. Ini akan membersihkan
-header apa pun yang ditugaskan ke respons, membersihkan isi respons, dan mengatur kode status ke `200`.
+Anda dapat membersihkan body respons dan header dengan menggunakan metode `clear()`. Ini akan membersihkan
+header apa pun yang ditetapkan ke respons, membersihkan body respons, dan mengatur kode status ke `200`.
 
 ```php
 Flight::response()->clear();
 ```
 
-#### Membersihkan Hanya Isi Respons
+#### Membersihkan Hanya Body Respons
 
-Jika Anda hanya ingin membersihkan isi respons, Anda dapat menggunakan metode `clearBody()`:
+Jika Anda hanya ingin membersihkan body respons, Anda dapat menggunakan metode `clearBody()`:
 
 ```php
 // Ini masih akan mempertahankan header apa pun yang diatur pada objek response().
@@ -354,11 +354,11 @@ Flight::response()->clearBody();
 
 ### Penyimpanan Cache HTTP
 
-Flight menyediakan dukungan bawaan untuk penyimpanan cache tingkat HTTP. Jika kondisi caching
-terpenuhi, Flight akan mengembalikan respons HTTP `304 Not Modified`. Lain kali klien
+Flight menyediakan dukungan bawaan untuk caching tingkat HTTP. Jika kondisi caching
+terpenuhi, Flight akan mengembalikan respons HTTP `304 Not Modified`. Saat berikutnya klien
 meminta sumber daya yang sama, mereka akan diminta untuk menggunakan versi cache lokal mereka.
 
-#### Penyimpanan Cache Tingkat Rute
+#### Caching Tingkat Route
 
 Jika Anda ingin menyimpan cache seluruh respons Anda, Anda dapat menggunakan metode `cache()` dan meneruskan waktu untuk cache.
 
@@ -370,7 +370,7 @@ Flight::route('/news', function () {
   echo 'This content will be cached.';
 });
 
-// Secara alternatif, Anda dapat menggunakan string yang akan Anda teruskan
+// Alternatifnya, Anda dapat menggunakan string yang akan Anda teruskan
 // ke metode strtotime()
 Flight::route('/news', function () {
   Flight::response()->cache('+5 minutes');
@@ -382,7 +382,7 @@ Flight::route('/news', function () {
 
 Anda dapat menggunakan metode `lastModified` dan meneruskan timestamp UNIX untuk mengatur tanggal
 dan waktu halaman terakhir dimodifikasi. Klien akan terus menggunakan cache mereka hingga
-nilai terakhir dimodifikasi diubah.
+nilai last modified berubah.
 
 ```php
 Flight::route('/news', function () {
@@ -393,8 +393,8 @@ Flight::route('/news', function () {
 
 ### ETag
 
-Penyimpanan cache `ETag` mirip dengan `Last-Modified`, kecuali Anda dapat menentukan id apa pun yang Anda
-inginkan untuk sumber daya:
+Caching `ETag` mirip dengan `Last-Modified`, kecuali Anda dapat menentukan id apa pun yang
+Anda inginkan untuk sumber daya:
 
 ```php
 Flight::route('/news', function () {
@@ -416,21 +416,24 @@ Ada metode pembantu untuk streaming file ke pengguna akhir. Anda dapat menggunak
 ```php
 Flight::route('/download', function () {
   Flight::download('/path/to/file.txt');
+  // Mulai v3.17.1 Anda dapat menentukan nama file kustom untuk unduhan
+  Flight::download('/path/to/file.txt', 'custom_name.txt');
 });
 ```
 
 ## Lihat Juga
-- [Routing](/learn/routing) - Cara memetakan rute ke controller dan merender tampilan.
+- [Routing](/learn/routing) - Cara memetakan route ke controller dan merender view.
 - [Requests](/learn/requests) - Memahami cara menangani permintaan masuk.
-- [Middleware](/learn/middleware) - Menggunakan middleware dengan rute untuk autentikasi, logging, dll.
+- [Middleware](/learn/middleware) - Menggunakan middleware dengan route untuk autentikasi, logging, dll.
 - [Mengapa Framework?](/learn/why-frameworks) - Memahami manfaat menggunakan framework seperti Flight.
-- [Memperluas](/learn/extending) - Cara memperluas Flight dengan fungsionalitas Anda sendiri.
+- [Extending](/learn/extending) - Cara memperluas Flight dengan fungsionalitas Anda sendiri.
 
 ## Pemecahan Masalah
-- Jika Anda mengalami masalah dengan pengalihan yang tidak berfungsi, pastikan Anda menambahkan `return;` ke metode tersebut.
-- `stop()` dan `halt()` bukan hal yang sama. `halt()` akan menghentikan eksekusi segera, sementara `stop()` akan mengizinkan eksekusi berlanjut.
+- Jika Anda mengalami masalah dengan redirect yang tidak bekerja, pastikan Anda menambahkan `return;` ke metode.
+- `stop()` dan `halt()` bukan hal yang sama. `halt()` akan menghentikan eksekusi segera, sementara `stop()` akan memungkinkan eksekusi berlanjut.
 
 ## Changelog
+- v3.17.1 - Menambahkan `$fileName` ke metode `downloadFile()`.
 - v3.12.0 - Menambahkan metode pembantu downloadFile.
 - v3.10.0 - Menambahkan `jsonHalt`.
 - v1.0 - Rilis awal.

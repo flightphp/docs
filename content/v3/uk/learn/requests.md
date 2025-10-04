@@ -10,9 +10,9 @@ $request = Flight::request();
 
 ## Розуміння
 
-HTTP-запити є одним з ключових аспектів, які потрібно розуміти щодо життєвого циклу HTTP. Користувач виконує дію в веб-браузері або HTTP-клієнті, і вони надсилають серію заголовків, тіла, URL тощо до вашого проекту. Ви можете захоплювати ці заголовки (мова браузера, тип стиснення, який вони можуть обробляти, user agent тощо) і захоплювати тіло та URL, що надсилаються до вашої програми Flight. Ці запити є суттєвими для вашої програми, щоб зрозуміти, що робити далі.
+HTTP-запити є одним з основних аспектів, які потрібно розуміти про життєвий цикл HTTP. Користувач виконує дію в веб-браузері або HTTP-клієнті, і вони надсилають серію заголовків, тіла, URL тощо до вашого проекту. Ви можете захоплювати ці заголовки (мова браузера, тип стиснення, який вони можуть обробляти, user agent тощо) і захоплювати тіло та URL, що надсилається до вашої програми Flight. Ці запити є суттєвими для вашої програми, щоб зрозуміти, що робити далі.
 
-## Основне використання
+## Базове використання
 
 PHP має кілька суперглобальних змінних, включаючи `$_GET`, `$_POST`, `$_REQUEST`, `$_SERVER`, `$_FILES` та `$_COOKIE`. Flight абстрагує їх у зручні [Collections](/learn/collections). Ви можете отримати доступ до властивостей `query`, `data`, `cookies` та `files` як до масивів або об'єктів.
 
@@ -107,7 +107,7 @@ Flight::route('POST /upload', function(){
 });
 ```
 
-Якщо у вас завантажено кілька файлів, ви можете перебирати їх:
+Якщо у вас завантажено кілька файлів, ви можете перебрати їх:
 
 ```php
 Flight::route('POST /upload', function(){
@@ -119,11 +119,11 @@ Flight::route('POST /upload', function(){
 });
 ```
 
-> **Примітка щодо безпеки:** Завжди валідуйте та очищайте введення користувача, особливо при роботі з завантаженням файлів. Завжди валідуйте тип розширень, які ви дозволите завантажувати, але також валідуйте "магічні байти" файлу, щоб переконатися, що це дійсно тип файлу, який заявляє користувач. Є [статті](https://dev.to/yasuie/php-file-upload-check-uploaded-files-with-magic-bytes-54oe) [та](https://amazingalgorithms.com/snippets/php/detecting-the-mime-type-of-an-uploaded-file-using-magic-bytes/) [бібліотеки](https://github.com/RikudouSage/MimeTypeDetector), доступні для допомоги з цим.
+> **Примітка щодо безпеки:** Завжди валідуйте та очищайте вхідні дані користувача, особливо при роботі з завантаженням файлів. Завжди валідуйте типи розширень, які ви дозволите завантажувати, але ви також повинні валідувати "магічні байти" файлу, щоб переконатися, що це дійсно тип файлу, який стверджує користувач. Є [статті](https://dev.to/yasuie/php-file-upload-check-uploaded-files-with-magic-bytes-54oe) [та](https://amazingalgorithms.com/snippets/php/detecting-the-mime-type-of-an-uploaded-file-using-magic-bytes/) [бібліотеки](https://github.com/RikudouSage/MimeTypeDetector), доступні для допомоги з цим.
 
 ### Тіло запиту
 
-Щоб отримати сире тіло HTTP-запиту, наприклад, при роботі з POST/PUT запитами,
+Щоб отримати сире тіло HTTP-запиту, наприклад, при роботі з POST/PUT-запитами,
 ви можете зробити:
 
 ```php
@@ -135,7 +135,7 @@ Flight::route('POST /users/xml', function(){
 
 ### JSON тіло
 
-Якщо ви отримуєте запит з типом вмісту `application/json` та прикладом даних `{"id": 123}`
+Якщо ви отримуєте запит з типом вмісту `application/json` і прикладом даних `{"id": 123}`
 воно буде доступне з властивості `data`:
 
 ```php
@@ -169,7 +169,7 @@ $method = Flight::request()->getMethod();
 ```
 
 **Примітка:** Метод `getMethod()` спочатку витягує метод з `$_SERVER['REQUEST_METHOD']`, потім його можна перезаписати 
-`$_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE']`, якщо він існує, або `$_REQUEST['_method']`, якщо він існує.
+за допомогою `$_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE']`, якщо він існує, або `$_REQUEST['_method']`, якщо він існує.
 
 ## Властивості об'єкта запиту
 
@@ -177,7 +177,7 @@ $method = Flight::request()->getMethod();
 
 - **body** - Сире тіло HTTP-запиту
 - **url** - URL, що запитується
-- **base** - Батьківська піддиректорія URL
+- **base** - Батьківська підкаталог URL
 - **method** - Метод запиту (GET, POST, PUT, DELETE)
 - **referrer** - URL реферера
 - **ip** - IP-адреса клієнта
@@ -187,18 +187,18 @@ $method = Flight::request()->getMethod();
 - **type** - Тип вмісту
 - **length** - Довжина вмісту
 - **query** - Параметри рядка запиту
-- **data** - Дані POST або JSON-даних
+- **data** - Дані POST або JSON-дані
 - **cookies** - Дані cookie
 - **files** - Завантажені файли
 - **secure** - Чи є з'єднання безпечним
 - **accept** - Параметри HTTP accept
-- **proxy_ip** - IP-адреса проксі клієнта. Сканує масив `$_SERVER` на наявність `HTTP_CLIENT_IP`, `HTTP_X_FORWARDED_FOR`, `HTTP_X_FORWARDED`, `HTTP_X_CLUSTER_CLIENT_IP`, `HTTP_FORWARDED_FOR`, `HTTP_FORWARDED` в такому порядку.
+- **proxy_ip** - IP-адреса проксі клієнта. Сканує масив `$_SERVER` на `HTTP_CLIENT_IP`, `HTTP_X_FORWARDED_FOR`, `HTTP_X_FORWARDED`, `HTTP_X_CLUSTER_CLIENT_IP`, `HTTP_FORWARDED_FOR`, `HTTP_FORWARDED` в такому порядку.
 - **host** - Ім'я хоста запиту
 - **servername** - SERVER_NAME з `$_SERVER`
 
-## Допоміжні методи URL
+## Допоміжні методи
 
-Є кілька допоміжних методів для збирання частин URL для вашої зручності.
+Є кілька допоміжних методів для складання частин URL або роботи з певними заголовками.
 
 ### Повний URL
 
@@ -219,14 +219,37 @@ $url = Flight::request()->getBaseUrl();
 // Notice, no trailing slash.
 ```
 
-## Парсинг запитів
+## Парсинг запиту
 
-Ви можете передати URL до методу `parseQuery()`, щоб розпарсити рядок запиту в асоціативний масив:
+Ви можете передати URL методу `parseQuery()`, щоб розпарсити рядок запиту в асоціативний масив:
 
 ```php
 $query = Flight::request()->parseQuery('https://example.com/some/path?foo=bar');
 // ['foo' => 'bar']
 ```
+
+## Переговори щодо типів прийнятого вмісту
+
+_v3.17.2_
+
+Ви можете використовувати метод `negotiateContentType()`, щоб визначити найкращий тип вмісту для відповіді на основі заголовка `Accept`, надісланого клієнтом.
+
+```php
+
+// Example Accept header: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+// The below defines what you support.
+$availableTypes = ['application/json', 'application/xml'];
+$typeToServe = Flight::request()->negotiateContentType($availableTypes);
+if ($typeToServe === 'application/json') {
+	// Serve JSON response
+} elseif ($typeToServe === 'application/xml') {
+	// Serve XML response
+} else {
+	// Default to something else or throw an error
+}
+```
+
+> **Примітка:** Якщо жоден з доступних типів не знайдено в заголовку `Accept`, метод поверне `null`. Якщо заголовок `Accept` не визначено, метод поверне перший тип у масиві `$availableTypes`.
 
 ## Дивіться також
 - [Routing](/learn/routing) - Дивіться, як відображати маршрути на контролери та рендерити види.
@@ -235,9 +258,10 @@ $query = Flight::request()->parseQuery('https://example.com/some/path?foo=bar');
 - [Collections](/learn/collections) - Робота з колекціями даних.
 - [Uploaded File Handler](/learn/uploaded-file) - Обробка завантаження файлів.
 
-## Вирішення проблем
+## Усунення несправностей
 - `request()->ip` та `request()->proxy_ip` можуть відрізнятися, якщо ваш веб-сервер стоїть за проксі, балансувальником навантаження тощо. 
 
 ## Журнал змін
+- v3.17.2 - Додано negotiateContentType()
 - v3.12.0 - Додано можливість обробки завантаження файлів через об'єкт запиту.
-- v1.0 - Початковий реліз.
+- v1.0 - Початкове випущення.

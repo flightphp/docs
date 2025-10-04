@@ -247,16 +247,16 @@
         },
         {
             "name": "flightphp/cache",
-            "version": "1.0.0",
+            "version": "v1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/flightphp/cache.git",
-                "reference": "75fe4fc60186e2663f8371095b0977c319939902"
+                "reference": "0e28ca9eac632a539afaf94e91d27453182977cd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/flightphp/cache/zipball/75fe4fc60186e2663f8371095b0977c319939902",
-                "reference": "75fe4fc60186e2663f8371095b0977c319939902",
+                "url": "https://api.github.com/repos/flightphp/cache/zipball/0e28ca9eac632a539afaf94e91d27453182977cd",
+                "reference": "0e28ca9eac632a539afaf94e91d27453182977cd",
                 "shasum": ""
             },
             "require": {
@@ -295,22 +295,22 @@
             "description": "Light, simple and standalone PHP in-file caching class",
             "support": {
                 "issues": "https://github.com/flightphp/cache/issues",
-                "source": "https://github.com/flightphp/cache/tree/1.0.0"
+                "source": "https://github.com/flightphp/cache/tree/v1.1.0"
             },
-            "time": "2025-02-21T14:03:10+00:00"
+            "time": "2025-09-29T03:38:37+00:00"
         },
         {
             "name": "flightphp/core",
-            "version": "v3.17.0",
+            "version": "v3.17.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/flightphp/core.git",
-                "reference": "b331797ae3bb2f721e55c5f4d56c56614504b7c1"
+                "reference": "095a46663f7090c549f5c3459f0dada893b3b5d9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/flightphp/core/zipball/b331797ae3bb2f721e55c5f4d56c56614504b7c1",
-                "reference": "b331797ae3bb2f721e55c5f4d56c56614504b7c1",
+                "url": "https://api.github.com/repos/flightphp/core/zipball/095a46663f7090c549f5c3459f0dada893b3b5d9",
+                "reference": "095a46663f7090c549f5c3459f0dada893b3b5d9",
                 "shasum": ""
             },
             "require": {
@@ -371,9 +371,9 @@
             "homepage": "http://flightphp.com",
             "support": {
                 "issues": "https://github.com/flightphp/core/issues",
-                "source": "https://github.com/flightphp/core/tree/v3.17.0"
+                "source": "https://github.com/flightphp/core/tree/v3.17.2"
             },
-            "time": "2025-07-20T15:54:04+00:00"
+            "time": "2025-10-03T21:05:48+00:00"
         },
         {
             "name": "flightphp/runway",
@@ -756,16 +756,16 @@
     "packages-dev": [
         {
             "name": "flightphp/tracy-extensions",
-            "version": "v0.2.6",
+            "version": "v0.2.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/flightphp/tracy-extensions.git",
-                "reference": "0488323812c8a11a57c1f60fd9416ec2a46d3cb6"
+                "reference": "4150ea7dc9bbb56fa089e7a4662f68011a771256"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/flightphp/tracy-extensions/zipball/0488323812c8a11a57c1f60fd9416ec2a46d3cb6",
-                "reference": "0488323812c8a11a57c1f60fd9416ec2a46d3cb6",
+                "url": "https://api.github.com/repos/flightphp/tracy-extensions/zipball/4150ea7dc9bbb56fa089e7a4662f68011a771256",
+                "reference": "4150ea7dc9bbb56fa089e7a4662f68011a771256",
                 "shasum": ""
             },
             "require": {
@@ -795,9 +795,9 @@
             "description": "A few Flight specific extensions for Tracy Debugger to help debug your code quickly.",
             "support": {
                 "issues": "https://github.com/flightphp/tracy-extensions/issues",
-                "source": "https://github.com/flightphp/tracy-extensions/tree/v0.2.6"
+                "source": "https://github.com/flightphp/tracy-extensions/tree/v0.2.7"
             },
-            "time": "2025-05-26T16:33:00+00:00"
+            "time": "2025-09-03T13:47:57+00:00"
         },
         {
             "name": "phpstan/extension-installer",
@@ -849,16 +849,11 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "2.1.22",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "41600c8379eb5aee63e9413fe9e97273e25d57e4"
-            },
+            "version": "2.1.30",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/41600c8379eb5aee63e9413fe9e97273e25d57e4",
-                "reference": "41600c8379eb5aee63e9413fe9e97273e25d57e4",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/a4a7f159927983dd4f7c8020ed227d80b7f39d7d",
+                "reference": "a4a7f159927983dd4f7c8020ed227d80b7f39d7d",
                 "shasum": ""
             },
             "require": {
@@ -903,20 +898,20 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-08-04T19:17:37+00:00"
+            "time": "2025-10-02T16:07:52+00:00"
         },
         {
             "name": "rector/rector",
-            "version": "2.1.2",
+            "version": "2.1.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/rectorphp/rector.git",
-                "reference": "40a71441dd73fa150a66102f5ca1364c44fc8fff"
+                "reference": "c34cc07c4698f007a20dc5c99ff820089ae413ce"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rectorphp/rector/zipball/40a71441dd73fa150a66102f5ca1364c44fc8fff",
-                "reference": "40a71441dd73fa150a66102f5ca1364c44fc8fff",
+                "url": "https://api.github.com/repos/rectorphp/rector/zipball/c34cc07c4698f007a20dc5c99ff820089ae413ce",
+                "reference": "c34cc07c4698f007a20dc5c99ff820089ae413ce",
                 "shasum": ""
             },
             "require": {
@@ -955,7 +950,7 @@
             ],
             "support": {
                 "issues": "https://github.com/rectorphp/rector/issues",
-                "source": "https://github.com/rectorphp/rector/tree/2.1.2"
+                "source": "https://github.com/rectorphp/rector/tree/2.1.7"
             },
             "funding": [
                 {
@@ -963,7 +958,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-07-17T19:30:06+00:00"
+            "time": "2025-09-10T11:13:58+00:00"
         }
     ],
     "aliases": [],

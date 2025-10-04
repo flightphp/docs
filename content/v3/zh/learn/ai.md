@@ -2,20 +2,20 @@
 
 ## 概述
 
-Flight 让您轻松使用 AI 驱动的工具和现代开发者工作流程来增强您的 PHP 项目。凭借内置命令连接到 LLM（大型语言模型）提供商并生成项目特定的 AI 编码指令，Flight 帮助您和您的团队充分利用像 GitHub Copilot、Cursor 和 Windsurf 这样的 AI 助手。
+Flight 让您轻松为 PHP 项目注入 AI 驱动的工具和现代开发者工作流程。通过内置命令连接 LLM（大型语言模型）提供商并生成项目特定的 AI 编码指令，Flight 帮助您和您的团队充分利用 GitHub Copilot、Cursor 和 Windsurf 等 AI 助手。
 
 ## 理解
 
 AI 编码助手在理解您项目的上下文、约定和目标时最为有用。Flight 的 AI 助手让您能够：
 - 将您的项目连接到流行的 LLM 提供商（OpenAI、Grok、Claude 等）
-- 生成和更新项目特定的 AI 工具指令，以便每个人都能获得一致、相关的帮助
+- 生成和更新项目特定的 AI 工具指令，确保每个人获得一致、相关的帮助
 - 保持团队一致性和生产力，减少解释上下文的时间
 
 这些功能内置于 Flight 核心 CLI 和官方 [flightphp/skeleton](https://github.com/flightphp/skeleton) 启动项目中。
 
 ## 基本用法
 
-### 1. 设置 LLM 凭据
+### 设置 LLM 凭据
 
 `ai:init` 命令将引导您将项目连接到 LLM 提供商。
 
@@ -28,7 +28,7 @@ php runway ai:init
 - 输入您的 API 密钥
 - 设置基础 URL 和模型名称
 
-这会在您的项目根目录创建一个 `.runway-creds.json` 文件（并确保它在您的 `.gitignore` 中）。
+这将在您的项目根目录创建一个 `.runway-creds.json` 文件（并确保它在您的 `.gitignore` 中）。
 
 **示例：**
 ```
@@ -36,19 +36,19 @@ php runway ai:init
 您想使用哪个 LLM API？[1] openai, [2] grok, [3] claude: 1
 输入 LLM API 的基础 URL [https://api.openai.com]:
 输入您的 openai API 密钥: sk-...
-输入您想使用的模型名称（例如 gpt-4, claude-3-opus 等）[gpt-4o]:
+输入您想使用的模型名称（例如 gpt-4、claude-3-opus 等）[gpt-4o]:
 凭据已保存到 .runway-creds.json
 ```
 
-### 2. 生成项目特定的 AI 指令
+### 生成项目特定的 AI 指令
 
-`ai:generate-instructions` 命令帮助您创建或更新针对 AI 编码助手的指令，根据您的项目量身定制。
+`ai:generate-instructions` 命令帮助您创建或更新针对项目的 AI 编码助手的指令。
 
 ```bash
 php runway ai:generate-instructions
 ```
 
-您将回答一些关于您项目的问题（描述、数据库、模板、安全、团队规模等）。Flight 使用您的 LLM 提供商生成指令，然后将它们写入：
+您将回答一些关于项目的问题（描述、数据库、模板、安全、团队规模等）。Flight 使用您的 LLM 提供商生成指令，然后将它们写入：
 - `.github/copilot-instructions.md`（用于 GitHub Copilot）
 - `.cursor/rules/project-overview.mdc`（用于 Cursor）
 - `.windsurfrules`（用于 Windsurf）
@@ -63,13 +63,13 @@ php runway ai:generate-instructions
 AI 指令更新成功。
 ```
 
-现在，您的 AI 工具将基于您项目的实际需求提供更智能、更相关的建议。
+现在，您的 AI 工具将基于项目实际需求提供更智能、更相关的建议。
 
 ## 高级用法
 
-- 您可以使用命令选项自定义凭据或指令文件的位置（请参阅每个命令的 `--help`）。
-- AI 助手设计用于与支持 OpenAI 兼容 API 的任何 LLM 提供商合作。
-- 如果您想随着项目的发展更新指令，只需重新运行 `ai:generate-instructions` 并再次回答提示。
+- 您可以使用命令选项自定义凭据或指令文件的位置（查看每个命令的 `--help`）。
+- AI 助手设计用于与支持 OpenAI 兼容 API 的任何 LLM 提供商配合工作。
+- 如果您想随着项目演进而更新指令，只需重新运行 `ai:generate-instructions` 并再次回答提示。
 
 ## 另请参阅
 

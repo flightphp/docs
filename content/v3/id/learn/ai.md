@@ -2,7 +2,7 @@
 
 ## Gambaran Umum
 
-Flight memudahkan Anda untuk meningkatkan proyek PHP Anda dengan alat berbasis AI dan alur kerja pengembang modern. Dengan perintah bawaan untuk terhubung ke penyedia LLM (Large Language Model) dan menghasilkan instruksi pengkodean AI khusus proyek, Flight membantu Anda dan tim Anda mendapatkan manfaat maksimal dari asisten AI seperti GitHub Copilot, Cursor, dan Windsurf.
+Flight memudahkan Anda untuk meningkatkan proyek PHP Anda dengan alat berbasis AI dan alur kerja pengembang modern. Dengan perintah bawaan untuk menghubungkan ke penyedia LLM (Large Language Model) dan menghasilkan instruksi pengkodean AI khusus proyek, Flight membantu Anda dan tim Anda mendapatkan manfaat maksimal dari asisten AI seperti GitHub Copilot, Cursor, dan Windsurf.
 
 ## Pemahaman
 
@@ -15,7 +15,7 @@ Fitur-fitur ini dibangun ke dalam CLI inti Flight dan proyek starter resmi [flig
 
 ## Penggunaan Dasar
 
-### 1. Menyiapkan Kredensial LLM
+### Menyiapkan Kredensial LLM
 
 Perintah `ai:init` memandu Anda melalui proses menghubungkan proyek Anda ke penyedia LLM.
 
@@ -40,9 +40,9 @@ Enter the model name you want to use (e.g. gpt-4, claude-3-opus, etc) [gpt-4o]:
 Credentials saved to .runway-creds.json
 ```
 
-### 2. Menghasilkan Instruksi AI Khusus Proyek
+### Menghasilkan Instruksi AI Khusus Proyek
 
-Perintah `ai:generate-instructions` membantu Anda membuat atau memperbarui instruksi untuk asisten pengkodean AI, yang disesuaikan dengan proyek Anda.
+Perintah `ai:generate-instructions` membantu Anda membuat atau memperbarui instruksi untuk asisten pengkodean AI, disesuaikan dengan proyek Anda.
 
 ```bash
 php runway ai:generate-instructions

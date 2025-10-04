@@ -2,7 +2,7 @@
 
 ## Aperçu
 
-Flight facilite le renforcement de vos projets PHP avec des outils alimentés par l'IA et des flux de travail de développement modernes. Avec des commandes intégrées pour se connecter aux fournisseurs de LLM (Large Language Model) et générer des instructions de codage IA spécifiques au projet, Flight vous aide, vous et votre équipe, à tirer le meilleur parti des assistants IA comme GitHub Copilot, Cursor et Windsurf.
+Flight facilite le renforcement de vos projets PHP avec des outils alimentés par l'IA et des flux de travail modernes pour les développeurs. Avec des commandes intégrées pour se connecter aux fournisseurs de LLM (Large Language Model) et générer des instructions de codage IA spécifiques au projet, Flight vous aide, vous et votre équipe, à tirer le meilleur parti des assistants IA comme GitHub Copilot, Cursor et Windsurf.
 
 ## Compréhension
 
@@ -15,9 +15,9 @@ Ces fonctionnalités sont intégrées au CLI principal de Flight et au projet de
 
 ## Utilisation de Base
 
-### 1. Configuration des Identifiants LLM
+### Configuration des Identifiants LLM
 
-La commande `ai:init` vous guide pour connecter votre projet à un fournisseur de LLM.
+La commande `ai:init` vous guide à travers la connexion de votre projet à un fournisseur de LLM.
 
 ```bash
 php runway ai:init
@@ -40,7 +40,7 @@ Enter the model name you want to use (e.g. gpt-4, claude-3-opus, etc) [gpt-4o]:
 Credentials saved to .runway-creds.json
 ```
 
-### 2. Génération d'Instructions IA Spécifiques au Projet
+### Génération d'Instructions IA Spécifiques au Projet
 
 La commande `ai:generate-instructions` vous aide à créer ou mettre à jour des instructions pour les assistants de codage IA, adaptées à votre projet.
 
@@ -48,7 +48,7 @@ La commande `ai:generate-instructions` vous aide à créer ou mettre à jour des
 php runway ai:generate-instructions
 ```
 
-Vous répondrez à quelques questions sur votre projet (description, base de données, templating, sécurité, taille de l'équipe, etc.). Flight utilise votre fournisseur de LLM pour générer des instructions, puis les écrit dans :
+Vous répondrez à quelques questions sur votre projet (description, base de données, templating, sécurité, taille de l'équipe, etc.). Flight utilise votre fournisseur de LLM pour générer les instructions, puis les écrit dans :
 - `.github/copilot-instructions.md` (pour GitHub Copilot)
 - `.cursor/rules/project-overview.mdc` (pour Cursor)
 - `.windsurfrules` (pour Windsurf)

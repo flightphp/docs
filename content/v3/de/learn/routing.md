@@ -1,12 +1,12 @@
 # Routing
 
 ## Überblick
-Routing in Flight PHP ordnet URL-Muster Callback-Funktionen oder Klassenmethoden zu, um schnelle und einfache Anfragenverarbeitung zu ermöglichen. Es ist für minimalen Overhead, benutzerfreundliche Nutzung für Anfänger und Erweiterbarkeit ohne externe Abhängigkeiten konzipiert.
+Routing in Flight PHP ordnet URL-Muster Callback-Funktionen oder Klassenmethoden zu, um eine schnelle und einfache Anforderungsbehandlung zu ermöglichen. Es ist für minimale Overhead, benutzerfreundliche Nutzung für Anfänger und Erweiterbarkeit ohne externe Abhängigkeiten konzipiert.
 
 ## Verständnis
-Routing ist der Kernmechanismus, der HTTP-Anfragen mit der Anwendungslogik in Flight verbindet. Durch das Definieren von Routen legen Sie fest, wie verschiedene URLs spezifischen Code auslösen, sei es durch Funktionen, Klassenmethoden oder Controller-Aktionen. Das Routing-System von Flight ist flexibel und unterstützt grundlegende Muster, benannte Parameter, reguläre Ausdrücke sowie erweiterte Funktionen wie Dependency Injection und ressourcenorientiertes Routing. Dieser Ansatz hält Ihren Code organisiert und einfach zu warten, während er für Anfänger schnell und einfach bleibt und für fortgeschrittene Nutzer erweiterbar ist.
+Routing ist der Kernmechanismus, der HTTP-Anfragen mit Ihrer Anwendungslogik in Flight verbindet. Durch das Definieren von Routen legen Sie fest, wie verschiedene URLs spezifischen Code auslösen, sei es durch Funktionen, Klassenmethoden oder Controller-Aktionen. Das Routing-System von Flight ist flexibel und unterstützt grundlegende Muster, benannte Parameter, reguläre Ausdrücke sowie erweiterte Funktionen wie Dependency Injection und Resourceful Routing. Dieser Ansatz hält Ihren Code organisiert und einfach zu warten, während er für Anfänger schnell und einfach bleibt und für fortgeschrittene Nutzer erweiterbar ist.
 
-> **Hinweis:** Möchten Sie mehr über Routing erfahren? Schauen Sie sich die Seite ["why a framework?"](/learn/why-frameworks) für eine detailliertere Erklärung an.
+> **Hinweis:** Möchten Sie mehr über Routing erfahren? Schauen Sie sich die Seite ["why a framework?](/learn/why-frameworks) für eine detailliertere Erklärung an.
 
 ## Grundlegende Nutzung
 
@@ -19,7 +19,7 @@ Flight::route('/', function(){
 });
 ```
 
-> Routen werden in der Reihenfolge abgeglichen, in der sie definiert werden. Die erste Route, die zu einer Anfrage passt, wird aufgerufen.
+> Routen werden in der Reihenfolge abgeglichen, in der sie definiert sind. Die erste Route, die einer Anfrage entspricht, wird aufgerufen.
 
 ### Verwendung von Funktionen als Callbacks
 Der Callback kann jedes aufrufbare Objekt sein. Sie können also eine reguläre Funktion verwenden:
@@ -43,11 +43,11 @@ class GreetingController {
 }
 
 Flight::route('/', [ 'GreetingController','hello' ]);
-// oder
-Flight::route('/', [ GreetingController::class, 'hello' ]); // bevorzugte Methode
-// oder
+// or
+Flight::route('/', [ GreetingController::class, 'hello' ]); // preferred method
+// or
 Flight::route('/', [ 'GreetingController::hello' ]);
-// oder 
+// or 
 Flight::route('/', [ 'GreetingController->hello' ]);
 ```
 
@@ -77,11 +77,11 @@ $greeting = new GreetingController($app);
 Flight::route('/', [ $greeting, 'hello' ]);
 ```
 
-> **Hinweis:** Standardmäßig wird beim Aufruf eines Controllers im Framework die Klasse `flight\Engine` immer injiziert, es sei denn, Sie spezifizieren es über einen [Dependency Injection Container](/learn/dependency-injection-container).
+> **Hinweis:** Standardmäßig wird bei Aufruf eines Controllers im Framework die Klasse `flight\Engine` immer injiziert, es sei denn, Sie spezifizieren es über einen [Dependency Injection Container](/learn/dependency-injection-container)
 
 ### Methode-spezifisches Routing
 
-Standardmäßig werden Routenmuster gegen alle Anfragemethoden abgeglichen. Sie können auf spezifische Methoden reagieren, indem Sie einen Bezeichner vor die URL setzen.
+Standardmäßig werden Routenmuster gegen alle Anfragemethoden abgeglichen. Sie können auf spezifische Methoden reagieren, indem Sie einen Identifier vor die URL setzen.
 
 ```php
 Flight::route('GET /', function () {
@@ -100,12 +100,44 @@ Flight::put('/', function() { /* code */ });
 Flight::delete('/', function() { /* code */ });
 ```
 
-Sie können auch mehrere Methoden auf einen einzelnen Callback abbilden, indem Sie den `|`-Trenner verwenden:
+Sie können auch mehrere Methoden auf einen einzelnen Callback abbilden, indem Sie den `|`-Trennzeichen verwenden:
 
 ```php
 Flight::route('GET|POST /', function () {
   echo 'I received either a GET or a POST request.';
 });
+```
+
+### Spezielle Behandlung für HEAD- und OPTIONS-Anfragen
+
+Flight bietet integrierte Behandlung für `HEAD`- und `OPTIONS`-HTTP-Anfragen:
+
+#### HEAD-Anfragen
+
+- **HEAD-Anfragen** werden genau wie `GET`-Anfragen behandelt, aber Flight entfernt automatisch den Response-Body, bevor er an den Client gesendet wird.
+- Das bedeutet, Sie können eine Route für `GET` definieren, und HEAD-Anfragen zur gleichen URL geben nur Header zurück (keinen Inhalt), wie es die HTTP-Standards erwarten.
+
+```php
+Flight::route('GET /info', function() {
+    echo 'This is some info!';
+});
+// A HEAD request to /info will return the same headers, but no body.
+```
+
+#### OPTIONS-Anfragen
+
+`OPTIONS`-Anfragen werden von Flight automatisch für jede definierte Route behandelt.
+- Wenn eine OPTIONS-Anfrage empfangen wird, antwortet Flight mit einem `204 No Content`-Status und einem `Allow`-Header, der alle unterstützten HTTP-Methoden für diese Route auflistet.
+- Sie müssen keine separate Route für OPTIONS definieren, es sei denn, Sie möchten benutzerdefiniertes Verhalten oder die Response modifizieren.
+
+```php
+// For a route defined as:
+Flight::route('GET|POST /users', function() { /* ... */ });
+
+// An OPTIONS request to /users will respond with:
+//
+// Status: 204 No Content
+// Allow: GET, POST, HEAD, OPTIONS
 ```
 
 ### Verwendung des Router-Objekts
@@ -151,7 +183,7 @@ Flight::route('/@name/@id', function (string $name, string $id) {
 });
 ```
 
-Sie können auch reguläre Ausdrücke mit Ihren benannten Parametern kombinieren, indem Sie den `:`-Trenner verwenden:
+Sie können auch reguläre Ausdrücke mit Ihren benannten Parametern kombinieren, indem Sie den `:`-Trennzeichen verwenden:
 
 ```php
 Flight::route('/@name/@id:[0-9]{3}', function (string $name, string $id) {
@@ -160,11 +192,11 @@ Flight::route('/@name/@id:[0-9]{3}', function (string $name, string $id) {
 });
 ```
 
-> **Hinweis:** Das Abgleichen von Regex-Gruppen `()` mit positionsbasierten Parametern wird nicht unterstützt. Beispiel: `:'\(`
+> **Hinweis:** Das Abgleichen von Regex-Gruppen `()` mit positionalen Parametern wird nicht unterstützt. Ex: `:'\(`
 
 #### Wichtige Einschränkung
 
-Im obigen Beispiel scheint es, als ob `@name` direkt mit der Variable `$name` verknüpft ist, aber das ist nicht der Fall. Die Reihenfolge der Parameter in der Callback-Funktion bestimmt, was an sie weitergegeben wird. Wenn Sie die Reihenfolge der Parameter in der Callback-Funktion umkehren, werden auch die Variablen umgekehrt. Hier ein Beispiel:
+Während im obigen Beispiel erscheint, als ob `@name` direkt mit der Variable `$name` verknüpft ist, ist das nicht der Fall. Die Reihenfolge der Parameter in der Callback-Funktion bestimmt, was an sie weitergegeben wird. Wenn Sie die Reihenfolge der Parameter in der Callback-Funktion umkehren würden, würden die Variablen ebenfalls umgekehrt. Hier ein Beispiel:
 
 ```php
 Flight::route('/@name/@id', function (string $id, string $name) {
@@ -173,7 +205,7 @@ Flight::route('/@name/@id', function (string $id, string $name) {
 ```
 
 Und wenn Sie zur folgenden URL gehen: `/bob/123`, wäre die Ausgabe `hello, 123 (bob)!`. 
-_Seien Sie bitte vorsichtig_, wenn Sie Ihre Routen und Callback-Funktionen einrichten!
+_Bitte seien Sie vorsichtig_, wenn Sie Ihre Routen und Callback-Funktionen einrichten!
 
 ### Optionale Parameter
 Sie können benannte Parameter spezifizieren, die optional für das Abgleichen sind, indem Sie Segmente in Klammern setzen.
@@ -191,10 +223,10 @@ Flight::route(
 );
 ```
 
-Jede optionale Parameter, die nicht abgeglichen werden, wird als `NULL` weitergegeben.
+Jede optionale Parameter, die nicht abgeglichen wird, wird als `NULL` weitergegeben.
 
 ### Wildcard-Routing
-Das Abgleichen erfolgt nur auf einzelnen URL-Segmenten. Wenn Sie mehrere Segmente abgleichen möchten, können Sie das `*`-Wildcard verwenden.
+Das Abgleichen erfolgt nur auf einzelne URL-Segmente. Wenn Sie mehrere Segmente abgleichen möchten, können Sie das `*`-Wildcard verwenden.
 
 ```php
 Flight::route('/blog/*', function () {
@@ -202,7 +234,7 @@ Flight::route('/blog/*', function () {
 });
 ```
 
-Um alle Anfragen an einen einzelnen Callback zu leiten, können Sie tun:
+Um alle Anfragen an einen einzelnen Callback zu routen, können Sie tun:
 
 ```php
 Flight::route('*', function () {
@@ -212,8 +244,8 @@ Flight::route('*', function () {
 
 ### 404 Not Found Handler
 
-Standardmäßig sendet Flight bei einer nicht gefundenen URL eine sehr einfache und schlichte `HTTP 404 Not Found`-Antwort.
-Wenn Sie eine personalisiertere 404-Antwort haben möchten, können Sie Ihre eigene `notFound`-Methode [abbilden](/learn/extending):
+Standardmäßig sendet Flight bei einer nicht gefundenen URL eine sehr einfache und schlichte `HTTP 404 Not Found`-Response.
+Wenn Sie eine personalisiertere 404-Response haben möchten, können Sie Ihre eigene `notFound`-Methode [mappen](/learn/extending):
 
 ```php
 Flight::map('notFound', function() {
@@ -233,10 +265,39 @@ Flight::map('notFound', function() {
 });
 ```
 
+### Method Not Found Handler
+
+Standardmäßig sendet Flight bei einer gefundenen URL, aber nicht erlaubten Methode eine sehr einfache und schlichte `HTTP 405 Method Not Allowed`-Response (Ex: Method Not Allowed. Allowed Methods are: GET, POST). Es wird auch ein `Allow`-Header mit den erlaubten Methoden für diese URL enthalten.
+
+Wenn Sie eine personalisiertere 405-Response haben möchten, können Sie Ihre eigene `methodNotFound`-Methode [mappen](/learn/extending):
+
+```php
+use flight\net\Route;
+
+Flight::map('methodNotFound', function(Route $route) {
+	$url = Flight::request()->url;
+	$methods = implode(', ', $route->methods);
+
+	// You could also use Flight::render() with a custom template.
+	$output = <<<HTML
+		<h1>My Custom 405 Method Not Allowed</h1>
+		<h3>The method you have requested for {$url} is not allowed.</h3>
+		<p>Allowed Methods are: {$methods}</p>
+		HTML;
+
+	$this->response()
+		->clearBody()
+		->status(405)
+		->setHeader('Allow', $methods)
+		->write($output)
+		->send();
+});
+```
+
 ## Erweiterte Nutzung
 
 ### Dependency Injection in Routen
-Wenn Sie Dependency Injection über einen Container (PSR-11, PHP-DI, Dice usw.) verwenden möchten, ist der einzige Routentyp, bei dem das verfügbar ist, entweder das direkte Erstellen des Objekts selbst und die Verwendung des Containers, um Ihr Objekt zu erstellen, oder Sie können Strings verwenden, um die Klasse und Methode zum Aufrufen zu definieren. Sie können zur [Dependency Injection](/learn/dependency-injection-container)-Seite für weitere Informationen gehen. 
+Wenn Sie Dependency Injection über einen Container (PSR-11, PHP-DI, Dice usw.) verwenden möchten, ist der einzige Routentyp, bei dem das verfügbar ist, entweder das direkte Erstellen des Objekts selbst und die Verwendung des Containers, um Ihr Objekt zu erstellen, oder Sie können Strings verwenden, um die Klasse und Methode zu definieren, die aufgerufen werden soll. Sie können zur [Dependency Injection](/learn/dependency-injection-container)-Seite für weitere Informationen gehen. 
 
 Hier ein kurzes Beispiel:
 
@@ -290,7 +351,7 @@ Flight::route('/hello/@id', 'Greeting::hello');
 Flight::start();
 ```
 
-### Übergabe der Ausführung an die nächste Route
+### Ausführung an nächste Route weitergeben
 <span class="badge bg-warning">Veraltet</span>
 Sie können die Ausführung an die nächste passende Route weitergeben, indem Sie `true` aus Ihrer Callback-Funktion zurückgeben.
 
@@ -333,7 +394,7 @@ class UserController {
 ```
 
 Dies ist besonders hilfreich, wenn sich Ihre URL ändert. Im obigen Beispiel, sagen wir, dass Benutzer zu `/admin/users/@id` verschoben wurden.
-Mit Aliasing an Ort und Stelle müssen Sie nicht mehr alle alten URLs in Ihrem Code finden und ändern, da der Alias nun `/admin/users/5` zurückgibt, wie im obigen Beispiel.
+Mit Aliasing an Ort und Stelle müssen Sie nicht mehr alle alten URLs in Ihrem Code finden und ändern, da der Alias nun `/admin/users/5` wie im obigen Beispiel zurückgibt.
 
 Route-Aliasing funktioniert auch in Gruppen:
 
@@ -345,11 +406,11 @@ Flight::group('/users', function() {
 });
 ```
 
-### Überprüfen von Routeninformationen
-Wenn Sie die passende Routeninformation überprüfen möchten, gibt es 2 Wege, dies zu tun:
+### Inspektion von Routeninformationen
+Wenn Sie die passende Routeninformation inspizieren möchten, gibt es 2 Wege, das zu tun:
 
 1. Sie können die `executedRoute`-Eigenschaft auf dem `Flight::router()`-Objekt verwenden.
-2. Sie können das Routenobjekt anfordern, das an Ihren Callback übergeben wird, indem Sie `true` als dritten Parameter in der Routenmethode übergeben. Das Routenobjekt wird immer der letzte Parameter sein, der an Ihre Callback-Funktion übergeben wird.
+2. Sie können das Routenobjekt anfordern, das an Ihren Callback weitergegeben wird, indem Sie `true` als dritten Parameter in der Routenmethode übergeben. Das Routenobjekt wird immer der letzte Parameter sein, der an Ihre Callback-Funktion weitergegeben wird.
 
 #### `executedRoute`
 ```php
@@ -379,9 +440,9 @@ Flight::route('/', function() {
 });
 ```
 
-> **Hinweis:** Die `executedRoute`-Eigenschaft wird nur gesetzt, nachdem eine Route ausgeführt wurde. Wenn Sie versuchen, sie vor der Ausführung einer Route abzurufen, ist sie `NULL`. Sie können executedRoute auch in [Middleware](/learn/middleware) verwenden!
+> **Hinweis:** Die `executedRoute`-Eigenschaft wird nur nach der Ausführung einer Route gesetzt. Wenn Sie sie vor der Ausführung einer Route abrufen, ist sie `NULL`. Sie können executedRoute auch in [Middleware](/learn/middleware) verwenden!
 
-#### `true` in der Routendefinition übergeben
+#### `true` in Routendefinition übergeben
 ```php
 Flight::route('/', function(\flight\net\Route $route) {
   // Array of HTTP methods matched against
@@ -404,12 +465,12 @@ Flight::route('/', function(\flight\net\Route $route) {
 
   // Shows the alias assigned to this route
   $route->alias;
-}, true);// <-- Dieser true-Parameter ist das, was das bewirkt
+}, true);// <-- This true parameter is what makes that happen
 ```
 
 ### Routengruppierung und Middleware
-Es kann vorkommen, dass Sie verwandte Routen gruppieren möchten (z. B. `/api/v1`).
-Sie können dies tun, indem Sie die `group`-Methode verwenden:
+Es kann Fälle geben, in denen Sie verwandte Routen gruppieren möchten (z. B. `/api/v1`).
+Sie können das tun, indem Sie die `group`-Methode verwenden:
 
 ```php
 Flight::group('/api/v1', function () {
@@ -453,7 +514,7 @@ Flight::group('/api', function () {
 
 #### Gruppierung mit Objektkontext
 
-Sie können die Routengruppierung immer noch mit dem `Engine`-Objekt auf folgende Weise verwenden:
+Sie können Routengruppierung immer noch mit dem `Engine`-Objekt auf folgende Weise verwenden:
 
 ```php
 $app = Flight::app();
@@ -485,18 +546,18 @@ Flight::group('/api/v1', function () {
 }, [ MyAuthMiddleware::class ]); // or [ new MyAuthMiddleware() ] if you want to use an instance
 ```
 
-Weitere Details finden Sie auf der [Group Middleware](/learn/middleware#grouping-middleware)-Seite.
+Weitere Details finden Sie auf der [Gruppen-Middleware](/learn/middleware#grouping-middleware)-Seite.
 
-### Ressourcen-Routing
-Sie können eine Reihe von Routen für eine Ressource mit der `resource`-Methode erstellen. Dies erstellt eine Reihe von Routen für eine Ressource, die den RESTful-Konventionen folgt.
+### Resource Routing
+Sie können eine Reihe von Routen für eine Resource mit der `resource`-Methode erstellen. Dies erstellt eine Reihe von Routen für eine Resource, die den RESTful-Konventionen folgt.
 
-Um eine Ressource zu erstellen, tun Sie Folgendes:
+Um eine Resource zu erstellen, tun Sie Folgendes:
 
 ```php
 Flight::resource('/users', UsersController::class);
 ```
 
-Und im Hintergrund werden die folgenden Routen erstellt:
+Und was im Hintergrund passiert, ist, dass es die folgenden Routen erstellt:
 
 ```php
 [
@@ -547,15 +608,15 @@ class UsersController
 
 > **Hinweis**: Sie können die neu hinzugefügten Routen mit `runway` anzeigen, indem Sie `php runway routes` ausführen.
 
-#### Anpassen von Ressourcen-Routen
+#### Anpassen von Resource-Routen
 
-Es gibt einige Optionen, um die Ressourcen-Routen zu konfigurieren.
+Es gibt einige Optionen, um die Resource-Routen zu konfigurieren.
 
 ##### Alias-Basis
 
 Sie können die `aliasBase` konfigurieren. Standardmäßig ist der Alias der letzte Teil der angegebenen URL.
 Zum Beispiel würde `/users/` zu einem `aliasBase` von `users` führen. Wenn diese Routen erstellt werden,
-sind die Aliase `users.index`, `users.create` usw. Wenn Sie den Alias ändern möchten, setzen Sie `aliasBase`
+sind die Aliase `users.index`, `users.create` usw. Wenn Sie den Alias ändern möchten, setzen Sie die `aliasBase`
 auf den gewünschten Wert.
 
 ```php
@@ -564,7 +625,7 @@ Flight::resource('/users', UsersController::class, [ 'aliasBase' => 'user' ]);
 
 ##### Only und Except
 
-Sie können auch spezifizieren, welche Routen Sie erstellen möchten, indem Sie die Optionen `only` und `except` verwenden.
+Sie können auch spezifizieren, welche Routen Sie erstellen möchten, indem Sie die `only`- und `except`-Optionen verwenden.
 
 ```php
 // Whitelist only these methods and blacklist the rest
@@ -576,28 +637,28 @@ Flight::resource('/users', UsersController::class, [ 'only' => [ 'index', 'show'
 Flight::resource('/users', UsersController::class, [ 'except' => [ 'create', 'store', 'edit', 'update', 'destroy' ] ]);
 ```
 
-Dies sind im Wesentlichen Whitelist- und Blacklist-Optionen, damit Sie spezifizieren können, welche Routen Sie erstellen möchten.
+Diese sind im Wesentlichen Whitelisting- und Blacklisting-Optionen, damit Sie spezifizieren können, welche Routen Sie erstellen möchten.
 
 ##### Middleware
 
-Sie können auch Middleware spezifizieren, die auf jeder der Routen ausgeführt wird, die von der `resource`-Methode erstellt werden.
+Sie können auch Middleware spezifizieren, die für jede der von der `resource`-Methode erstellten Routen ausgeführt wird.
 
 ```php
 Flight::resource('/users', UsersController::class, [ 'middleware' => [ MyAuthMiddleware::class ] ]);
 ```
 
-### Streaming-Antworten
+### Streaming-Responses
 
-Sie können jetzt Antworten an den Client streamen, indem Sie `stream()` oder `streamWithHeaders()` verwenden. 
-Dies ist nützlich zum Senden großer Dateien, lang laufender Prozesse oder zum Generieren großer Antworten. 
+Sie können nun Responses an den Client streamen, indem Sie `stream()` oder `streamWithHeaders()` verwenden. 
+Dies ist nützlich für das Senden großer Dateien, lang laufender Prozesse oder das Generieren großer Responses. 
 Das Streamen einer Route wird etwas anders gehandhabt als eine reguläre Route.
 
-> **Hinweis:** Streaming-Antworten sind nur verfügbar, wenn Sie [`flight.v2.output_buffering`](/learn/migrating-to-v3#output_buffering) auf `false` gesetzt haben.
+> **Hinweis:** Streaming-Responses sind nur verfügbar, wenn Sie [`flight.v2.output_buffering`](/learn/migrating-to-v3#output_buffering) auf `false` gesetzt haben.
 
-#### Stream mit manuellen Headers
+#### Stream mit manuellen Headern
 
-Sie können eine Antwort an den Client streamen, indem Sie die `stream()`-Methode auf einer Route verwenden. Wenn Sie 
-das tun, müssen Sie alle Headers manuell setzen, bevor Sie etwas an den Client ausgeben.
+Sie können eine Response an den Client streamen, indem Sie die `stream()`-Methode auf einer Route verwenden. Wenn Sie 
+das tun, müssen Sie alle Header manuell setzen, bevor Sie etwas an den Client ausgeben.
 Dies geschieht mit der `header()`-PHP-Funktion oder der `Flight::response()->setRealHeader()`-Methode.
 
 ```php
@@ -634,9 +695,9 @@ Flight::route('/@filename', function($filename) {
 })->stream();
 ```
 
-#### Stream mit Headers
+#### Stream mit Headern
 
-Sie können auch die `streamWithHeaders()`-Methode verwenden, um die Headers zu setzen, bevor Sie mit dem Streamen beginnen.
+Sie können auch die `streamWithHeaders()`-Methode verwenden, um die Header zu setzen, bevor Sie mit dem Streamen beginnen.
 
 ```php
 Flight::route('/stream-users', function() {
@@ -674,10 +735,10 @@ Flight::route('/stream-users', function() {
 - [Dependency Injection](/learn/dependency-injection-container) - Vereinfachung der Objekterstellung und -verwaltung in Routen.
 - [Why a Framework?](/learn/why-frameworks) - Verständnis der Vorteile der Verwendung eines Frameworks wie Flight.
 - [Erweitern](/learn/extending) - Wie man Flight mit eigener Funktionalität erweitert, einschließlich der `notFound`-Methode.
-- [php.net: preg_match](https://www.php.net/manual/en/function.preg-match.php) - PHP-Funktion für reguläre Ausdrucksabgleichung.
+- [php.net: preg_match](https://www.php.net/manual/en/function.preg-match.php) - PHP-Funktion für reguläres Ausdrucksabgleichen.
 
 ## Fehlerbehebung
-- Routenparameter werden nach Reihenfolge abgeglichen, nicht nach Name. Stellen Sie sicher, dass die Reihenfolge der Callback-Parameter zur Routendefinition passt.
+- Routenparameter werden nach Reihenfolge abgeglichen, nicht nach Name. Stellen Sie sicher, dass die Parameterreihenfolge des Callbacks mit der Routendefinition übereinstimmt.
 - Die Verwendung von `Flight::get()` definiert keine Route; verwenden Sie `Flight::route('GET /...')` für Routing oder den Router-Objektkontext in Gruppen (z. B. `$router->get(...)`).
 - Die executedRoute-Eigenschaft wird nur nach der Ausführung einer Route gesetzt; sie ist NULL vor der Ausführung.
 - Streaming erfordert, dass die Legacy-Flight-Output-Buffering-Funktionalität deaktiviert ist (`flight.v2.output_buffering = false`).
@@ -685,11 +746,10 @@ Flight::route('/stream-users', function() {
 
 ### 404 Not Found oder unerwartetes Routenverhalten
 
-Wenn Sie einen 404 Not Found-Fehler sehen (aber Sie schwören bei Ihrem Leben, dass er wirklich da ist und es kein Tippfehler ist), könnte dies tatsächlich ein Problem damit sein, 
-dass Sie einen Wert aus Ihrem Routen-Endpunkt zurückgeben, anstatt ihn nur auszugeben. Der Grund dafür ist absichtlich, könnte aber einige Entwickler überraschen.
+Wenn Sie einen 404 Not Found-Fehler sehen (aber Sie schwören bei Ihrem Leben, dass er wirklich da ist und es kein Tippfehler ist), könnte das tatsächlich ein Problem damit sein, 
+dass Sie einen Wert in Ihrem Routenendpunkt zurückgeben, anstatt ihn nur auszugeben. Der Grund dafür ist absichtlich, könnte aber einige Entwickler überraschen.
 
 ```php
-
 Flight::route('/hello', function(){
 	// This might cause a 404 Not Found error
 	return 'Hello World';
@@ -699,12 +759,11 @@ Flight::route('/hello', function(){
 Flight::route('/hello', function(){
 	echo 'Hello World';
 });
-
 ```
 
-Der Grund dafür ist ein spezieller Mechanismus, der in den Router eingebaut ist und die Rückgabeausgabe als Signal behandelt, um "zur nächsten Route zu gehen". 
-Sie können das Verhalten in dem [Routing](/learn/routing#passing)-Abschnitt dokumentiert finden.
+Der Grund dafür ist ein spezieller Mechanismus, der in den Router integriert ist und die Rückgabe als Signal interpretiert, "zur nächsten Route zu gehen". 
+Sie können das Verhalten in dem [Routing](/learn/routing#passing)-Abschnitt dokumentiert sehen.
 
-## Änderungsprotokoll
-- v3: Hinzugefügt: Ressourcen-Routing, Route-Aliasing und Streaming-Unterstützung, Routengruppen und Middleware-Unterstützung.
-- v1: Der Großteil der grundlegenden Funktionen ist verfügbar.
+## Changelog
+- v3: Hinzugefügt Resource-Routing, Route-Aliasing und Streaming-Unterstützung, Routengruppen und Middleware-Unterstützung.
+- v1: Überwiegende Mehrheit der grundlegenden Funktionen verfügbar.

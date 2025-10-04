@@ -2,20 +2,20 @@
 
 ## Aperçu
 
-Flight aide à générer une partie des en-têtes de réponse pour vous, mais vous conservez la plupart des contrôles sur ce que vous renvoyez à l'utilisateur. La plupart du temps, vous accéderez directement à l'objet `response()`, mais Flight dispose de quelques méthodes d'assistance pour définir certains en-têtes de réponse pour vous.
+Flight aide à générer une partie des en-têtes de réponse pour vous, mais vous conservez la plupart du contrôle sur ce que vous renvoyez à l'utilisateur. La plupart du temps, vous accédez directement à l'objet `response()`, mais Flight propose des méthodes d'assistance pour définir certains en-têtes de réponse pour vous.
 
-## Compréhension
+## Comprendre
 
 Après que l'utilisateur a envoyé sa [requête](/learn/requests) à votre application, vous devez générer une réponse appropriée pour lui. Ils vous ont envoyé des informations comme la langue qu'ils préfèrent, s'ils peuvent gérer certains types de compression, leur agent utilisateur, etc., et après avoir traité tout cela, il est temps de leur renvoyer une réponse appropriée. Cela peut consister à définir des en-têtes, à sortir un corps de HTML ou de JSON pour eux, ou à les rediriger vers une page.
 
 ## Utilisation de base
 
-### Envoi d'un corps de réponse
+### Envoyer un corps de réponse
 
-Flight utilise `ob_start()` pour tamponner la sortie. Cela signifie que vous pouvez utiliser `echo` ou `print` pour envoyer une réponse à l'utilisateur et Flight la capturera et la renverra à l'utilisateur avec les en-têtes appropriés.
+Flight utilise `ob_start()` pour tamponner la sortie. Cela signifie que vous pouvez utiliser `echo` ou `print` pour envoyer une réponse à l'utilisateur et que Flight la capturera et la renverra à l'utilisateur avec les en-têtes appropriés.
 
 ```php
-// Ceci enverra "Hello, World!" au navigateur de l'utilisateur
+// Cela enverra "Hello, World!" au navigateur de l'utilisateur
 Flight::route('/', function() {
 	echo "Hello, World!";
 });
@@ -29,12 +29,12 @@ Flight::route('/', function() {
 En alternative, vous pouvez appeler la méthode `write()` pour ajouter au corps également.
 
 ```php
-// Ceci enverra "Hello, World!" au navigateur de l'utilisateur
+// Cela enverra "Hello, World!" au navigateur de l'utilisateur
 Flight::route('/', function() {
-	// verbeux, mais fait le travail parfois quand vous en avez besoin
+	// verbeux, mais cela fait le travail parfois quand vous en avez besoin
 	Flight::response()->write("Hello, World!");
 
-	// si vous voulez récupérer le corps que vous avez défini à ce moment
+	// si vous voulez récupérer le corps que vous avez défini à ce stade
 	// vous pouvez le faire comme ceci
 	$body = Flight::response()->getBody();
 });
@@ -42,7 +42,7 @@ Flight::route('/', function() {
 
 ### JSON
 
-Flight fournit un support pour l'envoi de réponses JSON et JSONP. Pour envoyer une réponse JSON, vous
+Flight fournit un support pour envoyer des réponses JSON et JSONP. Pour envoyer une réponse JSON, vous
 passez des données à encoder en JSON :
 
 ```php
@@ -65,15 +65,15 @@ Vous pouvez également passer un code de statut en tant que deuxième argument :
 Flight::json(['id' => 123], 201);
 ```
 
-#### JSON avec impression jolie
+#### JSON avec impression formatée
 
-Vous pouvez également passer un argument à la dernière position pour activer l'impression jolie :
+Vous pouvez également passer un argument à la dernière position pour activer l'impression formatée :
 
 ```php
 Flight::json(['id' => 123], 200, true, 'utf-8', JSON_PRETTY_PRINT);
 ```
 
-#### Changement de l'ordre des arguments JSON
+#### Changer l'ordre des arguments JSON
 
 `Flight::json()` est une méthode très ancienne, mais l'objectif de Flight est de maintenir la compatibilité arrière
 pour les projets. C'est en fait très simple si vous voulez refaire l'ordre des arguments pour utiliser une syntaxe plus simple,
@@ -82,11 +82,11 @@ vous pouvez simplement remapper la méthode JSON [comme n'importe quelle autre m
 ```php
 Flight::map('json', function($data, $code = 200, $options = 0) {
 
-	// maintenant vous n'avez pas à utiliser `true, 'utf-8'` lors de l'utilisation de la méthode json() !
+	// maintenant vous n'avez pas besoin de `true, 'utf-8'` quand vous utilisez la méthode json() !
 	Flight::_json($data, $code, true, 'utf-8', $options);
 }
 
-// Et maintenant elle peut être utilisée comme ceci
+// Et maintenant cela peut être utilisé comme ceci
 Flight::json(['id' => 123], 200, JSON_PRETTY_PRINT);
 ```
 
@@ -102,10 +102,10 @@ et arrêter l'exécution.
 ```php
 Flight::route('/users', function() {
 	$authorized = someAuthorizationCheck();
-	// Vérifiez si l'utilisateur est autorisé
+	// Vérifier si l'utilisateur est autorisé
 	if($authorized === false) {
 		Flight::jsonHalt(['error' => 'Unauthorized'], 401);
-		// pas de exit; nécessaire ici.
+		// pas de sortie ; nécessaire ici.
 	}
 
 	// Continuer avec le reste de la route
@@ -117,7 +117,7 @@ Avant v3.10.0, vous deviez faire quelque chose comme ceci :
 ```php
 Flight::route('/users', function() {
 	$authorized = someAuthorizationCheck();
-	// Vérifiez si l'utilisateur est autorisé
+	// Vérifier si l'utilisateur est autorisé
 	if($authorized === false) {
 		Flight::halt(401, json_encode(['error' => 'Unauthorized']));
 	}
@@ -126,7 +126,7 @@ Flight::route('/users', function() {
 });
 ```
 
-### Effacement d'un corps de réponse
+### Effacer un corps de réponse
 
 Si vous voulez effacer le corps de réponse, vous pouvez utiliser la méthode `clearBody` :
 
@@ -142,7 +142,7 @@ Flight::route('/', function() {
 
 Le cas d'utilisation ci-dessus n'est probablement pas courant, cependant il pourrait être plus courant si cela était utilisé dans un [middleware](/learn/middleware).
 
-### Exécution d'un rappel sur le corps de réponse
+### Exécuter un rappel sur le corps de réponse
 
 Vous pouvez exécuter un rappel sur le corps de réponse en utilisant la méthode `addResponseBodyCallback` :
 
@@ -153,13 +153,13 @@ Flight::route('/users', function() {
 	Flight::render('users_table', ['users' => $users]);
 });
 
-// Ceci gzippira toutes les réponses pour n'importe quelle route
+// Cela gzippera toutes les réponses pour n'importe quelle route
 Flight::response()->addResponseBodyCallback(function($body) {
 	return gzencode($body, 9);
 });
 ```
 
-Vous pouvez ajouter plusieurs rappels et ils seront exécutés dans l'ordre où ils ont été ajoutés. Comme cela peut accepter n'importe quel [appelable](https://www.php.net/manual/en/language.types.callable.php), il peut accepter un tableau de classe `[ $class, 'method' ]`, une closure `$strReplace = function($body) { str_replace('hi', 'there', $body); };`, ou un nom de fonction `'minify'` si vous aviez une fonction pour minifier votre code html par exemple.
+Vous pouvez ajouter plusieurs rappels et ils seront exécutés dans l'ordre où ils ont été ajoutés. Comme cela peut accepter n'importe quel [appelable](https://www.php.net/manual/en/language.types.callable.php), il peut accepter un tableau de classe `[ $class, 'method' ]`, une closure `$strReplace = function($body) { str_replace('hi', 'there', $body); };`, ou un nom de fonction `'minify'` si vous aviez une fonction pour minifier votre code HTML par exemple.
 
 **Note :** Les rappels de route ne fonctionneront pas si vous utilisez l'option de configuration `flight.v2.output_buffering`.
 
@@ -173,7 +173,7 @@ Flight::route('/users', function() {
 	$users = $db->fetchAll("SELECT * FROM users");
 	Flight::render('users_table', ['users' => $users]);
 
-	// Ceci gzippira seulement la réponse pour cette route
+	// Cela gzippera seulement la réponse pour cette route
 	Flight::response()->addResponseBodyCallback(function($body) {
 		return gzencode($body, 9);
 	});
@@ -182,20 +182,20 @@ Flight::route('/users', function() {
 
 #### Option Middleware
 
-Vous pouvez également utiliser [middleware](/learn/middleware) pour appliquer le rappel à toutes les routes via middleware :
+Vous pouvez également utiliser le [middleware](/learn/middleware) pour appliquer le rappel à toutes les routes via le middleware :
 
 ```php
 // MinifyMiddleware.php
 class MinifyMiddleware {
 	public function before() {
-		// Appliquez le rappel ici sur l'objet response().
+		// Appliquer le rappel ici sur l'objet response().
 		Flight::response()->addResponseBodyCallback(function($body) {
 			return $this->minify($body);
 		});
 	}
 
 	protected function minify(string $body): string {
-		// minifiez le corps d'une manière ou d'une autre
+		// minifier le corps d'une manière ou d'une autre
 		return $body;
 	}
 }
@@ -229,12 +229,12 @@ Si vous voulez obtenir le code de statut actuel, vous pouvez utiliser la méthod
 Flight::response()->status(); // 200
 ```
 
-### Définition d'un en-tête de réponse
+### Définir un en-tête de réponse
 
 Vous pouvez définir un en-tête tel que le type de contenu de la réponse en utilisant la méthode `header` :
 
 ```php
-// Ceci enverra "Hello, World!" au navigateur de l'utilisateur en texte brut
+// Cela enverra "Hello, World!" au navigateur de l'utilisateur en texte brut
 Flight::route('/', function() {
 	Flight::response()->header('Content-Type', 'text/plain');
 	// ou
@@ -246,7 +246,7 @@ Flight::route('/', function() {
 ### Redirection
 
 Vous pouvez rediriger la requête actuelle en utilisant la méthode `redirect()` et en passant
-une nouvelle URL :
+un nouvel URL :
 
 ```php
 Flight::route('/login', function() {
@@ -259,7 +259,7 @@ Flight::route('/login', function() {
 		return; // ceci est nécessaire pour que la fonctionnalité ci-dessous ne s'exécute pas
 	}
 
-	// ajoutez le nouvel utilisateur...
+	// ajouter le nouvel utilisateur...
 	Flight::db()->runQuery("INSERT INTO users ....");
 	Flight::redirect('/admin/dashboard');
 });
@@ -272,7 +272,7 @@ code personnalisé :
 Flight::redirect('/new/location', 301); // permanent
 ```
 
-### Arrêt de l'exécution de la route
+### Arrêter l'exécution de la route
 
 Vous pouvez arrêter le framework et sortir immédiatement à n'importe quel point en appelant la méthode `halt` :
 
@@ -286,7 +286,7 @@ Vous pouvez également spécifier un code de statut `HTTP` et un message optionn
 Flight::halt(200, 'Be right back...');
 ```
 
-L'appel à `halt` rejettera tout contenu de réponse jusqu'à ce point et arrêtera toute exécution.
+Appeler `halt` rejettera tout contenu de réponse jusqu'à ce point et arrêtera toute exécution.
 Si vous voulez arrêter le framework et sortir la réponse actuelle, utilisez la méthode `stop` :
 
 ```php
@@ -295,15 +295,15 @@ Flight::stop($httpStatusCode = null);
 
 > **Note :** `Flight::stop()` a un comportement étrange tel qu'il sortira la réponse mais continuera à exécuter votre script ce qui pourrait ne pas être ce que vous voulez. Vous pouvez utiliser `exit` ou `return` après avoir appelé `Flight::stop()` pour empêcher une exécution supplémentaire, mais il est généralement recommandé d'utiliser `Flight::halt()`.
 
-Ceci sauvegardera la clé et la valeur de l'en-tête dans l'objet de réponse. À la fin du cycle de vie de la requête,
+Cela sauvegardera la clé et la valeur de l'en-tête dans l'objet de réponse. À la fin du cycle de vie de la requête,
 il construira les en-têtes et enverra une réponse.
 
 ## Utilisation avancée
 
-### Envoi d'un en-tête immédiatement
+### Envoyer un en-tête immédiatement
 
 Il peut y avoir des moments où vous devez faire quelque chose de personnalisé avec l'en-tête et vous devez envoyer l'en-tête
-sur cette ligne de code même avec laquelle vous travaillez. Si vous définissez une [route streamée](/learn/routing),
+sur cette ligne même de code avec laquelle vous travaillez. Si vous définissez une [route streamée](/learn/routing),
 c'est ce dont vous auriez besoin. Cela est réalisable via `response()->setRealHeader()`.
 
 ```php
@@ -324,17 +324,17 @@ utilisez pour définir votre fonction de rappel :
 Flight::jsonp(['id' => 123], 'q');
 ```
 
-Donc, lors d'une requête GET en utilisant `?q=my_func`, vous devriez recevoir la sortie :
+Donc, lors de l'envoi d'une requête GET en utilisant `?q=my_func`, vous devriez recevoir la sortie :
 
 ```javascript
 my_func({"id":123});
 ```
 
-Si vous ne passez pas de nom de paramètre de requête, il utilisera par défaut `jsonp`.
+Si vous ne passez pas de nom de paramètre de requête, il passera par défaut à `jsonp`.
 
-> **Note :** Si vous utilisez encore des requêtes JSONP en 2025 et au-delà, rejoignez le chat et dites-nous pourquoi ! Nous aimons entendre de bonnes histoires de bataille/horreur !
+> **Note :** Si vous utilisez encore des requêtes JSONP en 2025 et au-delà, rejoignez le chat et dites-nous pourquoi ! Nous adorons entendre de bonnes histoires de batailles/horreurs !
 
-### Effacement des données de réponse
+### Effacer les données de réponse
 
 Vous pouvez effacer le corps de réponse et les en-têtes en utilisant la méthode `clear()`. Cela effacera
 tout en-tête assigné à la réponse, effacera le corps de réponse, et définira le code de statut à `200`.
@@ -343,13 +343,12 @@ tout en-tête assigné à la réponse, effacera le corps de réponse, et défini
 Flight::response()->clear();
 ```
 
-#### Effacement uniquement du corps de réponse
+#### Effacer seulement le corps de réponse
 
 Si vous voulez seulement effacer le corps de réponse, vous pouvez utiliser la méthode `clearBody()` :
 
 ```php
-// Ceci gardera toujours les en-têtes définis sur l'objet response().
-// Ceci gardera toujours les en-têtes définis sur l'objet response().
+// Cela gardera toujours les en-têtes définis sur l'objet response().
 Flight::response()->clearBody();
 ```
 
@@ -364,13 +363,14 @@ client demandera la même ressource, il sera invité à utiliser sa version mise
 Si vous voulez mettre en cache toute votre réponse, vous pouvez utiliser la méthode `cache()` et passer le temps de mise en cache.
 
 ```php
-// Ceci mettra en cache la réponse pendant 5 minutes
+
+// Cela mettra en cache la réponse pendant 5 minutes
 Flight::route('/news', function () {
   Flight::response()->cache(time() + 300);
   echo 'This content will be cached.';
 });
 
-// En alternative, vous pouvez utiliser une chaîne que vous passeriez
+// Alternativement, vous pouvez utiliser une chaîne que vous passeriez
 // à la méthode strtotime()
 Flight::route('/news', function () {
   Flight::response()->cache('+5 minutes');
@@ -380,9 +380,9 @@ Flight::route('/news', function () {
 
 ### Last-Modified
 
-Vous pouvez utiliser la méthode `lastModified` et passer un timestamp UNIX pour définir la date
+Vous pouvez utiliser la méthode `lastModified` et passer un horodatage UNIX pour définir la date
 et l'heure à laquelle une page a été modifiée pour la dernière fois. Le client continuera à utiliser son cache jusqu'à
-ce que la valeur de dernière modification soit changée.
+ce que la valeur de dernière modification change.
 
 ```php
 Flight::route('/news', function () {
@@ -407,7 +407,7 @@ Gardez à l'esprit que l'appel à `lastModified` ou `etag` définira et vérifie
 la valeur de cache. Si la valeur de cache est la même entre les requêtes, Flight enverra immédiatement
 une réponse `HTTP 304` et arrêtera le traitement.
 
-### Téléchargement d'un fichier
+### Télécharger un fichier
 
 _v3.12.0_
 
@@ -416,14 +416,16 @@ Il y a une méthode d'assistance pour streamer un fichier vers l'utilisateur fin
 ```php
 Flight::route('/download', function () {
   Flight::download('/path/to/file.txt');
+  // À partir de v3.17.1, vous pouvez spécifier un nom de fichier personnalisé pour le téléchargement
+  Flight::download('/path/to/file.txt', 'custom_name.txt');
 });
 ```
 
 ## Voir aussi
-- [Routing](/learn/routing) - Comment mapper les routes vers les contrôleurs et rendre les vues.
+- [Routing](/learn/routing) - Comment mapper les routes aux contrôleurs et rendre les vues.
 - [Requests](/learn/requests) - Comprendre comment gérer les requêtes entrantes.
 - [Middleware](/learn/middleware) - Utiliser le middleware avec les routes pour l'authentification, la journalisation, etc.
-- [Why a Framework?](/learn/why-frameworks) - Comprendre les avantages d'utiliser un framework comme Flight.
+- [Pourquoi un Framework ?](/learn/why-frameworks) - Comprendre les avantages d'utiliser un framework comme Flight.
 - [Extending](/learn/extending) - Comment étendre Flight avec votre propre fonctionnalité.
 
 ## Dépannage
@@ -431,6 +433,7 @@ Flight::route('/download', function () {
 - `stop()` et `halt()` ne sont pas la même chose. `halt()` arrêtera l'exécution immédiatement, tandis que `stop()` permettra à l'exécution de continuer.
 
 ## Journal des modifications
+- v3.17.1 - Ajout de `$fileName` à la méthode `downloadFile()`.
 - v3.12.0 - Ajout de la méthode d'assistance downloadFile.
 - v3.10.0 - Ajout de `jsonHalt`.
 - v1.0 - Version initiale.

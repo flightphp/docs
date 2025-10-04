@@ -1,12 +1,12 @@
 # ルーティング
 
 ## 概要
-Flight PHP のルーティングは、URL パターンをコールバック関数やクラスメソッドにマッピングし、高速でシンプルなリクエスト処理を可能にします。最小限のオーバーヘッド、初心者向けの使用感、そして外部依存なしの拡張性を設計しています。
+Flight PHP のルーティングは、URL パターンをコールバック関数やクラスメソッドにマッピングし、高速でシンプルなリクエスト処理を可能にします。最小限のオーバーヘッド、初心者向けの使用しやすさ、そして外部依存なしの拡張性を設計の目標としています。
 
 ## 理解
-ルーティングは、Flight アプリケーション内で HTTP リクエストをアプリケーションのロジックに接続するコアメカニズムです。ルートを定義することで、異なる URL が関数、クラスメソッド、またはコントローラーアクションを通じて特定のコードをトリガーする方法を指定します。Flight のルーティングシステムは柔軟で、基本パターン、名前付きパラメータ、正規表現、依存性注入やリソースフルルーティングなどの高度な機能に対応しています。このアプローチにより、コードを整理しやすくメンテナンスしやすく保ちつつ、初心者には高速でシンプルに、上級者には拡張可能に保てます。
+ルーティングは、Flight 内で HTTP リクエストをアプリケーションのロジックに接続するコアメカニズムです。ルートを定義することで、異なる URL が特定のコードをトリガーする方法を指定します。これは関数、クラスメソッド、またはコントローラーアクションを通じて行われます。Flight のルーティングシステムは柔軟で、基本パターン、名前付きパラメータ、正規表現、依存性注入やリソースフルルーティングなどの高度な機能をサポートします。このアプローチにより、コードを整理しやすくメンテナンスしやすく保ちつつ、初心者には高速でシンプルに、進んだユーザーには拡張可能に保てます。
 
-> **注意:** ルーティングについてさらに理解したいですか？["なぜフレームワークか？"](/learn/why-frameworks) ページで詳細な説明を確認してください。
+> **注意:** ルーティングについてさらに理解したいですか？より詳細な説明のために、["なぜフレームワーク？"](/learn/why-frameworks) ページを参照してください。
 
 ## 基本的な使用方法
 
@@ -19,7 +19,7 @@ Flight::route('/', function(){
 });
 ```
 
-> ルートは定義された順序でマッチされます。リクエストに最初にマッチしたルートが呼び出されます。
+> ルートは定義された順序でマッチされます。リクエストに最初にマッチするルートが呼び出されます。
 
 ### コールバックとしての関数の使用
 コールバックは任意の呼び出し可能なオブジェクトを使用できます。したがって、通常の関数を使用できます：
@@ -33,7 +33,7 @@ Flight::route('/', 'hello');
 ```
 
 ### コントローラーとしてのクラスとメソッドの使用
-クラス（静的または非静的）のメソッドも使用できます：
+クラス（静的メソッドまたは非静的）のメソッドも使用できます：
 
 ```php
 class GreetingController {
@@ -51,7 +51,7 @@ Flight::route('/', [ 'GreetingController::hello' ]);
 Flight::route('/', [ 'GreetingController->hello' ]);
 ```
 
-または、まずオブジェクトを作成してからメソッドを呼び出す方法：
+または、最初にオブジェクトを作成してからメソッドを呼び出す：
 
 ```php
 use flight\Engine;
@@ -77,11 +77,11 @@ $greeting = new GreetingController($app);
 Flight::route('/', [ $greeting, 'hello' ]);
 ```
 
-> **注意:** フレームワーク内でコントローラーが呼び出される場合、デフォルトで `flight\Engine` クラスが注入されます。[依存性注入コンテナ](/learn/dependency-injection-container) を通じて指定しない限りです。
+> **注意:** フレームワーク内でコントローラーが呼び出される場合、デフォルトで `flight\Engine` クラスが常に注入されます。[依存性注入コンテナ](/learn/dependency-injection-container) を通じて指定しない限りです。
 
 ### メソッド固有のルーティング
 
-デフォルトでは、ルートパターンはすべてのリクエストメソッドにマッチします。特定のメソッドに応答するには、URL の前に識別子を配置します。
+デフォルトでは、ルートパターンはすべてのリクエストメソッドに対してマッチします。特定のメソッドに応答するには、URL の前に識別子を置きます。
 
 ```php
 Flight::route('GET /', function () {
@@ -99,7 +99,7 @@ Flight::put('/', function() { /* code */ });
 Flight::delete('/', function() { /* code */ });
 ```
 
-複数のメソッドを単一のコールバックにマッピングするには、`|` 区切り文字を使用できます：
+単一のコールバックに複数のメソッドをマップするには、`|` 区切り文字を使用できます：
 
 ```php
 Flight::route('GET|POST /', function () {
@@ -107,15 +107,46 @@ Flight::route('GET|POST /', function () {
 });
 ```
 
+### HEAD と OPTIONS リクエストの特別な処理
+
+Flight は `HEAD` と `OPTIONS` HTTP リクエストの組み込み処理を提供します：
+
+#### HEAD リクエスト
+
+- **HEAD リクエスト** は `GET` リクエストと同様に扱われますが、Flight はクライアントに送信する前にレスポンスボディを自動的に削除します。
+- これにより、`GET` のルートを定義でき、同じ URL への HEAD リクエストはヘッダーのみ（コンテンツなし）を返し、HTTP 標準に従います。
+
+```php
+Flight::route('GET /info', function() {
+    echo 'This is some info!';
+});
+// /info への HEAD リクエストは同じヘッダーを返しますが、ボディはありません。
+```
+
+#### OPTIONS リクエスト
+
+`OPTIONS` リクエストは、定義された任意のルートに対して Flight によって自動的に処理されます。
+- OPTIONS リクエストを受け取ると、Flight は `204 No Content` ステータスと、そのルートでサポートされるすべての HTTP メソッドをリストした `Allow` ヘッダーで応答します。
+- カスタム動作やレスポンスの変更を望まない限り、OPTIONS 用の別ルートを定義する必要はありません。
+
+```php
+// 以下のように定義されたルートの場合：
+Flight::route('GET|POST /users', function() { /* ... */ });
+
+// /users への OPTIONS リクエストは以下のように応答します：
+//
+// Status: 204 No Content
+// Allow: GET, POST, HEAD, OPTIONS
+```
+
 ### ルーターオブジェクトの使用
 
 さらに、ヘルパーメソッドを持つルーターオブジェクトを取得できます：
 
 ```php
-
 $router = Flight::router();
 
-// Flight::route() と同じくすべてのメソッドをマップします
+// Flight::route() と同様にすべてのメソッドをマップ
 $router->map('/', function() {
 	echo 'hello world!';
 });
@@ -135,14 +166,14 @@ $router->patch('/users/@id', 		function() { /* code */});
 
 ```php
 Flight::route('/user/[0-9]+', function () {
-  // これにより /user/1234 にマッチします
+  // /user/1234 にマッチします
 });
 ```
 
-この方法は利用可能ですが、名前付きパラメータ、または正規表現付きの名前付きパラメータを使用することを推奨します。これらは読みやすく、メンテナンスしやすいためです。
+この方法は利用可能ですが、名前付きパラメータ、または正規表現付きの名前付きパラメータを使用することを推奨します。これらはより読みやすく、メンテナンスしやすいためです。
 
 ### 名前付きパラメータ
-ルートで名前付きパラメータを指定すると、コールバック関数に渡されます。**これはルートの可読性を高めるためのもので、それ以上のものではありません。重要な注意点については以下のセクションを参照してください。**
+ルートで名前付きパラメータを指定でき、コールバック関数に渡されます。**これは主にルートの可読性のためです。重要な注意事項については以下のセクションを参照してください。**
 
 ```php
 Flight::route('/@name/@id', function (string $name, string $id) {
@@ -154,14 +185,14 @@ Flight::route('/@name/@id', function (string $name, string $id) {
 
 ```php
 Flight::route('/@name/@id:[0-9]{3}', function (string $name, string $id) {
-  // これにより /bob/123 にマッチします
-  // しかし /bob/12345 にはマッチしません
+  // /bob/123 にマッチします
+  // /bob/12345 にはマッチしません
 });
 ```
 
-> **注意:** 位置パラメータ付きのマッチング regex グループ `()` はサポートされていません。例: `:'\(`
+> **注意:** 位置パラメータとのマッチング regex グループ `()` はサポートされていません。例: `:'\(`
 
-#### 重要な注意点
+#### 重要な注意事項
 
 上記の例では、`@name` が直接 `$name` 変数に結びついているように見えますが、そうではありません。コールバック関数のパラメータの順序が何が渡されるかを決定します。コールバック関数のパラメータの順序を切り替えると、変数も切り替わります。例：
 
@@ -172,7 +203,7 @@ Flight::route('/@name/@id', function (string $id, string $name) {
 ```
 
 以下の URL にアクセスした場合：`/bob/123`、出力は `hello, 123 (bob)!` になります。
-ルートとコールバック関数の設定時には _注意してください_！
+ルートとコールバック関数の設定時に _注意してください_！
 
 ### オプションのパラメータ
 マッチングにオプションの名前付きパラメータを指定するには、セグメントを括弧で囲みます。
@@ -190,14 +221,14 @@ Flight::route(
 );
 ```
 
-マッチしなかったオプションのパラメータは `NULL` として渡されます。
+マッチしないオプションのパラメータは `NULL` として渡されます。
 
 ### ワイルドカードルーティング
-マッチングは個別の URL セグメントでのみ行われます。複数のセグメントにマッチするには、`*` ワイルドカードを使用できます。
+マッチングは個別の URL セグメントでのみ行われます。複数のセグメントにマッチするには、` * ` ワイルドカードを使用します。
 
 ```php
 Flight::route('/blog/*', function () {
-  // これにより /blog/2000/02/01 にマッチします
+  // /blog/2000/02/01 にマッチします
 });
 ```
 
@@ -211,7 +242,7 @@ Flight::route('*', function () {
 
 ### 404 Not Found ハンドラー
 
-デフォルトでは、URL が見つからない場合、Flight は非常にシンプルでプレーンな `HTTP 404 Not Found` レスポンスを送信します。よりカスタマイズされた 404 レスポンスを希望する場合は、独自の `notFound` メソッドを[マップ](/learn/extending)できます：
+デフォルトでは、URL が見つからない場合、Flight は非常にシンプルでプレーンな `HTTP 404 Not Found` レスポンスを送信します。よりカスタマイズされた 404 レスポンスを望む場合、独自の `notFound` メソッドを [マップ](/learn/extending) できます：
 
 ```php
 Flight::map('notFound', function() {
@@ -231,15 +262,43 @@ Flight::map('notFound', function() {
 });
 ```
 
+### メソッドが見つからないハンドラー
+
+デフォルトでは、URL は見つかるがメソッドが許可されていない場合、Flight は非常にシンプルでプレーンな `HTTP 405 Method Not Allowed` レスポンスを送信します（例: Method Not Allowed. Allowed Methods are: GET, POST）。また、その URL で許可されたメソッドの `Allow` ヘッダーも含めます。
+
+よりカスタマイズされた 405 レスポンスを望む場合、独自の `methodNotFound` メソッドを [マップ](/learn/extending) できます：
+
+```php
+use flight\net\Route;
+
+Flight::map('methodNotFound', function(Route $route) {
+	$url = Flight::request()->url;
+	$methods = implode(', ', $route->methods);
+
+	// カスタムテンプレートで Flight::render() を使用することもできます。
+	$output = <<<HTML
+		<h1>My Custom 405 Method Not Allowed</h1>
+		<h3>The method you have requested for {$url} is not allowed.</h3>
+		<p>Allowed Methods are: {$methods}</p>
+		HTML;
+
+	$this->response()
+		->clearBody()
+		->status(405)
+		->setHeader('Allow', $methods)
+		->write($output)
+		->send();
+});
+```
+
 ## 高度な使用方法
 
 ### ルートでの依存性注入
-コンテナ（PSR-11、PHP-DI、Dice など）経由で依存性注入を使用する場合、利用可能なルートのタイプは、自身でオブジェクトを作成しコンテナでオブジェクトを作成するか、クラスとメソッドを呼び出す文字列を使用するかのいずれかです。[依存性注入](/learn/dependency-injection-container) ページで詳細を確認してください。
+コンテナ（PSR-11、PHP-DI、Dice など）を介した依存性注入を使用する場合、利用可能なルートのタイプは、自身でオブジェクトを作成しコンテナでオブジェクトを作成するか、クラスとメソッドを呼び出す文字列を使用するかのいずれかです。詳細は [依存性注入](/learn/dependency-injection-container) ページを参照してください。
 
 簡単な例：
 
 ```php
-
 use flight\database\PdoWrapper;
 
 // Greeting.php
@@ -263,7 +322,7 @@ class Greeting
 // PSR-11 に関する詳細は依存性注入ページを参照
 $dice = new \Dice\Dice();
 
-// '$dice = ' で変数を再割り当てすることを忘れずに!!!!!
+// 変数を '$dice = ' で再代入することを忘れずに!!!!!
 $dice = $dice->addRule('flight\database\PdoWrapper', [
 	'shared' => true,
 	'constructParams' => [ 
@@ -288,9 +347,9 @@ Flight::route('/hello/@id', 'Greeting::hello');
 Flight::start();
 ```
 
-### 次のルートへの実行の引き渡し
+### 実行を次のルートに渡す
 <span class="badge bg-warning">非推奨</span>
-コールバック関数から `true` を返すことで、次のマッチするルートに実行を引き渡せます。
+コールバック関数から `true` を返すことで、実行を次のマッチするルートに渡せます。
 
 ```php
 Flight::route('/user/@name', function (string $name) {
@@ -309,14 +368,14 @@ Flight::route('/user/*', function () {
 このような複雑なユースケースには、[ミドルウェア](/learn/middleware) を使用することを推奨します。
 
 ### ルートエイリアス
-ルートにエイリアスを割り当てることで、アプリケーション内で動的にそのエイリアスを呼び出し、後でコード内で生成できます（例: HTML テンプレート内のリンク、またはリダイレクト URL の生成）。
+ルートにエイリアスを割り当てることで、後でアプリ内でそのエイリアスを動的に呼び出し、コード内で後で生成できます（例: HTML テンプレート内のリンク、またはリダイレクト URL の生成）。
 
 ```php
 Flight::route('/users/@id', function($id) { echo 'user:'.$id; }, false, 'user_view');
 // または 
 Flight::route('/users/@id', function($id) { echo 'user:'.$id; })->setAlias('user_view');
 
-// 後でコードのどこかで
+// コードの後半で
 class UserController {
 	public function update() {
 
@@ -327,10 +386,10 @@ class UserController {
 		Flight::redirect($redirectUrl);
 	}
 }
-
 ```
 
-URL が変更された場合に特に役立ちます。上記の例で、ユーザーが `/admin/users/@id` に移動したとします。ルートにエイリアスを設定していれば、コード内のすべての古い URL を探して変更する必要がなく、エイリアスは今や `/admin/users/5` を返します。
+URL が変更された場合に特に役立ちます。上記の例で、ユーザーが `/admin/users/@id` に移動されたとします。
+ルートにエイリアスを設定していれば、コード内の古い URL をすべて見つけて変更する必要がなく、エイリアスは上記の例のように `/admin/users/5` を返します。
 
 グループ内でもルートエイリアスは動作します：
 
@@ -343,10 +402,10 @@ Flight::group('/users', function() {
 ```
 
 ### ルート情報の検査
-マッチしたルート情報を検査したい場合、2 つの方法があります：
+マッチするルート情報を検査したい場合、2 つの方法があります：
 
-1. `Flight::router()` オブジェクトの `executedRoute` プロパティを使用します。
-2. ルートメソッドの第 3 パラメータに `true` を渡すことで、ルートオブジェクトをコールバックに渡すようリクエストします。ルートオブジェクトはコールバックに渡される最後のパラメータになります。
+1. `Flight::router()` オブジェクトの `executedRoute` プロパティを使用できます。
+2. ルートメソッドの 3 番目のパラメータに `true` を渡すことで、ルートオブジェクトをコールバックに渡すようリクエストできます。ルートオブジェクトは常にコールバックに渡される最後のパラメータです。
 
 #### `executedRoute`
 ```php
@@ -376,7 +435,7 @@ Flight::route('/', function() {
 });
 ```
 
-> **注意:** `executedRoute` プロパティは、ルートが実行された後にのみ設定されます。ルートが実行される前にアクセスしようとすると `NULL` になります。[ミドルウェア](/learn/middleware) でも executedRoute を使用できます！
+> **注意:** `executedRoute` プロパティはルートが実行された後にのみ設定されます。ルートが実行される前にアクセスしようとすると `NULL` です。[ミドルウェア](/learn/middleware) でも executedRoute を使用できます！
 
 #### ルート定義に `true` を渡す
 ```php
@@ -404,7 +463,7 @@ Flight::route('/', function(\flight\net\Route $route) {
 }, true);// <-- この true パラメータがそれを実現します
 ```
 
-### ルートグループとミドルウェア
+### ルートグループ化とミドルウェア
 関連するルートをグループ化したい場合（例: `/api/v1`）があります。`group` メソッドを使用してこれを行えます：
 
 ```php
@@ -419,12 +478,12 @@ Flight::group('/api/v1', function () {
 });
 ```
 
-グループのグループをネストすることもできます：
+グループのネストも可能です：
 
 ```php
 Flight::group('/api', function () {
   Flight::group('/v1', function () {
-	// Flight::get() は変数を取得します。ルートを設定しません！オブジェクトコンテキストを以下で参照
+	// Flight::get() は変数を取得します。ルートを設定しません！オブジェクトコンテキストを以下参照
 	Flight::route('GET /users', function () {
 	  // GET /api/v1/users にマッチ
 	});
@@ -439,7 +498,7 @@ Flight::group('/api', function () {
   });
   Flight::group('/v2', function () {
 
-	// Flight::get() は変数を取得します。ルートを設定しません！オブジェクトコンテキストを以下で参照
+	// Flight::get() は変数を取得します。ルートを設定しません！オブジェクトコンテキストを以下参照
 	Flight::route('GET /users', function () {
 	  // GET /api/v2/users にマッチ
 	});
@@ -471,20 +530,20 @@ $app->group('/api/v1', function (Router $router) {
 
 #### ミドルウェア付きのグループ化
 
-ルートのグループにミドルウェアを割り当てすることもできます：
+ルートグループにミドルウェアを割り当てられます：
 
 ```php
 Flight::group('/api/v1', function () {
   Flight::route('/users', function () {
 	// /api/v1/users にマッチ
   });
-}, [ MyAuthMiddleware::class ]); // インスタンスを使用したい場合は [ new MyAuthMiddleware() ]
+}, [ MyAuthMiddleware::class ]); // インスタンスを使用したい場合 [ new MyAuthMiddleware() ]
 ```
 
-[group middleware](/learn/middleware#grouping-middleware) ページで詳細を確認してください。
+詳細は [グループミドルウェア](/learn/middleware#grouping-middleware) ページを参照してください。
 
 ### リソースルーティング
-`resource` メソッドを使用して、リソースのためのルートのセットを作成できます。これは RESTful 規約に従ったルートのセットを作成します。
+`resource` メソッドを使用して、リソース用のルートセットを作成できます。これは RESTful 規約に従うリソース用のルートセットを作成します。
 
 リソースを作成するには：
 
@@ -492,7 +551,7 @@ Flight::group('/api/v1', function () {
 Flight::resource('/users', UsersController::class);
 ```
 
-バックグラウンドで以下のルートが作成されます：
+バックグラウンドでは、以下のルートが作成されます：
 
 ```php
 [
@@ -541,16 +600,16 @@ class UsersController
 }
 ```
 
-> **注意**: 新しく追加されたルートは `php runway routes` を実行して `runway` で確認できます。
+> **注意**: 新しく追加されたルートは `php runway routes` を実行することで `runway` で表示できます。
 
 #### リソースルートのカスタマイズ
 
-リソースルートを構成するためのオプションがいくつかあります。
+リソースルートを構成するためのいくつかのオプションがあります。
 
 ##### エイリアスベース
 
 `aliasBase` を構成できます。デフォルトでは、エイリアスは指定された URL の最後の部分です。
-例: `/users/` は `aliasBase` を `users` にします。これらのルートが作成されると、エイリアスは `users.index`、`users.create` などになります。エイリアスを変更したい場合は、`aliasBase` を希望の値に設定します。
+例: `/users/` は `aliasBase` を `users` にします。これらのルートが作成されると、エイリアスは `users.index`、`users.create` などになります。エイリアスを変更したい場合、`aliasBase` を望む値に設定します。
 
 ```php
 Flight::resource('/users', UsersController::class, [ 'aliasBase' => 'user' ]);
@@ -570,7 +629,7 @@ Flight::resource('/users', UsersController::class, [ 'only' => [ 'index', 'show'
 Flight::resource('/users', UsersController::class, [ 'except' => [ 'create', 'store', 'edit', 'update', 'destroy' ] ]);
 ```
 
-これらは基本的にホワイトリストとブラックリストのオプションで、作成するルートを指定できます。
+これらは基本的にホワイトリストとブラックリストオプションで、作成するルートを指定できます。
 
 ##### ミドルウェア
 
@@ -582,15 +641,15 @@ Flight::resource('/users', UsersController::class, [ 'middleware' => [ MyAuthMid
 
 ### ストリーミングレスポンス
 
-`stream()` または `streamWithHeaders()` を使用して、クライアントにレスポンスをストリーミングできます。
-これは大きなファイル、長時間実行のプロセス、または大きなレスポンスを生成する場合に役立ちます。
+`stream()` または `streamWithHeaders()` を使用してクライアントにレスポンスをストリーミングできます。
+これは大きなファイル、長時間実行プロセス、または大きなレスポンスの生成に役立ちます。
 ルートのストリーミングは通常のルートとは少し異なります。
 
-> **注意:** ストリーミングレスポンスは、[`flight.v2.output_buffering`](/learn/migrating-to-v3#output_buffering) を `false` に設定した場合にのみ利用可能です。
+> **注意:** ストリーミングレスポンスは、`flight.v2.output_buffering` を `false` に設定した場合にのみ利用可能です。
 
 #### 手動ヘッダーでのストリーム
 
-ルートで `stream()` メソッドを使用してクライアントにレスポンスをストリーミングできます。これを行う場合、クライアントに出力する前にすべてのヘッダーを手動で設定する必要があります。
+ルートで `stream()` メソッドを使用してクライアントにレスポンスをストリーミングできます。これを行う場合、クライアントに何かを出力する前にすべてのヘッダーを手動で設定する必要があります。
 これは `header()` PHP 関数または `Flight::response()->setRealHeader()` メソッドで行います。
 
 ```php
@@ -598,13 +657,13 @@ Flight::route('/@filename', function($filename) {
 
 	$response = Flight::response();
 
-	// 明らかにパスをサニタイズするなどします。
+	// 明らかにパスをサニタイズするなど。
 	$fileNameSafe = basename($filename);
 
-	// ルートが実行された後に追加のヘッダーを設定する場合
-	// クライアントにエコーする前に定義する必要があります。
+	// ルート実行後に追加のヘッダーを設定する場合
+	// 何かをエコーする前に定義する必要があります。
 	// すべて header() 関数の生の呼び出しまたは
-	// Flight::response()->setRealHeader() の呼び出しである必要があります
+	// Flight::response()->setRealHeader() の呼び出しでなければなりません
 	header('Content-Disposition: attachment; filename="'.$fileNameSafe.'"');
 	// または
 	$response->setRealHeader('Content-Disposition: attachment; filename="'.$fileNameSafe.'"');
@@ -620,10 +679,10 @@ Flight::route('/@filename', function($filename) {
 	// または
 	$response->setRealHeader('Content-Length: '.filesize($filePath));
 
-	// ファイルが読み込まれるにつれてクライアントにストリーミング
+	// ファイルを読みながらクライアントにストリーミング
 	readfile($filePath);
 
-// これが魔法の行です
+// ここが魔法の行です
 })->stream();
 ```
 
@@ -634,8 +693,8 @@ Flight::route('/@filename', function($filename) {
 ```php
 Flight::route('/stream-users', function() {
 
-	// ここに追加のヘッダーを追加できます
-	// header() または Flight::response()->setRealHeader() を使用するだけです
+	// ここに追加のヘッダーを追加可能
+	// header() または Flight::response()->setRealHeader() を使用する必要があります
 
 	// データの取得方法の例として...
 	$users_stmt = Flight::db()->query("SELECT id, first_name, last_name FROM users");
@@ -657,45 +716,43 @@ Flight::route('/stream-users', function() {
 })->streamWithHeaders([
 	'Content-Type' => 'application/json',
 	'Content-Disposition' => 'attachment; filename="users.json"',
-	// オプションのステータスコード、デフォルトは 200
+	// オプションのステータスコード、デフォルト 200
 	'status' => 200
 ]);
 ```
 
-## 関連トピック
-- [Middleware](/learn/middleware) - ルートで認証、ロギングなどにミドルウェアを使用。
-- [Dependency Injection](/learn/dependency-injection-container) - ルートでのオブジェクト作成と管理の簡素化。
-- [Why a Framework?](/learn/why-frameworks) - Flight のようなフレームワークを使用する利点の理解。
-- [Extending](/learn/extending) - `notFound` メソッドを含む独自機能で Flight を拡張する方法。
+## 関連項目
+- [ミドルウェア](/learn/middleware) - 認証、ロギングなどにルートでミドルウェアを使用。
+- [依存性注入](/learn/dependency-injection-container) - ルートでのオブジェクト作成と管理の簡素化。
+- [なぜフレームワーク？](/learn/why-frameworks) - Flight のようなフレームワークを使用する利点の理解。
+- [拡張](/learn/extending) - `notFound` メソッドを含む独自機能で Flight を拡張する方法。
 - [php.net: preg_match](https://www.php.net/manual/en/function.preg-match.php) - 正規表現マッチングのための PHP 関数。
 
 ## トラブルシューティング
-- ルートパラメータは名前ではなく順序でマッチされます。コールバックパラメータの順序がルート定義と一致することを確認してください。
-- `Flight::get()` はルートを定義しません。ルーティングには `Flight::route('GET /...')` またはグループ内のルーターオブジェクトコンテキスト（例: `$router->get(...)`）を使用してください。
+- ルートパラメータは名前ではなく順序でマッチされます。コールバックパラメータの順序がルート定義に一致することを確認。
+- `Flight::get()` はルートを定義しません。ルーティングには `Flight::route('GET /...')` を使用するか、グループ内のルーターオブジェクトコンテキスト（例: `$router->get(...)`）を使用。
 - executedRoute プロパティはルート実行後にのみ設定されます。実行前は NULL です。
 - ストリーミングにはレガシー Flight 出力バッファリング機能の無効化（`flight.v2.output_buffering = false`）が必要です。
-- 依存性注入の場合、コンテナベースのインスタンス化をサポートするのは特定のルート定義のみです。
+- 依存性注入の場合、特定のルート定義のみコンテナベースのインスタンス化をサポート。
 
 ### 404 Not Found または予期しないルート動作
 
-404 Not Found エラー（しかし命に誓ってそこにあり、タイポではないと確信している場合）が表示される場合、これはルートエンドポイントで値を返す代わりにエコーするだけであることが原因の可能性があります。この理由は意図的ですが、一部の開発者を驚かせる可能性があります。
+404 Not Found エラーが表示される場合（しかし、命に誓ってそこにあるしタイポではないと確信している場合）、これはルートエンドポイントで値を返す代わりに単にエコーしなかった問題かもしれません。この理由は意図的ですが、一部の開発者を驚かせる可能性があります。
 
 ```php
-
 Flight::route('/hello', function(){
-	// これにより 404 Not Found エラーが発生する可能性があります
+	// これが 404 Not Found エラーを引き起こす可能性
 	return 'Hello World';
 });
 
-// 恐らくこれが欲しいもの
+// 恐らくこれが望ましい
 Flight::route('/hello', function(){
 	echo 'Hello World';
 });
-
 ```
 
-この理由は、ルーターに組み込まれた特別なメカニズムのためで、戻り値を出力を「次のルートに進む」シグナルとして扱います。
-動作は [Routing](/learn/routing#passing) セクションで文書化されています。
+この理由は、ルーターに組み込まれた特別なメカニズムのためで、リターン出力を「次のルートに進む」シグナルとして扱います。
+動作は [ルーティング](/learn/routing#passing) セクションで文書化されています。
 
 ## 変更履歴
 - v3: リソースルーティング、ルートエイリアス、ストリーミングサポート、ルートグループ、ミドルウェアサポートを追加。
