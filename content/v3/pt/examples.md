@@ -29,6 +29,7 @@ Embora esses não sejam oficialmente patrocinados pela equipe Flight, eles podem
 - [Sistema de Gerenciamento de Conteúdo Genérico (com....muito pouca documentação)](https://github.com/recepuncu/cms)
 - [Um pequeno framework php baseado no Flight e medoo.](https://github.com/ycrao/tinyme)
 - [Exemplo de Aplicativo MVC](https://github.com/paddypei/Flight-MVC)
+- [Produção pronta para produção](https://github.com/madcoda9000/SecStore) - Estrutura de autenticação pronta para produção que poupa semanas de desenvolvimento. Oferece segurança de nível empresarial: 2FA/TOTP, integração com LDAP, SSO do Azure, limitação de taxa inteligente, impressão digital de sessão, proteção contra força bruta, painel de análise de segurança, registo de auditoria abrangente e controlo de acesso granular baseado em funções.
 
 ## Quer Compartilhar Seu Próprio Exemplo?
 

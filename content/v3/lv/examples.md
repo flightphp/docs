@@ -29,6 +29,7 @@ Lai gan šie nav oficiāli atbalstīti no Flight komandas, tie var dot jums idej
 - [Vispārējs satura pārvaldības sistēma (ar....ļoti maz dokumentācijas)](https://github.com/recepuncu/cms)
 - [Mazs php framework, kas balstīts uz Flight un medoo.](https://github.com/ycrao/tinyme)
 - [Piemēru MVC lietojumprogramma](https://github.com/paddypei/Flight-MVC)
+— [Ražošanai gatava izmēģinājuma versija](https://github.com/madcoda9000/SecStore) — Ražošanai gatava autentifikācijas sistēma, kas ietaupa jūsu izstrādes laiku nedēļām. Piedāvā uzņēmuma līmeņa drošību: 2FA/TOTP, LDAP integrāciju, Azure SSO, viedu ātruma ierobežošanu, sesijas pirkstu nospiedumu noņemšanu, brutālas piespēles aizsardzību, drošības analītikas informācijas paneli, visaptverošu audita reģistrēšanu un detalizētu uz lomām balstītu piekļuves kontroli.
 
 ## Vēlaties dalīties ar savu piemēru?
 

@@ -29,6 +29,7 @@ Meskipun ini tidak secara resmi disponsori oleh Tim Flight, ini bisa memberi And
 - [Sistem Manajemen Konten Generik (dengan....sangat sedikit dokumentasi)](https://github.com/recepuncu/cms)
 - [Framework php kecil yang berbasis pada Flight dan medoo.](https://github.com/ycrao/tinyme)
 - [Contoh Aplikasi MVC](https://github.com/paddypei/Flight-MVC)
+- [Flight Boilerplate Siap Produksi](https://github.com/madcoda9000/SecStore) - Kerangka kerja autentikasi siap produksi yang menghemat waktu pengembangan Anda selama berminggu-minggu. Dilengkapi keamanan tingkat perusahaan: 2FA/TOTP, integrasi LDAP, Azure SSO, pembatasan kecepatan cerdas, sidik jari sesi, perlindungan brute-force, dasbor analitik keamanan, pencatatan audit komprehensif, dan kontrol akses berbasis peran yang terperinci.
 
 ## Ingin Membagikan Contoh Anda Sendiri?
 

@@ -29,6 +29,7 @@
 - [일반 콘텐츠 관리 시스템 (문서가 거의 없음)](https://github.com/recepuncu/cms)
 - [Flight와 medoo를 기반으로 한 작은 php 프레임워크.](https://github.com/ycrao/tinyme)
 - [예제 MVC 응용 프로그램](https://github.com/paddypei/Flight-MVC)
+- [프로덕션 준비 완료 Flight 보일러플레이트](https://github.com/madcoda9000/SecStore) - 몇 주에 달하는 개발 시간을 절약해 주는 프로덕션 준비 인증 프레임워크입니다. 엔터프라이즈급 보안 기능을 제공합니다: 2FA/TOTP, LDAP 통합, Azure SSO, 지능형 속도 제한, 세션 지문 인식, 무차별 대입 공격 방어, 보안 분석 대시보드, 포괄적인 감사 로깅, 세분화된 역할 기반 접근 제어.
 
 ## 자신의 예제를 공유하고 싶으신가요?
 
