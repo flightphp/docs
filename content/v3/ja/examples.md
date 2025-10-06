@@ -29,6 +29,7 @@
 - [一般的なコンテンツ管理システム (非常に少ないドキュメント付き)](https://github.com/recepuncu/cms)
 - [Flightとmedooに基づく小さなphpフレームワーク。](https://github.com/ycrao/tinyme)
 - [例のMVCアプリケーション](https://github.com/paddypei/Flight-MVC)
+- [本番環境対応のフライトボイラープレート](https://github.com/madcoda9000/SecStore) - 数週間の開発期間を短縮する、本番環境対応の認証フレームワークです。エンタープライズグレードのセキュリティ機能を備えています。2FA/TOTP、LDAP統合、Azure SSO、インテリジェントなレート制限、セッションフィンガープリンティング、ブルートフォース攻撃対策、セキュリティ分析ダッシュボード、包括的な監査ログ、きめ細かなロールベースのアクセス制御などを備えています。
 
 ## 自分の例を共有したいですか？
 

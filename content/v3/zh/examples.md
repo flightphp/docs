@@ -29,6 +29,7 @@
 - [通用内容管理系统（带有……非常少的文档）](https://github.com/recepuncu/cms)
 - [基于 Flight 和 medoo 的小型 PHP 框架。](https://github.com/ycrao/tinyme)
 - [示例 MVC 应用](https://github.com/paddypei/Flight-MVC)
+- [生產就緒的 Flight Boilerplate](https://github.com/madcoda9000/SecStore) - 一款生產就緒的驗證框架，可為您節省數週的開發時間。它具備企業級安全性：2FA/TOTP、LDAP 整合、Azure SSO、智慧限速、會話指紋辨識、暴力破解保護、安全分析儀表板、全面的稽核日誌記錄以及基於角色的細粒度存取控制。
 
 ## 想要分享您自己的示例吗？
 
