@@ -16,6 +16,7 @@ Community contributed examples:
 
 While these are not officially sponsored by the Flight Team, these could give you ideas on how to structure your own projects that are built with Flight!
 
+- [Ivox Car Rental](https://github.com/najtms/introductionToWeb) - Ivox Car Rental is a single-page, mobile-friendly car rental web application built with PHP (FlightPHP), JavaScript, and MySQL. It supports user registration, browsing, and booking cars, while admins can manage cars, users, and bookings. The app features a REST API, JWT authentication, and a responsive design for a modern rental experience.
 - [Decay](https://github.com/boxybird/decay) - Flight v3 with HTMX and SleekDB all about zombies! ([Demo](https://decay.andrewrhyand.com))
 - [Flight Example Blog](https://github.com/n0nag0n/flightphp-blog) - Flight v3 with Middleware, Controllers, Active Record, and Latte.
 - [Flight CRUD RESTful API](https://github.com/soheilkhaledabdi/php-crud-api-flight) - Simple CRUD API project using the Flight framework, which provides a basic structure for new users to quickly set up a PHP application with CRUD operations and database connectivity. The project demonstrates how to use Flight for RESTful API development, making it an ideal learning tool for beginners and a useful starter kit for more experienced developers.
