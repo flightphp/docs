@@ -1,6 +1,6 @@
-# Requests
+# 요청
 
-## Overview
+## 개요
 
 Flight는 HTTP 요청을 단일 객체로 캡슐화하며, 이를 다음과 같이 접근할 수 있습니다:
 
@@ -8,59 +8,59 @@ Flight는 HTTP 요청을 단일 객체로 캡슐화하며, 이를 다음과 같�
 $request = Flight::request();
 ```
 
-## Understanding
+## 이해
 
-HTTP 요청은 HTTP 라이프사이클에 대한 이해의 핵심 요소 중 하나입니다. 사용자가 웹 브라우저나 HTTP 클라이언트에서 작업을 수행하면, 헤더, 본문, URL 등을 프로젝트로 보냅니다. 이러한 헤더(브라우저 언어, 처리 가능한 압축 유형, 사용자 에이전트 등)를 캡처하고, Flight 애플리케이션으로 전송된 본문과 URL을 캡처할 수 있습니다. 이러한 요청은 앱이 다음에 무엇을 할지 이해하는 데 필수적입니다.
+HTTP 요청은 HTTP 수명 주기를 이해하는 데 핵심적인 측면 중 하나입니다. 사용자가 웹 브라우저나 HTTP 클라이언트에서 작업을 수행하면, 헤더, 본문, URL 등을 프로젝트로 보냅니다. 이러한 헤더(브라우저 언어, 처리할 수 있는 압축 유형, 사용자 에이전트 등)를 캡처하고, Flight 애플리케이션으로 전송된 본문과 URL을 캡처할 수 있습니다. 이러한 요청은 앱이 다음에 무엇을 할지 이해하는 데 필수적입니다.
 
-## Basic Usage
+## 기본 사용법
 
 PHP에는 `$_GET`, `$_POST`, `$_REQUEST`, `$_SERVER`, `$_FILES`, `$_COOKIE`와 같은 여러 슈퍼 글로벌이 있습니다. Flight는 이를 편리한 [Collections](/learn/collections)로 추상화합니다. `query`, `data`, `cookies`, `files` 속성을 배열 또는 객체로 접근할 수 있습니다.
 
-> **Note:** 프로젝트에서 이러한 슈퍼 글로벌을 사용하는 것은 **강력히** 권장되지 않으며, `request()` 객체를 통해 참조해야 합니다.
+> **참고:** 프로젝트에서 이러한 슈퍼 글로벌을 사용하는 것은 **강력히** 권장되지 않으며, `request()` 객체를 통해 참조해야 합니다.
 
-> **Note:** `$_ENV`에 대한 추상화는 제공되지 않습니다.
+> **참고:** `$_ENV`에 대한 추상화는 제공되지 않습니다.
 
 ### `$_GET`
 
-`$_GET` 배열은 `query` 속성을 통해 접근할 수 있습니다:
+`query` 속성을 통해 `$_GET` 배열에 접근할 수 있습니다:
 
 ```php
 // GET /search?keyword=something
 Flight::route('/search', function(){
 	$keyword = Flight::request()->query['keyword'];
-	// or
+	// 또는
 	$keyword = Flight::request()->query->keyword;
 	echo "You are searching for: $keyword";
-	// query a database or something else with the $keyword
+	// $keyword로 데이터베이스 쿼리 또는 다른 작업 수행
 });
 ```
 
 ### `$_POST`
 
-`$_POST` 배열은 `data` 속성을 통해 접근할 수 있습니다:
+`data` 속성을 통해 `$_POST` 배열에 접근할 수 있습니다:
 
 ```php
 Flight::route('POST /submit', function(){
 	$name = Flight::request()->data['name'];
 	$email = Flight::request()->data['email'];
-	// or
+	// 또는
 	$name = Flight::request()->data->name;
 	$email = Flight::request()->data->email;
 	echo "You submitted: $name, $email";
-	// save to a database or something else with the $name and $email
+	// $name과 $email로 데이터베이스 저장 또는 다른 작업 수행
 });
 ```
 
 ### `$_COOKIE`
 
-`$_COOKIE` 배열은 `cookies` 속성을 통해 접근할 수 있습니다:
+`cookies` 속성을 통해 `$_COOKIE` 배열에 접근할 수 있습니다:
 
 ```php
 Flight::route('GET /login', function(){
 	$savedLogin = Flight::request()->cookies['myLoginCookie'];
-	// or
+	// 또는
 	$savedLogin = Flight::request()->cookies->myLoginCookie;
-	// check if it's really saved or not and if it is auto log them in
+	// 실제로 저장되었는지 확인하고, 저장되었다면 자동 로그인
 	if($savedLogin) {
 		Flight::redirect('/dashboard');
 		return;
@@ -68,31 +68,30 @@ Flight::route('GET /login', function(){
 });
 ```
 
-새 쿠키 값 설정에 대한 도움말은 [overclokk/cookie](/awesome-plugins/php-cookie)를 참조하세요.
+새 쿠키 값 설정에 대한 도움은 [overclokk/cookie](/awesome-plugins/php-cookie)를 참조하세요.
 
 ### `$_SERVER`
 
-`$_SERVER` 배열에 접근하기 위해 `getVar()` 메서드를 사용할 수 있는 단축키가 있습니다:
+`getVar()` 메서드를 통해 `$_SERVER` 배열에 접근하는 단축 방법이 있습니다:
 
 ```php
-
 $host = Flight::request()->getVar('HTTP_HOST');
 ```
 
 ### `$_FILES`
 
-업로드된 파일은 `files` 속성을 통해 접근할 수 있습니다:
+`files` 속성을 통해 업로드된 파일에 접근할 수 있습니다:
 
 ```php
-// raw access to $_FILES property. See below for recommended approach
+// $_FILES 속성에 대한 직접 접근. 권장 접근법은 아래 참조
 $uploadedFile = Flight::request()->files['myFile']; 
-// or
+// 또는
 $uploadedFile = Flight::request()->files->myFile;
 ```
 
-더 자세한 정보는 [Uploaded File Handler](/learn/uploaded-file)를 참조하세요.
+더 많은 정보는 [Uploaded File Handler](/learn/uploaded-file)를 참조하세요.
 
-#### Processing File Uploads
+#### 파일 업로드 처리
 
 _v3.12.0_
 
@@ -100,7 +99,7 @@ _v3.12.0_
 
 ```php
 Flight::route('POST /upload', function(){
-	// If you had an input field like <input type="file" name="myFile">
+	// <input type="file" name="myFile">와 같은 입력 필드가 있는 경우
 	$uploadedFileData = Flight::request()->getUploadedFiles();
 	$uploadedFile = $uploadedFileData['myFile'];
 	$uploadedFile->moveTo('/path/to/uploads/' . $uploadedFile->getClientFilename());
@@ -111,7 +110,7 @@ Flight::route('POST /upload', function(){
 
 ```php
 Flight::route('POST /upload', function(){
-	// If you had an input field like <input type="file" name="myFiles[]">
+	// <input type="file" name="myFiles[]">와 같은 입력 필드가 있는 경우
 	$uploadedFiles = Flight::request()->getUploadedFiles()['myFiles'];
 	foreach ($uploadedFiles as $uploadedFile) {
 		$uploadedFile->moveTo('/path/to/uploads/' . $uploadedFile->getClientFilename());
@@ -119,56 +118,55 @@ Flight::route('POST /upload', function(){
 });
 ```
 
-> **Security Note:** 사용자 입력을 항상 검증하고 정제하세요, 특히 파일 업로드 시에는 더욱 그렇습니다. 업로드할 허용 확장자 유형을 검증해야 하며, 파일의 "매직 바이트"를 검증하여 사용자가 주장하는 파일 유형이 실제로 맞는지 확인해야 합니다. 이에 대한 [articles](https://dev.to/yasuie/php-file-upload-check-uploaded-files-with-magic-bytes-54oe) [and](https://amazingalgorithms.com/snippets/php/detecting-the-mime-type-of-an-uploaded-file-using-magic-bytes/) [libraries](https://github.com/RikudouSage/MimeTypeDetector)가 있습니다.
+> **보안 참고:** 파일 업로드를 다룰 때는 항상 사용자 입력을 검증하고 정제하세요. 업로드할 허용 확장 유형을 검증하는 것뿐만 아니라, 파일의 "매직 바이트"를 검증하여 사용자가 주장하는 파일 유형인지 확인해야 합니다. 이에 대한 [기사](https://dev.to/yasuie/php-file-upload-check-uploaded-files-with-magic-bytes-54oe) [및](https://amazingalgorithms.com/snippets/php/detecting-the-mime-type-of-an-uploaded-file-using-magic-bytes/) [라이브러리](https://github.com/RikudouSage/MimeTypeDetector)가 도움이 됩니다.
 
-### Request Body
+### 요청 본문
 
-POST/PUT 요청을 처리할 때 예를 들어, 원시 HTTP 요청 본문을 가져오려면 다음과 같이 할 수 있습니다:
+POST/PUT 요청을 다룰 때와 같은 원시 HTTP 요청 본문을 가져오려면 다음을 할 수 있습니다:
 
 ```php
 Flight::route('POST /users/xml', function(){
 	$xmlBody = Flight::request()->getBody();
-	// do something with the XML that was sent.
+	// 전송된 XML로 작업 수행.
 });
 ```
 
-### JSON Body
+### JSON 본문
 
-콘텐츠 유형이 `application/json`인 요청을 받고 예시 데이터가 `{"id": 123}`인 경우, `data` 속성에서 사용할 수 있습니다:
+콘텐츠 유형이 `application/json`이고 예시 데이터가 `{"id": 123}`인 요청을 받으면, `data` 속성에서 사용할 수 있습니다:
 
 ```php
 $id = Flight::request()->data->id;
 ```
 
-### Request Headers
+### 요청 헤더
 
-요청 헤더는 `getHeader()` 또는 `getHeaders()` 메서드를 사용하여 접근할 수 있습니다:
+`getHeader()` 또는 `getHeaders()` 메서드를 사용하여 요청 헤더에 접근할 수 있습니다:
 
 ```php
-
-// Maybe you need Authorization header
+// Authorization 헤더가 필요한 경우
 $host = Flight::request()->getHeader('Authorization');
-// or
+// 또는
 $host = Flight::request()->header('Authorization');
 
-// If you need to grab all headers
+// 모든 헤더를 가져와야 하는 경우
 $headers = Flight::request()->getHeaders();
-// or
+// 또는
 $headers = Flight::request()->headers();
 ```
 
-### Request Method
+### 요청 메서드
 
-요청 메서드는 `method` 속성 또는 `getMethod()` 메서드를 사용하여 접근할 수 있습니다:
+`method` 속성 또는 `getMethod()` 메서드를 사용하여 요청 메서드에 접근할 수 있습니다:
 
 ```php
-$method = Flight::request()->method; // actually populated by getMethod()
+$method = Flight::request()->method; // 실제로는 getMethod()로 채워짐
 $method = Flight::request()->getMethod();
 ```
 
-**Note:** `getMethod()` 메서드는 먼저 `$_SERVER['REQUEST_METHOD']`에서 메서드를 가져오며, 존재할 경우 `$_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE']` 또는 `$_REQUEST['_method']`로 덮어쓸 수 있습니다.
+**참고:** `getMethod()` 메서드는 먼저 `$_SERVER['REQUEST_METHOD']`에서 메서드를 가져온 다음, `$_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE']`가 존재하면 이를 덮어쓰거나 `$_REQUEST['_method']`가 존재하면 이를 사용합니다.
 
-## Request Object Properties
+## 요청 객체 속성
 
 요청 객체는 다음 속성을 제공합니다:
 
@@ -193,30 +191,31 @@ $method = Flight::request()->getMethod();
 - **host** - 요청 호스트 이름
 - **servername** - `$_SERVER`의 SERVER_NAME
 
-## Helper Methods
+## 도우미 메서드
 
-URL의 일부를 조합하거나 특정 헤더를 처리하기 위한 몇 가지 도우미 메서드가 있습니다.
+URL의 일부를 조합하거나 특정 헤더를 다루기 위한 몇 가지 도우미 메서드가 있습니다.
 
-### Full URL
+### 전체 URL
 
-전체 요청 URL은 `getFullUrl()` 메서드를 사용하여 접근할 수 있습니다:
+`getFullUrl()` 메서드를 사용하여 전체 요청 URL에 접근할 수 있습니다:
 
 ```php
 $url = Flight::request()->getFullUrl();
 // https://example.com/some/path?foo=bar
 ```
-### Base URL
 
-기본 URL은 `getBaseUrl()` 메서드를 사용하여 접근할 수 있습니다:
+### 기본 URL
+
+`getBaseUrl()` 메서드를 사용하여 기본 URL에 접근할 수 있습니다:
 
 ```php
 // http://example.com/path/to/something/cool?query=yes+thanks
 $url = Flight::request()->getBaseUrl();
 // https://example.com
-// Notice, no trailing slash.
+// 주의: 후행 슬래시 없음.
 ```
 
-## Query Parsing
+## 쿼리 파싱
 
 `parseQuery()` 메서드에 URL을 전달하여 쿼리 문자열을 연관 배열로 파싱할 수 있습니다:
 
@@ -225,40 +224,39 @@ $query = Flight::request()->parseQuery('https://example.com/some/path?foo=bar');
 // ['foo' => 'bar']
 ```
 
-## Negotiate Content Accept Types
+## 콘텐츠 Accept 유형 협상
 
 _v3.17.2_
 
 클라이언트가 보낸 `Accept` 헤더를 기반으로 응답할 최적의 콘텐츠 유형을 결정하기 위해 `negotiateContentType()` 메서드를 사용할 수 있습니다.
 
 ```php
-
-// Example Accept header: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
-// The below defines what you support.
+// 예시 Accept 헤더: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+// 아래는 지원하는 유형을 정의합니다.
 $availableTypes = ['application/json', 'application/xml'];
 $typeToServe = Flight::request()->negotiateContentType($availableTypes);
 if ($typeToServe === 'application/json') {
-	// Serve JSON response
+	// JSON 응답 제공
 } elseif ($typeToServe === 'application/xml') {
-	// Serve XML response
+	// XML 응답 제공
 } else {
-	// Default to something else or throw an error
+	// 다른 기본값 사용 또는 오류 발생
 }
 ```
 
-> **Note:** `Accept` 헤더에 사용 가능한 유형 중 하나가 발견되지 않으면 메서드는 `null`을 반환합니다. `Accept` 헤더가 정의되지 않은 경우, 메서드는 `$availableTypes` 배열의 첫 번째 유형을 반환합니다.
+> **참고:** `Accept` 헤더에 사용 가능한 유형 중 하나가 없으면 메서드는 `null`을 반환합니다. `Accept` 헤더가 정의되지 않은 경우, 메서드는 `$availableTypes` 배열의 첫 번째 유형을 반환합니다.
 
-## See Also
+## 관련 자료
 - [Routing](/learn/routing) - 라우트를 컨트롤러에 매핑하고 뷰를 렌더링하는 방법.
 - [Responses](/learn/responses) - HTTP 응답을 사용자 지정하는 방법.
-- [Why a Framework?](/learn/why-frameworks) - 요청이 큰 그림에 어떻게 맞는지.
+- [Why a Framework?](/learn/why-frameworks) - 요청이 전체 그림에 어떻게 맞는지.
 - [Collections](/learn/collections) - 데이터 컬렉션 작업.
 - [Uploaded File Handler](/learn/uploaded-file) - 파일 업로드 처리.
 
-## Troubleshooting
+## 문제 해결
 - `request()->ip`와 `request()->proxy_ip`는 웹 서버가 프록시, 로드 밸런서 등 뒤에 있는 경우 다를 수 있습니다.
 
-## Changelog
+## 변경 로그
 - v3.17.2 - negotiateContentType() 추가
 - v3.12.0 - 요청 객체를 통해 파일 업로드 처리 기능 추가.
 - v1.0 - 초기 릴리스.

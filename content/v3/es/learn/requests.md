@@ -8,21 +8,21 @@ Flight encapsula la solicitud HTTP en un solo objeto, que se puede acceder hacie
 $request = Flight::request();
 ```
 
-## Entendiendo
+## Comprensión
 
-Las solicitudes HTTP son uno de los aspectos principales a entender sobre el ciclo de vida de HTTP. Un usuario realiza una acción en un navegador web o un cliente HTTP, y envían una serie de encabezados, cuerpo, URL, etc. a tu proyecto. Puedes capturar estos encabezados (el idioma del navegador, qué tipo de compresión pueden manejar, el agente de usuario, etc.) y capturar el cuerpo y la URL que se envía a tu aplicación Flight. Estas solicitudes son esenciales para que tu app entienda qué hacer a continuación.
+Las solicitudes HTTP son uno de los aspectos centrales para entender sobre el ciclo de vida de HTTP. Un usuario realiza una acción en un navegador web o un cliente HTTP, y envían una serie de encabezados, cuerpo, URL, etc. a su proyecto. Puede capturar estos encabezados (el idioma del navegador, qué tipo de compresión pueden manejar, el agente de usuario, etc.) y capturar el cuerpo y la URL que se envía a su aplicación Flight. Estas solicitudes son esenciales para que su app entienda qué hacer a continuación.
 
-## Uso Básico
+## Uso básico
 
-PHP tiene varios super globals incluyendo `$_GET`, `$_POST`, `$_REQUEST`, `$_SERVER`, `$_FILES` y `$_COOKIE`. Flight abstrae estos en prácticas [Collections](/learn/collections). Puedes acceder a las propiedades `query`, `data`, `cookies` y `files` como arrays o objetos.
+PHP tiene varios super globals incluyendo `$_GET`, `$_POST`, `$_REQUEST`, `$_SERVER`, `$_FILES` y `$_COOKIE`. Flight abstrae estos en colecciones prácticas [Collections](/learn/collections). Puede acceder a las propiedades `query`, `data`, `cookies` y `files` como arrays u objetos.
 
-> **Nota:** Se **DESACONSEJA EN ALTO GRADO** usar estos super globals en tu proyecto y deben ser referenciados a través del objeto `request()`.
+> **Nota:** Se **DESACONSEJA EN GRAN MEDIDA** usar estos super globals en su proyecto y deben referenciarse a través del objeto `request()`.
 
 > **Nota:** No hay abstracción disponible para `$_ENV`.
 
 ### `$_GET`
 
-Puedes acceder al array `$_GET` a través de la propiedad `query`:
+Puede acceder al array `$_GET` a través de la propiedad `query`:
 
 ```php
 // GET /search?keyword=something
@@ -30,14 +30,14 @@ Flight::route('/search', function(){
 	$keyword = Flight::request()->query['keyword'];
 	// o
 	$keyword = Flight::request()->query->keyword;
-	echo "Estás buscando: $keyword";
+	echo "You are searching for: $keyword";
 	// consultar una base de datos o algo más con el $keyword
 });
 ```
 
 ### `$_POST`
 
-Puedes acceder al array `$_POST` a través de la propiedad `data`:
+Puede acceder al array `$_POST` a través de la propiedad `data`:
 
 ```php
 Flight::route('POST /submit', function(){
@@ -46,14 +46,14 @@ Flight::route('POST /submit', function(){
 	// o
 	$name = Flight::request()->data->name;
 	$email = Flight::request()->data->email;
-	echo "Enviaste: $name, $email";
+	echo "You submitted: $name, $email";
 	// guardar en una base de datos o algo más con el $name y $email
 });
 ```
 
 ### `$_COOKIE`
 
-Puedes acceder al array `$_COOKIE` a través de la propiedad `cookies`:
+Puede acceder al array `$_COOKIE` a través de la propiedad `cookies`:
 
 ```php
 Flight::route('GET /login', function(){
@@ -68,7 +68,7 @@ Flight::route('GET /login', function(){
 });
 ```
 
-Para ayuda sobre cómo establecer nuevos valores de cookies, consulta [overclokk/cookie](/awesome-plugins/php-cookie)
+Para obtener ayuda sobre cómo establecer nuevos valores de cookies, vea [overclokk/cookie](/awesome-plugins/php-cookie)
 
 ### `$_SERVER`
 
@@ -81,37 +81,37 @@ $host = Flight::request()->getVar('HTTP_HOST');
 
 ### `$_FILES`
 
-Puedes acceder a los archivos subidos a través de la propiedad `files`:
+Puede acceder a los archivos subidos a través de la propiedad `files`:
 
 ```php
-// acceso directo a la propiedad $_FILES. Ver abajo para el enfoque recomendado
+// acceso crudo a la propiedad $_FILES. Vea abajo para el enfoque recomendado
 $uploadedFile = Flight::request()->files['myFile']; 
 // o
 $uploadedFile = Flight::request()->files->myFile;
 ```
 
-Consulta [Uploaded File Handler](/learn/uploaded-file) para más información.
+Vea [Uploaded File Handler](/learn/uploaded-file) para más información.
 
-#### Procesamiento de Subidas de Archivos
+#### Procesamiento de subidas de archivos
 
 _v3.12.0_
 
-Puedes procesar subidas de archivos usando el framework con algunos métodos de ayuda. Básicamente se reduce a extraer los datos del archivo de la solicitud y moverlo a una nueva ubicación.
+Puede procesar subidas de archivos usando el framework con algunos métodos de ayuda. Básicamente se reduce a extraer los datos del archivo de la solicitud y moverlo a una nueva ubicación.
 
 ```php
 Flight::route('POST /upload', function(){
-	// Si tenías un campo de entrada como <input type="file" name="myFile">
+	// Si tenía un campo de entrada como <input type="file" name="myFile">
 	$uploadedFileData = Flight::request()->getUploadedFiles();
 	$uploadedFile = $uploadedFileData['myFile'];
 	$uploadedFile->moveTo('/path/to/uploads/' . $uploadedFile->getClientFilename());
 });
 ```
 
-Si tienes múltiples archivos subidos, puedes iterar a través de ellos:
+Si tiene múltiples archivos subidos, puede iterar a través de ellos:
 
 ```php
 Flight::route('POST /upload', function(){
-	// Si tenías un campo de entrada como <input type="file" name="myFiles[]">
+	// Si tenía un campo de entrada como <input type="file" name="myFiles[]">
 	$uploadedFiles = Flight::request()->getUploadedFiles()['myFiles'];
 	foreach ($uploadedFiles as $uploadedFile) {
 		$uploadedFile->moveTo('/path/to/uploads/' . $uploadedFile->getClientFilename());
@@ -119,11 +119,11 @@ Flight::route('POST /upload', function(){
 });
 ```
 
-> **Nota de Seguridad:** Siempre valida y sanitiza la entrada del usuario, especialmente al tratar con subidas de archivos. Siempre valida el tipo de extensiones que permitirás subir, pero también debes validar los "magic bytes" del archivo para asegurarte de que realmente es el tipo de archivo que el usuario afirma que es. Hay [artículos](https://dev.to/yasuie/php-file-upload-check-uploaded-files-with-magic-bytes-54oe) [y](https://amazingalgorithms.com/snippets/php/detecting-the-mime-type-of-an-uploaded-file-using-magic-bytes/) [bibliotecas](https://github.com/RikudouSage/MimeTypeDetector) disponibles para ayudar con esto.
+> **Nota de seguridad:** Siempre valide y sanitice la entrada del usuario, especialmente al tratar con subidas de archivos. Siempre valide el tipo de extensiones que permitirá subir, pero también debe validar los "magic bytes" del archivo para asegurar que realmente sea el tipo de archivo que el usuario afirma que es. Hay [artículos](https://dev.to/yasuie/php-file-upload-check-uploaded-files-with-magic-bytes-54oe) [y](https://amazingalgorithms.com/snippets/php/detecting-the-mime-type-of-an-uploaded-file-using-magic-bytes/) [bibliotecas](https://github.com/RikudouSage/MimeTypeDetector) disponibles para ayudar con esto.
 
-### Cuerpo de la Solicitud
+### Cuerpo de la solicitud
 
-Para obtener el cuerpo crudo de la solicitud HTTP, por ejemplo al tratar con solicitudes POST/PUT, puedes hacer:
+Para obtener el cuerpo crudo de la solicitud HTTP, por ejemplo al tratar con solicitudes POST/PUT, puede hacer:
 
 ```php
 Flight::route('POST /users/xml', function(){
@@ -134,32 +134,32 @@ Flight::route('POST /users/xml', function(){
 
 ### Cuerpo JSON
 
-Si recibes una solicitud con el tipo de contenido `application/json` y los datos de ejemplo `{"id": 123}`, estará disponible desde la propiedad `data`:
+Si recibe una solicitud con el tipo de contenido `application/json` y los datos de ejemplo `{"id": 123}`, estará disponible desde la propiedad `data`:
 
 ```php
 $id = Flight::request()->data->id;
 ```
 
-### Encabezados de la Solicitud
+### Encabezados de la solicitud
 
-Puedes acceder a los encabezados de la solicitud usando el método `getHeader()` o `getHeaders()`:
+Puede acceder a los encabezados de la solicitud usando el método `getHeader()` o `getHeaders()`:
 
 ```php
 
-// Tal vez necesites el encabezado Authorization
+// Tal vez necesite el encabezado Authorization
 $host = Flight::request()->getHeader('Authorization');
 // o
 $host = Flight::request()->header('Authorization');
 
-// Si necesitas obtener todos los encabezados
+// Si necesita obtener todos los encabezados
 $headers = Flight::request()->getHeaders();
 // o
 $headers = Flight::request()->headers();
 ```
 
-### Método de la Solicitud
+### Método de la solicitud
 
-Puedes acceder al método de la solicitud usando la propiedad `method` o el método `getMethod()`:
+Puede acceder al método de la solicitud usando la propiedad `method` o el método `getMethod()`:
 
 ```php
 $method = Flight::request()->method; // realmente poblado por getMethod()
@@ -168,7 +168,7 @@ $method = Flight::request()->getMethod();
 
 **Nota:** El método `getMethod()` primero extrae el método de `$_SERVER['REQUEST_METHOD']`, luego puede ser sobrescrito por `$_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE']` si existe o `$_REQUEST['_method']` si existe.
 
-## Propiedades del Objeto de Solicitud
+## Propiedades del objeto de solicitud
 
 El objeto de solicitud proporciona las siguientes propiedades:
 
@@ -193,49 +193,49 @@ El objeto de solicitud proporciona las siguientes propiedades:
 - **host** - El nombre de host de la solicitud
 - **servername** - El SERVER_NAME de `$_SERVER`
 
-## Métodos de Ayuda
+## Métodos de ayuda
 
-Hay un par de métodos de ayuda para ensamblar partes de una URL o tratar con ciertos encabezados.
+Hay algunos métodos de ayuda para ensamblar partes de una URL o tratar con ciertos encabezados.
 
-### URL Completa
+### URL completa
 
-Puedes acceder a la URL completa de la solicitud usando el método `getFullUrl()`:
+Puede acceder a la URL completa de la solicitud usando el método `getFullUrl()`:
 
 ```php
 $url = Flight::request()->getFullUrl();
 // https://example.com/some/path?foo=bar
 ```
 
-### URL Base
+### URL base
 
-Puedes acceder a la URL base usando el método `getBaseUrl()`:
+Puede acceder a la URL base usando el método `getBaseUrl()`:
 
 ```php
 // http://example.com/path/to/something/cool?query=yes+thanks
 $url = Flight::request()->getBaseUrl();
 // https://example.com
-// Nota, sin barra final.
+// Note, no trailing slash.
 ```
 
-## Análisis de Consultas
+## Análisis de consultas
 
-Puedes pasar una URL al método `parseQuery()` para analizar la cadena de consulta en un array asociativo:
+Puede pasar una URL al método `parseQuery()` para analizar la cadena de consulta en un array asociativo:
 
 ```php
 $query = Flight::request()->parseQuery('https://example.com/some/path?foo=bar');
 // ['foo' => 'bar']
 ```
 
-## Negociación de Tipos de Contenido Aceptados
+## Negociación de tipos de aceptación de contenido
 
 _v3.17.2_
 
-Puedes usar el método `negotiateContentType()` para determinar el mejor tipo de contenido para responder basado en el encabezado `Accept` enviado por el cliente.
+Puede usar el método `negotiateContentType()` para determinar el mejor tipo de contenido para responder basado en el encabezado `Accept` enviado por el cliente.
 
 ```php
 
 // Ejemplo de encabezado Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
-// Lo de abajo define lo que soportas.
+// Lo de abajo define lo que soporta.
 $availableTypes = ['application/json', 'application/xml'];
 $typeToServe = Flight::request()->negotiateContentType($availableTypes);
 if ($typeToServe === 'application/json') {
@@ -243,23 +243,23 @@ if ($typeToServe === 'application/json') {
 } elseif ($typeToServe === 'application/xml') {
 	// Servir respuesta XML
 } else {
-	// Por defecto a algo más o lanzar un error
+	// Por defecto algo más o lanzar un error
 }
 ```
 
 > **Nota:** Si ninguno de los tipos disponibles se encuentra en el encabezado `Accept`, el método retornará `null`. Si no hay encabezado `Accept` definido, el método retornará el primer tipo en el array `$availableTypes`.
 
-## Ver También
-- [Routing](/learn/routing) - Ver cómo mapear rutas a controladores y renderizar vistas.
+## Ver también
+- [Routing](/learn/routing) - Vea cómo mapear rutas a controladores y renderizar vistas.
 - [Responses](/learn/responses) - Cómo personalizar respuestas HTTP.
-- [Why a Framework?](/learn/why-frameworks) - Cómo encajan las solicitudes en el panorama general.
+- [Why a Framework?](/learn/why-frameworks) - Cómo las solicitudes encajan en el panorama general.
 - [Collections](/learn/collections) - Trabajando con colecciones de datos.
 - [Uploaded File Handler](/learn/uploaded-file) - Manejo de subidas de archivos.
 
-## Solución de Problemas
-- `request()->ip` y `request()->proxy_ip` pueden ser diferentes si tu servidor web está detrás de un proxy, balanceador de carga, etc.
+## Solución de problemas
+- `request()->ip` y `request()->proxy_ip` pueden ser diferentes si su servidor web está detrás de un proxy, balanceador de carga, etc.
 
-## Registro de Cambios
+## Registro de cambios
 - v3.17.2 - Agregado negotiateContentType()
-- v3.12.0 - Agregada la capacidad para manejar subidas de archivos a través del objeto de solicitud.
+- v3.12.0 - Agregada capacidad para manejar subidas de archivos a través del objeto de solicitud.
 - v1.0 - Lanzamiento inicial.

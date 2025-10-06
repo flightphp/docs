@@ -9,15 +9,15 @@ acessado fazendo:
 $request = Flight::request();
 ```
 
-## Entendendo
+## Compreendendo
 
-Requisições HTTP são um dos aspectos principais a serem compreendidos sobre o ciclo de vida HTTP. Um usuário realiza uma ação em um navegador web ou cliente HTTP, e eles enviam uma série de cabeçalhos, corpo, URL, etc. para o seu projeto. Você pode capturar esses cabeçalhos (a linguagem do navegador, o tipo de compressão que eles podem lidar, o agente do usuário, etc.) e capturar o corpo e a URL que é enviada para a sua aplicação Flight. Essas requisições são essenciais para que o seu app entenda o que fazer em seguida.
+As requisições HTTP são um dos aspectos principais a entender sobre o ciclo de vida HTTP. Um usuário realiza uma ação em um navegador web ou em um cliente HTTP, e eles enviam uma série de cabeçalhos, corpo, URL, etc. para o seu projeto. Você pode capturar esses cabeçalhos (a linguagem do navegador, que tipo de compressão eles podem lidar, o agente do usuário, etc.) e capturar o corpo e a URL que são enviados para a sua aplicação Flight. Essas requisições são essenciais para que o seu app entenda o que fazer em seguida.
 
 ## Uso Básico
 
-PHP possui várias super globais incluindo `$_GET`, `$_POST`, `$_REQUEST`, `$_SERVER`, `$_FILES` e `$_COOKIE`. Flight abstrai essas em coleções práticas [Collections](/learn/collections). Você pode acessar as propriedades `query`, `data`, `cookies` e `files` como arrays ou objetos.
+PHP possui vários super globais, incluindo `$_GET`, `$_POST`, `$_REQUEST`, `$_SERVER`, `$_FILES` e `$_COOKIE`. Flight abstrai esses em coleções práticas [Collections](/learn/collections). Você pode acessar as propriedades `query`, `data`, `cookies` e `files` como arrays ou objetos.
 
-> **Nota:** É **ALTAMENTE** desencorajado usar essas super globais no seu projeto e elas devem ser referenciadas através do objeto `request()`.
+> **Nota:** É **ALTAMENTE** desaconselhável usar esses super globais no seu projeto e eles devem ser referenciados através do objeto `request()`.
 
 > **Nota:** Não há abstração disponível para `$_ENV`.
 
@@ -121,7 +121,7 @@ Flight::route('POST /upload', function(){
 });
 ```
 
-> **Nota de Segurança:** Sempre valide e sanitize a entrada do usuário, especialmente ao lidar com uploads de arquivos. Sempre valide o tipo de extensões que você permitirá ser enviadas, mas você também deve validar os "magic bytes" do arquivo para garantir que é realmente o tipo de arquivo que o usuário afirma ser. Há [artigos](https://dev.to/yasuie/php-file-upload-check-uploaded-files-with-magic-bytes-54oe) [e](https://amazingalgorithms.com/snippets/php/detecting-the-mime-type-of-an-uploaded-file-using-magic-bytes/) [bibliotecas](https://github.com/RikudouSage/MimeTypeDetector) disponíveis para ajudar com isso.
+> **Nota de Segurança:** Sempre valide e sanitize a entrada do usuário, especialmente ao lidar com uploads de arquivos. Sempre valide o tipo de extensões que você permitirá ser enviado, mas você também deve validar os "magic bytes" do arquivo para garantir que é realmente o tipo de arquivo que o usuário afirma que é. Há [artigos](https://dev.to/yasuie/php-file-upload-check-uploaded-files-with-magic-bytes-54oe) [e](https://amazingalgorithms.com/snippets/php/detecting-the-mime-type-of-an-uploaded-file-using-magic-bytes/) [bibliotecas](https://github.com/RikudouSage/MimeTypeDetector) disponíveis para ajudar com isso.
 
 ### Corpo da Requisição
 
@@ -138,7 +138,7 @@ Flight::route('POST /users/xml', function(){
 ### Corpo JSON
 
 Se você receber uma requisição com o tipo de conteúdo `application/json` e os dados de exemplo `{"id": 123}`
-ele estará disponível da propriedade `data`:
+ele estará disponível na propriedade `data`:
 
 ```php
 $id = Flight::request()->data->id;
@@ -173,9 +173,9 @@ $method = Flight::request()->getMethod();
 **Nota:** O método `getMethod()` primeiro puxa o método de `$_SERVER['REQUEST_METHOD']`, então ele pode ser sobrescrito 
 por `$_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE']` se existir ou `$_REQUEST['_method']` se existir.
 
-## Propriedades do Objeto de Requisição
+## Propriedades do Objeto Request
 
-O objeto de requisição fornece as seguintes propriedades:
+O objeto request fornece as seguintes propriedades:
 
 - **body** - O corpo raw da requisição HTTP
 - **url** - A URL sendo requisitada
@@ -188,19 +188,19 @@ O objeto de requisição fornece as seguintes propriedades:
 - **user_agent** - Informações do navegador
 - **type** - O tipo de conteúdo
 - **length** - O comprimento do conteúdo
-- **query** - Parâmetros da string de consulta
-- **data** - Dados post ou dados JSON
+- **query** - Parâmetros da string de query
+- **data** - Dados POST ou dados JSON
 - **cookies** - Dados de cookie
 - **files** - Arquivos enviados
 - **secure** - Se a conexão é segura
-- **accept** - Parâmetros de aceitação HTTP
+- **accept** - Parâmetros HTTP accept
 - **proxy_ip** - Endereço IP proxy do cliente. Escaneia o array `$_SERVER` por `HTTP_CLIENT_IP`, `HTTP_X_FORWARDED_FOR`, `HTTP_X_FORWARDED`, `HTTP_X_CLUSTER_CLIENT_IP`, `HTTP_FORWARDED_FOR`, `HTTP_FORWARDED` nessa ordem.
 - **host** - O nome do host da requisição
 - **servername** - O SERVER_NAME de `$_SERVER`
 
 ## Métodos Auxiliares
 
-Há alguns métodos auxiliares para montar partes de uma URL ou lidar com certos cabeçalhos.
+Há alguns métodos auxiliares para juntar partes de uma URL, ou lidar com certos cabeçalhos.
 
 ### URL Completa
 
@@ -219,19 +219,19 @@ Você pode acessar a URL base usando o método `getBaseUrl()`:
 // http://example.com/path/to/something/cool?query=yes+thanks
 $url = Flight::request()->getBaseUrl();
 // https://example.com
-// Note, sem barra final.
+// Note, sem barra no final.
 ```
 
-## Análise de Consulta
+## Análise de Query
 
-Você pode passar uma URL para o método `parseQuery()` para analisar a string de consulta em um array associativo:
+Você pode passar uma URL para o método `parseQuery()` para analisar a string de query em um array associativo:
 
 ```php
 $query = Flight::request()->parseQuery('https://example.com/some/path?foo=bar');
 // ['foo' => 'bar']
 ```
 
-## Negociar Tipos de Aceitação de Conteúdo
+## Negociar Tipos de Conteúdo Aceitos
 
 _v3.17.2_
 
@@ -244,11 +244,11 @@ Você pode usar o método `negotiateContentType()` para determinar o melhor tipo
 $availableTypes = ['application/json', 'application/xml'];
 $typeToServe = Flight::request()->negotiateContentType($availableTypes);
 if ($typeToServe === 'application/json') {
-	// Servir resposta JSON
+	// Sirva resposta JSON
 } elseif ($typeToServe === 'application/xml') {
-	// Servir resposta XML
+	// Sirva resposta XML
 } else {
-	// Padrão para algo mais ou lançar um erro
+	// Padrão para algo mais ou lance um erro
 }
 ```
 
@@ -266,5 +266,5 @@ if ($typeToServe === 'application/json') {
 
 ## Changelog
 - v3.17.2 - Adicionado negotiateContentType()
-- v3.12.0 - Adicionada capacidade de lidar com uploads de arquivos através do objeto de requisição.
+- v3.12.0 - Adicionada capacidade de lidar com uploads de arquivos através do objeto request.
 - v1.0 - Lançamento inicial.

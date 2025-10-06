@@ -10,15 +10,15 @@ $request = Flight::request();
 
 ## Понимание
 
-HTTP-запросы — это один из ключевых аспектов, которые нужно понять в жизненном цикле HTTP. Пользователь выполняет действие в веб-браузере или HTTP-клиенте, и они отправляют серию заголовков, тела, URL и т.д. в ваш проект. Вы можете захватить эти заголовки (язык браузера, тип сжатия, который они могут обрабатывать, пользовательский агент и т.д.) и захватить тело и URL, которые отправляются в ваше приложение Flight. Эти запросы необходимы для вашего приложения, чтобы понять, что делать дальше.
+HTTP-запросы — это один из основных аспектов, которые нужно понять о жизненном цикле HTTP. Пользователь выполняет действие в веб-браузере или HTTP-клиенте, и они отправляют серию заголовков, тело, URL и т.д. в ваш проект. Вы можете захватить эти заголовки (язык браузера, тип сжатия, который они могут обрабатывать, пользовательский агент и т.д.) и захватить тело и URL, отправляемые в ваше приложение Flight. Эти запросы необходимы для вашего приложения, чтобы понять, что делать дальше.
 
 ## Основное использование
 
 PHP имеет несколько суперглобальных переменных, включая `$_GET`, `$_POST`, `$_REQUEST`, `$_SERVER`, `$_FILES` и `$_COOKIE`. Flight абстрагирует их в удобные [Collections](/learn/collections). Вы можете обращаться к свойствам `query`, `data`, `cookies` и `files` как к массивам или объектам.
 
-> **Примечание:** **СИЛЬНО** не рекомендуется использовать эти суперглобальные переменные в вашем проекте, и их следует ссылаться через объект `request()`.
+> **Примечание:** **СТРОГО** не рекомендуется использовать эти суперглобальные переменные в вашем проекте; они должны ссылаться через объект `request()`.
 
-> **Примечание:** Для `$_ENV` нет доступной абстракции.
+> **Примечание:** Нет доступной абстракции для `$_ENV`.
 
 ### `$_GET`
 
@@ -28,10 +28,10 @@ PHP имеет несколько суперглобальных перемен�
 // GET /search?keyword=something
 Flight::route('/search', function(){
 	$keyword = Flight::request()->query['keyword'];
-	// или
+	// or
 	$keyword = Flight::request()->query->keyword;
-	echo "Вы ищете: $keyword";
-	// запрос к базе данных или что-то еще с $keyword
+	echo "You are searching for: $keyword";
+	// query a database or something else with the $keyword
 });
 ```
 
@@ -43,11 +43,11 @@ Flight::route('/search', function(){
 Flight::route('POST /submit', function(){
 	$name = Flight::request()->data['name'];
 	$email = Flight::request()->data['email'];
-	// или
+	// or
 	$name = Flight::request()->data->name;
 	$email = Flight::request()->data->email;
-	echo "Вы отправили: $name, $email";
-	// сохранить в базу данных или что-то еще с $name и $email
+	echo "You submitted: $name, $email";
+	// save to a database or something else with the $name and $email
 });
 ```
 
@@ -58,9 +58,9 @@ Flight::route('POST /submit', function(){
 ```php
 Flight::route('GET /login', function(){
 	$savedLogin = Flight::request()->cookies['myLoginCookie'];
-	// или
+	// or
 	$savedLogin = Flight::request()->cookies->myLoginCookie;
-	// проверить, действительно ли сохранено, и если да, автоматически войти
+	// check if it's really saved or not and if it is auto log them in
 	if($savedLogin) {
 		Flight::redirect('/dashboard');
 		return;
@@ -68,7 +68,7 @@ Flight::route('GET /login', function(){
 });
 ```
 
-Для помощи в установке новых значений cookie см. [overclokk/cookie](/awesome-plugins/php-cookie)
+Для помощи по установке новых значений cookie см. [overclokk/cookie](/awesome-plugins/php-cookie)
 
 ### `$_SERVER`
 
@@ -84,9 +84,9 @@ $host = Flight::request()->getVar('HTTP_HOST');
 Вы можете получить доступ к загруженным файлам через свойство `files`:
 
 ```php
-// прямой доступ к свойству $_FILES. См. ниже рекомендуемый подход
+// raw access to $_FILES property. See below for recommended approach
 $uploadedFile = Flight::request()->files['myFile']; 
-// или
+// or
 $uploadedFile = Flight::request()->files->myFile;
 ```
 
@@ -100,18 +100,18 @@ _v3.12.0_
 
 ```php
 Flight::route('POST /upload', function(){
-	// Если у вас есть поле ввода вроде <input type="file" name="myFile">
+	// If you had an input field like <input type="file" name="myFile">
 	$uploadedFileData = Flight::request()->getUploadedFiles();
 	$uploadedFile = $uploadedFileData['myFile'];
 	$uploadedFile->moveTo('/path/to/uploads/' . $uploadedFile->getClientFilename());
 });
 ```
 
-Если у вас загружено несколько файлов, вы можете пройтись по ним циклом:
+Если у вас загружено несколько файлов, вы можете перебрать их:
 
 ```php
 Flight::route('POST /upload', function(){
-	// Если у вас есть поле ввода вроде <input type="file" name="myFiles[]">
+	// If you had an input field like <input type="file" name="myFiles[]">
 	$uploadedFiles = Flight::request()->getUploadedFiles()['myFiles'];
 	foreach ($uploadedFiles as $uploadedFile) {
 		$uploadedFile->moveTo('/path/to/uploads/' . $uploadedFile->getClientFilename());
@@ -119,7 +119,7 @@ Flight::route('POST /upload', function(){
 });
 ```
 
-> **Примечание по безопасности:** Всегда проверяйте и очищайте ввод пользователя, особенно при работе с загрузкой файлов. Всегда проверяйте типы расширений, которые вы разрешаете загружать, но также проверяйте "магические байты" файла, чтобы убедиться, что это действительно тип файла, который заявляет пользователь. Есть [статьи](https://dev.to/yasuie/php-file-upload-check-uploaded-files-with-magic-bytes-54oe) [и](https://amazingalgorithms.com/snippets/php/detecting-the-mime-type-of-an-uploaded-file-using-magic-bytes/) [библиотеки](https://github.com/RikudouSage/MimeTypeDetector), доступные для помощи в этом.
+> **Примечание по безопасности:** Всегда проверяйте и очищайте пользовательский ввод, особенно при работе с загрузкой файлов. Всегда проверяйте типы расширений, которые вы разрешаете загружать, но также проверяйте "магические байты" файла, чтобы убедиться, что это действительно тип файла, который утверждает пользователь. Есть [статьи](https://dev.to/yasuie/php-file-upload-check-uploaded-files-with-magic-bytes-54oe) [и](https://amazingalgorithms.com/snippets/php/detecting-the-mime-type-of-an-uploaded-file-using-magic-bytes/) [библиотеки](https://github.com/RikudouSage/MimeTypeDetector), доступные для помощи в этом.
 
 ### Тело запроса
 
@@ -128,7 +128,7 @@ Flight::route('POST /upload', function(){
 ```php
 Flight::route('POST /users/xml', function(){
 	$xmlBody = Flight::request()->getBody();
-	// сделать что-то с XML, который был отправлен.
+	// do something with the XML that was sent.
 });
 ```
 
@@ -146,14 +146,14 @@ $id = Flight::request()->data->id;
 
 ```php
 
-// Возможно, вам нужен заголовок Authorization
+// Maybe you need Authorization header
 $host = Flight::request()->getHeader('Authorization');
-// или
+// or
 $host = Flight::request()->header('Authorization');
 
-// Если нужно получить все заголовки
+// If you need to grab all headers
 $headers = Flight::request()->getHeaders();
-// или
+// or
 $headers = Flight::request()->headers();
 ```
 
@@ -162,7 +162,7 @@ $headers = Flight::request()->headers();
 Вы можете получить доступ к методу запроса с помощью свойства `method` или метода `getMethod()`:
 
 ```php
-$method = Flight::request()->method; // фактически заполняется getMethod()
+$method = Flight::request()->method; // actually populated by getMethod()
 $method = Flight::request()->getMethod();
 ```
 
@@ -187,7 +187,7 @@ $method = Flight::request()->getMethod();
 - **data** - Данные POST или JSON-данные
 - **cookies** - Данные cookie
 - **files** - Загруженные файлы
-- **secure** - Является ли соединение защищенным
+- **secure** - Является ли соединение безопасным
 - **accept** - Параметры HTTP accept
 - **proxy_ip** - IP-адрес прокси клиента. Сканирует массив `$_SERVER` на наличие `HTTP_CLIENT_IP`, `HTTP_X_FORWARDED_FOR`, `HTTP_X_FORWARDED`, `HTTP_X_CLUSTER_CLIENT_IP`, `HTTP_FORWARDED_FOR`, `HTTP_FORWARDED` в этом порядке.
 - **host** - Имя хоста запроса
@@ -214,7 +214,7 @@ $url = Flight::request()->getFullUrl();
 // http://example.com/path/to/something/cool?query=yes+thanks
 $url = Flight::request()->getBaseUrl();
 // https://example.com
-// Обратите внимание, без завершающего слеша.
+// Notice, no trailing slash.
 ```
 
 ## Разбор запроса
@@ -226,7 +226,7 @@ $query = Flight::request()->parseQuery('https://example.com/some/path?foo=bar');
 // ['foo' => 'bar']
 ```
 
-## Переговоры по типам принимаемого содержимого
+## Переговоры по типам содержимого Accept
 
 _v3.17.2_
 
@@ -234,16 +234,16 @@ _v3.17.2_
 
 ```php
 
-// Пример заголовка Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
-// Ниже определяются поддерживаемые типы.
+// Example Accept header: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+// The below defines what you support.
 $availableTypes = ['application/json', 'application/xml'];
 $typeToServe = Flight::request()->negotiateContentType($availableTypes);
 if ($typeToServe === 'application/json') {
-	// Отправить JSON-ответ
+	// Serve JSON response
 } elseif ($typeToServe === 'application/xml') {
-	// Отправить XML-ответ
+	// Serve XML response
 } else {
-	// По умолчанию что-то другое или выбросить ошибку
+	// Default to something else or throw an error
 }
 ```
 
@@ -262,4 +262,4 @@ if ($typeToServe === 'application/json') {
 ## Журнал изменений
 - v3.17.2 - Добавлен negotiateContentType()
 - v3.12.0 - Добавлена возможность обработки загрузки файлов через объект запроса.
-- v1.0 - Первоначальный выпуск.
+- v1.0 - Первое выпущение.

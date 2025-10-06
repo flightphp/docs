@@ -14,6 +14,12 @@ API documentation is crucial for any API. It helps developers understand how to 
 Application Performance Monitoring (APM) is crucial for any application. It helps you understand how your application is performing and where the bottlenecks are. There are a number of APM tools that can be used with Flight.
 - <span class="badge bg-primary">official</span> [flightphp/apm](/awesome-plugins/apm) - Flight APM is a simple APM library that can be used to monitor your Flight applications. It can be used to monitor the performance of your application and help you identify bottlenecks.
 
+## Async
+
+Flight is already a fast framework but strapping it a turbo engine on it makes everything more fun (and challenging)!
+
+- [flightphp/async](/awesome-plugins/async) - Official Flight Async library. This library is a simple way to add asynchronous processing to your application. It uses Swoole/Openswoole under the hood to provide a simple and effective way to run tasks asynchronously.
+
 ## Authorization/Permissions
 
 Authorization and Permissions are crucial for any application that requires controls to be in place for who can access what.
