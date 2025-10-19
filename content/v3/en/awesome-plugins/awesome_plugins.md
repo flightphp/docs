@@ -84,6 +84,7 @@ Templating is core to any web application with a UI. There are a number of templ
 
 - <span class="badge bg-warning">deprecated</span> [flightphp/core View](/learn#views) - This is a very basic templating engine that is part of the core. It's not recommended to be used if you have more than a couple pages in your project.
 - [latte/latte](/awesome-plugins/latte) - Latte is a full featured templating engine that is very easy to use and feels closer to a PHP syntax than Twig or Smarty. It's also very easy to extend and add your own filters and functions.
+- [knifelemon/comment-template](/awesome-plugins/comment-template) - CommentTemplate is a powerful PHP template engine with asset compilation, template inheritance, and variable processing. Features automatic CSS/JS minification, caching, Base64 encoding, and optional Flight PHP framework integration.
 
 ## WordPress Integration
 
