@@ -16,9 +16,10 @@ Exemplos contribuídos pela comunidade:
 
 Embora estes não sejam oficialmente patrocinados pela Equipe Flight, eles podem dar ideias sobre como estruturar seus próprios projetos construídos com Flight!
 
-- [Ivox Car Rental](https://github.com/najtms/introductionToWeb) - Ivox Car Rental é uma aplicação web de aluguel de carros de página única, amigável para mobile, construída com PHP (FlightPHP), JavaScript e MySQL. Ela suporta registro de usuários, navegação e reserva de carros, enquanto administradores podem gerenciar carros, usuários e reservas. O app possui uma API REST, autenticação JWT e um design responsivo para uma experiência de aluguel moderna.
+- [Eventify](https://github.com/ilhanklisura/eventify) - Eventify é um app de página única que conecta organizadores de eventos com participantes. Construído com PHP (FlightPHP), JavaScript e MySQL, possui autenticação JWT, gerenciamento de eventos e documentação de API RESTful usando OpenAPI.
+- [Ivox Car Rental](https://github.com/najtms/introductionToWeb) - Ivox Car Rental é uma aplicação web de aluguel de carros de página única e amigável para mobile, construída com PHP (FlightPHP), JavaScript e MySQL. Suporta registro de usuários, navegação e reserva de carros, enquanto administradores podem gerenciar carros, usuários e reservas. O app possui uma API REST, autenticação JWT e design responsivo para uma experiência de aluguel moderna.
 - [Decay](https://github.com/boxybird/decay) - Flight v3 com HTMX e SleekDB tudo sobre zumbis! ([Demo](https://decay.andrewrhyand.com))
-- [Flight Example Blog](https://github.com/n0nag0n/flightphp-blog) - Flight v3 com Middleware, Controladores, Active Record e Latte.
+- [Flight Example Blog](https://github.com/n0nag0n/flightphp-blog) - Flight v3 com Middleware, Controllers, Active Record e Latte.
 - [Flight CRUD RESTful API](https://github.com/soheilkhaledabdi/php-crud-api-flight) - Projeto simples de API CRUD usando o framework Flight, que fornece uma estrutura básica para novos usuários configurarem rapidamente uma aplicação PHP com operações CRUD e conectividade de banco de dados. O projeto demonstra como usar Flight para desenvolvimento de API RESTful, tornando-o uma ferramenta de aprendizado ideal para iniciantes e um kit inicial útil para desenvolvedores mais experientes.
 - [Flight School Management System](https://github.com/krmu/FlightPHP_School) - Flight v3
 - [Paste Bin with Comments](https://github.com/n0nag0n/commie2) - Flight v3

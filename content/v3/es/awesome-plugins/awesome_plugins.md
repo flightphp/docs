@@ -4,10 +4,10 @@ Flight es increíblemente extensible. Hay una serie de plugins que se pueden usa
 
 ## Documentación de API
 
-La documentación de API es crucial para cualquier API. Ayuda a los desarrolladores a entender cómo interactuar con tu API y qué esperar a cambio. Hay un par de herramientas disponibles para ayudarte a generar documentación de API para tus Proyectos Flight.
+La documentación de API es crucial para cualquier API. Ayuda a los desarrolladores a entender cómo interactuar con tu API y qué esperar a cambio. Hay un par de herramientas disponibles para ayudarte a generar documentación de API para tus Proyectos de Flight.
 
-- [FlightPHP OpenAPI Generator](https://dev.to/danielsc/define-generate-and-implement-an-api-first-approach-with-openapi-generator-and-flightphp-1fb3) - Publicación de blog escrita por Daniel Schreiber sobre cómo usar la Especificación OpenAPI con FlightPHP para construir tu API utilizando un enfoque API first.
-- [SwaggerUI](https://github.com/zircote/swagger-php) - Swagger UI es una gran herramienta para ayudarte a generar documentación de API para tus proyectos Flight. Es muy fácil de usar y se puede personalizar para adaptarse a tus necesidades. Esta es la biblioteca PHP para ayudarte a generar la documentación Swagger.
+- [FlightPHP OpenAPI Generator](https://dev.to/danielsc/define-generate-and-implement-an-api-first-approach-with-openapi-generator-and-flightphp-1fb3) - Publicación de blog escrita por Daniel Schreiber sobre cómo usar la Especificación OpenAPI con FlightPHP para construir tu API utilizando un enfoque API primero.
+- [SwaggerUI](https://github.com/zircote/swagger-php) - Swagger UI es una gran herramienta para ayudarte a generar documentación de API para tus proyectos de Flight. Es muy fácil de usar y se puede personalizar para adaptarse a tus necesidades. Esta es la biblioteca PHP para ayudarte a generar la documentación Swagger.
 
 ## Monitoreo de Rendimiento de Aplicaciones (APM)
 
@@ -24,13 +24,13 @@ Flight ya es un framework rápido, pero agregarle un motor turbo lo hace todo m�
 
 La autorización y los permisos son cruciales para cualquier aplicación que requiera controles en su lugar para quién puede acceder a qué.
 
-- <span class="badge bg-primary">oficial</span> [flightphp/permissions](/awesome-plugins/permissions) - Biblioteca oficial de Permisos de Flight. Esta biblioteca es una forma simple de agregar permisos a nivel de usuario y aplicación a tu aplicación.
+- <span class="badge bg-primary">oficial</span> [flightphp/permissions](/awesome-plugins/permissions) - Biblioteca oficial de Permisos de Flight. Esta biblioteca es una forma simple de agregar permisos a nivel de usuario y aplicación a tu aplicación. 
 
 ## Caché
 
 El caché es una gran manera de acelerar tu aplicación. Hay una serie de bibliotecas de caché que se pueden usar con Flight.
 
-- <span class="badge bg-primary">oficial</span> [flightphp/cache](/awesome-plugins/php-file-cache) - Clase ligera, simple y autónoma de caché en archivo PHP
+- <span class="badge bg-primary">oficial</span> [flightphp/cache](/awesome-plugins/php-file-cache) - Clase ligera, simple y independiente de caché en archivo PHP
 
 ## CLI
 
@@ -40,7 +40,7 @@ Las aplicaciones CLI son una gran manera de interactuar con tu aplicación. Pued
 
 ## Cookies
 
-Las cookies son una gran manera de almacenar pequeños bits de datos en el lado del cliente. Se pueden usar para almacenar preferencias de usuario, configuraciones de aplicación y más.
+Las cookies son una gran manera de almacenar pequeños fragmentos de datos en el lado del cliente. Se pueden usar para almacenar preferencias de usuario, configuraciones de aplicación y más.
 
 - [overclokk/cookie](/awesome-plugins/php-cookie) - PHP Cookie es una biblioteca PHP que proporciona una forma simple y efectiva de gestionar cookies.
 
@@ -48,16 +48,16 @@ Las cookies son una gran manera de almacenar pequeños bits de datos en el lado 
 
 La depuración es crucial cuando estás desarrollando en tu entorno local. Hay algunos plugins que pueden elevar tu experiencia de depuración.
 
-- [tracy/tracy](/awesome-plugins/tracy) - Esta es una manejadora de errores completa que se puede usar con Flight. Tiene una serie de paneles que pueden ayudarte a depurar tu aplicación. También es muy fácil de extender y agregar tus propios paneles.
-- <span class="badge bg-primary">oficial</span> [flightphp/tracy-extensions](/awesome-plugins/tracy-extensions) - Usado con el manejador de errores [Tracy](/awesome-plugins/tracy), este plugin agrega algunos paneles extra para ayudar con la depuración específicamente para proyectos Flight.
+- [tracy/tracy](/awesome-plugins/tracy) - Esta es un manejador de errores completo que se puede usar con Flight. Tiene una serie de paneles que pueden ayudarte a depurar tu aplicación. También es muy fácil de extender y agregar tus propios paneles.
+- <span class="badge bg-primary">oficial</span> [flightphp/tracy-extensions](/awesome-plugins/tracy-extensions) - Usado con el manejador de errores [Tracy](/awesome-plugins/tracy), este plugin agrega algunos paneles extra para ayudar con la depuración específicamente para proyectos de Flight.
 
 ## Bases de Datos
 
-Las bases de datos son el núcleo de la mayoría de las aplicaciones. Así es como almacenas y recuperas datos. Algunas bibliotecas de bases de datos son simplemente envolturas para escribir consultas y otras son ORMs completos.
+Las bases de datos son el núcleo de la mayoría de las aplicaciones. Así es como almacenas y recuperas datos. Algunas bibliotecas de bases de datos son simplemente envolturas para escribir consultas y algunas son ORMs completos.
 
 - <span class="badge bg-primary">oficial</span> [flightphp/core PdoWrapper](/learn/pdo-wrapper) - Envoltura oficial de PDO de Flight que forma parte del núcleo. Esta es una envoltura simple para ayudar a simplificar el proceso de escribir consultas y ejecutarlas. No es un ORM.
-- <span class="badge bg-primary">oficial</span> [flightphp/active-record](/awesome-plugins/active-record) - ORM/Mapper ActiveRecord oficial de Flight. Gran biblioteca pequeña para recuperar y almacenar datos fácilmente en tu base de datos.
-- [byjg/php-migration](/awesome-plugins/migrations) - Plugin para mantener un seguimiento de todos los cambios de base de datos para tu proyecto.
+- <span class="badge bg-primary">oficial</span> [flightphp/active-record](/awesome-plugins/active-record) - ORM/Mapper oficial de ActiveRecord de Flight. Gran biblioteca pequeña para recuperar y almacenar datos fácilmente en tu base de datos.
+- [byjg/php-migration](/awesome-plugins/migrations) - Plugin para rastrear todos los cambios de base de datos para tu proyecto.
 
 ## Encriptación
 
@@ -80,17 +80,18 @@ Las sesiones no son realmente útiles para las API, pero para construir una apli
 
 ## Plantillas
 
-Las plantillas son el núcleo de cualquier aplicación web con una UI. Hay una serie de motores de plantillas que se pueden usar con Flight.
+La plantillación es el núcleo de cualquier aplicación web con una UI. Hay una serie de motores de plantillas que se pueden usar con Flight.
 
 - <span class="badge bg-warning">deprecado</span> [flightphp/core View](/learn#views) - Este es un motor de plantillas muy básico que forma parte del núcleo. No se recomienda usarlo si tienes más de un par de páginas en tu proyecto.
 - [latte/latte](/awesome-plugins/latte) - Latte es un motor de plantillas completo que es muy fácil de usar y se siente más cercano a la sintaxis de PHP que Twig o Smarty. También es muy fácil de extender y agregar tus propios filtros y funciones.
+- [knifelemon/comment-template](/awesome-plugins/comment-template) - CommentTemplate es un potente motor de plantillas PHP con compilación de activos, herencia de plantillas y procesamiento de variables. Incluye minificación automática de CSS/JS, caché, codificación Base64 e integración opcional con el framework Flight PHP.
 
 ## Integración con WordPress
 
 ¿Quieres usar Flight en tu proyecto de WordPress? ¡Hay un plugin práctico para eso!
 
-- [n0nag0n/wordpress-integration-for-flight-framework](/awesome-plugins/n0nag0n_wordpress) - Este plugin de WordPress te permite ejecutar Flight justo al lado de WordPress. Es perfecto para agregar APIs personalizadas, microservicios o incluso aplicaciones completas a tu sitio de WordPress usando el framework Flight. Súper útil si quieres lo mejor de ambos mundos!
+- [n0nag0n/wordpress-integration-for-flight-framework](/awesome-plugins/n0nag0n_wordpress) - Este plugin de WordPress te permite ejecutar Flight junto con WordPress. Es perfecto para agregar APIs personalizadas, microservicios o incluso aplicaciones completas a tu sitio de WordPress usando el framework Flight. ¡Súper útil si quieres lo mejor de ambos mundos!
 
-## Contribuir
+## Contribuyendo
 
 ¿Tienes un plugin que te gustaría compartir? ¡Envía una solicitud de pull para agregarlo a la lista!
