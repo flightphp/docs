@@ -33,14 +33,14 @@ use KnifeLemon\CommentTemplate\Engine;
 $app = Flight::app();
 
 $app->register('view', Engine::class, [], function (Engine $engine) use ($app) {
-    // Wo Ihre Template-Dateien gespeichert sind
-    $engine->setTemplatesPath(__DIR__ . '/views');
+    // Wurzelverzeichnis (wo sich index.php befindet) - das Document Root Ihrer Webanwendung
+    $engine->setPublicPath(__DIR__);
     
-    // Wo Ihre öffentlichen Assets serviert werden
-    $engine->setPublicPath(__DIR__ . '/public');
+    // Template-Dateiverzeichnis - unterstützt relative und absolute Pfade
+    $engine->setSkinPath('views');             // Relativ zum öffentlichen Pfad
     
-    // Wo kompilierte Assets gespeichert werden
-    $engine->setAssetPath('assets');
+    // Wo kompilierte Assets gespeichert werden - unterstützt relative und absolute Pfade
+    $engine->setAssetPath('assets');           // Relativ zum öffentlichen Pfad
     
     // Template-Dateierweiterung
     $engine->setFileExtension('.php');
@@ -63,9 +63,9 @@ $app = Flight::app();
 
 // __construct(string $publicPath = "", string $skinPath = "", string $assetPath = "", string $fileExtension = "")
 $app->register('view', Engine::class, [
-    __DIR__ . '/public',    // publicPath - wo Assets serviert werden
-    __DIR__ . '/views',     // skinPath - wo Template-Dateien gespeichert sind  
-    'assets',               // assetPath - wo kompilierte Assets gespeichert werden
+    __DIR__,                // publicPath - Wurzelverzeichnis (wo index.php ist)
+    'views',                // skinPath - Template-Pfad (unterstützt relativ/absolut)
+    'assets',               // assetPath - kompilierter Asset-Pfad (unterstützt relativ/absolut)
     '.php'                  // fileExtension - Template-Dateierweiterung
 ]);
 
@@ -73,6 +73,83 @@ $app->map('render', function(string $template, array $data) use ($app): void {
     echo $app->view()->render($template, $data);
 });
 ```
+
+## Pfad-Konfiguration
+
+CommentTemplate bietet intelligente Pfad-Behandlung für relative und absolute Pfade:
+
+### Öffentlicher Pfad
+
+Der **Öffentliche Pfad** ist das Wurzelverzeichnis Ihrer Webanwendung, typischerweise wo sich `index.php` befindet. Dies ist das Document Root, von dem Webserver Dateien bereitstellen.
+
+```php
+// Beispiel: wenn Ihre index.php bei /var/www/html/myapp/index.php liegt
+$template->setPublicPath('/var/www/html/myapp');  // Wurzelverzeichnis
+
+// Windows-Beispiel: wenn Ihre index.php bei C:\xampp\htdocs\myapp\index.php liegt
+$template->setPublicPath('C:\\xampp\\htdocs\\myapp');
+```
+
+### Template-Pfad-Konfiguration
+
+Template-Pfad unterstützt sowohl relative als auch absolute Pfade:
+
+```php
+$template = new Engine();
+$template->setPublicPath('/var/www/html/myapp');  // Wurzelverzeichnis (wo index.php ist)
+
+// Relative Pfade - automatisch mit öffentlichem Pfad kombiniert
+$template->setSkinPath('views');           // → /var/www/html/myapp/views/
+$template->setSkinPath('templates/pages'); // → /var/www/html/myapp/templates/pages/
+
+// Absolute Pfade - wie sie sind verwendet (Unix/Linux)
+$template->setSkinPath('/var/www/templates');      // → /var/www/templates/
+$template->setSkinPath('/full/path/to/templates'); // → /full/path/to/templates/
+
+// Windows absolute Pfade
+$template->setSkinPath('C:\\www\\templates');     // → C:\www\templates\
+$template->setSkinPath('D:/projects/templates');  // → D:/projects/templates/
+
+// UNC-Pfade (Windows-Netzwerkfreigaben)
+$template->setSkinPath('\\\\server\\share\\templates'); // → \\server\share\templates\
+```
+
+### Asset-Pfad-Konfiguration
+
+Asset-Pfad unterstützt auch sowohl relative als auch absolute Pfade:
+
+```php
+// Relative Pfade - automatisch mit öffentlichem Pfad kombiniert
+$template->setAssetPath('assets');        // → /var/www/html/myapp/assets/
+$template->setAssetPath('static/files');  // → /var/www/html/myapp/static/files/
+
+// Absolute Pfade - wie sie sind verwendet (Unix/Linux)
+$template->setAssetPath('/var/www/cdn');           // → /var/www/cdn/
+$template->setAssetPath('/full/path/to/assets');   // → /full/path/to/assets/
+
+// Windows absolute Pfade
+$template->setAssetPath('C:\\www\\static');       // → C:\www\static\
+$template->setAssetPath('D:/projects/assets');    // → D:/projects/assets/
+
+// UNC-Pfade (Windows-Netzwerkfreigaben)
+$template->setAssetPath('\\\\server\\share\\assets'); // → \\server\share\assets\
+```
+
+**Intelligente Pfad-Erkennung:**
+
+- **Relative Pfade**: Keine führenden Trennzeichen (`/`, `\`) oder Laufwerksbuchstaben
+- **Unix Absolut**: Beginnt mit `/` (z.B. `/var/www/assets`)
+- **Windows Absolut**: Beginnt mit Laufwerksbuchstabe (z.B. `C:\www`, `D:/assets`)
+- **UNC-Pfade**: Beginnt mit `\\` (z.B. `\\server\share`)
+
+**Wie es funktioniert:**
+
+- Alle Pfade werden automatisch basierend auf dem Typ aufgelöst (relativ vs absolut)
+- Relative Pfade werden mit dem öffentlichen Pfad kombiniert
+- `@css` und `@js` erstellen minifizierte Dateien in: `{resolvedAssetPath}/css/` oder `{resolvedAssetPath}/js/`
+- `@asset` kopiert einzelne Dateien nach: `{resolvedAssetPath}/{relativePath}`
+- `@assetDir` kopiert Verzeichnisse nach: `{resolvedAssetPath}/{relativePath}`
+- Intelligente Zwischenspeicherung: Dateien werden nur kopiert, wenn die Quelle neuer ist als das Ziel
 
 ## Template-Direktiven
 
@@ -227,10 +304,30 @@ const imageData = '<!--@base64(images/icon.png)-->';
 {$name|concat= (Admin)}              <!-- Text anhängen -->
 ```
 
-#### Variablenbefehle
+#### Mehrere Filter verketten
 ```html
 {$content|striptag|trim|escape}      <!-- Mehrere Filter ketten -->
 ```
+
+### Kommentare
+
+Template-Kommentare werden vollständig aus der Ausgabe entfernt und erscheinen nicht im finalen HTML:
+
+```html
+{* Dies ist ein einzeiliger Template-Kommentar *}
+
+{* 
+   Dies ist ein mehrzeiliger
+   Template-Kommentar 
+   über mehrere Zeilen
+*}
+
+<h1>{$title}</h1>
+{* Debug-Kommentar: Prüfen ob title-Variable funktioniert *}
+<p>{$content}</p>
+```
+
+**Hinweis**: Template-Kommentare `{* ... *}` unterscheiden sich von HTML-Kommentaren `<!-- ... -->`. Template-Kommentare werden während der Verarbeitung entfernt und erreichen nie den Browser.
 
 ## Beispiel-Projektstruktur
 

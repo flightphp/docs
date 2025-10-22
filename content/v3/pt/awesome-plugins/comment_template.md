@@ -33,14 +33,14 @@ use KnifeLemon\CommentTemplate\Engine;
 $app = Flight::app();
 
 $app->register('view', Engine::class, [], function (Engine $engine) use ($app) {
-    // Onde seus arquivos de template estão armazenados
-    $engine->setTemplatesPath(__DIR__ . '/views');
+    // Diretório raiz (onde está o index.php) - a raiz do documento da sua aplicação web
+    $engine->setPublicPath(__DIR__);
     
-    // Onde seus assets públicos serão servidos
-    $engine->setPublicPath(__DIR__ . '/public');
+    // Diretório dos arquivos de template - suporta caminhos relativos e absolutos
+    $engine->setSkinPath('views');             // Relativo ao caminho público
     
-    // Onde os assets compilados serão armazenados
-    $engine->setAssetPath('assets');
+    // Onde os assets compilados serão armazenados - suporta caminhos relativos e absolutos
+    $engine->setAssetPath('assets');           // Relativo ao caminho público
     
     // Extensão do arquivo de template
     $engine->setFileExtension('.php');
@@ -63,9 +63,9 @@ $app = Flight::app();
 
 // __construct(string $publicPath = "", string $skinPath = "", string $assetPath = "", string $fileExtension = "")
 $app->register('view', Engine::class, [
-    __DIR__ . '/public',    // publicPath - onde os assets serão servidos
-    __DIR__ . '/views',     // skinPath - onde os arquivos de template estão armazenados  
-    'assets',               // assetPath - onde os assets compilados serão armazenados
+    __DIR__,                // publicPath - diretório raiz (onde está o index.php)
+    'views',                // skinPath - caminho dos templates (suporta relativo/absoluto)
+    'assets',               // assetPath - caminho dos assets compilados (suporta relativo/absoluto)
     '.php'                  // fileExtension - extensão do arquivo de template
 ]);
 
@@ -73,6 +73,83 @@ $app->map('render', function(string $template, array $data) use ($app): void {
     echo $app->view()->render($template, $data);
 });
 ```
+
+## Configuração de Caminhos
+
+CommentTemplate fornece tratamento inteligente de caminhos para caminhos relativos e absolutos:
+
+### Caminho Público
+
+O **Caminho Público** é o diretório raiz da sua aplicação web, tipicamente onde o `index.php` reside. Esta é a raiz do documento de onde os servidores web servem arquivos.
+
+```php
+// Exemplo: se seu index.php está em /var/www/html/myapp/index.php
+$template->setPublicPath('/var/www/html/myapp');  // Diretório raiz
+
+// Exemplo Windows: se seu index.php está em C:\xampp\htdocs\myapp\index.php
+$template->setPublicPath('C:\\xampp\\htdocs\\myapp');
+```
+
+### Configuração do Caminho de Templates
+
+O caminho de templates suporta caminhos relativos e absolutos:
+
+```php
+$template = new Engine();
+$template->setPublicPath('/var/www/html/myapp');  // Diretório raiz (onde está o index.php)
+
+// Caminhos relativos - automaticamente combinados com o caminho público
+$template->setSkinPath('views');           // → /var/www/html/myapp/views/
+$template->setSkinPath('templates/pages'); // → /var/www/html/myapp/templates/pages/
+
+// Caminhos absolutos - usados como estão (Unix/Linux)
+$template->setSkinPath('/var/www/templates');      // → /var/www/templates/
+$template->setSkinPath('/full/path/to/templates'); // → /full/path/to/templates/
+
+// Caminhos absolutos Windows
+$template->setSkinPath('C:\\www\\templates');     // → C:\www\templates\
+$template->setSkinPath('D:/projects/templates');  // → D:/projects/templates/
+
+// Caminhos UNC (compartilhamentos de rede Windows)
+$template->setSkinPath('\\\\server\\share\\templates'); // → \\server\share\templates\
+```
+
+### Configuração do Caminho de Assets
+
+O caminho de assets também suporta caminhos relativos e absolutos:
+
+```php
+// Caminhos relativos - automaticamente combinados com o caminho público
+$template->setAssetPath('assets');        // → /var/www/html/myapp/assets/
+$template->setAssetPath('static/files');  // → /var/www/html/myapp/static/files/
+
+// Caminhos absolutos - usados como estão (Unix/Linux)
+$template->setAssetPath('/var/www/cdn');           // → /var/www/cdn/
+$template->setAssetPath('/full/path/to/assets');   // → /full/path/to/assets/
+
+// Caminhos absolutos Windows
+$template->setAssetPath('C:\\www\\static');       // → C:\www\static\
+$template->setAssetPath('D:/projects/assets');    // → D:/projects/assets/
+
+// Caminhos UNC (compartilhamentos de rede Windows)
+$template->setAssetPath('\\\\server\\share\\assets'); // → \\server\share\assets\
+```
+
+**Detecção Inteligente de Caminhos:**
+
+- **Caminhos Relativos**: Sem separadores iniciais (`/`, `\`) ou letras de unidade
+- **Unix Absoluto**: Começa com `/` (ex. `/var/www/assets`)
+- **Windows Absoluto**: Começa com letra de unidade (ex. `C:\www`, `D:/assets`)
+- **Caminhos UNC**: Começa com `\\` (ex. `\\server\share`)
+
+**Como funciona:**
+
+- Todos os caminhos são automaticamente resolvidos baseados no tipo (relativo vs absoluto)
+- Caminhos relativos são combinados com o caminho público
+- `@css` e `@js` criam arquivos minificados em: `{resolvedAssetPath}/css/` ou `{resolvedAssetPath}/js/`
+- `@asset` copia arquivos únicos para: `{resolvedAssetPath}/{relativePath}`
+- `@assetDir` copia diretórios para: `{resolvedAssetPath}/{relativePath}`
+- Cache inteligente: arquivos só são copiados quando a fonte é mais nova que o destino
 
 ## Diretivas de Template
 
@@ -227,10 +304,30 @@ const imageData = '<!--@base64(images/icon.png)-->';
 {$name|concat= (Admin)}              <!-- Concatena texto -->
 ```
 
-#### Comandos de Variáveis
+#### Encadear Múltiplos Filtros
 ```html
 {$content|striptag|trim|escape}      <!-- Encadeia múltiplos filtros -->
 ```
+
+### Comentários
+
+Comentários de template são completamente removidos da saída e não aparecem no HTML final:
+
+```html
+{* Este é um comentário de template de uma linha *}
+
+{* 
+   Este é um comentário de template
+   de múltiplas linhas 
+   que abrange várias linhas
+*}
+
+<h1>{$title}</h1>
+{* Comentário de debug: verificar se a variável title funciona *}
+<p>{$content}</p>
+```
+
+**Nota**: Comentários de template `{* ... *}` são diferentes de comentários HTML `<!-- ... -->`. Comentários de template são removidos durante o processamento e nunca chegam ao navegador.
 
 ## Estrutura de Projeto Exemplo
 

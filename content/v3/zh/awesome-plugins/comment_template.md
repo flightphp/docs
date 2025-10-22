@@ -33,14 +33,14 @@ use KnifeLemon\CommentTemplate\Engine;
 $app = Flight::app();
 
 $app->register('view', Engine::class, [], function (Engine $engine) use ($app) {
-    // 模板文件存储的位置
-    $engine->setTemplatesPath(__DIR__ . '/views');
+    // 根目录（index.php 所在位置）- Web 应用程序的文档根目录
+    $engine->setPublicPath(__DIR__);
     
-    // 公共资产服务的路径
-    $engine->setPublicPath(__DIR__ . '/public');
+    // 模板文件目录 - 支持相对路径和绝对路径
+    $engine->setSkinPath('views');             // 相对于公共路径
     
-    // 编译资产的存储位置
-    $engine->setAssetPath('assets');
+    // 编译资产的存储位置 - 支持相对路径和绝对路径
+    $engine->setAssetPath('assets');           // 相对于公共路径
     
     // 模板文件扩展名
     $engine->setFileExtension('.php');
@@ -63,9 +63,9 @@ $app = Flight::app();
 
 // __construct(string $publicPath = "", string $skinPath = "", string $assetPath = "", string $fileExtension = "")
 $app->register('view', Engine::class, [
-    __DIR__ . '/public',    // publicPath - 资产服务的路径
-    __DIR__ . '/views',     // skinPath - 模板文件存储的位置  
-    'assets',               // assetPath - 编译资产的存储位置
+    __DIR__,                // publicPath - 根目录（index.php 所在位置）
+    'views',                // skinPath - 模板路径（支持相对/绝对路径）
+    'assets',               // assetPath - 编译资产路径（支持相对/绝对路径）
     '.php'                  // fileExtension - 模板文件扩展名
 ]);
 
@@ -73,6 +73,83 @@ $app->map('render', function(string $template, array $data) use ($app): void {
     echo $app->view()->render($template, $data);
 });
 ```
+
+## 路径配置
+
+CommentTemplate 为相对路径和绝对路径提供智能路径处理：
+
+### 公共路径
+
+**公共路径**是您的 Web 应用程序的根目录，通常是 `index.php` 所在的位置。这是 Web 服务器提供文件的文档根目录。
+
+```php
+// 示例：如果您的 index.php 位于 /var/www/html/myapp/index.php
+$template->setPublicPath('/var/www/html/myapp');  // 根目录
+
+// Windows 示例：如果您的 index.php 位于 C:\xampp\htdocs\myapp\index.php
+$template->setPublicPath('C:\\xampp\\htdocs\\myapp');
+```
+
+### 模板路径配置
+
+模板路径支持相对路径和绝对路径：
+
+```php
+$template = new Engine();
+$template->setPublicPath('/var/www/html/myapp');  // 根目录（index.php 所在位置）
+
+// 相对路径 - 自动与公共路径组合
+$template->setSkinPath('views');           // → /var/www/html/myapp/views/
+$template->setSkinPath('templates/pages'); // → /var/www/html/myapp/templates/pages/
+
+// 绝对路径 - 按原样使用（Unix/Linux）
+$template->setSkinPath('/var/www/templates');      // → /var/www/templates/
+$template->setSkinPath('/full/path/to/templates'); // → /full/path/to/templates/
+
+// Windows 绝对路径
+$template->setSkinPath('C:\\www\\templates');     // → C:\www\templates\
+$template->setSkinPath('D:/projects/templates');  // → D:/projects/templates/
+
+// UNC 路径（Windows 网络共享）
+$template->setSkinPath('\\\\server\\share\\templates'); // → \\server\share\templates\
+```
+
+### 资产路径配置
+
+资产路径也支持相对路径和绝对路径：
+
+```php
+// 相对路径 - 自动与公共路径组合
+$template->setAssetPath('assets');        // → /var/www/html/myapp/assets/
+$template->setAssetPath('static/files');  // → /var/www/html/myapp/static/files/
+
+// 绝对路径 - 按原样使用（Unix/Linux）
+$template->setAssetPath('/var/www/cdn');           // → /var/www/cdn/
+$template->setAssetPath('/full/path/to/assets');   // → /full/path/to/assets/
+
+// Windows 绝对路径
+$template->setAssetPath('C:\\www\\static');       // → C:\www\static\
+$template->setAssetPath('D:/projects/assets');    // → D:/projects/assets/
+
+// UNC 路径（Windows 网络共享）
+$template->setAssetPath('\\\\server\\share\\assets'); // → \\server\share\assets\
+```
+
+**智能路径检测：**
+
+- **相对路径**：没有前导分隔符（`/`、`\`）或驱动器字母
+- **Unix 绝对**：以 `/` 开头（例如：`/var/www/assets`）
+- **Windows 绝对**：以驱动器字母开头（例如：`C:\www`、`D:/assets`）
+- **UNC 路径**：以 `\\` 开头（例如：`\\server\share`）
+
+**工作原理：**
+
+- 所有路径都根据类型自动解析（相对 vs 绝对）
+- 相对路径与公共路径组合
+- `@css` 和 `@js` 在以下位置创建压缩文件：`{resolvedAssetPath}/css/` 或 `{resolvedAssetPath}/js/`
+- `@asset` 将单个文件复制到：`{resolvedAssetPath}/{relativePath}`
+- `@assetDir` 将目录复制到：`{resolvedAssetPath}/{relativePath}`
+- 智能缓存：仅当源文件比目标文件新时才复制文件
 
 ## 模板指令
 
@@ -227,10 +304,30 @@ const imageData = '<!--@base64(images/icon.png)-->';
 {$name|concat= (Admin)}              <!-- 连接文本 -->
 ```
 
-#### 变量命令
+#### 链式多个过滤器
 ```html
 {$content|striptag|trim|escape}      <!-- 链式多个过滤器 -->
 ```
+
+### 注释
+
+模板注释会从输出中完全删除，不会出现在最终的 HTML 中：
+
+```html
+{* 这是单行模板注释 *}
+
+{* 
+   这是跨越多行的
+   多行 
+   模板注释
+*}
+
+<h1>{$title}</h1>
+{* 调试注释：检查 title 变量是否工作 *}
+<p>{$content}</p>
+```
+
+**注意**：模板注释 `{* ... *}` 与 HTML 注释 `<!-- ... -->` 不同。模板注释在处理过程中被删除，不会到达浏览器。
 
 ## 示例项目结构
 

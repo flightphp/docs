@@ -33,14 +33,14 @@ use KnifeLemon\CommentTemplate\Engine;
 $app = Flight::app();
 
 $app->register('view', Engine::class, [], function (Engine $engine) use ($app) {
-    // Kur tiek glabāti jūsu veidņu faili
-    $engine->setTemplatesPath(__DIR__ . '/views');
+    // Saknes direktorijs (kur atrodas index.php) - jūsu tīmekļa lietojumprogrammas dokumentu sakne
+    $engine->setPublicPath(__DIR__);
     
-    // Kur tiks apkalpoti jūsu publiskie resursi
-    $engine->setPublicPath(__DIR__ . '/public');
+    // Veidņu failu direktorijs - atbalsta relatīvos un absolūtos ceļus
+    $engine->setSkinPath('views');             // Relatīvs pret publisko ceļu
     
-    // Kur tiks glabāti kompilētie resursi
-    $engine->setAssetPath('assets');
+    // Kur tiks glabāti kompilētie resursi - atbalsta relatīvos un absolūtos ceļus
+    $engine->setAssetPath('assets');           // Relatīvs pret publisko ceļu
     
     // Veidnes faila paplašinājums
     $engine->setFileExtension('.php');
@@ -63,9 +63,9 @@ $app = Flight::app();
 
 // __construct(string $publicPath = "", string $skinPath = "", string $assetPath = "", string $fileExtension = "")
 $app->register('view', Engine::class, [
-    __DIR__ . '/public',    // publicPath - kur tiks apkalpoti resursi
-    __DIR__ . '/views',     // skinPath - kur tiek glabāti veidņu faili  
-    'assets',               // assetPath - kur tiks glabāti kompilētie resursi
+    __DIR__,                // publicPath - saknes direktorijs (kur atrodas index.php)
+    'views',                // skinPath - veidņu ceļš (atbalsta relatīvos/absolūtos)
+    'assets',               // assetPath - kompilēto resursu ceļš (atbalsta relatīvos/absolūtos)
     '.php'                  // fileExtension - veidnes faila paplašinājums
 ]);
 
@@ -73,6 +73,83 @@ $app->map('render', function(string $template, array $data) use ($app): void {
     echo $app->view()->render($template, $data);
 });
 ```
+
+## Ceļa konfigurācija
+
+CommentTemplate nodrošina inteliģentu ceļu apstrādi relatīvajiem un absolūtajiem ceļiem:
+
+### Publiskais ceļš
+
+**Publiskais ceļš** ir jūsu tīmekļa lietojumprogrammas saknes direktorijs, parasti tur, kur atrodas `index.php`. Šis ir dokumentu sakne, no kuras tīmekļa serveri apkalpo failus.
+
+```php
+// Piemērs: ja jūsu index.php atrodas /var/www/html/myapp/index.php
+$template->setPublicPath('/var/www/html/myapp');  // Saknes direktorijs
+
+// Windows piemērs: ja jūsu index.php atrodas C:\xampp\htdocs\myapp\index.php
+$template->setPublicPath('C:\\xampp\\htdocs\\myapp');
+```
+
+### Veidņu ceļa konfigurācija
+
+Veidņu ceļš atbalsta gan relatīvos, gan absolūtos ceļus:
+
+```php
+$template = new Engine();
+$template->setPublicPath('/var/www/html/myapp');  // Saknes direktorijs (kur atrodas index.php)
+
+// Relatīvie ceļi - automātiski apvienoti ar publisko ceļu
+$template->setSkinPath('views');           // → /var/www/html/myapp/views/
+$template->setSkinPath('templates/pages'); // → /var/www/html/myapp/templates/pages/
+
+// Absolūtie ceļi - izmantoti kā ir (Unix/Linux)
+$template->setSkinPath('/var/www/templates');      // → /var/www/templates/
+$template->setSkinPath('/full/path/to/templates'); // → /full/path/to/templates/
+
+// Windows absolūtie ceļi
+$template->setSkinPath('C:\\www\\templates');     // → C:\www\templates\
+$template->setSkinPath('D:/projects/templates');  // → D:/projects/templates/
+
+// UNC ceļi (Windows tīkla koplietošana)
+$template->setSkinPath('\\\\server\\share\\templates'); // → \\server\share\templates\
+```
+
+### Resursu ceļa konfigurācija
+
+Resursu ceļš arī atbalsta gan relatīvos, gan absolūtos ceļus:
+
+```php
+// Relatīvie ceļi - automātiski apvienoti ar publisko ceļu
+$template->setAssetPath('assets');        // → /var/www/html/myapp/assets/
+$template->setAssetPath('static/files');  // → /var/www/html/myapp/static/files/
+
+// Absolūtie ceļi - izmantoti kā ir (Unix/Linux)
+$template->setAssetPath('/var/www/cdn');           // → /var/www/cdn/
+$template->setAssetPath('/full/path/to/assets');   // → /full/path/to/assets/
+
+// Windows absolūtie ceļi
+$template->setAssetPath('C:\\www\\static');       // → C:\www\static\
+$template->setAssetPath('D:/projects/assets');    // → D:/projects/assets/
+
+// UNC ceļi (Windows tīkla koplietošana)
+$template->setAssetPath('\\\\server\\share\\assets'); // → \\server\share\assets\
+```
+
+**Viedā ceļa noteikšana:**
+
+- **Relatīvie ceļi**: Bez sākuma atdalītājiem (`/`, `\`) vai disku burtiem
+- **Unix absolūtie**: Sākas ar `/` (piem. `/var/www/assets`)
+- **Windows absolūtie**: Sākas ar disku burtu (piem. `C:\www`, `D:/assets`)
+- **UNC ceļi**: Sākas ar `\\` (piem. `\\server\share`)
+
+**Kā tas darbojas:**
+
+- Visi ceļi tiek automātiski atrisināti, pamatojoties uz tipu (relatīvs vs absolūts)
+- Relatīvie ceļi tiek apvienoti ar publisko ceļu
+- `@css` un `@js` izveido minimizētus failus šeit: `{resolvedAssetPath}/css/` vai `{resolvedAssetPath}/js/`
+- `@asset` kopē atsevišķus failus uz: `{resolvedAssetPath}/{relativePath}`
+- `@assetDir` kopē direktorijus uz: `{resolvedAssetPath}/{relativePath}`
+- Viedā kešošana: faili tiek kopēti tikai tad, ja avots ir jaunāks nekā mērķis
 
 ## Veidnes direktīvas
 
@@ -227,10 +304,30 @@ const imageData = '<!--@base64(images/icon.png)-->';
 {$name|concat= (Admin)}              <!-- Apvienot tekstu -->
 ```
 
-#### Mainīgo komandas
+#### Ķēdīt vairākus filtrus
 ```html
 {$content|striptag|trim|escape}      <!-- Ķēdīt vairākus filtrus -->
 ```
+
+### Komentāri
+
+Veidnes komentāri tiek pilnībā noņemti no izvades un neparādās gala HTML:
+
+```html
+{* Šis ir vienas līnijas veidnes komentārs *}
+
+{* 
+   Šis ir daudzrindas
+   veidnes komentārs 
+   kas aptver vairākas līnijas
+*}
+
+<h1>{$title}</h1>
+{* Atkļūdošanas komentārs: pārbauda vai title mainīgais darbojas *}
+<p>{$content}</p>
+```
+
+**Piezīme**: Veidnes komentāri `{* ... *}` atšķiras no HTML komentāriem `<!-- ... -->`. Veidnes komentāri tiek noņemti apstrādes laikā un nekad nesasniedz pārlūkprogrammu.
 
 ## Piemēra projekta struktūra
 

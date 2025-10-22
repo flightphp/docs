@@ -33,6 +33,133 @@ use KnifeLemon\CommentTemplate\Engine;
 $app = Flight::app();
 
 $app->register('view', Engine::class, [], function (Engine $engine) use ($app) {
+    // ルートディレクトリ（index.phpがある場所）- Webアプリケーションのドキュメントルート
+    $engine->setPublicPath(__DIR__);
+    
+    // テンプレートファイルディレクトリ - 相対パスと絶対パスの両方をサポート
+    $engine->setSkinPath('views');             // パブリックパス基準の相対パス
+    
+    // コンパイルされたアセットが保存される場所 - 相対パスと絶対パスの両方をサポート
+    $engine->setAssetPath('assets');           // パブリックパス基準の相対パス
+    
+    // テンプレートファイル拡張子
+    $engine->setFileExtension('.php');
+});
+
+$app->map('render', function(string $template, array $data) use ($app): void {
+    echo $app->view()->render($template, $data);
+});
+```
+
+### 方法 2: コンストラクタパラメータを使用
+
+```php
+<?php
+require_once 'vendor/autoload.php';
+
+use KnifeLemon\CommentTemplate\Engine;
+
+$app = Flight::app();
+
+// __construct(string $publicPath = "", string $skinPath = "", string $assetPath = "", string $fileExtension = "")
+$app->register('view', Engine::class, [
+    __DIR__,                // publicPath - ルートディレクトリ（index.phpがある場所）
+    'views',                // skinPath - テンプレートパス（相対/絶対パスをサポート）
+    'assets',               // assetPath - コンパイルされたアセットパス（相対/絶対パスをサポート）
+    '.php'                  // fileExtension - テンプレートファイル拡張子
+]);
+
+$app->map('render', function(string $template, array $data) use ($app): void {
+    echo $app->view()->render($template, $data);
+});
+```
+
+## パス設定
+
+CommentTemplate は相対パスと絶対パスの両方に対するインテリジェントなパス処理を提供します：
+
+### パブリックパス
+
+**パブリックパス**は、通常 `index.php` が配置されている Web アプリケーションのルートディレクトリです。これは Web サーバーがファイルを提供するドキュメントルートです。
+
+```php
+// 例: index.phpが /var/www/html/myapp/index.php にある場合
+$template->setPublicPath('/var/www/html/myapp');  // ルートディレクトリ
+
+// Windows例: index.phpが C:\xampp\htdocs\myapp\index.php にある場合
+$template->setPublicPath('C:\\xampp\\htdocs\\myapp');
+```
+
+### テンプレートパス設定
+
+テンプレートパスは相対パスと絶対パスの両方をサポートします：
+
+```php
+$template = new Engine();
+$template->setPublicPath('/var/www/html/myapp');  // ルートディレクトリ（index.phpがある場所）
+
+// 相対パス - パブリックパスと自動的に結合
+$template->setSkinPath('views');           // → /var/www/html/myapp/views/
+$template->setSkinPath('templates/pages'); // → /var/www/html/myapp/templates/pages/
+
+// 絶対パス - そのまま使用（Unix/Linux）
+$template->setSkinPath('/var/www/templates');      // → /var/www/templates/
+$template->setSkinPath('/full/path/to/templates'); // → /full/path/to/templates/
+
+// Windows絶対パス
+$template->setSkinPath('C:\\www\\templates');     // → C:\www\templates\
+$template->setSkinPath('D:/projects/templates');  // → D:/projects/templates/
+
+// UNCパス（Windowsネットワーク共有）
+$template->setSkinPath('\\\\server\\share\\templates'); // → \\server\share\templates\
+```
+
+### アセットパス設定
+
+アセットパスも相対パスと絶対パスの両方をサポートします：
+
+```php
+// 相対パス - パブリックパスと自動的に結合
+$template->setAssetPath('assets');        // → /var/www/html/myapp/assets/
+$template->setAssetPath('static/files');  // → /var/www/html/myapp/static/files/
+
+// 絶対パス - そのまま使用（Unix/Linux）
+$template->setAssetPath('/var/www/cdn');           // → /var/www/cdn/
+$template->setAssetPath('/full/path/to/assets');   // → /full/path/to/assets/
+
+// Windows絶対パス
+$template->setAssetPath('C:\\www\\static');       // → C:\www\static\
+$template->setAssetPath('D:/projects/assets');    // → D:/projects/assets/
+
+// UNCパス（Windowsネットワーク共有）
+$template->setAssetPath('\\\\server\\share\\assets'); // → \\server\share\assets\
+```
+
+**スマートパス検出:**
+
+- **相対パス**: 先頭の区切り文字（`/`、`\`）やドライブ文字なし
+- **Unix絶対**: `/` で始まる（例：`/var/www/assets`）
+- **Windows絶対**: ドライブ文字で始まる（例：`C:\www`、`D:/assets`）
+- **UNCパス**: `\\` で始まる（例：`\\server\share`）
+
+**動作方法:**
+
+- すべてのパスはタイプに基づいて自動的に解決されます（相対 vs 絶対）
+- 相対パスはパブリックパスと結合されます
+- `@css` と `@js` は以下の場所に最小化されたファイルを作成します：`{resolvedAssetPath}/css/` または `{resolvedAssetPath}/js/`
+- `@asset` は単一ファイルを以下の場所にコピーします：`{resolvedAssetPath}/{relativePath}`
+- `@assetDir` はディレクトリを以下の場所にコピーします：`{resolvedAssetPath}/{relativePath}`
+- スマートキャッシュ: ソースが宛先より新しい場合のみファイルがコピーされます
+
+```php
+<?php
+require_once 'vendor/autoload.php';
+
+use KnifeLemon\CommentTemplate\Engine;
+
+$app = Flight::app();
+
+$app->register('view', Engine::class, [], function (Engine $engine) use ($app) {
     // テンプレートファイルが保存される場所
     $engine->setTemplatesPath(__DIR__ . '/views');
     
@@ -228,10 +355,30 @@ const imageData = '<!--@base64(images/icon.png)-->';
 {$name|concat= (Admin)}              <!-- テキストを連結 -->
 ```
 
-#### 変数コマンド
+#### 複数フィルターのチェーン
 ```html
 {$content|striptag|trim|escape}      <!-- 複数のフィルターをチェーン -->
 ```
+
+### コメント
+
+テンプレートコメントは出力から完全に削除され、最終的な HTML には表示されません：
+
+```html
+{* これは単一行のテンプレートコメントです *}
+
+{* 
+   これは複数行にわたる
+   マルチライン 
+   テンプレートコメントです
+*}
+
+<h1>{$title}</h1>
+{* デバッグコメント: title変数が動作するかチェック *}
+<p>{$content}</p>
+```
+
+**注記**: テンプレートコメント `{* ... *}` は HTML コメント `<!-- ... -->` とは異なります。テンプレートコメントは処理中に削除され、ブラウザには届きません。
 
 ## 例のプロジェクト構造
 
