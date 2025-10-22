@@ -33,14 +33,14 @@ use KnifeLemon\CommentTemplate\Engine;
 $app = Flight::app();
 
 $app->register('view', Engine::class, [], function (Engine $engine) use ($app) {
-    // 템플릿 파일이 저장된 위치
-    $engine->setTemplatesPath(__DIR__ . '/views');
+    // 루트 디렉토리 (index.php가 있는 곳) - 웹 애플리케이션의 문서 루트
+    $engine->setPublicPath(__DIR__);
     
-    // 공용 자산이 제공되는 위치
-    $engine->setPublicPath(__DIR__ . '/public');
+    // 템플릿 파일 디렉토리 - 상대 경로와 절대 경로 모두 지원
+    $engine->setSkinPath('views');             // 공용 경로 기준 상대 경로
     
-    // 컴파일된 자산이 저장되는 위치
-    $engine->setAssetPath('assets');
+    // 컴파일된 자산이 저장되는 위치 - 상대 경로와 절대 경로 모두 지원
+    $engine->setAssetPath('assets');           // 공용 경로 기준 상대 경로
     
     // 템플릿 파일 확장자
     $engine->setFileExtension('.php');
@@ -63,9 +63,9 @@ $app = Flight::app();
 
 // __construct(string $publicPath = "", string $skinPath = "", string $assetPath = "", string $fileExtension = "")
 $app->register('view', Engine::class, [
-    __DIR__ . '/public',    // publicPath - 자산이 제공되는 위치
-    __DIR__ . '/views',     // skinPath - 템플릿 파일이 저장된 위치  
-    'assets',               // assetPath - 컴파일된 자산이 저장되는 위치
+    __DIR__,                // publicPath - 루트 디렉토리 (index.php가 있는 곳)
+    'views',                // skinPath - 템플릿 경로 (상대/절대 경로 지원)
+    'assets',               // assetPath - 컴파일된 자산 경로 (상대/절대 경로 지원)
     '.php'                  // fileExtension - 템플릿 파일 확장자
 ]);
 
@@ -73,6 +73,83 @@ $app->map('render', function(string $template, array $data) use ($app): void {
     echo $app->view()->render($template, $data);
 });
 ```
+
+## 경로 설정
+
+CommentTemplate은 상대 경로와 절대 경로 모두에 대한 지능형 경로 처리를 제공합니다:
+
+### 공용 경로
+
+**공용 경로**는 일반적으로 `index.php`가 있는 웹 애플리케이션의 루트 디렉토리입니다. 이는 웹 서버가 파일을 제공하는 문서 루트입니다.
+
+```php
+// 예: index.php가 /var/www/html/myapp/index.php에 있는 경우
+$template->setPublicPath('/var/www/html/myapp');  // 루트 디렉토리
+
+// Windows 예: index.php가 C:\xampp\htdocs\myapp\index.php에 있는 경우
+$template->setPublicPath('C:\\xampp\\htdocs\\myapp');
+```
+
+### 템플릿 경로 설정
+
+템플릿 경로는 상대 경로와 절대 경로를 모두 지원합니다:
+
+```php
+$template = new Engine();
+$template->setPublicPath('/var/www/html/myapp');  // 루트 디렉토리 (index.php가 있는 곳)
+
+// 상대 경로 - 공용 경로와 자동으로 결합
+$template->setSkinPath('views');           // → /var/www/html/myapp/views/
+$template->setSkinPath('templates/pages'); // → /var/www/html/myapp/templates/pages/
+
+// 절대 경로 - 그대로 사용 (Unix/Linux)
+$template->setSkinPath('/var/www/templates');      // → /var/www/templates/
+$template->setSkinPath('/full/path/to/templates'); // → /full/path/to/templates/
+
+// Windows 절대 경로
+$template->setSkinPath('C:\\www\\templates');     // → C:\www\templates\
+$template->setSkinPath('D:/projects/templates');  // → D:/projects/templates/
+
+// UNC 경로 (Windows 네트워크 공유)
+$template->setSkinPath('\\\\server\\share\\templates'); // → \\server\share\templates\
+```
+
+### 자산 경로 설정
+
+자산 경로도 상대 경로와 절대 경로를 모두 지원합니다:
+
+```php
+// 상대 경로 - 공용 경로와 자동으로 결합
+$template->setAssetPath('assets');        // → /var/www/html/myapp/assets/
+$template->setAssetPath('static/files');  // → /var/www/html/myapp/static/files/
+
+// 절대 경로 - 그대로 사용 (Unix/Linux)
+$template->setAssetPath('/var/www/cdn');           // → /var/www/cdn/
+$template->setAssetPath('/full/path/to/assets');   // → /full/path/to/assets/
+
+// Windows 절대 경로
+$template->setAssetPath('C:\\www\\static');       // → C:\www\static\
+$template->setAssetPath('D:/projects/assets');    // → D:/projects/assets/
+
+// UNC 경로 (Windows 네트워크 공유)
+$template->setAssetPath('\\\\server\\share\\assets'); // → \\server\share\assets\
+```
+
+**스마트 경로 감지:**
+
+- **상대 경로**: 선행 구분자(`/`, `\`)나 드라이브 문자가 없음
+- **Unix 절대**: `/`로 시작 (예: `/var/www/assets`)
+- **Windows 절대**: 드라이브 문자로 시작 (예: `C:\www`, `D:/assets`)
+- **UNC 경로**: `\\`로 시작 (예: `\\server\share`)
+
+**작동 방식:**
+
+- 모든 경로는 유형에 따라 자동으로 해결됩니다 (상대 vs 절대)
+- 상대 경로는 공용 경로와 결합됩니다
+- `@css`와 `@js`는 다음 위치에 압축된 파일을 생성합니다: `{resolvedAssetPath}/css/` 또는 `{resolvedAssetPath}/js/`
+- `@asset`은 단일 파일을 다음 위치에 복사합니다: `{resolvedAssetPath}/{relativePath}`
+- `@assetDir`은 디렉토리를 다음 위치에 복사합니다: `{resolvedAssetPath}/{relativePath}`
+- 스마트 캐싱: 소스가 대상보다 최신인 경우에만 파일이 복사됩니다
 
 ## 템플릿 지시어
 
@@ -227,10 +304,30 @@ const imageData = '<!--@base64(images/icon.png)-->';
 {$name|concat= (Admin)}              <!-- 텍스트 연결 -->
 ```
 
-#### 변수 명령어
+#### 다중 필터 체인
 ```html
 {$content|striptag|trim|escape}      <!-- 여러 필터 체인 -->
 ```
+
+### 주석
+
+템플릿 주석은 출력에서 완전히 제거되며 최종 HTML에 나타나지 않습니다:
+
+```html
+{* 이것은 한 줄 템플릿 주석입니다 *}
+
+{* 
+   이것은 여러 줄에 걸친
+   다중 줄 
+   템플릿 주석입니다
+*}
+
+<h1>{$title}</h1>
+{* 디버그 주석: title 변수가 작동하는지 확인 *}
+<p>{$content}</p>
+```
+
+**참고**: 템플릿 주석 `{* ... *}`은 HTML 주석 `<!-- ... -->`과 다릅니다. 템플릿 주석은 처리 중에 제거되며 브라우저에 전달되지 않습니다.
 
 ## 예시 프로젝트 구조
 

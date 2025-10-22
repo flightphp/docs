@@ -33,14 +33,14 @@ use KnifeLemon\CommentTemplate\Engine;
 $app = Flight::app();
 
 $app->register('view', Engine::class, [], function (Engine $engine) use ($app) {
-    // Donde se almacenan tus archivos de plantilla
-    $engine->setTemplatesPath(__DIR__ . '/views');
+    // Directorio raíz (donde está index.php) - la raíz del documento de su aplicación web
+    $engine->setPublicPath(__DIR__);
     
-    // Donde se servirán tus activos públicos
-    $engine->setPublicPath(__DIR__ . '/public');
+    // Directorio de archivos de plantilla - soporta rutas relativas y absolutas
+    $engine->setSkinPath('views');             // Relativo a la ruta pública
     
-    // Donde se almacenarán los activos compilados
-    $engine->setAssetPath('assets');
+    // Donde se almacenarán los activos compilados - soporta rutas relativas y absolutas
+    $engine->setAssetPath('assets');           // Relativo a la ruta pública
     
     // Extensión de archivo de plantilla
     $engine->setFileExtension('.php');
@@ -63,9 +63,9 @@ $app = Flight::app();
 
 // __construct(string $publicPath = "", string $skinPath = "", string $assetPath = "", string $fileExtension = "")
 $app->register('view', Engine::class, [
-    __DIR__ . '/public',    // publicPath - donde se servirán los activos
-    __DIR__ . '/views',     // skinPath - donde se almacenan los archivos de plantilla  
-    'assets',               // assetPath - donde se almacenarán los activos compilados
+    __DIR__,                // publicPath - directorio raíz (donde está index.php)
+    'views',                // skinPath - ruta de plantillas (soporta relativa/absoluta)
+    'assets',               // assetPath - ruta de activos compilados (soporta relativa/absoluta)
     '.php'                  // fileExtension - extensión de archivo de plantilla
 ]);
 
@@ -73,6 +73,83 @@ $app->map('render', function(string $template, array $data) use ($app): void {
     echo $app->view()->render($template, $data);
 });
 ```
+
+## Configuración de Rutas
+
+CommentTemplate proporciona manejo inteligente de rutas para rutas relativas y absolutas:
+
+### Ruta Pública
+
+La **Ruta Pública** es el directorio raíz de su aplicación web, típicamente donde reside `index.php`. Este es el document root desde donde los servidores web sirven archivos.
+
+```php
+// Ejemplo: si su index.php está en /var/www/html/myapp/index.php
+$template->setPublicPath('/var/www/html/myapp');  // Directorio raíz
+
+// Ejemplo Windows: si su index.php está en C:\xampp\htdocs\myapp\index.php
+$template->setPublicPath('C:\\xampp\\htdocs\\myapp');
+```
+
+### Configuración de Ruta de Plantillas
+
+La ruta de plantillas soporta tanto rutas relativas como absolutas:
+
+```php
+$template = new Engine();
+$template->setPublicPath('/var/www/html/myapp');  // Directorio raíz (donde está index.php)
+
+// Rutas relativas - automáticamente combinadas con la ruta pública
+$template->setSkinPath('views');           // → /var/www/html/myapp/views/
+$template->setSkinPath('templates/pages'); // → /var/www/html/myapp/templates/pages/
+
+// Rutas absolutas - usadas tal como están (Unix/Linux)
+$template->setSkinPath('/var/www/templates');      // → /var/www/templates/
+$template->setSkinPath('/full/path/to/templates'); // → /full/path/to/templates/
+
+// Rutas absolutas Windows
+$template->setSkinPath('C:\\www\\templates');     // → C:\www\templates\
+$template->setSkinPath('D:/projects/templates');  // → D:/projects/templates/
+
+// Rutas UNC (recursos compartidos de red Windows)
+$template->setSkinPath('\\\\server\\share\\templates'); // → \\server\share\templates\
+```
+
+### Configuración de Ruta de Activos
+
+La ruta de activos también soporta tanto rutas relativas como absolutas:
+
+```php
+// Rutas relativas - automáticamente combinadas con la ruta pública
+$template->setAssetPath('assets');        // → /var/www/html/myapp/assets/
+$template->setAssetPath('static/files');  // → /var/www/html/myapp/static/files/
+
+// Rutas absolutas - usadas tal como están (Unix/Linux)
+$template->setAssetPath('/var/www/cdn');           // → /var/www/cdn/
+$template->setAssetPath('/full/path/to/assets');   // → /full/path/to/assets/
+
+// Rutas absolutas Windows
+$template->setAssetPath('C:\\www\\static');       // → C:\www\static\
+$template->setAssetPath('D:/projects/assets');    // → D:/projects/assets/
+
+// Rutas UNC (recursos compartidos de red Windows)
+$template->setAssetPath('\\\\server\\share\\assets'); // → \\server\share\assets\
+```
+
+**Detección Inteligente de Rutas:**
+
+- **Rutas Relativas**: Sin separadores principales (`/`, `\`) o letras de unidad
+- **Unix Absoluta**: Comienza con `/` (ej. `/var/www/assets`)
+- **Windows Absoluta**: Comienza con letra de unidad (ej. `C:\www`, `D:/assets`)
+- **Rutas UNC**: Comienza con `\\` (ej. `\\server\share`)
+
+**Cómo funciona:**
+
+- Todas las rutas se resuelven automáticamente basándose en el tipo (relativa vs absoluta)
+- Las rutas relativas se combinan con la ruta pública
+- `@css` y `@js` crean archivos minificados en: `{resolvedAssetPath}/css/` o `{resolvedAssetPath}/js/`
+- `@asset` copia archivos únicos a: `{resolvedAssetPath}/{relativePath}`
+- `@assetDir` copia directorios a: `{resolvedAssetPath}/{relativePath}`
+- Caché inteligente: los archivos solo se copian cuando el origen es más nuevo que el destino
 
 ## Directivas de Plantilla
 
@@ -227,10 +304,30 @@ const imageData = '<!--@base64(images/icon.png)-->';
 {$name|concat= (Admin)}              <!-- Concatenar texto -->
 ```
 
-#### Comandos de Variables
+#### Encadenar Múltiples Filtros
 ```html
 {$content|striptag|trim|escape}      <!-- Encadenar múltiples filtros -->
 ```
+
+### Comentarios
+
+Los comentarios de plantilla se eliminan completamente de la salida y no aparecen en el HTML final:
+
+```html
+{* Este es un comentario de plantilla de una línea *}
+
+{* 
+   Este es un comentario de plantilla
+   de múltiples líneas 
+   que abarca varias líneas
+*}
+
+<h1>{$title}</h1>
+{* Comentario de depuración: verificar si la variable title funciona *}
+<p>{$content}</p>
+```
+
+**Nota**: Los comentarios de plantilla `{* ... *}` son diferentes de los comentarios HTML `<!-- ... -->`. Los comentarios de plantilla se eliminan durante el procesamiento y nunca llegan al navegador.
 
 ## Estructura de Proyecto de Ejemplo
 

@@ -33,14 +33,14 @@ use KnifeLemon\CommentTemplate\Engine;
 $app = Flight::app();
 
 $app->register('view', Engine::class, [], function (Engine $engine) use ($app) {
-    // Где хранятся файлы шаблонов
-    $engine->setTemplatesPath(__DIR__ . '/views');
+    // Корневая директория (где находится index.php) - корень документа вашего веб-приложения
+    $engine->setPublicPath(__DIR__);
     
-    // Откуда будут обслуживаться публичные активы
-    $engine->setPublicPath(__DIR__ . '/public');
+    // Директория файлов шаблонов - поддерживает относительные и абсолютные пути
+    $engine->setSkinPath('views');             // Относительно публичного пути
     
-    // Где будут храниться скомпилированные активы
-    $engine->setAssetPath('assets');
+    // Где будут храниться скомпилированные активы - поддерживает относительные и абсолютные пути
+    $engine->setAssetPath('assets');           // Относительно публичного пути
     
     // Расширение файла шаблона
     $engine->setFileExtension('.php');
@@ -63,9 +63,9 @@ $app = Flight::app();
 
 // __construct(string $publicPath = "", string $skinPath = "", string $assetPath = "", string $fileExtension = "")
 $app->register('view', Engine::class, [
-    __DIR__ . '/public',    // publicPath - откуда будут обслуживаться активы
-    __DIR__ . '/views',     // skinPath - где хранятся файлы шаблонов  
-    'assets',               // assetPath - где будут храниться скомпилированные активы
+    __DIR__,                // publicPath - корневая директория (где находится index.php)
+    'views',                // skinPath - путь шаблонов (поддерживает относительные/абсолютные)
+    'assets',               // assetPath - путь скомпилированных активов (поддерживает относительные/абсолютные)
     '.php'                  // fileExtension - расширение файла шаблона
 ]);
 
@@ -73,6 +73,83 @@ $app->map('render', function(string $template, array $data) use ($app): void {
     echo $app->view()->render($template, $data);
 });
 ```
+
+## Конфигурация путей
+
+CommentTemplate обеспечивает интеллектуальную обработку путей для относительных и абсолютных путей:
+
+### Публичный путь
+
+**Публичный путь** — это корневая директория вашего веб-приложения, обычно где находится `index.php`. Это корень документа, откуда веб-серверы предоставляют файлы.
+
+```php
+// Пример: если ваш index.php находится в /var/www/html/myapp/index.php
+$template->setPublicPath('/var/www/html/myapp');  // Корневая директория
+
+// Пример Windows: если ваш index.php находится в C:\xampp\htdocs\myapp\index.php
+$template->setPublicPath('C:\\xampp\\htdocs\\myapp');
+```
+
+### Конфигурация пути шаблонов
+
+Путь шаблонов поддерживает как относительные, так и абсолютные пути:
+
+```php
+$template = new Engine();
+$template->setPublicPath('/var/www/html/myapp');  // Корневая директория (где находится index.php)
+
+// Относительные пути - автоматически объединяются с публичным путем
+$template->setSkinPath('views');           // → /var/www/html/myapp/views/
+$template->setSkinPath('templates/pages'); // → /var/www/html/myapp/templates/pages/
+
+// Абсолютные пути - используются как есть (Unix/Linux)
+$template->setSkinPath('/var/www/templates');      // → /var/www/templates/
+$template->setSkinPath('/full/path/to/templates'); // → /full/path/to/templates/
+
+// Абсолютные пути Windows
+$template->setSkinPath('C:\\www\\templates');     // → C:\www\templates\
+$template->setSkinPath('D:/projects/templates');  // → D:/projects/templates/
+
+// UNC пути (сетевые ресурсы Windows)
+$template->setSkinPath('\\\\server\\share\\templates'); // → \\server\share\templates\
+```
+
+### Конфигурация пути активов
+
+Путь активов также поддерживает как относительные, так и абсолютные пути:
+
+```php
+// Относительные пути - автоматически объединяются с публичным путем
+$template->setAssetPath('assets');        // → /var/www/html/myapp/assets/
+$template->setAssetPath('static/files');  // → /var/www/html/myapp/static/files/
+
+// Абсолютные пути - используются как есть (Unix/Linux)
+$template->setAssetPath('/var/www/cdn');           // → /var/www/cdn/
+$template->setAssetPath('/full/path/to/assets');   // → /full/path/to/assets/
+
+// Абсолютные пути Windows
+$template->setAssetPath('C:\\www\\static');       // → C:\www\static\
+$template->setAssetPath('D:/projects/assets');    // → D:/projects/assets/
+
+// UNC пути (сетевые ресурсы Windows)
+$template->setAssetPath('\\\\server\\share\\assets'); // → \\server\share\assets\
+```
+
+**Умное определение путей:**
+
+- **Относительные пути**: Без начальных разделителей (`/`, `\`) или букв дисков
+- **Unix абсолютные**: Начинаются с `/` (напр. `/var/www/assets`)
+- **Windows абсолютные**: Начинаются с буквы диска (напр. `C:\www`, `D:/assets`)
+- **UNC пути**: Начинаются с `\\` (напр. `\\server\share`)
+
+**Как это работает:**
+
+- Все пути автоматически разрешаются на основе типа (относительный vs абсолютный)
+- Относительные пути объединяются с публичным путем
+- `@css` и `@js` создают минимизированные файлы в: `{resolvedAssetPath}/css/` или `{resolvedAssetPath}/js/`
+- `@asset` копирует отдельные файлы в: `{resolvedAssetPath}/{relativePath}`
+- `@assetDir` копирует директории в: `{resolvedAssetPath}/{relativePath}`
+- Умное кеширование: файлы копируются только когда источник новее цели
 
 ## Директивы шаблонов
 
@@ -227,10 +304,30 @@ const imageData = '<!--@base64(images/icon.png)-->';
 {$name|concat= (Admin)}              <!-- Конкатенация текста -->
 ```
 
-#### Команды переменных
+#### Цепочка нескольких фильтров
 ```html
 {$content|striptag|trim|escape}      <!-- Цепочка нескольких фильтров -->
 ```
+
+### Комментарии
+
+Комментарии шаблонов полностью удаляются из вывода и не появляются в финальном HTML:
+
+```html
+{* Это однострочный комментарий шаблона *}
+
+{* 
+   Это многострочный
+   комментарий шаблона 
+   на несколько строк
+*}
+
+<h1>{$title}</h1>
+{* Отладочный комментарий: проверяем работает ли переменная title *}
+<p>{$content}</p>
+```
+
+**Примечание**: Комментарии шаблонов `{* ... *}` отличаются от HTML комментариев `<!-- ... -->`. Комментарии шаблонов удаляются во время обработки и никогда не достигают браузера.
 
 ## Структура примера проекта
 

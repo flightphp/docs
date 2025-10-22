@@ -33,14 +33,14 @@ use KnifeLemon\CommentTemplate\Engine;
 $app = Flight::app();
 
 $app->register('view', Engine::class, [], function (Engine $engine) use ($app) {
-    // Tempat file template disimpan
-    $engine->setTemplatesPath(__DIR__ . '/views');
+    // Direktori root (tempat index.php berada) - root dokumen aplikasi web Anda
+    $engine->setPublicPath(__DIR__);
     
-    // Tempat aset publik akan disajikan
-    $engine->setPublicPath(__DIR__ . '/public');
+    // Direktori file template - mendukung path relatif dan absolut
+    $engine->setSkinPath('views');             // Relatif terhadap path publik
     
-    // Tempat aset yang dikompilasi akan disimpan
-    $engine->setAssetPath('assets');
+    // Tempat aset yang dikompilasi akan disimpan - mendukung path relatif dan absolut
+    $engine->setAssetPath('assets');           // Relatif terhadap path publik
     
     // Ekstensi file template
     $engine->setFileExtension('.php');
@@ -73,6 +73,79 @@ $app->map('render', function(string $template, array $data) use ($app): void {
     echo $app->view()->render($template, $data);
 });
 ```
+
+### Konfigurasi Path
+
+CommentTemplate mendukung path relatif dan absolut dengan resolusi cerdas:
+
+#### Path Relatif
+```php
+<?php
+$engine = new Engine();
+
+// Semua path relatif terhadap directPath publik
+$engine->setPublicPath(__DIR__ . '/public');
+$engine->setSkinPath('templates');        // Akan di-resolve ke {publicPath}/templates
+$engine->setAssetPath('compiled');        // Akan di-resolve ke {publicPath}/compiled
+
+// Juga dapat menggunakan subdirektori
+$engine->setSkinPath('views/templates');  
+$engine->setAssetPath('assets/compiled'); 
+```
+
+#### Path Absolut
+```php
+<?php
+$engine = new Engine();
+
+// Path absolut lengkap
+$engine->setSkinPath('/var/www/templates');
+$engine->setAssetPath('/var/www/public/assets');
+
+// Path Windows
+$engine->setSkinPath('C:\xampp\htdocs\templates');
+$engine->setAssetPath('C:\xampp\htdocs\public\assets');
+
+// Path UNC (Windows network)
+$engine->setSkinPath('\\server\share\templates');
+$engine->setAssetPath('\\server\share\public\assets');
+```
+
+#### Path Campuran
+```php
+<?php
+$engine = new Engine();
+$engine->setPublicPath('/var/www/public');
+
+// Campurkan path relatif dan absolut berdasarkan kebutuhan
+$engine->setSkinPath('views');                    // Relatif: /var/www/public/views
+$engine->setAssetPath('/tmp/compiled-assets');    // Absolut: /tmp/compiled-assets
+```
+
+#### Tips Praktis
+
+**Pengembangan Lokal:**
+```php
+$engine->setPublicPath(__DIR__ . '/public');
+$engine->setSkinPath('views');           // Mudah untuk pengembangan
+$engine->setAssetPath('assets');         // Aset terorganisir dalam struktur proyek
+```
+
+**Produksi:**
+```php
+$engine->setPublicPath('/var/www/myapp/public');
+$engine->setSkinPath('/var/www/myapp/templates');    // Path absolut untuk kontrol penuh
+$engine->setAssetPath('/var/www/myapp/public/dist'); // Aset di direktori yang dapat diakses web
+```
+
+**Docker/Container:**
+```php
+$engine->setPublicPath('/app/public');
+$engine->setSkinPath('/app/resources/views');
+$engine->setAssetPath('/app/public/assets');
+```
+
+CommentTemplate secara otomatis mendeteksi jenis path dan menanganinya dengan benar, memberikan fleksibilitas maksimum untuk setup deployment yang berbeda.
 
 ## Direktif Template
 
@@ -227,10 +300,30 @@ const imageData = '<!--@base64(images/icon.png)-->';
 {$name|concat= (Admin)}              <!-- Gabungkan teks -->
 ```
 
-#### Perintah Variabel
+#### Rantai Beberapa Filter
 ```html
 {$content|striptag|trim|escape}      <!-- Rantai beberapa filter -->
 ```
+
+### Komentar
+
+Komentar template sepenuhnya dihapus dari output dan tidak muncul di HTML final:
+
+```html
+{* Ini adalah komentar template satu baris *}
+
+{* 
+   Ini adalah komentar template
+   multi-baris yang mencakup
+   beberapa baris
+*}
+
+<h1>{$title}</h1>
+{* Komentar debugging: memeriksa apakah variabel title berfungsi *}
+<p>{$content}</p>
+```
+
+**Catatan**: Komentar template `{* ... *}` berbeda dari komentar HTML `<!-- ... -->`. Komentar template dihapus selama pemrosesan dan tidak pernah sampai ke browser.
 
 ## Struktur Proyek Contoh
 
