@@ -16,6 +16,7 @@ Community contributed examples:
 
 While these are not officially sponsored by the Flight Team, these could give you ideas on how to structure your own projects that are built with Flight!
 
+- [ASC REST API Spell Checker](https://github.com/AlMosahih-ASC/asc-api-sample) - A lightweight REST API for Arabic spell checking built with FlightPHP and ArPHP library. This API provides Arabic text spell checking capabilities including misspelled word detection and correction suggestions.
 - [Eventify](https://github.com/ilhanklisura/eventify) - Eventify is a single-page app connecting event organizers with attendees. Built with PHP (FlightPHP), JavaScript, and MySQL, it features JWT auth, event management, and RESTful API docs using OpenAPI.
 - [Ivox Car Rental](https://github.com/najtms/introductionToWeb) - Ivox Car Rental is a single-page, mobile-friendly car rental web application built with PHP (FlightPHP), JavaScript, and MySQL. It supports user registration, browsing, and booking cars, while admins can manage cars, users, and bookings. The app features a REST API, JWT authentication, and a responsive design for a modern rental experience.
 - [Decay](https://github.com/boxybird/decay) - Flight v3 with HTMX and SleekDB all about zombies! ([Demo](https://decay.andrewrhyand.com))
