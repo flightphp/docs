@@ -41,6 +41,7 @@ Drop this into your `index.php` or a `services.php` file to start tracking:
 
 ```php
 use flight\apm\logger\LoggerFactory;
+use flight\database\PdoWrapper;
 use flight\Apm;
 
 $ApmLogger = LoggerFactory::create(__DIR__ . '/../../.runway-config.json');
