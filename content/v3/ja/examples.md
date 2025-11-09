@@ -11,6 +11,7 @@
 - [fleact](https://github.com/flightphp/fleact) - ReactJS 統合の FlightPHP スターターキット。
 - [flastro](https://github.com/flightphp/flastro) - Astro 統合の FlightPHP スターターキット。
 - [velt](https://github.com/flightphp/velt) - Velt は FlightPHP バックエンド付きの Svelte スターターテンプレートで、クイックで簡単です。
+- [vite-flightphp](https://github.com/pauloramoscuba/vite-flightphp) - FlightPHPとViteとTailwind CSSを搭載したモダンフロントエンド、ホットリロード機能付き。
 
 ## インスピレーションが必要ですか？
 
