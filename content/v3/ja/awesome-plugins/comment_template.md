@@ -201,6 +201,64 @@ $app->map('render', function(string $template, array $data) use ($app): void {
 });
 ```
 
+## Tracy デバッガー統合
+
+CommentTemplateは開発ログとデバッグのために[Tracy Debugger](https://tracy.nette.org/)との統合を含んでいます。
+
+![Comment Template Tracy](https://raw.githubusercontent.com/KnifeLemon/CommentTemplate/refs/heads/master/tracy.jpeg)
+
+### インストール
+
+```bash
+composer require tracy/tracy
+```
+
+### 使用方法
+
+```php
+<?php
+use KnifeLemon\CommentTemplate\Engine;
+use Tracy\Debugger;
+
+// Tracyを有効にする（出力前に呼び出す必要があります）
+Debugger::enable(Debugger::DEVELOPMENT);
+Flight::set('flight.content_length', false);
+
+// テンプレートのオーバーライド
+$app->register('view', Engine::class, [], function (Engine $builder) use ($app) {
+    $builder->setPublicPath($app->get('flight.views.topPath'));
+    $builder->setAssetPath($app->get('flight.views.assetPath'));
+    $builder->setSkinPath($app->get('flight.views.path'));
+    $builder->setFileExtension($app->get('flight.views.extension'));
+});
+$app->map('render', function(string $template, array $data) use ($app): void {
+    echo $app->view()->render($template, $data);
+});
+
+$app->start();
+```
+
+### デバッグパネル機能
+
+CommentTemplateは4つのタブを持つカスタムパネルをTracyのデバッグバーに追加します：
+
+- **Overview**: 設定、パフォーマンス指標、カウント
+- **Assets**: 圧縮率を含むCSS/JSコンパイルの詳細
+- **Variables**: 適用されたフィルターを含む元の値と変換された値
+- **Timeline**: すべてのテンプレート操作の時系列ビュー
+
+### ログに記録される内容
+
+- テンプレートレンダリング（開始/終了、期間、レイアウト、インポート）
+- アセットコンパイル（CSS/JSファイル、サイズ、圧縮率）
+- 変数処理（元の値/変換された値、フィルター）
+- アセット操作（base64エンコーディング、ファイルコピー）
+- パフォーマンス指標（期間、メモリ使用量）
+
+**注意:** Tracyがインストールされていないか無効になっている場合、パフォーマンスへの影響はゼロです。
+
+[Flight PHPでの完全な動作例](https://github.com/KnifeLemon/CommentTemplate/tree/master/examples/flightphp)を参照してください。
+
 ## テンプレートディレクティブ
 
 ### レイアウトの継承
