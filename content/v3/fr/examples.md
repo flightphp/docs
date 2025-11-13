@@ -11,6 +11,7 @@ Exemples contributés par la communauté :
 - [fleact](https://github.com/flightphp/fleact) - Un kit de démarrage FlightPHP avec intégration ReactJS.
 - [flastro](https://github.com/flightphp/flastro) - Un kit de démarrage FlightPHP avec intégration Astro.
 - [velt](https://github.com/flightphp/velt) - Velt est un modèle de démarrage rapide et facile pour Svelte avec un backend FlightPHP. 
+- [vite-flightphp](https://github.com/pauloramoscuba/vite-flightphp) - FlightPHP et frontend moderne (Vite + Tailwind CSS) avec hot reload.
 
 ## Besoin d'inspiration ?
 

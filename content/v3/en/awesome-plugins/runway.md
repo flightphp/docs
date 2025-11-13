@@ -138,7 +138,7 @@ class ExampleCommand extends AbstractBaseCommand
      *
      * @return void
      */
-    public function execute(string $controller)
+    public function execute()
     {
         $io = $this->app()->io();
 
