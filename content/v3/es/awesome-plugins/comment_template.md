@@ -151,6 +151,64 @@ $template->setAssetPath('\\\\server\\share\\assets'); // → \\server\share\asse
 - `@assetDir` copia directorios a: `{resolvedAssetPath}/{relativePath}`
 - Caché inteligente: los archivos solo se copian cuando el origen es más nuevo que el destino
 
+## Integración con Tracy Debugger
+
+CommentTemplate incluye integración con [Tracy Debugger](https://tracy.nette.org/) para registro y depuración en desarrollo.
+
+![Comment Template Tracy](https://raw.githubusercontent.com/KnifeLemon/CommentTemplate/refs/heads/master/tracy.jpeg)
+
+### Instalación
+
+```bash
+composer require tracy/tracy
+```
+
+### Uso
+
+```php
+<?php
+use KnifeLemon\CommentTemplate\Engine;
+use Tracy\Debugger;
+
+// Habilitar Tracy (debe llamarse antes de cualquier salida)
+Debugger::enable(Debugger::DEVELOPMENT);
+Flight::set('flight.content_length', false);
+
+// Sobrescritura de plantilla
+$app->register('view', Engine::class, [], function (Engine $builder) use ($app) {
+    $builder->setPublicPath($app->get('flight.views.topPath'));
+    $builder->setAssetPath($app->get('flight.views.assetPath'));
+    $builder->setSkinPath($app->get('flight.views.path'));
+    $builder->setFileExtension($app->get('flight.views.extension'));
+});
+$app->map('render', function(string $template, array $data) use ($app): void {
+    echo $app->view()->render($template, $data);
+});
+
+$app->start();
+```
+
+### Características del Panel de Depuración
+
+CommentTemplate agrega un panel personalizado a la barra de depuración de Tracy con cuatro pestañas:
+
+- **Overview**: Configuración, métricas de rendimiento y contadores
+- **Assets**: Detalles de compilación CSS/JS con ratios de compresión
+- **Variables**: Valores originales y transformados con filtros aplicados
+- **Timeline**: Vista cronológica de todas las operaciones de plantilla
+
+### Qué se Registra
+
+- Renderizado de plantillas (inicio/fin, duración, diseños, importaciones)
+- Compilación de activos (archivos CSS/JS, tamaños, ratios de compresión)
+- Procesamiento de variables (valores originales/transformados, filtros)
+- Operaciones de activos (codificación base64, copia de archivos)
+- Métricas de rendimiento (duración, uso de memoria)
+
+**Nota:** Cero impacto en el rendimiento cuando Tracy no está instalado o deshabilitado.
+
+Consulte el [ejemplo completo funcional con Flight PHP](https://github.com/KnifeLemon/CommentTemplate/tree/master/examples/flightphp).
+
 ## Directivas de Plantilla
 
 ### Herencia de Diseño
