@@ -57,7 +57,7 @@ class SomeController {
 ```
 
 You can also use this to track if they have permission to do something in your application.
-For instance, if your have a way that users can interact with posting on your software, you can 
+For instance, if you have a way that users can interact with posting on your software, you can 
 check if they have permission to perform certain actions.
 
 ```php
