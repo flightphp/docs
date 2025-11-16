@@ -151,6 +151,64 @@ $template->setAssetPath('\\\\server\\share\\assets'); // → \\server\share\asse
 - `@assetDir` copies directories to: `{resolvedAssetPath}/{relativePath}`
 - Smart caching: files only copied when source is newer than destination
 
+## Tracy Debugger Integration
+
+CommentTemplate includes integration with [Tracy Debugger](https://tracy.nette.org/) for development logging and debugging.
+
+![Comment Template Tracy](https://raw.githubusercontent.com/KnifeLemon/CommentTemplate/refs/heads/master/tracy.jpeg)
+
+### Installation
+
+```bash
+composer require tracy/tracy
+```
+
+### Usage
+
+```php
+<?php
+use KnifeLemon\CommentTemplate\Engine;
+use Tracy\Debugger;
+
+// Enable Tracy (must be called before any output)
+Debugger::enable(Debugger::DEVELOPMENT);
+Flight::set('flight.content_length', false);
+
+// Template Overried
+$app->register('view', Engine::class, [], function (Engine $builder) use ($app) {
+    $builder->setPublicPath($app->get('flight.views.topPath'));
+    $builder->setAssetPath($app->get('flight.views.assetPath'));
+    $builder->setSkinPath($app->get('flight.views.path'));
+    $builder->setFileExtension($app->get('flight.views.extension'));
+});
+$app->map('render', function(string $template, array $data) use ($app): void {
+    echo $app->view()->render($template, $data);
+});
+
+$app->start();
+```
+
+### Debug Panel Features
+
+CommentTemplate adds a custom panel to Tracy's debug bar with four tabs:
+
+- **Overview**: Configuration, performance metrics, and counts
+- **Assets**: CSS/JS compilation details with compression ratios
+- **Variables**: Original and transformed values with applied filters
+- **Timeline**: Chronological view of all template operations
+
+### What Gets Logged
+
+- Template rendering (start/end, duration, layouts, imports)
+- Asset compilation (CSS/JS files, sizes, compression ratios)
+- Variable processing (original/transformed values, filters)
+- Asset operations (base64 encoding, file copying)
+- Performance metrics (duration, memory usage)
+
+**Note:** Zero performance impact when Tracy is not installed or disabled.
+
+See [complete working example with Flight PHP](https://github.com/KnifeLemon/CommentTemplate/tree/master/examples/flightphp).
+
 ## Template Directives
 
 ### Layout Inheritance
