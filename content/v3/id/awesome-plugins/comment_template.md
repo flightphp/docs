@@ -151,6 +151,64 @@ $template->setAssetPath('\\\\server\\share\\assets'); // → \\server\share\asse
 - `@assetDir` menyalin direktori ke: `{resolvedAssetPath}/{relativePath}`
 - Caching cerdas: file hanya disalin ketika sumber lebih baru daripada tujuan
 
+## Integrasi Tracy Debugger
+
+CommentTemplate menyertakan integrasi dengan [Tracy Debugger](https://tracy.nette.org/) untuk logging dan debugging pengembangan.
+
+![Comment Template Tracy](https://raw.githubusercontent.com/KnifeLemon/CommentTemplate/refs/heads/master/tracy.jpeg)
+
+### Instalasi
+
+```bash
+composer require tracy/tracy
+```
+
+### Penggunaan
+
+```php
+<?php
+use KnifeLemon\CommentTemplate\Engine;
+use Tracy\Debugger;
+
+// Aktifkan Tracy (harus dipanggil sebelum output apa pun)
+Debugger::enable(Debugger::DEVELOPMENT);
+Flight::set('flight.content_length', false);
+
+// Override template
+$app->register('view', Engine::class, [], function (Engine $builder) use ($app) {
+    $builder->setPublicPath($app->get('flight.views.topPath'));
+    $builder->setAssetPath($app->get('flight.views.assetPath'));
+    $builder->setSkinPath($app->get('flight.views.path'));
+    $builder->setFileExtension($app->get('flight.views.extension'));
+});
+$app->map('render', function(string $template, array $data) use ($app): void {
+    echo $app->view()->render($template, $data);
+});
+
+$app->start();
+```
+
+### Fitur Panel Debug
+
+CommentTemplate menambahkan panel kustom ke debug bar Tracy dengan empat tab:
+
+- **Overview**: Konfigurasi, metrik kinerja, dan penghitungan
+- **Assets**: Detail kompilasi CSS/JS dengan rasio kompresi
+- **Variables**: Nilai asli dan yang ditransformasi dengan filter yang diterapkan
+- **Timeline**: Tampilan kronologis dari semua operasi template
+
+### Apa yang Dicatat
+
+- Rendering template (mulai/selesai, durasi, layout, impor)
+- Kompilasi aset (file CSS/JS, ukuran, rasio kompresi)
+- Pemrosesan variabel (nilai asli/yang ditransformasi, filter)
+- Operasi aset (encoding base64, penyalinan file)
+- Metrik kinerja (durasi, penggunaan memori)
+
+**Catatan:** Tidak ada dampak kinerja ketika Tracy tidak diinstal atau dinonaktifkan.
+
+Lihat [contoh lengkap yang berfungsi dengan Flight PHP](https://github.com/KnifeLemon/CommentTemplate/tree/master/examples/flightphp).
+
 ## Direktif Template
 
 ### Pewarisan Tata Letak

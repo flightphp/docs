@@ -151,6 +151,64 @@ $template->setAssetPath('\\\\server\\share\\assets'); // → \\server\share\asse
 - `@assetDir` 将目录复制到：`{resolvedAssetPath}/{relativePath}`
 - 智能缓存：仅当源文件比目标文件新时才复制文件
 
+## Tracy 调试器集成
+
+CommentTemplate 包含与 [Tracy Debugger](https://tracy.nette.org/) 的集成，用于开发日志记录和调试。
+
+![Comment Template Tracy](https://raw.githubusercontent.com/KnifeLemon/CommentTemplate/refs/heads/master/tracy.jpeg)
+
+### 安装
+
+```bash
+composer require tracy/tracy
+```
+
+### 使用方法
+
+```php
+<?php
+use KnifeLemon\CommentTemplate\Engine;
+use Tracy\Debugger;
+
+// 启用 Tracy（必须在任何输出之前调用）
+Debugger::enable(Debugger::DEVELOPMENT);
+Flight::set('flight.content_length', false);
+
+// 模板覆盖
+$app->register('view', Engine::class, [], function (Engine $builder) use ($app) {
+    $builder->setPublicPath($app->get('flight.views.topPath'));
+    $builder->setAssetPath($app->get('flight.views.assetPath'));
+    $builder->setSkinPath($app->get('flight.views.path'));
+    $builder->setFileExtension($app->get('flight.views.extension'));
+});
+$app->map('render', function(string $template, array $data) use ($app): void {
+    echo $app->view()->render($template, $data);
+});
+
+$app->start();
+```
+
+### 调试面板功能
+
+CommentTemplate 为 Tracy 的调试栏添加了一个包含四个选项卡的自定义面板：
+
+- **Overview**：配置、性能指标和计数
+- **Assets**：包含压缩率的 CSS/JS 编译详情
+- **Variables**：包含应用过滤器的原始值和转换值
+- **Timeline**：所有模板操作的时间顺序视图
+
+### 记录的内容
+
+- 模板渲染（开始/结束、持续时间、布局、导入）
+- 资源编译（CSS/JS 文件、大小、压缩率）
+- 变量处理（原始/转换值、过滤器）
+- 资源操作（base64 编码、文件复制）
+- 性能指标（持续时间、内存使用）
+
+**注意：** 当 Tracy 未安装或被禁用时，对性能没有任何影响。
+
+请参阅 [Flight PHP 完整工作示例](https://github.com/KnifeLemon/CommentTemplate/tree/master/examples/flightphp)。
+
 ## 模板指令
 
 ### 布局继承

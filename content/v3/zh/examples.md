@@ -11,6 +11,7 @@
 - [fleact](https://github.com/flightphp/fleact) - 一个带有 ReactJS 集成的 FlightPHP 启动套件。
 - [flastro](https://github.com/flightphp/flastro) - 一个带有 Astro 集成的 FlightPHP 启动套件。
 - [velt](https://github.com/flightphp/velt) - Velt 是一个快速易用的 Svelte 启动模板，带有 FlightPHP 后端。
+- [vite-flightphp](https://github.com/pauloramoscuba/vite-flightphp) - FlightPHP 和现代前端技术（Vite + Tailwind CSS），支持热重载功能。
 
 ## 需要一些灵感吗？
 

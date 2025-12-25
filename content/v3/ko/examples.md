@@ -7,10 +7,11 @@
 
 커뮤니티 기여 예제:
 
-- [flightravel](https://github.com/fadrian06-templates/flighravel): Laravel 디렉토리와 PHP 도구 + GH Actions를 사용한 FlightPHP.
-- [fleact](https://github.com/flightphp/fleact) - ReactJS 통합을 위한 FlightPHP 스타터 키트.
-- [flastro](https://github.com/flightphp/flastro) - Astro 통합을 위한 FlightPHP 스타터 키트.
-- [velt](https://github.com/flightphp/velt) - FlightPHP 백엔드를 사용한 빠르고 쉬운 Svelte 스타터 템플릿인 Velt.
+- [flightravel](https://github.com/fadrian06-templates/flighravel): Laravel 디렉토리와 PHP 도구 + GH Actions를 사용한 FlightPHP입니다.
+- [fleact](https://github.com/flightphp/fleact) - ReactJS 통합을 포함한 FlightPHP 스타터 키트입니다.
+- [flastro](https://github.com/flightphp/flastro) - Astro 통합을 포함한 FlightPHP 스타터 키트입니다.
+- [velt](https://github.com/flightphp/velt) - Velt는 FlightPHP 백엔드를 사용하는 빠르고 쉬운 Svelte 스타터 템플릿입니다. 
+- [vite-flightphp](https://github.com/pauloramoscuba/vite-flightphp) - FlightPHP와 모던 프론트엔드 (Vite + Tailwind CSS), 핫 리로드 기능 포함.
 
 ## 영감을 얻고 싶으신가요?
 

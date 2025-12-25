@@ -151,6 +151,64 @@ $template->setAssetPath('\\\\server\\share\\assets'); // → \\server\share\asse
 - `@assetDir` kopiert Verzeichnisse nach: `{resolvedAssetPath}/{relativePath}`
 - Intelligentes Caching: Dateien werden nur kopiert, wenn die Quelle neuer als das Ziel ist
 
+## Tracy Debugger Integration
+
+CommentTemplate beinhaltet Integration mit [Tracy Debugger](https://tracy.nette.org/) für Entwicklungs-Logging und Debugging.
+
+![Comment Template Tracy](https://raw.githubusercontent.com/KnifeLemon/CommentTemplate/refs/heads/master/tracy.jpeg)
+
+### Installation
+
+```bash
+composer require tracy/tracy
+```
+
+### Verwendung
+
+```php
+<?php
+use KnifeLemon\CommentTemplate\Engine;
+use Tracy\Debugger;
+
+// Tracy aktivieren (muss vor jeder Ausgabe aufgerufen werden)
+Debugger::enable(Debugger::DEVELOPMENT);
+Flight::set('flight.content_length', false);
+
+// Template-Überschreibung
+$app->register('view', Engine::class, [], function (Engine $builder) use ($app) {
+    $builder->setPublicPath($app->get('flight.views.topPath'));
+    $builder->setAssetPath($app->get('flight.views.assetPath'));
+    $builder->setSkinPath($app->get('flight.views.path'));
+    $builder->setFileExtension($app->get('flight.views.extension'));
+});
+$app->map('render', function(string $template, array $data) use ($app): void {
+    echo $app->view()->render($template, $data);
+});
+
+$app->start();
+```
+
+### Debug-Panel-Funktionen
+
+CommentTemplate fügt Tracys Debug-Leiste ein benutzerdefiniertes Panel mit vier Tabs hinzu:
+
+- **Overview**: Konfiguration, Leistungsmetriken und Zähler
+- **Assets**: CSS/JS-Kompilierungsdetails mit Kompressionsraten
+- **Variables**: Original- und transformierte Werte mit angewendeten Filtern
+- **Timeline**: Chronologische Ansicht aller Template-Operationen
+
+### Was wird protokolliert
+
+- Template-Rendering (Start/Ende, Dauer, Layouts, Imports)
+- Asset-Kompilierung (CSS/JS-Dateien, Größen, Kompressionsraten)
+- Variablenverarbeitung (Original/transformierte Werte, Filter)
+- Asset-Operationen (Base64-Kodierung, Dateikopieren)
+- Leistungsmetriken (Dauer, Speicherverbrauch)
+
+**Hinweis:** Keine Leistungseinbußen, wenn Tracy nicht installiert oder deaktiviert ist.
+
+Siehe [vollständiges funktionierendes Beispiel mit Flight PHP](https://github.com/KnifeLemon/CommentTemplate/tree/master/examples/flightphp).
+
 ## Template-Direktiven
 
 ### Layout-Vererbung

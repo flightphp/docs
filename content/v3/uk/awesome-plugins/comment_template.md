@@ -151,6 +151,64 @@ $template->setAssetPath('\\\\server\\share\\assets'); // → \\server\share\asse
 - `@assetDir` копіює каталоги до: `{resolvedAssetPath}/{relativePath}`
 - Інтелектуальне кешування: файли копіюються тільки коли джерело новіше за призначення
 
+## Інтеграція з Tracy Debugger
+
+CommentTemplate включає інтеграцію з [Tracy Debugger](https://tracy.nette.org/) для логування та налагодження під час розробки.
+
+![Comment Template Tracy](https://raw.githubusercontent.com/KnifeLemon/CommentTemplate/refs/heads/master/tracy.jpeg)
+
+### Встановлення
+
+```bash
+composer require tracy/tracy
+```
+
+### Використання
+
+```php
+<?php
+use KnifeLemon\CommentTemplate\Engine;
+use Tracy\Debugger;
+
+// Увімкнути Tracy (має бути викликано перед будь-яким виводом)
+Debugger::enable(Debugger::DEVELOPMENT);
+Flight::set('flight.content_length', false);
+
+// Перевизначення шаблону
+$app->register('view', Engine::class, [], function (Engine $builder) use ($app) {
+    $builder->setPublicPath($app->get('flight.views.topPath'));
+    $builder->setAssetPath($app->get('flight.views.assetPath'));
+    $builder->setSkinPath($app->get('flight.views.path'));
+    $builder->setFileExtension($app->get('flight.views.extension'));
+});
+$app->map('render', function(string $template, array $data) use ($app): void {
+    echo $app->view()->render($template, $data);
+});
+
+$app->start();
+```
+
+### Функції панелі налагодження
+
+CommentTemplate додає користувацьку панель до панелі налагодження Tracy з чотирма вкладками:
+
+- **Overview**: Конфігурація, метрики продуктивності та лічильники
+- **Assets**: Деталі компіляції CSS/JS з коефіцієнтами стиснення
+- **Variables**: Оригінальні та перетворені значення з застосованими фільтрами
+- **Timeline**: Хронологічний вигляд усіх операцій шаблонів
+
+### Що логується
+
+- Рендеринг шаблонів (початок/кінець, тривалість, макети, імпорти)
+- Компіляція активів (файли CSS/JS, розміри, коефіцієнти стиснення)
+- Обробка змінних (оригінальні/перетворені значення, фільтри)
+- Операції з активами (кодування base64, копіювання файлів)
+- Метрики продуктивності (тривалість, використання пам'яті)
+
+**Примітка:** Нульовий вплив на продуктивність, коли Tracy не встановлено або вимкнено.
+
+Див. [повний робочий приклад з Flight PHP](https://github.com/KnifeLemon/CommentTemplate/tree/master/examples/flightphp).
+
 ## Директиви шаблонів
 
 ### Успадкування макетів

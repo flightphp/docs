@@ -10,7 +10,8 @@ Kopienas sniegtie piemēri:
 - [flightravel](https://github.com/fadrian06-templates/flighravel): FlightPHP ar Laravel direktorijām, ar PHP rīkiem + GH Actions
 - [fleact](https://github.com/flightphp/fleact) - FlightPHP starter komplekts ar ReactJS integrāciju.
 - [flastro](https://github.com/flightphp/flastro) - FlightPHP starter komplekts ar Astro integrāciju.
-- [velt](https://github.com/flightphp/velt) - Velt ir ātrs un viegls Svelte starter veidne ar FlightPHP aizmuguri. 
+- [velt](https://github.com/flightphp/velt) - Velt ir ātrs un viegls Svelte starter veidne ar FlightPHP backend.
+- [vite-flightphp](https://github.com/pauloramoscuba/vite-flightphp) - FlightPHP ar mūsdienu front-end (Vite + Tailwind CSS) un karstās atjaunināšanas funkciju.
 
 ## Vai vajag iedvesmu?
 

@@ -7,10 +7,11 @@
 
 コミュニティ提供の例：
 
-- [flightravel](https://github.com/fadrian06-templates/flighravel): Laravel ディレクトリ、PHP ツール + GH Actions を備えた FlightPHP。
-- [fleact](https://github.com/flightphp/fleact) - ReactJS 統合を備えた FlightPHP スターターキット。
-- [flastro](https://github.com/flightphp/flastro) - Astro 統合を備えた FlightPHP スターターキット。
-- [velt](https://github.com/flightphp/velt) - Velt は FlightPHP バックエンドを備えた迅速で簡単な Svelte スターターテンプレートです。
+- [flightravel](https://github.com/fadrian06-templates/flighravel): Laravel ディレクトリ付きの FlightPHP、PHP ツール + GH Actions
+- [fleact](https://github.com/flightphp/fleact) - ReactJS 統合の FlightPHP スターターキット。
+- [flastro](https://github.com/flightphp/flastro) - Astro 統合の FlightPHP スターターキット。
+- [velt](https://github.com/flightphp/velt) - Velt は FlightPHP バックエンド付きの Svelte スターターテンプレートで、クイックで簡単です。
+- [vite-flightphp](https://github.com/pauloramoscuba/vite-flightphp) - FlightPHPとViteとTailwind CSSを搭載したモダンフロントエンド、ホットリロード機能付き。
 
 ## インスピレーションが必要ですか？
 

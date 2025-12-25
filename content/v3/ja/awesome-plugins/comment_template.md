@@ -74,82 +74,63 @@ $app->map('render', function(string $template, array $data) use ($app): void {
 });
 ```
 
-## パス設定
+## Tracy デバッガー統合
 
-CommentTemplate は、相対パスと絶対パスの両方に対してインテリジェントなパス処理を提供します：
+CommentTemplateは開発ログとデバッグのために[Tracy Debugger](https://tracy.nette.org/)との統合を含んでいます。
 
-### パブリックパス
+![Comment Template Tracy](https://raw.githubusercontent.com/KnifeLemon/CommentTemplate/refs/heads/master/tracy.jpeg)
 
-**パブリックパス** は、Web アプリケーションのルートディレクトリで、通常 `index.php` が存在する場所です。これは Web サーバーがファイルを配信するドキュメントルートです。
+### インストール
 
-```php
-// 例: index.php が /var/www/html/myapp/index.php にある場合
-$template->setPublicPath('/var/www/html/myapp');  // ルートディレクトリ
-
-// Windows の例: index.php が C:\xampp\htdocs\myapp\index.php にある場合
-$template->setPublicPath('C:\\xampp\\htdocs\\myapp');
+```bash
+composer require tracy/tracy
 ```
 
-### テンプレートパス設定
-
-テンプレートパスは、相対パスと絶対パスの両方をサポートします：
+### 使用方法
 
 ```php
-$template = new Engine();
-$template->setPublicPath('/var/www/html/myapp');  // ルートディレクトリ（index.php が存在する場所）
+<?php
+use KnifeLemon\CommentTemplate\Engine;
+use Tracy\Debugger;
 
-// 相対パス - パブリックパスと自動的に結合
-$template->setSkinPath('views');           // → /var/www/html/myapp/views/
-$template->setSkinPath('templates/pages'); // → /var/www/html/myapp/templates/pages/
+// Tracyを有効にする（出力前に呼び出す必要があります）
+Debugger::enable(Debugger::DEVELOPMENT);
+Flight::set('flight.content_length', false);
 
-// 絶対パス - そのまま使用（Unix/Linux）
-$template->setSkinPath('/var/www/templates');      // → /var/www/templates/
-$template->setSkinPath('/full/path/to/templates'); // → /full/path/to/templates/
+// テンプレートのオーバーライド
+$app->register('view', Engine::class, [], function (Engine $builder) use ($app) {
+    $builder->setPublicPath($app->get('flight.views.topPath'));
+    $builder->setAssetPath($app->get('flight.views.assetPath'));
+    $builder->setSkinPath($app->get('flight.views.path'));
+    $builder->setFileExtension($app->get('flight.views.extension'));
+});
+$app->map('render', function(string $template, array $data) use ($app): void {
+    echo $app->view()->render($template, $data);
+});
 
-// Windows 絶対パス
-$template->setSkinPath('C:\\www\\templates');     // → C:\www\templates\
-$template->setSkinPath('D:/projects/templates');  // → D:/projects/templates/
-
-// UNC パス（Windows ネットワーク共有）
-$template->setSkinPath('\\\\server\\share\\templates'); // → \\server\share\templates\
+$app->start();
 ```
 
-### アセットパス設定
+### デバッグパネル機能
 
-アセットパスも相対パスと絶対パスの両方をサポートします：
+CommentTemplateは4つのタブを持つカスタムパネルをTracyのデバッグバーに追加します：
 
-```php
-// 相対パス - パブリックパスと自動的に結合
-$template->setAssetPath('assets');        // → /var/www/html/myapp/assets/
-$template->setAssetPath('static/files');  // → /var/www/html/myapp/static/files/
+- **Overview**: 設定、パフォーマンス指標、カウント
+- **Assets**: 圧縮率を含むCSS/JSコンパイルの詳細
+- **Variables**: 適用されたフィルターを含む元の値と変換された値
+- **Timeline**: すべてのテンプレート操作の時系列ビュー
 
-// 絶対パス - そのまま使用（Unix/Linux）
-$template->setAssetPath('/var/www/cdn');           // → /var/www/cdn/
-$template->setAssetPath('/full/path/to/assets');   // → /full/path/to/assets/
+### ログに記録される内容
 
-// Windows 絶対パス
-$template->setAssetPath('C:\\www\\static');       // → C:\www\static\
-$template->setAssetPath('D:/projects/assets');    // → D:/projects/assets/
+- テンプレートレンダリング（開始/終了、期間、レイアウト、インポート）
+- アセットコンパイル（CSS/JSファイル、サイズ、圧縮率）
+- 変数処理（元の値/変換された値、フィルター）
+- アセット操作（base64エンコーディング、ファイルコピー）
+- パフォーマンス指標（期間、メモリ使用量）
 
-// UNC パス（Windows ネットワーク共有）
-$template->setAssetPath('\\\\server\\share\\assets'); // → \\server\share\assets\
-```
+**注意:** Tracyがインストールされていないか無効になっている場合、パフォーマンスへの影響はゼロです。
 
-**スマートパス検出：**
-
-- **相対パス**: 先頭に区切り文字（`/`、`\`）やドライブレターがない
-- **Unix 絶対**: `/` で始まる（例: `/var/www/assets`）
-- **Windows 絶対**: ドライブレターで始まる（例: `C:\www`、`D:/assets`）
-- **UNC パス**: `\\` で始まる（例: `\\server\share`）
-
-**仕組み：**
-
-- すべてのパスはタイプ（相対 vs 絶対）に基づいて自動的に解決される
-- 相対パスはパブリックパスと結合される
-- `@css` と `@js` は最小化されたファイルを `{resolvedAssetPath}/css/` または `{resolvedAssetPath}/js/` に作成
-- `@asset` は単一ファイルを `{resolvedAssetPath}/{relativePath}` にコピー
-- `@assetDir` はディレクトリを `{resolvedAssetPath}/{relativePath}` にコピー
-- スマートキャッシュ: ソースがデスティネーションより新しい場合のみファイルをコピー
+[Flight PHPでの完全な動作例](https://github.com/KnifeLemon/CommentTemplate/tree/master/examples/flightphp)を参照してください。
 
 ## テンプレートディレクティブ
 

@@ -151,6 +151,64 @@ $template->setAssetPath('\\\\server\\share\\assets'); // → \\server\share\asse
 - `@assetDir` kopē direktorijas uz: `{resolvedAssetPath}/{relativePath}`
 - Inteliģenta kešošana: faili tiek kopēti tikai tad, kad avots ir jaunāks par mērķi
 
+## Tracy atkļūdotāja integrācija
+
+CommentTemplate ietver integrāciju ar [Tracy Debugger](https://tracy.nette.org/) izstrādes reģistrēšanai un atkļūdošanai.
+
+![Comment Template Tracy](https://raw.githubusercontent.com/KnifeLemon/CommentTemplate/refs/heads/master/tracy.jpeg)
+
+### Instalācija
+
+```bash
+composer require tracy/tracy
+```
+
+### Lietošana
+
+```php
+<?php
+use KnifeLemon\CommentTemplate\Engine;
+use Tracy\Debugger;
+
+// Iespējot Tracy (jāizsauc pirms jebkuras izvades)
+Debugger::enable(Debugger::DEVELOPMENT);
+Flight::set('flight.content_length', false);
+
+// Veidnes pārrakstīšana
+$app->register('view', Engine::class, [], function (Engine $builder) use ($app) {
+    $builder->setPublicPath($app->get('flight.views.topPath'));
+    $builder->setAssetPath($app->get('flight.views.assetPath'));
+    $builder->setSkinPath($app->get('flight.views.path'));
+    $builder->setFileExtension($app->get('flight.views.extension'));
+});
+$app->map('render', function(string $template, array $data) use ($app): void {
+    echo $app->view()->render($template, $data);
+});
+
+$app->start();
+```
+
+### Atkļūdošanas paneļa funkcijas
+
+CommentTemplate pievieno pielāgotu paneli Tracy atkļūdošanas joslai ar četrām cilnēm:
+
+- **Overview**: Konfigurācija, veiktspējas metrika un skaitītāji
+- **Assets**: CSS/JS kompilācijas detaļas ar saspiešanas proporcijām
+- **Variables**: Oriģinālās un pārveidotās vērtības ar lietotajiem filtriem
+- **Timeline**: Hronoloģisks visu veidņu operāciju skats
+
+### Kas tiek reģistrēts
+
+- Veidņu renderēšana (sākums/beigas, ilgums, izkārtojumi, importi)
+- Aktīvu kompilācija (CSS/JS faili, izmēri, saspiešanas proporcijas)
+- Mainīgo apstrāde (oriģinālās/pārveidotās vērtības, filtri)
+- Aktīvu operācijas (base64 kodēšana, failu kopēšana)
+- Veiktspējas metrika (ilgums, atmiņas izmantošana)
+
+**Piezīme:** Nulles ietekme uz veiktspēju, ja Tracy nav instalēts vai ir atspējots.
+
+Skatiet [pilnīgu darba piemēru ar Flight PHP](https://github.com/KnifeLemon/CommentTemplate/tree/master/examples/flightphp).
+
 ## Veidnes direktīvas
 
 ### Izkārtojuma mantojums

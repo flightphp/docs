@@ -151,6 +151,64 @@ $template->setAssetPath('\\\\server\\share\\assets'); // → \\server\share\asse
 - `@assetDir`은 디렉토리를 `{resolvedAssetPath}/{relativePath}`로 복사합니다
 - 스마트 캐싱: 소스 파일이 대상 파일보다 최신일 때만 파일이 복사됩니다
 
+## Tracy 디버거 통합
+
+CommentTemplate은 개발 로깅 및 디버깅을 위해 [Tracy Debugger](https://tracy.nette.org/)와 통합됩니다.
+
+![Comment Template Tracy](https://raw.githubusercontent.com/KnifeLemon/CommentTemplate/refs/heads/master/tracy.jpeg)
+
+### 설치
+
+```bash
+composer require tracy/tracy
+```
+
+### 사용법
+
+```php
+<?php
+use KnifeLemon\CommentTemplate\Engine;
+use Tracy\Debugger;
+
+// Tracy 활성화 (출력 전에 호출되어야 함)
+Debugger::enable(Debugger::DEVELOPMENT);
+Flight::set('flight.content_length', false);
+
+// 템플릿 재정의
+$app->register('view', Engine::class, [], function (Engine $builder) use ($app) {
+    $builder->setPublicPath($app->get('flight.views.topPath'));
+    $builder->setAssetPath($app->get('flight.views.assetPath'));
+    $builder->setSkinPath($app->get('flight.views.path'));
+    $builder->setFileExtension($app->get('flight.views.extension'));
+});
+$app->map('render', function(string $template, array $data) use ($app): void {
+    echo $app->view()->render($template, $data);
+});
+
+$app->start();
+```
+
+### 디버그 패널 기능
+
+CommentTemplate은 Tracy의 디버그 바에 4개의 탭이 있는 사용자 정의 패널을 추가합니다:
+
+- **Overview**: 구성, 성능 지표 및 카운트
+- **Assets**: 압축률이 포함된 CSS/JS 컴파일 세부정보
+- **Variables**: 적용된 필터가 있는 원본 및 변환된 값
+- **Timeline**: 모든 템플릿 작업의 시간순 보기
+
+### 로깅되는 항목
+
+- 템플릿 렌더링 (시작/종료, 기간, 레이아웃, 가져오기)
+- 자산 컴파일 (CSS/JS 파일, 크기, 압축률)
+- 변수 처리 (원본/변환된 값, 필터)
+- 자산 작업 (base64 인코딩, 파일 복사)
+- 성능 지표 (기간, 메모리 사용량)
+
+**참고:** Tracy가 설치되지 않았거나 비활성화된 경우 성능에 영향이 없습니다.
+
+[Flight PHP와 함께 사용하는 완전한 예제](https://github.com/KnifeLemon/CommentTemplate/tree/master/examples/flightphp)를 참조하세요.
+
 ## 템플릿 지시어
 
 ### 레이아웃 상속

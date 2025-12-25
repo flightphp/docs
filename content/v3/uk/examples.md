@@ -8,9 +8,10 @@
 Приклади, надані спільнотою:
 
 - [flightravel](https://github.com/fadrian06-templates/flighravel): FlightPHP з директоріями Laravel, з інструментами PHP + GH Actions
-- [fleact](https://github.com/flightphp/fleact) - Стартові набір FlightPHP з інтеграцією ReactJS.
-- [flastro](https://github.com/flightphp/flastro) - Стартові набір FlightPHP з інтеграцією Astro.
-- [velt](https://github.com/flightphp/velt) - Velt — це швидкий і простий шаблон старту Svelte з бекендом на FlightPHP. 
+- [fleact](https://github.com/flightphp/fleact) - Стартер-кіт FlightPHP з інтеграцією ReactJS.
+- [flastro](https://github.com/flightphp/flastro) - Стартер-кіт FlightPHP з інтеграцією Astro.
+- [velt](https://github.com/flightphp/velt) - Velt — це швидкий і простий шаблон стартера Svelte з бекендом FlightPHP. 
+- [vite-flightphp](https://github.com/pauloramoscuba/vite-flightphp) - FlightPHP та сучасний фронтенд (Vite + Tailwind CSS) з підтримкою hot reload.
 
 ## Потрібне натхнення?
 
