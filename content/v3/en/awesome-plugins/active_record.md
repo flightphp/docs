@@ -598,6 +598,107 @@ echo $contact->user->name; // this is the user name
 
 Pretty cool eh?
 
+### Eager Loading
+
+#### Overview
+Eager loading solves the N+1 query problem by loading relationships in advance. Instead of executing a separate query for each record's relationships, eager loading fetches all related data in just one additional query per relationship.
+
+> **Note:** Eager loading is only available for v0.7.0 and above.
+
+#### Basic Usage
+Use the `with()` method to specify which relationships to eager load:
+```php
+// Load users with their contacts in 2 queries instead of N+1
+$users = $user->with('contacts')->findAll();
+foreach ($users as $u) {
+    foreach ($u->contacts as $contact) {
+        echo $contact->email; // No additional query!
+    }
+}
+```
+
+#### Multiple Relations
+Load multiple relationships at once:
+```php
+$users = $user->with(['contacts', 'profile', 'settings'])->findAll();
+```
+
+#### Relationship Types
+
+##### HAS_MANY
+```php
+// Eager load all contacts for each user
+$users = $user->with('contacts')->findAll();
+foreach ($users as $u) {
+    // $u->contacts is already loaded as an array
+    foreach ($u->contacts as $contact) {
+        echo $contact->email;
+    }
+}
+```
+##### HAS_ONE
+```php
+// Eager load one contact for each user
+$users = $user->with('contact')->findAll();
+foreach ($users as $u) {
+    // $u->contact is already loaded as an object
+    echo $u->contact->email;
+}
+```
+
+##### BELONGS_TO
+```php
+// Eager load parent users for all contacts
+$contacts = $contact->with('user')->findAll();
+foreach ($contacts as $c) {
+    // $c->user is already loaded
+    echo $c->user->name;
+}
+```
+##### With find()
+Eager loading works with both 
+findAll()
+ and 
+find()
+:
+
+```php
+$user = $user->with('contacts')->find(1);
+// User and all their contacts loaded in 2 queries
+```
+#### Performance Benefits
+Without eager loading (N+1 problem):
+```php
+$users = $user->findAll(); // 1 query
+foreach ($users as $u) {
+    $contacts = $u->contacts; // N queries (one per user!)
+}
+// Total: 1 + N queries
+```
+
+With eager loading:
+
+```php
+$users = $user->with('contacts')->findAll(); // 2 queries total
+foreach ($users as $u) {
+    $contacts = $u->contacts; // 0 additional queries!
+}
+// Total: 2 queries (1 for users + 1 for all contacts)
+```
+For 10 users, this reduces queries from 11 to 2 - an 82% reduction!
+
+#### Important Notes
+- Eager loading is completely optional - lazy loading still works as before
+- Already loaded relationships are automatically skipped
+- Back references work with eager loading
+- Relation callbacks are respected during eager loading
+
+#### Limitations
+- Nested eager loading (e.g., 
+with(['contacts.addresses'])
+) is not currently supported
+- Eager load constraints via closures are not supported in this version
+
 ## Setting Custom Data
 Sometimes you may need to attach something unique to your ActiveRecord such as a custom calculation that might be easier to just attach to the object that would then be passed to say a template.
 
