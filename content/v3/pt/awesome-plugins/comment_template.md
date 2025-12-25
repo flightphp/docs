@@ -5,7 +5,7 @@
 ## Recursos
 
 - **Herança de Templates**: Use layouts e inclua outros templates
-- **Compilação de Assets**: Minificação e cache automáticos de CSS/JS
+- **Compilação de Assets**: Minificação automática de CSS/JS e cache
 - **Processamento de Variáveis**: Variáveis de template com filtros e comandos
 - **Codificação Base64**: Assets inline como URIs de dados
 - **Integração com o Framework Flight**: Integração opcional com o framework PHP Flight
@@ -33,16 +33,16 @@ use KnifeLemon\CommentTemplate\Engine;
 $app = Flight::app();
 
 $app->register('view', Engine::class, [], function (Engine $engine) use ($app) {
-    // Diretório raiz (onde está o index.php) - a raiz do documento da sua aplicação web
+    // Diretório raiz (onde index.php está) - a raiz de documentos da sua aplicação web
     $engine->setPublicPath(__DIR__);
     
-    // Diretório dos arquivos de template - suporta caminhos relativos e absolutos
+    // Diretório de arquivos de template - suporta caminhos relativos e absolutos
     $engine->setSkinPath('views');             // Relativo ao caminho público
     
     // Onde os assets compilados serão armazenados - suporta caminhos relativos e absolutos
     $engine->setAssetPath('assets');           // Relativo ao caminho público
     
-    // Extensão do arquivo de template
+    // Extensão de arquivo de template
     $engine->setFileExtension('.php');
 });
 
@@ -63,10 +63,10 @@ $app = Flight::app();
 
 // __construct(string $publicPath = "", string $skinPath = "", string $assetPath = "", string $fileExtension = "")
 $app->register('view', Engine::class, [
-    __DIR__,                // publicPath - diretório raiz (onde está o index.php)
-    'views',                // skinPath - caminho dos templates (suporta relativo/absoluto)
-    'assets',               // assetPath - caminho dos assets compilados (suporta relativo/absoluto)
-    '.php'                  // fileExtension - extensão do arquivo de template
+    __DIR__,                // publicPath - diretório raiz (onde index.php está)
+    'views',                // skinPath - caminho de templates (suporta relativo/absoluto)
+    'assets',               // assetPath - caminho de assets compilados (suporta relativo/absoluto)
+    '.php'                  // fileExtension - extensão de arquivo de template
 ]);
 
 $app->map('render', function(string $template, array $data) use ($app): void {
@@ -76,29 +76,29 @@ $app->map('render', function(string $template, array $data) use ($app): void {
 
 ## Configuração de Caminhos
 
-CommentTemplate fornece tratamento inteligente de caminhos para caminhos relativos e absolutos:
+O CommentTemplate fornece tratamento inteligente de caminhos para caminhos relativos e absolutos:
 
 ### Caminho Público
 
-O **Caminho Público** é o diretório raiz da sua aplicação web, tipicamente onde o `index.php` reside. Esta é a raiz do documento de onde os servidores web servem arquivos.
+O **Caminho Público** é o diretório raiz da sua aplicação web, tipicamente onde `index.php` reside. Este é o raiz de documentos de onde os servidores web servem arquivos.
 
 ```php
-// Exemplo: se seu index.php está em /var/www/html/myapp/index.php
+// Exemplo: se o seu index.php estiver em /var/www/html/myapp/index.php
 $template->setPublicPath('/var/www/html/myapp');  // Diretório raiz
 
-// Exemplo Windows: se seu index.php está em C:\xampp\htdocs\myapp\index.php
+// Exemplo Windows: se o seu index.php estiver em C:\xampp\htdocs\myapp\index.php
 $template->setPublicPath('C:\\xampp\\htdocs\\myapp');
 ```
 
-### Configuração do Caminho de Templates
+### Configuração de Caminho de Templates
 
 O caminho de templates suporta caminhos relativos e absolutos:
 
 ```php
 $template = new Engine();
-$template->setPublicPath('/var/www/html/myapp');  // Diretório raiz (onde está o index.php)
+$template->setPublicPath('/var/www/html/myapp');  // Diretório raiz (onde index.php está)
 
-// Caminhos relativos - automaticamente combinados com o caminho público
+// Caminhos relativos - combinados automaticamente com o caminho público
 $template->setSkinPath('views');           // → /var/www/html/myapp/views/
 $template->setSkinPath('templates/pages'); // → /var/www/html/myapp/templates/pages/
 
@@ -114,12 +114,12 @@ $template->setSkinPath('D:/projects/templates');  // → D:/projects/templates/
 $template->setSkinPath('\\\\server\\share\\templates'); // → \\server\share\templates\
 ```
 
-### Configuração do Caminho de Assets
+### Configuração de Caminho de Assets
 
 O caminho de assets também suporta caminhos relativos e absolutos:
 
 ```php
-// Caminhos relativos - automaticamente combinados com o caminho público
+// Caminhos relativos - combinados automaticamente com o caminho público
 $template->setAssetPath('assets');        // → /var/www/html/myapp/assets/
 $template->setAssetPath('static/files');  // → /var/www/html/myapp/static/files/
 
@@ -138,13 +138,13 @@ $template->setAssetPath('\\\\server\\share\\assets'); // → \\server\share\asse
 **Detecção Inteligente de Caminhos:**
 
 - **Caminhos Relativos**: Sem separadores iniciais (`/`, `\`) ou letras de unidade
-- **Unix Absoluto**: Começa com `/` (ex. `/var/www/assets`)
-- **Windows Absoluto**: Começa com letra de unidade (ex. `C:\www`, `D:/assets`)
-- **Caminhos UNC**: Começa com `\\` (ex. `\\server\share`)
+- **Absolutos Unix**: Começa com `/` (ex.: `/var/www/assets`)
+- **Absolutos Windows**: Começa com letra de unidade (ex.: `C:\www`, `D:/assets`)
+- **Caminhos UNC**: Começa com `\\` (ex.: `\\server\share`)
 
 **Como funciona:**
 
-- Todos os caminhos são automaticamente resolvidos baseados no tipo (relativo vs absoluto)
+- Todos os caminhos são resolvidos automaticamente com base no tipo (relativo vs absoluto)
 - Caminhos relativos são combinados com o caminho público
 - `@css` e `@js` criam arquivos minificados em: `{resolvedAssetPath}/css/` ou `{resolvedAssetPath}/js/`
 - `@asset` copia arquivos únicos para: `{resolvedAssetPath}/{relativePath}`
@@ -192,9 +192,9 @@ O CommentTemplate suporta diferentes estratégias de carregamento de JavaScript:
 <!--@js(/js/script.js)-->             <!-- Minificado, carregado no final -->
 <!--@jsAsync(/js/analytics.js)-->     <!-- Minificado, carregado no final com async -->
 <!--@jsDefer(/js/utils.js)-->         <!-- Minificado, carregado no final com defer -->
-<!--@jsTop(/js/critical.js)-->        <!-- Minificado, carregado no head -->
-<!--@jsTopAsync(/js/tracking.js)-->   <!-- Minificado, carregado no head com async -->
-<!--@jsTopDefer(/js/polyfill.js)-->   <!-- Minificado, carregado no head com defer -->
+<!--@jsTop(/js/critical.js)-->        <!-- Minificado, carregado na head -->
+<!--@jsTopAsync(/js/tracking.js)-->   <!-- Minificado, carregado na head com async -->
+<!--@jsTopDefer(/js/polyfill.js)-->   <!-- Minificado, carregado na head com defer -->
 <!--@jsSingle(/js/widget.js)-->       <!-- Arquivo único, não minificado -->
 <!--@jsSingleAsync(/js/ads.js)-->     <!-- Arquivo único, não minificado, async -->
 <!--@jsSingleDefer(/js/social.js)-->  <!-- Arquivo único, não minificado, defer -->
@@ -234,7 +234,7 @@ const imageData = '<!--@base64(images/icon.png)-->';
 ```
 ** Exemplo: **
 ```html
-<!-- Inline de imagens pequenas como URIs de dados para carregamento mais rápido -->
+<!-- Inline imagens pequenas como URIs de dados para carregamento mais rápido -->
 <img src="<!--@base64(images/logo.png)-->" alt="Logo">
 <div style="background-image: url('<!--@base64(icons/star.svg)-->');">
     Ícone pequeno como fundo
@@ -249,7 +249,7 @@ const imageData = '<!--@base64(images/icon.png)-->';
 ** Exemplo: **
 ```html
 <!-- Copia e referencia assets estáticos -->
-<img src="<!--@asset(images/hero-banner.jpg)-->" alt="Banner Heroico">
+<img src="<!--@asset(images/hero-banner.jpg)-->" alt="Hero Banner">
 <a href="<!--@asset(documents/brochure.pdf)-->" download>Baixar Brochura</a>
 
 <!-- Copia diretório inteiro (fontes, ícones, etc.) -->
@@ -292,10 +292,10 @@ const imageData = '<!--@base64(images/icon.png)-->';
 {$content|lower}                     <!-- Converte para minúsculas -->
 {$html|striptag}                     <!-- Remove tags HTML -->
 {$text|escape}                       <!-- Escapa HTML -->
-{$multiline|nl2br}                   <!-- Converte quebras de linha em <br> -->
-{$html|br2nl}                        <!-- Converte tags <br> em quebras de linha -->
+{$multiline|nl2br}                   <!-- Converte quebras de linha para <br> -->
+{$html|br2nl}                        <!-- Converte tags <br> para quebras de linha -->
 {$description|trim}                  <!-- Remove espaços em branco -->
-{$subject|title}                     <!-- Converte para título -->
+{$subject|title}                     <!-- Converte para título case -->
 ```
 
 #### Comandos de Variáveis
@@ -304,30 +304,30 @@ const imageData = '<!--@base64(images/icon.png)-->';
 {$name|concat= (Admin)}              <!-- Concatena texto -->
 ```
 
-#### Encadear Múltiplos Filtros
+#### Comandos de Variáveis
 ```html
 {$content|striptag|trim|escape}      <!-- Encadeia múltiplos filtros -->
 ```
 
 ### Comentários
 
-Comentários de template são completamente removidos da saída e não aparecem no HTML final:
+Os comentários de template são completamente removidos da saída e não aparecerão no HTML final:
 
 ```html
-{* Este é um comentário de template de uma linha *}
+{* Este é um comentário de template de linha única *}
 
 {* 
-   Este é um comentário de template
-   de múltiplas linhas 
-   que abrange várias linhas
+   Este é um comentário de 
+   template multi-linha 
+   que se estende por várias linhas
 *}
 
 <h1>{$title}</h1>
-{* Comentário de debug: verificar se a variável title funciona *}
+{* Comentário de debug: verificando se a variável title funciona *}
 <p>{$content}</p>
 ```
 
-**Nota**: Comentários de template `{* ... *}` são diferentes de comentários HTML `<!-- ... -->`. Comentários de template são removidos durante o processamento e nunca chegam ao navegador.
+**Nota**: Os comentários de template `{* ... *}` são diferentes dos comentários HTML `<!-- ... -->`. Os comentários de template são removidos durante o processamento e nunca chegam ao navegador.
 
 ## Estrutura de Projeto Exemplo
 

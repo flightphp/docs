@@ -2,21 +2,21 @@
 
 Flight est incroyablement extensible. Il existe un certain nombre de plugins qui peuvent être utilisés pour ajouter des fonctionnalités à votre application Flight. Certains sont officiellement pris en charge par l'équipe Flight et d'autres sont des bibliothèques micro/lite pour vous aider à démarrer.
 
-## Documentation API
+## Documentation de l'API
 
-La documentation API est cruciale pour toute API. Elle aide les développeurs à comprendre comment interagir avec votre API et ce qu'ils peuvent attendre en retour. Il existe quelques outils disponibles pour vous aider à générer la documentation API pour vos projets Flight.
+La documentation de l'API est cruciale pour toute API. Elle aide les développeurs à comprendre comment interagir avec votre API et ce qu'ils peuvent attendre en retour. Il existe quelques outils disponibles pour vous aider à générer la documentation de l'API pour vos projets Flight.
 
 - [FlightPHP OpenAPI Generator](https://dev.to/danielsc/define-generate-and-implement-an-api-first-approach-with-openapi-generator-and-flightphp-1fb3) - Article de blog écrit par Daniel Schreiber sur la façon d'utiliser la spécification OpenAPI avec FlightPHP pour construire votre API en adoptant une approche API-first.
-- [SwaggerUI](https://github.com/zircote/swagger-php) - Swagger UI est un excellent outil pour vous aider à générer la documentation API pour vos projets Flight. Il est très facile à utiliser et peut être personnalisé selon vos besoins. Il s'agit de la bibliothèque PHP pour vous aider à générer la documentation Swagger.
+- [SwaggerUI](https://github.com/zircote/swagger-php) - Swagger UI est un excellent outil pour vous aider à générer la documentation de l'API pour vos projets Flight. Il est très facile à utiliser et peut être personnalisé pour répondre à vos besoins. Il s'agit de la bibliothèque PHP pour vous aider à générer la documentation Swagger.
 
 ## Surveillance des Performances des Applications (APM)
 
-La surveillance des performances des applications (APM) est cruciale pour toute application. Elle vous aide à comprendre comment votre application se comporte et où se trouvent les goulots d'étranglement. Il existe un certain nombre d'outils APM qui peuvent être utilisés avec Flight.
+La surveillance des performances des applications (APM) est cruciale pour toute application. Elle vous aide à comprendre comment votre application performe et où se trouvent les goulots d'étranglement. Il existe un certain nombre d'outils APM qui peuvent être utilisés avec Flight.
 - <span class="badge bg-primary">officiel</span> [flightphp/apm](/awesome-plugins/apm) - Flight APM est une bibliothèque APM simple qui peut être utilisée pour surveiller vos applications Flight. Elle peut être utilisée pour surveiller les performances de votre application et vous aider à identifier les goulots d'étranglement.
 
 ## Asynchrone
 
-Flight est déjà un framework rapide, mais lui ajouter un moteur turbo rend tout plus amusant (et plus stimulant) !
+Flight est déjà un framework rapide, mais lui ajouter un turbo le rend encore plus amusant (et stimulant) !
 
 - [flightphp/async](/awesome-plugins/async) - Bibliothèque officielle Flight Async. Cette bibliothèque est une façon simple d'ajouter un traitement asynchrone à votre application. Elle utilise Swoole/Openswoole en arrière-plan pour fournir une façon simple et efficace d'exécuter des tâches de manière asynchrone.
 
@@ -30,7 +30,7 @@ L'autorisation et les permissions sont cruciales pour toute application qui néc
 
 La mise en cache est un excellent moyen d'accélérer votre application. Il existe un certain nombre de bibliothèques de mise en cache qui peuvent être utilisées avec Flight.
 
-- <span class="badge bg-primary">officiel</span> [flightphp/cache](/awesome-plugins/php-file-cache) - Classe de mise en cache PHP légère, simple et autonome en fichier
+- <span class="badge bg-primary">officiel</span> [flightphp/cache](/awesome-plugins/php-file-cache) - Classe PHP légère, simple et autonome pour la mise en cache en fichier
 
 ## CLI
 
@@ -53,30 +53,30 @@ Le débogage est crucial lorsque vous développez dans votre environnement local
 
 ## Bases de Données
 
-Les bases de données sont au cœur de la plupart des applications. C'est ainsi que vous stockez et récupérez les données. Certaines bibliothèques de bases de données sont simplement des wrappers pour écrire des requêtes et d'autres sont des ORMs complets.
+Les bases de données sont au cœur de la plupart des applications. C'est ainsi que vous stockez et récupérez les données. Certaines bibliothèques de base de données sont simplement des wrappers pour écrire des requêtes et d'autres sont des ORMs complets.
 
 - <span class="badge bg-primary">officiel</span> [flightphp/core PdoWrapper](/learn/pdo-wrapper) - Wrapper PDO officiel Flight qui fait partie du cœur. Il s'agit d'un wrapper simple pour aider à simplifier le processus d'écriture et d'exécution des requêtes. Ce n'est pas un ORM.
-- <span class="badge bg-primary">officiel</span> [flightphp/active-record](/awesome-plugins/active-record) - ORM/Mapper ActiveRecord officiel Flight. Excellente petite bibliothèque pour récupérer et stocker facilement les données dans votre base de données.
+- <span class="badge bg-primary">officiel</span> [flightphp/active-record](/awesome-plugins/active-record) - ORM/Mapper ActiveRecord officiel Flight. Excellente petite bibliothèque pour récupérer et stocker facilement des données dans votre base de données.
 - [byjg/php-migration](/awesome-plugins/migrations) - Plugin pour suivre toutes les modifications de base de données pour votre projet.
 
 ## Chiffrement
 
 Le chiffrement est crucial pour toute application qui stocke des données sensibles. Chiffrer et déchiffrer les données n'est pas terriblement difficile, mais stocker correctement la clé de chiffrement [peut](https://stackoverflow.com/questions/6767839/where-should-i-store-an-encryption-key-for-php#:~:text=Write%20a%20php%20config%20file%20and%20store%20it,folder%20is%20not%20accessible%20to%20the%20end%20user.) [être](https://www.reddit.com/r/PHP/comments/luqsn/the_encryption_key_where_do_you_store_it/) [difficile](https://security.stackexchange.com/questions/48047/location-to-store-an-encryption-key). La chose la plus importante est de ne jamais stocker votre clé de chiffrement dans un répertoire public ou de l'engager dans votre dépôt de code.
 
-- [defuse/php-encryption](/awesome-plugins/php-encryption) - Il s'agit d'une bibliothèque qui peut être utilisée pour chiffrer et déchiffrer les données. Se mettre en route est assez simple pour commencer à chiffrer et déchiffrer les données.
+- [defuse/php-encryption](/awesome-plugins/php-encryption) - Il s'agit d'une bibliothèque qui peut être utilisée pour chiffrer et déchiffrer des données. Se lancer est assez simple pour commencer à chiffrer et déchiffrer des données.
 
 ## File d'Attente de Tâches
 
 Les files d'attente de tâches sont vraiment utiles pour traiter les tâches de manière asynchrone. Cela peut être l'envoi d'emails, le traitement d'images, ou tout ce qui n'a pas besoin d'être fait en temps réel.
 
-- [n0nag0n/simple-job-queue](/awesome-plugins/simple-job-queue) - Simple Job Queue est une bibliothèque qui peut être utilisée pour traiter les tâches de manière asynchrone. Elle peut être utilisée avec beanstalkd, MySQL/MariaDB, SQLite et PostgreSQL.
+- [n0nag0n/simple-job-queue](/awesome-plugins/simple-job-queue) - Simple Job Queue est une bibliothèque qui peut être utilisée pour traiter les tâches de manière asynchrone. Elle peut être utilisée avec beanstalkd, MySQL/MariaDB, SQLite, et PostgreSQL.
 
 ## Session
 
 Les sessions ne sont pas vraiment utiles pour les API, mais pour construire une application web, les sessions peuvent être cruciales pour maintenir l'état et les informations de connexion.
 
 - <span class="badge bg-primary">officiel</span> [flightphp/session](/awesome-plugins/session) - Bibliothèque officielle Flight Session. Il s'agit d'une bibliothèque de session simple qui peut être utilisée pour stocker et récupérer les données de session. Elle utilise la gestion de session intégrée de PHP.
-- [Ghostff/Session](/awesome-plugins/ghost-session) - Gestionnaire de sessions PHP (non-bloquant, flash, segment, chiffrement de session). Utilise PHP open_ssl pour le chiffrement/déchiffrement optionnel des données de session.
+- [Ghostff/Session](/awesome-plugins/ghost-session) - Gestionnaire de Sessions PHP (non-bloquant, flash, segment, chiffrement de session). Utilise PHP open_ssl pour le chiffrement/déchiffrement optionnel des données de session.
 
 ## Modélisation
 
@@ -84,13 +84,13 @@ La modélisation est au cœur de toute application web avec une interface utilis
 
 - <span class="badge bg-warning">déprécié</span> [flightphp/core View](/learn#views) - Il s'agit d'un moteur de modélisation très basique qui fait partie du cœur. Il n'est pas recommandé de l'utiliser si vous avez plus de quelques pages dans votre projet.
 - [latte/latte](/awesome-plugins/latte) - Latte est un moteur de modélisation complet qui est très facile à utiliser et qui ressemble plus à une syntaxe PHP que Twig ou Smarty. Il est également très facile à étendre et à ajouter vos propres filtres et fonctions.
-- [knifelemon/comment-template](/awesome-plugins/comment-template) - CommentTemplate est un puissant moteur de templates PHP avec compilation d'actifs, héritage de templates et traitement de variables. Fonctionnalités : minification automatique CSS/JS, mise en cache, encodage Base64 et intégration optionnelle avec le framework PHP Flight.
+- [knifelemon/comment-template](/awesome-plugins/comment-template) - CommentTemplate est un puissant moteur de templates PHP avec compilation d'actifs, héritage de templates, et traitement de variables. Fonctionnalités : minification automatique CSS/JS, mise en cache, encodage Base64, et intégration optionnelle avec le framework PHP Flight.
 
 ## Intégration WordPress
 
-Vous voulez utiliser Flight dans votre projet WordPress ? Il y a un plugin pratique pour cela !
+Vous souhaitez utiliser Flight dans votre projet WordPress ? Il existe un plugin pratique pour cela !
 
-- [n0nag0n/wordpress-integration-for-flight-framework](/awesome-plugins/n0nag0n_wordpress) - Ce plugin WordPress vous permet d'exécuter Flight directement aux côtés de WordPress. C'est parfait pour ajouter des API personnalisées, des microservices, ou même des applications complètes à votre site WordPress en utilisant le framework Flight. Super utile si vous voulez le meilleur des deux mondes !
+- [n0nag0n/wordpress-integration-for-flight-framework](/awesome-plugins/n0nag0n_wordpress) - Ce plugin WordPress vous permet d'exécuter Flight directement aux côtés de WordPress. Il est parfait pour ajouter des API personnalisées, des microservices, ou même des applications complètes à votre site WordPress en utilisant le framework Flight. Super utile si vous voulez le meilleur des deux mondes !
 
 ## Contribution
 

@@ -1,12 +1,12 @@
-# ランウェイ
+# Runway
 
-ランウェイはCLIアプリケーションで、Flightアプリケーションの管理を支援します。コントローラを生成したり、すべてのルートを表示したりすることができます。優れた[adhocore/php-cli](https://github.com/adhocore/php-cli)ライブラリに基づいています。
+Runway は、Flight アプリケーションを管理するのに役立つ CLI アプリケーションです。コントローラーを生成したり、すべてのルートを表示したり、その他さまざまな機能を提供します。これは優れた [adhocore/php-cli](https://github.com/adhocore/php-cli) ライブラリを基にしています。
 
-[こちらをクリック](https://github.com/flightphp/runway)して、コードを表示してください。
+コードを見るには [こちら](https://github.com/flightphp/runway) をクリックしてください。
 
 ## インストール
 
-Composerを使用してインストールしてください。
+Composer でインストールします。
 
 ```bash
 composer require flightphp/runway
@@ -14,40 +14,40 @@ composer require flightphp/runway
 
 ## 基本設定
 
-ランウェイを実行する最初の回は、セットアッププロセスを進め、プロジェクトのルートに`.runway.json`構成ファイルを作成します。このファイルには、ランウェイが正しく動作するために必要ないくつかの構成が含まれています。
+Runway を初めて実行すると、セットアッププロセスを実行し、プロジェクトのルートに `.runway.json` 設定ファイルを作成します。このファイルには、Runway が正常に動作するために必要な設定が含まれています。
 
-## 使用法
+## 使用方法
 
-ランウェイには、Flightアプリケーションを管理するために使用できる複数のコマンドがあります。ランウェイを使用する方法は2つあります。
+Runway には、Flight アプリケーションを管理するためのさまざまなコマンドがあります。Runway を使用する簡単な方法は 2 つあります。
 
 1. スケルトンプロジェクトを使用している場合、プロジェクトのルートから `php runway [command]` を実行できます。
-1. Composerを介してインストールされたパッケージとしてRunwayを使用している場合、プロジェクトのルートから `vendor/bin/runway [command]` を実行できます。
+1. Composer 経由でインストールしたパッケージとして Runway を使用している場合、プロジェクトのルートから `vendor/bin/runway [command]` を実行できます。
 
-任意のコマンドに対して、`--help`フラグを渡すと、そのコマンドの使用方法に関するより詳細な情報を取得できます。
+任意のコマンドに対して、`--help` フラグを渡すことで、そのコマンドの使用方法についての詳細情報を取得できます。
 
 ```bash
 php runway routes --help
 ```
 
-以下はいくつかの例です。
+以下にいくつかの例を示します：
 
-### コントローラを生成する
+### コントローラーの生成
 
-`.runway.json`ファイルの構成に基づいて、デフォルトの場所は `app/controllers/` ディレクトリにコントローラを生成します。
+`.runway.json` ファイルの設定に基づいて、デフォルトの場所に `app/controllers/` ディレクトリでコントローラーを生成します。
 
 ```bash
 php runway make:controller MyController
 ```
 
-### アクティブレコードモデルを生成する
+### Active Record モデルの生成
 
-`.runway.json`ファイルの構成に基づいて、デフォルトの場所は `app/records/` ディレクトリにコントローラを生成します。
+`.runway.json` ファイルの設定に基づいて、デフォルトの場所に `app/records/` ディレクトリでコントローラーを生成します。
 
 ```bash
 php runway make:record users
 ```
 
-たとえば、次のスキーマを持つ `users` テーブルがある場合：`id`、`name`、`email`、`created_at`、`updated_at`、`app/records/UserRecord.php` ファイルに類似したファイルが作成されます：
+たとえば、`users` テーブルに以下のスキーマがある場合：`id`、`name`、`email`、`created_at`、`updated_at`、`app/records/UserRecord.php` ファイルに以下の類似したファイルが作成されます：
 
 ```php
 <?php
@@ -57,7 +57,7 @@ declare(strict_types=1);
 namespace app\records;
 
 /**
- * ユーザーテーブルのアクティブレコードクラス。
+ * users テーブルの ActiveRecord クラス。
  * @link https://docs.flightphp.com/awesome-plugins/active-record
  * 
  * @property int $id
@@ -65,13 +65,13 @@ namespace app\records;
  * @property string $email
  * @property string $created_at
  * @property string $updated_at
- * // 関係を定義した場合、ここに関係を追加できます
- * @property CompanyRecord $company 関係の例
+ * // $relations 配列で定義したら、ここに関連付けを追加することもできます
+ * @property CompanyRecord $company 関連付けの例
  */
 class UserRecord extends \flight\ActiveRecord
 {
     /**
-     * @var array $relations モデルの関係を設定します
+     * @var array $relations モデルの関連付けを設定
      *   https://docs.flightphp.com/awesome-plugins/active-record#relationships
      */
     protected array $relations = [];
@@ -87,31 +87,31 @@ class UserRecord extends \flight\ActiveRecord
 }
 ```
 
-### すべてのルートを表示する
+### すべてのルートの表示
 
-登録されているすべてのFlightのルートを表示します。
+これにより、現在 Flight に登録されているすべてのルートが表示されます。
 
 ```bash
 php runway routes
 ```
 
-特定のルートのみを表示したい場合、フラグを渡してルートをフィルタリングできます。
+特定のルートのみを表示したい場合、ルートをフィルタリングするためのフラグを渡せます。
 
 ```bash
-# GETルートのみを表示
+# GET ルートのみを表示
 php runway routes --get
 
-# POSTルートのみを表示
+# POST ルートのみを表示
 php runway routes --post
 
 # など
 ```
 
-## ランウェイのカスタマイズ
+## Runway のカスタマイズ
 
-Flight向けのパッケージを作成しているか、プロジェクトに独自のカスタムコマンドを追加したい場合は、プロジェクト/パッケージ向けに `src/commands/`、`flight/commands/`、`app/commands/`、または `commands/` ディレクトリを作成してください。
+Flight 用にパッケージを作成する場合や、プロジェクトに独自のカスタムコマンドを追加したい場合、プロジェクト/パッケージ用に `src/commands/`、`flight/commands/`、`app/commands/`、または `commands/` ディレクトリを作成することで実現できます。さらにカスタマイズが必要な場合は、以下の設定セクションを参照してください。
 
-コマンドを作成するには、`AbstractBaseCommand`クラスを拡張し、`__construct`メソッドと`execute`メソッドを最低限実装します。
+コマンドを作成するには、`AbstractBaseCommand` クラスを拡張し、最低限 `__construct` メソッドと `execute` メソッドを実装するだけです。
 
 ```php
 <?php
@@ -125,12 +125,12 @@ class ExampleCommand extends AbstractBaseCommand
 	/**
      * コンストラクタ
      *
-     * @param array<string,mixed> $config .runway-config.jsonからのJSON構成
+     * @param array<string,mixed> $config .runway-config.json からの JSON 設定
      */
     public function __construct(array $config)
     {
-        parent::__construct('make:example', 'ドキュメントの例を作成', $config);
-        $this->argument('<funny-gif>', '面白いGIFの名前');
+        parent::__construct('make:example', 'ドキュメント用の例を作成', $config);
+        $this->argument('<funny-gif>', '面白い GIF の名前');
     }
 
 	/**
@@ -138,17 +138,56 @@ class ExampleCommand extends AbstractBaseCommand
      *
      * @return void
      */
-    public function execute(string $controller)
+    public function execute()
     {
         $io = $this->app()->io();
 
-		$io->info('例を作成します...');
+		$io->info('例を作成中...');
 
-		// ここで何かを実行
+		// ここで何かをします
 
 		$io->ok('例が作成されました！');
 	}
 }
 ```
 
-独自のカスタムコマンドをFlightアプリケーションに組み込む方法については、[adhocore/php-cliドキュメント](https://github.com/adhocore/php-cli)を参照してください！
+Flight アプリケーションに独自のカスタムコマンドを構築する方法についての詳細は、[adhocore/php-cli ドキュメント](https://github.com/adhocore/php-cli) を参照してください！
+
+### 設定
+
+Runway の設定をカスタマイズする必要がある場合、プロジェクトのルートに `.runway-config.json` ファイルを作成できます。以下に設定できる追加の設定を示します：
+
+```js
+{
+
+	// アプリケーション ディレクトリが配置されている場所
+	"app_root": "app/",
+
+	// ルート index ファイルが配置されているディレクトリ
+	"index_root": "public/",
+
+	// 他のプロジェクトのルートへのパス
+	"root_paths": [
+		"/home/user/different-project",
+		"/var/www/another-project"
+	],
+
+	// ベース パスは通常設定する必要はありませんが、必要に応じて使用できます
+	"base_paths": {
+		"/includes/libs/vendor", // vendor ディレクトリなどのユニークなパスがある場合
+	},
+
+	// 最終パスは、コマンド ファイルを検索するプロジェクト内の場所
+	"final_paths": {
+		"src/diff-path/commands",
+		"app/module/admin/commands",
+	},
+
+	// フルパスを追加したい場合、問題ありません（プロジェクト ルートからの絶対パスまたは相対パス）
+	"paths": [
+		"/home/user/different-project/src/diff-path/commands",
+		"/var/www/another-project/app/module/admin/commands",
+		"app/my-unique-commands"
+	]
+}
+```

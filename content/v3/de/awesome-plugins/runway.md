@@ -1,53 +1,53 @@
-# Startbahn
+# Runway
 
-Startbahn ist eine CLI-Anwendung, die Ihnen dabei hilft, Ihre Flight-Anwendungen zu verwalten. Sie kann Controller generieren, alle Routen anzeigen und mehr. Sie basiert auf der ausgezeichneten [adhocore/php-cli](https://github.com/adhocore/php-cli) Bibliothek.
+Runway ist eine CLI-Anwendung, die Ihnen hilft, Ihre Flight-Anwendungen zu verwalten. Sie kann Controller generieren, alle Routen anzeigen und mehr. Sie basiert auf der hervorragenden [adhocore/php-cli](https://github.com/adhocore/php-cli)-Bibliothek.
 
 Klicken Sie [hier](https://github.com/flightphp/runway), um den Code anzusehen.
 
 ## Installation
 
-Mit Composer installieren.
+Installieren Sie mit Composer.
 
 ```bash
-composer require flightphp/startbahn
+composer require flightphp/runway
 ```
 
-## Grundkonfiguration
+## Grundlegende Konfiguration
 
-Das erste Mal, wenn Sie Startbahn ausführen, wird es Sie durch einen Einrichtungsprozess führen und eine .runway.json-Konfigurationsdatei im Stammverzeichnis Ihres Projekts erstellen. Diese Datei wird einige notwendige Konfigurationen enthalten, damit Startbahn ordnungsgemäß funktioniert.
+Beim ersten Ausführen von Runway durchläuft es einen Einrichtungsprozess und erstellt eine `.runway.json`-Konfigurationsdatei im Stammverzeichnis Ihres Projekts. Diese Datei enthält einige notwendige Konfigurationen, damit Runway ordnungsgemäß funktioniert.
 
 ## Verwendung
 
-Startbahn hat mehrere Befehle, die Sie verwenden können, um Ihre Flight-Anwendung zu verwalten. Es gibt zwei einfache Möglichkeiten, Startbahn zu verwenden.
+Runway verfügt über eine Reihe von Befehlen, die Sie verwenden können, um Ihre Flight-Anwendung zu verwalten. Es gibt zwei einfache Wege, Runway zu verwenden.
 
-1. Wenn Sie das Grundgerüstprojekt verwenden, können Sie `php startbahn [Befehl]` im Stammverzeichnis Ihres Projekts ausführen.
-1. Wenn Sie Startbahn als über Composer installiertes Paket verwenden, können Sie `vendor/bin/startbahn [Befehl]` im Stammverzeichnis Ihres Projekts ausführen.
+1. Wenn Sie das Skeleton-Projekt verwenden, können Sie `php runway [command]` vom Stammverzeichnis Ihres Projekts ausführen.
+1. Wenn Sie Runway als über Composer installiertes Paket verwenden, können Sie `vendor/bin/runway [command]` vom Stammverzeichnis Ihres Projekts ausführen.
 
 Für jeden Befehl können Sie die `--help`-Flagge übergeben, um weitere Informationen zur Verwendung des Befehls zu erhalten.
 
 ```bash
-php startbahn routes --help
+php runway routes --help
 ```
 
-Hier sind ein paar Beispiele:
+Hier sind einige Beispiele:
 
 ### Einen Controller generieren
 
-Basierend auf der Konfiguration in Ihrer .runway.json-Datei wird der Standardort einen Controller für Sie im `app/controllers/` Verzeichnis generieren.
+Basierend auf der Konfiguration in Ihrer `.runway.json`-Datei wird der Standardort einen Controller für Sie im `app/controllers/`-Verzeichnis generieren.
 
 ```bash
-php startbahn make:controller MeinController
+php runway make:controller MyController
 ```
 
-### Einen Aktiven Datensatz-Model generieren
+### Ein Active Record-Modell generieren
 
-Basierend auf der Konfiguration in Ihrer .runway.json-Datei wird der Standardort einen Controller für Sie im `app/records/` Verzeichnis generieren.
+Basierend auf der Konfiguration in Ihrer `.runway.json`-Datei wird der Standardort einen Controller für Sie im `app/records/`-Verzeichnis generieren.
 
 ```bash
-php startbahn make:record benutzer
+php runway make:record users
 ```
 
-Wenn Sie zum Beispiel die `benutzer` Tabelle mit dem folgenden Schema haben: `id`, `name`, `email`, `created_at`, `updated_at`, wird eine Datei ähnlich der folgenden in der `app/records/BenutzerDatensatz.php` erstellt:
+Falls Sie beispielsweise die `users`-Tabelle mit dem folgenden Schema haben: `id`, `name`, `email`, `created_at`, `updated_at`, wird eine Datei ähnlich der folgenden in der Datei `app/records/UserRecord.php` erstellt:
 
 ```php
 <?php
@@ -57,7 +57,7 @@ declare(strict_types=1);
 namespace app\records;
 
 /**
- * ActiveRecord-Klasse für die benutzer Tabelle.
+ * ActiveRecord-Klasse für die users-Tabelle.
  * @link https://docs.flightphp.com/awesome-plugins/active-record
  * 
  * @property int $id
@@ -65,53 +65,53 @@ namespace app\records;
  * @property string $email
  * @property string $created_at
  * @property string $updated_at
- * // Sie können hier auch Beziehungen hinzufügen, sobald Sie sie im $relations-Array definieren
+ * // Sie könnten hier auch Beziehungen hinzufügen, sobald Sie sie im $relations-Array definieren
  * @property CompanyRecord $company Beispiel für eine Beziehung
  */
-class BenutzerDatensatz erstreckt sich über \flight\ActiveRecord
+class UserRecord extends \flight\ActiveRecord
 {
     /**
-     * @var array $relations Setzen Sie die Beziehungen für das Modell
+     * @var array $relations Setzt die Beziehungen für das Modell
      *   https://docs.flightphp.com/awesome-plugins/active-record#relationships
      */
     protected array $relations = [];
 
     /**
      * Konstruktor
-     * @param gemischt $datenbankverbindung Die Verbindung zur Datenbank
+     * @param mixed $databaseConnection Die Verbindung zur Datenbank
      */
-    public function __construct($datenbankverbindung)
+    public function __construct($databaseConnection)
     {
-        parent::__construct($datenbankverbindung, 'benutzer');
+        parent::__construct($databaseConnection, 'users');
     }
 }
 ```
 
 ### Alle Routen anzeigen
 
-Dies wird alle Routen anzeigen, die derzeit bei Flight registriert sind.
+Dies zeigt alle Routen an, die derzeit bei Flight registriert sind.
 
 ```bash
-php startbahn routes
+php runway routes
 ```
 
-Wenn Sie nur bestimmte Routen anzeigen möchten, können Sie eine Flagge übergeben, um die Routen zu filtern.
+Wenn Sie nur spezifische Routen anzeigen möchten, können Sie eine Flagge übergeben, um die Routen zu filtern.
 
 ```bash
-# Nur GET-Routen anzeigen
-php startbahn routes --get
+# Zeigt nur GET-Routen an
+php runway routes --get
 
-# Nur POST-Routen anzeigen
-php startbahn routes --post
+# Zeigt nur POST-Routen an
+php runway routes --post
 
 # usw.
 ```
 
-## Anpassen von Startbahn
+## Anpassen von Runway
 
-Wenn Sie entweder ein Paket für Flight erstellen oder Ihre eigenen benutzerdefinierten Befehle in Ihr Projekt integrieren möchten, können Sie dies tun, indem Sie ein `src/befehle/`, `flight/befehle/`, `app/befehle/` oder `befehle/` Verzeichnis für Ihr Projekt/Paket erstellen.
+Wenn Sie entweder ein Paket für Flight erstellen oder eigene benutzerdefinierte Befehle in Ihr Projekt hinzufügen möchten, können Sie dies tun, indem Sie ein `src/commands/`, `flight/commands/`, `app/commands/` oder `commands/`-Verzeichnis für Ihr Projekt/Paket erstellen. Wenn Sie weitere Anpassungen benötigen, siehe den Abschnitt unten zu Konfiguration.
 
-Um einen Befehl zu erstellen, erweitern Sie einfach die Klasse `AbstractBaseCommand` und implementieren Sie mindestens eine `__construct`-Methode und eine `ausführen`-Methode.
+Um einen Befehl zu erstellen, erweitern Sie einfach die `AbstractBaseCommand`-Klasse und implementieren mindestens eine `__construct`-Methode und eine `execute`-Methode.
 
 ```php
 <?php
@@ -120,35 +120,74 @@ declare(strict_types=1);
 
 namespace flight\commands;
 
-Klasse BeispielBefehl erweitert AbstractBaseCommand
+class ExampleCommand extends AbstractBaseCommand
 {
 	/**
-     * Konstruieren
+     * Konstruktor
      *
-     * @param array<string, gemischt> $konfig JSON-Konfiguration aus .runway-config.json
+     * @param array<string,mixed> $config JSON-Konfiguration aus .runway-config.json
      */
-    public function __construct(array $konfig)
+    public function __construct(array $config)
     {
-        parent::__construct('make:beispiel', 'Erstellt ein Beispiel für die Dokumentation', $konfig);
-        $this->argument('<lustiges-gif>', 'Der Name des lustigen Gifs');
+        parent::__construct('make:example', 'Erstellt ein Beispiel für die Dokumentation', $config);
+        $this->argument('<funny-gif>', 'Der Name des lustigen GIFs');
     }
 
 	/**
      * Führt die Funktion aus
      *
-     * @return Leer
+     * @return void
      */
-    public function execute(string $controller)
+    public function execute()
     {
         $io = $this->app()->io();
 
-		$io->info('Beispiel wird erstellt...');
+		$io->info('Erstelle Beispiel...');
 
-		// Hier etwas machen
+		// Etwas hier tun
 
 		$io->ok('Beispiel erstellt!');
 	}
 }
 ```
 
-Siehe die [adhocore/php-cli Dokumentation](https://github.com/adhocore/php-cli) für weitere Informationen, wie Sie Ihre eigenen benutzerdefinierten Befehle in Ihre Flight-Anwendung integrieren können!
+Siehe die [adhocore/php-cli-Dokumentation](https://github.com/adhocore/php-cli) für weitere Informationen darüber, wie Sie eigene benutzerdefinierte Befehle in Ihre Flight-Anwendung einbauen!
+
+### Konfiguration
+
+Wenn Sie die Konfiguration für Runway anpassen müssen, können Sie eine `.runway-config.json`-Datei im Stammverzeichnis Ihres Projekts erstellen. Nachfolgend sind einige zusätzliche Konfigurationen aufgeführt, die Sie setzen können:
+
+```js
+{
+
+	// Hier befindet sich das Verzeichnis Ihrer Anwendung
+	"app_root": "app/",
+
+	// Dies ist das Verzeichnis, in dem sich Ihre root index-Datei befindet
+	"index_root": "public/",
+
+	// Dies sind die Pfade zu den Roots anderer Projekte
+	"root_paths": [
+		"/home/user/different-project",
+		"/var/www/another-project"
+	],
+
+	// Base-Pfade müssen wahrscheinlich nicht konfiguriert werden, aber es ist hier, falls Sie es wollen
+	"base_paths": {
+		"/includes/libs/vendor", // falls Sie einen wirklich einzigartigen Pfad für Ihr Vendor-Verzeichnis oder Ähnliches haben
+	},
+
+	// Final-Pfade sind Orte innerhalb eines Projekts, um nach den Befehlsdateien zu suchen
+	"final_paths": {
+		"src/diff-path/commands",
+		"app/module/admin/commands",
+	},
+
+	// Wenn Sie einfach den vollständigen Pfad hinzufügen möchten, tun Sie es ruhig (absolut oder relativ zum Projekt-Root)
+	"paths": [
+		"/home/user/different-project/src/diff-path/commands",
+		"/var/www/another-project/app/module/admin/commands",
+		"app/my-unique-commands"
+	]
+}
+```

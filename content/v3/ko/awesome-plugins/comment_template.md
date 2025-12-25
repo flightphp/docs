@@ -1,11 +1,11 @@
 # CommentTemplate
 
-[CommentTemplate](https://github.com/KnifeLemon/CommentTemplate)은 자산 컴파일, 템플릿 상속, 변수 처리 기능을 갖춘 강력한 PHP 템플릿 엔진입니다. 내장된 CSS/JS 압축 및 캐싱으로 템플릿을 간단하면서도 유연하게 관리할 수 있습니다.
+[CommentTemplate](https://github.com/KnifeLemon/CommentTemplate)은 자산 컴파일, 템플릿 상속, 변수 처리 기능을 갖춘 강력한 PHP 템플릿 엔진입니다. 내장된 CSS/JS 최소화 및 캐싱을 통해 템플릿을 간단하고 유연하게 관리할 수 있습니다.
 
 ## 기능
 
 - **템플릿 상속**: 레이아웃 사용 및 다른 템플릿 포함
-- **자산 컴파일**: 자동 CSS/JS 압축 및 캐싱
+- **자산 컴파일**: 자동 CSS/JS 최소화 및 캐싱
 - **변수 처리**: 필터와 명령어를 사용한 템플릿 변수
 - **Base64 인코딩**: 데이터 URI로 인라인 자산
 - **Flight 프레임워크 통합**: Flight PHP 프레임워크와의 선택적 통합
@@ -20,7 +20,7 @@ composer require knifelemon/comment-template
 
 ## 기본 구성
 
-시작하기 위한 기본 구성 옵션이 있습니다. 이에 대해 자세한 내용은 [CommentTemplate Repo](https://github.com/KnifeLemon/CommentTemplate)를 참조하세요.
+시작하기 위한 기본 구성 옵션이 있습니다. 이에 대해 더 자세히 읽으려면 [CommentTemplate Repo](https://github.com/KnifeLemon/CommentTemplate)를 참조하세요.
 
 ### 방법 1: 콜백 함수 사용
 
@@ -37,10 +37,10 @@ $app->register('view', Engine::class, [], function (Engine $engine) use ($app) {
     $engine->setPublicPath(__DIR__);
     
     // 템플릿 파일 디렉토리 - 상대 경로와 절대 경로 모두 지원
-    $engine->setSkinPath('views');             // 공용 경로 기준 상대 경로
+    $engine->setSkinPath('views');             // 공용 경로에 상대적
     
-    // 컴파일된 자산이 저장되는 위치 - 상대 경로와 절대 경로 모두 지원
-    $engine->setAssetPath('assets');           // 공용 경로 기준 상대 경로
+    // 컴파일된 자산이 저장될 위치 - 상대 경로와 절대 경로 모두 지원
+    $engine->setAssetPath('assets');           // 공용 경로에 상대적
     
     // 템플릿 파일 확장자
     $engine->setFileExtension('.php');
@@ -74,13 +74,13 @@ $app->map('render', function(string $template, array $data) use ($app): void {
 });
 ```
 
-## 경로 설정
+## 경로 구성
 
-CommentTemplate은 상대 경로와 절대 경로 모두에 대한 지능형 경로 처리를 제공합니다:
+CommentTemplate은 상대 경로와 절대 경로 모두에 대한 지능적인 경로 처리를 제공합니다:
 
 ### 공용 경로
 
-**공용 경로**는 일반적으로 `index.php`가 있는 웹 애플리케이션의 루트 디렉토리입니다. 이는 웹 서버가 파일을 제공하는 문서 루트입니다.
+**공용 경로**는 웹 애플리케이션의 루트 디렉토리로, 일반적으로 `index.php`가 있는 위치입니다. 이는 웹 서버가 파일을 제공하는 문서 루트입니다.
 
 ```php
 // 예: index.php가 /var/www/html/myapp/index.php에 있는 경우
@@ -90,9 +90,9 @@ $template->setPublicPath('/var/www/html/myapp');  // 루트 디렉토리
 $template->setPublicPath('C:\\xampp\\htdocs\\myapp');
 ```
 
-### 템플릿 경로 설정
+### 템플릿 경로 구성
 
-템플릿 경로는 상대 경로와 절대 경로를 모두 지원합니다:
+템플릿 경로는 상대 경로와 절대 경로 모두를 지원합니다:
 
 ```php
 $template = new Engine();
@@ -114,9 +114,9 @@ $template->setSkinPath('D:/projects/templates');  // → D:/projects/templates/
 $template->setSkinPath('\\\\server\\share\\templates'); // → \\server\share\templates\
 ```
 
-### 자산 경로 설정
+### 자산 경로 구성
 
-자산 경로도 상대 경로와 절대 경로를 모두 지원합니다:
+자산 경로도 상대 경로와 절대 경로 모두를 지원합니다:
 
 ```php
 // 상대 경로 - 공용 경로와 자동으로 결합
@@ -137,19 +137,19 @@ $template->setAssetPath('\\\\server\\share\\assets'); // → \\server\share\asse
 
 **스마트 경로 감지:**
 
-- **상대 경로**: 선행 구분자(`/`, `\`)나 드라이브 문자가 없음
+- **상대 경로**: 선행 구분자 (`/`, `\`) 또는 드라이브 문자 없음
 - **Unix 절대**: `/`로 시작 (예: `/var/www/assets`)
 - **Windows 절대**: 드라이브 문자로 시작 (예: `C:\www`, `D:/assets`)
 - **UNC 경로**: `\\`로 시작 (예: `\\server\share`)
 
 **작동 방식:**
 
-- 모든 경로는 유형에 따라 자동으로 해결됩니다 (상대 vs 절대)
+- 모든 경로는 유형(상대 vs 절대)에 따라 자동으로 해결됩니다
 - 상대 경로는 공용 경로와 결합됩니다
-- `@css`와 `@js`는 다음 위치에 압축된 파일을 생성합니다: `{resolvedAssetPath}/css/` 또는 `{resolvedAssetPath}/js/`
-- `@asset`은 단일 파일을 다음 위치에 복사합니다: `{resolvedAssetPath}/{relativePath}`
-- `@assetDir`은 디렉토리를 다음 위치에 복사합니다: `{resolvedAssetPath}/{relativePath}`
-- 스마트 캐싱: 소스가 대상보다 최신인 경우에만 파일이 복사됩니다
+- `@css`와 `@js`는 `{resolvedAssetPath}/css/` 또는 `{resolvedAssetPath}/js/`에 최소화된 파일을 생성합니다
+- `@asset`은 단일 파일을 `{resolvedAssetPath}/{relativePath}`로 복사합니다
+- `@assetDir`은 디렉토리를 `{resolvedAssetPath}/{relativePath}`로 복사합니다
+- 스마트 캐싱: 소스 파일이 대상 파일보다 최신일 때만 파일이 복사됩니다
 
 ## 템플릿 지시어
 
@@ -181,23 +181,23 @@ $template->setAssetPath('\\\\server\\share\\assets'); // → \\server\share\asse
 
 #### CSS 파일
 ```html
-<!--@css(/css/styles.css)-->          <!-- 압축 및 캐싱됨 -->
-<!--@cssSingle(/css/critical.css)-->  <!-- 단일 파일, 압축되지 않음 -->
+<!--@css(/css/styles.css)-->          <!-- 최소화 및 캐싱 -->
+<!--@cssSingle(/css/critical.css)-->  <!-- 단일 파일, 최소화되지 않음 -->
 ```
 
 #### JavaScript 파일
 CommentTemplate은 다양한 JavaScript 로딩 전략을 지원합니다:
 
 ```html
-<!--@js(/js/script.js)-->             <!-- 압축됨, 하단에 로드 -->
-<!--@jsAsync(/js/analytics.js)-->     <!-- 압축됨, 하단에 async로 로드 -->
-<!--@jsDefer(/js/utils.js)-->         <!-- 압축됨, 하단에 defer로 로드 -->
-<!--@jsTop(/js/critical.js)-->        <!-- 압축됨, head에 로드 -->
-<!--@jsTopAsync(/js/tracking.js)-->   <!-- 압축됨, head에 async로 로드 -->
-<!--@jsTopDefer(/js/polyfill.js)-->   <!-- 압축됨, head에 defer로 로드 -->
-<!--@jsSingle(/js/widget.js)-->       <!-- 단일 파일, 압축되지 않음 -->
-<!--@jsSingleAsync(/js/ads.js)-->     <!-- 단일 파일, 압축되지 않음, async -->
-<!--@jsSingleDefer(/js/social.js)-->  <!-- 단일 파일, 압축되지 않음, defer -->
+<!--@js(/js/script.js)-->             <!-- 최소화, 하단에 로드 -->
+<!--@jsAsync(/js/analytics.js)-->     <!-- 최소화, 하단에 async로 로드 -->
+<!--@jsDefer(/js/utils.js)-->         <!-- 최소화, 하단에 defer로 로드 -->
+<!--@jsTop(/js/critical.js)-->        <!-- 최소화, head에 로드 -->
+<!--@jsTopAsync(/js/tracking.js)-->   <!-- 최소화, head에 async로 로드 -->
+<!--@jsTopDefer(/js/polyfill.js)-->   <!-- 최소화, head에 defer로 로드 -->
+<!--@jsSingle(/js/widget.js)-->       <!-- 단일 파일, 최소화되지 않음 -->
+<!--@jsSingleAsync(/js/ads.js)-->     <!-- 단일 파일, 최소화되지 않음, async -->
+<!--@jsSingleDefer(/js/social.js)-->  <!-- 단일 파일, 최소화되지 않음, defer -->
 ```
 
 #### CSS/JS 파일 내 자산 지시어
@@ -207,7 +207,7 @@ CommentTemplate은 컴파일 중 CSS 및 JavaScript 파일 내 자산 지시어�
 **CSS 예시:**
 ```css
 /* CSS 파일 내 */
-/* @font-face {
+@font-face {
     font-family: 'CustomFont';
     src: url('<!--@asset(fonts/custom.woff2)-->') format('woff2');
 }
@@ -271,7 +271,7 @@ const imageData = '<!--@base64(images/icon.png)-->';
     <!--@import(components/sidebar)-->
     
     <div class="content">
-        <p>메인 콘텐츠가 여기에...</p>
+        <p>여기에 주요 콘텐츠...</p>
     </div>
 </main>
 
@@ -304,7 +304,7 @@ const imageData = '<!--@base64(images/icon.png)-->';
 {$name|concat= (Admin)}              <!-- 텍스트 연결 -->
 ```
 
-#### 다중 필터 체인
+#### 변수 명령어
 ```html
 {$content|striptag|trim|escape}      <!-- 여러 필터 체인 -->
 ```
@@ -317,9 +317,9 @@ const imageData = '<!--@base64(images/icon.png)-->';
 {* 이것은 한 줄 템플릿 주석입니다 *}
 
 {* 
-   이것은 여러 줄에 걸친
-   다중 줄 
-   템플릿 주석입니다
+   이것은 여러 줄 
+   템플릿 주석입니다 
+   여러 줄에 걸칩니다
 *}
 
 <h1>{$title}</h1>
@@ -327,7 +327,7 @@ const imageData = '<!--@base64(images/icon.png)-->';
 <p>{$content}</p>
 ```
 
-**참고**: 템플릿 주석 `{* ... *}`은 HTML 주석 `<!-- ... -->`과 다릅니다. 템플릿 주석은 처리 중에 제거되며 브라우저에 전달되지 않습니다.
+**참고**: 템플릿 주석 `{* ... *}`은 HTML 주석 `<!-- ... -->`과 다릅니다. 템플릿 주석은 처리 중 제거되며 브라우저에 도달하지 않습니다.
 
 ## 예시 프로젝트 구조
 

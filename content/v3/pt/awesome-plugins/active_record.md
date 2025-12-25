@@ -1,6 +1,6 @@
 # Flight Active Record
 
-Um registro ativo é o mapeamento de uma entidade de banco de dados para um objeto PHP. Falando de forma simples, se você tiver uma tabela de usuários em seu banco de dados, você pode "traduzir" uma linha dessa tabela para uma classe `User` e um objeto `$user` em seu código. Veja [exemplo básico](#basic-example).
+Um active record é um mapeamento de uma entidade de banco de dados para um objeto PHP. Falando de forma simples, se você tem uma tabela users no seu banco de dados, você pode "traduzir" uma linha dessa tabela para uma classe `User` e um objeto `$user` no seu código. Veja [exemplo básico](#basic-example).
 
 Clique [aqui](https://github.com/flightphp/active-record) para o repositório no GitHub.
 
@@ -20,9 +20,9 @@ Agora você pode configurar uma nova classe para representar essa tabela:
 
 ```php
 /**
- * Uma classe ActiveRecord é geralmente singular
+ * Uma classe ActiveRecord geralmente é singular
  * 
- * É altamente recomendável adicionar as propriedades da tabela como comentários aqui
+ * É altamente recomendado adicionar as propriedades da tabela como comentários aqui
  * 
  * @property int    $id
  * @property string $name
@@ -31,7 +31,7 @@ Agora você pode configurar uma nova classe para representar essa tabela:
 class User extends flight\ActiveRecord {
 	public function __construct($database_connection)
 	{
-		// você pode configurá-la assim
+		// você pode definir assim
 		parent::__construct($database_connection, 'users');
 		// ou assim
 		parent::__construct($database_connection, null, [ 'table' => 'users']);
@@ -39,7 +39,7 @@ class User extends flight\ActiveRecord {
 }
 ```
 
-Agora assista a mágica acontecer!
+Agora veja a mágica acontecer!
 
 ```php
 // para sqlite
@@ -55,24 +55,24 @@ $database_connection = mysqli_connect('localhost', 'username', 'password', 'test
 
 $user = new User($database_connection);
 $user->name = 'Bobby Tables';
-$user->password = password_hash('uma senha legal');
+$user->password = password_hash('some cool password');
 $user->insert();
 // ou $user->save();
 
 echo $user->id; // 1
 
 $user->name = 'Joseph Mamma';
-$user->password = password_hash('uma nova senha legal!!!');
+$user->password = password_hash('some cool password again!!!');
 $user->insert();
-// não pode usar $user->save() aqui ou ele achará que é uma atualização!
+// não pode usar $user->save() aqui ou ele pensará que é uma atualização!
 
 echo $user->id; // 2
 ```
 
-E foi assim tão fácil adicionar um novo usuário! Agora que há uma linha de usuário no banco de dados, como você a extrai?
+E foi tão fácil adicionar um novo usuário! Agora que há uma linha de usuário no banco de dados, como você a recupera?
 
 ```php
-$user->find(1); // encontra id = 1 no banco de dados e o retorna.
+$user->find(1); // encontre id = 1 no banco de dados e retorne-o.
 echo $user->name; // 'Bobby Tables'
 ```
 
@@ -82,17 +82,17 @@ E se você quiser encontrar todos os usuários?
 $users = $user->findAll();
 ```
 
-E quanto a uma certa condição?
+E com uma condição específica?
 
 ```php
 $users = $user->like('name', '%mamma%')->findAll();
 ```
 
-Veja quanto é divertido isso? Vamos instalá-lo e começar!
+Veja como isso é divertido? Vamos instalá-lo e começar!
 
 ## Instalação
 
-Basta instalar com o Composer
+Simplesmente instale com o Composer
 
 ```php
 composer require flightphp/active-record 
@@ -100,10 +100,10 @@ composer require flightphp/active-record
 
 ## Uso
 
-Isso pode ser utilizado como uma biblioteca autônoma ou com o Framework PHP Flight. Totalmente a seu critério.
+Isso pode ser usado como uma biblioteca independente ou com o Flight PHP Framework. Completamente com você.
 
-### Autônomo
-Basta garantir que você passe uma conexão PDO para o construtor.
+### Independente
+Apenas certifique-se de passar uma conexão PDO para o construtor.
 
 ```php
 $pdo_connection = new PDO('sqlite:test.db'); // isso é apenas um exemplo, você provavelmente usaria uma conexão de banco de dados real
@@ -111,26 +111,26 @@ $pdo_connection = new PDO('sqlite:test.db'); // isso é apenas um exemplo, você
 $User = new User($pdo_connection);
 ```
 
-> Não quer sempre configurar sua conexão de banco de dados no construtor? Veja [Gerenciamento de Conexão de Banco de Dados](#database-connection-management) para outras ideias!
+> Não quer sempre definir sua conexão de banco de dados no construtor? Veja [Gerenciamento de Conexão de Banco de Dados](#database-connection-management) para outras ideias!
 
 ### Registrar como um método no Flight
-Se você estiver usando o Framework PHP Flight, pode registrar a classe ActiveRecord como um serviço, mas honestamente, você não precisa.
+Se você estiver usando o Flight PHP Framework, você pode registrar a classe ActiveRecord como um serviço, mas honestamente não precisa.
 
 ```php
 Flight::register('user', 'User', [ $pdo_connection ]);
 
-// então você pode usá-la assim em um controlador, uma função, etc.
+// então você pode usá-lo assim em um controlador, uma função, etc.
 
 Flight::user()->find(1);
 ```
 
 ## Métodos `runway`
 
-[runway](/awesome-plugins/runway) é uma ferramenta CLI para o Flight que possui um comando personalizado para esta biblioteca.
+[runway](/awesome-plugins/runway) é uma ferramenta CLI para Flight que tem um comando personalizado para esta biblioteca. 
 
 ```bash
 # Uso
-php runway make:record nome_da_tabela_do_banco_de_dados [nome_da_classe]
+php runway make:record database_table_name [class_name]
 
 # Exemplo
 php runway make:record users
@@ -158,11 +158,11 @@ namespace app\records;
 class UserRecord extends \flight\ActiveRecord
 {
     /**
-     * @var array $relations Defina os relacionamentos para o modelo
+     * @var array $relations Defina as relações para o modelo
      *   https://docs.flightphp.com/awesome-plugins/active-record#relationships
      */
     protected array $relations = [
-		// 'nome_da_relação' => [ self::HAS_MANY, 'ClasseRelacionada', 'chave_estrangeira' ],
+		// 'relation_name' => [ self::HAS_MANY, 'RelatedClass', 'foreign_key' ],
 	];
 
     /**
@@ -180,15 +180,15 @@ class UserRecord extends \flight\ActiveRecord
 
 #### `find($id = null) : boolean|ActiveRecord`
 
-Encontra um registro e atribui ao objeto atual. Se você passar um `$id` de algum tipo, ele realizará uma busca na chave primária com esse valor. Se nada for passado, ele apenas encontrará o primeiro registro na tabela.
+Encontra um registro e o atribui ao objeto atual. Se você passar um `$id` de algum tipo, ele executará uma busca na chave primária com esse valor. Se nada for passado, ele simplesmente encontrará o primeiro registro na tabela.
 
-Além disso, você pode passar outros métodos auxiliares para consultar sua tabela.
+Adicionalmente, você pode passar outros métodos auxiliares para consultar sua tabela.
 
 ```php
-// encontrar um registro com algumas condições previamente
+// encontre um registro com algumas condições antes
 $user->notNull('password')->orderBy('id DESC')->find();
 
-// encontrar um registro por um id específico
+// encontre um registro por um id específico
 $id = 123;
 $user->find($id);
 ```
@@ -203,7 +203,7 @@ $user->findAll();
 
 #### `isHydrated(): boolean` (v0.4.0)
 
-Retorna `true` se o registro atual tiver sido hidratado (buscado do banco de dados).
+Retorna `true` se o registro atual foi hidratado (buscado do banco de dados).
 
 ```php
 $user->find(1);
@@ -224,24 +224,24 @@ $user->insert();
 
 ##### Chaves Primárias Baseadas em Texto
 
-Se você tiver uma chave primária baseada em texto (como um UUID), pode definir o valor da chave primária antes de inserir de duas maneiras.
+Se você tiver uma chave primária baseada em texto (como um UUID), você pode definir o valor da chave primária antes de inserir de uma de duas maneiras.
 
 ```php
 $user = new User($pdo_connection, [ 'primaryKey' => 'uuid' ]);
-$user->uuid = 'algum-uuid';
+$user->uuid = 'some-uuid';
 $user->name = 'demo';
 $user->password = md5('demo');
 $user->insert(); // ou $user->save();
 ```
 
-ou você pode fazer com que a chave primária seja gerada automaticamente para você por meio de eventos.
+ou você pode ter a chave primária gerada automaticamente para você através de eventos.
 
 ```php
 class User extends flight\ActiveRecord {
 	public function __construct($database_connection)
 	{
 		parent::__construct($database_connection, 'users', [ 'primaryKey' => 'uuid' ]);
-		// você também pode definir a chave primária assim em vez do array acima.
+		// você também pode definir a primaryKey dessa maneira em vez do array acima.
 		$this->primaryKey = 'uuid';
 	}
 
@@ -251,9 +251,7 @@ class User extends flight\ActiveRecord {
 }
 ```
 
-Se você não definir a chave primária antes de inserir, ela será definida como o `rowid` e o 
-banco de dados a gerará para você, mas não persistirá porque esse campo pode não existir
-em sua tabela. Por isso, é recomendável usar o evento para gerenciar isso automaticamente.
+Se você não definir a chave primária antes de inserir, ela será definida como `rowid` e o banco de dados a gerará para você, mas não persistirá porque esse campo pode não existir na sua tabela. É por isso que é recomendado usar o evento para lidar com isso automaticamente.
 
 #### `update(): boolean|ActiveRecord`
 
@@ -267,7 +265,7 @@ $user->update();
 
 #### `save(): boolean|ActiveRecord`
 
-Insere ou atualiza o registro atual no banco de dados. Se o registro tiver um id, ele atualizará; caso contrário, ele irá inserir.
+Insere ou atualiza o registro atual no banco de dados. Se o registro tiver um id, ele atualizará, caso contrário, inserirá.
 
 ```php
 $user = new User($pdo_connection);
@@ -276,7 +274,7 @@ $user->password = md5('demo');
 $user->save();
 ```
 
-**Nota:** Se você tiver relacionamentos definidos na classe, ele salvará recursivamente essas relações também, se foram definidas, instanciadas e possuem dados sujos para atualizar. (v0.4.0 e superior)
+**Nota:** Se você tiver relações definidas na classe, ele salvará recursivamente essas relações também se elas tiverem sido definidas, instanciadas e tiverem dados sujos para atualizar. (v0.4.0 e acima)
 
 #### `delete(): boolean`
 
@@ -287,7 +285,7 @@ $user->gt('id', 0)->orderBy('id desc')->find();
 $user->delete();
 ```
 
-Você também pode excluir vários registros executando uma pesquisa previamente.
+Você também pode excluir múltiplos registros executando uma busca antes.
 
 ```php
 $user->like('name', 'Bob%')->delete();
@@ -300,32 +298,32 @@ Dados sujos referem-se aos dados que foram alterados em um registro.
 ```php
 $user->greaterThan('id', 0)->orderBy('id desc')->find();
 
-// nada está "sujo" até esse ponto.
+// nada está "sujo" até este ponto.
 
-$user->email = 'test@example.com'; // agora o e-mail é considerado "sujo" pois foi alterado.
+$user->email = 'test@example.com'; // agora o email é considerado "sujo" pois foi alterado.
 $user->update();
-// agora não há dados sujos porque foram atualizados e persistidos no banco de dados.
+// agora não há dados sujos porque foi atualizado e persistido no banco de dados
 
-$user->password = password_hash('nova_senha'); // agora isso é sujo
-$user->dirty(); // passando nada limpará todas as entradas sujas.
-$user->update(); // nada será atualizado porque nada foi capturado como sujo.
+$user->password = password_hash()'newpassword'); // agora isso é sujo
+$user->dirty(); // passar nada limpará todas as entradas sujas.
+$user->update(); // nada será atualizado pois nada foi capturado como sujo.
 
-$user->dirty([ 'name' => 'algo', 'password' => password_hash('uma senha diferente') ]);
-$user->update(); // tanto nome quanto senha são atualizados.
+$user->dirty([ 'name' => 'something', 'password' => password_hash('a different password') ]);
+$user->update(); // tanto name quanto password são atualizados.
 ```
 
 #### `copyFrom(array $data): ActiveRecord` (v0.4.0)
 
-Este é um alias para o método `dirty()`. É um pouco mais claro o que você está fazendo.
+Isso é um alias para o método `dirty()`. É um pouco mais claro o que você está fazendo.
 
 ```php
-$user->copyFrom([ 'name' => 'algo', 'password' => password_hash('uma senha diferente') ]);
-$user->update(); // tanto nome quanto senha são atualizados.
+$user->copyFrom([ 'name' => 'something', 'password' => password_hash('a different password') ]);
+$user->update(); // tanto name quanto password são atualizados.
 ```
 
 #### `isDirty(): boolean` (v0.4.0)
 
-Retorna `true` se o registro atual tiver sido alterado.
+Retorna `true` se o registro atual foi alterado.
 
 ```php
 $user->greaterThan('id', 0)->orderBy('id desc')->find();
@@ -335,15 +333,14 @@ $user->isDirty(); // true
 
 #### `reset(bool $include_query_data = true): ActiveRecord`
 
-Redefine o registro atual para seu estado inicial. Isso é muito bom para usar em tipos de comportamento de loop.
-Se você passar `true`, isso também redefinirá os dados da consulta usados para encontrar o objeto atual (comportamento padrão).
+Redefine o registro atual para seu estado inicial. Isso é realmente bom para usar em comportamentos de loop. Se você passar `true`, ele também redefinirá os dados da consulta usados para encontrar o objeto atual (comportamento padrão).
 
 ```php
 $users = $user->greaterThan('id', 0)->orderBy('id desc')->find();
 $user_company = new UserCompany($pdo_connection);
 
 foreach($users as $user) {
-	$user_company->reset(); // comece com uma folha limpa
+	$user_company->reset(); // comece com uma lousa limpa
 	$user_company->user_id = $user->id;
 	$user_company->company_id = $some_company_id;
 	$user_company->insert();
@@ -352,12 +349,12 @@ foreach($users as $user) {
 
 #### `getBuiltSql(): string` (v0.4.1)
 
-Depois de executar um método `find()`, `findAll()`, `insert()`, `update()`, ou `save()`, você pode obter o SQL que foi construído e usá-lo para fins de depuração.
+Após executar um método `find()`, `findAll()`, `insert()`, `update()`, ou `save()`, você pode obter o SQL que foi construído e usá-lo para fins de depuração.
 
 ## Métodos de Consulta SQL
 #### `select(string $field1 [, string $field2 ... ])`
 
-Você pode selecionar apenas algumas das colunas em uma tabela, se desejar (é mais eficiente em tabelas realmente largas com muitas colunas)
+Você pode selecionar apenas algumas das colunas em uma tabela se quiser (é mais performático em tabelas muito largas com muitas colunas)
 
 ```php
 $user->select('id', 'name')->find();
@@ -373,7 +370,7 @@ $user->select('id', 'name')->from('user')->find();
 
 #### `join(string $table_name, string $join_condition)`
 
-Você pode até juntar a outra tabela no banco de dados.
+Você pode até juntar com outra tabela no banco de dados.
 
 ```php
 $user->join('contacts', 'contacts.user_id = users.id')->find();
@@ -381,13 +378,13 @@ $user->join('contacts', 'contacts.user_id = users.id')->find();
 
 #### `where(string $where_conditions)`
 
-Você pode definir alguns argumentos where personalizados (não pode definir parâmetros nesta declaração where)
+Você pode definir alguns argumentos where personalizados (você não pode definir params nesta declaração where)
 
 ```php
 $user->where('id=1 AND name="demo"')->find();
 ```
 
-**Nota de Segurança** - Você pode ser tentado a fazer algo como `$user->where("id = '{$id}' AND name = '{$name}'")->find();`. Por favor, NÃO FAÇA ISSO!!! Isso é suscetível a ataques que são conhecidos como injeções de SQL. Existem muitos artigos online, por favor, pesquise "sql injection attacks php" e você encontrará muitos artigos sobre esse assunto. A maneira adequada de lidar com isso com esta biblioteca é, em vez desse método `where()`, você faria algo mais parecido com `$user->eq('id', $id)->eq('name', $name)->find();` Se você absolutamente precisa fazer isso, a biblioteca `PDO` possui `$pdo->quote($var)` para escapar para você. Somente após usar `quote()` você pode usá-lo em uma declaração `where()`.
+**Nota de Segurança** - Você pode ser tentado a fazer algo como `$user->where("id = '{$id}' AND name = '{$name}'")->find();`. Por favor, NÃO FAÇA ISSO!!! Isso é suscetível a ataques conhecidos como Injeção de SQL. Há muitos artigos online, por favor pesquise "sql injection attacks php" e você encontrará muitos artigos sobre o assunto. A maneira adequada de lidar com isso com esta biblioteca é, em vez de usar este método `where()`, você faria algo como `$user->eq('id', $id)->eq('name', $name)->find();` Se você absolutamente tiver que fazer isso, a biblioteca `PDO` tem `$pdo->quote($var)` para escapá-lo para você. Somente após usar `quote()` você pode usá-lo em uma declaração `where()`.
 
 #### `group(string $group_by_statement)/groupBy(string $group_by_statement)`
 
@@ -399,7 +396,7 @@ $user->select('COUNT(*) as count')->groupBy('name')->findAll();
 
 #### `order(string $order_by_statement)/orderBy(string $order_by_statement)`
 
-Classifique a consulta retornada de uma certa maneira.
+Ordene a consulta retornada de uma certa maneira.
 
 ```php
 $user->orderBy('name DESC')->find();
@@ -407,7 +404,7 @@ $user->orderBy('name DESC')->find();
 
 #### `limit(string $limit)/limit(int $offset, int $limit)`
 
-Limite a quantidade de registros retornados. Se um segundo int for dado, será offset, limit como em SQL.
+Limite a quantidade de registros retornados. Se um segundo int for dado, será offset, limit assim como no SQL.
 
 ```php
 $user->orderby('name DESC')->limit(0, 10)->findAll();
@@ -501,20 +498,20 @@ $user->between('id', [1, 2])->find();
 
 ### Condições OR
 
-É possível envolver suas condições em uma declaração OR. Isso é feito com o método `startWrap()` e `endWrap()` ou preenchendo o 3º parâmetro da condição após o campo e o valor.
+É possível envolver suas condições em uma declaração OR. Isso é feito com os métodos `startWrap()` e `endWrap()` ou preenchendo o 3º parâmetro da condição após o campo e valor.
 
 ```php
 // Método 1
 $user->eq('id', 1)->startWrap()->eq('name', 'demo')->or()->eq('name', 'test')->endWrap('OR')->find();
-// Isso será avaliado para `id = 1 AND (name = 'demo' OR name = 'test')`
+// Isso avaliará como `id = 1 AND (name = 'demo' OR name = 'test')`
 
 // Método 2
 $user->eq('id', 1)->eq('name', 'demo', 'OR')->find();
-// Isso será avaliado para `id = 1 OR name = 'demo'`
+// Isso avaliará como `id = 1 OR name = 'demo'`
 ```
 
 ## Relacionamentos
-Você pode definir vários tipos de relacionamentos usando esta biblioteca. Você pode definir relacionamentos um->muitos e um->um entre tabelas. Isso requer uma configuração extra na classe previamente.
+Você pode definir vários tipos de relacionamentos usando esta biblioteca. Você pode definir relacionamentos um-para-muitos e um-para-um entre tabelas. Isso requer um pouco de configuração extra na classe antes.
 
 Definir o array `$relations` não é difícil, mas adivinhar a sintaxe correta pode ser confuso.
 
@@ -527,7 +524,7 @@ protected array $relations = [
 		self::HAS_ONE, // este é o tipo de relacionamento
 
 		// obrigatório
-		'Some_Class', // esta é a classe ActiveRecord "outra" que será referenciada
+		'Some_Class', // esta é a classe ActiveRecord "outra" que isso referenciará
 
 		// obrigatório
 		// dependendo do tipo de relacionamento
@@ -535,20 +532,20 @@ protected array $relations = [
 		// self::HAS_MANY = a chave estrangeira que referencia a junção
 		// self::BELONGS_TO = a chave local que referencia a junção
 		'local_or_foreign_key',
-		// apenas FYI, isso também se junta apenas à chave primária do modelo "outro"
+		// apenas FYI, isso também só junta com a chave primária do modelo "outro"
 
 		// opcional
-		[ 'eq' => [ 'client_id', 5 ], 'select' => 'COUNT(*) as count', 'limit' 5 ], // condições adicionais que você deseja ao juntar a relação
+		[ 'eq' => [ 'client_id', 5 ], 'select' => 'COUNT(*) as count', 'limit' 5 ], // condições adicionais que você quer ao juntar a relação
 		// $record->eq('client_id', 5)->select('COUNT(*) as count')->limit(5))
 
 		// opcional
-		'back_reference_name' // isso é se você quiser referenciar essa relação de volta para si mesma Ex: $user->contact->user;
+		'back_reference_name' // isso é se você quiser referenciar de volta este relacionamento para si mesmo Ex: $user->contact->user;
 	];
 ]
 ```
 
 ```php
-class User extends ActiveRecord {
+class User extends ActiveRecord{
 	protected array $relations = [
 		'contacts' => [ self::HAS_MANY, Contact::class, 'user_id' ],
 		'contact' => [ self::HAS_ONE, Contact::class, 'user_id' ],
@@ -560,7 +557,7 @@ class User extends ActiveRecord {
 	}
 }
 
-class Contact extends ActiveRecord {
+class Contact extends ActiveRecord{
 	protected array $relations = [
 		'user' => [ self::BELONGS_TO, User::class, 'user_id' ],
 		'user_with_backref' => [ self::BELONGS_TO, User::class, 'user_id', [], 'contact' ],
@@ -572,33 +569,134 @@ class Contact extends ActiveRecord {
 }
 ```
 
-Agora temos as referências configuradas para que possamos usá-las muito facilmente!
+Agora temos as referências configuradas para que possamos usá-las facilmente!
 
 ```php
 $user = new User($pdo_connection);
 
-// encontrar o usuário mais recente.
+// encontre o usuário mais recente.
 $user->notNull('id')->orderBy('id desc')->find();
 
-// obter contatos usando a relação:
+// obtenha contatos usando a relação:
 foreach($user->contacts as $contact) {
 	echo $contact->id;
 }
 
-// ou podemos fazer o caminho inverso.
+// ou podemos ir do outro jeito.
 $contact = new Contact();
 
-// encontrar um contato
+// encontre um contato
 $contact->find();
 
-// obter usuário usando a relação:
+// obtenha o usuário usando a relação:
 echo $contact->user->name; // este é o nome do usuário
 ```
 
-Bem legal, não é?
+Bem legal, hein?
+
+### Carregamento Ansioso
+
+#### Visão Geral
+O carregamento ansioso resolve o problema de consulta N+1 carregando relacionamentos antecipadamente. Em vez de executar uma consulta separada para os relacionamentos de cada registro, o carregamento ansioso busca todos os dados relacionados em apenas uma consulta adicional por relacionamento.
+
+> **Nota:** O carregamento ansioso está disponível apenas para v0.7.0 e acima.
+
+#### Uso Básico
+Use o método `with()` para especificar quais relacionamentos carregar ansiosamente:
+```php
+// Carregue usuários com seus contatos em 2 consultas em vez de N+1
+$users = $user->with('contacts')->findAll();
+foreach ($users as $u) {
+    foreach ($u->contacts as $contact) {
+        echo $contact->email; // Sem consulta adicional!
+    }
+}
+```
+
+#### Múltiplas Relações
+Carregue múltiplos relacionamentos de uma vez:
+```php
+$users = $user->with(['contacts', 'profile', 'settings'])->findAll();
+```
+
+#### Tipos de Relacionamento
+
+##### HAS_MANY
+```php
+// Carregue ansiosamente todos os contatos para cada usuário
+$users = $user->with('contacts')->findAll();
+foreach ($users as $u) {
+    // $u->contacts já está carregado como um array
+    foreach ($u->contacts as $contact) {
+        echo $contact->email;
+    }
+}
+```
+##### HAS_ONE
+```php
+// Carregue ansiosamente um contato para cada usuário
+$users = $user->with('contact')->findAll();
+foreach ($users as $u) {
+    // $u->contact já está carregado como um objeto
+    echo $u->contact->email;
+}
+```
+
+##### BELONGS_TO
+```php
+// Carregue ansiosamente usuários pais para todos os contatos
+$contacts = $contact->with('user')->findAll();
+foreach ($contacts as $c) {
+    // $c->user já está carregado
+    echo $c->user->name;
+}
+```
+##### Com find()
+O carregamento ansioso funciona com 
+findAll()
+ e 
+find()
+:
+
+```php
+$user = $user->with('contacts')->find(1);
+// Usuário e todos os seus contatos carregados em 2 consultas
+```
+#### Benefícios de Desempenho
+Sem carregamento ansioso (problema N+1):
+```php
+$users = $user->findAll(); // 1 consulta
+foreach ($users as $u) {
+    $contacts = $u->contacts; // N consultas (uma por usuário!)
+}
+// Total: 1 + N consultas
+```
+
+Com carregamento ansioso:
+
+```php
+$users = $user->with('contacts')->findAll(); // 2 consultas no total
+foreach ($users as $u) {
+    $contacts = $u->contacts; // 0 consultas adicionais!
+}
+// Total: 2 consultas (1 para usuários + 1 para todos os contatos)
+```
+Para 10 usuários, isso reduz as consultas de 11 para 2 - uma redução de 82%!
+
+#### Notas Importantes
+- O carregamento ansioso é completamente opcional - o carregamento preguiçoso ainda funciona como antes
+- Relacionamentos já carregados são automaticamente ignorados
+- Referências de volta funcionam com carregamento ansioso
+- Callbacks de relação são respeitados durante o carregamento ansioso
+
+#### Limitações
+- Carregamento ansioso aninhado (ex., 
+with(['contacts.addresses'])
+) não é suportado atualmente
+- Restrições de carregamento ansioso via closures não são suportadas nesta versão
 
 ## Definindo Dados Personalizados
-Às vezes você pode precisar anexar algo único ao seu ActiveRecord, como um cálculo personalizado que pode ser mais fácil apenas anexar ao objeto que então seria passado para, digamos, um modelo.
+Às vezes, você pode precisar anexar algo único ao seu ActiveRecord, como um cálculo personalizado que pode ser mais fácil de simplesmente anexar ao objeto que seria passado para, digamos, um template.
 
 #### `setCustomData(string $field, mixed $value)`
 Você anexa os dados personalizados com o método `setCustomData()`.
@@ -606,7 +704,7 @@ Você anexa os dados personalizados com o método `setCustomData()`.
 $user->setCustomData('page_view_count', $page_view_count);
 ```
 
-E então, você simplesmente faz referência a ele como uma propriedade normal do objeto.
+E então você simplesmente o referencia como uma propriedade de objeto normal.
 
 ```php
 echo $user->page_view_count;
@@ -614,7 +712,7 @@ echo $user->page_view_count;
 
 ## Eventos
 
-Mais uma super incrível característica sobre esta biblioteca é sobre eventos. Eventos são acionados em determinados momentos com base em certos métodos que você chama. Eles são muito úteis para configurar dados automaticamente para você.
+Uma funcionalidade super legal sobre esta biblioteca é sobre eventos. Eventos são acionados em certos momentos com base em certos métodos que você chama. Eles são muito úteis para configurar dados para você automaticamente.
 
 #### `onConstruct(ActiveRecord $ActiveRecord, array &config)`
 
@@ -631,7 +729,7 @@ Flight::register('db', 'PDO', [ 'sqlite:test.db' ]);
 // User.php
 class User extends flight\ActiveRecord {
 
-	protected function onConstruct(self $self, array &$config) { // não se esqueça da referência &
+	protected function onConstruct(self $self, array &$config) { // não esqueça a referência &
 		// você poderia fazer isso para definir automaticamente a conexão
 		$config['connection'] = Flight::db();
 		// ou isso
@@ -645,7 +743,7 @@ class User extends flight\ActiveRecord {
 
 #### `beforeFind(ActiveRecord $ActiveRecord)`
 
-Isso provavelmente só é útil se você precisar de uma manipulação de consulta toda vez.
+Isso provavelmente é útil apenas se você precisar de uma manipulação de consulta a cada vez.
 
 ```php
 class User extends flight\ActiveRecord {
@@ -656,7 +754,7 @@ class User extends flight\ActiveRecord {
 	}
 
 	protected function beforeFind(self $self) {
-		// sempre execute id >= 0 se isso for do seu agrado
+		// sempre execute id >= 0 se isso for o seu estilo
 		$self->gte('id', 0); 
 	} 
 }
@@ -664,7 +762,7 @@ class User extends flight\ActiveRecord {
 
 #### `afterFind(ActiveRecord $ActiveRecord)`
 
-Esse é provavelmente mais útil se você sempre precisar executar alguma lógica toda vez que este registro for buscado. Você precisa descriptografar algo? Você precisa executar uma consulta de contagem personalizada a cada vez (não performático, mas tudo bem)?
+Este é provavelmente mais útil se você sempre precisar executar alguma lógica toda vez que este registro é buscado. Você precisa descriptografar algo? Você precisa executar uma consulta de contagem personalizada a cada vez (não performático, mas tanto faz)?
 
 ```php
 class User extends flight\ActiveRecord {
@@ -686,7 +784,7 @@ class User extends flight\ActiveRecord {
 
 #### `beforeFindAll(ActiveRecord $ActiveRecord)`
 
-Isso é provavelmente só útil se você precisar de uma manipulação de consulta toda vez.
+Isso provavelmente é útil apenas se você precisar de uma manipulação de consulta a cada vez.
 
 ```php
 class User extends flight\ActiveRecord {
@@ -697,7 +795,7 @@ class User extends flight\ActiveRecord {
 	}
 
 	protected function beforeFindAll(self $self) {
-		// sempre execute id >= 0 se isso for do seu agrado
+		// sempre execute id >= 0 se isso for o seu estilo
 		$self->gte('id', 0); 
 	} 
 }
@@ -705,7 +803,7 @@ class User extends flight\ActiveRecord {
 
 #### `afterFindAll(array<int,ActiveRecord> $results)`
 
-Semelhante ao `afterFind()`, mas você pode fazê-lo com todos os registros!
+Similar ao `afterFind()` mas você pode fazer isso para todos os registros!
 
 ```php
 class User extends flight\ActiveRecord {
@@ -718,7 +816,7 @@ class User extends flight\ActiveRecord {
 	protected function afterFindAll(array $results) {
 
 		foreach($results as $self) {
-			// faça algo legal como no afterFind()
+			// faça algo legal como afterFind()
 		}
 	} 
 }
@@ -726,7 +824,7 @@ class User extends flight\ActiveRecord {
 
 #### `beforeInsert(ActiveRecord $ActiveRecord)`
 
-Realmente útil se você precisar definir alguns valores padrão toda vez.
+Realmente útil se você precisar de alguns valores padrão definidos a cada vez.
 
 ```php
 class User extends flight\ActiveRecord {
@@ -737,7 +835,7 @@ class User extends flight\ActiveRecord {
 	}
 
 	protected function beforeInsert(self $self) {
-		// defina alguns padrões sensatos
+		// defina alguns padrões sólidos
 		if(!$self->created_date) {
 			$self->created_date = gmdate('Y-m-d');
 		}
@@ -751,7 +849,7 @@ class User extends flight\ActiveRecord {
 
 #### `afterInsert(ActiveRecord $ActiveRecord)`
 
-Talvez você tenha um caso de uso para mudar dados após serem inseridos?
+Talvez você tenha um caso de uso para alterar dados após a inserção?
 
 ```php
 class User extends flight\ActiveRecord {
@@ -764,14 +862,14 @@ class User extends flight\ActiveRecord {
 	protected function afterInsert(self $self) {
 		// você faz o que quiser
 		Flight::cache()->set('most_recent_insert_id', $self->id);
-		// ou qualquer outra coisa....
+		// ou o que for....
 	} 
 }
 ```
 
 #### `beforeUpdate(ActiveRecord $ActiveRecord)`
 
-Realmente útil se você precisar definir alguns valores padrão cada vez que uma atualização ocorrer.
+Realmente útil se você precisar de alguns valores padrão definidos a cada vez em uma atualização.
 
 ```php
 class User extends flight\ActiveRecord {
@@ -782,7 +880,7 @@ class User extends flight\ActiveRecord {
 	}
 
 	protected function beforeInsert(self $self) {
-		// defina alguns padrões sensatos
+		// defina alguns padrões sólidos
 		if(!$self->updated_date) {
 			$self->updated_date = gmdate('Y-m-d');
 		}
@@ -792,7 +890,7 @@ class User extends flight\ActiveRecord {
 
 #### `afterUpdate(ActiveRecord $ActiveRecord)`
 
-Talvez você tenha um caso de uso para mudar dados após serem atualizados?
+Talvez você tenha um caso de uso para alterar dados após a atualização?
 
 ```php
 class User extends flight\ActiveRecord {
@@ -805,14 +903,14 @@ class User extends flight\ActiveRecord {
 	protected function afterInsert(self $self) {
 		// você faz o que quiser
 		Flight::cache()->set('most_recently_updated_user_id', $self->id);
-		// ou qualquer outra coisa....
+		// ou o que for....
 	} 
 }
 ```
 
 #### `beforeSave(ActiveRecord $ActiveRecord)/afterSave(ActiveRecord $ActiveRecord)`
 
-Isso é útil se você quiser que eventos aconteçam tanto quando inserções quanto atualizações ocorrerem. Vou poupar você da longa explicação, mas tenho certeza de que você pode imaginar o que é.
+Isso é útil se você quiser que eventos aconteçam tanto em inserções quanto em atualizações. Vou poupá-lo da longa explicação, mas tenho certeza de que você pode adivinhar o que é.
 
 ```php
 class User extends flight\ActiveRecord {
@@ -841,14 +939,14 @@ class User extends flight\ActiveRecord {
 	}
 
 	protected function beforeDelete(self $self) {
-		echo 'Ele foi um soldado valente... :cry-face:';
+		echo 'He was a brave soldier... :cry-face:';
 	} 
 }
 ```
 
 ## Gerenciamento de Conexão de Banco de Dados
 
-Quando você estiver usando esta biblioteca, pode definir a conexão com o banco de dados de algumas maneiras diferentes. Você pode definir a conexão no construtor, pode defini-la via uma variável de configuração `$config['connection']` ou pode defini-la via `setDatabaseConnection()` (v0.4.1).
+Quando você está usando esta biblioteca, você pode definir a conexão de banco de dados de algumas maneiras diferentes. Você pode definir a conexão no construtor, você pode defini-la via uma variável de configuração `$config['connection']` ou você pode defini-la via `setDatabaseConnection()` (v0.4.1). 
 
 ```php
 $pdo_connection = new PDO('sqlite:test.db'); // por exemplo
@@ -860,7 +958,7 @@ $user = new User();
 $user->setDatabaseConnection($pdo_connection);
 ```
 
-Se você deseja evitar configurar sempre uma `$database_connection` toda vez que chamar um registro ativo, existem maneiras de contornar isso!
+Se você quiser evitar sempre definir um `$database_connection` toda vez que chamar um active record, há maneiras de contornar isso!
 
 ```php
 // index.php ou bootstrap.php
@@ -877,24 +975,23 @@ class User extends flight\ActiveRecord {
 	}
 }
 
-// E agora, nenhum argumento é necessário!
+// E agora, sem argumentos necessários!
 $user = new User();
 ```
 
-> **Nota:** Se você planeja fazer testes unitários, fazer assim pode adicionar alguns desafios aos testes unitários, mas, no geral, porque você pode injetar sua 
-conexão com `setDatabaseConnection()` ou `$config['connection']`, não é tão complicado.
+> **Nota:** Se você estiver planejando testes unitários, fazer isso dessa maneira pode adicionar alguns desafios aos testes unitários, mas no geral, porque você pode injetar sua conexão com `setDatabaseConnection()` ou `$config['connection']`, não é tão ruim.
 
-Se você precisar atualizar a conexão do banco de dados, por exemplo, se estiver executando um script CLI de longa duração e precisar atualizar a conexão de tempos em tempos, pode redefinir a conexão com `$your_record->setDatabaseConnection($pdo_connection)`.
+Se você precisar atualizar a conexão de banco de dados, por exemplo, se estiver executando um script CLI de longa duração e precisar atualizar a conexão de tempos em tempos, você pode redefinir a conexão com `$your_record->setDatabaseConnection($pdo_connection)`.
 
-## Contribuindo
+## Contribuição
 
-Por favor, contribua. :D
+Por favor, faça. :D
 
 ### Configuração
 
-Quando você contribuir, certifique-se de executar `composer test-coverage` para manter 100% de cobertura de testes (isso não é verdadeiro teste unitário, mais como teste de integração).
+Quando você contribuir, certifique-se de executar `composer test-coverage` para manter 100% de cobertura de testes (isso não é cobertura de teste unitário real, mais como testes de integração).
 
-Além disso, certifique-se de executar `composer beautify` e `composer phpcs` para corrigir quaisquer erros de linting.
+Também certifique-se de executar `composer beautify` e `composer phpcs` para corrigir qualquer erro de linting.
 
 ## Licença
 

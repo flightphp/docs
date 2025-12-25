@@ -1,14 +1,14 @@
 # CommentTemplate
 
-[CommentTemplate](https://github.com/KnifeLemon/CommentTemplate) は、強力な PHP テンプレートエンジンで、アセットのコンパイル、テンプレートの継承、変数の処理を備えています。組み込みの CSS/JS 最小化とキャッシュにより、シンプルで柔軟なテンプレート管理を提供します。
+[CommentTemplate](https://github.com/KnifeLemon/CommentTemplate) は、強力な PHP テンプレートエンジンで、アセットのコンパイル、テンプレートの継承、変数の処理を備えています。ビルトインの CSS/JS 最小化とキャッシュにより、シンプルで柔軟なテンプレート管理を提供します。
 
 ## 機能
 
 - **テンプレートの継承**: レイアウトを使用し、他のテンプレートを含める
-- **アセットのコンパイル**: CSS/JS の自動最小化とキャッシュ
+- **アセットのコンパイル**: 自動 CSS/JS 最小化とキャッシュ
 - **変数の処理**: フィルターとコマンド付きのテンプレート変数
 - **Base64 エンコーディング**: アセットをデータ URI としてインライン化
-- **Flight Framework 統合**: Flight PHP フレームワークとのオプションの統合
+- **Flight Framework との統合**: Flight PHP フレームワークとのオプションの統合
 
 ## インストール
 
@@ -33,141 +33,14 @@ use KnifeLemon\CommentTemplate\Engine;
 $app = Flight::app();
 
 $app->register('view', Engine::class, [], function (Engine $engine) use ($app) {
-    // ルートディレクトリ（index.phpがある場所）- Webアプリケーションのドキュメントルート
+    // ルートディレクトリ（index.php が存在する場所） - Web アプリケーションのドキュメントルート
     $engine->setPublicPath(__DIR__);
     
-    // テンプレートファイルディレクトリ - 相対パスと絶対パスの両方をサポート
-    $engine->setSkinPath('views');             // パブリックパス基準の相対パス
+    // テンプレートファイルのディレクトリ - 相対パスと絶対パスの両方をサポート
+    $engine->setSkinPath('views');             // パブリックパスに対する相対パス
     
-    // コンパイルされたアセットが保存される場所 - 相対パスと絶対パスの両方をサポート
-    $engine->setAssetPath('assets');           // パブリックパス基準の相対パス
-    
-    // テンプレートファイル拡張子
-    $engine->setFileExtension('.php');
-});
-
-$app->map('render', function(string $template, array $data) use ($app): void {
-    echo $app->view()->render($template, $data);
-});
-```
-
-### 方法 2: コンストラクタパラメータを使用
-
-```php
-<?php
-require_once 'vendor/autoload.php';
-
-use KnifeLemon\CommentTemplate\Engine;
-
-$app = Flight::app();
-
-// __construct(string $publicPath = "", string $skinPath = "", string $assetPath = "", string $fileExtension = "")
-$app->register('view', Engine::class, [
-    __DIR__,                // publicPath - ルートディレクトリ（index.phpがある場所）
-    'views',                // skinPath - テンプレートパス（相対/絶対パスをサポート）
-    'assets',               // assetPath - コンパイルされたアセットパス（相対/絶対パスをサポート）
-    '.php'                  // fileExtension - テンプレートファイル拡張子
-]);
-
-$app->map('render', function(string $template, array $data) use ($app): void {
-    echo $app->view()->render($template, $data);
-});
-```
-
-## パス設定
-
-CommentTemplate は相対パスと絶対パスの両方に対するインテリジェントなパス処理を提供します：
-
-### パブリックパス
-
-**パブリックパス**は、通常 `index.php` が配置されている Web アプリケーションのルートディレクトリです。これは Web サーバーがファイルを提供するドキュメントルートです。
-
-```php
-// 例: index.phpが /var/www/html/myapp/index.php にある場合
-$template->setPublicPath('/var/www/html/myapp');  // ルートディレクトリ
-
-// Windows例: index.phpが C:\xampp\htdocs\myapp\index.php にある場合
-$template->setPublicPath('C:\\xampp\\htdocs\\myapp');
-```
-
-### テンプレートパス設定
-
-テンプレートパスは相対パスと絶対パスの両方をサポートします：
-
-```php
-$template = new Engine();
-$template->setPublicPath('/var/www/html/myapp');  // ルートディレクトリ（index.phpがある場所）
-
-// 相対パス - パブリックパスと自動的に結合
-$template->setSkinPath('views');           // → /var/www/html/myapp/views/
-$template->setSkinPath('templates/pages'); // → /var/www/html/myapp/templates/pages/
-
-// 絶対パス - そのまま使用（Unix/Linux）
-$template->setSkinPath('/var/www/templates');      // → /var/www/templates/
-$template->setSkinPath('/full/path/to/templates'); // → /full/path/to/templates/
-
-// Windows絶対パス
-$template->setSkinPath('C:\\www\\templates');     // → C:\www\templates\
-$template->setSkinPath('D:/projects/templates');  // → D:/projects/templates/
-
-// UNCパス（Windowsネットワーク共有）
-$template->setSkinPath('\\\\server\\share\\templates'); // → \\server\share\templates\
-```
-
-### アセットパス設定
-
-アセットパスも相対パスと絶対パスの両方をサポートします：
-
-```php
-// 相対パス - パブリックパスと自動的に結合
-$template->setAssetPath('assets');        // → /var/www/html/myapp/assets/
-$template->setAssetPath('static/files');  // → /var/www/html/myapp/static/files/
-
-// 絶対パス - そのまま使用（Unix/Linux）
-$template->setAssetPath('/var/www/cdn');           // → /var/www/cdn/
-$template->setAssetPath('/full/path/to/assets');   // → /full/path/to/assets/
-
-// Windows絶対パス
-$template->setAssetPath('C:\\www\\static');       // → C:\www\static\
-$template->setAssetPath('D:/projects/assets');    // → D:/projects/assets/
-
-// UNCパス（Windowsネットワーク共有）
-$template->setAssetPath('\\\\server\\share\\assets'); // → \\server\share\assets\
-```
-
-**スマートパス検出:**
-
-- **相対パス**: 先頭の区切り文字（`/`、`\`）やドライブ文字なし
-- **Unix絶対**: `/` で始まる（例：`/var/www/assets`）
-- **Windows絶対**: ドライブ文字で始まる（例：`C:\www`、`D:/assets`）
-- **UNCパス**: `\\` で始まる（例：`\\server\share`）
-
-**動作方法:**
-
-- すべてのパスはタイプに基づいて自動的に解決されます（相対 vs 絶対）
-- 相対パスはパブリックパスと結合されます
-- `@css` と `@js` は以下の場所に最小化されたファイルを作成します：`{resolvedAssetPath}/css/` または `{resolvedAssetPath}/js/`
-- `@asset` は単一ファイルを以下の場所にコピーします：`{resolvedAssetPath}/{relativePath}`
-- `@assetDir` はディレクトリを以下の場所にコピーします：`{resolvedAssetPath}/{relativePath}`
-- スマートキャッシュ: ソースが宛先より新しい場合のみファイルがコピーされます
-
-```php
-<?php
-require_once 'vendor/autoload.php';
-
-use KnifeLemon\CommentTemplate\Engine;
-
-$app = Flight::app();
-
-$app->register('view', Engine::class, [], function (Engine $engine) use ($app) {
-    // テンプレートファイルが保存される場所
-    $engine->setTemplatesPath(__DIR__ . '/views');
-    
-    // パブリックアセットが提供される場所
-    $engine->setPublicPath(__DIR__ . '/public');
-    
-    // コンパイルされたアセットが保存される場所
-    $engine->setAssetPath('assets');
+    // コンパイルされたアセットの保存場所 - 相対パスと絶対パスの両方をサポート
+    $engine->setAssetPath('assets');           // パブリックパスに対する相対パス
     
     // テンプレートファイルの拡張子
     $engine->setFileExtension('.php');
@@ -190,9 +63,9 @@ $app = Flight::app();
 
 // __construct(string $publicPath = "", string $skinPath = "", string $assetPath = "", string $fileExtension = "")
 $app->register('view', Engine::class, [
-    __DIR__ . '/public',    // publicPath - アセットが提供される場所
-    __DIR__ . '/views',     // skinPath - テンプレートファイルが保存される場所  
-    'assets',               // assetPath - コンパイルされたアセットが保存される場所
+    __DIR__,                // publicPath - ルートディレクトリ（index.php が存在する場所）
+    'views',                // skinPath - テンプレートパス（相対/絶対をサポート）
+    'assets',               // assetPath - コンパイルされたアセットパス（相対/絶対をサポート）
     '.php'                  // fileExtension - テンプレートファイルの拡張子
 ]);
 
@@ -201,9 +74,86 @@ $app->map('render', function(string $template, array $data) use ($app): void {
 });
 ```
 
+## パス設定
+
+CommentTemplate は、相対パスと絶対パスの両方に対してインテリジェントなパス処理を提供します：
+
+### パブリックパス
+
+**パブリックパス** は、Web アプリケーションのルートディレクトリで、通常 `index.php` が存在する場所です。これは Web サーバーがファイルを配信するドキュメントルートです。
+
+```php
+// 例: index.php が /var/www/html/myapp/index.php にある場合
+$template->setPublicPath('/var/www/html/myapp');  // ルートディレクトリ
+
+// Windows の例: index.php が C:\xampp\htdocs\myapp\index.php にある場合
+$template->setPublicPath('C:\\xampp\\htdocs\\myapp');
+```
+
+### テンプレートパス設定
+
+テンプレートパスは、相対パスと絶対パスの両方をサポートします：
+
+```php
+$template = new Engine();
+$template->setPublicPath('/var/www/html/myapp');  // ルートディレクトリ（index.php が存在する場所）
+
+// 相対パス - パブリックパスと自動的に結合
+$template->setSkinPath('views');           // → /var/www/html/myapp/views/
+$template->setSkinPath('templates/pages'); // → /var/www/html/myapp/templates/pages/
+
+// 絶対パス - そのまま使用（Unix/Linux）
+$template->setSkinPath('/var/www/templates');      // → /var/www/templates/
+$template->setSkinPath('/full/path/to/templates'); // → /full/path/to/templates/
+
+// Windows 絶対パス
+$template->setSkinPath('C:\\www\\templates');     // → C:\www\templates\
+$template->setSkinPath('D:/projects/templates');  // → D:/projects/templates/
+
+// UNC パス（Windows ネットワーク共有）
+$template->setSkinPath('\\\\server\\share\\templates'); // → \\server\share\templates\
+```
+
+### アセットパス設定
+
+アセットパスも相対パスと絶対パスの両方をサポートします：
+
+```php
+// 相対パス - パブリックパスと自動的に結合
+$template->setAssetPath('assets');        // → /var/www/html/myapp/assets/
+$template->setAssetPath('static/files');  // → /var/www/html/myapp/static/files/
+
+// 絶対パス - そのまま使用（Unix/Linux）
+$template->setAssetPath('/var/www/cdn');           // → /var/www/cdn/
+$template->setAssetPath('/full/path/to/assets');   // → /full/path/to/assets/
+
+// Windows 絶対パス
+$template->setAssetPath('C:\\www\\static');       // → C:\www\static\
+$template->setAssetPath('D:/projects/assets');    // → D:/projects/assets/
+
+// UNC パス（Windows ネットワーク共有）
+$template->setAssetPath('\\\\server\\share\\assets'); // → \\server\share\assets\
+```
+
+**スマートパス検出：**
+
+- **相対パス**: 先頭に区切り文字（`/`、`\`）やドライブレターがない
+- **Unix 絶対**: `/` で始まる（例: `/var/www/assets`）
+- **Windows 絶対**: ドライブレターで始まる（例: `C:\www`、`D:/assets`）
+- **UNC パス**: `\\` で始まる（例: `\\server\share`）
+
+**仕組み：**
+
+- すべてのパスはタイプ（相対 vs 絶対）に基づいて自動的に解決される
+- 相対パスはパブリックパスと結合される
+- `@css` と `@js` は最小化されたファイルを `{resolvedAssetPath}/css/` または `{resolvedAssetPath}/js/` に作成
+- `@asset` は単一ファイルを `{resolvedAssetPath}/{relativePath}` にコピー
+- `@assetDir` はディレクトリを `{resolvedAssetPath}/{relativePath}` にコピー
+- スマートキャッシュ: ソースがデスティネーションより新しい場合のみファイルをコピー
+
 ## テンプレートディレクティブ
 
-### レイアウトの継承
+### レイアウト継承
 
 共通の構造を作成するためにレイアウトを使用します：
 
@@ -252,12 +202,11 @@ CommentTemplate は異なる JavaScript 読み込み戦略をサポートしま�
 
 #### CSS/JS ファイル内のアセットディレクティブ
 
-CommentTemplate はコンパイル中に CSS と JavaScript ファイル内のアセットディレクティブも処理します：
+CommentTemplate は、コンパイル中に CSS と JavaScript ファイル内のアセットディレクティブも処理します：
 
-**CSS の例:**
+**CSS の例：**
 ```css
-/* CSS ファイル内 */
-/* フォントファイル */
+/* あなたの CSS ファイル内で */
 @font-face {
     font-family: 'CustomFont';
     src: url('<!--@asset(fonts/custom.woff2)-->') format('woff2');
@@ -272,18 +221,18 @@ CommentTemplate はコンパイル中に CSS と JavaScript ファイル内の�
 }
 ```
 
-**JavaScript の例:**
+**JavaScript の例：**
 ```javascript
-/* JS ファイル内 */
+/* あなたの JS ファイル内で */
 const fontUrl = '<!--@asset(fonts/custom.woff2)-->';
 const imageData = '<!--@base64(images/icon.png)-->';
 ```
 
 #### Base64 エンコーディング
 ```html
-<!--@base64(images/logo.png)-->       <!-- データ URI としてインライン化 -->
+<!--@base64(images/logo.png)-->       <!-- データ URI としてインライン -->
 ```
-**例:**
+**例：**
 ```html
 <!-- 小さな画像をデータ URI としてインライン化して高速読み込み -->
 <img src="<!--@base64(images/logo.png)-->" alt="Logo">
@@ -294,16 +243,16 @@ const imageData = '<!--@base64(images/icon.png)-->';
 
 #### アセットのコピー
 ```html
-<!--@asset(images/photo.jpg)-->       <!-- 単一のアセットをパブリックディレクトリにコピー -->
-<!--@assetDir(assets)-->              <!-- ディレクトリ全体をパブリックディレクトリにコピー -->
+<!--@asset(images/photo.jpg)-->       <!-- 単一アセットをパブリックディレクトリにコピー -->
+<!--@assetDir(assets)-->              <!-- 全体のディレクトリをパブリックディレクトリにコピー -->
 ```
-**例:**
+**例：**
 ```html
 <!-- 静的アセットをコピーして参照 -->
 <img src="<!--@asset(images/hero-banner.jpg)-->" alt="Hero Banner">
-<a href="<!--@asset(documents/brochure.pdf)-->" download>パンフレットダウンロード</a>
+<a href="<!--@asset(documents/brochure.pdf)-->" download>ブロシュアをダウンロード</a>
 
-<!-- ディレクトリ全体（フォント、アイコンなど）をコピー -->
+<!-- 全体のディレクトリ（フォント、アイコンなど）をコピー -->
 <!--@assetDir(assets/fonts)-->
 <!--@assetDir(assets/icons)-->
 ```
@@ -312,17 +261,17 @@ const imageData = '<!--@base64(images/icon.png)-->';
 ```html
 <!--@import(components/header)-->     <!-- 他のテンプレートを含める -->
 ```
-**例:**
+**例：**
 ```html
 <!-- 再利用可能なコンポーネントを含める -->
 <!--@import(components/header)-->
 
 <main>
-    <h1>ウェブサイトへようこそ</h1>
+    <h1>当社のウェブサイトへようこそ</h1>
     <!--@import(components/sidebar)-->
     
     <div class="content">
-        <p>メインコンテンツはここ...</p>
+        <p>ここにメインコンテンツ...</p>
     </div>
 </main>
 
@@ -355,30 +304,30 @@ const imageData = '<!--@base64(images/icon.png)-->';
 {$name|concat= (Admin)}              <!-- テキストを連結 -->
 ```
 
-#### 複数フィルターのチェーン
+#### 変数コマンド
 ```html
 {$content|striptag|trim|escape}      <!-- 複数のフィルターをチェーン -->
 ```
 
 ### コメント
 
-テンプレートコメントは出力から完全に削除され、最終的な HTML には表示されません：
+テンプレートコメントは出力から完全に削除され、最終的な HTML に表示されません：
 
 ```html
-{* これは単一行のテンプレートコメントです *}
+{* これは1行のテンプレートコメントです *}
 
 {* 
-   これは複数行にわたる
-   マルチライン 
-   テンプレートコメントです
+   これは複数行の 
+   テンプレートコメントです 
+   複数行にわたります
 *}
 
 <h1>{$title}</h1>
-{* デバッグコメント: title変数が動作するかチェック *}
+{* デバッグコメント: title 変数が動作するかを確認 *}
 <p>{$content}</p>
 ```
 
-**注記**: テンプレートコメント `{* ... *}` は HTML コメント `<!-- ... -->` とは異なります。テンプレートコメントは処理中に削除され、ブラウザには届きません。
+**注意**: テンプレートコメント `{* ... *}` は HTML コメント `<!-- ... -->` と異なります。テンプレートコメントは処理中に削除され、ブラウザに到達しません。
 
 ## 例のプロジェクト構造
 

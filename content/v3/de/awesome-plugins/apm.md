@@ -1,18 +1,18 @@
 # FlightPHP APM Dokumentation
 
-Willkommen bei FlightPHP APM – dem persönlichen Performance-Coach für Ihre App! Dieser Leitfaden ist Ihre Roadmap zur Einrichtung, Nutzung und Beherrschung der Application Performance Monitoring (APM) mit FlightPHP. Ob Sie langsame Anfragen aufspüren oder einfach nur Latency-Diagramme analysieren möchten, wir haben Sie abgedeckt. Lassen Sie uns Ihre App schneller machen, Ihre Nutzer glücklicher und Ihre Debugging-Sitzungen zu einem Kinderspiel!
+Willkommen bei FlightPHP APM – dem persönlichen Performance-Coach Ihrer App! Dieser Leitfaden ist Ihre Roadmap zur Einrichtung, Nutzung und Beherrschung der Application Performance Monitoring (APM) mit FlightPHP. Ob Sie langsame Anfragen aufspüren oder einfach nur über Latenzdiagramme schwärmen möchten, wir haben Sie abgedeckt. Lassen Sie uns Ihre App schneller machen, Ihre Nutzer glücklicher und Ihre Debugging-Sitzungen zu einem Kinderspiel!
 
-Sehen Sie sich eine [Demo](https://flightphp-docs-apm.sky-9.com/apm/dashboard) des Dashboards für die Flight Docs Site an.
+Sehen Sie sich eine [Demo](https://flightphp-docs-apm.sky-9.com/apm/dashboard) des Dashboards für die Flight Docs-Seite an.
 
 ![FlightPHP APM](/images/apm.png)
 
 ## Warum APM wichtig ist
 
-Stellen Sie sich vor: Ihre App ist ein volles Restaurant. Ohne eine Möglichkeit, zu verfolgen, wie lange Bestellungen dauern oder wo die Küche stockt, raten Sie, warum Kunden unzufrieden gehen. APM ist Ihr Sous-Chef – es beobachtet jeden Schritt, von eingehenden Anfragen bis zu Datenbankabfragen, und markiert alles, was Sie verlangsamt. Langsame Seiten verlieren Nutzer (Studien sagen, 53 % verlassen die Seite, wenn sie mehr als 3 Sekunden zum Laden braucht!), und APM hilft Ihnen, diese Probleme *bevor* sie schmerzen zu erkennen. Es ist proaktive Seelenruhe – weniger „Warum ist das kaputt?“-Momente, mehr „Schau, wie reibungslos das läuft!“-Erfolge.
+Stellen Sie sich vor: Ihre App ist ein volles Restaurant. Ohne eine Möglichkeit, zu verfolgen, wie lange Bestellungen dauern oder wo die Küche ins Stocken gerät, raten Sie nur, warum die Kunden verärgert gehen. APM ist Ihr Sous-Chef – es überwacht jeden Schritt, von eingehenden Anfragen bis zu Datenbankabfragen, und markiert alles, was Sie verlangsamt. Langsame Seiten verlieren Nutzer (Studien sagen, 53 % verlassen die Seite, wenn sie mehr als 3 Sekunden zum Laden braucht!), und APM hilft Ihnen, diese Probleme *bevor* sie schmerzen, zu erkennen. Es ist proaktive Seelenfrieden – weniger „Warum ist das kaputt?“-Momente, mehr „Schaut, wie geschmeidig das läuft!“-Erfolge.
 
 ## Installation
 
-Beginnen Sie mit Composer:
+Legen Sie mit Composer los:
 
 ```bash
 composer require flightphp/apm
@@ -24,16 +24,16 @@ Sie benötigen:
 
 ## Unterstützte Datenbanken
 
-FlightPHP APM unterstützt derzeit die folgenden Datenbanken zur Speicherung von Metriken:
+FlightPHP APM unterstützt derzeit die folgenden Datenbanken zum Speichern von Metriken:
 
 - **SQLite3**: Einfach, dateibasiert und ideal für lokale Entwicklung oder kleine Apps. Standardoption in den meisten Setups.
-- **MySQL/MariaDB**: Ideal für größere Projekte oder Produktionsumgebungen, in denen Sie robuste, skalierbare Speicherung benötigen.
+- **MySQL/MariaDB**: Ideal für größere Projekte oder Produktionsumgebungen, in denen Sie robusten, skalierbaren Speicher benötigen.
 
 Sie können Ihren Datenbanktyp während des Konfigurationsschritts wählen (siehe unten). Stellen Sie sicher, dass Ihre PHP-Umgebung die notwendigen Erweiterungen installiert hat (z. B. `pdo_sqlite` oder `pdo_mysql`).
 
 ## Erste Schritte
 
-Hier ist Ihr Schritt-für-Schritt zu APM-Großartigkeit:
+Hier ist Ihr Schritt-für-Schritt-Weg zur APM-Größe:
 
 ### 1. Registrieren Sie die APM
 
@@ -41,6 +41,7 @@ Fügen Sie das in Ihre `index.php` oder eine `services.php`-Datei ein, um mit de
 
 ```php
 use flight\apm\logger\LoggerFactory;
+use flight\database\PdoWrapper;
 use flight\Apm;
 
 $ApmLogger = LoggerFactory::create(__DIR__ . '/../../.runway-config.json');
@@ -54,18 +55,18 @@ $Apm->addPdoConnection($pdo);
 ```
 
 **Was passiert hier?**
-- `LoggerFactory::create()` greift auf Ihre Konfiguration zu (mehr dazu bald) und richtet einen Logger ein – standardmäßig SQLite.
-- `Apm` ist der Star – es hört auf Flights Events (Anfragen, Routen, Fehler usw.) und sammelt Metriken.
+- `LoggerFactory::create()` greift auf Ihre Konfiguration zu (mehr dazu bald) und richtet einen Logger ein – SQLite standardmäßig.
+- `Apm` ist der Star – es hört auf Flight-Events (Anfragen, Routen, Fehler usw.) und sammelt Metriken.
 - `bindEventsToFlightInstance($app)` verbindet alles mit Ihrer Flight-App.
 
 **Pro-Tipp: Sampling**
-Wenn Ihre App beschäftigt ist, könnte das Loggen *jeder* Anfrage die Dinge überlasten. Verwenden Sie eine Sample-Rate (0.0 bis 1.0):
+Wenn Ihre App beschäftigt ist, könnte das Logging *jeder* Anfrage Dinge überlasten. Verwenden Sie eine Sample-Rate (0.0 bis 1.0):
 
 ```php
 $Apm = new Apm($ApmLogger, 0.1); // Protokolliert 10 % der Anfragen
 ```
 
-Das hält die Performance knackig, während es Ihnen dennoch solide Daten liefert.
+Das hält die Performance knackig, während es Ihnen immer noch solide Daten liefert.
 
 ### 2. Konfigurieren Sie es
 
@@ -76,7 +77,7 @@ php vendor/bin/runway apm:init
 ```
 
 **Was macht das?**
-- Startet einen Wizard, der fragt, wo rohe Metriken herkommen (Quelle) und wo verarbeitete Daten hingehen (Ziel).
+- Startet einen Wizard, der fragt, wo rohe Metriken herkommen (Quelle) und wohin verarbeitete Daten gehen (Ziel).
 - Standard ist SQLite – z. B. `sqlite:/tmp/apm_metrics.sqlite` für die Quelle, eine andere für das Ziel.
 - Sie erhalten eine Konfiguration wie:
   ```json
@@ -97,13 +98,13 @@ Rohe Metriken häufen sich schnell an (denken Sie an ungefilterte Logs). Der Wor
 
 ### 3. Metriken mit dem Worker verarbeiten
 
-Der Worker verwandelt rohe Metriken in dashboard-bereite Daten. Führen Sie ihn einmal aus:
+Der Worker verwandelt rohe Metriken in dashboard-bereite Daten. Führen Sie es einmal aus:
 
 ```bash
 php vendor/bin/runway apm:worker
 ```
 
-**Was macht er?**
+**Was macht es?**
 - Liest aus Ihrer Quelle (z. B. `apm_metrics.sqlite`).
 - Verarbeitet bis zu 100 Metriken (Standard-Batch-Größe) in Ihr Ziel.
 - Stoppt, wenn fertig oder keine Metriken mehr da sind.
@@ -125,7 +126,7 @@ Für Live-Apps möchten Sie kontinuierliche Verarbeitung. Hier sind Ihre Optione
   Feuert jede Minute – perfekt für Produktion.
 
 - **Tmux/Screen**:
-  Starten Sie eine abtrennbare Sitzung:
+  Starten Sie eine abtrennbare Session:
   ```bash
   tmux new -s apm-worker
   php vendor/bin/runway apm:worker --daemon
@@ -142,7 +143,7 @@ Für Live-Apps möchten Sie kontinuierliche Verarbeitung. Hier sind Ihre Optione
   - `--timeout 300`: Beendet nach 5 Minuten.
 
 **Warum die Mühe?**
-Ohne den Worker ist Ihr Dashboard leer. Es ist die Brücke zwischen rohen Logs und handlungsrelevanten Erkenntnissen.
+Ohne den Worker ist Ihr Dashboard leer. Es ist die Brücke zwischen rohen Logs und handlungsrelevanten Einblicken.
 
 ### 4. Dashboard starten
 
@@ -154,7 +155,7 @@ php vendor/bin/runway apm:dashboard
 
 **Was ist das?**
 - Startet einen PHP-Server unter `http://localhost:8001/apm/dashboard`.
-- Zeigt Anfragen-Logs, langsame Routen, Fehlerquoten und mehr.
+- Zeigt Anfrage-Logs, langsame Routen, Fehlerquoten und mehr.
 
 **Anpassen**:
 ```bash
@@ -173,20 +174,20 @@ Für die Produktion müssen Sie möglicherweise einige Techniken ausprobieren, u
 - **Reverse Proxy verwenden**: Richten Sie Nginx oder Apache ein, um Anfragen an das Dashboard weiterzuleiten.
 - **SSH-Tunnel**: Wenn Sie per SSH auf den Server zugreifen können, verwenden Sie `ssh -L 8080:localhost:8001 youruser@yourserver`, um das Dashboard zu Ihrem lokalen Rechner zu tunneln.
 - **VPN**: Wenn Ihr Server hinter einem VPN ist, verbinden Sie sich damit und greifen Sie direkt auf das Dashboard zu.
-- **Firewall konfigurieren**: Öffnen Sie Port 8001 für Ihre IP oder das Netzwerk des Servers. (Oder welchen Port Sie auch eingestellt haben).
-- **Apache/Nginx konfigurieren**: Wenn Sie einen Webserver vor Ihrer Anwendung haben, können Sie ihn für eine Domain oder Subdomain konfigurieren. Wenn Sie das tun, setzen Sie das Document Root auf `/path/to/your/project/vendor/flightphp/apm/dashboard`.
+- **Firewall konfigurieren**: Öffnen Sie Port 8001 für Ihre IP oder das Netzwerk des Servers (oder welchen Port Sie auch gesetzt haben).
+- **Apache/Nginx konfigurieren**: Wenn Sie einen Webserver vor Ihrer Anwendung haben, können Sie ihn auf eine Domain oder Subdomain konfigurieren. Wenn Sie das tun, setzen Sie das Dokumenten-Root auf `/path/to/your/project/vendor/flightphp/apm/dashboard`.
 
-#### Wollen Sie ein anderes Dashboard?
+#### Ein anderes Dashboard gewünscht?
 
-Sie können Ihr eigenes Dashboard bauen, wenn Sie möchten! Schauen Sie in das Verzeichnis `vendor/flightphp/apm/src/apm/presenter` für Ideen, wie Sie die Daten für Ihr eigenes Dashboard präsentieren können!
+Sie können Ihr eigenes Dashboard bauen, wenn Sie möchten! Schauen Sie im Verzeichnis `vendor/flightphp/apm/src/apm/presenter` nach Ideen, wie Sie die Daten für Ihr eigenes Dashboard präsentieren können!
 
 ## Dashboard-Funktionen
 
 Das Dashboard ist Ihr APM-Hauptquartier – hier ist, was Sie sehen werden:
 
-- **Anfragen-Log**: Jede Anfrage mit Zeitstempel, URL, Response-Code und Gesamtzeit. Klicken Sie auf „Details“ für Middleware, Abfragen und Fehler.
+- **Anfrage-Log**: Jede Anfrage mit Zeitstempel, URL, Response-Code und Gesamtzeit. Klicken Sie auf „Details“ für Middleware, Abfragen und Fehler.
 - **Langsamste Anfragen**: Top 5 Anfragen, die Zeit fressen (z. B. „/api/heavy“ bei 2,5 s).
-- **Langsamste Routen**: Top 5 Routen nach durchschnittlicher Zeit – super zum Erkennen von Mustern.
+- **Langsamste Routen**: Top 5 Routen nach durchschnittlicher Zeit – toll zum Erkennen von Mustern.
 - **Fehlerquote**: Prozentsatz fehlgeschlagener Anfragen (z. B. 2,3 % 500er).
 - **Latenz-Percentile**: 95. (p95) und 99. (p99) Response-Zeiten – kennen Sie Ihre Worst-Case-Szenarien.
 - **Response-Code-Diagramm**: Visualisieren Sie 200er, 404er, 500er über die Zeit.
@@ -195,7 +196,7 @@ Das Dashboard ist Ihr APM-Hauptquartier – hier ist, was Sie sehen werden:
 
 **Extras**:
 - Filtern nach „Letzte Stunde“, „Letzter Tag“ oder „Letzte Woche“.
-- Umschalten auf Dark Mode für nächtliche Sessions.
+- Umschalten auf Dark Mode für diese späten Nachte-Sitzungen.
 
 **Beispiel**:
 Eine Anfrage an `/users` könnte zeigen:
@@ -219,7 +220,7 @@ $app->eventDispatcher()->trigger('apm.custom', new CustomEvent('api_call', [
 ```
 
 **Wo erscheint es?**
-In den Anfragen-Details des Dashboards unter „Custom Events“ – erweiterbar mit hübscher JSON-Formatierung.
+Im Dashboard unter „Details der Anfrage“ bei „Benutzerdefinierte Events“ – erweiterbar mit hübscher JSON-Formatierung.
 
 **Anwendungsfall**:
 ```php
@@ -233,7 +234,7 @@ $app->eventDispatcher()->trigger('apm.custom', new CustomEvent('external_api', [
 ```
 Jetzt sehen Sie, ob diese API Ihre App herunterzieht!
 
-## Datenbank-Monitoring
+## Datenbank-Überwachung
 
 Verfolgen Sie PDO-Abfragen so:
 
@@ -252,7 +253,7 @@ $Apm->addPdoConnection($pdo);
 **Achtung**:
 - **Optional**: Überspringen Sie das, wenn Sie kein DB-Tracking brauchen.
 - **Nur PdoWrapper**: Core PDO ist noch nicht integriert – bleiben Sie dran!
-- **Performance-Warnung**: Das Loggen jeder Abfrage auf einer DB-lastigen Site kann Dinge verlangsamen. Verwenden Sie Sampling (`$Apm = new Apm($ApmLogger, 0.1)`), um die Last zu reduzieren.
+- **Performance-Warnung**: Das Logging jeder Abfrage auf einer DB-lastigen Site kann Dinge verlangsamen. Verwenden Sie Sampling (`$Apm = new Apm($ApmLogger, 0.1)`), um die Last zu verringern.
 
 **Beispiel-Ausgabe**:
 - Abfrage: `SELECT name FROM products WHERE price > 100`
@@ -266,7 +267,7 @@ Passen Sie den Worker nach Ihrem Geschmack an:
 - `--timeout 300`: Stoppt nach 5 Minuten – gut für Tests.
 - `--max_messages 500`: Begrenzt auf 500 Metriken – hält es endlich.
 - `--batch_size 200`: Verarbeitet 200 auf einmal – balanciert Geschwindigkeit und Speicher.
-- `--daemon`: Läuft non-stop – ideal für Live-Monitoring.
+- `--daemon`: Läuft non-stop – ideal für Live-Überwachung.
 
 **Beispiel**:
 ```bash
@@ -274,26 +275,26 @@ php vendor/bin/runway apm:worker --daemon --batch_size 100 --timeout 3600
 ```
 Läuft eine Stunde, verarbeitet 100 Metriken auf einmal.
 
-## Request ID in der App
+## Request-ID in der App
 
-Jede Anfrage hat eine eindeutige Request ID für das Tracking. Sie können diese ID in Ihrer App verwenden, um Logs und Metriken zu korrelieren. Zum Beispiel können Sie die Request ID auf einer Fehlerseite hinzufügen:
+Jede Anfrage hat eine eindeutige Request-ID zum Tracking. Sie können diese ID in Ihrer App verwenden, um Logs und Metriken zu korrelieren. Zum Beispiel können Sie die Request-ID auf einer Fehlerseite hinzufügen:
 
 ```php
 Flight::map('error', function($message) {
-	// Holen Sie die Request ID aus dem Response-Header X-Flight-Request-Id
+	// Holen Sie die Request-ID aus dem Response-Header X-Flight-Request-Id
 	$requestId = Flight::response()->getHeader('X-Flight-Request-Id');
 
 	// Zusätzlich könnten Sie sie aus der Flight-Variable holen
 	// Diese Methode funktioniert nicht gut in Swoole oder anderen asynchronen Plattformen.
 	// $requestId = Flight::get('apm.request_id');
 	
-	echo "Fehler: $message (Request ID: $requestId)";
+	echo "Fehler: $message (Request-ID: $requestId)";
 });
 ```
 
 ## Upgrade
 
-Wenn Sie auf eine neuere Version der APM upgraden, besteht die Möglichkeit, dass Datenbank-Migrationen ausgeführt werden müssen. Sie können das tun, indem Sie den folgenden Befehl ausführen:
+Wenn Sie auf eine neuere Version der APM upgraden, besteht die Chance, dass Datenbank-Migrationen ausgeführt werden müssen. Sie können das tun, indem Sie den folgenden Befehl ausführen:
 
 ```bash
 php vendor/bin/runway apm:migrate
@@ -302,7 +303,17 @@ Das führt alle benötigten Migrationen aus, um das Datenbankschema auf die neue
 
 **Hinweis:** Wenn Ihre APM-Datenbank groß ist, können diese Migrationen einige Zeit in Anspruch nehmen. Sie möchten diesen Befehl vielleicht während der Nebenzeiten ausführen.
 
-## Alte Daten bereinigen
+### Upgrade von 0.4.3 -> 0.5.0
+
+Wenn Sie von 0.4.3 auf 0.5.0 upgraden, müssen Sie den folgenden Befehl ausführen:
+
+```bash
+php vendor/bin/runway apm:config-migrate
+```
+
+Das migriert Ihre Konfiguration vom alten Format mit der `.runway-config.json`-Datei ins neue Format, das Schlüssel/Werte in der `config.php`-Datei speichert.
+
+## Bereinigen alter Daten
 
 Um Ihre Datenbank ordentlich zu halten, können Sie alte Daten bereinigen. Das ist besonders nützlich, wenn Sie eine beschäftigte App betreiben und die Datenbankgröße handhabbar halten möchten.
 Sie können das tun, indem Sie den folgenden Befehl ausführen:
@@ -321,7 +332,7 @@ Das entfernt alle Daten, die älter als 7 Tage sind, aus der Datenbank.
 
 Feststecken? Probieren Sie diese aus:
 
-- **Kein Dashboard-Daten?**
+- **Keine Dashboard-Daten?**
   - Läuft der Worker? Überprüfen Sie `ps aux | grep apm:worker`.
   - Stimmen die Konfigurationspfade? Überprüfen Sie, ob die DSNs in `.runway-config.json` auf echte Dateien zeigen.
   - Führen Sie `php vendor/bin/runway apm:worker` manuell aus, um ausstehende Metriken zu verarbeiten.
@@ -340,8 +351,8 @@ Feststecken? Probieren Sie diese aus:
   - Reduzieren Sie die Batch-Größe: `--batch_size 20`.
 
 - **Keine Ausnahmen/Fehler getrackt?**
-  - Wenn Sie [Tracy](https://tracy.nette.org/) für Ihr Projekt aktiviert haben, überschreibt es die Fehlerbehandlung von Flight. Sie müssen Tracy deaktivieren und sicherstellen, dass `Flight::set('flight.handle_errors', true);` gesetzt ist.
+  - Wenn Sie [Tracy](https://tracy.nette.org/) für Ihr Projekt aktiviert haben, überschreibt es die Fehlerbehandlung von Flight. Sie müssen Tracy deaktivieren und dann sicherstellen, dass `Flight::set('flight.handle_errors', true);` gesetzt ist.
 
-- **Datenbankabfragen nicht getrackt?**
+- **Keine Datenbankabfragen getrackt?**
   - Stellen Sie sicher, dass Sie `PdoWrapper` für Ihre Datenbankverbindungen verwenden.
-  - Vergewissern Sie sich, dass Sie das letzte Argument im Konstruktor auf `true` setzen.
+  - Machen Sie sicher, dass das letzte Argument im Konstruktor `true` ist.

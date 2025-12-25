@@ -1,12 +1,12 @@
 # CommentTemplate
 
-[CommentTemplate](https://github.com/KnifeLemon/CommentTemplate) est un puissant moteur de templates PHP avec compilation d'actifs, héritage de templates et traitement des variables. Il fournit une façon simple mais flexible de gérer les templates avec une minification CSS/JS intégrée et un cache.
+[CommentTemplate](https://github.com/KnifeLemon/CommentTemplate) est un puissant moteur de templates PHP avec compilation d'actifs, héritage de templates et traitement de variables. Il fournit une façon simple mais flexible de gérer les templates avec une minification CSS/JS intégrée et un cache.
 
 ## Fonctionnalités
 
 - **Héritage de Templates** : Utilisez des layouts et incluez d'autres templates
-- **Compilation d'Actifs** : Minification et cache automatique CSS/JS
-- **Traitement des Variables** : Variables de template avec filtres et commandes
+- **Compilation d'Actifs** : Minification automatique CSS/JS et cache
+- **Traitement de Variables** : Variables de template avec filtres et commandes
 - **Encodage Base64** : Actifs en ligne sous forme d'URI de données
 - **Intégration avec le Framework Flight** : Intégration optionnelle avec le framework PHP Flight
 
@@ -20,9 +20,9 @@ composer require knifelemon/comment-template
 
 ## Configuration de Base
 
-Il existe quelques options de configuration de base pour commencer. Vous pouvez en lire plus à leur sujet dans le [Repo CommentTemplate](https://github.com/KnifeLemon/CommentTemplate).
+Il existe quelques options de configuration de base pour commencer. Vous pouvez en lire plus à ce sujet dans le [Repo CommentTemplate](https://github.com/KnifeLemon/CommentTemplate).
 
-### Méthode 1 : Utilisation d'une Fonction de Callback
+### Méthode 1 : Utilisation d'une Fonction de Rappel
 
 ```php
 <?php
@@ -33,7 +33,7 @@ use KnifeLemon\CommentTemplate\Engine;
 $app = Flight::app();
 
 $app->register('view', Engine::class, [], function (Engine $engine) use ($app) {
-    // Répertoire racine (où se trouve index.php) - la racine du document de votre application web
+    // Répertoire racine (où se trouve index.php) - la racine des documents de votre application web
     $engine->setPublicPath(__DIR__);
     
     // Répertoire des fichiers de templates - supporte les chemins relatifs et absolus
@@ -42,7 +42,7 @@ $app->register('view', Engine::class, [], function (Engine $engine) use ($app) {
     // Où les actifs compilés seront stockés - supporte les chemins relatifs et absolus
     $engine->setAssetPath('assets');           // Relatif au chemin public
     
-    // Extension des fichiers de template
+    // Extension des fichiers de templates
     $engine->setFileExtension('.php');
 });
 
@@ -66,7 +66,7 @@ $app->register('view', Engine::class, [
     __DIR__,                // publicPath - répertoire racine (où se trouve index.php)
     'views',                // skinPath - chemin des templates (supporte relatif/absolu)
     'assets',               // assetPath - chemin des actifs compilés (supporte relatif/absolu)
-    '.php'                  // fileExtension - extension des fichiers de template
+    '.php'                  // fileExtension - extension des fichiers de templates
 ]);
 
 $app->map('render', function(string $template, array $data) use ($app): void {
@@ -76,11 +76,11 @@ $app->map('render', function(string $template, array $data) use ($app): void {
 
 ## Configuration des Chemins
 
-CommentTemplate offre une gestion intelligente des chemins pour les chemins relatifs et absolus :
+CommentTemplate fournit une gestion intelligente des chemins pour les chemins relatifs et absolus :
 
 ### Chemin Public
 
-Le **Chemin Public** est le répertoire racine de votre application web, généralement où se trouve `index.php`. C'est la racine du document que les serveurs web utilisent pour servir les fichiers.
+Le **Chemin Public** est le répertoire racine de votre application web, typiquement où réside `index.php`. C'est la racine des documents à partir de laquelle les serveurs web servent les fichiers.
 
 ```php
 // Exemple : si votre index.php est à /var/www/html/myapp/index.php
@@ -102,7 +102,7 @@ $template->setPublicPath('/var/www/html/myapp');  // Répertoire racine (où se 
 $template->setSkinPath('views');           // → /var/www/html/myapp/views/
 $template->setSkinPath('templates/pages'); // → /var/www/html/myapp/templates/pages/
 
-// Chemins absolus - utilisés tel quel (Unix/Linux)
+// Chemins absolus - utilisés tels quels (Unix/Linux)
 $template->setSkinPath('/var/www/templates');      // → /var/www/templates/
 $template->setSkinPath('/full/path/to/templates'); // → /full/path/to/templates/
 
@@ -116,14 +116,14 @@ $template->setSkinPath('\\\\server\\share\\templates'); // → \\server\share\te
 
 ### Configuration du Chemin des Actifs
 
-Le chemin des actifs supporte aussi les chemins relatifs et absolus :
+Le chemin des actifs supporte également les chemins relatifs et absolus :
 
 ```php
 // Chemins relatifs - automatiquement combinés avec le chemin public
 $template->setAssetPath('assets');        // → /var/www/html/myapp/assets/
 $template->setAssetPath('static/files');  // → /var/www/html/myapp/static/files/
 
-// Chemins absolus - utilisés tel quel (Unix/Linux)
+// Chemins absolus - utilisés tels quels (Unix/Linux)
 $template->setAssetPath('/var/www/cdn');           // → /var/www/cdn/
 $template->setAssetPath('/full/path/to/assets');   // → /full/path/to/assets/
 
@@ -137,19 +137,19 @@ $template->setAssetPath('\\\\server\\share\\assets'); // → \\server\share\asse
 
 **Détection Intelligente des Chemins :**
 
-- **Chemins Relatifs** : Pas de séparateurs de début (`/`, `\`) ou de lettres de lecteur
-- **Unix Absolu** : Commence par `/` (ex : `/var/www/assets`)
-- **Windows Absolu** : Commence par une lettre de lecteur (ex : `C:\www`, `D:/assets`)
-- **Chemins UNC** : Commence par `\\` (ex : `\\server\share`)
+- **Chemins Relatifs** : Pas de séparateurs initiaux (`/`, `\`) ou lettres de lecteur
+- **Absolus Unix** : Commence par `/` (ex. : `/var/www/assets`)
+- **Absolus Windows** : Commence par une lettre de lecteur (ex. : `C:\www`, `D:/assets`)
+- **Chemins UNC** : Commence par `\\` (ex. : `\\server\share`)
 
-**Comment ça fonctionne :**
+**Comment ça marche :**
 
-- Tous les chemins sont automatiquement résolus selon le type (relatif vs absolu)
+- Tous les chemins sont automatiquement résolus en fonction du type (relatif vs absolu)
 - Les chemins relatifs sont combinés avec le chemin public
 - `@css` et `@js` créent des fichiers minifiés dans : `{resolvedAssetPath}/css/` ou `{resolvedAssetPath}/js/`
 - `@asset` copie les fichiers uniques vers : `{resolvedAssetPath}/{relativePath}`
 - `@assetDir` copie les répertoires vers : `{resolvedAssetPath}/{relativePath}`
-- Cache intelligent : les fichiers ne sont copiés que lorsque la source est plus récente que la destination
+- Cache intelligent : les fichiers ne sont copiés que si la source est plus récente que la destination
 
 ## Directives de Template
 
@@ -157,7 +157,7 @@ $template->setAssetPath('\\\\server\\share\\assets'); // → \\server\share\asse
 
 Utilisez des layouts pour créer une structure commune :
 
-**layout/global_layout.php** :
+**layout/global_layout.php**:
 ```html
 <!DOCTYPE html>
 <html>
@@ -170,7 +170,7 @@ Utilisez des layouts pour créer une structure commune :
 </html>
 ```
 
-**view/page.php** :
+**view/page.php**:
 ```html
 <!--@layout(layout/global_layout)-->
 <h1>{$title}</h1>
@@ -186,15 +186,15 @@ Utilisez des layouts pour créer une structure commune :
 ```
 
 #### Fichiers JavaScript
-CommentTemplate prend en charge différentes stratégies de chargement JavaScript :
+CommentTemplate supporte différentes stratégies de chargement JavaScript :
 
 ```html
 <!--@js(/js/script.js)-->             <!-- Minifié, chargé en bas -->
 <!--@jsAsync(/js/analytics.js)-->     <!-- Minifié, chargé en bas avec async -->
 <!--@jsDefer(/js/utils.js)-->         <!-- Minifié, chargé en bas avec defer -->
-<!--@jsTop(/js/critical.js)-->        <!-- Minifié, chargé dans la tête -->
-<!--@jsTopAsync(/js/tracking.js)-->   <!-- Minifié, chargé dans la tête avec async -->
-<!--@jsTopDefer(/js/polyfill.js)-->   <!-- Minifié, chargé dans la tête avec defer -->
+<!--@jsTop(/js/critical.js)-->        <!-- Minifié, chargé dans head -->
+<!--@jsTopAsync(/js/tracking.js)-->   <!-- Minifié, chargé dans head avec async -->
+<!--@jsTopDefer(/js/polyfill.js)-->   <!-- Minifié, chargé dans head avec defer -->
 <!--@jsSingle(/js/widget.js)-->       <!-- Fichier unique, non minifié -->
 <!--@jsSingleAsync(/js/ads.js)-->     <!-- Fichier unique, non minifié, async -->
 <!--@jsSingleDefer(/js/social.js)-->  <!-- Fichier unique, non minifié, defer -->
@@ -202,7 +202,7 @@ CommentTemplate prend en charge différentes stratégies de chargement JavaScrip
 
 #### Directives d'Actifs dans les Fichiers CSS/JS
 
-CommentTemplate traite également les directives d'actifs au sein des fichiers CSS et JavaScript lors de la compilation :
+CommentTemplate traite également les directives d'actifs au sein des fichiers CSS et JavaScript pendant la compilation :
 
 **Exemple CSS :**
 ```css
@@ -248,8 +248,8 @@ const imageData = '<!--@base64(images/icon.png)-->';
 ```
 ** Exemple : **
 ```html
-<!-- Copiez et référencez des actifs statiques -->
-<img src="<!--@asset(images/hero-banner.jpg)-->" alt="Bannière Héroïque">
+<!-- Copiez et référencez les actifs statiques -->
+<img src="<!--@asset(images/hero-banner.jpg)-->" alt="Hero Banner">
 <a href="<!--@asset(documents/brochure.pdf)-->" download>Télécharger la Brochure</a>
 
 <!-- Copiez un répertoire entier (polices, icônes, etc.) -->
@@ -259,7 +259,7 @@ const imageData = '<!--@base64(images/icon.png)-->';
 
 ### Inclutions de Templates
 ```html
-<!--@import(components/header)-->     <!-- Incluez d'autres templates -->
+<!--@import(components/header)-->     <!-- Inclut d'autres templates -->
 ```
 ** Exemple : **
 ```html
@@ -278,7 +278,7 @@ const imageData = '<!--@base64(images/icon.png)-->';
 <!--@import(components/footer)-->
 ```
 
-### Traitement des Variables
+### Traitement de Variables
 
 #### Variables de Base
 ```html
@@ -292,8 +292,8 @@ const imageData = '<!--@base64(images/icon.png)-->';
 {$content|lower}                     <!-- Convertir en minuscules -->
 {$html|striptag}                     <!-- Supprimer les balises HTML -->
 {$text|escape}                       <!-- Échapper le HTML -->
-{$multiline|nl2br}                   <!-- Convertir les nouvelles lignes en <br> -->
-{$html|br2nl}                        <!-- Convertir les balises <br> en nouvelles lignes -->
+{$multiline|nl2br}                   <!-- Convertir les retours à la ligne en <br> -->
+{$html|br2nl}                        <!-- Convertir les balises <br> en retours à la ligne -->
 {$description|trim}                  <!-- Supprimer les espaces blancs -->
 {$subject|title}                     <!-- Convertir en casse titre -->
 ```
@@ -304,30 +304,30 @@ const imageData = '<!--@base64(images/icon.png)-->';
 {$name|concat= (Admin)}              <!-- Concaténer du texte -->
 ```
 
-#### Chaîner Plusieurs Filtres
+#### Commandes de Variables
 ```html
 {$content|striptag|trim|escape}      <!-- Chaîner plusieurs filtres -->
 ```
 
 ### Commentaires
 
-Les commentaires de template sont entièrement supprimés de la sortie et n'apparaissent pas dans le HTML final :
+Les commentaires de template sont complètement supprimés de la sortie et n'apparaîtront pas dans le HTML final :
 
 ```html
 {* Ceci est un commentaire de template sur une ligne *}
 
 {* 
-   Ceci est un commentaire de template
-   multi-lignes qui s'étend sur
-   plusieurs lignes
+   Ceci est un commentaire de 
+   template sur plusieurs 
+   lignes
 *}
 
 <h1>{$title}</h1>
-{* Commentaire de débogage : vérifie si la variable title fonctionne *}
+{* Commentaire de débogage : vérification si la variable title fonctionne *}
 <p>{$content}</p>
 ```
 
-**Note** : Les commentaires de template `{* ... *}` sont différents des commentaires HTML `<!-- ... -->`. Les commentaires de template sont supprimés lors du traitement et n'atteignent jamais le navigateur.
+**Note** : Les commentaires de template `{* ... *}` sont différents des commentaires HTML `<!-- ... -->`. Les commentaires de template sont supprimés pendant le traitement et n'atteignent jamais le navigateur.
 
 ## Structure de Projet Exemple
 

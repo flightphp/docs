@@ -14,21 +14,21 @@ A documentação de API é crucial para qualquer API. Ela ajuda os desenvolvedor
 O Monitoramento de Desempenho de Aplicação (APM) é crucial para qualquer aplicação. Ele ajuda você a entender como sua aplicação está se saindo e onde estão os gargalos. Existem vários ferramentas APM que podem ser usadas com Flight.
 - <span class="badge bg-primary">oficial</span> [flightphp/apm](/awesome-plugins/apm) - Flight APM é uma biblioteca APM simples que pode ser usada para monitorar suas aplicações Flight. Pode ser usada para monitorar o desempenho da sua aplicação e ajudá-lo a identificar gargalos.
 
-## Assíncrono
+## Async
 
 Flight já é um framework rápido, mas adicionar um motor turbo a ele torna tudo mais divertido (e desafiador)!
 
-- [flightphp/async](/awesome-plugins/async) - Biblioteca Async oficial do Flight. Esta biblioteca é uma forma simples de adicionar processamento assíncrono à sua aplicação. Ela usa Swoole/Openswoole sob o capô para fornecer uma maneira simples e eficaz de executar tarefas de forma assíncrona.
+- [flightphp/async](/awesome-plugins/async) - Biblioteca Async oficial do Flight. Esta biblioteca é uma maneira simples de adicionar processamento assíncrono à sua aplicação. Ela usa Swoole/Openswoole sob o capô para fornecer uma maneira simples e eficaz de executar tarefas de forma assíncrona.
 
 ## Autorização/Permissões
 
 Autorização e Permissões são cruciais para qualquer aplicação que exija controles para quem pode acessar o quê.
 
-- <span class="badge bg-primary">oficial</span> [flightphp/permissions](/awesome-plugins/permissions) - Biblioteca de Permissões oficial do Flight. Esta biblioteca é uma forma simples de adicionar permissões em nível de usuário e aplicação à sua aplicação. 
+- <span class="badge bg-primary">oficial</span> [flightphp/permissions](/awesome-plugins/permissions) - Biblioteca de Permissões oficial do Flight. Esta biblioteca é uma maneira simples de adicionar permissões em nível de usuário e aplicação à sua aplicação. 
 
 ## Cache
 
-Cache é uma ótima maneira de acelerar sua aplicação. Existem várias bibliotecas de cache que podem ser usadas com Flight.
+O cache é uma ótima maneira de acelerar sua aplicação. Existem várias bibliotecas de cache que podem ser usadas com Flight.
 
 - <span class="badge bg-primary">oficial</span> [flightphp/cache](/awesome-plugins/php-file-cache) - Classe de cache em arquivo PHP leve, simples e independente
 
@@ -46,10 +46,10 @@ Cookies são uma ótima maneira de armazenar pequenos pedaços de dados no lado 
 
 ## Depuração
 
-Depuração é crucial quando você está desenvolvendo em seu ambiente local. Existem alguns plugins que podem elevar sua experiência de depuração.
+A depuração é crucial quando você está desenvolvendo em seu ambiente local. Existem alguns plugins que podem elevar sua experiência de depuração.
 
-- [tracy/tracy](/awesome-plugins/tracy) - Este é um manipulador de erros completo que pode ser usado com Flight. Ele tem vários painéis que podem ajudá-lo a depurar sua aplicação. Também é muito fácil de estender e adicionar seus próprios painéis.
-- <span class="badge bg-primary">oficial</span> [flightphp/tracy-extensions](/awesome-plugins/tracy-extensions) - Usado com o manipulador de erros [Tracy](/awesome-plugins/tracy), este plugin adiciona alguns painéis extras para ajudar na depuração especificamente para projetos Flight.
+- [tracy/tracy](/awesome-plugins/tracy) - Esta é uma manipuladora de erros completa que pode ser usada com Flight. Ela tem vários painéis que podem ajudá-lo a depurar sua aplicação. Também é muito fácil de estender e adicionar seus próprios painéis.
+- <span class="badge bg-primary">oficial</span> [flightphp/tracy-extensions](/awesome-plugins/tracy-extensions) - Usado com o manipulador de erros [Tracy](/awesome-plugins/tracy), este plugin adiciona alguns painéis extras para ajudar com a depuração especificamente para projetos Flight.
 
 ## Bancos de Dados
 
@@ -61,13 +61,13 @@ Bancos de dados são o núcleo da maioria das aplicações. É assim que você a
 
 ## Criptografia
 
-Criptografia é crucial para qualquer aplicação que armazena dados sensíveis. Criptografar e descriptografar os dados não é terrivelmente difícil, mas armazenar adequadamente a chave de criptografia [pode](https://stackoverflow.com/questions/6767839/where-should-i-store-an-encryption-key-for-php#:~:text=Write%20a%20php%20config%20file%20and%20store%20it,folder%20is%20not%20accessible%20to%20the%20end%20user.) [ser](https://www.reddit.com/r/PHP/comments/luqsn/the_encryption_key_where_do_you_store_it/) [difícil](https://security.stackexchange.com/questions/48047/location-to-store-an-encryption-key). O mais importante é nunca armazenar sua chave de criptografia em um diretório público ou commitá-la em seu repositório de código.
+A criptografia é crucial para qualquer aplicação que armazena dados sensíveis. Criptografar e descriptografar os dados não é terrivelmente difícil, mas armazenar adequadamente a chave de criptografia [pode](https://stackoverflow.com/questions/6767839/where-should-i-store-an-encryption-key-for-php#:~:text=Write%20a%20php%20config%20file%20and%20store%20it,folder%20is%20not%20accessible%20to%20the%20end%20user.) [ser](https://www.reddit.com/r/PHP/comments/luqsn/the_encryption_key_where_do_you_store_it/) [difícil](https://security.stackexchange.com/questions/48047/location-to-store-an-encryption-key). O mais importante é nunca armazenar sua chave de criptografia em um diretório público ou commitá-la em seu repositório de código.
 
 - [defuse/php-encryption](/awesome-plugins/php-encryption) - Esta é uma biblioteca que pode ser usada para criptografar e descriptografar dados. Começar a usar é bastante simples para começar a criptografar e descriptografar dados.
 
 ## Fila de Tarefas
 
-Filas de tarefas são realmente úteis para processar tarefas de forma assíncrona. Isso pode ser enviar e-mails, processar imagens ou qualquer coisa que não precise ser feita em tempo real.
+Filas de tarefas são realmente úteis para processar tarefas de forma assíncrona. Isso pode ser o envio de e-mails, processamento de imagens ou qualquer coisa que não precise ser feita em tempo real.
 
 - [n0nag0n/simple-job-queue](/awesome-plugins/simple-job-queue) - Simple Job Queue é uma biblioteca que pode ser usada para processar tarefas de forma assíncrona. Pode ser usada com beanstalkd, MySQL/MariaDB, SQLite e PostgreSQL.
 
@@ -78,13 +78,13 @@ Sessões não são realmente úteis para APIs, mas para construir uma aplicaçã
 - <span class="badge bg-primary">oficial</span> [flightphp/session](/awesome-plugins/session) - Biblioteca de Sessão oficial do Flight. Esta é uma biblioteca de sessão simples que pode ser usada para armazenar e recuperar dados de sessão. Ela usa o manuseio de sessão integrado do PHP.
 - [Ghostff/Session](/awesome-plugins/ghost-session) - Gerenciador de Sessão PHP (não bloqueante, flash, segmento, criptografia de sessão). Usa PHP open_ssl para criptografia/descriptografia opcional de dados de sessão.
 
-## Modelagem
+## Templating
 
-Modelagem é o núcleo de qualquer aplicação web com uma UI. Existem vários motores de modelagem que podem ser usados com Flight.
+O templating é o núcleo de qualquer aplicação web com uma UI. Existem vários motores de templating que podem ser usados com Flight.
 
-- <span class="badge bg-warning">deprecado</span> [flightphp/core View](/learn#views) - Este é um motor de modelagem muito básico que faz parte do núcleo. Não é recomendado usá-lo se você tiver mais do que algumas páginas em seu projeto.
-- [latte/latte](/awesome-plugins/latte) - Latte é um motor de modelagem completo que é muito fácil de usar e se sente mais próximo da sintaxe PHP do que Twig ou Smarty. Também é muito fácil de estender e adicionar seus próprios filtros e funções.
-- [knifelemon/comment-template](/awesome-plugins/comment-template) - CommentTemplate é um poderoso motor de template PHP com compilação de assets, herança de templates e processamento de variáveis. Recursos incluem minificação automática de CSS/JS, cache, codificação Base64 e integração opcional com o framework PHP Flight.
+- <span class="badge bg-warning">deprecado</span> [flightphp/core View](/learn#views) - Este é um motor de templating muito básico que faz parte do núcleo. Não é recomendado usá-lo se você tiver mais do que algumas páginas em seu projeto.
+- [latte/latte](/awesome-plugins/latte) - Latte é um motor de templating completo que é muito fácil de usar e se sente mais próximo da sintaxe PHP do que Twig ou Smarty. Também é muito fácil de estender e adicionar seus próprios filtros e funções.
+- [knifelemon/comment-template](/awesome-plugins/comment-template) - CommentTemplate é um poderoso motor de template PHP com compilação de assets, herança de templates e processamento de variáveis. Recursos incluem minificação automática de CSS/JS, cache, codificação Base64 e integração opcional com o framework Flight PHP.
 
 ## Integração com WordPress
 

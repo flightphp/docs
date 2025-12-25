@@ -1,6 +1,6 @@
 # CommentTemplate
 
-[CommentTemplate](https://github.com/KnifeLemon/CommentTemplate) ir jaudīgs PHP veidņu dz motor ar resursu kompilāciju, veidņu mantojumu un mainīgo apstrādi. Tas nodrošina vienkāršu, bet elastīgu veidu, kā pārvaldīt veidnes ar iebūvētu CSS/JS minimizāciju un kešošanu.
+[CommentTemplate](https://github.com/KnifeLemon/CommentTemplate) ir jaudīgs PHP veidņu dzinējs ar resursu kompilāciju, veidņu mantojumu un mainīgo apstrādi. Tas nodrošina vienkāršu, bet elastīgu veidu, kā pārvaldīt veidnes ar iebūvētu CSS/JS minimizāciju un kešošanu.
 
 ## Funkcijas
 
@@ -10,7 +10,7 @@
 - **Base64 kodēšana**: Iekšējie resursi kā datu URI
 - **Flight Framework integrācija**: Neobligātā integrācija ar Flight PHP framework
 
-## Instalācija
+## Instalēšana
 
 Instalējiet ar composer.
 
@@ -20,7 +20,7 @@ composer require knifelemon/comment-template
 
 ## Pamata konfigurācija
 
-Ir daži pamata konfigurācijas varianti, lai sāktu darbu. Jūs varat lasīt vairāk par tiem [CommentTemplate Repo](https://github.com/KnifeLemon/CommentTemplate).
+Ir dažas pamata konfigurācijas opcijas, lai sāktu. Vairāk par tām var lasīt [CommentTemplate Repo](https://github.com/KnifeLemon/CommentTemplate).
 
 ### 1. metode: Izmantojot atgriezeniskās saites funkciju
 
@@ -33,14 +33,14 @@ use KnifeLemon\CommentTemplate\Engine;
 $app = Flight::app();
 
 $app->register('view', Engine::class, [], function (Engine $engine) use ($app) {
-    // Saknes direktorijs (kur atrodas index.php) - jūsu tīmekļa lietojumprogrammas dokumentu sakne
+    // Saknes direktorija (kur ir index.php) - jūsu tīmekļa lietojumprogrammas dokumentu sakne
     $engine->setPublicPath(__DIR__);
     
-    // Veidņu failu direktorijs - atbalsta relatīvos un absolūtos ceļus
-    $engine->setSkinPath('views');             // Relatīvs pret publisko ceļu
+    // Veidņu failu direktorija - atbalsta gan relatīvās, gan absolūtās ceļus
+    $engine->setSkinPath('views');             // Relatīvi pret publisko ceļu
     
-    // Kur tiks glabāti kompilētie resursi - atbalsta relatīvos un absolūtos ceļus
-    $engine->setAssetPath('assets');           // Relatīvs pret publisko ceļu
+    // Kur tiks glabāti kompilētie resursi - atbalsta gan relatīvās, gan absolūtās ceļus
+    $engine->setAssetPath('assets');           // Relatīvi pret publisko ceļu
     
     // Veidnes faila paplašinājums
     $engine->setFileExtension('.php');
@@ -51,7 +51,7 @@ $app->map('render', function(string $template, array $data) use ($app): void {
 });
 ```
 
-### 2. metode: Izmantojot konstruktoras parametrus
+### 2. metode: Izmantojot konstruktoru parametrus
 
 ```php
 <?php
@@ -63,7 +63,7 @@ $app = Flight::app();
 
 // __construct(string $publicPath = "", string $skinPath = "", string $assetPath = "", string $fileExtension = "")
 $app->register('view', Engine::class, [
-    __DIR__,                // publicPath - saknes direktorijs (kur atrodas index.php)
+    __DIR__,                // publicPath - saknes direktorija (kur ir index.php)
     'views',                // skinPath - veidņu ceļš (atbalsta relatīvos/absolūtos)
     'assets',               // assetPath - kompilēto resursu ceļš (atbalsta relatīvos/absolūtos)
     '.php'                  // fileExtension - veidnes faila paplašinājums
@@ -74,19 +74,19 @@ $app->map('render', function(string $template, array $data) use ($app): void {
 });
 ```
 
-## Ceļa konfigurācija
+## Ceļu konfigurācija
 
-CommentTemplate nodrošina inteliģentu ceļu apstrādi relatīvajiem un absolūtajiem ceļiem:
+CommentTemplate nodrošina inteliģentu ceļu apstrādi gan relatīvajiem, gan absolūtajiem ceļiem:
 
 ### Publiskais ceļš
 
-**Publiskais ceļš** ir jūsu tīmekļa lietojumprogrammas saknes direktorijs, parasti tur, kur atrodas `index.php`. Šis ir dokumentu sakne, no kuras tīmekļa serveri apkalpo failus.
+**Publiskais ceļš** ir jūsu tīmekļa lietojumprogrammas saknes direktorija, parasti tur, kur atrodas `index.php`. Tas ir dokumentu saknes ceļš, no kura tīmekļa serveri pasniedz failus.
 
 ```php
-// Piemērs: ja jūsu index.php atrodas /var/www/html/myapp/index.php
-$template->setPublicPath('/var/www/html/myapp');  // Saknes direktorijs
+// Piemērs: ja jūsu index.php ir /var/www/html/myapp/index.php
+$template->setPublicPath('/var/www/html/myapp');  // Saknes direktorija
 
-// Windows piemērs: ja jūsu index.php atrodas C:\xampp\htdocs\myapp\index.php
+// Windows piemērs: ja jūsu index.php ir C:\xampp\htdocs\myapp\index.php
 $template->setPublicPath('C:\\xampp\\htdocs\\myapp');
 ```
 
@@ -96,7 +96,7 @@ Veidņu ceļš atbalsta gan relatīvos, gan absolūtos ceļus:
 
 ```php
 $template = new Engine();
-$template->setPublicPath('/var/www/html/myapp');  // Saknes direktorijs (kur atrodas index.php)
+$template->setPublicPath('/var/www/html/myapp');  // Saknes direktorija (kur ir index.php)
 
 // Relatīvie ceļi - automātiski apvienoti ar publisko ceļu
 $template->setSkinPath('views');           // → /var/www/html/myapp/views/
@@ -135,21 +135,21 @@ $template->setAssetPath('D:/projects/assets');    // → D:/projects/assets/
 $template->setAssetPath('\\\\server\\share\\assets'); // → \\server\share\assets\
 ```
 
-**Viedā ceļa noteikšana:**
+**Inteliģenta ceļu noteikšana:**
 
-- **Relatīvie ceļi**: Bez sākuma atdalītājiem (`/`, `\`) vai disku burtiem
-- **Unix absolūtie**: Sākas ar `/` (piem. `/var/www/assets`)
-- **Windows absolūtie**: Sākas ar disku burtu (piem. `C:\www`, `D:/assets`)
-- **UNC ceļi**: Sākas ar `\\` (piem. `\\server\share`)
+- **Relatīvie ceļi**: Nav vadītājsimbolu (`/`, `\`) vai disketes burtiem
+- **Unix absolūtie**: Sākas ar `/` (piem., `/var/www/assets`)
+- **Windows absolūtie**: Sākas ar diska burtu (piem., `C:\www`, `D:/assets`)
+- **UNC ceļi**: Sākas ar `\\` (piem., `\\server\share`)
 
 **Kā tas darbojas:**
 
-- Visi ceļi tiek automātiski atrisināti, pamatojoties uz tipu (relatīvs vs absolūts)
+- Visi ceļi tiek automātiski atrisināti, balstoties uz tipu (relatīvs pret absolūto)
 - Relatīvie ceļi tiek apvienoti ar publisko ceļu
-- `@css` un `@js` izveido minimizētus failus šeit: `{resolvedAssetPath}/css/` vai `{resolvedAssetPath}/js/`
+- `@css` un `@js` izveido minimizētus failus: `{resolvedAssetPath}/css/` vai `{resolvedAssetPath}/js/`
 - `@asset` kopē atsevišķus failus uz: `{resolvedAssetPath}/{relativePath}`
-- `@assetDir` kopē direktorijus uz: `{resolvedAssetPath}/{relativePath}`
-- Viedā kešošana: faili tiek kopēti tikai tad, ja avots ir jaunāks nekā mērķis
+- `@assetDir` kopē direktorijas uz: `{resolvedAssetPath}/{relativePath}`
+- Inteliģenta kešošana: faili tiek kopēti tikai tad, kad avots ir jaunāks par mērķi
 
 ## Veidnes direktīvas
 
@@ -182,7 +182,7 @@ Izmantojiet izkārtojumus, lai izveidotu kopīgu struktūru:
 #### CSS faili
 ```html
 <!--@css(/css/styles.css)-->          <!-- Minimizēts un kešots -->
-<!--@cssSingle(/css/critical.css)-->  <!-- Viens fails, ne minimizēts -->
+<!--@cssSingle(/css/critical.css)-->  <!-- Atsevišķs fails, ne minimizēts -->
 ```
 
 #### JavaScript faili
@@ -195,19 +195,20 @@ CommentTemplate atbalsta dažādas JavaScript ielādes stratēģijas:
 <!--@jsTop(/js/critical.js)-->        <!-- Minimizēts, ielādēts galvā -->
 <!--@jsTopAsync(/js/tracking.js)-->   <!-- Minimizēts, ielādēts galvā ar async -->
 <!--@jsTopDefer(/js/polyfill.js)-->   <!-- Minimizēts, ielādēts galvā ar defer -->
-<!--@jsSingle(/js/widget.js)-->       <!-- Viens fails, ne minimizēts -->
-<!--@jsSingleAsync(/js/ads.js)-->     <!-- Viens fails, ne minimizēts, async -->
-<!--@jsSingleDefer(/js/social.js)-->  <!-- Viens fails, ne minimizēts, defer -->
+<!--@jsSingle(/js/widget.js)-->       <!-- Atsevišķs fails, ne minimizēts -->
+<!--@jsSingleAsync(/js/ads.js)-->     <!-- Atsevišķs fails, ne minimizēts, async -->
+<!--@jsSingleDefer(/js/social.js)-->  <!-- Atsevišķs fails, ne minimizēts, defer -->
 ```
 
 #### Resursu direktīvas CSS/JS failos
 
-CommentTemplate apstrādā arī resursu direktīvas CSS un JavaScript failos kompilācijas laikā:
+CommentTemplate arī apstrādā resursu direktīvas CSS un JavaScript failos kompilācijas laikā:
 
 **CSS piemērs:**
 ```css
 /* Jūsu CSS failos */
-/* @font-face {
+/* Fontu definīcijas */
+@font-face {
     font-family: 'CustomFont';
     src: url('<!--@asset(fonts/custom.woff2)-->') format('woff2');
 }
@@ -230,11 +231,11 @@ const imageData = '<!--@base64(images/icon.png)-->';
 
 #### Base64 kodēšana
 ```html
-<!--@base64(images/logo.png)-->       <!-- Iekšēji kā data URI -->
+<!--@base64(images/logo.png)-->       <!-- Iekšēji kā datu URI -->
 ```
 ** Piemērs: **
 ```html
-<!-- Iekšēji mazas attēlus kā data URI ātrākai ielādei -->
+<!-- Iekšēji mazas bildes kā datu URI ātrākai ielādei -->
 <img src="<!--@base64(images/logo.png)-->" alt="Logo">
 <div style="background-image: url('<!--@base64(icons/star.svg)-->');">
     Mazs ikona kā fons
@@ -243,27 +244,27 @@ const imageData = '<!--@base64(images/icon.png)-->';
 
 #### Resursu kopēšana
 ```html
-<!--@asset(images/photo.jpg)-->       <!-- Kopēt vienu resursu uz publisko direktoriju -->
-<!--@assetDir(assets)-->              <!-- Kopēt visu direktoriju uz publisko direktoriju -->
+<!--@asset(images/photo.jpg)-->       <!-- Kopē atsevišķu resursu uz publisko direktoriju -->
+<!--@assetDir(assets)-->              <!-- Kopē visu direktoriju uz publisko direktoriju -->
 ```
 ** Piemērs: **
 ```html
-<!-- Kopēt un atsauce uz statiskajiem resursiem -->
+<!-- Kopē un atsaucas uz statiskajiem resursiem -->
 <img src="<!--@asset(images/hero-banner.jpg)-->" alt="Hero Banner">
 <a href="<!--@asset(documents/brochure.pdf)-->" download>Lejupielādēt Brošūru</a>
 
-<!-- Kopēt visu direktoriju (fonts, ikonas utt.) -->
+<!-- Kopē visu direktoriju (fonti, ikonas utt.) -->
 <!--@assetDir(assets/fonts)-->
 <!--@assetDir(assets/icons)-->
 ```
 
 ### Veidnes iekļaušana
 ```html
-<!--@import(components/header)-->     <!-- Iekļaut citas veidnes -->
+<!--@import(components/header)-->     <!-- Iekļauj citas veidnes -->
 ```
 ** Piemērs: **
 ```html
-<!-- Iekļaut atkārtoti lietojamos komponentus -->
+<!-- Iekļauj atkārtoti izmantojamas sastāvdaļas -->
 <!--@import(components/header)-->
 
 <main>
@@ -288,46 +289,46 @@ const imageData = '<!--@base64(images/icon.png)-->';
 
 #### Mainīgo filtri
 ```html
-{$title|upper}                       <!-- Pārvērst uz lielajiem burtiem -->
-{$content|lower}                     <!-- Pārvērst uz mazajiem burtiem -->
-{$html|striptag}                     <!-- Noņemt HTML tagus -->
-{$text|escape}                       <!-- Ekrānot HTML -->
-{$multiline|nl2br}                   <!-- Pārvērst jaunas rindas uz <br> -->
-{$html|br2nl}                        <!-- Pārvērst <br> tagus uz jaunām rindām -->
-{$description|trim}                  <!-- Apgriezt tukšvietas -->
-{$subject|title}                     <!-- Pārvērst uz virsraksta gadījumu -->
+{$title|upper}                       <!-- Pārvērš uz lielajiem burtiem -->
+{$content|lower}                     <!-- Pārvērš uz mazajiem burtiem -->
+{$html|striptag}                     <!-- Noņem HTML atzīmes -->
+{$text|escape}                       <!-- Ekrēno HTML -->
+{$multiline|nl2br}                   <!-- Pārvērš jaunas rindas uz <br> -->
+{$html|br2nl}                        <!-- Pārvērš <br> atzīmes uz jaunām rindām -->
+{$description|trim}                  <!-- Apgriež tukšumus -->
+{$subject|title}                     <!-- Pārvērš uz virsraksta gadījumu -->
 ```
 
 #### Mainīgo komandas
 ```html
-{$title|default=Default Title}       <!-- Iestatīt noklusējuma vērtību -->
-{$name|concat= (Admin)}              <!-- Apvienot tekstu -->
+{$title|default=Default Title}       <!-- Iestata noklusējuma vērtību -->
+{$name|concat= (Admin)}              <!-- Apvieno tekstu -->
 ```
 
-#### Ķēdīt vairākus filtrus
+#### Mainīgo komandas
 ```html
-{$content|striptag|trim|escape}      <!-- Ķēdīt vairākus filtrus -->
+{$content|striptag|trim|escape}      <!-- Ķēžu vairākus filtrus -->
 ```
 
 ### Komentāri
 
-Veidnes komentāri tiek pilnībā noņemti no izvades un neparādās gala HTML:
+Veidnes komentāri tiek pilnībā noņemti no izvades un neparādīsies galīgajā HTML:
 
 ```html
-{* Šis ir vienas līnijas veidnes komentārs *}
+{* Tas ir vienrindas veidnes komentārs *}
 
 {* 
-   Šis ir daudzrindas
+   Tas ir vairākrindu 
    veidnes komentārs 
-   kas aptver vairākas līnijas
+   kas aptver vairākas rindas
 *}
 
 <h1>{$title}</h1>
-{* Atkļūdošanas komentārs: pārbauda vai title mainīgais darbojas *}
+{* Debug komentārs: pārbauda, vai title mainīgais darbojas *}
 <p>{$content}</p>
 ```
 
-**Piezīme**: Veidnes komentāri `{* ... *}` atšķiras no HTML komentāriem `<!-- ... -->`. Veidnes komentāri tiek noņemti apstrādes laikā un nekad nesasniedz pārlūkprogrammu.
+**Piezīme**: Veidnes komentāri `{* ... *}` atšķiras no HTML komentāriem `<!-- ... -->`. Veidnes komentāri tiek noņemti apstrādes laikā un nekad nenonāk pārlūkprogrammā.
 
 ## Piemēra projekta struktūra
 

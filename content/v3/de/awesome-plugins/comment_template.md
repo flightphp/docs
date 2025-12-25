@@ -1,6 +1,6 @@
 # CommentTemplate
 
-[CommentTemplate](https://github.com/KnifeLemon/CommentTemplate) ist ein leistungsstarkes PHP-Template-Engine mit Asset-Kompilierung, Template-Vererbung und Variablenverarbeitung. Es bietet eine einfache, aber flexible Möglichkeit, Templates zu verwalten, mit integrierter CSS/JS-Minifizierung und Caching.
+[CommentTemplate](https://github.com/KnifeLemon/CommentTemplate) ist ein leistungsstarker PHP-Template-Engine mit Asset-Kompilierung, Template-Vererbung und Variablenverarbeitung. Es bietet eine einfache, aber flexible Möglichkeit, Templates zu verwalten, mit integrierter CSS/JS-Minifizierung und Caching.
 
 ## Features
 
@@ -8,7 +8,7 @@
 - **Asset-Kompilierung**: Automatische CSS/JS-Minifizierung und Caching
 - **Variablenverarbeitung**: Template-Variablen mit Filtern und Befehlen
 - **Base64-Kodierung**: Inline-Assets als Data-URIs
-- **Flight-Framework-Integration**: Optionale Integration mit dem Flight-PHP-Framework
+- **Flight Framework Integration**: Optionale Integration mit dem Flight PHP Framework
 
 ## Installation
 
@@ -20,7 +20,7 @@ composer require knifelemon/comment-template
 
 ## Grundlegende Konfiguration
 
-Es gibt einige grundlegende Konfigurationsoptionen, um zu starten. Sie können mehr darüber in der [CommentTemplate-Repo](https://github.com/KnifeLemon/CommentTemplate) lesen.
+Es gibt einige grundlegende Konfigurationsoptionen, um zu starten. Sie können mehr darüber in der [CommentTemplate Repo](https://github.com/KnifeLemon/CommentTemplate) lesen.
 
 ### Methode 1: Verwendung einer Callback-Funktion
 
@@ -33,16 +33,16 @@ use KnifeLemon\CommentTemplate\Engine;
 $app = Flight::app();
 
 $app->register('view', Engine::class, [], function (Engine $engine) use ($app) {
-    // Wurzelverzeichnis (wo sich index.php befindet) - das Document Root Ihrer Webanwendung
+    // Root-Verzeichnis (wo index.php liegt) - das Dokument-Root Ihrer Web-Anwendung
     $engine->setPublicPath(__DIR__);
     
-    // Template-Dateiverzeichnis - unterstützt relative und absolute Pfade
-    $engine->setSkinPath('views');             // Relativ zum öffentlichen Pfad
+    // Verzeichnis für Template-Dateien - unterstützt sowohl relative als auch absolute Pfade
+    $engine->setSkinPath('views');             // Relativ zum Public Path
     
-    // Wo kompilierte Assets gespeichert werden - unterstützt relative und absolute Pfade
-    $engine->setAssetPath('assets');           // Relativ zum öffentlichen Pfad
+    // Wo kompilierte Assets gespeichert werden - unterstützt sowohl relative als auch absolute Pfade
+    $engine->setAssetPath('assets');           // Relativ zum Public Path
     
-    // Template-Dateierweiterung
+    // Dateierweiterung für Templates
     $engine->setFileExtension('.php');
 });
 
@@ -63,10 +63,10 @@ $app = Flight::app();
 
 // __construct(string $publicPath = "", string $skinPath = "", string $assetPath = "", string $fileExtension = "")
 $app->register('view', Engine::class, [
-    __DIR__,                // publicPath - Wurzelverzeichnis (wo index.php ist)
+    __DIR__,                // publicPath - Root-Verzeichnis (wo index.php liegt)
     'views',                // skinPath - Template-Pfad (unterstützt relativ/absolut)
-    'assets',               // assetPath - kompilierter Asset-Pfad (unterstützt relativ/absolut)
-    '.php'                  // fileExtension - Template-Dateierweiterung
+    'assets',               // assetPath - Pfad für kompilierte Assets (unterstützt relativ/absolut)
+    '.php'                  // fileExtension - Dateierweiterung für Templates
 ]);
 
 $app->map('render', function(string $template, array $data) use ($app): void {
@@ -74,35 +74,35 @@ $app->map('render', function(string $template, array $data) use ($app): void {
 });
 ```
 
-## Pfad-Konfiguration
+## Pfadkonfiguration
 
-CommentTemplate bietet intelligente Pfad-Behandlung für relative und absolute Pfade:
+CommentTemplate bietet intelligente Pfadbehandlung für sowohl relative als auch absolute Pfade:
 
-### Öffentlicher Pfad
+### Public Path
 
-Der **Öffentliche Pfad** ist das Wurzelverzeichnis Ihrer Webanwendung, typischerweise wo sich `index.php` befindet. Dies ist das Document Root, von dem Webserver Dateien bereitstellen.
+Der **Public Path** ist das Root-Verzeichnis Ihrer Web-Anwendung, typischerweise wo `index.php` liegt. Dies ist das Dokument-Root, aus dem Webserver Dateien ausliefern.
 
 ```php
-// Beispiel: wenn Ihre index.php bei /var/www/html/myapp/index.php liegt
-$template->setPublicPath('/var/www/html/myapp');  // Wurzelverzeichnis
+// Beispiel: Wenn Ihre index.php bei /var/www/html/myapp/index.php liegt
+$template->setPublicPath('/var/www/html/myapp');  // Root-Verzeichnis
 
-// Windows-Beispiel: wenn Ihre index.php bei C:\xampp\htdocs\myapp\index.php liegt
+// Windows-Beispiel: Wenn Ihre index.php bei C:\xampp\htdocs\myapp\index.php liegt
 $template->setPublicPath('C:\\xampp\\htdocs\\myapp');
 ```
 
-### Template-Pfad-Konfiguration
+### Konfiguration des Templates-Pfads
 
-Template-Pfad unterstützt sowohl relative als auch absolute Pfade:
+Der Templates-Pfad unterstützt sowohl relative als auch absolute Pfade:
 
 ```php
 $template = new Engine();
-$template->setPublicPath('/var/www/html/myapp');  // Wurzelverzeichnis (wo index.php ist)
+$template->setPublicPath('/var/www/html/myapp');  // Root-Verzeichnis (wo index.php liegt)
 
-// Relative Pfade - automatisch mit öffentlichem Pfad kombiniert
+// Relative Pfade - werden automatisch mit dem Public Path kombiniert
 $template->setSkinPath('views');           // → /var/www/html/myapp/views/
 $template->setSkinPath('templates/pages'); // → /var/www/html/myapp/templates/pages/
 
-// Absolute Pfade - wie sie sind verwendet (Unix/Linux)
+// Absolute Pfade - werden so verwendet (Unix/Linux)
 $template->setSkinPath('/var/www/templates');      // → /var/www/templates/
 $template->setSkinPath('/full/path/to/templates'); // → /full/path/to/templates/
 
@@ -114,16 +114,16 @@ $template->setSkinPath('D:/projects/templates');  // → D:/projects/templates/
 $template->setSkinPath('\\\\server\\share\\templates'); // → \\server\share\templates\
 ```
 
-### Asset-Pfad-Konfiguration
+### Konfiguration des Asset-Pfads
 
-Asset-Pfad unterstützt auch sowohl relative als auch absolute Pfade:
+Der Asset-Pfad unterstützt ebenfalls sowohl relative als auch absolute Pfade:
 
 ```php
-// Relative Pfade - automatisch mit öffentlichem Pfad kombiniert
+// Relative Pfade - werden automatisch mit dem Public Path kombiniert
 $template->setAssetPath('assets');        // → /var/www/html/myapp/assets/
 $template->setAssetPath('static/files');  // → /var/www/html/myapp/static/files/
 
-// Absolute Pfade - wie sie sind verwendet (Unix/Linux)
+// Absolute Pfade - werden so verwendet (Unix/Linux)
 $template->setAssetPath('/var/www/cdn');           // → /var/www/cdn/
 $template->setAssetPath('/full/path/to/assets');   // → /full/path/to/assets/
 
@@ -135,21 +135,21 @@ $template->setAssetPath('D:/projects/assets');    // → D:/projects/assets/
 $template->setAssetPath('\\\\server\\share\\assets'); // → \\server\share\assets\
 ```
 
-**Intelligente Pfad-Erkennung:**
+**Intelligente Pfaderkennung:**
 
 - **Relative Pfade**: Keine führenden Trennzeichen (`/`, `\`) oder Laufwerksbuchstaben
-- **Unix Absolut**: Beginnt mit `/` (z.B. `/var/www/assets`)
-- **Windows Absolut**: Beginnt mit Laufwerksbuchstabe (z.B. `C:\www`, `D:/assets`)
-- **UNC-Pfade**: Beginnt mit `\\` (z.B. `\\server\share`)
+- **Unix Absolut**: Beginnt mit `/` (z. B. `/var/www/assets`)
+- **Windows Absolut**: Beginnt mit Laufwerksbuchstabe (z. B. `C:\www`, `D:/assets`)
+- **UNC-Pfade**: Beginnt mit `\\` (z. B. `\\server\share`)
 
-**Wie es funktioniert:**
+**So funktioniert es:**
 
-- Alle Pfade werden automatisch basierend auf dem Typ aufgelöst (relativ vs absolut)
-- Relative Pfade werden mit dem öffentlichen Pfad kombiniert
-- `@css` und `@js` erstellen minifizierte Dateien in: `{resolvedAssetPath}/css/` oder `{resolvedAssetPath}/js/`
+- Alle Pfade werden automatisch basierend auf dem Typ (relativ vs. absolut) aufgelöst
+- Relative Pfade werden mit dem Public Path kombiniert
+- `@css` und `@js` erstellen minimierte Dateien in: `{resolvedAssetPath}/css/` oder `{resolvedAssetPath}/js/`
 - `@asset` kopiert einzelne Dateien nach: `{resolvedAssetPath}/{relativePath}`
 - `@assetDir` kopiert Verzeichnisse nach: `{resolvedAssetPath}/{relativePath}`
-- Intelligente Zwischenspeicherung: Dateien werden nur kopiert, wenn die Quelle neuer ist als das Ziel
+- Intelligentes Caching: Dateien werden nur kopiert, wenn die Quelle neuer als das Ziel ist
 
 ## Template-Direktiven
 
@@ -243,8 +243,8 @@ const imageData = '<!--@base64(images/icon.png)-->';
 
 #### Asset-Kopieren
 ```html
-<!--@asset(images/photo.jpg)-->       <!-- Einzelnes Asset in das öffentliche Verzeichnis kopieren -->
-<!--@assetDir(assets)-->              <!-- Ganzes Verzeichnis in das öffentliche Verzeichnis kopieren -->
+<!--@asset(images/photo.jpg)-->       <!-- Kopiert einzelnes Asset in das Public-Verzeichnis -->
+<!--@assetDir(assets)-->              <!-- Kopiert gesamtes Verzeichnis in das Public-Verzeichnis -->
 ```
 **Beispiel:**
 ```html
@@ -252,7 +252,7 @@ const imageData = '<!--@base64(images/icon.png)-->';
 <img src="<!--@asset(images/hero-banner.jpg)-->" alt="Hero Banner">
 <a href="<!--@asset(documents/brochure.pdf)-->" download>Download Brochure</a>
 
-<!-- Ganzes Verzeichnis kopieren (Fonts, Icons usw.) -->
+<!-- Gesamtes Verzeichnis kopieren (Fonts, Icons usw.) -->
 <!--@assetDir(assets/fonts)-->
 <!--@assetDir(assets/icons)-->
 ```
@@ -301,29 +301,29 @@ const imageData = '<!--@base64(images/icon.png)-->';
 #### Variablenbefehle
 ```html
 {$title|default=Default Title}       <!-- Standardwert setzen -->
-{$name|concat= (Admin)}              <!-- Text anhängen -->
+{$name|concat= (Admin)}              <!-- Text konkatenerieren -->
 ```
 
-#### Mehrere Filter verketten
+#### Variablenbefehle
 ```html
-{$content|striptag|trim|escape}      <!-- Mehrere Filter ketten -->
+{$content|striptag|trim|escape}      <!-- Mehrere Filter verketten -->
 ```
 
 ### Kommentare
 
-Template-Kommentare werden vollständig aus der Ausgabe entfernt und erscheinen nicht im finalen HTML:
+Template-Kommentare werden vollständig aus dem Output entfernt und erscheinen nicht im finalen HTML:
 
 ```html
 {* Dies ist ein einzeiliger Template-Kommentar *}
 
 {* 
-   Dies ist ein mehrzeiliger
+   Dies ist ein mehrzeiliger 
    Template-Kommentar 
-   über mehrere Zeilen
+   der mehrere Zeilen umfasst
 *}
 
 <h1>{$title}</h1>
-{* Debug-Kommentar: Prüfen ob title-Variable funktioniert *}
+{* Debug-Kommentar: Überprüfen, ob die Title-Variable funktioniert *}
 <p>{$content}</p>
 ```
 

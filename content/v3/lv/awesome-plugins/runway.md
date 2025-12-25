@@ -1,12 +1,12 @@
-# Lidmašīnas
+# Runway
 
-Lidmašīnas ir CLI lietotne, kas palīdz pārvaldīt jūsu Flight lietojumprogrammas. Tā var ģenerēt kontrolierus, parādīt visus maršrutus un vairāk. Tā balstīta uz lielisko [adhocore/php-cli](https://github.com/adhocore/php-cli) bibliotēku.
+Runway ir CLI lietojumprogramma, kas palīdz pārvaldīt jūsu Flight lietojumprogrammas. Tā var ģenerēt kontrolierus, parādīt visas maršrutus un vairāk. Tā balstās uz izcilo [adhocore/php-cli](https://github.com/adhocore/php-cli) bibliotēku.
 
-Uzklikšķiniet [šeit](https://github.com/flightphp/runway), lai skatītu kodu.
+Noklikšķiniet [šeit](https://github.com/flightphp/runway), lai skatītu kodu.
 
-## Instalēšana
+## Uzstādīšana
 
-Instalējiet to ar komponistu.
+Uzstādiet ar composer.
 
 ```bash
 composer require flightphp/runway
@@ -14,16 +14,16 @@ composer require flightphp/runway
 
 ## Pamata konfigurācija
 
-Pirmo reizi palaižot Lidmašīnas, tā vadīs jūs caur iestatīšanas procesu un izveidos `.runway.json` konfigurācijas failu jūsu projekta saknē. Šajā failā būs dažas nepieciešamās konfigurācijas, lai Lidmašīnas pareizi darbotos.
+Pirmo reizi palaižot Runway, tā vadīs jūs cauri uzstādīšanas procesam un izveidos `.runway.json` konfigurācijas failu jūsu projekta saknes direktorijā. Šis fails saturēs dažas nepieciešamas konfigurācijas, lai Runway darbotos pareizi.
 
-## Lietojums
+## Lietošana
 
-Lidmašīnā ir vairākas komandas, ar kurām varat pārvaldīt savu Flight lietojumprogrammu. Ir divi viegli veidi, kā izmantot Lidmašīnas.
+Runway ir vairākas komandas, kuras jūs varat izmantot, lai pārvaldītu jūsu Flight lietojumprogrammu. Ir divi viegli veidi, kā izmantot Runway.
 
-1. Ja izmantojat ietvaru projektu, varat izpildīt `php runway [komanda]` no savu projekta saknes.
-1. Ja izmantojat Lidmašīnas kā paketi, kas instalēts ar komponistu, varat izpildīt `vendor/bin/runway [komanda]` no savu projekta saknes.
+1. Ja jūs izmantojat skeletu projektu, jūs varat palaidīt `php runway [command]` no jūsu projekta saknes.
+1. Ja jūs izmantojat Runway kā paketi, kas uzstādīta caur composer, jūs varat palaidīt `vendor/bin/runway [command]` no jūsu projekta saknes.
 
-Lai iegūtu papildinformāciju par jebkuru komandu, jūs varat padot `--help` karodziņa.
+Jebkurai komandai jūs varat pievienot `--help` karodziņu, lai iegūtu vairāk informācijas par to, kā izmantot komandu.
 
 ```bash
 php runway routes --help
@@ -33,21 +33,21 @@ php runway routes --help
 
 ### Ģenerēt kontrolieri
 
-Balstoties uz konfigurāciju jūsu `.runway.json` failā, noklusējuma atrašanās vieta jums ģenerēs kontrolieri `app/controllers/` direktorijā.
+Pamatojoties uz konfigurāciju jūsu `.runway.json` failā, noklusējuma atrašanās vieta ģenerēs kontrolieri jums `app/controllers/` direktorijā.
 
 ```bash
 php runway make:controller MyController
 ```
 
-### Ģenerēt aktīvās ierakstu modeles
+### Ģenerēt Active Record modeli
 
-Balstoties uz konfigurāciju jūsu `.runway.json` failā, noklusējuma atrašanās vieta jums ģenerēs kontrolieri `app/records/` direktorijā.
+Pamatojoties uz konfigurāciju jūsu `.runway.json` failā, noklusējuma atrašanās vieta ģenerēs kontrolieri jums `app/records/` direktorijā.
 
 ```bash
 php runway make:record users
 ```
 
-Ja, piemēram, ir `users` tabula ar sekojošu shēmu: `id`, `name`, `email`, `created_at`, `updated_at`, fails līdzīgs sekojošajam tiks izveidots `app/records/UserRecord.php` failā:
+Ja, piemēram, jums ir `users` tabula ar šādu shēmu: `id`, `name`, `email`, `created_at`, `updated_at`, fails, līdzīgs šim, tiks izveidots `app/records/UserRecord.php` failā:
 
 ```php
 <?php
@@ -57,7 +57,7 @@ declare(strict_types=1);
 namespace app\records;
 
 /**
- * ActiveRecord klase lietotāju tabulai.
+ * ActiveRecord klase lietotājiem tabulai.
  * @link https://docs.flightphp.com/awesome-plugins/active-record
  * 
  * @property int $id
@@ -65,20 +65,20 @@ namespace app\records;
  * @property string $email
  * @property string $created_at
  * @property string $updated_at
- * // šeit jūs varat pievienot attiecības, kad tās definētas $relations masīvā
- * @property CompanyRecord $company Attēlots attiecību piemērs
+ * // jūs varat arī pievienot attiecības šeit, kad definēsiet tās $relations masīvā
+ * @property CompanyRecord $company Attiecības piemērs
  */
 class UserRecord extends \flight\ActiveRecord
 {
     /**
-     * @var array $relations Uzstādiet attiecības modeļim
+     * @var array $relations Iestatīt attiecības modelim
      *   https://docs.flightphp.com/awesome-plugins/active-record#relationships
      */
     protected array $relations = [];
 
     /**
      * Konstruktors
-     * @param mixed $databaseConnection Datu bāzes savienojums
+     * @param mixed $databaseConnection Savienojums ar datubāzi
      */
     public function __construct($databaseConnection)
     {
@@ -89,13 +89,13 @@ class UserRecord extends \flight\ActiveRecord
 
 ### Parādīt visus maršrutus
 
-Tas parādīs visus maršrutus, kas pašlaik ir reģistrēti ar Flight.
+Tas parādīs visus maršrutus, kas pašlaik reģistrēti ar Flight.
 
 ```bash
 php runway routes
 ```
 
-Ja vēlaties skatīt tikai konkrētus maršrutus, jūs varat padot karodziņu, lai filtrētu maršrutus.
+Ja vēlaties skatīt tikai specifiskus maršrutus, jūs varat pievienot karodziņu, lai filtrētu maršrutus.
 
 ```bash
 # Parādīt tikai GET maršrutus
@@ -104,14 +104,14 @@ php runway routes --get
 # Parādīt tikai POST maršrutus
 php runway routes --post
 
-# u.c.
+# utt.
 ```
 
-## Lidmašīnas pielāgošana
+## Pielāgošana Runway
 
-Ja jūs izveidojat paketi Flight, vai vēlaties pievienot savas pielāgotas komandas savā projektā, to varat izdarīt, izveidojot `src/commands/`, `flight/commands/`, `app/commands/` vai `commands/` direktoriju savam projektam/paketei.
+Ja jūs vai nu izveidojat paketi Flight, vai vēlaties pievienot savas pielāgotas komandas savam projektam, jūs varat to izdarīt, izveidojot `src/commands/`, `flight/commands/`, `app/commands/` vai `commands/` direktoriju savam projektam/paketei. Ja nepieciešama tālākā pielāgošana, skatiet sadaļu zemāk par Konfigurāciju.
 
-Lai izveidotu komandu, jums vienkārši jāpaplašina `AbstractBaseCommand` klase un jāimplementē vismaz `__construct` metode un `execute` metode.
+Lai izveidotu komandu, jūs vienkārši pagarināt `AbstractBaseCommand` klasi un implementēt vismaz `__construct` metodi un `execute` metodi.
 
 ```php
 <?php
@@ -122,7 +122,7 @@ namespace flight\commands;
 
 class ExampleCommand extends AbstractBaseCommand
 {
-    /**
+	/**
      * Konstruktors
      *
      * @param array<string,mixed> $config JSON konfigurācija no .runway-config.json
@@ -130,7 +130,7 @@ class ExampleCommand extends AbstractBaseCommand
     public function __construct(array $config)
     {
         parent::__construct('make:example', 'Izveidot piemēru dokumentācijai', $config);
-        $this->argument('<funny-gif>', 'Smaida GIF nosaukums');
+        $this->argument('<funny-gif>', 'Smieklīgā gif nosaukums');
     }
 
 	/**
@@ -138,17 +138,56 @@ class ExampleCommand extends AbstractBaseCommand
      *
      * @return void
      */
-    public function execute(string $controller)
+    public function execute()
     {
         $io = $this->app()->io();
 
 		$io->info('Izveido piemēru...');
 
-		// Kaut ko dariet šeit
+		// Dariet kaut ko šeit
 
 		$io->ok('Piemērs izveidots!');
 	}
 }
 ```
 
-Skatiet [adhocore/php-cli Dokumentāciju](https://github.com/adhocore/php-cli), lai iegūtu vairāk informācijas par to, kā izveidot savas pielāgotas komandas savā Flight lietojumprogrammā!
+Skatiet [adhocore/php-cli Dokumentāciju](https://github.com/adhocore/php-cli), lai iegūtu vairāk informācijas par to, kā izveidot savas pielāgotas komandas savai Flight lietojumprogrammai!
+
+### Konfigurācija
+
+Ja nepieciešams pielāgot konfigurāciju Runway, jūs varat izveidot `.runway-config.json` failu jūsu projekta saknes direktorijā. Zemāk ir dažas papildu konfigurācijas, kuras jūs varat iestatīt:
+
+```js
+{
+
+	// Šī ir vieta, kur atrodas jūsu lietojumprogrammas direktorija
+	"app_root": "app/",
+
+	// Šī ir direktorija, kur atrodas jūsu saknes indeksa fails
+	"index_root": "public/",
+
+	// Šie ir ceļi uz citu projektu saknēm
+	"root_paths": [
+		"/home/user/different-project",
+		"/var/www/another-project"
+	],
+
+	// Bāzes ceļi visticamāk nav jākonfigurē, bet tas ir šeit, ja vēlaties
+	"base_paths": {
+		"/includes/libs/vendor", // ja jums ir patiesi unikāls ceļš uz jūsu vendor direktoriju vai kaut ko
+	},
+
+	// Galīgie ceļi ir vietas projektā, kur meklēt komandu failus
+	"final_paths": {
+		"src/diff-path/commands",
+		"app/module/admin/commands",
+	},
+
+	// Ja vēlaties pievienot pilnu ceļu, dariet to (absolūts vai relatīvs pret projektu sakni)
+	"paths": [
+		"/home/user/different-project/src/diff-path/commands",
+		"/var/www/another-project/app/module/admin/commands",
+		"app/my-unique-commands"
+	]
+}
+```

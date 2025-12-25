@@ -1,11 +1,11 @@
 # CommentTemplate
 
-[CommentTemplate](https://github.com/KnifeLemon/CommentTemplate) adalah mesin template PHP yang kuat dengan kompilasi aset, pewarisan template, dan pemrosesan variabel. Ini menyediakan cara sederhana namun fleksibel untuk mengelola template dengan minifikasi CSS/JS bawaan dan caching.
+[CommentTemplate](https://github.com/KnifeLemon/CommentTemplate) adalah mesin template PHP yang kuat dengan kompilasi aset, pewarisan template, dan pemrosesan variabel. Ini menyediakan cara sederhana namun fleksibel untuk mengelola template dengan minifikasi CSS/JS dan caching bawaan.
 
 ## Fitur
 
-- **Pewarisan Template**: Gunakan layout dan sertakan template lain
-- **Kompilasi Aset**: Minifikasi CSS/JS otomatis dan caching
+- **Pewarisan Template**: Gunakan tata letak dan sertakan template lain
+- **Kompilasi Aset**: Minifikasi dan caching CSS/JS otomatis
 - **Pemrosesan Variabel**: Variabel template dengan filter dan perintah
 - **Encoding Base64**: Aset inline sebagai data URI
 - **Integrasi Framework Flight**: Integrasi opsional dengan framework PHP Flight
@@ -20,7 +20,7 @@ composer require knifelemon/comment-template
 
 ## Konfigurasi Dasar
 
-Ada beberapa opsi konfigurasi dasar untuk memulai. Anda dapat membaca lebih lanjut tentangnya di [CommentTemplate Repo](https://github.com/KnifeLemon/CommentTemplate).
+Ada beberapa opsi konfigurasi dasar untuk memulai. Anda dapat membaca lebih lanjut tentangnya di [Repo CommentTemplate](https://github.com/KnifeLemon/CommentTemplate).
 
 ### Metode 1: Menggunakan Fungsi Callback
 
@@ -63,9 +63,9 @@ $app = Flight::app();
 
 // __construct(string $publicPath = "", string $skinPath = "", string $assetPath = "", string $fileExtension = "")
 $app->register('view', Engine::class, [
-    __DIR__ . '/public',    // publicPath - tempat aset akan disajikan
-    __DIR__ . '/views',     // skinPath - tempat file template disimpan  
-    'assets',               // assetPath - tempat aset yang dikompilasi akan disimpan
+    __DIR__,                // publicPath - direktori root (tempat index.php berada)
+    'views',                // skinPath - path template (mendukung relatif/absolut)
+    'assets',               // assetPath - path aset yang dikompilasi (mendukung relatif/absolut)
     '.php'                  // fileExtension - ekstensi file template
 ]);
 
@@ -74,84 +74,88 @@ $app->map('render', function(string $template, array $data) use ($app): void {
 });
 ```
 
-### Konfigurasi Path
+## Konfigurasi Path
 
-CommentTemplate mendukung path relatif dan absolut dengan resolusi cerdas:
+CommentTemplate menyediakan penanganan path yang cerdas untuk path relatif dan absolut:
 
-#### Path Relatif
+### Path Publik
+
+**Path Publik** adalah direktori root aplikasi web Anda, biasanya tempat `index.php` berada. Ini adalah root dokumen yang disajikan oleh server web.
+
 ```php
-<?php
-$engine = new Engine();
+// Contoh: jika index.php Anda berada di /var/www/html/myapp/index.php
+$template->setPublicPath('/var/www/html/myapp');  // Direktori root
 
-// Semua path relatif terhadap directPath publik
-$engine->setPublicPath(__DIR__ . '/public');
-$engine->setSkinPath('templates');        // Akan di-resolve ke {publicPath}/templates
-$engine->setAssetPath('compiled');        // Akan di-resolve ke {publicPath}/compiled
-
-// Juga dapat menggunakan subdirektori
-$engine->setSkinPath('views/templates');  
-$engine->setAssetPath('assets/compiled'); 
+// Contoh Windows: jika index.php Anda berada di C:\xampp\htdocs\myapp\index.php
+$template->setPublicPath('C:\\xampp\\htdocs\\myapp');
 ```
 
-#### Path Absolut
+### Konfigurasi Path Template
+
+Path template mendukung path relatif dan absolut:
+
 ```php
-<?php
-$engine = new Engine();
+$template = new Engine();
+$template->setPublicPath('/var/www/html/myapp');  // Direktori root (tempat index.php berada)
 
-// Path absolut lengkap
-$engine->setSkinPath('/var/www/templates');
-$engine->setAssetPath('/var/www/public/assets');
+// Path relatif - otomatis digabungkan dengan path publik
+$template->setSkinPath('views');           // → /var/www/html/myapp/views/
+$template->setSkinPath('templates/pages'); // → /var/www/html/myapp/templates/pages/
 
-// Path Windows
-$engine->setSkinPath('C:\xampp\htdocs\templates');
-$engine->setAssetPath('C:\xampp\htdocs\public\assets');
+// Path absolut - digunakan apa adanya (Unix/Linux)
+$template->setSkinPath('/var/www/templates');      // → /var/www/templates/
+$template->setSkinPath('/full/path/to/templates'); // → /full/path/to/templates/
 
-// Path UNC (Windows network)
-$engine->setSkinPath('\\server\share\templates');
-$engine->setAssetPath('\\server\share\public\assets');
+// Path absolut Windows
+$template->setSkinPath('C:\\www\\templates');     // → C:\www\templates\
+$template->setSkinPath('D:/projects/templates');  // → D:/projects/templates/
+
+// Path UNC (share jaringan Windows)
+$template->setSkinPath('\\\\server\\share\\templates'); // → \\server\share\templates\
 ```
 
-#### Path Campuran
-```php
-<?php
-$engine = new Engine();
-$engine->setPublicPath('/var/www/public');
+### Konfigurasi Path Aset
 
-// Campurkan path relatif dan absolut berdasarkan kebutuhan
-$engine->setSkinPath('views');                    // Relatif: /var/www/public/views
-$engine->setAssetPath('/tmp/compiled-assets');    // Absolut: /tmp/compiled-assets
+Path aset juga mendukung path relatif dan absolut:
+
+```php
+// Path relatif - otomatis digabungkan dengan path publik
+$template->setAssetPath('assets');        // → /var/www/html/myapp/assets/
+$template->setAssetPath('static/files');  // → /var/www/html/myapp/static/files/
+
+// Path absolut - digunakan apa adanya (Unix/Linux)
+$template->setAssetPath('/var/www/cdn');           // → /var/www/cdn/
+$template->setAssetPath('/full/path/to/assets');   // → /full/path/to/assets/
+
+// Path absolut Windows
+$template->setAssetPath('C:\\www\\static');       // → C:\www\static\
+$template->setAssetPath('D:/projects/assets');    // → D:/projects/assets/
+
+// Path UNC (share jaringan Windows)
+$template->setAssetPath('\\\\server\\share\\assets'); // → \\server\share\assets\
 ```
 
-#### Tips Praktis
+**Deteksi Path Cerdas:**
 
-**Pengembangan Lokal:**
-```php
-$engine->setPublicPath(__DIR__ . '/public');
-$engine->setSkinPath('views');           // Mudah untuk pengembangan
-$engine->setAssetPath('assets');         // Aset terorganisir dalam struktur proyek
-```
+- **Path Relatif**: Tidak ada pemisah awal (`/`, `\`) atau huruf drive
+- **Absolut Unix**: Dimulai dengan `/` (misalnya, `/var/www/assets`)
+- **Absolut Windows**: Dimulai dengan huruf drive (misalnya, `C:\www`, `D:/assets`)
+- **Path UNC**: Dimulai dengan `\\` (misalnya, `\\server\share`)
 
-**Produksi:**
-```php
-$engine->setPublicPath('/var/www/myapp/public');
-$engine->setSkinPath('/var/www/myapp/templates');    // Path absolut untuk kontrol penuh
-$engine->setAssetPath('/var/www/myapp/public/dist'); // Aset di direktori yang dapat diakses web
-```
+**Cara Kerjanya:**
 
-**Docker/Container:**
-```php
-$engine->setPublicPath('/app/public');
-$engine->setSkinPath('/app/resources/views');
-$engine->setAssetPath('/app/public/assets');
-```
-
-CommentTemplate secara otomatis mendeteksi jenis path dan menanganinya dengan benar, memberikan fleksibilitas maksimum untuk setup deployment yang berbeda.
+- Semua path otomatis diselesaikan berdasarkan tipe (relatif vs absolut)
+- Path relatif digabungkan dengan path publik
+- `@css` dan `@js` membuat file yang diminifikasi di: `{resolvedAssetPath}/css/` atau `{resolvedAssetPath}/js/`
+- `@asset` menyalin file tunggal ke: `{resolvedAssetPath}/{relativePath}`
+- `@assetDir` menyalin direktori ke: `{resolvedAssetPath}/{relativePath}`
+- Caching cerdas: file hanya disalin ketika sumber lebih baru daripada tujuan
 
 ## Direktif Template
 
-### Pewarisan Layout
+### Pewarisan Tata Letak
 
-Gunakan layout untuk membuat struktur umum:
+Gunakan tata letak untuk membuat struktur umum:
 
 **layout/global_layout.php**:
 ```html
@@ -173,7 +177,7 @@ Gunakan layout untuk membuat struktur umum:
 <p>{$content}</p>
 ```
 
-### Pengelolaan Aset
+### Manajemen Aset
 
 #### File CSS
 ```html
@@ -185,9 +189,9 @@ Gunakan layout untuk membuat struktur umum:
 CommentTemplate mendukung strategi pemuatan JavaScript yang berbeda:
 
 ```html
-<!--@js(/js/script.js)-->             <!-- Diminifikasi, dimuat di bagian bawah -->
-<!--@jsAsync(/js/analytics.js)-->     <!-- Diminifikasi, dimuat di bagian bawah dengan async -->
-<!--@jsDefer(/js/utils.js)-->         <!-- Diminifikasi, dimuat di bagian bawah dengan defer -->
+<!--@js(/js/script.js)-->             <!-- Diminifikasi, dimuat di bawah -->
+<!--@jsAsync(/js/analytics.js)-->     <!-- Diminifikasi, dimuat di bawah dengan async -->
+<!--@jsDefer(/js/utils.js)-->         <!-- Diminifikasi, dimuat di bawah dengan defer -->
 <!--@jsTop(/js/critical.js)-->        <!-- Diminifikasi, dimuat di head -->
 <!--@jsTopAsync(/js/tracking.js)-->   <!-- Diminifikasi, dimuat di head dengan async -->
 <!--@jsTopDefer(/js/polyfill.js)-->   <!-- Diminifikasi, dimuat di head dengan defer -->
@@ -202,7 +206,7 @@ CommentTemplate juga memproses direktif aset dalam file CSS dan JavaScript selam
 
 **Contoh CSS:**
 ```css
-/* Di file CSS Anda */
+/* Dalam file CSS Anda */
 @font-face {
     font-family: 'CustomFont';
     src: url('<!--@asset(fonts/custom.woff2)-->') format('woff2');
@@ -219,7 +223,7 @@ CommentTemplate juga memproses direktif aset dalam file CSS dan JavaScript selam
 
 **Contoh JavaScript:**
 ```javascript
-/* Di file JS Anda */
+/* Dalam file JS Anda */
 const fontUrl = '<!--@asset(fonts/custom.woff2)-->';
 const imageData = '<!--@base64(images/icon.png)-->';
 ```
@@ -248,7 +252,7 @@ const imageData = '<!--@base64(images/icon.png)-->';
 <img src="<!--@asset(images/hero-banner.jpg)-->" alt="Hero Banner">
 <a href="<!--@asset(documents/brochure.pdf)-->" download>Unduh Brosur</a>
 
-<!-- Salin seluruh direktori (fonts, icons, dll.) -->
+<!-- Salin seluruh direktori (font, ikon, dll.) -->
 <!--@assetDir(assets/fonts)-->
 <!--@assetDir(assets/icons)-->
 ```
@@ -286,44 +290,44 @@ const imageData = '<!--@base64(images/icon.png)-->';
 ```html
 {$title|upper}                       <!-- Ubah ke huruf besar -->
 {$content|lower}                     <!-- Ubah ke huruf kecil -->
-{$html|striptag}                     <!-- Hilangkan tag HTML -->
+{$html|striptag}                     <!-- Hapus tag HTML -->
 {$text|escape}                       <!-- Escape HTML -->
 {$multiline|nl2br}                   <!-- Ubah baris baru menjadi <br> -->
 {$html|br2nl}                        <!-- Ubah tag <br> menjadi baris baru -->
-{$description|trim}                  <!-- Hilangkan spasi -->
+{$description|trim}                  <!-- Potong spasi -->
 {$subject|title}                     <!-- Ubah ke title case -->
 ```
 
 #### Perintah Variabel
 ```html
-{$title|default=Default Title}       <!-- Tetapkan nilai default -->
+{$title|default=Default Title}       <!-- Atur nilai default -->
 {$name|concat= (Admin)}              <!-- Gabungkan teks -->
 ```
 
-#### Rantai Beberapa Filter
+#### Perintah Variabel
 ```html
 {$content|striptag|trim|escape}      <!-- Rantai beberapa filter -->
 ```
 
 ### Komentar
 
-Komentar template sepenuhnya dihapus dari output dan tidak muncul di HTML final:
+Komentar template sepenuhnya dihapus dari output dan tidak akan muncul di HTML akhir:
 
 ```html
 {* Ini adalah komentar template satu baris *}
 
 {* 
-   Ini adalah komentar template
-   multi-baris yang mencakup
-   beberapa baris
+   Ini adalah komentar 
+   template multi-baris 
+   yang meliputi beberapa baris
 *}
 
 <h1>{$title}</h1>
-{* Komentar debugging: memeriksa apakah variabel title berfungsi *}
+{* Komentar debug: memeriksa apakah variabel title berfungsi *}
 <p>{$content}</p>
 ```
 
-**Catatan**: Komentar template `{* ... *}` berbeda dari komentar HTML `<!-- ... -->`. Komentar template dihapus selama pemrosesan dan tidak pernah sampai ke browser.
+**Catatan**: Komentar template `{* ... *}` berbeda dari komentar HTML `<!-- ... -->`. Komentar template dihapus selama pemrosesan dan tidak pernah mencapai browser.
 
 ## Struktur Proyek Contoh
 

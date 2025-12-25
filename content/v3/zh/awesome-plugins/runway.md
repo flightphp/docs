@@ -1,12 +1,12 @@
-# 跑道
+# Runway
 
-跑道是一个CLI应用程序，可帮助您管理您的Flight应用程序。它可以生成控制器，显示所有路由等。它基于优秀的 [adhocore/php-cli](https://github.com/adhocore/php-cli) 库。
+Runway 是一个 CLI 应用程序，帮助您管理 Flight 应用程序。它可以生成控制器、显示所有路由等。它基于优秀的 [adhocore/php-cli](https://github.com/adhocore/php-cli) 库。
 
-点击[这里](https://github.com/flightphp/runway) 查看代码。
+点击 [这里](https://github.com/flightphp/runway) 查看代码。
 
 ## 安装
 
-使用 composer 安装。
+使用 Composer 安装。
 
 ```bash
 composer require flightphp/runway
@@ -14,16 +14,16 @@ composer require flightphp/runway
 
 ## 基本配置
 
-第一次运行跑道时，它将引导您完成设置过程并在项目根目录中创建一个 `.runway.json` 配置文件。此文件将包含一些Runway正常工作所需的配置。
+首次运行 Runway 时，它会引导您完成设置过程，并在项目根目录创建一个 `.runway.json` 配置文件。此文件将包含 Runway 正常工作的必要配置。
 
-## 用法
+## 使用
 
-跑道有许多命令可用于管理您的Flight应用程序。有两种简单的方法可以使用跑道。
+Runway 具有多个命令，可用于管理您的 Flight 应用程序。有两种简单的方式使用 Runway。
 
-1. 如果您使用的是骨架项目，可以从项目的根目录运行 `php runway [command]`。
-1. 如果您是通过composer安装的包来使用跑道，您可以从项目的根目录运行 `vendor/bin/runway [command]`。
+1. 如果您使用的是骨架项目，可以从项目根目录运行 `php runway [command]`。
+1. 如果您通过 Composer 安装 Runway 作为包，可以从项目根目录运行 `vendor/bin/runway [command]`。
 
-对于任何命令，您都可以传入 `--help` 标志以获取有关如何使用命令的更多信息。
+对于任何命令，您可以传入 `--help` 标志以获取有关如何使用该命令的更多信息。
 
 ```bash
 php runway routes --help
@@ -33,21 +33,21 @@ php runway routes --help
 
 ### 生成控制器
 
-根据您的 `.runway.json` 文件中的配置，默认位置将为您在 `app/controllers/` 目录中生成一个控制器。
+基于您的 `.runway.json` 文件中的配置，默认位置将在 `app/controllers/` 目录中为您生成控制器。
 
 ```bash
 php runway make:controller MyController
 ```
 
-### 生成活动记录模型
+### 生成 Active Record 模型
 
-根据您的 `.runway.json` 文件中的配置，默认位置将为您在 `app/records/` 目录中生成一个控制器。
+基于您的 `.runway.json` 文件中的配置，默认位置将在 `app/records/` 目录中为您生成模型。
 
 ```bash
 php runway make:record users
 ```
 
-例如，如果您有以下架构的 `users` 表：`id`，`name`，`email`，`created_at`，`updated_at`，则类似以下内容的文件将在 `app/records/UserRecord.php` 文件中创建：
+例如，如果您有 `users` 表，具有以下架构：`id`、`name`、`email`、`created_at`、`updated_at`，则将在 `app/records/UserRecord.php` 文件中创建类似以下的文件：
 
 ```php
 <?php
@@ -57,7 +57,7 @@ declare(strict_types=1);
 namespace app\records;
 
 /**
- * users 表的ActiveRecord类。
+ * ActiveRecord class for the users table.
  * @link https://docs.flightphp.com/awesome-plugins/active-record
  * 
  * @property int $id
@@ -65,20 +65,20 @@ namespace app\records;
  * @property string $email
  * @property string $created_at
  * @property string $updated_at
- * // 一旦在 $relations 数组中定义了关系，您也可以在此处添加关系
- * @property CompanyRecord $company 关系示例
+ * // you could also add relationships here once you define them in the $relations array
+ * @property CompanyRecord $company Example of a relationship
  */
 class UserRecord extends \flight\ActiveRecord
 {
     /**
-     * @var array $relations 为该模型设置关系
+     * @var array $relations Set the relationships for the model
      *   https://docs.flightphp.com/awesome-plugins/active-record#relationships
      */
     protected array $relations = [];
 
     /**
-     * 构造函数
-     * @param mixed $databaseConnection 数据库连接
+     * Constructor
+     * @param mixed $databaseConnection The connection to the database
      */
     public function __construct($databaseConnection)
     {
@@ -89,29 +89,29 @@ class UserRecord extends \flight\ActiveRecord
 
 ### 显示所有路由
 
-这将显示当前在Flight中注册的所有路由。
+这将显示当前注册到 Flight 的所有路由。
 
 ```bash
 php runway routes
 ```
 
-如果您只想查看特定路由，您可以传入一个标志以过滤路由。
+如果您只想查看特定路由，可以传入标志来过滤路由。
 
 ```bash
-# 仅显示 GET 路由
+# 显示仅 GET 路由
 php runway routes --get
 
-# 仅显示 POST 路由
+# 显示仅 POST 路由
 php runway routes --post
 
-# 等等
+# 等。
 ```
 
-## 自定义跑道
+## 自定义 Runway
 
-如果您要为Flight创建一个包，或者想要将自定义命令添加到您的项目中，您可以通过为您的项目/包创建一个 `src/commands/`, `flight/commands/`, `app/commands/`, 或 `commands/` 目录来实现此目的。
+如果您正在为 Flight 创建包，或者想在项目中添加自己的自定义命令，可以通过为您的项目/包创建 `src/commands/`、`flight/commands/`、`app/commands/` 或 `commands/` 目录来实现。如果需要进一步自定义，请参阅下面的配置部分。
 
-要创建一个命令，您只需扩展 `AbstractBaseCommand` 类，并至少实现一个 `__construct` 方法和一个 `execute` 方法。
+要创建命令，只需扩展 `AbstractBaseCommand` 类，并至少实现 `__construct` 方法和 `execute` 方法。
 
 ```php
 <?php
@@ -123,32 +123,71 @@ namespace flight\commands;
 class ExampleCommand extends AbstractBaseCommand
 {
 	/**
-     * 构造函数
+     * Construct
      *
-     * @param array<string,mixed> $config 来自 .runway-config.json 的JSON配置
+     * @param array<string,mixed> $config JSON config from .runway-config.json
      */
     public function __construct(array $config)
     {
-        parent::__construct('make:example', '为文档创建示例', $config);
-        $this->argument('<funny-gif>', '滑稽gif的名称');
+        parent::__construct('make:example', 'Create an example for the documentation', $config);
+        $this->argument('<funny-gif>', 'The name of the funny gif');
     }
 
 	/**
-     * 执行函数
+     * Executes the function
      *
      * @return void
      */
-    public function execute(string $controller)
+    public function execute()
     {
         $io = $this->app()->io();
 
-		$io->info('创建示例...');
+		$io->info('Creating example...');
 
-		// 在这里执行操作
+		// Do something here
 
-		$io->ok('示例已创建！');
+		$io->ok('Example created!');
 	}
 }
 ```
 
-有关如何将自定义命令构建到您的Flight应用程序中的更多信息，请参阅 [adhocore/php-cli 文档](https://github.com/adhocore/php-cli)。
+有关如何将自定义命令构建到 Flight 应用程序中的更多信息，请参阅 [adhocore/php-cli 文档](https://github.com/adhocore/php-cli)！
+
+### 配置
+
+如果需要自定义 Runway 的配置，可以在项目根目录创建一个 `.runway-config.json` 文件。以下是一些可以设置的附加配置：
+
+```js
+{
+
+	// This is where your application directory is located
+	"app_root": "app/",
+
+	// This is the directory where your root index file is located
+	"index_root": "public/",
+
+	// These are the paths to the roots of other projects
+	"root_paths": [
+		"/home/user/different-project",
+		"/var/www/another-project"
+	],
+
+	// Base paths most likely don't need to be configured, but it's here if you want it
+	"base_paths": {
+		"/includes/libs/vendor", // if you have a really unique path for your vendor directory or something
+	},
+
+	// Final paths are locations within a project to search for the command files
+	"final_paths": {
+		"src/diff-path/commands",
+		"app/module/admin/commands",
+	},
+
+	// If you want to just add the full path, go right ahead (absolute or relative to project root)
+	"paths": [
+		"/home/user/different-project/src/diff-path/commands",
+		"/var/www/another-project/app/module/admin/commands",
+		"app/my-unique-commands"
+	]
+}
+```

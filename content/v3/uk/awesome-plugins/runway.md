@@ -1,6 +1,6 @@
-# Розгін
+# Runway
 
-Розгін - це CLI-додаток, який допомагає вам керувати вашими застосунками Flight. Він може генерувати контролери, відображати всі маршрути та багато іншого. Він базується на відмінній бібліотеці [adhocore/php-cli](https://github.com/adhocore/php-cli).
+Runway — це CLI-додаток, який допомагає керувати вашими додатками Flight. Він може генерувати контролери, відображати всі маршрути та інше. Він базується на чудовій бібліотеці [adhocore/php-cli](https://github.com/adhocore/php-cli).
 
 Натисніть [тут](https://github.com/flightphp/runway), щоб переглянути код.
 
@@ -12,18 +12,18 @@
 composer require flightphp/runway
 ```
 
-## Основна конфігурація
+## Базова конфігурація
 
-Перший раз, коли ви запустите Розгін, він проведе вас через процес налаштування і створить файл конфігурації `.runway.json` у корені вашого проєкту. Цей файл міститиме необхідні конфігурації для коректної роботи Розгону.
+Вперше запускаючи Runway, він проведе вас через процес налаштування та створить файл конфігурації `.runway.json` у корені вашого проекту. Цей файл міститиме деякі необхідні конфігурації для правильної роботи Runway.
 
 ## Використання
 
-Розгін має кілька команд, які ви можете використовувати для керування вашим застосунком Flight. Є два простих способи використовувати Розгін.
+Runway має низку команд, які ви можете використовувати для керування вашим додатком Flight. Є два простих способи використовувати Runway.
 
-1. Якщо ви використовуєте скелетний проєкт, ви можете запустити `php runway [command]` з кореня вашого проєкту.
-1. Якщо ви використовуєте Розгін як пакет, встановлений через composer, ви можете запустити `vendor/bin/runway [command]` з кореня вашого проєкту.
+1. Якщо ви використовуєте скелетний проект, ви можете запустити `php runway [command]` з кореня вашого проекту.
+1. Якщо ви використовуєте Runway як пакет, встановлений через composer, ви можете запустити `vendor/bin/runway [command]` з кореня вашого проекту.
 
-Для будь-якої команди ви можете передати прапор `--help`, щоб отримати більше інформації про те, як використовувати команду.
+Для будь-якої команди ви можете передати прапорець `--help`, щоб отримати більше інформації про те, як використовувати команду.
 
 ```bash
 php runway routes --help
@@ -33,7 +33,7 @@ php runway routes --help
 
 ### Генерація контролера
 
-На основі конфігурації у вашому файлі `.runway.json`, за замовчуванням буде згенеровано контролер у каталозі `app/controllers/`.
+На основі конфігурації у вашому файлі `.runway.json`, за замовчуванням буде згенеровано контролер у директорії `app/controllers/`.
 
 ```bash
 php runway make:controller MyController
@@ -41,13 +41,13 @@ php runway make:controller MyController
 
 ### Генерація моделі Active Record
 
-На основі конфігурації у вашому файлі `.runway.json`, за замовчуванням буде згенеровано контролер у каталозі `app/records/`.
+На основі конфігурації у вашому файлі `.runway.json`, за замовчуванням буде згенеровано контролер у директорії `app/records/`.
 
 ```bash
 php runway make:record users
 ```
 
-Якщо, наприклад, у вас є таблиця `users` з наступною схемою: `id`, `name`, `email`, `created_at`, `updated_at`, буде створено файл подібний до наступного у файлі `app/records/UserRecord.php`:
+Наприклад, якщо у вас є таблиця `users` з такою схемою: `id`, `name`, `email`, `created_at`, `updated_at`, буде створено файл, подібний до наступного, у файлі `app/records/UserRecord.php`:
 
 ```php
 <?php
@@ -57,7 +57,7 @@ declare(strict_types=1);
 namespace app\records;
 
 /**
- * Клас ActiveRecord для таблиці користувачів.
+ * ActiveRecord class for the users table.
  * @link https://docs.flightphp.com/awesome-plugins/active-record
  * 
  * @property int $id
@@ -65,20 +65,20 @@ namespace app\records;
  * @property string $email
  * @property string $created_at
  * @property string $updated_at
- * // ви також можете додати зв'язки тут, як тільки визначите їх у масиві $relations
- * @property CompanyRecord $company Приклад зв'язку
+ * // you could also add relationships here once you define them in the $relations array
+ * @property CompanyRecord $company Example of a relationship
  */
 class UserRecord extends \flight\ActiveRecord
 {
     /**
-     * @var array $relations Встановити зв'язки для моделі
+     * @var array $relations Set the relationships for the model
      *   https://docs.flightphp.com/awesome-plugins/active-record#relationships
      */
     protected array $relations = [];
 
     /**
-     * Конструктор
-     * @param mixed $databaseConnection З'єднання з базою даних
+     * Constructor
+     * @param mixed $databaseConnection The connection to the database
      */
     public function __construct($databaseConnection)
     {
@@ -89,29 +89,29 @@ class UserRecord extends \flight\ActiveRecord
 
 ### Відображення всіх маршрутів
 
-Це відобразить всі маршрути, які наразі зареєстровані в Flight.
+Це відобразить всі маршрути, які наразі зареєстровані у Flight.
 
 ```bash
 php runway routes
 ```
 
-Якщо ви хочете переглянути лише конкретні маршрути, ви можете передати прапор для фільтрації маршрутів.
+Якщо ви хочете переглянути лише конкретні маршрути, ви можете передати прапорець для фільтрації маршрутів.
 
 ```bash
-# Відображати лише маршрути GET
+# Display only GET routes
 php runway routes --get
 
-# Відображати лише маршрути POST
+# Display only POST routes
 php runway routes --post
 
-# тощо.
+# etc.
 ```
 
-## Налаштування Розгону
+## Налаштування Runway
 
-Якщо ви або створюєте пакет для Flight, або хочете додати свої власні команди у свій проєкт, ви можете це зробити, створивши каталог `src/commands/`, `flight/commands/`, `app/commands/`, або `commands/` для вашого проєкту/пакету. 
+Якщо ви створюєте пакет для Flight або хочете додати власні власні команди до вашого проекту, ви можете зробити це, створивши директорію `src/commands/`, `flight/commands/`, `app/commands/` або `commands/` для вашого проекту/пакету. Якщо вам потрібне подальше налаштування, дивіться розділ нижче про Конфігурацію.
 
-Щоб створити команду, вам просто потрібно розширити клас `AbstractBaseCommand` і реалізувати, принаймні, методи `__construct` та `execute`.
+Щоб створити команду, просто розширте клас `AbstractBaseCommand` та реалізуйте щонайменше метод `__construct` та метод `execute`.
 
 ```php
 <?php
@@ -123,32 +123,71 @@ namespace flight\commands;
 class ExampleCommand extends AbstractBaseCommand
 {
 	/**
-     * Конструктор
+     * Construct
      *
-     * @param array<string,mixed> $config JSON конфігурація з .runway-config.json
+     * @param array<string,mixed> $config JSON config from .runway-config.json
      */
     public function __construct(array $config)
     {
-        parent::__construct('make:example', 'Створити приклад для документації', $config);
-        $this->argument('<funny-gif>', 'Назва смішного гіфу');
+        parent::__construct('make:example', 'Create an example for the documentation', $config);
+        $this->argument('<funny-gif>', 'The name of the funny gif');
     }
 
 	/**
-     * Виконує функцію
+     * Executes the function
      *
      * @return void
      */
-    public function execute(string $controller)
+    public function execute()
     {
         $io = $this->app()->io();
 
-		$io->info('Створення прикладу...');
+		$io->info('Creating example...');
 
-		// Зробіть щось тут
+		// Do something here
 
-		$io->ok('Приклад створено!');
+		$io->ok('Example created!');
 	}
 }
 ```
 
-Дивіться [adhocore/php-cli Документацію](https://github.com/adhocore/php-cli) для отримання додаткової інформації про те, як створити свої власні команди у вашому застосунку Flight!
+Дивіться [Документацію adhocore/php-cli](https://github.com/adhocore/php-cli) для отримання додаткової інформації про те, як створювати власні власні команди для вашого додатка Flight!
+
+### Конфігурація
+
+Якщо вам потрібно налаштувати конфігурацію для Runway, ви можете створити файл `.runway-config.json` у корені вашого проекту. Нижче наведено деякі додаткові конфігурації, які ви можете встановити:
+
+```js
+{
+
+	// This is where your application directory is located
+	"app_root": "app/",
+
+	// This is the directory where your root index file is located
+	"index_root": "public/",
+
+	// These are the paths to the roots of other projects
+	"root_paths": [
+		"/home/user/different-project",
+		"/var/www/another-project"
+	],
+
+	// Base paths most likely don't need to be configured, but it's here if you want it
+	"base_paths": {
+		"/includes/libs/vendor", // if you have a really unique path for your vendor directory or something
+	},
+
+	// Final paths are locations within a project to search for the command files
+	"final_paths": {
+		"src/diff-path/commands",
+		"app/module/admin/commands",
+	},
+
+	// If you want to just add the full path, go right ahead (absolute or relative to project root)
+	"paths": [
+		"/home/user/different-project/src/diff-path/commands",
+		"/var/www/another-project/app/module/admin/commands",
+		"app/my-unique-commands"
+	]
+}
+```

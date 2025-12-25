@@ -1,6 +1,6 @@
 # Dokumentasi FlightPHP APM
 
-Selamat datang di FlightPHP APM—pelatih performa pribadi untuk aplikasi Anda! Panduan ini adalah peta jalan Anda untuk menyiapkan, menggunakan, dan menguasai Application Performance Monitoring (APM) dengan FlightPHP. Baik Anda sedang memburu permintaan lambat atau hanya ingin bersemangat dengan grafik latensi, kami siap membantu. Mari buat aplikasi Anda lebih cepat, pengguna Anda lebih bahagia, dan sesi debugging Anda menjadi mudah!
+Selamat datang di FlightPHP APM—pelatih performa pribadi aplikasi Anda! Panduan ini adalah peta jalan Anda untuk menyiapkan, menggunakan, dan menguasai Application Performance Monitoring (APM) dengan FlightPHP. Baik Anda sedang mencari permintaan lambat atau hanya ingin antusias dengan grafik latensi, kami telah menyiapkannya untuk Anda. Mari buat aplikasi Anda lebih cepat, pengguna Anda lebih bahagia, dan sesi debugging Anda menjadi lebih mudah!
 
 Lihat [demo](https://flightphp-docs-apm.sky-9.com/apm/dashboard) dari dashboard untuk situs Flight Docs.
 
@@ -8,7 +8,7 @@ Lihat [demo](https://flightphp-docs-apm.sky-9.com/apm/dashboard) dari dashboard 
 
 ## Mengapa APM Penting
 
-Bayangkan ini: aplikasi Anda seperti restoran sibuk. Tanpa cara untuk melacak berapa lama pesanan memakan waktu atau di mana dapur tersendat, Anda hanya menebak-nebak mengapa pelanggan pergi dengan kesal. APM adalah sous-chef Anda—ia mengawasi setiap langkah, dari permintaan masuk hingga kueri database, dan menandai apa pun yang memperlambat Anda. Halaman lambat membuat pengguna pergi (studi mengatakan 53% bounce jika situs memakan waktu lebih dari 3 detik untuk dimuat!), dan APM membantu Anda menangkap masalah-masalah itu *sebelum* mereka menyakitkan. Ini adalah ketenangan pikiran yang proaktif—lebih sedikit momen “mengapa ini rusak?” dan lebih banyak kemenangan “lihat betapa lancarnya ini berjalan!”.
+Bayangkan ini: aplikasi Anda adalah restoran sibuk. Tanpa cara untuk melacak berapa lama pesanan memakan waktu atau di mana dapur tersendat, Anda hanya menebak mengapa pelanggan pergi dengan kesal. APM adalah sous-chef Anda—ia mengawasi setiap langkah, dari permintaan masuk hingga kueri database, dan menandai apa pun yang memperlambat Anda. Halaman lambat membuat pengguna hilang (studi mengatakan 53% bounce jika situs memakan waktu lebih dari 3 detik untuk dimuat!), dan APM membantu Anda menangkap masalah tersebut *sebelum* mereka menyengat. Ini adalah ketenangan pikiran yang proaktif—lebih sedikit momen “mengapa ini rusak?” dan lebih banyak kemenangan “lihat betapa lancarnya ini berjalan!”
 
 ## Instalasi
 
@@ -18,7 +18,7 @@ Mulai dengan Composer:
 composer require flightphp/apm
 ```
 
-Anda memerlukan:
+Anda akan membutuhkan:
 - **PHP 7.4+**: Menjaga kami kompatibel dengan distribusi Linux LTS sambil mendukung PHP modern.
 - **[FlightPHP Core](https://github.com/flightphp/core) v3.15+**: Framework ringan yang kami tingkatkan.
 
@@ -33,7 +33,7 @@ Anda dapat memilih jenis database Anda selama langkah konfigurasi (lihat di bawa
 
 ## Memulai
 
-Berikut langkah demi langkah untuk kehebatan APM:
+Berikut langkah demi langkah Anda menuju kehebatan APM:
 
 ### 1. Daftarkan APM
 
@@ -41,6 +41,7 @@ Masukkan ini ke dalam file `index.php` atau `services.php` Anda untuk mulai mela
 
 ```php
 use flight\apm\logger\LoggerFactory;
+use flight\database\PdoWrapper;
 use flight\Apm;
 
 $ApmLogger = LoggerFactory::create(__DIR__ . '/../../.runway-config.json');
@@ -56,10 +57,10 @@ $Apm->addPdoConnection($pdo);
 **Apa yang terjadi di sini?**
 - `LoggerFactory::create()` mengambil konfigurasi Anda (lebih lanjut nanti) dan menyiapkan logger—SQLite secara default.
 - `Apm` adalah bintangnya—ia mendengarkan peristiwa Flight (permintaan, rute, kesalahan, dll.) dan mengumpulkan metrik.
-- `bindEventsToFlightInstance($app)` menghubungkannya semua ke aplikasi Flight Anda.
+- `bindEventsToFlightInstance($app)` mengikat semuanya ke aplikasi Flight Anda.
 
 **Tips Pro: Sampling**
-Jika aplikasi Anda sibuk, mencatat *setiap* permintaan mungkin membebani sistem. Gunakan tingkat sampel (0.0 hingga 1.0):
+Jika aplikasi Anda sibuk, mencatat *setiap* permintaan mungkin membebani. Gunakan tingkat sampel (0.0 hingga 1.0):
 
 ```php
 $Apm = new Apm($ApmLogger, 0.1); // Mencatat 10% permintaan
@@ -93,11 +94,11 @@ php vendor/bin/runway apm:init
 > Proses ini juga akan menanyakan apakah Anda ingin menjalankan migrasi untuk pengaturan ini. Jika Anda menyiapkannya untuk pertama kali, jawabannya ya.
 
 **Mengapa dua lokasi?**
-Metrik mentah menumpuk dengan cepat (bayangkan log yang tidak difilter). Worker memprosesnya menjadi tujuan terstruktur untuk dashboard. Menjaga semuanya rapi!
+Metrik mentah menumpuk cepat (pikirkan log yang tidak difilter). Worker memprosesnya menjadi tujuan terstruktur untuk dashboard. Menjaga semuanya rapi!
 
 ### 3. Proses Metrik dengan Worker
 
-Worker mengubah metrik mentah menjadi data siap dashboard. Jalankan sekali:
+Worker mengubah metrik mentah menjadi data siap dashboard. Jalankannya sekali:
 
 ```bash
 php vendor/bin/runway apm:worker
@@ -105,17 +106,17 @@ php vendor/bin/runway apm:worker
 
 **Apa yang dilakukannya?**
 - Membaca dari sumber Anda (misalnya, `apm_metrics.sqlite`).
-- Memproses hingga 100 metrik (ukuran batch default) ke tujuan Anda.
+- Memproses hingga 100 metrik (ukuran batch default) menjadi tujuan Anda.
 - Berhenti ketika selesai atau jika tidak ada metrik yang tersisa.
 
 **Jaga Agar Tetap Berjalan**
-Untuk aplikasi langsung, Anda ingin pemrosesan berkelanjutan. Berikut opsi Anda:
+Untuk aplikasi langsung, Anda akan ingin pemrosesan berkelanjutan. Berikut opsi Anda:
 
 - **Mode Daemon**:
   ```bash
   php vendor/bin/runway apm:worker --daemon
   ```
-  Berjalan selamanya, memproses metrik saat datang. Bagus untuk dev atau pengaturan kecil.
+  Berjalan selamanya, memproses metrik saat mereka datang. Bagus untuk dev atau pengaturan kecil.
 
 - **Crontab**:
   Tambahkan ini ke crontab Anda (`crontab -e`):
@@ -131,7 +132,7 @@ Untuk aplikasi langsung, Anda ingin pemrosesan berkelanjutan. Berikut opsi Anda:
   php vendor/bin/runway apm:worker --daemon
   # Ctrl+B, kemudian D untuk melepaskan; `tmux attach -t apm-worker` untuk terhubung kembali
   ```
-  Menjaganya tetap berjalan bahkan jika Anda logout.
+  Menjaganya berjalan bahkan jika Anda logout.
 
 - **Penyesuaian Kustom**:
   ```bash
@@ -153,14 +154,14 @@ php vendor/bin/runway apm:dashboard
 ```
 
 **Apa ini?**
-- Menghidupkan server PHP di `http://localhost:8001/apm/dashboard`.
-- Menampilkan log permintaan, rute lambat, tingkat kesalahan, dan lainnya.
+- Memutar server PHP di `http://localhost:8001/apm/dashboard`.
+- Menampilkan log permintaan, rute lambat, tingkat kesalahan, dan banyak lagi.
 
 **Kustomisasi Itu**:
 ```bash
 php vendor/bin/runway apm:dashboard --host 0.0.0.0 --port 8080 --php-path=/usr/local/bin/php
 ```
-- `--host 0.0.0.0`: Dapat diakses dari IP mana pun (berguna untuk penampilan jarak jauh).
+- `--host 0.0.0.0`: Dapat diakses dari IP mana pun (berguna untuk melihat jarak jauh).
 - `--port 8080`: Gunakan port berbeda jika 8001 sudah digunakan.
 - `--php-path`: Arahkan ke PHP jika tidak ada di PATH Anda.
 
@@ -172,13 +173,13 @@ Untuk produksi, Anda mungkin harus mencoba beberapa teknik untuk menjalankan das
 
 - **Gunakan Reverse Proxy**: Siapkan Nginx atau Apache untuk meneruskan permintaan ke dashboard.
 - **SSH Tunnel**: Jika Anda bisa SSH ke server, gunakan `ssh -L 8080:localhost:8001 youruser@yourserver` untuk menyalurkan dashboard ke mesin lokal Anda.
-- **VPN**: Jika server Anda di belakang VPN, hubungkan ke sana dan akses dashboard secara langsung.
+- **VPN**: Jika server Anda di belakang VPN, hubungkan ke itu dan akses dashboard secara langsung.
 - **Konfigurasikan Firewall**: Buka port 8001 untuk IP Anda atau jaringan server. (atau port apa pun yang Anda atur).
-- **Konfigurasikan Apache/Nginx**: Jika Anda memiliki server web di depan aplikasi Anda, Anda dapat mengonfigurasinya ke domain atau subdomain. Jika Anda melakukan ini, Anda akan mengatur root dokumen ke `/path/to/your/project/vendor/flightphp/apm/dashboard`
+- **Konfigurasikan Apache/Nginx**: Jika Anda memiliki server web di depan aplikasi Anda, Anda bisa mengonfigurasinya ke domain atau subdomain. Jika Anda melakukan ini, Anda akan mengatur root dokumen ke `/path/to/your/project/vendor/flightphp/apm/dashboard`
 
-#### Ingin dashboard berbeda?
+#### Ingin dashboard yang berbeda?
 
-Anda bisa membangun dashboard sendiri jika mau! Lihat direktori vendor/flightphp/apm/src/apm/presenter untuk ide tentang cara menyajikan data untuk dashboard Anda sendiri!
+Anda bisa membangun dashboard sendiri jika ingin! Lihat direktori vendor/flightphp/apm/src/apm/presenter untuk ide tentang cara menyajikan data untuk dashboard Anda sendiri!
 
 ## Fitur Dashboard
 
@@ -188,14 +189,14 @@ Dashboard adalah markas APM Anda—berikut yang akan Anda lihat:
 - **Permintaan Terlambat**: 5 permintaan teratas yang memakan waktu (misalnya, “/api/heavy” di 2.5s).
 - **Rute Terlambat**: 5 rute teratas berdasarkan waktu rata-rata—bagus untuk melihat pola.
 - **Tingkat Kesalahan**: Persentase permintaan yang gagal (misalnya, 2.3% 500s).
-- **Persentil Latensi**: 95th (p95) dan 99th (p99) waktu respons—tahu skenario kasus terburuk Anda.
+- **Persentil Latensi**: 95th (p95) dan 99th (p99) waktu respons—ketahui skenario kasus terburuk Anda.
 - **Grafik Kode Respons**: Visualisasikan 200s, 404s, 500s seiring waktu.
 - **Kueri/Middleware Panjang**: 5 panggilan database lambat teratas dan lapisan middleware.
 - **Cache Hit/Miss**: Seberapa sering cache Anda menyelamatkan hari.
 
-**Tambahan**:
+**Ekstra**:
 - Filter berdasarkan “Jam Terakhir,” “Hari Terakhir,” atau “Minggu Terakhir.”
-- Toggle mode gelap untuk sesi malam larut.
+- Toggle mode gelap untuk sesi malam hari itu.
 
 **Contoh**:
 Permintaan ke `/users` mungkin menunjukkan:
@@ -218,7 +219,7 @@ $app->eventDispatcher()->trigger('apm.custom', new CustomEvent('api_call', [
 ]));
 ```
 
-**Di mana munculnya?**
+**Di mana itu muncul?**
 Di detail permintaan dashboard di bawah “Peristiwa Kustom”—dapat diperluas dengan format JSON yang bagus.
 
 **Kasus Penggunaan**:
@@ -265,7 +266,7 @@ Sesuaikan worker sesuai keinginan Anda:
 
 - `--timeout 300`: Berhenti setelah 5 menit—bagus untuk pengujian.
 - `--max_messages 500`: Dibatasi pada 500 metrik—menjaganya terbatas.
-- `--batch_size 200`: Memproses 200 sekaligus—menyeimbangkan kecepatan dan memori.
+- `--batch_size 200`: Memproses 200 sekaligus—menseimbangkan kecepatan dan memori.
 - `--daemon`: Berjalan tanpa henti—ideal untuk pemantauan langsung.
 
 **Contoh**:
@@ -276,7 +277,7 @@ Berjalan selama satu jam, memproses 100 metrik sekaligus.
 
 ## ID Permintaan di Aplikasi
 
-Setiap permintaan memiliki ID permintaan unik untuk pelacakan. Anda dapat menggunakan ID ini di aplikasi Anda untuk mengkorelasikan log dan metrik. Misalnya, Anda dapat menambahkan ID permintaan ke halaman kesalahan:
+Setiap permintaan memiliki ID permintaan unik untuk pelacakan. Anda bisa menggunakan ID ini di aplikasi Anda untuk mengkorelasikan log dan metrik. Misalnya, Anda bisa menambahkan ID permintaan ke halaman kesalahan:
 
 ```php
 Flight::map('error', function($message) {
@@ -293,7 +294,7 @@ Flight::map('error', function($message) {
 
 ## Upgrade
 
-Jika Anda sedang meng-upgrade ke versi APM yang lebih baru, ada kemungkinan ada migrasi database yang perlu dijalankan. Anda bisa melakukannya dengan menjalankan perintah berikut:
+Jika Anda sedang mengupgrade ke versi APM yang lebih baru, ada kemungkinan ada migrasi database yang perlu dijalankan. Anda bisa melakukan ini dengan menjalankan perintah berikut:
 
 ```bash
 php vendor/bin/runway apm:migrate
@@ -302,15 +303,25 @@ Ini akan menjalankan migrasi apa pun yang diperlukan untuk memperbarui skema dat
 
 **Catatan:** Jika database APM Anda besar ukurannya, migrasi ini mungkin memakan waktu. Anda mungkin ingin menjalankan perintah ini selama jam non-puncak.
 
+### Upgrade dari 0.4.3 -> 0.5.0
+
+Jika Anda sedang mengupgrade dari 0.4.3 ke 0.5.0, Anda perlu menjalankan perintah berikut:
+
+```bash
+php vendor/bin/runway apm:config-migrate
+```
+
+Ini akan memigrasikan konfigurasi Anda dari format lama menggunakan file `.runway-config.json` ke format baru yang menyimpan key/value di file `config.php`.
+
 ## Membersihkan Data Lama
 
 Untuk menjaga database Anda rapi, Anda bisa membersihkan data lama. Ini sangat berguna jika Anda menjalankan aplikasi sibuk dan ingin menjaga ukuran database tetap terkendali.
-Anda bisa melakukannya dengan menjalankan perintah berikut:
+Anda bisa melakukan ini dengan menjalankan perintah berikut:
 
 ```bash
 php vendor/bin/runway apm:purge
 ```
-Ini akan menghapus semua data lebih tua dari 30 hari dari database. Anda bisa menyesuaikan jumlah hari dengan memberikan nilai berbeda ke opsi `--days`:
+Ini akan menghapus semua data lebih tua dari 30 hari dari database. Anda bisa menyesuaikan jumlah hari dengan melewatkan nilai berbeda ke opsi `--days`:
 
 ```bash
 php vendor/bin/runway apm:purge --days 7
@@ -323,7 +334,7 @@ Tersangkut? Coba ini:
 
 - **Tidak Ada Data Dashboard?**
   - Apakah worker berjalan? Periksa `ps aux | grep apm:worker`.
-  - Path konfigurasi cocok? Verifikasi DSN di `.runway-config.json` menunjuk ke file nyata.
+  - Path konfigurasi cocok? Verifikasi DSN `.runway-config.json` mengarah ke file nyata.
   - Jalankan `php vendor/bin/runway apm:worker` secara manual untuk memproses metrik tertunda.
 
 - **Kesalahan Worker?**
@@ -331,7 +342,7 @@ Tersangkut? Coba ini:
   - Periksa log PHP untuk jejak tumpukan.
 
 - **Dashboard Tidak Mau Mulai?**
-  - Port 8001 sedang digunakan? Gunakan `--port 8080`.
+  - Port 8001 digunakan? Gunakan `--port 8080`.
   - PHP tidak ditemukan? Gunakan `--php-path /usr/bin/php`.
   - Firewall memblokir? Buka port atau gunakan `--host localhost`.
 
@@ -340,7 +351,7 @@ Tersangkut? Coba ini:
   - Kurangi ukuran batch: `--batch_size 20`.
 
 - **Tidak Melacak Pengecualian/Kesalahan?**
-  - Jika Anda memiliki [Tracy](https://tracy.nette.org/) diaktifkan untuk proyek Anda, itu akan menggantikan penanganan kesalahan Flight. Anda perlu menonaktifkan Tracy dan kemudian pastikan bahwa `Flight::set('flight.handle_errors', true);` diatur.
+  - Jika Anda memiliki [Tracy](https://tracy.nette.org/) diaktifkan untuk proyek Anda, itu akan mengganti penanganan kesalahan Flight. Anda perlu menonaktifkan Tracy dan kemudian pastikan bahwa `Flight::set('flight.handle_errors', true);` diatur.
 
 - **Tidak Melacak Kueri Database?**
   - Pastikan Anda menggunakan `PdoWrapper` untuk koneksi database Anda.

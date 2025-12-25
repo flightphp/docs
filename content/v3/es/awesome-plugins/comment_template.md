@@ -8,7 +8,7 @@
 - **Compilación de Activos**: Minificación y caché automáticos de CSS/JS
 - **Procesamiento de Variables**: Variables de plantilla con filtros y comandos
 - **Codificación Base64**: Activos en línea como URIs de datos
-- **Integración con Flight Framework**: Integración opcional con el framework PHP Flight
+- **Integración con el Framework Flight**: Integración opcional con el framework PHP Flight
 
 ## Instalación
 
@@ -33,13 +33,13 @@ use KnifeLemon\CommentTemplate\Engine;
 $app = Flight::app();
 
 $app->register('view', Engine::class, [], function (Engine $engine) use ($app) {
-    // Directorio raíz (donde está index.php) - la raíz del documento de su aplicación web
+    // Directorio raíz (donde está index.php) - el directorio raíz de tu aplicación web
     $engine->setPublicPath(__DIR__);
     
-    // Directorio de archivos de plantilla - soporta rutas relativas y absolutas
+    // Directorio de archivos de plantillas - soporta rutas relativas y absolutas
     $engine->setSkinPath('views');             // Relativo a la ruta pública
     
-    // Donde se almacenarán los activos compilados - soporta rutas relativas y absolutas
+    // Dónde se almacenarán los activos compilados - soporta rutas relativas y absolutas
     $engine->setAssetPath('assets');           // Relativo a la ruta pública
     
     // Extensión de archivo de plantilla
@@ -76,17 +76,17 @@ $app->map('render', function(string $template, array $data) use ($app): void {
 
 ## Configuración de Rutas
 
-CommentTemplate proporciona manejo inteligente de rutas para rutas relativas y absolutas:
+CommentTemplate proporciona un manejo inteligente de rutas tanto relativas como absolutas:
 
 ### Ruta Pública
 
-La **Ruta Pública** es el directorio raíz de su aplicación web, típicamente donde reside `index.php`. Este es el document root desde donde los servidores web sirven archivos.
+La **Ruta Pública** es el directorio raíz de tu aplicación web, típicamente donde reside `index.php`. Este es el directorio raíz desde el que los servidores web sirven archivos.
 
 ```php
-// Ejemplo: si su index.php está en /var/www/html/myapp/index.php
+// Ejemplo: si tu index.php está en /var/www/html/myapp/index.php
 $template->setPublicPath('/var/www/html/myapp');  // Directorio raíz
 
-// Ejemplo Windows: si su index.php está en C:\xampp\htdocs\myapp\index.php
+// Ejemplo en Windows: si tu index.php está en C:\xampp\htdocs\myapp\index.php
 $template->setPublicPath('C:\\xampp\\htdocs\\myapp');
 ```
 
@@ -98,19 +98,19 @@ La ruta de plantillas soporta tanto rutas relativas como absolutas:
 $template = new Engine();
 $template->setPublicPath('/var/www/html/myapp');  // Directorio raíz (donde está index.php)
 
-// Rutas relativas - automáticamente combinadas con la ruta pública
+// Rutas relativas - se combinan automáticamente con la ruta pública
 $template->setSkinPath('views');           // → /var/www/html/myapp/views/
 $template->setSkinPath('templates/pages'); // → /var/www/html/myapp/templates/pages/
 
-// Rutas absolutas - usadas tal como están (Unix/Linux)
+// Rutas absolutas - se usan tal cual (Unix/Linux)
 $template->setSkinPath('/var/www/templates');      // → /var/www/templates/
 $template->setSkinPath('/full/path/to/templates'); // → /full/path/to/templates/
 
-// Rutas absolutas Windows
+// Rutas absolutas en Windows
 $template->setSkinPath('C:\\www\\templates');     // → C:\www\templates\
 $template->setSkinPath('D:/projects/templates');  // → D:/projects/templates/
 
-// Rutas UNC (recursos compartidos de red Windows)
+// Rutas UNC (comparticiones de red en Windows)
 $template->setSkinPath('\\\\server\\share\\templates'); // → \\server\share\templates\
 ```
 
@@ -119,41 +119,41 @@ $template->setSkinPath('\\\\server\\share\\templates'); // → \\server\share\te
 La ruta de activos también soporta tanto rutas relativas como absolutas:
 
 ```php
-// Rutas relativas - automáticamente combinadas con la ruta pública
+// Rutas relativas - se combinan automáticamente con la ruta pública
 $template->setAssetPath('assets');        // → /var/www/html/myapp/assets/
 $template->setAssetPath('static/files');  // → /var/www/html/myapp/static/files/
 
-// Rutas absolutas - usadas tal como están (Unix/Linux)
+// Rutas absolutas - se usan tal cual (Unix/Linux)
 $template->setAssetPath('/var/www/cdn');           // → /var/www/cdn/
 $template->setAssetPath('/full/path/to/assets');   // → /full/path/to/assets/
 
-// Rutas absolutas Windows
+// Rutas absolutas en Windows
 $template->setAssetPath('C:\\www\\static');       // → C:\www\static\
 $template->setAssetPath('D:/projects/assets');    // → D:/projects/assets/
 
-// Rutas UNC (recursos compartidos de red Windows)
+// Rutas UNC (comparticiones de red en Windows)
 $template->setAssetPath('\\\\server\\share\\assets'); // → \\server\share\assets\
 ```
 
 **Detección Inteligente de Rutas:**
 
-- **Rutas Relativas**: Sin separadores principales (`/`, `\`) o letras de unidad
-- **Unix Absoluta**: Comienza con `/` (ej. `/var/www/assets`)
-- **Windows Absoluta**: Comienza con letra de unidad (ej. `C:\www`, `D:/assets`)
-- **Rutas UNC**: Comienza con `\\` (ej. `\\server\share`)
+- **Rutas Relativas**: Sin separadores iniciales (`/`, `\`) ni letras de unidad
+- **Absolutas Unix**: Comienzan con `/` (p. ej., `/var/www/assets`)
+- **Absolutas Windows**: Comienzan con letra de unidad (p. ej., `C:\www`, `D:/assets`)
+- **Rutas UNC**: Comienzan con `\\` (p. ej., `\\server\share`)
 
 **Cómo funciona:**
 
-- Todas las rutas se resuelven automáticamente basándose en el tipo (relativa vs absoluta)
+- Todas las rutas se resuelven automáticamente según el tipo (relativa vs absoluta)
 - Las rutas relativas se combinan con la ruta pública
 - `@css` y `@js` crean archivos minificados en: `{resolvedAssetPath}/css/` o `{resolvedAssetPath}/js/`
-- `@asset` copia archivos únicos a: `{resolvedAssetPath}/{relativePath}`
+- `@asset` copia archivos individuales a: `{resolvedAssetPath}/{relativePath}`
 - `@assetDir` copia directorios a: `{resolvedAssetPath}/{relativePath}`
-- Caché inteligente: los archivos solo se copian cuando el origen es más nuevo que el destino
+- Caché inteligente: los archivos solo se copian cuando la fuente es más nueva que el destino
 
 ## Directivas de Plantilla
 
-### Herencia de Diseño
+### Herencia de Diseños
 
 Usa diseños para crear una estructura común:
 
@@ -204,7 +204,7 @@ CommentTemplate soporta diferentes estrategias de carga de JavaScript:
 
 CommentTemplate también procesa directivas de activos dentro de archivos CSS y JavaScript durante la compilación:
 
-**Ejemplo de CSS:**
+**Ejemplo CSS:**
 ```css
 /* En tus archivos CSS */
 @font-face {
@@ -221,7 +221,7 @@ CommentTemplate también procesa directivas de activos dentro de archivos CSS y 
 }
 ```
 
-**Ejemplo de JavaScript:**
+**Ejemplo JavaScript:**
 ```javascript
 /* En tus archivos JS */
 const fontUrl = '<!--@asset(fonts/custom.woff2)-->';
@@ -304,26 +304,26 @@ const imageData = '<!--@base64(images/icon.png)-->';
 {$name|concat= (Admin)}              <!-- Concatenar texto -->
 ```
 
-#### Encadenar Múltiples Filtros
+#### Comandos de Variables
 ```html
 {$content|striptag|trim|escape}      <!-- Encadenar múltiples filtros -->
 ```
 
 ### Comentarios
 
-Los comentarios de plantilla se eliminan completamente de la salida y no aparecen en el HTML final:
+Los comentarios de plantilla se eliminan completamente de la salida y no aparecerán en el HTML final:
 
 ```html
 {* Este es un comentario de plantilla de una línea *}
 
 {* 
-   Este es un comentario de plantilla
-   de múltiples líneas 
+   Este es un comentario de plantilla 
+   de varias líneas 
    que abarca varias líneas
 *}
 
 <h1>{$title}</h1>
-{* Comentario de depuración: verificar si la variable title funciona *}
+{* Comentario de depuración: verificando si la variable title funciona *}
 <p>{$content}</p>
 ```
 
