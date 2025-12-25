@@ -9,10 +9,10 @@ use DOMXPath;
 class DocsLogic {
 
 	/** @var string */
-    private const DS = DIRECTORY_SEPARATOR;
+	private const DS = DIRECTORY_SEPARATOR;
 
 	/** @var string Path to the base content directory */
-    public const CONTENT_DIR = __DIR__ . self::DS . '..' . self::DS . '..' . self::DS . 'content' . self::DS;
+	public const CONTENT_DIR = __DIR__ . self::DS . '..' . self::DS . '..' . self::DS . 'content' . self::DS;
 
 	const AVAILABLE_LANGUAGES = [
 		'en',
@@ -35,7 +35,6 @@ class DocsLogic {
 	 * @param CustomEngine $app Flight Engine
 	 */
 	public function __construct(protected $app) {
-		
 	}
 
 	/**
@@ -46,33 +45,33 @@ class DocsLogic {
 	public function getLearnSectionNames(): array {
 		return [
 			'Core Components' => [
-				[ 'url' => '/learn/routing', 'title' => 'Routing' ],
-				[ 'url' => '/learn/middleware', 'title' => 'Middleware' ],
-				[ 'url' => '/learn/autoloading', 'title' => 'Autoloading' ],
-				[ 'url' => '/learn/requests', 'title' => 'Requests' ],
-				[ 'url' => '/learn/responses', 'title' => 'Responses' ],
-				[ 'url' => '/learn/templates', 'title' => 'HTML Templates' ],
-				[ 'url' => '/learn/security', 'title' => 'Security' ],
-				[ 'url' => '/learn/configuration', 'title' => 'Configuration' ],
-				[ 'url' => '/learn/events', 'title' => 'Event Manager' ],
-				[ 'url' => '/learn/extending', 'title' => 'Extending Flight' ],
-				[ 'url' => '/learn/filtering', 'title' => 'Method Hooks and Filtering' ],
-				[ 'url' => '/learn/dependency-injection-container', 'title' => 'Dependency Injection' ],
+				['url' => '/learn/routing', 'title' => 'Routing'],
+				['url' => '/learn/middleware', 'title' => 'Middleware'],
+				['url' => '/learn/autoloading', 'title' => 'Autoloading'],
+				['url' => '/learn/requests', 'title' => 'Requests'],
+				['url' => '/learn/responses', 'title' => 'Responses'],
+				['url' => '/learn/templates', 'title' => 'HTML Templates'],
+				['url' => '/learn/security', 'title' => 'Security'],
+				['url' => '/learn/configuration', 'title' => 'Configuration'],
+				['url' => '/learn/events', 'title' => 'Event Manager'],
+				['url' => '/learn/extending', 'title' => 'Extending Flight'],
+				['url' => '/learn/filtering', 'title' => 'Method Hooks and Filtering'],
+				['url' => '/learn/dependency-injection-container', 'title' => 'Dependency Injection'],
 			],
 			'Utility Classes' => [
-				[ 'url' => '/learn/collections', 'title' => 'Collections' ],
-				[ 'url' => '/learn/json', 'title' => 'JSON Wrapper' ],
-				[ 'url' => '/learn/pdo-wrapper', 'title' => 'PDO Wrapper' ],
-				[ 'url' => '/learn/uploaded-file', 'title' => 'Uploaded File Handler' ],
+				['url' => '/learn/collections', 'title' => 'Collections'],
+				['url' => '/learn/json', 'title' => 'JSON Wrapper'],
+				['url' => '/learn/pdo-wrapper', 'title' => 'PDO Wrapper'],
+				['url' => '/learn/uploaded-file', 'title' => 'Uploaded File Handler'],
 			],
 			'Important Concepts' => [
-				[ 'url' => '/learn/why-frameworks', 'title' => 'Why a Framework?' ],
-				[ 'url' => '/learn/flight-vs-another-framework', 'title' => 'Flight vs Others' ],
+				['url' => '/learn/why-frameworks', 'title' => 'Why a Framework?'],
+				['url' => '/learn/flight-vs-another-framework', 'title' => 'Flight vs Others'],
 			],
 			'Other Topics' => [
-				[ 'url' => '/learn/unit-testing', 'title' => 'Unit Testing' ],
-				[ 'url' => '/learn/ai', 'title' => 'AI & Developer Experience' ],
-				[ 'url' => '/learn/migrating-to-v3', 'title' => 'Migrating v2 -> v3' ],
+				['url' => '/learn/unit-testing', 'title' => 'Unit Testing'],
+				['url' => '/learn/ai', 'title' => 'AI & Developer Experience'],
+				['url' => '/learn/migrating-to-v3', 'title' => 'Migrating v2 -> v3'],
 			]
 		];
 	}
@@ -83,20 +82,20 @@ class DocsLogic {
 	 * @param string $latte_file The path to the Latte template file to be rendered.
 	 * @param array $params An optional array of parameters to be passed to the template.
 	 */
-    public function renderPage(string $latte_file, array $params = []) {
-        $request = $this->app->request();
-        $uri = $request->url;
+	public function renderPage(string $latte_file, array $params = []) {
+		$request = $this->app->request();
+		$uri = $request->url;
 
-        if (str_contains($uri, '?')) {
-            $uri = substr($uri, 0, strpos($uri, '?'));
-        }
+		if (str_contains($uri, '?')) {
+			$uri = substr($uri, 0, strpos($uri, '?'));
+		}
 
 		$startTime = microtime(true);
-		if(!empty($params['raw_markdown']) && (str_contains($request->header('Accept'), 'text/plain') || str_contains($request->header('Accept'), 'text/markdown'))) {
+		if (!empty($params['raw_markdown']) && (str_contains($request->header('Accept'), 'text/plain') || str_contains($request->header('Accept'), 'text/markdown'))) {
 			$this->app->response()->header('Content-Type', 'text/markdown; charset=utf-8');
 			$this->app->response()->write($params['raw_markdown']);
 		} else {
-			
+
 			// Here we can set variables that will be available on any page
 			$params['url'] = $request->getScheme() . '://' . $request->getHeader('Host') . $uri;
 			$params['nonce'] = HeaderSecurityMiddleware::$nonce;
@@ -104,10 +103,10 @@ class DocsLogic {
 
 			$this->app->latte()->render($latte_file, $params);
 		}
-		
+
 		$executionTime = microtime(true) - $startTime;
-		$this->app->eventDispatcher()->trigger('flight.view.rendered', $latte_file.':'.$uri, $executionTime);
-    }
+		$this->app->eventDispatcher()->trigger('flight.view.rendered', $latte_file . ':' . $uri, $executionTime);
+	}
 
 	/**
 	 * Sets up the translator service with the specified language and version.
@@ -120,7 +119,7 @@ class DocsLogic {
 		$Translator = $this->app->translator();
 		$Translator->setLanguage($language);
 		$Translator->setVersion($version);
-        return $Translator;
+		return $Translator;
 	}
 
 	/**
@@ -132,8 +131,8 @@ class DocsLogic {
 	 *
 	 * @return void
 	 */
-    public function compileSinglePage(string $language, string $version, string $section) {
-        $app = $this->app;
+	public function compileSinglePage(string $language, string $version, string $section) {
+		$app = $this->app;
 
 		// Check if the language is valid
 		if ($this->checkValidLanguage($language) === false) {
@@ -159,18 +158,18 @@ class DocsLogic {
 			$app->cache()->store($cacheKey, $markdown_html, 86400); // 1 day
 		}
 
-		$app->eventDispatcher()->trigger('flight.cache.checked', 'compile_single_page_'.$cacheKey, $cacheHit, microtime(true) - $cacheStartTime);
+		$app->eventDispatcher()->trigger('flight.cache.checked', 'compile_single_page_' . $cacheKey, $cacheHit, microtime(true) - $cacheStartTime);
 
-        $markdown_html = $this->wrapContentInDiv($markdown_html);
+		$markdown_html = $this->wrapContentInDiv($markdown_html);
 
-        $this->renderPage('single_page.latte', [
-            'page_title' => $section,
-            'markdown' => $markdown_html,
+		$this->renderPage('single_page.latte', [
+			'page_title' => $section,
+			'markdown' => $markdown_html,
 			'version' => $version,
 			'language' => $language,
 			'raw_markdown' => $rawMarkdown,
-        ]);
-    }
+		]);
+	}
 
 	/**
 	 * Compiles the Scrollspy page based on the provided language, version, section, and sub-section.
@@ -180,7 +179,7 @@ class DocsLogic {
 	 * @param string $section The main section of the documentation.
 	 * @param string $sub_section The sub-section of the documentation.
 	 */
-    public function compileScrollspyPage(string $language, string $version, string $section, string $sub_section) {
+	public function compileScrollspyPage(string $language, string $version, string $section, string $sub_section) {
 		$app = $this->app;
 
 		// Check if the language is valid
@@ -209,13 +208,13 @@ class DocsLogic {
 			$markdown_html = $app->parsedown()->text($rawMarkdown);
 
 			$heading_data = [];
-			$markdown_html = Text::generateAndConvertHeaderListFromHtml($markdown_html, $heading_data, $section_file_path.'/'.$sub_section);
+			$markdown_html = Text::generateAndConvertHeaderListFromHtml($markdown_html, $heading_data, $section_file_path . '/' . $sub_section);
 			$markdown_html = Text::addClassesToElements($markdown_html);
 			$app->cache()->store($sub_section_underscored . '_heading_data_' . $language . '_' . $version, $heading_data, 86400); // 1 day
 			$app->cache()->store($cacheKey, $markdown_html, 86400); // 1 day
 		}
 
-		$app->eventDispatcher()->trigger('flight.cache.checked', 'compile_scrollspy_page_'.$cacheKey, $cacheHit, microtime(true) - $cacheStartTime);
+		$app->eventDispatcher()->trigger('flight.cache.checked', 'compile_scrollspy_page_' . $cacheKey, $cacheHit, microtime(true) - $cacheStartTime);
 
 		// pull the title out of the first h1 tag
 		$page_title = '';
@@ -235,7 +234,7 @@ class DocsLogic {
 			'raw_markdown' => $rawMarkdown,
 			'markdown' => $markdown_html,
 			'heading_data' => $heading_data,
-			'relative_uri' => '/'.$section_file_path,
+			'relative_uri' => '/' . $section_file_path,
 			'version' => $version,
 			'language' => $language,
 		];
@@ -247,22 +246,22 @@ class DocsLogic {
 		}
 
 		$this->renderPage('single_page_scrollspy.latte', $params);
-    }
+	}
 
 	/**
-     * This is necessary to encapsulate contents (<p>, <pre>, <ol>, <ul>)
-     * in a div which can be then styled with CSS thanks to the class name `flight-block`
+	 * This is necessary to encapsulate contents (<p>, <pre>, <ol>, <ul>)
+	 * in a div which can be then styled with CSS thanks to the class name `flight-block`
 	 * 
 	 * @param string $html
 	 * @return string
-     */
-    protected function wrapContentInDiv(string $html): string {
-        $dom = new DOMDocument;
-        $dom->loadHTML('<?xml encoding="utf-8" ?>' . $html);
-        $xpath = new DOMXPath($dom);
-        $elements = $xpath->query('//body/*');
-        $d = '';
-        $div = null;
+	 */
+	protected function wrapContentInDiv(string $html): string {
+		$dom = new DOMDocument;
+		$dom->loadHTML('<?xml encoding="utf-8" ?>' . $html);
+		$xpath = new DOMXPath($dom);
+		$elements = $xpath->query('//body/*');
+		$d = '';
+		$div = null;
 
 		foreach ($elements as $element) {
 			$elt_html = $element->C14N();
@@ -296,6 +295,7 @@ class DocsLogic {
 				&& $element->nodeName !== 'pre'
 				&& $element->nodeName !== 'h3'
 				&& $element->nodeName !== 'h4'
+				&& $element->nodeName !== 'h5'
 				&& $element->nodeName !== 'ol'
 				&& $element->nodeName !== 'ul'
 				&& $element->nodeName !== 'blockquote'
@@ -311,12 +311,12 @@ class DocsLogic {
 			}
 		}
 
-        if (!is_null($div)) {
-            $d .= '</div>';
-        }
+		if (!is_null($div)) {
+			$d .= '</div>';
+		}
 
-        return $d;
-    }
+		return $d;
+	}
 
 	/**
 	 * Checks if the provided language is valid.
@@ -356,35 +356,35 @@ class DocsLogic {
 		}
 
 		$language_directory_to_grep = self::CONTENT_DIR . $version . self::DS . $language . self::DS;
-        $grep_command = 'grep -r -i -n --color=never --include="*.md" '.escapeshellarg($query).' '.escapeshellarg($language_directory_to_grep);
-        exec($grep_command, $grep_output);
+		$grep_command = 'grep -r -i -n --color=never --include="*.md" ' . escapeshellarg($query) . ' ' . escapeshellarg($language_directory_to_grep);
+		exec($grep_command, $grep_output);
 
-        $files_found = [];
-        foreach($grep_output as $line) {
-            $line_parts = explode(':', $line);
-            // Catch the windows C drive letter
-            if($line_parts[0] === 'C') {
-                array_shift($line_parts);
-            }
-            $file_path = str_replace('/', self::DS, $line_parts[0]);
-            $line_number = $line_parts[1];
-            $line_content = $line_parts[2];
+		$files_found = [];
+		foreach ($grep_output as $line) {
+			$line_parts = explode(':', $line);
+			// Catch the windows C drive letter
+			if ($line_parts[0] === 'C') {
+				array_shift($line_parts);
+			}
+			$file_path = str_replace('/', self::DS, $line_parts[0]);
+			$line_number = $line_parts[1];
+			$line_content = $line_parts[2];
 
 			// Skip test files
 			if (substr($file_path, -9) === '__test.md') {
 				continue;
 			}
 
-            $file_contents = file_exists($file_path)
-                ? file_get_contents($file_path)
-                : '';
+			$file_contents = file_exists($file_path)
+				? file_get_contents($file_path)
+				: '';
 
-            // pull the title from the first header tag in the markdown file.
-            preg_match('/# (.+)/', $file_contents, $matches);
-            if(empty($matches[1])) {
-                continue;
-            }
-            $title = $matches[1];
+			// pull the title from the first header tag in the markdown file.
+			preg_match('/# (.+)/', $file_contents, $matches);
+			if (empty($matches[1])) {
+				continue;
+			}
+			$title = $matches[1];
 
 			// convert markdown to html and then strip tags to get plain text
 			$file_contents = strip_tags($this->app->parsedown()->text($file_contents));
@@ -446,28 +446,28 @@ class DocsLogic {
 			// bold the search term in the excerpt
 			$excerpt = preg_replace('/(' . preg_quote($query, '/') . ')/i', '<b class="text-info">$1</b>', $excerpt);
 
-            $files_found[$file_path][] = [
-                'line_number' => $line_number,
-                'line_content' => $line_content,
-                'page_name' => $title,
+			$files_found[$file_path][] = [
+				'line_number' => $line_number,
+				'line_content' => $line_content,
+				'page_name' => $title,
 				'excerpt' => $excerpt,
-            ];
-        }
+			];
+		}
 
-        $final_search = [];
-        foreach($files_found as $file_path => $data) {
-            $count = count($files_found[$file_path]);
-            $final_search[] = [
+		$final_search = [];
+		foreach ($files_found as $file_path => $data) {
+			$count = count($files_found[$file_path]);
+			$final_search[] = [
 				'page_name' => $data[0]['page_name'],
-                'search_result' => $data[0]['page_name'].' ("'.$query.'" '.$count.'x)',
-                'url' => '/'.$language.'/'.$version.'/'.str_replace([ $language_directory_to_grep, '.md', '_', '\\' ], [ '', '', '-', '/' ], $file_path),
-                'hits' => $count,
+				'search_result' => $data[0]['page_name'] . ' ("' . $query . '" ' . $count . 'x)',
+				'url' => '/' . $language . '/' . $version . '/' . str_replace([$language_directory_to_grep, '.md', '_', '\\'], ['', '', '-', '/'], $file_path),
+				'hits' => $count,
 				'excerpt' => $data[0]['excerpt'],
-            ];
-        }
+			];
+		}
 
-        // sort by descending order by putting $b first
-        usort($final_search, fn($a, $b) => $b['hits'] <=> $a['hits']);
+		// sort by descending order by putting $b first
+		usort($final_search, fn($a, $b) => $b['hits'] <=> $a['hits']);
 
 		return $final_search;
 	}

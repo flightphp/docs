@@ -14,7 +14,7 @@ use flight\Cache;
  * @var CustomEngine $app
  */
 
- // This translates some common parts of the page, not the content
+// This translates some common parts of the page, not the content
 $app->register('translator', Translator::class);
 
 // Templating Engine used to render the views
@@ -28,7 +28,7 @@ $app->register('latte', LatteEngine::class, [], function (LatteEngine $latte) us
     );
 
     $latte->addExtension($translatorExtension);
-	$latte->addExtension(new Latte\Bridges\Tracy\TracyExtension);
+    $latte->addExtension(new Latte\Bridges\Tracy\TracyExtension);
 });
 
 // Cache for storing parsedown and other things
@@ -40,6 +40,6 @@ $app->register('cache', Cache::class, [__DIR__ . '/../cache/'], function (Cache 
 $app->register('parsedown', Parsedown::class);
 
 // Register the APM
-$ApmLogger = LoggerFactory::create(__DIR__ . '/../../.runway-config.json');
+$ApmLogger = LoggerFactory::create($config['runway']);
 $Apm = new Apm($ApmLogger);
 $Apm->bindEventsToFlightInstance($app);

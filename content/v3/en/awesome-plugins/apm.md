@@ -304,6 +304,16 @@ This will run any migrations that are needed to update the database schema to th
 
 **Note:** If you're APM database is large in size, these migrations may take some time to run. You may want to run this command during off-peak hours.
 
+### Upgrading from 0.4.3 -> 0.5.0
+
+If you are upgrading from 0.4.3 to 0.5.0, you will need to run the following command:
+
+```bash
+php vendor/bin/runway apm:config-migrate
+```
+
+This will migrate your config from the old format using the `.runway-config.json` file to the new format which stores the key/values in the `config.php` file.
+
 ## Purging Old Data
 
 To keep your database tidy, you can purge old data. This is especially useful if you’re running a busy app and want to keep the database size manageable.
