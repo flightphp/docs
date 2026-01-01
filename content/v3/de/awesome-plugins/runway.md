@@ -1,6 +1,6 @@
 # Runway
 
-Runway ist eine CLI-Anwendung, die Ihnen hilft, Ihre Flight-Anwendungen zu verwalten. Sie kann Controller generieren, alle Routen anzeigen und mehr. Sie basiert auf der hervorragenden [adhocore/php-cli](https://github.com/adhocore/php-cli)-Bibliothek.
+Runway ist eine CLI-Anwendung, die Ihnen bei der Verwaltung Ihrer Flight-Anwendungen hilft. Sie kann Controller generieren, alle Routen anzeigen und mehr. Sie basiert auf der hervorragenden [adhocore/php-cli](https://github.com/adhocore/php-cli)-Bibliothek.
 
 Klicken Sie [hier](https://github.com/flightphp/runway), um den Code anzusehen.
 
@@ -12,18 +12,45 @@ Installieren Sie mit Composer.
 composer require flightphp/runway
 ```
 
-## Grundlegende Konfiguration
+## Basis-Konfiguration
 
-Beim ersten Ausführen von Runway durchläuft es einen Einrichtungsprozess und erstellt eine `.runway.json`-Konfigurationsdatei im Stammverzeichnis Ihres Projekts. Diese Datei enthält einige notwendige Konfigurationen, damit Runway ordnungsgemäß funktioniert.
+Beim ersten Ausführen von Runway versucht es, eine `runway`-Konfiguration in `app/config/config.php` über den Schlüssel `'runway'` zu finden.
+
+```php
+<?php
+// app/config/config.php
+return [
+    'runway' => [
+        'app_root' => 'app/',
+		'public_root' => 'public/',
+    ],
+];
+```
+
+> **HINWEIS** - Ab **v1.2.0** ist `.runway-config.json` veraltet. Bitte migrieren Sie Ihre Konfiguration zu `app/config/config.php`. Sie können dies einfach mit dem Befehl `php runway config:migrate` tun.
+
+### Projekt-Root-Erkennung
+
+Runway ist intelligent genug, um das Root-Verzeichnis Ihres Projekts zu erkennen, auch wenn Sie es aus einem Unterverzeichnis ausführen. Es sucht nach Indikatoren wie `composer.json`, `.git` oder `app/config/config.php`, um zu bestimmen, wo sich das Projekt-Root befindet. Das bedeutet, dass Sie Runway-Befehle von überall in Ihrem Projekt ausführen können!
 
 ## Verwendung
 
-Runway verfügt über eine Reihe von Befehlen, die Sie verwenden können, um Ihre Flight-Anwendung zu verwalten. Es gibt zwei einfache Wege, Runway zu verwenden.
+Runway verfügt über eine Reihe von Befehlen, die Sie zur Verwaltung Ihrer Flight-Anwendung verwenden können. Es gibt zwei einfache Wege, Runway zu nutzen.
 
-1. Wenn Sie das Skeleton-Projekt verwenden, können Sie `php runway [command]` vom Stammverzeichnis Ihres Projekts ausführen.
-1. Wenn Sie Runway als über Composer installiertes Paket verwenden, können Sie `vendor/bin/runway [command]` vom Stammverzeichnis Ihres Projekts ausführen.
+1. Wenn Sie das Skeleton-Projekt verwenden, können Sie `php runway [command]` vom Root Ihres Projekts ausführen.
+1. Wenn Sie Runway als Paket über Composer installiert haben, können Sie `vendor/bin/runway [command]` vom Root Ihres Projekts ausführen.
 
-Für jeden Befehl können Sie die `--help`-Flagge übergeben, um weitere Informationen zur Verwendung des Befehls zu erhalten.
+### Befehlsliste
+
+Sie können eine Liste aller verfügbaren Befehle anzeigen, indem Sie den `php runway`-Befehl ausführen.
+
+```bash
+php runway
+```
+
+### Befehlshilfe
+
+Für jeden Befehl können Sie die `--help`-Flagge übergeben, um mehr Informationen darüber zu erhalten, wie man den Befehl verwendet.
 
 ```bash
 php runway routes --help
@@ -33,7 +60,7 @@ Hier sind einige Beispiele:
 
 ### Einen Controller generieren
 
-Basierend auf der Konfiguration in Ihrer `.runway.json`-Datei wird der Standardort einen Controller für Sie im `app/controllers/`-Verzeichnis generieren.
+Basierend auf der Konfiguration in `runway.app_root` wird der Speicherort einen Controller für Sie im `app/controllers/`-Verzeichnis generieren.
 
 ```bash
 php runway make:controller MyController
@@ -41,13 +68,13 @@ php runway make:controller MyController
 
 ### Ein Active Record-Modell generieren
 
-Basierend auf der Konfiguration in Ihrer `.runway.json`-Datei wird der Standardort einen Controller für Sie im `app/records/`-Verzeichnis generieren.
+Stellen Sie zuerst sicher, dass Sie das [Active Record](/awesome-plugins/active-record)-Plugin installiert haben. Basierend auf der Konfiguration in `runway.app_root` wird der Speicherort einen Record für Sie im `app/records/`-Verzeichnis generieren.
 
 ```bash
 php runway make:record users
 ```
 
-Falls Sie beispielsweise die `users`-Tabelle mit dem folgenden Schema haben: `id`, `name`, `email`, `created_at`, `updated_at`, wird eine Datei ähnlich der folgenden in der Datei `app/records/UserRecord.php` erstellt:
+Wenn Sie beispielsweise die `users`-Tabelle mit dem folgenden Schema haben: `id`, `name`, `email`, `created_at`, `updated_at`, wird eine Datei ähnlich der folgenden in der Datei `app/records/UserRecord.php` erstellt:
 
 ```php
 <?php
@@ -65,13 +92,13 @@ namespace app\records;
  * @property string $email
  * @property string $created_at
  * @property string $updated_at
- * // Sie könnten hier auch Beziehungen hinzufügen, sobald Sie sie im $relations-Array definieren
+ * // Sie könnten auch Beziehungen hier hinzufügen, sobald Sie sie im $relations-Array definieren
  * @property CompanyRecord $company Beispiel für eine Beziehung
  */
 class UserRecord extends \flight\ActiveRecord
 {
     /**
-     * @var array $relations Setzt die Beziehungen für das Modell
+     * @var array $relations Legen Sie die Beziehungen für das Modell fest
      *   https://docs.flightphp.com/awesome-plugins/active-record#relationships
      */
     protected array $relations = [];
@@ -98,18 +125,18 @@ php runway routes
 Wenn Sie nur spezifische Routen anzeigen möchten, können Sie eine Flagge übergeben, um die Routen zu filtern.
 
 ```bash
-# Zeigt nur GET-Routen an
+# Zeige nur GET-Routen an
 php runway routes --get
 
-# Zeigt nur POST-Routen an
+# Zeige nur POST-Routen an
 php runway routes --post
 
 # usw.
 ```
 
-## Anpassen von Runway
+## Hinzufügen benutzerdefinierter Befehle zu Runway
 
-Wenn Sie entweder ein Paket für Flight erstellen oder eigene benutzerdefinierte Befehle in Ihr Projekt hinzufügen möchten, können Sie dies tun, indem Sie ein `src/commands/`, `flight/commands/`, `app/commands/` oder `commands/`-Verzeichnis für Ihr Projekt/Paket erstellen. Wenn Sie weitere Anpassungen benötigen, siehe den Abschnitt unten zu Konfiguration.
+Wenn Sie entweder ein Paket für Flight erstellen oder eigene benutzerdefinierte Befehle zu Ihrem Projekt hinzufügen möchten, können Sie dies tun, indem Sie ein `src/commands/`, `flight/commands/`, `app/commands/` oder `commands/`-Verzeichnis für Ihr Projekt/Paket erstellen. Wenn Sie weitere Anpassungen benötigen, siehe den Abschnitt unten zu Konfiguration.
 
 Um einen Befehl zu erstellen, erweitern Sie einfach die `AbstractBaseCommand`-Klasse und implementieren mindestens eine `__construct`-Methode und eine `execute`-Methode.
 
@@ -125,11 +152,11 @@ class ExampleCommand extends AbstractBaseCommand
 	/**
      * Konstruktor
      *
-     * @param array<string,mixed> $config JSON-Konfiguration aus .runway-config.json
+     * @param array<string,mixed> $config Konfiguration aus app/config/config.php
      */
     public function __construct(array $config)
     {
-        parent::__construct('make:example', 'Erstellt ein Beispiel für die Dokumentation', $config);
+        parent::__construct('make:example', 'Erstelle ein Beispiel für die Dokumentation', $config);
         $this->argument('<funny-gif>', 'Der Name des lustigen GIFs');
     }
 
@@ -144,50 +171,116 @@ class ExampleCommand extends AbstractBaseCommand
 
 		$io->info('Erstelle Beispiel...');
 
-		// Etwas hier tun
+		// Hier etwas tun
 
 		$io->ok('Beispiel erstellt!');
 	}
 }
 ```
 
-Siehe die [adhocore/php-cli-Dokumentation](https://github.com/adhocore/php-cli) für weitere Informationen darüber, wie Sie eigene benutzerdefinierte Befehle in Ihre Flight-Anwendung einbauen!
+Lesen Sie die [adhocore/php-cli-Dokumentation](https://github.com/adhocore/php-cli), um mehr darüber zu erfahren, wie Sie eigene benutzerdefinierte Befehle in Ihre Flight-Anwendung einbauen!
 
-### Konfiguration
+## Konfigurationsverwaltung
 
-Wenn Sie die Konfiguration für Runway anpassen müssen, können Sie eine `.runway-config.json`-Datei im Stammverzeichnis Ihres Projekts erstellen. Nachfolgend sind einige zusätzliche Konfigurationen aufgeführt, die Sie setzen können:
+Da die Konfiguration ab `v1.2.0` zu `app/config/config.php` verschoben wurde, gibt es einige Hilfsbefehle zur Verwaltung der Konfiguration.
 
-```js
+### Alte Konfiguration migrieren
+
+Wenn Sie eine alte `.runway-config.json`-Datei haben, können Sie sie einfach mit dem folgenden Befehl zu `app/config/config.php` migrieren:
+
+```bash
+php runway config:migrate
+```
+
+### Konfigurationswert setzen
+
+Sie können einen Konfigurationswert mit dem `config:set`-Befehl setzen. Dies ist nützlich, wenn Sie einen Konfigurationswert aktualisieren möchten, ohne die Datei zu öffnen.
+
+```bash
+php runway config:set app_root "app/"
+```
+
+### Konfigurationswert abrufen
+
+Sie können einen Konfigurationswert mit dem `config:get`-Befehl abrufen.
+
+```bash
+php runway config:get app_root
+```
+
+## Alle Runway-Konfigurationen
+
+Wenn Sie die Konfiguration für Runway anpassen müssen, können Sie diese Werte in `app/config/config.php` setzen. Nachfolgend sind einige zusätzliche Konfigurationen, die Sie setzen können:
+
+```php
+<?php
+// app/config/config.php
+return [
+    // ... andere Konfigurationswerte ...
+
+    'runway' => [
+        // Hier befindet sich Ihr Anwendungsverzeichnis
+        'app_root' => 'app/',
+
+        // Dies ist das Verzeichnis, in dem sich Ihre Root-Index-Datei befindet
+        'index_root' => 'public/',
+
+        // Dies sind die Pfade zu den Roots anderer Projekte
+        'root_paths' => [
+            '/home/user/different-project',
+            '/var/www/another-project'
+        ],
+
+        // Basis-Pfade müssen wahrscheinlich nicht konfiguriert werden, aber es ist hier, falls Sie es möchten
+        'base_paths' => [
+            '/includes/libs/vendor', // wenn Sie einen wirklich einzigartigen Pfad für Ihr Vendor-Verzeichnis haben oder so
+        ],
+
+        // Finale Pfade sind Orte innerhalb eines Projekts, um nach Befehlsdateien zu suchen
+        'final_paths' => [
+            'src/diff-path/commands',
+            'app/module/admin/commands',
+        ],
+
+        // Wenn Sie einfach den vollständigen Pfad hinzufügen möchten, tun Sie es ruhig (absolut oder relativ zum Projekt-Root)
+        'paths' => [
+            '/home/user/different-project/src/diff-path/commands',
+            '/var/www/another-project/app/module/admin/commands',
+            'app/my-unique-commands'
+        ]
+    ]
+];
+```
+
+### Zugriff auf Konfiguration
+
+Wenn Sie die Konfigurationswerte effektiv abrufen müssen, können Sie sie über die `__construct`-Methode oder die `app()`-Methode abrufen. Es ist auch wichtig zu beachten, dass, wenn Sie eine `app/config/services.php`-Datei haben, diese Dienste ebenfalls für Ihren Befehl verfügbar sind.
+
+```php
+public function execute()
 {
+    $io = $this->app()->io();
+    
+    // Zugriff auf Konfiguration
+    $app_root = $this->config['runway']['app_root'];
+    
+    // Zugriff auf Dienste wie vielleicht eine Datenbankverbindung
+    $database = $this->config['database']
+    
+    // ...
+}
+```
 
-	// Hier befindet sich das Verzeichnis Ihrer Anwendung
-	"app_root": "app/",
+## AI-Hilfs-Wrapper
 
-	// Dies ist das Verzeichnis, in dem sich Ihre root index-Datei befindet
-	"index_root": "public/",
+Runway hat einige Hilfs-Wrapper, die es einfacher machen, für KI Befehle zu generieren. Sie können `addOption` und `addArgument` auf eine Weise verwenden, die ähnlich wie Symfony Console wirkt. Dies ist hilfreich, wenn Sie KI-Tools verwenden, um Ihre Befehle zu generieren.
 
-	// Dies sind die Pfade zu den Roots anderer Projekte
-	"root_paths": [
-		"/home/user/different-project",
-		"/var/www/another-project"
-	],
-
-	// Base-Pfade müssen wahrscheinlich nicht konfiguriert werden, aber es ist hier, falls Sie es wollen
-	"base_paths": {
-		"/includes/libs/vendor", // falls Sie einen wirklich einzigartigen Pfad für Ihr Vendor-Verzeichnis oder Ähnliches haben
-	},
-
-	// Final-Pfade sind Orte innerhalb eines Projekts, um nach den Befehlsdateien zu suchen
-	"final_paths": {
-		"src/diff-path/commands",
-		"app/module/admin/commands",
-	},
-
-	// Wenn Sie einfach den vollständigen Pfad hinzufügen möchten, tun Sie es ruhig (absolut oder relativ zum Projekt-Root)
-	"paths": [
-		"/home/user/different-project/src/diff-path/commands",
-		"/var/www/another-project/app/module/admin/commands",
-		"app/my-unique-commands"
-	]
+```php
+public function __construct(array $config)
+{
+    parent::__construct('make:example', 'Erstelle ein Beispiel für die Dokumentation', $config);
+    
+    // Der Name-Argument ist nullable und standardmäßig vollständig optional
+    $this->addOption('name', 'Der Name des Beispiels', null);
 }
 ```

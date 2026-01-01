@@ -14,7 +14,24 @@ composer require flightphp/runway
 
 ## Basic Configuration
 
-The first time you run Runway, it will run you through a setup process and create a `.runway.json` configuration file in the root of your project. This file will contain some necessary configurations for Runway to work properly. 
+The first time you run Runway, it will try and find a `runway` configuration in `app/config/config.php` via the `'runway'` key.
+
+```php
+<?php
+// app/config/config.php
+return [
+    'runway' => [
+        'app_root' => 'app/',
+		'public_root' => 'public/',
+    ],
+];
+```
+
+> **NOTE** - As of **v1.2.0**, `.runway-config.json` is deprecated. Please migrate your configuration to `app/config/config.php`. You can do this easily with the `php runway config:migrate` command.
+
+### Project Root Detection
+
+Runway is smart enough to detect the root of your project, even if you run it from a subdirectory. It looks for indicators like `composer.json`, `.git`, or `app/config/config.php` to determine where the project root is. This means you can run Runway commands from anywhere in your project! 
 
 ## Usage
 
@@ -22,6 +39,16 @@ Runway has a number of commands that you can use to manage your Flight applicati
 
 1. If you are using the skeleton project, you can run `php runway [command]` from the root of your project.
 1. If you are using Runway as a package installed via composer, you can run `vendor/bin/runway [command]` from the root of your project.
+
+### Command List
+
+You can view a list of all available commands by running the `php runway` command.
+
+```bash
+php runway
+```
+
+### Command Help
 
 For any command, you can pass in the `--help` flag to get more information on how to use the command.
 
@@ -33,7 +60,7 @@ Here are a few examples:
 
 ### Generate a Controller
 
-Based on the configuration in your `.runway.json` file, the default location will generate a controller for you in the `app/controllers/` directory.
+Based on the configuration in `runway.app_root`, the location will generate a controller for you in the `app/controllers/` directory.
 
 ```bash
 php runway make:controller MyController
@@ -41,7 +68,7 @@ php runway make:controller MyController
 
 ### Generate an Active Record Model
 
-Based on the configuration in your `.runway.json` file, the default location will generate a controller for you in the `app/records/` directory.
+First make sure you've installed the [Active Record](/awesome-plugins/active-record) plugin. Based on the configuration in `runway.app_root`, the location will generate a record for you in the `app/records/` directory.
 
 ```bash
 php runway make:record users
@@ -107,7 +134,7 @@ php runway routes --post
 # etc.
 ```
 
-## Customizing Runway
+## Adding Custom Commands to Runway
 
 If you are either creating a package for Flight, or want to add your own custom commands into your project, you can do so by creating a `src/commands/`, `flight/commands/`, `app/commands/`, or `commands/` directory for your project/package. If you need further customization, see the section below on Configuration.
 
@@ -125,7 +152,7 @@ class ExampleCommand extends AbstractBaseCommand
 	/**
      * Construct
      *
-     * @param array<string,mixed> $config JSON config from .runway-config.json
+     * @param array<string,mixed> $config Config from app/config/config.php
      */
     public function __construct(array $config)
     {
@@ -153,41 +180,107 @@ class ExampleCommand extends AbstractBaseCommand
 
 See the [adhocore/php-cli Documentation](https://github.com/adhocore/php-cli) for more information on how to build your own custom commands into your Flight application!
 
-### Configuration
+## Configuration Management
 
-If you need to customize the configuration for Runway, you can create a `.runway-config.json` file in the root of your project. Below are some additional configurations that you can set:
+Since configuration has moved to `app/config/config.php` as of `v1.2.0`, there are a few helper commands to manage configuration.
 
-```js
+### Migrate Old Config
+
+If you have an old `.runway-config.json` file, you can easily migrate it to `app/config/config.php` with the following command:
+
+```bash
+php runway config:migrate
+```
+
+### Set Configuration Value
+
+You can set a configuration value using the `config:set` command. This is useful if you want to update a configuration value without opening the file.
+
+```bash
+php runway config:set app_root "app/"
+```
+
+### Get Configuration Value
+
+You can get a configuration value using the `config:get` command.
+
+```bash
+php runway config:get app_root
+```
+
+## All Runway Configurations
+
+If you need to customize the configuration for Runway, you can set these values in `app/config/config.php`. Below are some additional configurations that you can set:
+
+```php
+<?php
+// app/config/config.php
+return [
+    // ... other config values ...
+
+    'runway' => [
+        // This is where your application directory is located
+        'app_root' => 'app/',
+
+        // This is the directory where your root index file is located
+        'index_root' => 'public/',
+
+        // These are the paths to the roots of other projects
+        'root_paths' => [
+            '/home/user/different-project',
+            '/var/www/another-project'
+        ],
+
+        // Base paths most likely don't need to be configured, but it's here if you want it
+        'base_paths' => [
+            '/includes/libs/vendor', // if you have a really unique path for your vendor directory or something
+        ],
+
+        // Final paths are locations within a project to search for the command files
+        'final_paths' => [
+            'src/diff-path/commands',
+            'app/module/admin/commands',
+        ],
+
+        // If you want to just add the full path, go right ahead (absolute or relative to project root)
+        'paths' => [
+            '/home/user/different-project/src/diff-path/commands',
+            '/var/www/another-project/app/module/admin/commands',
+            'app/my-unique-commands'
+        ]
+    ]
+];
+```
+
+### Accessing Configuration
+
+If you need to access the configuration values effectively, you can access them through the `__construct` method or the `app()` method. It is also important to note that if you have a `app/config/services.php` file, those services will also be available to your command.
+
+```php
+public function execute()
 {
+    $io = $this->app()->io();
+    
+    // Access configuration
+    $app_root = $this->config['runway']['app_root'];
+    
+    // Access services like maybe a database connection
+    $database = $this->config['database']
+    
+    // ...
+}
+```
 
-	// This is where your application directory is located
-	"app_root": "app/",
+## AI Helper Wrappers
 
-	// This is the directory where your root index file is located
-	"index_root": "public/",
+Runway has some helper wrappers that make it easier for AI to generate commands. You can use `addOption` and `addArgument` in a way that feels similar to Symfony Console. This is helpful if you are using AI tools to generate your commands.
 
-	// These are the paths to the roots of other projects
-	"root_paths": [
-		"/home/user/different-project",
-		"/var/www/another-project"
-	],
-
-	// Base paths most likely don't need to be configured, but it's here if you want it
-	"base_paths": {
-		"/includes/libs/vendor", // if you have a really unique path for your vendor directory or something
-	},
-
-	// Final paths are locations within a project to search for the command files
-	"final_paths": {
-		"src/diff-path/commands",
-		"app/module/admin/commands",
-	},
-
-	// If you want to just add the full path, go right ahead (absolute or relative to project root)
-	"paths": [
-		"/home/user/different-project/src/diff-path/commands",
-		"/var/www/another-project/app/module/admin/commands",
-		"app/my-unique-commands"
-	]
+```php
+public function __construct(array $config)
+{
+    parent::__construct('make:example', 'Create an example for the documentation', $config);
+    
+    // The mode argument is nullable and defaults to completely optional
+    $this->addOption('name', 'The name of the example', null);
 }
 ```
