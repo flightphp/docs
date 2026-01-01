@@ -26,6 +26,12 @@ Authorization and Permissions are crucial for any application that requires cont
 
 - <span class="badge bg-primary">official</span> [flightphp/permissions](/awesome-plugins/permissions) - Official Flight Permissions library. This library is a simple way to add user and application level permissions to your application. 
 
+## Authentication
+
+Authentication is essential for applications that need to verify user identity and secure API endpoints.
+
+- [firebase/php-jwt](/awesome-plugins/jwt) - JSON Web Token (JWT) library for PHP. A simple and secure way to implement token-based authentication in your Flight applications. Perfect for stateless API authentication, protecting routes with middleware, and implementing OAuth-style authorization flows.
+
 ## Caching
 
 Caching is a great way to speed up your application. There are a number of caching libraries that can be used with Flight.

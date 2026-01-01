@@ -1,18 +1,18 @@
 # Plugin Hebat
 
-Flight sangat dapat diperluas. Ada sejumlah plugin yang dapat digunakan untuk menambahkan fungsionalitas ke aplikasi Flight Anda. Beberapa didukung secara resmi oleh Tim Flight dan yang lain adalah pustaka mikro/lite untuk membantu Anda memulai.
+Flight sangat mudah diperluas. Ada sejumlah plugin yang dapat digunakan untuk menambahkan fungsionalitas ke aplikasi Flight Anda. Beberapa didukung secara resmi oleh Tim Flight dan yang lain adalah pustaka mikro/lite untuk membantu Anda memulai.
 
 ## Dokumentasi API
 
 Dokumentasi API sangat penting untuk API apa pun. Ini membantu pengembang memahami cara berinteraksi dengan API Anda dan apa yang diharapkan sebagai balasan. Ada beberapa alat yang tersedia untuk membantu Anda menghasilkan dokumentasi API untuk Proyek Flight Anda.
 
-- [FlightPHP OpenAPI Generator](https://dev.to/danielsc/define-generate-and-implement-an-api-first-approach-with-openapi-generator-and-flightphp-1fb3) - Posting blog yang ditulis oleh Daniel Schreiber tentang cara menggunakan Spesifikasi OpenAPI dengan FlightPHP untuk membangun API Anda menggunakan pendekatan API first.
-- [SwaggerUI](https://github.com/zircote/swagger-php) - Swagger UI adalah alat hebat untuk membantu Anda menghasilkan dokumentasi API untuk proyek Flight Anda. Ini sangat mudah digunakan dan dapat disesuaikan sesuai kebutuhan Anda. Ini adalah pustaka PHP untuk membantu Anda menghasilkan dokumentasi Swagger.
+- [FlightPHP OpenAPI Generator](https://dev.to/danielsc/define-generate-and-implement-an-api-first-approach-with-openapi-generator-and-flightphp-1fb3) - Posting blog yang ditulis oleh Daniel Schreiber tentang cara menggunakan Spesifikasi OpenAPI dengan FlightPHP untuk membangun API Anda menggunakan pendekatan API pertama.
+- [SwaggerUI](https://github.com/zircote/swagger-php) - Swagger UI adalah alat yang hebat untuk membantu Anda menghasilkan dokumentasi API untuk proyek Flight Anda. Ini sangat mudah digunakan dan dapat disesuaikan sesuai kebutuhan Anda. Ini adalah pustaka PHP untuk membantu Anda menghasilkan dokumentasi Swagger.
 
 ## Pemantauan Kinerja Aplikasi (APM)
 
-Pemantauan Kinerja Aplikasi (APM) sangat penting untuk aplikasi apa pun. Ini membantu Anda memahami bagaimana aplikasi Anda berkinerja dan di mana titik lemahnya. Ada sejumlah alat APM yang dapat digunakan dengan Flight.
-- <span class="badge bg-primary">resmi</span> [flightphp/apm](/awesome-plugins/apm) - Flight APM adalah pustaka APM sederhana yang dapat digunakan untuk memantau aplikasi Flight Anda. Ini dapat digunakan untuk memantau kinerja aplikasi Anda dan membantu Anda mengidentifikasi titik lemah.
+Pemantauan Kinerja Aplikasi (APM) sangat penting untuk aplikasi apa pun. Ini membantu Anda memahami bagaimana aplikasi Anda berkinerja dan di mana kemacetan berada. Ada sejumlah alat APM yang dapat digunakan dengan Flight.
+- <span class="badge bg-primary">resmi</span> [flightphp/apm](/awesome-plugins/apm) - Flight APM adalah pustaka APM sederhana yang dapat digunakan untuk memantau aplikasi Flight Anda. Ini dapat digunakan untuk memantau kinerja aplikasi Anda dan membantu Anda mengidentifikasi kemacetan.
 
 ## Async
 
@@ -26,11 +26,17 @@ Otorisasi dan Izin sangat penting untuk aplikasi apa pun yang memerlukan kontrol
 
 - <span class="badge bg-primary">resmi</span> [flightphp/permissions](/awesome-plugins/permissions) - Pustaka Permissions Flight resmi. Pustaka ini adalah cara sederhana untuk menambahkan izin tingkat pengguna dan aplikasi ke aplikasi Anda. 
 
+## Otentikasi
+
+Otentikasi sangat penting untuk aplikasi yang perlu memverifikasi identitas pengguna dan mengamankan endpoint API.
+
+- [firebase/php-jwt](/awesome-plugins/jwt) - Pustaka JSON Web Token (JWT) untuk PHP. Cara sederhana dan aman untuk mengimplementasikan otentikasi berbasis token di aplikasi Flight Anda. Sempurna untuk otentikasi API tanpa status, melindungi rute dengan middleware, dan mengimplementasikan alur otorisasi gaya OAuth.
+
 ## Penyimpanan Cache
 
 Penyimpanan cache adalah cara hebat untuk mempercepat aplikasi Anda. Ada sejumlah pustaka caching yang dapat digunakan dengan Flight.
 
-- <span class="badge bg-primary">resmi</span> [flightphp/cache](/awesome-plugins/php-file-cache) - Kelas caching in-file PHP yang ringan, sederhana, dan standalone
+- <span class="badge bg-primary">resmi</span> [flightphp/cache](/awesome-plugins/php-file-cache) - Kelas caching dalam file PHP yang ringan, sederhana, dan mandiri
 
 ## CLI
 
@@ -40,13 +46,13 @@ Aplikasi CLI adalah cara hebat untuk berinteraksi dengan aplikasi Anda. Anda dap
 
 ## Cookies
 
-Cookies adalah cara hebat untuk menyimpan potongan data kecil di sisi klien. Mereka dapat digunakan untuk menyimpan preferensi pengguna, pengaturan aplikasi, dan banyak lagi.
+Cookies adalah cara hebat untuk menyimpan bit data kecil di sisi klien. Mereka dapat digunakan untuk menyimpan preferensi pengguna, pengaturan aplikasi, dan banyak lagi.
 
 - [overclokk/cookie](/awesome-plugins/php-cookie) - PHP Cookie adalah pustaka PHP yang menyediakan cara sederhana dan efektif untuk mengelola cookies.
 
 ## Debugging
 
-Debugging sangat penting ketika Anda mengembangkan di lingkungan lokal Anda. Ada beberapa plugin yang dapat meningkatkan pengalaman debugging Anda.
+Debugging sangat penting saat Anda mengembangkan di lingkungan lokal Anda. Ada beberapa plugin yang dapat meningkatkan pengalaman debugging Anda.
 
 - [tracy/tracy](/awesome-plugins/tracy) - Ini adalah penanganan kesalahan lengkap yang dapat digunakan dengan Flight. Ini memiliki sejumlah panel yang dapat membantu Anda mendebug aplikasi Anda. Ini juga sangat mudah untuk diperluas dan menambahkan panel Anda sendiri.
 - <span class="badge bg-primary">resmi</span> [flightphp/tracy-extensions](/awesome-plugins/tracy-extensions) - Digunakan dengan penanganan kesalahan [Tracy](/awesome-plugins/tracy), plugin ini menambahkan beberapa panel tambahan untuk membantu debugging khusus untuk proyek Flight.
@@ -67,7 +73,7 @@ Enkripsi sangat penting untuk aplikasi apa pun yang menyimpan data sensitif. Men
 
 ## Antrian Pekerjaan
 
-Antrian pekerjaan sangat membantu untuk memproses tugas secara asinkron. Ini bisa berupa mengirim email, memproses gambar, atau apa pun yang tidak perlu dilakukan secara real time.
+Antrian pekerjaan sangat membantu untuk memproses tugas secara asinkron. Ini bisa berupa mengirim email, memproses gambar, atau apa pun yang tidak perlu dilakukan secara real-time.
 
 - [n0nag0n/simple-job-queue](/awesome-plugins/simple-job-queue) - Simple Job Queue adalah pustaka yang dapat digunakan untuk memproses pekerjaan secara asinkron. Ini dapat digunakan dengan beanstalkd, MySQL/MariaDB, SQLite, dan PostgreSQL.
 
@@ -82,9 +88,9 @@ Sesi tidak terlalu berguna untuk API tetapi untuk membangun aplikasi web, sesi b
 
 Templating adalah inti dari aplikasi web apa pun dengan UI. Ada sejumlah mesin templating yang dapat digunakan dengan Flight.
 
-- <span class="badge bg-warning">deprecated</span> [flightphp/core View](/learn#views) - Ini adalah mesin templating dasar yang merupakan bagian dari inti. Tidak direkomendasikan untuk digunakan jika Anda memiliki lebih dari beberapa halaman di proyek Anda.
+- <span class="badge bg-warning">deprecated</span> [flightphp/core View](/learn#views) - Ini adalah mesin templating dasar yang merupakan bagian dari inti. Tidak disarankan digunakan jika Anda memiliki lebih dari beberapa halaman di proyek Anda.
 - [latte/latte](/awesome-plugins/latte) - Latte adalah mesin templating lengkap yang sangat mudah digunakan dan terasa lebih dekat dengan sintaks PHP daripada Twig atau Smarty. Ini juga sangat mudah untuk diperluas dan menambahkan filter dan fungsi Anda sendiri.
-- [knifelemon/comment-template](/awesome-plugins/comment-template) - CommentTemplate adalah mesin template PHP yang kuat dengan kompilasi aset, pewarisan template, dan pemrosesan variabel. Fitur minifikasi CSS/JS otomatis, caching, pengkodean Base64, dan integrasi framework PHP Flight opsional.
+- [knifelemon/comment-template](/awesome-plugins/comment-template) - CommentTemplate adalah mesin template PHP yang kuat dengan kompilasi aset, pewarisan template, dan pemrosesan variabel. Fitur minifikasi CSS/JS otomatis, caching, pengkodean Base64, dan integrasi opsional dengan framework PHP Flight.
 
 ## Integrasi WordPress
 
@@ -94,4 +100,4 @@ Ingin menggunakan Flight di proyek WordPress Anda? Ada plugin yang berguna untuk
 
 ## Berkontribusi
 
-Punya plugin yang ingin Anda bagikan? Kirimkan pull request untuk menambahkannya ke daftar!
+Punya plugin yang ingin dibagikan? Kirimkan pull request untuk menambahkannya ke daftar!
