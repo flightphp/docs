@@ -1,4 +1,4 @@
-# Firebase JWT - JSON Web Token Authentication for Flight
+# Firebase JWT - JSON Web Token Authentication
 
 JWT (JSON Web Tokens) are a compact, URL-safe way to represent claims between your application and a client. They're perfect for stateless API authentication—no need for server-side session storage! This guide shows you how to integrate [Firebase JWT](https://github.com/firebase/php-jwt) with Flight for secure, token-based authentication.
 
