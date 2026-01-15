@@ -12,8 +12,10 @@ use RecursiveDirectoryIterator;
  * @property-read bool $dryRun
  * @property-read int $threads
  */
-class TranslateCommand extends AbstractBaseCommand {
-    public function __construct(array $config = []) {
+class TranslateCommand extends AbstractBaseCommand
+{
+    public function __construct(array $config = [])
+    {
         parent::__construct('app:translate', 'Translate markdown documentation files to other languages.', $config);
         $this->option('--from-date', 'Skip files older than this date (YYYY-MM-DD)', null, 0)
             ->option('--skip-files', 'Comma separated list of filenames to skip', null, '')
@@ -21,7 +23,8 @@ class TranslateCommand extends AbstractBaseCommand {
             ->option('--threads', 'Number of concurrent translation requests', null, 5);
     }
 
-    public function execute() {
+    public function execute()
+    {
         $io = $this->app()->io();
         $chatgpt_key = $this->config['chatgpt_key'] ?? '';
 
@@ -38,6 +41,8 @@ class TranslateCommand extends AbstractBaseCommand {
         $fromDate = $this->fromDate;
         if ($fromDate) {
             $fromDate = strtotime($fromDate . ' 00:00:00');
+        } else {
+            $fromDate = strtotime($this->config['last_translation_run'] . ' 00:00:00');
         }
 
         $dryRun = $this->dryRun;
@@ -101,15 +106,14 @@ class TranslateCommand extends AbstractBaseCommand {
             foreach ($translationJobs as $job) {
                 $io->comment("  [DRY RUN] Would translate " . basename($job['file']) . " to {$job['language']}", true);
             }
-            return;
         }
 
         // Process jobs in batches based on thread count
-        $maxThreads = (int)$this->threads;
+        $maxThreads = (int) $this->threads;
         $totalJobs = count($translationJobs);
         $processedJobs = 0;
 
-        while ($processedJobs < $totalJobs) {
+        while (!$dryRun && $processedJobs < $totalJobs) {
             $batch = array_slice($translationJobs, $processedJobs, $maxThreads);
             $this->processBatch($batch, $chatgpt_key, $io);
             $processedJobs += count($batch);
@@ -119,15 +123,19 @@ class TranslateCommand extends AbstractBaseCommand {
         // Cleanup orphaned files
         if (!$dryRun) {
             $this->cleanupOrphanedFiles($files, $languages, $projectRoot, $io);
+            // update config.php to have the last time this was run
+            $this->app()->handle([PROJECT_ROOT . '/vendor/bin/runway', 'config:set', 'last_translation_run', date('Y-m-d')]);
         } else {
             $io->comment("[DRY RUN] Skipping orphaned file cleanup check.", true);
         }
+
     }
 
     /**
      * Process a batch of translation jobs concurrently using curl_multi
      */
-    protected function processBatch(array $batch, string $apiKey, $io) {
+    protected function processBatch(array $batch, string $apiKey, $io)
+    {
         $mh = curl_multi_init();
         $handles = [];
         $jobData = [];
@@ -149,8 +157,8 @@ class TranslateCommand extends AbstractBaseCommand {
             $ch = $this->createCurlHandle($apiKey, $messages);
             curl_multi_add_handle($mh, $ch);
 
-            $handles[(int)$ch] = $ch;
-            $jobData[(int)$ch] = [
+            $handles[(int) $ch] = $ch;
+            $jobData[(int) $ch] = [
                 'job' => $job,
                 'messages' => $messages,
                 'full_response' => '',
@@ -240,7 +248,8 @@ class TranslateCommand extends AbstractBaseCommand {
     /**
      * Create a configured curl handle for the API request
      */
-    protected function createCurlHandle(string $apiKey, array $messages) {
+    protected function createCurlHandle(string $apiKey, array $messages)
+    {
         $ch = curl_init('https://api.x.ai/v1/chat/completions');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_POST, true);
@@ -256,7 +265,8 @@ class TranslateCommand extends AbstractBaseCommand {
         return $ch;
     }
 
-    protected function cleanupOrphanedFiles(array $files, array $languages, string $projectRoot, $io) {
+    protected function cleanupOrphanedFiles(array $files, array $languages, string $projectRoot, $io)
+    {
         $enFiles = [];
         foreach ($files as $file) {
             $enFiles[] = ltrim(str_replace(realpath($projectRoot . '/content/v3/en/'), '', realpath($file)), '/\\');
@@ -264,14 +274,16 @@ class TranslateCommand extends AbstractBaseCommand {
 
         foreach ($languages as $languageAbbreviation) {
             $langDir = $projectRoot . "/content/v3/{$languageAbbreviation}/";
-            if (!is_dir($langDir)) continue;
+            if (!is_dir($langDir))
+                continue;
 
             $iterator = new RecursiveIteratorIterator(
                 new RecursiveDirectoryIterator($langDir, RecursiveDirectoryIterator::SKIP_DOTS)
             );
 
             foreach ($iterator as $translatedFile) {
-                if ($translatedFile->getExtension() !== 'md') continue;
+                if ($translatedFile->getExtension() !== 'md')
+                    continue;
 
                 $relativePath = ltrim(str_replace(realpath($langDir), '', $translatedFile->getRealPath()), '/\\');
 
