@@ -1,8 +1,8 @@
-# Firebase JWT - Autenticación con JSON Web Token para Flight
+# Firebase JWT - Autenticación con JSON Web Token
 
-JWT (JSON Web Tokens) son una forma compacta y segura para URLs de representar reclamaciones entre tu aplicación y un cliente. ¡Son perfectos para la autenticación de API sin estado, sin necesidad de almacenamiento de sesiones en el servidor! Esta guía te muestra cómo integrar [Firebase JWT](https://github.com/firebase/php-jwt) con Flight para una autenticación segura basada en tokens.
+JWT (JSON Web Tokens) son una forma compacta y segura para URLs de representar afirmaciones entre tu aplicación y un cliente. ¡Son perfectos para la autenticación de API sin estado, sin necesidad de almacenamiento de sesiones en el servidor! Esta guía te muestra cómo integrar [Firebase JWT](https://github.com/firebase/php-jwt) con Flight para una autenticación segura basada en tokens.
 
-Visita el [repositorio de Github](https://github.com/firebase/php-jwt) para documentación completa y detalles.
+Visita el [repositorio de Github](https://github.com/firebase/php-jwt) para obtener la documentación completa y detalles.
 
 ## ¿Qué es JWT?
 
@@ -17,7 +17,7 @@ Ejemplo de JWT: `eyJ0eXAiOiJKV1QiLCJhbGc...` (parece gibberish, ¡pero es data e
 
 - **Sin estado**: No se necesita almacenamiento de sesiones en el servidor, perfecto para microservicios y APIs
 - **Escalable**: Funciona genial con balanceadores de carga ya que no hay requisito de afinidad de sesión
-- **Multi-dominio**: Se puede usar a través de diferentes dominios y servicios
+- **Multi-dominio**: Puede usarse a través de diferentes dominios y servicios
 - **Amigable con móviles**: Genial para apps móviles donde las cookies pueden no funcionar bien
 - **Estandarizado**: Enfoque estándar de la industria (RFC 7519)
 
@@ -63,7 +63,7 @@ try {
 
 ## Middleware JWT para Flight (Enfoque recomendado)
 
-La forma más común y útil de usar JWT con Flight es como **middleware** para proteger tus rutas de API. Aquí hay un ejemplo completo, listo para producción:
+La forma más común y útil de usar JWT con Flight es como **middleware** para proteger tus rutas de API. Aquí hay un ejemplo completo y listo para producción:
 
 ### Paso 1: Crear una clase de middleware JWT
 
@@ -82,19 +82,19 @@ class JwtMiddleware {
 
     public function __construct(Engine $app) {
         $this->app = $app;
-        // Almacena tu clave secreta en app/config/config.php, ¡NO la hardcodees!
+        // Almacena tu clave secreta en app/config/config.php, ¡NO la codifiques de forma fija!
         $this->secretKey = $app->get('config')['jwt_secret'];
     }
 
     public function before(array $params) {
         $authHeader = $this->app->request()->getHeader('Authorization');
 
-        // Verificar si existe el header de Authorization
+        // Verificar si existe el header de autorización
         if (empty($authHeader)) {
             $this->app->jsonHalt(['error' => 'No se proporcionó token de autorización'], 401);
         }
 
-        // Extraer token del formato "Bearer <token>"
+        // Extraer el token del formato "Bearer <token>"
         if (!preg_match('/Bearer\s+(.*)$/i', $authHeader, $matches)) {
             $this->app->jsonHalt(['error' => 'Formato de autorización inválido. Usa: Bearer <token>'], 401);
         }
@@ -119,7 +119,7 @@ class JwtMiddleware {
 }
 ```
 
-### Paso 2: Registrar clave secreta JWT en tu configuración
+### Paso 2: Registrar la clave secreta JWT en tu configuración
 
 ```php
 // app/config/config.php
@@ -128,11 +128,11 @@ return [
 ];
 
 // app/config/bootstrap.php o index.php
-// asegúrate de agregar esta línea si quieres exponer la config a la app
+// asegúrate de agregar esta línea si quieres exponer la configuración a la app
 $app->set('config', $config);
 ```
 
-> **Nota de seguridad**: ¡Nunca hardcodees tu clave secreta! Usa variables de entorno en producción.
+> **Nota de seguridad**: ¡Nunca codifiques de forma fija tu clave secreta! Usa variables de entorno en producción.
 
 ### Paso 3: Proteger tus rutas con middleware
 
@@ -145,9 +145,9 @@ Flight::route('GET /api/user/profile', function() {
         'username' => $user->username,
         'role' => $user->role
     ]);
-})->addMiddleware( JwtMiddleware::class);
+})->addMiddleware(JwtMiddleware::class);
 
-// Proteger un grupo entero de rutas (¡más común!)
+// Proteger un grupo completo de rutas (¡más común!)
 Flight::group('/api', function() {
     Flight::route('GET /users', function() { /* ... */ });
     Flight::route('GET /posts', function() { /* ... */ });
@@ -156,7 +156,7 @@ Flight::group('/api', function() {
 }, [ JwtMiddleware::class ]); // ¡Todas las rutas en este grupo están protegidas!
 ```
 
-Para más detalles sobre middleware, ve la [documentación de middleware](/learn/middleware).
+Para más detalles sobre middleware, consulta la [documentación de middleware](/learn/middleware).
 
 ## Casos de uso comunes
 
@@ -197,7 +197,7 @@ Flight::route('POST /api/login', function() {
 });
 
 function validateUserCredentials($username, $password) {
-    // Tu búsqueda en base de datos y verificación de contraseña aquí
+    // Tu búsqueda en la base de datos y verificación de contraseña aquí
     // Ejemplo:
     $db = Flight::db();
     $user = $db->fetchRow("SELECT * FROM users WHERE username = ?", [$username]);
@@ -213,9 +213,9 @@ function validateUserCredentials($username, $password) {
 }
 ```
 
-### 2. Flujo de actualización de token
+### 2. Flujo de renovación de token
 
-Implementa un sistema de token de actualización para sesiones de larga duración:
+Implementa un sistema de token de renovación para sesiones de larga duración:
 
 ```php
 Flight::route('POST /api/login', function() {
@@ -232,7 +232,7 @@ Flight::route('POST /api/login', function() {
         'exp' => time() + (15 * 60)
     ], $secretKey, 'HS256');
     
-    // Token de actualización de larga duración (7 días)
+    // Token de renovación de larga duración (7 días)
     $refreshToken = JWT::encode([
         'user_id' => $user->id,
         'type' => 'refresh',
@@ -254,7 +254,7 @@ Flight::route('POST /api/refresh', function() {
     try {
         $decoded = JWT::decode($refreshToken, new Key($refreshSecret, 'HS256'));
         
-        // Verificar que sea un token de actualización
+        // Verificar que sea un token de renovación
         if ($decoded->type !== 'refresh') {
             Flight::jsonHalt(['error' => 'Tipo de token inválido'], 401);
         }
@@ -274,7 +274,7 @@ Flight::route('POST /api/refresh', function() {
         ]);
         
     } catch (Exception $e) {
-        Flight::jsonHalt(['error' => 'Token de actualización inválido'], 401);
+        Flight::jsonHalt(['error' => 'Token de renovación inválido'], 401);
     }
 });
 ```
@@ -363,7 +363,7 @@ echo $secretKey; // ¡Almacena esto en tu archivo .env!
 // JWT_REFRESH_SECRET=another-base64-encoded-secret-here
 
 // También puedes usar el archivo app/config/config.php para almacenar tus secretos
-// solo asegúrate de que el archivo de config no se comprometa en control de versiones
+// solo asegúrate de que el archivo de configuración no se comprometa en control de versiones
 // return [
 //     'jwt_secret' => 'your-base64-encoded-secret-here',
 //     'jwt_refresh_secret' => 'another-base64-encoded-secret-here',
@@ -379,7 +379,7 @@ $secretKey = getenv('JWT_SECRET');
 // Buena práctica: tokens de acceso de corta duración
 'exp' => time() + (15 * 60)  // 15 minutos
 
-// Para tokens de actualización: expiración más larga
+// Para tokens de renovación: expiración más larga
 'exp' => time() + (7 * 24 * 60 * 60)  // 7 días
 ```
 
@@ -387,9 +387,9 @@ $secretKey = getenv('JWT_SECRET');
 
 Los JWT deben **siempre** transmitirse sobre HTTPS. ¡Nunca envíes tokens sobre HTTP plano en producción!
 
-### 5. Valida las reclamaciones del token
+### 5. Valida las afirmaciones del token
 
-Siempre valida las reclamaciones que te importan:
+Siempre valida las afirmaciones que te importan:
 
 ```php
 $decoded = JWT::decode($jwt, new Key($secretKey, 'HS256'));
@@ -397,7 +397,7 @@ $decoded = JWT::decode($jwt, new Key($secretKey, 'HS256'));
 // La verificación de expiración se maneja automáticamente por la librería
 // Pero puedes agregar validaciones personalizadas:
 if ($decoded->iat > time()) {
-    throw new Exception('Token usado antes de ser emitido');
+    throw new Exception('Token usado antes de que se emitiera');
 }
 
 if (isset($decoded->nbf) && $decoded->nbf > time()) {
@@ -405,7 +405,7 @@ if (isset($decoded->nbf) && $decoded->nbf > time()) {
 }
 ```
 
-### 6. Considera lista negra de tokens para logout
+### 6. Considera la lista negra de tokens para logout
 
 Para seguridad extra, mantén una lista negra de tokens invalidados:
 
@@ -474,9 +474,9 @@ $decoded = JWT::decode($jwt, new Key($publicKey, 'RS256'));
 ## Solución de problemas
 
 ### Error "Token expirado"
-La reclamación `exp` de tu token está en el pasado. Emite un nuevo token o implementa actualización de token.
+La afirmación `exp` de tu token está en el pasado. Emite un nuevo token o implementa renovación de token.
 
-### "Falla en verificación de firma"
+### "Fallo en la verificación de firma"
 - Estás usando una clave secreta diferente para decodificar que la que usaste para codificar
 - El token ha sido manipulado
 - Desfase de reloj entre servidores (agrega un buffer de tolerancia)
@@ -489,7 +489,7 @@ $decoded = JWT::decode($jwt, new Key($secretKey, 'HS256'));
 ```
 
 ### Token no se envía en solicitudes
-Asegúrate de que tu cliente esté enviando el header `Authorization`:
+Asegúrate de que tu cliente envíe el header `Authorization`:
 
 ```javascript
 // Ejemplo en JavaScript
@@ -506,8 +506,8 @@ La librería Firebase JWT proporciona estos métodos principales:
 
 - `JWT::encode(array $payload, string $key, string $alg)`: Crea un JWT a partir de un payload
 - `JWT::decode(string $jwt, Key $key)`: Decodifica y verifica un JWT
-- `JWT::urlsafeB64Encode(string $input)`: Codificación Base64 URL-segura
-- `JWT::urlsafeB64Decode(string $input)`: Decodificación Base64 URL-segura
+- `JWT::urlsafeB64Encode(string $input)`: Codificación Base64 segura para URL
+- `JWT::urlsafeB64Decode(string $input)`: Decodificación Base64 segura para URL
 - `JWT::$leeway`: Propiedad estática para establecer tolerancia de tiempo para validación (en segundos)
 
 ## ¿Por qué usar esta librería?
@@ -516,7 +516,7 @@ La librería Firebase JWT proporciona estos métodos principales:
 - **Mantenimiento activo**: Mantenida por el equipo de Google/Firebase
 - **Enfocada en seguridad**: Actualizaciones regulares y parches de seguridad
 - **API simple**: Fácil de entender e implementar
-- **Bien documentada**: Documentación extensa y soporte de comunidad
+- **Bien documentada**: Documentación extensa y soporte comunitario
 - **Flexible**: Soporta múltiples algoritmos y opciones configurables
 
 ## Ver también
@@ -529,4 +529,4 @@ La librería Firebase JWT proporciona estos métodos principales:
 
 ## Licencia
 
-La librería Firebase JWT está licenciada bajo la Licencia BSD 3-Clause. Ve el [repositorio de Github](https://github.com/firebase/php-jwt) para detalles.
+La librería Firebase JWT está licenciada bajo la Licencia BSD 3-Clause. Consulta el [repositorio de Github](https://github.com/firebase/php-jwt) para detalles.

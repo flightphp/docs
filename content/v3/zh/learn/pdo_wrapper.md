@@ -1,20 +1,24 @@
 # PdoWrapper PDO 辅助类
 
+> **警告**
+>
+> **已弃用：** 从 Flight v3.18.0 开始，`PdoWrapper` 已被弃用。它不会在未来的版本中移除，但会为了向后兼容而维护。请改用 [SimplePdo](/learn/simple-pdo)，它提供相同的功能加上针对常见数据库操作的额外辅助方法。
+
 ## 概述
 
-Flight 中的 `PdoWrapper` 类是一个友好的辅助工具，用于使用 PDO 处理数据库。它简化了常见的数据库任务，添加了一些方便的方法来获取结果，并将结果返回为 [Collections](/learn/collections)，便于访问。它还支持查询日志记录和应用程序性能监控 (APM)，适用于高级用例。
+Flight 中的 `PdoWrapper` 类是使用 PDO 处理数据库的友好辅助工具。它简化了常见的数据库任务，添加了一些用于获取结果的便捷方法，并以 [Collections](/learn/collections) 的形式返回结果，便于访问。它还支持查询日志记录和应用程序性能监控 (APM)，适用于高级用例。
 
 ## 理解
 
-在 PHP 中处理数据库可能有点冗长，尤其是直接使用 PDO 时。`PdoWrapper` 扩展了 PDO，并添加了使查询、获取和处理结果更容易的方法。不再需要处理预准备语句和获取模式，您可以获得简单的方法来处理常见任务，并且每行都返回为 Collection，因此您可以使用数组或对象表示法。
+在 PHP 中处理数据库可能有些冗长，尤其是直接使用 PDO 时。`PdoWrapper` 扩展了 PDO，并添加了使查询、获取和处理结果更容易的方法。不再需要处理预处理语句和获取模式，你可以获得针对常见任务的简单方法，并且每一行都作为 Collection 返回，因此可以使用数组或对象表示法。
 
-您可以将 `PdoWrapper` 注册为 Flight 中的共享服务，然后在您的应用程序的任何地方通过 `Flight::db()` 使用它。
+您可以将 `PdoWrapper` 注册为 Flight 中的共享服务，然后在您的应用中的任何地方通过 `Flight::db()` 使用它。
 
 ## 基本用法
 
 ### 注册 PDO 辅助工具
 
-首先，将 `PdoWrapper` 类与 Flight 注册：
+首先，使用 Flight 注册 `PdoWrapper` 类：
 
 ```php
 Flight::register('db', \flight\database\PdoWrapper::class, [
@@ -27,15 +31,15 @@ Flight::register('db', \flight\database\PdoWrapper::class, [
 ]);
 ```
 
-现在，您可以在任何地方使用 `Flight::db()` 来获取数据库连接。
+现在，您可以在任何地方使用 `Flight::db()` 来获取您的数据库连接。
 
-### 运行查询
+### 执行查询
 
 #### `runQuery()`
 
 `function runQuery(string $sql, array $params = []): PDOStatement`
 
-用于 INSERT、UPDATE，或者当您想要手动获取结果时：
+用于 INSERT、UPDATE，或者当您想手动获取结果时：
 
 ```php
 $db = Flight::db();
@@ -45,7 +49,7 @@ while ($row = $statement->fetch()) {
 }
 ```
 
-您也可以用于写入：
+您也可以用于写入操作：
 
 ```php
 $db->runQuery("INSERT INTO users (name) VALUES (?)", ['Alice']);
@@ -105,7 +109,7 @@ $users = Flight::db()->fetchAll("SELECT * FROM users WHERE id IN (?)", ['1,2,3']
 
 ### 查询日志记录 & APM
 
-如果您想要跟踪查询性能，请在注册时启用 APM 跟踪：
+如果您想跟踪查询性能，在注册时启用 APM 跟踪：
 
 ```php
 Flight::register('db', \flight\database\PdoWrapper::class, [
@@ -113,7 +117,7 @@ Flight::register('db', \flight\database\PdoWrapper::class, [
 ]);
 ```
 
-运行查询后，您可以手动记录它们，但如果启用，APM 会自动记录它们：
+在执行查询后，您可以手动记录它们，但如果启用 APM，它会自动记录它们：
 
 ```php
 Flight::db()->logQueries();
@@ -162,14 +166,14 @@ Flight::route('/users', function () {
 
 ## 另请参阅
 
-- [Collections](/learn/collections) - 了解如何使用 Collection 类进行简单的数据访问。
+- [Collections](/learn/collections) - 了解如何使用 Collection 类进行轻松的数据访问。
 
 ## 故障排除
 
-- 如果您收到关于数据库连接的错误，请检查您的 DSN、用户名、密码和选项。
-- 所有行都返回为 Collections——如果您需要普通数组，请使用 `$collection->getData()`。
+- 如果您遇到数据库连接错误，请检查您的 DSN、用户名、密码和选项。
+- 所有行都作为 Collection 返回——如果您需要普通数组，请使用 `$collection->getData()`。
 - 对于 `IN (?)` 查询，请确保传递数组或逗号分隔的字符串。
 
 ## 更新日志
 
-- v3.2.0 - PdoWrapper 的初始发布，带有基本查询和获取方法。
+- v3.2.0 - PdoWrapper 的初始发布，带有基本的查询和获取方法。

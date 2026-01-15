@@ -1,14 +1,18 @@
 # Clase Ayudante PDO PdoWrapper
 
+> **ADVERTENCIA**
+>
+> **Obsoleto:** `PdoWrapper` está obsoleto desde Flight v3.18.0. No se eliminará en una versión futura, pero se mantendrá para compatibilidad hacia atrás. Por favor, use [SimplePdo](/learn/simple-pdo) en su lugar, que ofrece la misma funcionalidad más métodos ayudantes adicionales para operaciones comunes de base de datos.
+
 ## Resumen
 
-La clase `PdoWrapper` en Flight es un ayudante amigable para trabajar con bases de datos usando PDO. Simplifica tareas comunes de base de datos, agrega algunos métodos útiles para obtener resultados y devuelve los resultados como [Collections](/learn/collections) para un acceso fácil. También soporta registro de consultas y monitoreo de rendimiento de aplicaciones (APM) para casos de uso avanzados.
+La clase `PdoWrapper` en Flight es un ayudante amigable para trabajar con bases de datos usando PDO. Simplifica tareas comunes de base de datos, agrega algunos métodos útiles para obtener resultados y devuelve los resultados como [Collections](/learn/collections) para un acceso fácil. También soporta registro de consultas y monitoreo de rendimiento de la aplicación (APM) para casos de uso avanzados.
 
-## Entendiendo
+## Comprensión
 
 Trabajar con bases de datos en PHP puede ser un poco verboso, especialmente cuando se usa PDO directamente. `PdoWrapper` extiende PDO y agrega métodos que hacen que consultar, obtener y manejar resultados sea mucho más fácil. En lugar de manejar declaraciones preparadas y modos de obtención, obtienes métodos simples para tareas comunes, y cada fila se devuelve como una Collection, por lo que puedes usar notación de array u objeto.
 
-Puedes registrar `PdoWrapper` como un servicio compartido en Flight, y luego usarlo en cualquier lugar de tu aplicación a través de `Flight::db()`.
+Puedes registrar `PdoWrapper` como un servicio compartido en Flight, y luego usarlo en cualquier lugar de tu app a través de `Flight::db()`.
 
 ## Uso Básico
 

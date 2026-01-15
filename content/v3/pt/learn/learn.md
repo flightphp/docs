@@ -1,15 +1,15 @@
 # Aprenda Sobre o Flight
 
 Flight é um framework rápido, simples e extensível para PHP. Ele é bastante versátil e pode ser usado para construir qualquer tipo de aplicação web. 
-Ele é construído com simplicidade em mente e é escrito de uma forma que é fácil de entender e usar.
+É construído com simplicidade em mente e é escrito de uma forma fácil de entender e usar.
 
-> **Nota:** Você verá exemplos que usam `Flight::` como uma variável estática e alguns que usam o objeto Engine `$app->`. Ambos funcionam de forma intercambiável com o outro. `$app` e `$this->app` em um controller/middleware é a abordagem recomendada pela equipe do Flight.
+> **Nota:** Você verá exemplos que usam `Flight::` como uma variável estática e alguns que usam o objeto Engine `$app->`. Ambos funcionam de forma intercambiável um com o outro. `$app` e `$this->app` em um controller/middleware é a abordagem recomendada pela equipe do Flight.
 
 ## Componentes Principais
 
 ### [Routing](/learn/routing)
 
-Aprenda como gerenciar rotas para sua aplicação web. Isso também inclui agrupar rotas, parâmetros de rota e middleware.
+Aprenda como gerenciar rotas para sua aplicação web. Isso também inclui agrupamento de rotas, parâmetros de rota e middleware.
 
 ### [Middleware](/learn/middleware)
 
@@ -17,7 +17,7 @@ Aprenda como usar middleware para filtrar requisições e respostas em sua aplic
 
 ### [Autoloading](/learn/autoloading)
 
-Aprenda como autoloadar suas próprias classes em sua aplicação.
+Aprenda como carregar automaticamente suas próprias classes em sua aplicação.
 
 ### [Requests](/learn/requests)
 
@@ -49,7 +49,7 @@ Aprenda como estender o framework adicionando seus próprios métodos e classes.
 
 ### [Method Hooks and Filtering](/learn/filtering)
 
-Aprenda como adicionar hooks de eventos aos seus métodos e métodos internos do framework.
+Aprenda como adicionar ganchos de eventos aos seus métodos e métodos internos do framework.
 
 ### [Dependency Injection Container (DIC)](/learn/dependency-injection-container)
 
@@ -65,9 +65,13 @@ Collections são usadas para armazenar dados e serem acessíveis como um array o
 
 Isso tem algumas funções simples para tornar a codificação e decodificação do seu JSON consistente.
 
-### [PDO Wrapper](/learn/pdo-wrapper)
+### [SimplePdo](/learn/simple-pdo)
 
-PDO às vezes pode adicionar mais dor de cabeça do que o necessário. Esta classe wrapper simples pode tornar significativamente mais fácil interagir com seu banco de dados.
+PDO às vezes pode adicionar mais dor de cabeça do que o necessário. SimplePdo é uma classe auxiliar moderna para PDO com métodos convenientes como `insert()`, `update()`, `delete()` e `transaction()` para tornar as operações de banco de dados muito mais fáceis.
+
+### [PdoWrapper](/learn/pdo-wrapper) (Deprecated)
+
+O wrapper original do PDO está depreciado a partir da v3.18.0. Por favor, use [SimplePdo](/learn/simple-pdo) em vez disso.
 
 ### [Uploaded File Handler](/learn/uploaded-file)
 
@@ -75,15 +79,15 @@ Uma classe simples para ajudar a gerenciar arquivos enviados e movê-los para um
 
 ## Conceitos Importantes
 
-### [Por Que um Framework?](/learn/why-frameworks)
+### [Why a Framework?](/learn/why-frameworks)
 
 Aqui está um artigo curto sobre por que você deve usar um framework. É uma boa ideia entender os benefícios de usar um framework antes de começar a usar um.
 
-Adicionalmente, um excelente tutorial foi criado por [@lubiana](https://git.php.fail/lubiana). Embora não entre em grandes detalhes sobre o Flight especificamente, 
-este guia ajudará você a entender alguns dos principais conceitos ao redor de um framework e por que eles são benéficos de usar. 
+Além disso, um excelente tutorial foi criado por [@lubiana](https://git.php.fail/lubiana). Embora não entre em grandes detalhes sobre o Flight especificamente, 
+este guia ajudará você a entender alguns dos conceitos principais ao redor de um framework e por que eles são benéficos de usar. 
 Você pode encontrar o tutorial [aqui](https://git.php.fail/lubiana/no-framework-tutorial/src/branch/master/README.md).
 
-### [Flight Comparado a Outros Frameworks](/learn/flight-vs-another-framework)
+### [Flight Compared to Other Frameworks](/learn/flight-vs-another-framework)
 
 Se você está migrando de outro framework como Laravel, Slim, Fat-Free ou Symfony para o Flight, esta página ajudará você a entender as diferenças entre os dois.
 
@@ -91,7 +95,7 @@ Se você está migrando de outro framework como Laravel, Slim, Fat-Free ou Symfo
 
 ### [Unit Testing](/learn/unit-testing)
 
-Siga este guia para aprender como fazer testes unitários no seu código Flight para que seja sólido como uma rocha.
+Siga este guia para aprender como fazer testes unitários no seu código Flight para torná-lo sólido como uma rocha.
 
 ### [AI & Developer Experience](/learn/ai)
 
@@ -99,4 +103,4 @@ Aprenda como o Flight funciona com ferramentas de IA e fluxos de trabalho modern
 
 ### [Migrating v2 -> v3](/learn/migrating-to-v3)
 
-A compatibilidade com versões anteriores foi mantida na maior parte, mas há algumas mudanças das quais você deve estar ciente ao migrar da v2 para a v3.
+A compatibilidade com versões anteriores foi mantida em grande parte, mas há algumas mudanças das quais você deve estar ciente ao migrar da v2 para a v3.

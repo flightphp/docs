@@ -1,20 +1,24 @@
 # PdoWrapper PDO 도우미 클래스
 
+> **경고**
+>
+> **사용 중단됨:** `PdoWrapper`는 Flight v3.18.0부터 사용 중단되었습니다. 향후 버전에서 제거되지 않지만, 이전 호환성을 위해 유지될 것입니다. 동일한 기능에 더해 일반적인 데이터베이스 작업을 위한 추가 도우미 메서드를 제공하는 [SimplePdo](/learn/simple-pdo)를 대신 사용하십시오.
+
 ## 개요
 
-Flight의 `PdoWrapper` 클래스는 PDO를 사용하여 데이터베이스 작업을 수행하는 데 친근한 도우미입니다. 일반적인 데이터베이스 작업을 간소화하고, 결과를 가져오는 데 유용한 메서드를 추가하며, 결과를 쉽게 접근할 수 있도록 [Collections](/learn/collections)로 반환합니다. 또한 고급 사용 사례를 위해 쿼리 로깅과 애플리케이션 성능 모니터링(APM)을 지원합니다.
+Flight의 `PdoWrapper` 클래스는 PDO를 사용하여 데이터베이스 작업을 수행하는 데 친근한 도우미입니다. 일반적인 데이터베이스 작업을 간소화하고, 결과를 가져오는 데 유용한 메서드를 추가하며, 결과를 [Collections](/learn/collections)으로 반환하여 쉽게 접근할 수 있습니다. 또한 쿼리 로깅과 애플리케이션 성능 모니터링(APM)을 지원하여 고급 사용 사례를 처리합니다.
 
 ## 이해하기
 
-PHP에서 데이터베이스를 사용하는 것은 PDO를 직접 사용할 때 특히 장황할 수 있습니다. `PdoWrapper`는 PDO를 확장하여 쿼리, 가져오기, 결과 처리 작업을 훨씬 쉽게 만드는 메서드를 추가합니다. 준비된 문장과 가져오기 모드를 다루는 대신, 일반적인 작업에 대한 간단한 메서드를 사용하며, 모든 행이 Collection으로 반환되므로 배열 또는 객체 표기법을 사용할 수 있습니다.
+PHP에서 PDO를 직접 사용하면 데이터베이스 작업이 다소 장황할 수 있습니다. `PdoWrapper`는 PDO를 확장하여 쿼리, 결과 가져오기, 결과 처리 작업을 훨씬 쉽게 만드는 메서드를 추가합니다. 준비된 문장과 가져오기 모드를 다루는 대신 일반적인 작업을 위한 간단한 메서드를 얻고, 모든 행이 Collection으로 반환되므로 배열 또는 객체 표기법을 사용할 수 있습니다.
 
-Flight에서 `PdoWrapper`를 공유 서비스로 등록한 후, 앱의 어디서나 `Flight::db()`를 통해 사용할 수 있습니다.
+`PdoWrapper`를 Flight에서 공유 서비스로 등록할 수 있으며, 그 후 앱의 어디서나 `Flight::db()`를 통해 사용할 수 있습니다.
 
 ## 기본 사용법
 
-### PDO 도우미 등록
+### PDO 도우미 등록하기
 
-먼저 Flight에 `PdoWrapper` 클래스를 등록합니다:
+먼저 Flight에 `PdoWrapper` 클래스를 등록하십시오:
 
 ```php
 Flight::register('db', \flight\database\PdoWrapper::class, [
@@ -27,15 +31,15 @@ Flight::register('db', \flight\database\PdoWrapper::class, [
 ]);
 ```
 
-이제 어디서나 `Flight::db()`를 사용하여 데이터베이스 연결을 가져올 수 있습니다.
+이제 어디서나 `Flight::db()`를 사용하여 데이터베이스 연결을 얻을 수 있습니다.
 
-### 쿼리 실행
+### 쿼리 실행하기
 
 #### `runQuery()`
 
 `function runQuery(string $sql, array $params = []): PDOStatement`
 
-INSERT, UPDATE 또는 결과를 수동으로 가져오고 싶을 때 사용합니다:
+INSERT, UPDATE 또는 결과를 수동으로 가져오고 싶을 때 사용하십시오:
 
 ```php
 $db = Flight::db();
@@ -66,7 +70,7 @@ $count = Flight::db()->fetchField("SELECT COUNT(*) FROM users WHERE status = ?",
 
 `function fetchRow(string $sql, array $params = []): Collection`
 
-단일 행을 Collection(배열/객체 접근)으로 가져옵니다:
+Collection(배열/객체 접근)으로 단일 행을 가져옵니다:
 
 ```php
 $user = Flight::db()->fetchRow("SELECT * FROM users WHERE id = ?", [123]);
@@ -90,7 +94,7 @@ foreach ($users as $user) {
 }
 ```
 
-### `IN()` 플레이스홀더 사용
+### `IN()` 플레이스홀더 사용하기
 
 `IN()` 절에서 단일 `?`를 사용하고 배열 또는 쉼표로 구분된 문자열을 전달할 수 있습니다:
 
@@ -105,11 +109,11 @@ $users = Flight::db()->fetchAll("SELECT * FROM users WHERE id IN (?)", ['1,2,3']
 
 ### 쿼리 로깅 & APM
 
-쿼리 성능을 추적하려면 등록 시 APM 추적을 활성화합니다:
+쿼리 성능을 추적하려면 등록 시 APM 추적을 활성화하십시오:
 
 ```php
 Flight::register('db', \flight\database\PdoWrapper::class, [
-    'mysql:host=localhost;dbname=cool_db_name', 'user', 'pass', [/* 옵션 */], true // 마지막 매개변수가 APM을 활성화합니다
+    'mysql:host=localhost;dbname=cool_db_name', 'user', 'pass', [/* options */], true // 마지막 매개변수가 APM을 활성화합니다
 ]);
 ```
 
@@ -119,7 +123,7 @@ Flight::register('db', \flight\database\PdoWrapper::class, [
 Flight::db()->logQueries();
 ```
 
-이것은 연결 및 쿼리 메트릭과 함께 이벤트(`flight.db.queries`)를 발생시키며, Flight의 이벤트 시스템을 사용하여 이를 수신할 수 있습니다.
+이것은 연결 및 쿼리 메트릭스가 포함된 이벤트(`flight.db.queries`)를 발생시키며, Flight의 이벤트 시스템을 사용하여 이를 수신할 수 있습니다.
 
 ### 전체 예제
 
@@ -160,15 +164,15 @@ Flight::route('/users', function () {
 });
 ```
 
-## 관련 항목
+## 관련 자료
 
-- [Collections](/learn/collections) - 쉬운 데이터 접근을 위한 Collection 클래스 사용법을 알아보세요.
+- [Collections](/learn/collections) - 쉬운 데이터 접근을 위한 Collection 클래스 사용법을 알아보십시오.
 
 ## 문제 해결
 
-- 데이터베이스 연결 오류가 발생하면 DSN, 사용자 이름, 비밀번호 및 옵션을 확인하세요.
-- 모든 행은 Collection으로 반환됩니다. 일반 배열이 필요하면 `$collection->getData()`를 사용하세요.
-- `IN (?)` 쿼리의 경우 배열 또는 쉼표로 구분된 문자열을 전달했는지 확인하세요.
+- 데이터베이스 연결 오류가 발생하면 DSN, 사용자 이름, 비밀번호 및 옵션을 확인하십시오.
+- 모든 행은 Collection으로 반환됩니다—일반 배열이 필요하면 `$collection->getData()`를 사용하십시오.
+- `IN (?)` 쿼리의 경우 배열 또는 쉼표로 구분된 문자열을 전달했는지 확인하십시오.
 
 ## 변경 로그
 

@@ -1,18 +1,18 @@
 # Autoloading
 
-## Gambaran Umum
+## Ringkasan
 
-Autoloading adalah konsep di PHP di mana Anda menentukan direktori atau direktori untuk memuat kelas dari. Ini jauh lebih bermanfaat daripada menggunakan `require` atau `include` untuk memuat kelas. Ini juga merupakan persyaratan untuk menggunakan paket Composer.
+Autoloading adalah konsep dalam PHP di mana Anda menentukan direktori atau direktori untuk memuat kelas dari. Ini jauh lebih bermanfaat daripada menggunakan `require` atau `include` untuk memuat kelas. Ini juga merupakan persyaratan untuk menggunakan paket Composer.
 
 ## Pemahaman
 
-Secara default, kelas `Flight` apa pun dimuat secara otomatis untuk Anda berkat composer. Namun, jika Anda ingin memuat kelas Anda sendiri secara otomatis, Anda dapat menggunakan metode `Flight::path()` untuk menentukan direktori untuk memuat kelas dari.
+Secara default, kelas `Flight` apa pun dimuat otomatis untuk Anda berkat composer. Namun, jika Anda ingin memuat otomatis kelas Anda sendiri, Anda dapat menggunakan metode `Flight::path()` untuk menentukan direktori untuk memuat kelas dari.
 
 Menggunakan autoloader dapat membantu menyederhanakan kode Anda secara signifikan. Alih-alih memiliki file yang dimulai dengan berbagai pernyataan `include` atau `require` di bagian atas untuk menangkap semua kelas yang digunakan dalam file tersebut, Anda dapat secara dinamis memanggil kelas Anda dan mereka akan disertakan secara otomatis.
 
 ## Penggunaan Dasar
 
-Misalkan kita memiliki pohon direktori seperti berikut:
+Misalkan kita memiliki struktur direktori seperti berikut:
 
 ```text
 # Contoh path
@@ -30,7 +30,7 @@ Misalkan kita memiliki pohon direktori seperti berikut:
 	└── index.php
 ```
 
-Anda mungkin telah memperhatikan bahwa ini adalah struktur file yang sama dengan situs dokumentasi ini.
+Anda mungkin memperhatikan bahwa ini adalah struktur file yang sama dengan situs dokumentasi ini.
 
 Anda dapat menentukan setiap direktori untuk dimuat seperti ini:
 
@@ -51,7 +51,7 @@ Flight::path(__DIR__.'/../app/utils/');
 
 // tidak diperlukan namespacing
 
-// Semua kelas yang dimuat secara otomatis disarankan menggunakan Pascal Case (setiap kata dikapitalisasi, tanpa spasi)
+// Semua kelas yang dimuat otomatis disarankan menggunakan Pascal Case (setiap kata dikapitalisasi, tanpa spasi)
 class MyController {
 
 	public function index() {
@@ -74,7 +74,7 @@ Jika Anda memiliki namespace, sebenarnya sangat mudah untuk mengimplementasikann
 Flight::path(__DIR__.'/../');
 ```
 
-Sekarang ini adalah tampilan controller Anda. Lihat contoh di bawah ini, tetapi perhatikan komentar untuk informasi penting.
+Sekarang ini adalah tampilan controller Anda. Lihat contoh di bawah, tapi perhatikan komentar untuk informasi penting.
 
 ```php
 /**
@@ -84,10 +84,10 @@ Sekarang ini adalah tampilan controller Anda. Lihat contoh di bawah ini, tetapi 
 // namespace diperlukan
 // namespace sama dengan struktur direktori
 // namespace harus mengikuti case yang sama dengan struktur direktori
-// namespace dan direktori tidak boleh memiliki underscore (kecuali Loader::setV2ClassLoading(false) diatur)
+// namespace dan direktori tidak boleh memiliki underscore (kecuali Loader::setV2ClassLoading(false) disetel)
 namespace app\controllers;
 
-// Semua kelas yang dimuat secara otomatis disarankan menggunakan Pascal Case (setiap kata dikapitalisasi, tanpa spasi)
+// Semua kelas yang dimuat otomatis disarankan menggunakan Pascal Case (setiap kata dikapitalisasi, tanpa spasi)
 // Mulai dari 3.7.2, Anda dapat menggunakan Pascal_Snake_Case untuk nama kelas Anda dengan menjalankan Loader::setV2ClassLoading(false);
 class MyController {
 
@@ -97,7 +97,7 @@ class MyController {
 }
 ```
 
-Dan jika Anda ingin memuat kelas di direktori utils Anda secara otomatis, Anda akan melakukan hal yang sama secara dasar:
+Dan jika Anda ingin memuat otomatis kelas di direktori utils Anda, Anda pada dasarnya melakukan hal yang sama:
 
 ```php
 
@@ -106,7 +106,7 @@ Dan jika Anda ingin memuat kelas di direktori utils Anda secara otomatis, Anda a
  */
 
 // namespace harus cocok dengan struktur direktori dan case (perhatikan direktori UTILS semua huruf kapital
-//     seperti di pohon file di atas)
+//     seperti dalam pohon file di atas)
 namespace app\UTILS;
 
 class ArrayHelperUtil {
@@ -117,11 +117,11 @@ class ArrayHelperUtil {
 }
 ```
 
-## Underscores di Nama Kelas
+## Underscores dalam Nama Kelas
 
 Mulai dari 3.7.2, Anda dapat menggunakan Pascal_Snake_Case untuk nama kelas Anda dengan menjalankan `Loader::setV2ClassLoading(false);`. 
-Ini akan memungkinkan Anda menggunakan underscore di nama kelas Anda. 
-Ini tidak disarankan, tetapi tersedia untuk mereka yang membutuhkannya.
+Ini akan memungkinkan Anda menggunakan underscore dalam nama kelas Anda. 
+Ini tidak disarankan, tapi tersedia untuk mereka yang membutuhkannya.
 
 ```php
 use flight\core\Loader;
@@ -154,25 +154,25 @@ class My_Controller {
 - [Mengapa Framework?](/learn/why-frameworks) - Memahami manfaat menggunakan framework seperti Flight.
 
 ## Pemecahan Masalah
-- Jika Anda tidak dapat mengetahui mengapa kelas namespaced Anda tidak ditemukan, ingatlah untuk menggunakan `Flight::path()` ke direktori root di proyek Anda, bukan direktori `app/` atau `src/` atau setara.
+- Jika Anda tidak bisa memahami mengapa kelas namespaced Anda tidak ditemukan, ingatlah untuk menggunakan `Flight::path()` ke direktori root di proyek Anda, bukan direktori `app/` atau `src/` atau setara.
 
 ### Kelas Tidak Ditemukan (autoloading tidak berfungsi)
 
-Ada beberapa alasan mengapa ini bisa terjadi. Di bawah ini beberapa contoh tetapi pastikan Anda juga memeriksa bagian [autoloading](/learn/autoloading).
+Ada beberapa alasan mengapa ini bisa terjadi. Di bawah ini beberapa contoh tapi pastikan Anda juga memeriksa bagian [autoloading](/learn/autoloading).
 
 #### Nama File Salah
 Yang paling umum adalah nama kelas tidak cocok dengan nama file.
 
 Jika Anda memiliki kelas bernama `MyClass` maka file harus bernama `MyClass.php`. Jika Anda memiliki kelas bernama `MyClass` dan file bernama `myclass.php` 
-maka autoloader tidak akan dapat menemukannya.
+maka autoloader tidak akan bisa menemukannya.
 
 #### Namespace Salah
 Jika Anda menggunakan namespace, maka namespace harus cocok dengan struktur direktori.
 
 ```php
-// ...code...
+// ...kode...
 
-// jika MyController Anda berada di direktori app/controllers dan bernamespace
+// jika MyController Anda berada di direktori app/controllers dan namespaced
 // ini tidak akan berfungsi.
 Flight::route('/hello', 'MyController->hello');
 
@@ -191,7 +191,7 @@ Flight::route('/hello', [ 'app\controllers\MyController', 'hello' ]);
 
 #### `path()` tidak didefinisikan
 
-Di aplikasi skeleton, ini didefinisikan di dalam file `config.php`, tetapi agar kelas Anda ditemukan, Anda perlu memastikan bahwa metode `path()`
+Dalam aplikasi skeleton, ini didefinisikan di dalam file `config.php`, tapi agar kelas Anda ditemukan, Anda perlu memastikan bahwa metode `path()`
 didefinisikan (mungkin ke root direktori Anda) sebelum Anda mencoba menggunakannya.
 
 ```php

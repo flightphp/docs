@@ -1,14 +1,18 @@
 # Kelas Pembantu PDO PdoWrapper
 
+> **PERINGATAN**
+>
+> **Usang:** `PdoWrapper` sudah usang sejak Flight v3.18.0. Ini tidak akan dihapus di versi mendatang, tetapi akan dipelihara untuk kompatibilitas mundur. Silakan gunakan [SimplePdo](/learn/simple-pdo) sebagai gantinya, yang menawarkan fungsionalitas yang sama ditambah metode pembantu tambahan untuk operasi database umum.
+
 ## Gambaran Umum
 
 Kelas `PdoWrapper` di Flight adalah pembantu yang ramah untuk bekerja dengan database menggunakan PDO. Ini menyederhanakan tugas database umum, menambahkan beberapa metode yang berguna untuk mengambil hasil, dan mengembalikan hasil sebagai [Collections](/learn/collections) untuk akses yang mudah. Ini juga mendukung pencatatan query dan pemantauan kinerja aplikasi (APM) untuk kasus penggunaan lanjutan.
 
 ## Pemahaman
 
-Bekerja dengan database di PHP bisa sedikit verbose, terutama saat menggunakan PDO secara langsung. `PdoWrapper` memperluas PDO dan menambahkan metode yang membuat querying, fetching, dan penanganan hasil jauh lebih mudah. Alih-alih mengelola pernyataan yang disiapkan dan mode fetch, Anda mendapatkan metode sederhana untuk tugas umum, dan setiap baris dikembalikan sebagai Collection, sehingga Anda dapat menggunakan notasi array atau objek.
+Bekerja dengan database di PHP bisa agak verbose, terutama saat menggunakan PDO secara langsung. `PdoWrapper` memperluas PDO dan menambahkan metode yang membuat querying, fetching, dan penanganan hasil jauh lebih mudah. Alih-alih mengelola pernyataan yang disiapkan dan mode fetch, Anda mendapatkan metode sederhana untuk tugas umum, dan setiap baris dikembalikan sebagai Collection, sehingga Anda bisa menggunakan notasi array atau objek.
 
-Anda dapat mendaftarkan `PdoWrapper` sebagai layanan bersama di Flight, dan kemudian menggunakannya di mana saja di aplikasi Anda melalui `Flight::db()`.
+Anda bisa mendaftarkan `PdoWrapper` sebagai layanan bersama di Flight, dan kemudian menggunakannya di mana saja di aplikasi Anda melalui `Flight::db()`.
 
 ## Penggunaan Dasar
 
@@ -27,7 +31,7 @@ Flight::register('db', \flight\database\PdoWrapper::class, [
 ]);
 ```
 
-Sekarang Anda dapat menggunakan `Flight::db()` di mana saja untuk mendapatkan koneksi database Anda.
+Sekarang Anda bisa menggunakan `Flight::db()` di mana saja untuk mendapatkan koneksi database Anda.
 
 ### Menjalankan Query
 
@@ -45,7 +49,7 @@ while ($row = $statement->fetch()) {
 }
 ```
 
-Anda juga dapat menggunakannya untuk penulisan:
+Anda juga bisa menggunakannya untuk penulisan:
 
 ```php
 $db->runQuery("INSERT INTO users (name) VALUES (?)", ['Alice']);
@@ -92,7 +96,7 @@ foreach ($users as $user) {
 
 ### Menggunakan Placeholder `IN()`
 
-Anda dapat menggunakan satu `?` tunggal dalam klausa `IN()` dan meneruskan array atau string yang dipisahkan koma:
+Anda bisa menggunakan satu `?` tunggal dalam klausa `IN()` dan meneruskan array atau string yang dipisahkan koma:
 
 ```php
 $ids = [1, 2, 3];
@@ -109,17 +113,17 @@ Jika Anda ingin melacak kinerja query, aktifkan pelacakan APM saat mendaftarkan:
 
 ```php
 Flight::register('db', \flight\database\PdoWrapper::class, [
-    'mysql:host=localhost;dbname=cool_db_name', 'user', 'pass', [/* options */], true // param terakhir mengaktifkan APM
+    'mysql:host=localhost;dbname=cool_db_name', 'user', 'pass', [/* options */], true // parameter terakhir mengaktifkan APM
 ]);
 ```
 
-Setelah menjalankan query, Anda dapat mencatatnya secara manual tetapi APM akan mencatatnya secara otomatis jika diaktifkan:
+Setelah menjalankan query, Anda bisa mencatatnya secara manual tetapi APM akan mencatatnya secara otomatis jika diaktifkan:
 
 ```php
 Flight::db()->logQueries();
 ```
 
-Ini akan memicu sebuah event (`flight.db.queries`) dengan metrik koneksi dan query, yang dapat Anda dengarkan menggunakan sistem event Flight.
+Ini akan memicu event (`flight.db.queries`) dengan metrik koneksi dan query, yang bisa Anda dengarkan menggunakan sistem event Flight.
 
 ### Contoh Lengkap
 
@@ -134,10 +138,10 @@ Flight::route('/users', function () {
         echo $user['name'];
     }
 
-    // Dapatkan satu pengguna tunggal
+    // Dapatkan satu pengguna
     $user = Flight::db()->fetchRow('SELECT * FROM users WHERE id = ?', [123]);
 
-    // Dapatkan satu nilai tunggal
+    // Dapatkan satu nilai
     $count = Flight::db()->fetchField('SELECT COUNT(*) FROM users');
 
     // Sintaks IN() khusus

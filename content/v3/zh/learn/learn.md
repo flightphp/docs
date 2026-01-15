@@ -1,19 +1,19 @@
 # 了解 Flight
 
-Flight 是一个快速、简单、可扩展的 PHP 框架。它非常通用，可用于构建任何类型的 Web 应用程序。
+Flight 是一个快速、简单、可扩展的 PHP 框架。它非常多功能，可用于构建任何类型的 Web 应用程序。
 它以简单性为设计理念，并以易于理解和使用的方式编写。
 
-> **注意：** 您将看到一些示例使用 `Flight::` 作为静态变量，而另一些使用 `$app->` 引擎对象。两者可以互换使用。在控制器/中间件中，`$app` 和 `$this->app` 是 Flight 团队推荐的方法。
+> **注意：** 您将看到一些示例使用 `Flight::` 作为静态变量，而有些使用 `$app->` 引擎对象。两者可以互换使用。`$app` 和 `$this->app` 在控制器/中间件中是 Flight 团队推荐的方法。
 
 ## 核心组件
 
 ### [路由](/learn/routing)
 
-了解如何管理 Web 应用程序的路由。这还包括路由分组、路由参数和中间件。
+了解如何为您的 Web 应用程序管理路由。这还包括路由分组、路由参数和中间件。
 
 ### [中间件](/learn/middleware)
 
-了解如何使用中间件来过滤应用程序中的请求和响应。
+了解如何使用中间件过滤应用程序中的请求和响应。
 
 ### [自动加载](/learn/autoloading)
 
@@ -25,15 +25,15 @@ Flight 是一个快速、简单、可扩展的 PHP 框架。它非常通用，�
 
 ### [响应](/learn/responses)
 
-了解如何向用户发送响应。
+了解如何向您的用户发送响应。
 
 ### [HTML 模板](/learn/templates)
 
-了解如何使用内置视图引擎渲染 HTML 模板。
+了解如何使用内置视图引擎渲染您的 HTML 模板。
 
 ### [安全](/learn/security)
 
-了解如何保护应用程序免受常见安全威胁。
+了解如何保护您的应用程序免受常见安全威胁。
 
 ### [配置](/learn/configuration)
 
@@ -41,7 +41,7 @@ Flight 是一个快速、简单、可扩展的 PHP 框架。它非常通用，�
 
 ### [事件管理器](/learn/events)
 
-了解如何使用事件系统向应用程序添加自定义事件。
+了解如何使用事件系统向您的应用程序添加自定义事件。
 
 ### [扩展 Flight](/learn/extending)
 
@@ -49,11 +49,11 @@ Flight 是一个快速、简单、可扩展的 PHP 框架。它非常通用，�
 
 ### [方法钩子和过滤](/learn/filtering)
 
-了解如何向方法和内部框架方法添加事件钩子。
+了解如何向您的方法和框架内部方法添加事件钩子。
 
 ### [依赖注入容器 (DIC)](/learn/dependency-injection-container)
 
-了解如何使用依赖注入容器 (DIC) 来管理应用程序的依赖项。
+了解如何使用依赖注入容器 (DIC) 来管理您应用程序的依赖项。
 
 ## 实用类
 
@@ -63,15 +63,19 @@ Flight 是一个快速、简单、可扩展的 PHP 框架。它非常通用，�
 
 ### [JSON 包装器](/learn/json)
 
-这提供了几个简单函数，使 JSON 的编码和解码保持一致。
+这是一个具有几个简单函数的工具，用于使您的 JSON 编码和解码保持一致。
 
-### [PDO 包装器](/learn/pdo-wrapper)
+### [SimplePdo](/learn/simple-pdo)
 
-PDO 有时会带来不必要的麻烦。这个简单的包装类可以显著简化与数据库的交互。
+PDO 有时会带来不必要的麻烦。SimplePdo 是一个现代的 PDO 辅助类，提供了方便的方法，如 `insert()`、`update()`、`delete()` 和 `transaction()`，使数据库操作更加容易。
+
+### [PdoWrapper](/learn/pdo-wrapper)（已弃用）
+
+从 v3.18.0 开始，原始 PDO 包装器已被弃用。请改用 [SimplePdo](/learn/simple-pdo)。
 
 ### [上传文件处理程序](/learn/uploaded-file)
 
-一个简单的类，帮助管理上传的文件并将其移动到永久位置。
+一个简单的类，用于帮助管理上传的文件并将其移动到永久位置。
 
 ## 重要概念
 
@@ -79,21 +83,21 @@ PDO 有时会带来不必要的麻烦。这个简单的包装类可以显著简�
 
 这是一篇简短的文章，解释为什么您应该使用框架。在开始使用框架之前，了解其好处是个好主意。
 
-此外，[@lubiana](https://git.php.fail/lubiana) 创建了一个优秀的教程。虽然它没有详细介绍 Flight 的具体内容，
-但这个指南将帮助您理解围绕框架的一些主要概念，以及为什么使用它们有益。
+此外，由 [@lubiana](https://git.php.fail/lubiana) 创建了一个优秀的教程。虽然它没有详细介绍 Flight 的具体内容，
+但这个指南将帮助您理解围绕框架的一些主要概念，以及为什么使用它们是有益的。
 您可以在 [这里](https://git.php.fail/lubiana/no-framework-tutorial/src/branch/master/README.md) 找到该教程。
 
 ### [Flight 与其他框架的比较](/learn/flight-vs-another-framework)
 
-如果您从其他框架（如 Laravel、Slim、Fat-Free 或 Symfony）迁移到 Flight，此页面将帮助您了解两者之间的差异。
+如果您从其他框架（如 Laravel、Slim、Fat-Free 或 Symfony）迁移到 Flight，此页面将帮助您理解两者之间的差异。
 
 ## 其他主题
 
 ### [单元测试](/learn/unit-testing)
 
-按照此指南学习如何对 Flight 代码进行单元测试，使其坚如磐石。
+按照此指南学习如何对您的 Flight 代码进行单元测试，使其坚如磐石。
 
-### [AI 与开发者体验](/learn/ai)
+### [AI 和开发者体验](/learn/ai)
 
 了解 Flight 如何与 AI 工具和现代开发者工作流程配合，帮助您更快、更智能地编码。
 

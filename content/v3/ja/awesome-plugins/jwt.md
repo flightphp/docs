@@ -1,22 +1,22 @@
-# Firebase JWT - Flight 用の JSON Web Token 認証
+# Firebase JWT - JSON Web Token 認証
 
-JWT (JSON Web Tokens) は、アプリケーションとクライアント間の主張を表すコンパクトで URL セーフな方法です。サーバー側のセッションストレージが不要なステートレス API 認証に最適です！このガイドでは、[Firebase JWT](https://github.com/firebase/php-jwt) を Flight と統合して、セキュアなトークンベースの認証を行う方法を示します。
+JWT (JSON Web Tokens) は、アプリケーションとクライアント間で請求を表すためのコンパクトで URL セーフな方法です。サーバー側のセッションストレージが不要なステートレス API 認証に最適です！このガイドでは、[Firebase JWT](https://github.com/firebase/php-jwt) を Flight と統合して、セキュアなトークンベースの認証を行う方法を示します。
 
 完全なドキュメントと詳細については、[Github リポジトリ](https://github.com/firebase/php-jwt) をご覧ください。
 
 ## JWT とは？
 
 JSON Web Token は、3つの部分を含む文字列です：
-1. **ヘッダー**: トークンに関するメタデータ (アルゴリズム、タイプ)
-2. **ペイロード**: あなたのデータ (ユーザー ID、ロール、期限切れなど)
-3. **シグネチャー**: 真正性を検証するための暗号署名
+1. **ヘッダー**: トークンに関するメタデータ（アルゴリズム、タイプ）
+2. **ペイロード**: あなたのデータ（ユーザー ID、ロール、期限切れなど）
+3. **署名**: 真正性を検証するための暗号署名
 
-例の JWT: `eyJ0eXAiOiJKV1QiLCJhbGc...` (意味不明に見えますが、構造化されたデータです！)
+例の JWT: `eyJ0eXAiOiJKV1QiLCJhbGc...`（意味不明に見えますが、構造化されたデータです！）
 
 ### JWT を使用する理由は？
 
 - **ステートレス**: サーバー側のセッションストレージが不要 — マイクロサービスや API に最適
-- **スケーラブル**: セッションアフィニティの要件がないため、ロードバランサーとよく動作
+- **スケーラブル**: セッション親和性要件がないため、ロードバランサーでうまく動作
 - **クロスドメイン**: 異なるドメインやサービス間で使用可能
 - **モバイルフレンドリー**: クッキーがうまく動作しないモバイルアプリに最適
 - **標準化**: 業界標準のアプローチ (RFC 7519)
@@ -37,7 +37,7 @@ JWT を作成して検証する簡単な例：
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
-// あなたの秘密鍵 (これをセキュアに保ってください！)
+// あなたのシークレットキー（これを安全に保ってください！）
 $secretKey = 'your-256-bit-secret-key-here-keep-it-safe';
 
 // トークンを作成
@@ -61,9 +61,9 @@ try {
 }
 ```
 
-## Flight 用の JWT ミドルウェア (推奨アプローチ)
+## Flight 用の JWT ミドルウェア（推奨アプローチ）
 
-Flight で JWT を使用する最も一般的で有用な方法は、**ミドルウェア**として API ルートを保護することです。以下は、完全で本番環境対応の例です：
+Flight で JWT を使用する最も一般的で有用な方法は、API ルートを保護するための **ミドルウェア** としてです。以下は、完全で本番環境対応の例です：
 
 ### ステップ 1: JWT ミドルウェアクラスを作成
 
@@ -82,21 +82,21 @@ class JwtMiddleware {
 
     public function __construct(Engine $app) {
         $this->app = $app;
-        // 秘密鍵を app/config/config.php に保存し、ハードコードしないでください！
+        // シークレットキーを app/config/config.php に保存し、ハードコードしないでください！
         $this->secretKey = $app->get('config')['jwt_secret'];
     }
 
     public function before(array $params) {
         $authHeader = $this->app->request()->getHeader('Authorization');
 
-        // Authorization ヘッダーが存在するかチェック
+        // Authorization ヘッダーの存在を確認
         if (empty($authHeader)) {
-            $this->app->jsonHalt(['error' => 'No authorization token provided'], 401);
+            $this->app->jsonHalt(['error' => '認証トークンが提供されていません'], 401);
         }
 
         // "Bearer <token>" 形式からトークンを抽出
         if (!preg_match('/Bearer\s+(.*)$/i', $authHeader, $matches)) {
-            $this->app->jsonHalt(['error' => 'Invalid authorization format. Use: Bearer <token>'], 401);
+            $this->app->jsonHalt(['error' => '無効な認証形式です。Bearer <token> を使用してください'], 401);
         }
 
         $jwt = $matches[1];
@@ -109,17 +109,17 @@ class JwtMiddleware {
             $this->app->request()->data->user = $decoded;
             
         } catch (ExpiredException $e) {
-            $this->app->jsonHalt(['error' => 'Token has expired'], 401);
+            $this->app->jsonHalt(['error' => 'トークンの有効期限が切れています'], 401);
         } catch (SignatureInvalidException $e) {
-            $this->app->jsonHalt(['error' => 'Invalid token signature'], 401);
+            $this->app->jsonHalt(['error' => '無効なトークン署名'], 401);
         } catch (Exception $e) {
-            $this->app->jsonHalt(['error' => 'Invalid token: ' . $e->getMessage()], 401);
+            $this->app->jsonHalt(['error' => '無効なトークン: ' . $e->getMessage()], 401);
         }
     }
 }
 ```
 
-### ステップ 2: 設定に JWT 秘密鍵を登録
+### ステップ 2: 設定に JWT シークレットを登録
 
 ```php
 // app/config/config.php
@@ -128,26 +128,26 @@ return [
 ];
 
 // app/config/bootstrap.php または index.php
-// 設定をアプリに公開したい場合、この行を追加してください
+// 設定をアプリに公開したい場合は、この行を追加してください
 $app->set('config', $config);
 ```
 
-> **セキュリティノート**: 秘密鍵をハードコードしないでください！本番環境では環境変数を使用してください。
+> **セキュリティノート**: シークレットキーをハードコードしないでください！本番環境では環境変数を使用してください。
 
 ### ステップ 3: ミドルウェアでルートを保護
 
 ```php
 // 単一のルートを保護
 Flight::route('GET /api/user/profile', function() {
-    $user = Flight::request()->data->user; // ミドルウェアによって設定
+    $user = Flight::request()->data->user; // ミドルウェアで設定
     Flight::json([
         'user_id' => $user->user_id,
         'username' => $user->username,
         'role' => $user->role
     ]);
-})->addMiddleware( JwtMiddleware::class);
+})->addMiddleware(JwtMiddleware::class);
 
-// ルートのグループ全体を保護 (より一般的！)
+// ルートのグループ全体を保護（より一般的！）
 Flight::group('/api', function() {
     Flight::route('GET /users', function() { /* ... */ });
     Flight::route('GET /posts', function() { /* ... */ });
@@ -158,9 +158,9 @@ Flight::group('/api', function() {
 
 ミドルウェアの詳細については、[ミドルウェアドキュメント](/learn/middleware) を参照してください。
 
-## 一般的なユースケース
+## 一般的な使用事例
 
-### 1. ログインエンドポイント (トークン生成)
+### 1. ログインエンドポイント（トークン生成）
 
 認証成功後に JWT を生成するルートを作成：
 
@@ -170,11 +170,11 @@ Flight::route('POST /api/login', function() {
     $username = $data->username ?? '';
     $password = $data->password ?? '';
 
-    // 認証情報を検証 (例 — 独自のロジックを使用！)
+    // 認証情報を検証（例 — 独自のロジックを使用！）
     $user = validateUserCredentials($username, $password);
     
     if (!$user) {
-        Flight::jsonHalt(['error' => 'Invalid credentials'], 401);
+        Flight::jsonHalt(['error' => '無効な認証情報'], 401);
     }
 
     // JWT を生成
@@ -184,7 +184,7 @@ Flight::route('POST /api/login', function() {
         'username' => $user->username,
         'role' => $user->role,
         'iat' => time(),
-        'exp' => time() + (60 * 60) // 1時間後の期限切れ
+        'exp' => time() + (60 * 60) // 1時間の有効期限
     ];
 
     $jwt = JWT::encode($payload, $secretKey, 'HS256');
@@ -197,7 +197,7 @@ Flight::route('POST /api/login', function() {
 });
 
 function validateUserCredentials($username, $password) {
-    // ここにデータベース検索とパスワード検証を実装
+    // ここにデータベース検索とパスワード検証
     // 例:
     $db = Flight::db();
     $user = $db->fetchRow("SELECT * FROM users WHERE username = ?", [$username]);
@@ -213,7 +213,7 @@ function validateUserCredentials($username, $password) {
 }
 ```
 
-### 2. トークンリフレッシュフロー
+### 2. トークン更新フロー
 
 長期間のセッションのためのリフレッシュトークンシステムを実装：
 
@@ -224,7 +224,7 @@ Flight::route('POST /api/login', function() {
     $secretKey = Flight::get('config')['jwt_secret'];
     $refreshSecret = Flight::get('config')['jwt_refresh_secret'];
     
-    // 短期間のアクセス トークン (15 分)
+    // 短期間のアクセストークン (15 分)
     $accessToken = JWT::encode([
         'user_id' => $user->id,
         'type' => 'access',
@@ -232,7 +232,7 @@ Flight::route('POST /api/login', function() {
         'exp' => time() + (15 * 60)
     ], $secretKey, 'HS256');
     
-    // 長期間のリフレッシュ トークン (7 日)
+    // 長期間のリフレッシュトークン (7 日)
     $refreshToken = JWT::encode([
         'user_id' => $user->id,
         'type' => 'refresh',
@@ -254,12 +254,12 @@ Flight::route('POST /api/refresh', function() {
     try {
         $decoded = JWT::decode($refreshToken, new Key($refreshSecret, 'HS256'));
         
-        // これがリフレッシュ トークンであることを検証
+        // これがリフレッシュトークンであることを検証
         if ($decoded->type !== 'refresh') {
-            Flight::jsonHalt(['error' => 'Invalid token type'], 401);
+            Flight::jsonHalt(['error' => '無効なトークンタイプ'], 401);
         }
         
-        // 新しいアクセス トークンを生成
+        // 新しいアクセストークンを生成
         $secretKey = Flight::get('config')['jwt_secret'];
         $accessToken = JWT::encode([
             'user_id' => $decoded->user_id,
@@ -274,7 +274,7 @@ Flight::route('POST /api/refresh', function() {
         ]);
         
     } catch (Exception $e) {
-        Flight::jsonHalt(['error' => 'Invalid refresh token'], 401);
+        Flight::jsonHalt(['error' => '無効なリフレッシュトークン'], 401);
     }
 });
 ```
@@ -295,21 +295,21 @@ class JwtRoleMiddleware {
     }
     
     public function before(array $params) {
-        // JwtMiddleware が既に実行され、ユーザー データが設定されていると仮定
+        // JwtMiddleware がすでに実行され、ユーザー データが設定されていると仮定
         $user = $this->app->request()->data->user ?? null;
         
         if (!$user) {
-            $this->app->jsonHalt(['error' => 'Authentication required'], 401);
+            $this->app->jsonHalt(['error' => '認証が必要です'], 401);
         }
         
-        // ユーザーが必要なロールを持っているかチェック
+        // ユーザーが必要なロールを持っているかをチェック
         if (!empty($this->allowedRoles) && !in_array($user->role, $this->allowedRoles)) {
-            $this->app->jsonHalt(['error' => 'Insufficient permissions'], 403);
+            $this->app->jsonHalt(['error' => '権限が不足しています'], 403);
         }
     }
 }
 
-// 使用例: 管理者限定ルート
+// 使用例: 管理者専用ルート
 Flight::route('DELETE /api/users/@id', function($id) {
     // ユーザー削除ロジック
 })->addMiddleware([
@@ -320,7 +320,7 @@ Flight::route('DELETE /api/users/@id', function($id) {
 
 ### 4. ユーザーごとのレート制限付きパブリック API
 
-セッションなしでユーザーを追跡してレート制限：
+セッションなしで JWT を使用してユーザー を追跡し、レート制限：
 
 ```php
 class RateLimitMiddleware {
@@ -330,11 +330,11 @@ class RateLimitMiddleware {
         $userId = $user ? $user->user_id : Flight::request()->ip;
         
         $cacheKey = "rate_limit:$userId";
-        // app/config/services.php でキャッシュ サービスを設定してください
+        // app/config/services.php でキャッシュサービスを設定してください
         $requests = Flight::cache()->get($cacheKey, 0);
         
         if ($requests >= 100) { // 1時間あたり 100 リクエスト
-            Flight::jsonHalt(['error' => 'Rate limit exceeded'], 429);
+            Flight::jsonHalt(['error' => 'レート制限を超えました'], 429);
         }
         
         Flight::cache()->set($cacheKey, $requests + 1, 3600);
@@ -344,26 +344,26 @@ class RateLimitMiddleware {
 
 ## セキュリティのベストプラクティス
 
-### 1. 強力な秘密鍵を使用
+### 1. 強力なシークレットキー を使用
 
 ```php
-// セキュアな秘密鍵を生成 (一度実行し、.env ファイルに保存)
+// セキュアなシークレットキーを生成（一度実行し、.env ファイルに保存）
 $secretKey = base64_encode(random_bytes(32));
 echo $secretKey; // これを .env ファイルに保存！
 ```
 
-### 2. 秘密鍵を環境変数に保存
+### 2. シークレットを環境変数に保存
 
 ```php
-// 秘密鍵をバージョン管理にコミットしないでください！
+// シークレットをバージョン管理にコミットしないでください！
 // .env ファイルと vlucas/phpdotenv などのライブラリを使用
 
 // .env ファイル:
 // JWT_SECRET=your-base64-encoded-secret-here
 // JWT_REFRESH_SECRET=another-base64-encoded-secret-here
 
-// アプリの設定ファイル app/config/config.php にも秘密鍵を保存可能
-// ただし、設定ファイルはバージョン管理にコミットしないでください
+// app/config/config.php ファイルを使用してシークレットを保存することも可能
+// 設定ファイルがバージョン管理にコミットされないことを確認
 // return [
 //     'jwt_secret' => 'your-base64-encoded-secret-here',
 //     'jwt_refresh_secret' => 'another-base64-encoded-secret-here',
@@ -376,38 +376,38 @@ echo $secretKey; // これを .env ファイルに保存！
 ### 3. 適切な有効期限を設定
 
 ```php
-// 良い習慣: 短期間のアクセス トークン
+// 良い習慣: 短期間のアクセストークン
 'exp' => time() + (15 * 60)  // 15 分
 
-// リフレッシュ トークンの場合: 長い有効期限
+// リフレッシュトークンの場合: 長い有効期限
 'exp' => time() + (7 * 24 * 60 * 60)  // 7 日
 ```
 
 ### 4. 本番環境で HTTPS を使用
 
-JWT は **常に** HTTPS を介して送信してください。本番環境でプレーン HTTP を使用しないでください！
+JWT は **常に** HTTPS で送信されるべきです。本番環境ではプレーン HTTP でトークンを送信しないでください！
 
-### 5. トークン主張を検証
+### 5. トークンクレームを検証
 
-重要な主張を常に検証：
+重要なクレームを常に検証：
 
 ```php
 $decoded = JWT::decode($jwt, new Key($secretKey, 'HS256'));
 
-// 期限切れのチェックはライブラリによって自動的に処理されます
+// 期限切れのチェックはライブラリで自動的に処理されます
 // ただし、カスタム検証を追加可能:
 if ($decoded->iat > time()) {
-    throw new Exception('Token used before it was issued');
+    throw new Exception('トークンが発行される前に使用されました');
 }
 
 if (isset($decoded->nbf) && $decoded->nbf > time()) {
-    throw new Exception('Token not yet valid');
+    throw new Exception('トークンがまだ有効ではありません');
 }
 ```
 
 ### 6. ログアウトのためのトークンブラックリストを検討
 
-追加のセキュリティのために、無効化されたトークンのブラックリストを維持：
+追加のセキュリティのため、無効化されたトークンのブラックリストを維持：
 
 ```php
 Flight::route('POST /api/logout', function() {
@@ -422,7 +422,7 @@ Flight::route('POST /api/logout', function() {
     // 有効期限までキャッシュ/Redis に保存
     Flight::cache()->set("blacklist:$jwt", true, $ttl);
     
-    Flight::json(['message' => 'Successfully logged out']);
+    Flight::json(['message' => '正常にログアウトしました']);
 });
 
 // JwtMiddleware に追加:
@@ -431,19 +431,19 @@ public function before(array $params) {
     
     // ブラックリストをチェック
     if (Flight::cache()->get("blacklist:$jwt")) {
-        $this->app->jsonHalt(['error' => 'Token has been revoked'], 401);
+        $this->app->jsonHalt(['error' => 'トークンが取り消されました'], 401);
     }
     
     // ... トークンを検証 ...
 }
 ```
 
-## アルゴリズムと鍵の種類
+## アルゴリズムとキー タイプ
 
 Firebase JWT は複数のアルゴリズムをサポート：
 
 ### 対称アルゴリズム (HMAC)
-- **HS256** (ほとんどのアプリで推奨): 単一の秘密鍵を使用
+- **HS256** (ほとんどのアプリに推奨): 単一のシークレットキー を使用
 - **HS384**, **HS512**: より強力なバリエーション
 
 ```php
@@ -469,17 +469,17 @@ $jwt = JWT::encode($payload, $privateKey, 'RS256');
 $decoded = JWT::decode($jwt, new Key($publicKey, 'RS256'));
 ```
 
-> **RSA を使用するタイミング**: 公開鍵を検証のために配布する必要がある場合 (例: マイクロサービス、サードパーティ統合) に RSA を使用。単一のアプリケーションの場合、HS256 がよりシンプルで十分です。
+> **RSA を使用するタイミング**: 検証のための公開鍵を配布する必要がある場合に RSA を使用（例: マイクロサービス、サードパーティ統合）。単一のアプリケーションの場合、HS256 がよりシンプルで十分です。
 
 ## トラブルシューティング
 
 ### "Expired token" エラー
-トークンの `exp` 主張が過去です。新しいトークンを発行するか、トークンリフレッシュを実装してください。
+トークンの `exp` クレームが過去です。新しいトークンを発行するか、トークン更新を実装してください。
 
 ### "Signature verification failed"
-- エンコードに使用したものと異なる秘密鍵でデコードしている
-- トークンが改ざんされている
-- サーバー間のクロックスキュー (レウェイバッファを追加)
+- エンコードに使用したものと異なるシークレットキー でデコードしています
+- トークンが改ざんされています
+- サーバー間のクロックスキュー（leeway バッファを追加）
 
 ```php
 use Firebase\JWT\JWT;
@@ -506,23 +506,23 @@ Firebase JWT ライブラリはこれらのコアメソッドを提供：
 
 - `JWT::encode(array $payload, string $key, string $alg)`: ペイロードから JWT を作成
 - `JWT::decode(string $jwt, Key $key)`: JWT をデコードして検証
-- `JWT::urlsafeB64Encode(string $input)`: Base64 URL セーフエンコード
-- `JWT::urlsafeB64Decode(string $input)`: Base64 URL セーフデコード
-- `JWT::$leeway`: 検証のための時間レウェイを設定する静的プロパティ (秒単位)
+- `JWT::urlsafeB64Encode(string $input)`: Base64 URL セーフエンコーディング
+- `JWT::urlsafeB64Decode(string $input)`: Base64 URL セーフデコーディング
+- `JWT::$leeway`: 検証のための時間 leeway を設定する静的プロパティ（秒単位）
 
 ## このライブラリを使用する理由は？
 
-- **業界標準**: Firebase JWT は PHP で最も人気があり、広く信頼されている JWT ライブラリ
+- **業界標準**: Firebase JWT は PHP 用の最も人気があり信頼されている JWT ライブラリ
 - **積極的なメンテナンス**: Google/Firebase チームによるメンテナンス
 - **セキュリティ重視**: 定期的な更新とセキュリティパッチ
 - **シンプルな API**: 理解しやすく実装しやすい
-- **よくドキュメント化**: 広範なドキュメントとコミュニティサポート
-- **柔軟**: 複数のアルゴリズムと設定可能なオプションをサポート
+- **よくドキュメント化**: 豊富なドキュメントとコミュニティサポート
+- **柔軟**: 複数のアルゴリズムと構成可能なオプションをサポート
 
-## 関連項目
+## 関連資料
 
 - [Firebase JWT Github リポジトリ](https://github.com/firebase/php-jwt)
-- [JWT.io](https://jwt.io/) - JWT をデバッグおよびデコード
+- [JWT.io](https://jwt.io/) - JWT をデバッグしてデコード
 - [RFC 7519](https://tools.ietf.org/html/rfc7519) - 公式 JWT 仕様
 - [Flight ミドルウェアドキュメント](/learn/middleware)
 - [Flight セッションプラグイン](/awesome-plugins/session) - 従来のセッションベース認証用

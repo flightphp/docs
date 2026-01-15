@@ -1,5 +1,9 @@
 # PdoWrapper PDO Helper Class
 
+> **WARNING**
+>
+> **Deprecated:** `PdoWrapper` is deprecated as of Flight v3.18.0. It will not be removed in a future version, but will be maintained for backward compatibility. Please use [SimplePdo](/learn/simple-pdo) instead, which offers the same functionality plus additional helper methods for common database operations.
+
 ## Overview
 
 The `PdoWrapper` class in Flight is a friendly helper for working with databases using PDO. It simplifies common database tasks, adds some handy methods for fetching results, and returns results as [Collections](/learn/collections) for easy access. It also supports query logging and application performance monitoring (APM) for advanced use cases.

@@ -2,7 +2,7 @@
 
 ## Visão Geral
 
-Autoloading é um conceito no PHP onde você especifica um diretório ou diretórios para carregar classes. Isso é muito mais benéfico do que usar `require` ou `include` para carregar classes. Também é um requisito para usar pacotes do Composer.
+Autoloading é um conceito em PHP onde você especifica um diretório ou diretórios para carregar classes. Isso é muito mais benéfico do que usar `require` ou `include` para carregar classes. Também é um requisito para usar pacotes do Composer.
 
 ## Entendendo
 
@@ -22,7 +22,7 @@ Vamos assumir que temos uma árvore de diretórios como a seguinte:
 │   ├── config
 │   ├── controllers - contém os controllers para este projeto
 │   ├── translations
-│   ├── UTILS - contém classes apenas para esta aplicação (isso está em maiúsculas de propósito para um exemplo posterior)
+│   ├── UTILS - contém classes apenas para esta aplicação (isso é tudo maiúsculo de propósito para um exemplo posterior)
 │   └── views
 └── public
     └── css
@@ -49,7 +49,7 @@ Flight::path(__DIR__.'/../app/utils/');
  * app/controllers/MyController.php
  */
 
-// sem namespacing necessário
+// nenhum namespacing necessário
 
 // Todas as classes autoloaded são recomendadas para serem Pascal Case (cada palavra capitalizada, sem espaços)
 class MyController {
@@ -62,7 +62,7 @@ class MyController {
 
 ## Namespaces
 
-Se você tiver namespaces, na verdade fica muito fácil implementar isso. Você deve usar o método `Flight::path()` para especificar o diretório raiz (não o document root ou pasta `public/`) da sua aplicação.
+Se você tiver namespaces, na verdade se torna muito fácil implementar isso. Você deve usar o método `Flight::path()` para especificar o diretório raiz (não o document root ou pasta `public/`) da sua aplicação.
 
 ```php
 
@@ -105,7 +105,7 @@ E se você quisesse autoload uma classe no seu diretório utils, você faria bas
  * app/UTILS/ArrayHelperUtil.php
  */
 
-// namespace deve corresponder à estrutura de diretórios e case (note que o diretório UTILS está em maiúsculas
+// namespace deve corresponder à estrutura de diretórios e case (note que o diretório UTILS é tudo maiúsculo
 //     como na árvore de arquivos acima)
 namespace app\UTILS;
 
@@ -139,7 +139,7 @@ Loader::setV2ClassLoading(false);
  * app/controllers/My_Controller.php
  */
 
-// sem namespacing necessário
+// nenhum namespacing necessário
 
 class My_Controller {
 
@@ -158,7 +158,7 @@ class My_Controller {
 
 ### Classe Não Encontrada (autoloading não funcionando)
 
-Pode haver alguns motivos para isso não acontecer. Abaixo estão alguns exemplos, mas certifique-se de verificar também a seção [autoloading](/learn/autoloading).
+Pode haver alguns motivos para isso não acontecer. Abaixo estão alguns exemplos, mas certifique-se de também verificar a seção [autoloading](/learn/autoloading).
 
 #### Nome de Arquivo Incorreto
 O mais comum é que o nome da classe não corresponda ao nome do arquivo.
@@ -170,9 +170,9 @@ então o autoloader não conseguirá encontrá-lo.
 Se você estiver usando namespaces, o namespace deve corresponder à estrutura de diretórios.
 
 ```php
-// ...código...
+// ...code...
 
-// se o seu MyController estiver no diretório app/controllers e estiver namespaced
+// se o seu MyController estiver no diretório app/controllers e for namespaced
 // isso não funcionará.
 Flight::route('/hello', 'MyController->hello');
 

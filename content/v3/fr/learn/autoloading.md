@@ -2,13 +2,13 @@
 
 ## Aperçu
 
-L'autoloading est un concept en PHP où vous spécifiez un répertoire ou des répertoires pour charger les classes. Cela est beaucoup plus avantageux que d'utiliser `require` ou `include` pour charger les classes. C'est également une exigence pour utiliser les packages Composer.
+L'autoloading est un concept en PHP où vous spécifiez un répertoire ou des répertoires pour charger les classes. Cela est beaucoup plus avantageux que d'utiliser `require` ou `include` pour charger les classes. C'est également une exigence pour utiliser les paquets Composer.
 
-## Compréhension
+## Comprendre
 
 Par défaut, toute classe `Flight` est autoloadée automatiquement pour vous grâce à Composer. Cependant, si vous souhaitez autoloader vos propres classes, vous pouvez utiliser la méthode `Flight::path()` pour spécifier un répertoire à partir duquel charger les classes.
 
-L'utilisation d'un autoloader peut aider à simplifier votre code de manière significative. Au lieu d'avoir des fichiers qui commencent par une multitude d'instructions `include` ou `require` en haut pour capturer toutes les classes utilisées dans ce fichier, vous pouvez au contraire appeler dynamiquement vos classes et elles seront incluses automatiquement.
+L'utilisation d'un autoloader peut simplifier votre code de manière significative. Au lieu d'avoir des fichiers qui commencent par une multitude d'instructions `include` ou `require` en haut pour capturer toutes les classes utilisées dans ce fichier, vous pouvez au lieu de cela appeler dynamiquement vos classes et elles seront incluses automatiquement.
 
 ## Utilisation de base
 
@@ -51,7 +51,7 @@ Flight::path(__DIR__.'/../app/utils/');
 
 // pas de namespace requis
 
-// Toutes les classes autoloadées sont recommandées d'être en Pascal Case (chaque mot en majuscule, sans espaces)
+// Toutes les classes autoloadées sont recommandées en Pascal Case (chaque mot avec majuscule, sans espaces)
 class MyController {
 
 	public function index() {
@@ -60,7 +60,7 @@ class MyController {
 }
 ```
 
-## Espaces de noms
+## Namespaces
 
 Si vous avez des namespaces, il devient en fait très facile de les implémenter. Vous devriez utiliser la méthode `Flight::path()` pour spécifier le répertoire racine (pas la racine du document ou le dossier `public/`) de votre application.
 
@@ -82,12 +82,12 @@ Maintenant, voici à quoi pourrait ressembler votre contrôleur. Regardez l'exem
  */
 
 // les namespaces sont requis
-// les namespaces sont les mêmes que la structure de répertoires
-// les namespaces doivent suivre la même casse que la structure de répertoires
+// les namespaces sont les mêmes que la structure des répertoires
+// les namespaces doivent suivre le même cas que la structure des répertoires
 // les namespaces et les répertoires ne peuvent pas avoir de tirets bas (sauf si Loader::setV2ClassLoading(false) est défini)
 namespace app\controllers;
 
-// Toutes les classes autoloadées sont recommandées d'être en Pascal Case (chaque mot en majuscule, sans espaces)
+// Toutes les classes autoloadées sont recommandées en Pascal Case (chaque mot avec majuscule, sans espaces)
 // À partir de 3.7.2, vous pouvez utiliser Pascal_Snake_Case pour les noms de vos classes en exécutant Loader::setV2ClassLoading(false);
 class MyController {
 
@@ -105,7 +105,7 @@ Et si vous vouliez autoloader une classe dans votre répertoire utils, vous feri
  * app/UTILS/ArrayHelperUtil.php
  */
 
-// le namespace doit correspondre à la structure de répertoires et à la casse (notez que le répertoire UTILS est tout en majuscules
+// le namespace doit correspondre à la structure des répertoires et au cas (notez que le répertoire UTILS est tout en majuscules
 //     comme dans l'arbre de fichiers ci-dessus)
 namespace app\UTILS;
 
@@ -121,7 +121,7 @@ class ArrayHelperUtil {
 
 À partir de 3.7.2, vous pouvez utiliser Pascal_Snake_Case pour les noms de vos classes en exécutant `Loader::setV2ClassLoading(false);`. 
 Cela vous permettra d'utiliser des tirets bas dans les noms de vos classes. 
-Cela n'est pas recommandé, mais c'est disponible pour ceux qui en ont besoin.
+Cela n'est pas recommandé, mais il est disponible pour ceux qui en ont besoin.
 
 ```php
 use flight\core\Loader;
@@ -151,14 +151,14 @@ class My_Controller {
 
 ## Voir aussi
 - [Routing](/learn/routing) - Comment mapper les routes aux contrôleurs et rendre les vues.
-- [Pourquoi un Framework ?](/learn/why-frameworks) - Comprendre les avantages d'utiliser un framework comme Flight.
+- [Why a Framework?](/learn/why-frameworks) - Comprendre les avantages d'utiliser un framework comme Flight.
 
 ## Dépannage
 - Si vous ne parvenez pas à comprendre pourquoi vos classes avec namespace ne sont pas trouvées, rappelez-vous d'utiliser `Flight::path()` vers le répertoire racine de votre projet, pas votre répertoire `app/` ou `src/` ou équivalent.
 
 ### Classe non trouvée (autoloading ne fonctionne pas)
 
-Il pourrait y avoir plusieurs raisons pour cela. Ci-dessous, quelques exemples, mais assurez-vous également de consulter la section [autoloading](/learn/autoloading).
+Il pourrait y avoir plusieurs raisons pour cela. Ci-dessous quelques exemples, mais assurez-vous de consulter également la section [autoloading](/learn/autoloading).
 
 #### Nom de fichier incorrect
 Le plus courant est que le nom de la classe ne correspond pas au nom du fichier.
@@ -167,7 +167,7 @@ Si vous avez une classe nommée `MyClass`, alors le fichier devrait s'appeler `M
 alors l'autoloader ne pourra pas la trouver.
 
 #### Namespace incorrect
-Si vous utilisez des namespaces, alors le namespace devrait correspondre à la structure de répertoires.
+Si vous utilisez des namespaces, alors le namespace devrait correspondre à la structure des répertoires.
 
 ```php
 // ...code...
@@ -185,14 +185,14 @@ use app\controllers\MyController;
 Flight::route('/hello', [ MyController::class, 'hello' ]);
 // peut aussi être écrit
 Flight::route('/hello', MyController::class.'->hello');
-// ou encore...
+// aussi...
 Flight::route('/hello', [ 'app\controllers\MyController', 'hello' ]);
 ```
 
 #### `path()` non défini
 
 Dans l'application squelette, cela est défini dans le fichier `config.php`, mais pour que vos classes soient trouvées, vous devez vous assurer que la méthode `path()`
-est définie (probablement vers la racine de votre répertoire) avant de l'utiliser.
+est définie (probablement vers la racine de votre répertoire) avant d'essayer de l'utiliser.
 
 ```php
 // Ajouter un chemin à l'autoloader

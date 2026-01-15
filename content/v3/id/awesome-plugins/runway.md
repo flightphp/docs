@@ -1,6 +1,6 @@
 # Runway
 
-Runway adalah aplikasi CLI yang membantu Anda mengelola aplikasi Flight Anda. Ini dapat menghasilkan controller, menampilkan semua rute, dan banyak lagi. Ini didasarkan pada pustaka [adhocore/php-cli](https://github.com/adhocore/php-cli) yang luar biasa.
+Runway adalah aplikasi CLI yang membantu Anda mengelola aplikasi Flight Anda. Ini dapat menghasilkan controller, menampilkan semua rute, dan lainnya. Ini didasarkan pada pustaka [adhocore/php-cli](https://github.com/adhocore/php-cli) yang luar biasa.
 
 Klik [di sini](https://github.com/flightphp/runway) untuk melihat kode.
 
@@ -27,11 +27,11 @@ return [
 ];
 ```
 
-> **CATATAN** - Mulai dari **v1.2.0**, `.runway-config.json` sudah usang. Silakan migrasi konfigurasi Anda ke `app/config/config.php`. Anda dapat melakukannya dengan mudah menggunakan perintah `php runway config:migrate`.
+> **CATATAN** - Mulai dari **v1.2.0**, `.runway-config.json` sudah tidak digunakan lagi. Silakan migrasikan konfigurasi Anda ke `app/config/config.php`. Anda dapat melakukan ini dengan mudah menggunakan perintah `php runway config:migrate`.
 
 ### Deteksi Root Proyek
 
-Runway cukup pintar untuk mendeteksi root proyek Anda, bahkan jika Anda menjalankannya dari subdirektori. Ini mencari indikator seperti `composer.json`, `.git`, atau `app/config/config.php` untuk menentukan di mana root proyek berada. Ini berarti Anda dapat menjalankan perintah Runway dari mana saja di proyek Anda!
+Runway cukup pintar untuk mendeteksi root proyek Anda, bahkan jika Anda menjalankannya dari subdirektori. Ini mencari indikator seperti `composer.json`, `.git`, atau `app/config/config.php` untuk menentukan di mana root proyek berada. Ini berarti Anda dapat menjalankan perintah Runway dari mana saja di proyek Anda! 
 
 ## Penggunaan
 
@@ -50,7 +50,7 @@ php runway
 
 ### Bantuan Perintah
 
-Untuk perintah apa pun, Anda dapat meneruskan flag `--help` untuk mendapatkan informasi lebih lanjut tentang cara menggunakan perintah tersebut.
+Untuk perintah apa pun, Anda dapat menambahkan flag `--help` untuk mendapatkan informasi lebih lanjut tentang cara menggunakan perintah tersebut.
 
 ```bash
 php runway routes --help
@@ -122,7 +122,7 @@ Ini akan menampilkan semua rute yang saat ini terdaftar dengan Flight.
 php runway routes
 ```
 
-Jika Anda ingin hanya melihat rute tertentu, Anda dapat meneruskan flag untuk memfilter rute.
+Jika Anda ingin hanya melihat rute tertentu, Anda dapat menambahkan flag untuk memfilter rute.
 
 ```bash
 # Tampilkan hanya rute GET
@@ -136,9 +136,9 @@ php runway routes --post
 
 ## Menambahkan Perintah Kustom ke Runway
 
-Jika Anda sedang membuat paket untuk Flight, atau ingin menambahkan perintah kustom sendiri ke proyek Anda, Anda dapat melakukannya dengan membuat direktori `src/commands/`, `flight/commands/`, `app/commands/`, atau `commands/` untuk proyek/paket Anda. Jika Anda memerlukan kustomisasi lebih lanjut, lihat bagian di bawah tentang Konfigurasi.
+Jika Anda sedang membuat paket untuk Flight, atau ingin menambahkan perintah kustom sendiri ke proyek Anda, Anda dapat melakukannya dengan membuat direktori `src/commands/`, `flight/commands/`, `app/commands/`, atau `commands/` untuk proyek/paket Anda. Jika Anda membutuhkan penyesuaian lebih lanjut, lihat bagian di bawah tentang Konfigurasi.
 
-Untuk membuat perintah, Anda cukup memperluas kelas `AbstractBaseCommand`, dan mengimplementasikan setidaknya metode `__construct` dan metode `execute`.
+Untuk membuat perintah, Anda cukup memperluas kelas `AbstractBaseCommand`, dan mengimplementasikan minimal metode `__construct` dan metode `execute`.
 
 ```php
 <?php
@@ -178,7 +178,7 @@ class ExampleCommand extends AbstractBaseCommand
 }
 ```
 
-Lihat [Dokumentasi adhocore/php-cli](https://github.com/adhocore/php-cli) untuk informasi lebih lanjut tentang cara membangun perintah kustom sendiri ke aplikasi Flight Anda!
+Lihat [Dokumentasi adhocore/php-cli](https://github.com/adhocore/php-cli) untuk informasi lebih lanjut tentang cara membangun perintah kustom Anda sendiri ke aplikasi Flight!
 
 ## Manajemen Konfigurasi
 
@@ -222,10 +222,10 @@ return [
         // Ini adalah lokasi direktori aplikasi Anda
         'app_root' => 'app/',
 
-        // Ini adalah direktori di mana file indeks root Anda berada
+        // Ini adalah direktori di mana file index root Anda berada
         'index_root' => 'public/',
 
-        // Ini adalah path ke root proyek lain
+        // Ini adalah path ke root proyek lainnya
         'root_paths' => [
             '/home/user/different-project',
             '/var/www/another-project'
@@ -254,7 +254,7 @@ return [
 
 ### Mengakses Konfigurasi
 
-Jika Anda perlu mengakses nilai konfigurasi secara efektif, Anda dapat mengaksesnya melalui metode `__construct` atau metode `app()`. Penting juga untuk dicatat bahwa jika Anda memiliki file `app/config/services.php`, layanan-layanan tersebut juga akan tersedia untuk perintah Anda.
+Jika Anda perlu mengakses nilai konfigurasi secara efektif, Anda dapat mengaksesnya melalui metode `__construct` atau metode `app()`. Penting juga untuk dicatat bahwa jika Anda memiliki file `app/config/services.php`, layanan tersebut juga akan tersedia untuk perintah Anda.
 
 ```php
 public function execute()
@@ -273,7 +273,7 @@ public function execute()
 
 ## Wrapper Pembantu AI
 
-Runway memiliki beberapa wrapper pembantu yang memudahkan AI untuk menghasilkan perintah. Anda dapat menggunakan `addOption` dan `addArgument` dengan cara yang mirip dengan Symfony Console. Ini membantu jika Anda menggunakan alat AI untuk menghasilkan perintah Anda.
+Runway memiliki beberapa wrapper pembantu yang membuat lebih mudah bagi AI untuk menghasilkan perintah. Anda dapat menggunakan `addOption` dan `addArgument` dengan cara yang mirip dengan Symfony Console. Ini membantu jika Anda menggunakan alat AI untuk menghasilkan perintah Anda.
 
 ```php
 public function __construct(array $config)

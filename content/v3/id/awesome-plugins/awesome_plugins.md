@@ -7,11 +7,11 @@ Flight sangat mudah diperluas. Ada sejumlah plugin yang dapat digunakan untuk me
 Dokumentasi API sangat penting untuk API apa pun. Ini membantu pengembang memahami cara berinteraksi dengan API Anda dan apa yang diharapkan sebagai balasan. Ada beberapa alat yang tersedia untuk membantu Anda menghasilkan dokumentasi API untuk Proyek Flight Anda.
 
 - [FlightPHP OpenAPI Generator](https://dev.to/danielsc/define-generate-and-implement-an-api-first-approach-with-openapi-generator-and-flightphp-1fb3) - Posting blog yang ditulis oleh Daniel Schreiber tentang cara menggunakan Spesifikasi OpenAPI dengan FlightPHP untuk membangun API Anda menggunakan pendekatan API pertama.
-- [SwaggerUI](https://github.com/zircote/swagger-php) - Swagger UI adalah alat yang hebat untuk membantu Anda menghasilkan dokumentasi API untuk proyek Flight Anda. Ini sangat mudah digunakan dan dapat disesuaikan sesuai kebutuhan Anda. Ini adalah pustaka PHP untuk membantu Anda menghasilkan dokumentasi Swagger.
+- [SwaggerUI](https://github.com/zircote/swagger-php) - Swagger UI adalah alat hebat untuk membantu Anda menghasilkan dokumentasi API untuk proyek Flight Anda. Ini sangat mudah digunakan dan dapat disesuaikan sesuai kebutuhan Anda. Ini adalah pustaka PHP untuk membantu Anda menghasilkan dokumentasi Swagger.
 
 ## Pemantauan Kinerja Aplikasi (APM)
 
-Pemantauan Kinerja Aplikasi (APM) sangat penting untuk aplikasi apa pun. Ini membantu Anda memahami bagaimana aplikasi Anda berkinerja dan di mana kemacetan berada. Ada sejumlah alat APM yang dapat digunakan dengan Flight.
+Pemantauan Kinerja Aplikasi (APM) sangat penting untuk aplikasi apa pun. Ini membantu Anda memahami bagaimana aplikasi Anda berkinerja dan di mana kemacetan terjadi. Ada sejumlah alat APM yang dapat digunakan dengan Flight.
 - <span class="badge bg-primary">resmi</span> [flightphp/apm](/awesome-plugins/apm) - Flight APM adalah pustaka APM sederhana yang dapat digunakan untuk memantau aplikasi Flight Anda. Ini dapat digunakan untuk memantau kinerja aplikasi Anda dan membantu Anda mengidentifikasi kemacetan.
 
 ## Async
@@ -22,58 +22,59 @@ Flight sudah merupakan framework yang cepat, tetapi menambahkan mesin turbo pada
 
 ## Otorisasi/Izin
 
-Otorisasi dan Izin sangat penting untuk aplikasi apa pun yang memerlukan kontrol atas siapa yang dapat mengakses apa.
+Otorisasi dan Izin sangat penting untuk aplikasi apa pun yang memerlukan kontrol untuk siapa yang dapat mengakses apa.
 
 - <span class="badge bg-primary">resmi</span> [flightphp/permissions](/awesome-plugins/permissions) - Pustaka Permissions Flight resmi. Pustaka ini adalah cara sederhana untuk menambahkan izin tingkat pengguna dan aplikasi ke aplikasi Anda. 
 
-## Otentikasi
+## Autentikasi
 
-Otentikasi sangat penting untuk aplikasi yang perlu memverifikasi identitas pengguna dan mengamankan endpoint API.
+Autentikasi sangat penting untuk aplikasi yang perlu memverifikasi identitas pengguna dan mengamankan endpoint API.
 
-- [firebase/php-jwt](/awesome-plugins/jwt) - Pustaka JSON Web Token (JWT) untuk PHP. Cara sederhana dan aman untuk mengimplementasikan otentikasi berbasis token di aplikasi Flight Anda. Sempurna untuk otentikasi API tanpa status, melindungi rute dengan middleware, dan mengimplementasikan alur otorisasi gaya OAuth.
+- [firebase/php-jwt](/awesome-plugins/jwt) - Pustaka JSON Web Token (JWT) untuk PHP. Cara sederhana dan aman untuk mengimplementasikan autentikasi berbasis token di aplikasi Flight Anda. Sempurna untuk autentikasi API tanpa status, melindungi rute dengan middleware, dan mengimplementasikan alur otorisasi gaya OAuth.
 
 ## Penyimpanan Cache
 
 Penyimpanan cache adalah cara hebat untuk mempercepat aplikasi Anda. Ada sejumlah pustaka caching yang dapat digunakan dengan Flight.
 
-- <span class="badge bg-primary">resmi</span> [flightphp/cache](/awesome-plugins/php-file-cache) - Kelas caching dalam file PHP yang ringan, sederhana, dan mandiri
+- <span class="badge bg-primary">resmi</span> [flightphp/cache](/awesome-plugins/php-file-cache) - Kelas caching dalam file PHP yang ringan, sederhana, dan standalone
 
 ## CLI
 
-Aplikasi CLI adalah cara hebat untuk berinteraksi dengan aplikasi Anda. Anda dapat menggunakannya untuk menghasilkan controller, menampilkan semua rute, dan banyak lagi.
+Aplikasi CLI adalah cara hebat untuk berinteraksi dengan aplikasi Anda. Anda dapat menggunakannya untuk menghasilkan controller, menampilkan semua rute, dan lainnya.
 
 - <span class="badge bg-primary">resmi</span> [flightphp/runway](/awesome-plugins/runway) - Runway adalah aplikasi CLI yang membantu Anda mengelola aplikasi Flight Anda.
 
 ## Cookies
 
-Cookies adalah cara hebat untuk menyimpan bit data kecil di sisi klien. Mereka dapat digunakan untuk menyimpan preferensi pengguna, pengaturan aplikasi, dan banyak lagi.
+Cookies adalah cara hebat untuk menyimpan bit data kecil di sisi klien. Mereka dapat digunakan untuk menyimpan preferensi pengguna, pengaturan aplikasi, dan lainnya.
 
 - [overclokk/cookie](/awesome-plugins/php-cookie) - PHP Cookie adalah pustaka PHP yang menyediakan cara sederhana dan efektif untuk mengelola cookies.
 
 ## Debugging
 
-Debugging sangat penting saat Anda mengembangkan di lingkungan lokal Anda. Ada beberapa plugin yang dapat meningkatkan pengalaman debugging Anda.
+Debugging sangat penting saat Anda mengembangkan di lingkungan lokal. Ada beberapa plugin yang dapat meningkatkan pengalaman debugging Anda.
 
 - [tracy/tracy](/awesome-plugins/tracy) - Ini adalah penanganan kesalahan lengkap yang dapat digunakan dengan Flight. Ini memiliki sejumlah panel yang dapat membantu Anda mendebug aplikasi Anda. Ini juga sangat mudah untuk diperluas dan menambahkan panel Anda sendiri.
 - <span class="badge bg-primary">resmi</span> [flightphp/tracy-extensions](/awesome-plugins/tracy-extensions) - Digunakan dengan penanganan kesalahan [Tracy](/awesome-plugins/tracy), plugin ini menambahkan beberapa panel tambahan untuk membantu debugging khusus untuk proyek Flight.
 
 ## Database
 
-Database adalah inti dari sebagian besar aplikasi. Inilah cara Anda menyimpan dan mengambil data. Beberapa pustaka database hanyalah wrapper untuk menulis query dan beberapa adalah ORM lengkap.
+Database adalah inti dari sebagian besar aplikasi. Ini adalah cara Anda menyimpan dan mengambil data. Beberapa pustaka database hanyalah wrapper untuk menulis kueri dan beberapa adalah ORM lengkap.
 
-- <span class="badge bg-primary">resmi</span> [flightphp/core PdoWrapper](/learn/pdo-wrapper) - Wrapper PDO Flight resmi yang merupakan bagian dari inti. Ini adalah wrapper sederhana untuk membantu menyederhanakan proses penulisan query dan mengeksekusinya. Ini bukan ORM.
+- <span class="badge bg-primary">resmi</span> [flightphp/core SimplePdo](/learn/simple-pdo) - Pembantu PDO Flight resmi yang merupakan bagian dari inti. Ini adalah wrapper modern dengan metode pembantu yang nyaman seperti `insert()`, `update()`, `delete()`, dan `transaction()` untuk menyederhanakan operasi database. Semua hasil dikembalikan sebagai Collections untuk akses array/objek yang fleksibel. Bukan ORM, hanya cara yang lebih baik untuk bekerja dengan PDO.
+- <span class="badge bg-warning">deprecated</span> [flightphp/core PdoWrapper](/learn/pdo-wrapper) - Wrapper PDO Flight resmi yang merupakan bagian dari inti (deprecated sejak v3.18.0). Gunakan SimplePdo sebagai gantinya.
 - <span class="badge bg-primary">resmi</span> [flightphp/active-record](/awesome-plugins/active-record) - ORM/Mapper ActiveRecord Flight resmi. Pustaka kecil yang hebat untuk dengan mudah mengambil dan menyimpan data di database Anda.
 - [byjg/php-migration](/awesome-plugins/migrations) - Plugin untuk melacak semua perubahan database untuk proyek Anda.
 
 ## Enkripsi
 
-Enkripsi sangat penting untuk aplikasi apa pun yang menyimpan data sensitif. Mengenkripsi dan mendekripsi data tidak terlalu sulit, tetapi menyimpan kunci enkripsi dengan benar [bisa](https://stackoverflow.com/questions/6767839/where-should-i-store-an-encryption-key-for-php#:~:text=Write%20a%20php%20config%20file%20and%20store%20it,folder%20is%20not%20accessible%20to%20the%20end%20user.) [menjadi](https://www.reddit.com/r/PHP/comments/luqsn/the_encryption_key_where_do_you_store_it/) [sulit](https://security.stackexchange.com/questions/48047/location-to-store-an-encryption-key). Hal terpenting adalah jangan pernah menyimpan kunci enkripsi Anda di direktori publik atau mengommitnya ke repositori kode Anda.
+Enkripsi sangat penting untuk aplikasi apa pun yang menyimpan data sensitif. Mengenkripsi dan mendekripsi data tidak terlalu sulit, tetapi menyimpan kunci enkripsi dengan benar [bisa](https://stackoverflow.com/questions/6767839/where-should-i-store-an-encryption-key-for-php#:~:text=Write%20a%20php%20config%20file%20and%20store%20it,folder%20is%20not%20accessible%20to%20the%20end%20user.) [menjadi](https://www.reddit.com/r/PHP/comments/luqsn/the_encryption_key_where_do_you_store_it/) [sulit](https://security.stackexchange.com/questions/48047/location-to-store-an-encryption-key). Hal yang paling penting adalah jangan pernah menyimpan kunci enkripsi Anda di direktori publik atau mengkomitnya ke repositori kode Anda.
 
 - [defuse/php-encryption](/awesome-plugins/php-encryption) - Ini adalah pustaka yang dapat digunakan untuk mengenkripsi dan mendekripsi data. Memulai dan menjalankannya cukup sederhana untuk mulai mengenkripsi dan mendekripsi data.
 
 ## Antrian Pekerjaan
 
-Antrian pekerjaan sangat membantu untuk memproses tugas secara asinkron. Ini bisa berupa mengirim email, memproses gambar, atau apa pun yang tidak perlu dilakukan secara real-time.
+Antrian pekerjaan sangat membantu untuk memproses tugas secara asinkron. Ini bisa mengirim email, memproses gambar, atau apa pun yang tidak perlu dilakukan secara real time.
 
 - [n0nag0n/simple-job-queue](/awesome-plugins/simple-job-queue) - Simple Job Queue adalah pustaka yang dapat digunakan untuk memproses pekerjaan secara asinkron. Ini dapat digunakan dengan beanstalkd, MySQL/MariaDB, SQLite, dan PostgreSQL.
 
@@ -88,9 +89,9 @@ Sesi tidak terlalu berguna untuk API tetapi untuk membangun aplikasi web, sesi b
 
 Templating adalah inti dari aplikasi web apa pun dengan UI. Ada sejumlah mesin templating yang dapat digunakan dengan Flight.
 
-- <span class="badge bg-warning">deprecated</span> [flightphp/core View](/learn#views) - Ini adalah mesin templating dasar yang merupakan bagian dari inti. Tidak disarankan digunakan jika Anda memiliki lebih dari beberapa halaman di proyek Anda.
+- <span class="badge bg-warning">deprecated</span> [flightphp/core View](/learn#views) - Ini adalah mesin templating dasar yang merupakan bagian dari inti. Tidak direkomendasikan untuk digunakan jika Anda memiliki lebih dari beberapa halaman di proyek Anda.
 - [latte/latte](/awesome-plugins/latte) - Latte adalah mesin templating lengkap yang sangat mudah digunakan dan terasa lebih dekat dengan sintaks PHP daripada Twig atau Smarty. Ini juga sangat mudah untuk diperluas dan menambahkan filter dan fungsi Anda sendiri.
-- [knifelemon/comment-template](/awesome-plugins/comment-template) - CommentTemplate adalah mesin template PHP yang kuat dengan kompilasi aset, pewarisan template, dan pemrosesan variabel. Fitur minifikasi CSS/JS otomatis, caching, pengkodean Base64, dan integrasi opsional dengan framework PHP Flight.
+- [knifelemon/comment-template](/awesome-plugins/comment-template) - CommentTemplate adalah mesin template PHP yang kuat dengan kompilasi aset, pewarisan template, dan pemrosesan variabel. Fitur minifikasi CSS/JS otomatis, caching, pengkodean Base64, dan integrasi opsional dengan framework Flight PHP.
 
 ## Integrasi WordPress
 
@@ -100,4 +101,4 @@ Ingin menggunakan Flight di proyek WordPress Anda? Ada plugin yang berguna untuk
 
 ## Berkontribusi
 
-Punya plugin yang ingin dibagikan? Kirimkan pull request untuk menambahkannya ke daftar!
+Punya plugin yang ingin Anda bagikan? Ajukan pull request untuk menambahkannya ke daftar!

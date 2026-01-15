@@ -1,13 +1,13 @@
-# Firebase JWT - JSON Web Token Authentication for Flight
+# Firebase JWT - JSON Web Token 认证
 
-JWT（JSON Web Tokens）是一种紧凑的、URL 安全的表示应用程序与客户端之间声明的方式。它们非常适合无状态 API 认证——无需服务器端会话存储！本指南将向您展示如何将 [Firebase JWT](https://github.com/firebase/php-jwt) 与 Flight 集成，以实现安全的基于令牌的认证。
+JWT（JSON Web Tokens）是一种紧凑的、URL 安全的表示应用程序与客户端之间声明的方式。它们非常适合无状态 API 认证——无需服务器端会话存储！本指南将向您展示如何将 [Firebase JWT](https://github.com/firebase/php-jwt) 与 Flight 集成，实现安全的基于令牌的认证。
 
 访问 [Github 仓库](https://github.com/firebase/php-jwt) 以获取完整文档和详细信息。
 
 ## 什么是 JWT？
 
 JSON Web Token 是一个包含三个部分的字符串：
-1. **Header**：关于令牌的元数据（算法、类型）
+1. **Header**：令牌的元数据（算法、类型）
 2. **Payload**：您的数据（用户 ID、角色、过期时间等）
 3. **Signature**：用于验证真实性的加密签名
 
@@ -17,8 +17,8 @@ JSON Web Token 是一个包含三个部分的字符串：
 
 - **无状态**：无需服务器端会话存储——非常适合微服务和 API
 - **可扩展**：与负载均衡器配合良好，因为没有会话亲和性要求
-- **跨域**：可用于不同域和服务之间
-- **移动友好**：非常适合移动应用，在 cookie 可能无法正常工作的情况下
+- **跨域**：可在不同域和服务之间使用
+- **移动友好**：适合移动应用，Cookie 可能无法正常工作
 - **标准化**：行业标准方法（RFC 7519）
 
 ## 安装
@@ -45,7 +45,7 @@ $payload = [
     'user_id' => 123,
     'username' => 'johndoe',
     'role' => 'admin',
-    'iat' => time(),              // 发行时间
+    'iat' => time(),              // 签发时间
     'exp' => time() + 3600        // 1 小时后过期
 ];
 
@@ -63,7 +63,7 @@ try {
 
 ## Flight 的 JWT 中间件（推荐方法）
 
-使用 JWT 与 Flight 的最常见且最有用的方式是作为 **middleware** 来保护您的 API 路由。以下是一个完整的、生产就绪的示例：
+在 Flight 中使用 JWT 最常见且最有用的方式是作为 **middleware** 来保护您的 API 路由。这是一个完整的、生产就绪的示例：
 
 ### 步骤 1：创建 JWT 中间件类
 
@@ -82,14 +82,14 @@ class JwtMiddleware {
 
     public function __construct(Engine $app) {
         $this->app = $app;
-        // 将您的密钥存储在 app/config/config.php 中，不要硬编码！
+        // 在 app/config/config.php 中存储您的密钥，不要硬编码！
         $this->secretKey = $app->get('config')['jwt_secret'];
     }
 
     public function before(array $params) {
         $authHeader = $this->app->request()->getHeader('Authorization');
 
-        // 检查 Authorization 标头是否存在
+        // 检查 Authorization 头是否存在
         if (empty($authHeader)) {
             $this->app->jsonHalt(['error' => 'No authorization token provided'], 401);
         }
@@ -105,7 +105,7 @@ class JwtMiddleware {
             // 解码并验证令牌
             $decoded = JWT::decode($jwt, new Key($this->secretKey, 'HS256'));
             
-            // 在请求中存储用户数据，以供路由处理程序使用
+            // 将用户数据存储在请求中，以便路由处理器使用
             $this->app->request()->data->user = $decoded;
             
         } catch (ExpiredException $e) {
@@ -145,7 +145,7 @@ Flight::route('GET /api/user/profile', function() {
         'username' => $user->username,
         'role' => $user->role
     ]);
-})->addMiddleware( JwtMiddleware::class);
+})->addMiddleware(JwtMiddleware::class);
 
 // 保护一组路由（更常见！）
 Flight::group('/api', function() {
@@ -153,16 +153,16 @@ Flight::group('/api', function() {
     Flight::route('GET /posts', function() { /* ... */ });
     Flight::route('POST /posts', function() { /* ... */ });
     Flight::route('DELETE /posts/@id', function($id) { /* ... */ });
-}, [ JwtMiddleware::class ]); // 该组中的所有路由都受保护！
+}, [ JwtMiddleware::class ]); // 该组中的所有路由均受保护！
 ```
 
-有关中间件的更多详细信息，请参阅 [middleware 文档](/learn/middleware)。
+有关中间件的更多详细信息，请参阅 [middleware documentation](/learn/middleware)。
 
 ## 常见用例
 
 ### 1. 登录端点（令牌生成）
 
-创建一个在成功认证后生成 JWT 的路由：
+创建一个在认证成功后生成 JWT 的路由：
 
 ```php
 Flight::route('POST /api/login', function() {
@@ -197,7 +197,7 @@ Flight::route('POST /api/login', function() {
 });
 
 function validateUserCredentials($username, $password) {
-    // 在这里进行数据库查找和密码验证
+    // 在这里执行数据库查找和密码验证
     // 示例：
     $db = Flight::db();
     $user = $db->fetchRow("SELECT * FROM users WHERE username = ?", [$username]);
@@ -215,7 +215,7 @@ function validateUserCredentials($username, $password) {
 
 ### 2. 令牌刷新流程
 
-为长寿命会话实现刷新令牌系统：
+实现一个刷新令牌系统，用于长生命周期会话：
 
 ```php
 Flight::route('POST /api/login', function() {
@@ -224,7 +224,7 @@ Flight::route('POST /api/login', function() {
     $secretKey = Flight::get('config')['jwt_secret'];
     $refreshSecret = Flight::get('config')['jwt_refresh_secret'];
     
-    // 短寿命访问令牌（15 分钟）
+    // 短期访问令牌（15 分钟）
     $accessToken = JWT::encode([
         'user_id' => $user->id,
         'type' => 'access',
@@ -232,7 +232,7 @@ Flight::route('POST /api/login', function() {
         'exp' => time() + (15 * 60)
     ], $secretKey, 'HS256');
     
-    // 长寿命刷新令牌（7 天）
+    // 长期刷新令牌（7 天）
     $refreshToken = JWT::encode([
         'user_id' => $user->id,
         'type' => 'refresh',
@@ -295,7 +295,7 @@ class JwtRoleMiddleware {
     }
     
     public function before(array $params) {
-        // 假设 JwtMiddleware 已经运行并设置了用户数据
+        // 假设 JwtMiddleware 已运行并设置了用户数据
         $user = $this->app->request()->data->user ?? null;
         
         if (!$user) {
@@ -309,7 +309,7 @@ class JwtRoleMiddleware {
     }
 }
 
-// 用法：仅管理员路由
+// 用法：仅限管理员路由
 Flight::route('DELETE /api/users/@id', function($id) {
     // 删除用户逻辑
 })->addMiddleware([
@@ -318,9 +318,9 @@ Flight::route('DELETE /api/users/@id', function($id) {
 ]);
 ```
 
-### 4. 公共 API 按用户限流
+### 4. 公共 API 按用户速率限制
 
-使用 JWT 在没有会话的情况下跟踪和限流用户：
+使用 JWT 在无需会话的情况下跟踪和限制用户速率：
 
 ```php
 class RateLimitMiddleware {
@@ -349,7 +349,7 @@ class RateLimitMiddleware {
 ```php
 // 生成安全的密钥（运行一次，保存到 .env 文件）
 $secretKey = base64_encode(random_bytes(32));
-echo $secretKey; // 将其存储在您的 .env 文件中！
+echo $secretKey; // 将此存储到您的 .env 文件中！
 ```
 
 ### 2. 将密钥存储在环境变量中
@@ -362,7 +362,7 @@ echo $secretKey; // 将其存储在您的 .env 文件中！
 // JWT_SECRET=your-base64-encoded-secret-here
 // JWT_REFRESH_SECRET=another-base64-encoded-secret-here
 
-// 您也可以使用 app/config/config.php 文件来存储密钥
+// 您也可以使用 app/config/config.php 文件存储密钥
 // 只是确保配置文件未提交到版本控制
 // return [
 //     'jwt_secret' => 'your-base64-encoded-secret-here',
@@ -376,7 +376,7 @@ $secretKey = getenv('JWT_SECRET');
 ### 3. 设置适当的过期时间
 
 ```php
-// 良好实践：短寿命访问令牌
+// 良好实践：短期访问令牌
 'exp' => time() + (15 * 60)  // 15 分钟
 
 // 对于刷新令牌：更长的过期时间
@@ -405,9 +405,9 @@ if (isset($decoded->nbf) && $decoded->nbf > time()) {
 }
 ```
 
-### 6. 为注销考虑令牌黑名单
+### 6. 考虑注销时的令牌黑名单
 
-为额外安全，维护无效令牌的黑名单：
+为增强安全性，维护无效令牌的黑名单：
 
 ```php
 Flight::route('POST /api/logout', function() {
@@ -419,7 +419,7 @@ Flight::route('POST /api/logout', function() {
     $decoded = Flight::request()->data->user;
     $ttl = $decoded->exp - time();
     
-    // 在缓存/Redis 中存储直到过期
+    // 存储到缓存/Redis 中直到过期
     Flight::cache()->set("blacklist:$jwt", true, $ttl);
     
     Flight::json(['message' => 'Successfully logged out']);
@@ -473,23 +473,23 @@ $decoded = JWT::decode($jwt, new Key($publicKey, 'RS256'));
 
 ## 故障排除
 
-### “过期令牌”错误
-您的令牌的 `exp` 声明已过去。颁发新令牌或实现令牌刷新。
+### “Expired token” 错误
+您的令牌的 `exp` 声明已过期。颁发新令牌或实现令牌刷新。
 
-### “签名验证失败”
-- 您使用不同的密钥解码，而非用于编码的密钥
+### “Signature verification failed”
+- 您使用不同的密钥解码，而编码时使用了不同的密钥
 - 令牌已被篡改
 - 服务器之间时钟偏差（添加宽限缓冲）
 
 ```php
 use Firebase\JWT\JWT;
 
-JWT::$leeway = 60; // 允许 60 秒时钟偏差
+JWT::$leeway = 60; // 允许 60 秒的时钟偏差
 $decoded = JWT::decode($jwt, new Key($secretKey, 'HS256'));
 ```
 
 ### 请求中未发送令牌
-确保您的客户端发送 `Authorization` 标头：
+确保您的客户端发送 `Authorization` 头：
 
 ```javascript
 // JavaScript 示例
@@ -514,7 +514,7 @@ Firebase JWT 库提供这些核心方法：
 
 - **行业标准**：Firebase JWT 是 PHP 中最流行和最受信任的 JWT 库
 - **积极维护**：由 Google/Firebase 团队维护
-- **安全焦点**：定期更新和安全补丁
+- **安全导向**：定期更新和安全补丁
 - **简单 API**：易于理解和实现
 - **文档完善**：广泛的文档和社区支持
 - **灵活**：支持多种算法和可配置选项

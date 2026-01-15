@@ -1,24 +1,24 @@
-# Firebase JWT - JSON Web Token autentifikācija Flight
+# Firebase JWT - JSON Web Token autentifikācija
 
-JWT (JSON Web Tokens) ir kompakts, URL-drošs veids, kā pārstāvēt pretenzijas starp jūsu lietojumprogrammu un klientu. Tie ir ideāli piemēroti bezstāvokļa API autentifikācijai — nav vajadzīga servera puses sesiju uzglabāšana! Šis ceļvedis parāda, kā integrēt [Firebase JWT](https://github.com/firebase/php-jwt) ar Flight drošai, tokenu balstītai autentifikācijai.
+JWT (JSON Web Tokens) ir kompakts, URL-drošs veids, kā attēlot apgalvojumus starp jūsu lietojumprogrammu un klientu. Tie ir ideāli piemēroti bezstāvokļa API autentifikācijai — nav nepieciešama servera puses sesijas uzglabāšana! Šis ceļvedis parāda, kā integrēt [Firebase JWT](https://github.com/firebase/php-jwt) ar Flight drošai, tokenu balstītai autentifikācijai.
 
 Apmeklējiet [Github krātuvi](https://github.com/firebase/php-jwt), lai iegūtu pilnu dokumentāciju un detaļas.
 
 ## Kas ir JWT?
 
 JSON Web Token ir virkne, kas satur trīs daļas:
-1. **Virsnieks**: Metadati par tokenu (algoritms, tips)
+1. **Galvene**: Metadati par tokenu (algoritms, tips)
 2. **Ladējums**: Jūsu dati (lietotāja ID, lomas, termiņš utt.)
-3. **Paraksts**: Kriptogrāfiskais paraksts autentiskuma pārbaudei
+3. **Paraksts**: Kriptogrāfisks paraksts autentiskuma pārbaudei
 
-Piemērs JWT: `eyJ0eXAiOiJKV1QiLCJhbGc...` (izskatās pēc muļķībām, bet tas ir strukturēti dati!)
+Piemērs JWT: `eyJ0eXAiOiJKV1QiLCJhbGc...` (izskatās kā neskaidrs teksts, bet tas ir strukturēti dati!)
 
 ### Kāpēc izmantot JWT?
 
-- **Bezstāvoklis**: Nav vajadzīga servera puses sesiju uzglabāšana — ideāli piemērots mikroservisiem un API
-- **Mērogojams**: Labi darbojas ar slodzes līdzsvarotājjiem, jo nav sesiju saistības prasības
-- **Pārrobežu**: Var izmantot dažādās domēnos un servisos
-- **Mobilajām ierīcēm draudzīgs**: Lieliski piemērots mobilajām lietojumprogrammām, kur sīkfaili var nedarboties labi
+- **Bezstāvokļa**: Nav nepieciešama servera puses sesijas uzglabāšana — ideāli piemērots mikroservisiem un API
+- **Izmērojams**: Labi darbojas ar slodzes līdzsvarotājiem, jo nav sesijas saistības prasības
+- **Pārrobežu**: Var izmantot dažādās domēnos un servisā
+- **Mobilajām ierīcēm draudzīgs**: Lieliski piemērots mobilajām lietotnēm, kur cepumi var nedarboties labi
 - **Standartizēts**: Nozares standarta pieeja (RFC 7519)
 
 ## Instalēšana
@@ -31,13 +31,13 @@ composer require firebase/php-jwt
 
 ## Pamata izmantošana
 
-Šeit ir ātrs piemērs tokena izveidei un pārbaudei:
+Šeit ir ātrs piemērs JWT izveidei un pārbaudei:
 
 ```php
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
-// Jūsu slepenā atslēga (TURĒT TO DROŠU!)
+// Jūsu slepenā atslēga (SAGLABĀJIE TO DROŠU!)
 $secretKey = 'your-256-bit-secret-key-here-keep-it-safe';
 
 // Izveidojiet tokenu
@@ -46,7 +46,7 @@ $payload = [
     'username' => 'johndoe',
     'role' => 'admin',
     'iat' => time(),              // Izsniegts
-    'exp' => time() + 3600        // Beidzas pēc 1 stundas
+    'exp' => time() + 3600        // Beigsies pēc 1 stundas
 ];
 
 $jwt = JWT::encode($payload, $secretKey, 'HS256');
@@ -61,9 +61,9 @@ try {
 }
 ```
 
-## JWT starpprogrammatūra Flight (Ieteicamais pieeja)
+## JWT starpprogrammatūra Flight (Ieteicamā pieeja)
 
-Visizplatītākais un noderīgākais veids, kā izmantot JWT ar Flight, ir kā **starpprogrammatūru**, lai aizsargātu jūsu API maršrutus. Šeit ir pilnīgs, ražošanai gatavs piemērs:
+Biežākais un noderīgākais veids, kā izmantot JWT ar Flight, ir kā **starpprogrammatūru**, lai aizsargātu jūsu API maršrutus. Šeit ir pilnīgs, ražošanai gatavs piemērs:
 
 ### 1. solis: Izveidojiet JWT starpprogrammatūras klasi
 
@@ -82,14 +82,14 @@ class JwtMiddleware {
 
     public function __construct(Engine $app) {
         $this->app = $app;
-        // Uzglabājiet savu slepeno atslēgu app/config/config.php, nevis cietkodus!
+        // Saglabājiet savu slepeno atslēgu app/config/config.php, nevis cietkodus!
         $this->secretKey = $app->get('config')['jwt_secret'];
     }
 
     public function before(array $params) {
         $authHeader = $this->app->request()->getHeader('Authorization');
 
-        // Pārbaudiet, vai pastāv autorizācijas virsraksts
+        // Pārbaudiet, vai pastāv Authorization galvene
         if (empty($authHeader)) {
             $this->app->jsonHalt(['error' => 'Nav nodrošināts autorizācijas tokens'], 401);
         }
@@ -105,7 +105,7 @@ class JwtMiddleware {
             // Atšifrējiet un pārbaudiet tokenu
             $decoded = JWT::decode($jwt, new Key($this->secretKey, 'HS256'));
             
-            // Uzglabājiet lietotāja datus pieprasījumā, lai izmantotu maršruta apstrādātājos
+            // Saglabājiet lietotāja datus pieprasījumā, lai izmantotu maršruta apstrādātājos
             $this->app->request()->data->user = $decoded;
             
         } catch (ExpiredException $e) {
@@ -128,7 +128,7 @@ return [
 ];
 
 // app/config/bootstrap.php vai index.php
-// pārliecinieties, ka pievienojat šo rindu, ja vēlaties pakļaut konfigurāciju lietojumprogrammai
+// pārliecinieties, ka pievienojat šo rindu, ja vēlaties pakļaut konfigurāciju lietotnei
 $app->set('config', $config);
 ```
 
@@ -145,7 +145,7 @@ Flight::route('GET /api/user/profile', function() {
         'username' => $user->username,
         'role' => $user->role
     ]);
-})->addMiddleware( JwtMiddleware::class);
+})->addMiddleware(JwtMiddleware::class);
 
 // Aizsargājiet veselu maršrutu grupu (biežāk!)
 Flight::group('/api', function() {
@@ -158,9 +158,9 @@ Flight::group('/api', function() {
 
 Lai iegūtu vairāk detaļu par starpprogrammatūru, skatiet [starpprogrammatūras dokumentāciju](/learn/middleware).
 
-## Izplatīti izmantošanas gadījumi
+## Biežas izmantošanas gadījumi
 
-### 1. Pieteikšanās galapunkts (Tokena ģenerēšana)
+### 1. Pieteikšanās galapunkts (Tokenu ģenerēšana)
 
 Izveidojiet maršrutu, kas ģenerē JWT pēc veiksmīgas autentifikācijas:
 
@@ -213,9 +213,9 @@ function validateUserCredentials($username, $password) {
 }
 ```
 
-### 2. Tokena atjaunošanas plūsma
+### 2. Tokenu atjaunošanas plūsma
 
-Īstenojiet atjaunošanas tokena sistēmu ilgstošām sesijām:
+Implementējiet atjaunošanas tokenu sistēmu ilgstošām sesijām:
 
 ```php
 Flight::route('POST /api/login', function() {
@@ -224,7 +224,7 @@ Flight::route('POST /api/login', function() {
     $secretKey = Flight::get('config')['jwt_secret'];
     $refreshSecret = Flight::get('config')['jwt_refresh_secret'];
     
-    // Īstermiņa piekļuves tokens (15 minūtes)
+    // Īsa mūža piekļuves tokens (15 minūtes)
     $accessToken = JWT::encode([
         'user_id' => $user->id,
         'type' => 'access',
@@ -232,7 +232,7 @@ Flight::route('POST /api/login', function() {
         'exp' => time() + (15 * 60)
     ], $secretKey, 'HS256');
     
-    // Ilgtermiņa atjaunošanas tokens (7 dienas)
+    // Ilga mūža atjaunošanas tokens (7 dienas)
     $refreshToken = JWT::encode([
         'user_id' => $user->id,
         'type' => 'refresh',
@@ -309,16 +309,16 @@ class JwtRoleMiddleware {
     }
 }
 
-// Lietojums: Tikai administratora maršruts
+// Lietojums: Administrātora tikai maršruts
 Flight::route('DELETE /api/users/@id', function($id) {
-    // Dzēst lietotāja loģiku
+    // Dzēst lietotāja loģika
 })->addMiddleware([
     JwtMiddleware::class,
     new JwtRoleMiddleware(Flight::app(), ['admin'])
 ]);
 ```
 
-### 4. Publiska API ar ātruma ierobežošanu pēc lietotāja
+### 4. Publiskais API ar ātruma ierobežošanu pa lietotāju
 
 Izmantojiet JWT, lai izsekotu un ierobežotu ātrumu lietotājiem bez sesijām:
 
@@ -330,7 +330,7 @@ class RateLimitMiddleware {
         $userId = $user ? $user->user_id : Flight::request()->ip;
         
         $cacheKey = "rate_limit:$userId";
-        // Pārliecinieties, ka iestatāt kešatmiņas servisu app/config/services.php
+        // Pārliecinieties, ka iestatāt kešošanas servisu app/config/services.php
         $requests = Flight::cache()->get($cacheKey, 0);
         
         if ($requests >= 100) { // 100 pieprasījumi stundā
@@ -344,39 +344,39 @@ class RateLimitMiddleware {
 
 ## Drošības labākās prakses
 
-### 1. Izmantojiet spēcīgas slepenās atslēgas
+### 1. Izmantojiet stipras slepenās atslēgas
 
 ```php
-// Ģenerējiet drošu slepeno atslēgu (palaižiet vienreiz, saglabājiet .env failā)
+// Ģenerējiet drošu slepeno atslēgu (izpildiet vienreiz, saglabājiet .env failā)
 $secretKey = base64_encode(random_bytes(32));
-echo $secretKey; // Uzglabājiet to savā .env failā!
+echo $secretKey; // Saglabājiet to savā .env failā!
 ```
 
-### 2. Uzglabājiet noslēpumus vides mainīgajos
+### 2. Saglabājiet noslēpumus vides mainīgajos
 
 ```php
-// Nekad neapņemiet noslēpumus versiju kontrolē!
+// Nekad neiekļaujiet noslēpumus versiju kontrolē!
 // Izmantojiet .env failu un bibliotēku, piemēram, vlucas/phpdotenv
 
 // .env fails:
 // JWT_SECRET=your-base64-encoded-secret-here
 // JWT_REFRESH_SECRET=another-base64-encoded-secret-here
 
-// Varat arī izmantot app/config/config.php failu, lai uzglabātu savus noslēpumus
-// tikai pārliecinieties, ka konfigurācijas fails nav apņemts versiju kontrolē
+// Jūs varat arī izmantot app/config/config.php failu, lai saglabātu savus noslēpumus
+// tikai pārliecinieties, ka konfigurācijas fails nav iekļauts versiju kontrolē
 // return [
 //     'jwt_secret' => 'your-base64-encoded-secret-here',
 //     'jwt_refresh_secret' => 'another-base64-encoded-secret-here',
 // ];
 
-// Savā lietojumprogrammā:
+// Savā lietotnē:
 $secretKey = getenv('JWT_SECRET');
 ```
 
-### 3. Iestatiet piemērotus termiņu laikus
+### 3. Iestatiet piemērotus termiņus
 
 ```php
-// Labā prakse: īstermiņa piekļuves tokeni
+// Labā prakse: īsa mūža piekļuves tokeni
 'exp' => time() + (15 * 60)  // 15 minūtes
 
 // Atjaunošanas tokeniem: ilgāks termiņš
@@ -387,15 +387,15 @@ $secretKey = getenv('JWT_SECRET');
 
 JWT vienmēr jāpārsūta pār HTTPS. Nekad nesūtiet tokenus pār vienkāršu HTTP ražošanā!
 
-### 5. Validējiet tokena pretenzijas
+### 5. Validējiet tokena apgalvojumus
 
-Vienmēr validējiet pretenzijas, kas jums rūp:
+Vienmēr validējiet apgalvojumus, kas jums rūp:
 
 ```php
 $decoded = JWT::decode($jwt, new Key($secretKey, 'HS256'));
 
-// Pārbaudiet termiņu, ko bibliotēka automātiski apstrādā
-// Bet varat pievienot pielāgotas validācijas:
+// Pārbaude par termiņu tiek apstrādāta automātiski bibliotēkas
+// Bet jūs varat pievienot pielāgotas validācijas:
 if ($decoded->iat > time()) {
     throw new Exception('Tokens izmantots pirms izsniegšanas');
 }
@@ -405,7 +405,7 @@ if (isset($decoded->nbf) && $decoded->nbf > time()) {
 }
 ```
 
-### 6. Apsveriet tokena melno sarakstu izrakstīšanai
+### 6. Apsveriet tokenu melno sarakstu izrakstīšanai
 
 Papildu drošībai uzturiet nederīgu tokenu melno sarakstu:
 
@@ -419,7 +419,7 @@ Flight::route('POST /api/logout', function() {
     $decoded = Flight::request()->data->user;
     $ttl = $decoded->exp - time();
     
-    // Uzglabājiet kešatmiņā/redis līdz termiņam
+    // Saglabājiet kešā/redis līdz termiņam
     Flight::cache()->set("blacklist:$jwt", true, $ttl);
     
     Flight::json(['message' => 'Veiksmīgi izrakstījies']);
@@ -443,8 +443,8 @@ public function before(array $params) {
 Firebase JWT atbalsta vairākus algoritmus:
 
 ### Simetriskie algoritmi (HMAC)
-- **HS256** (Ieteicams lielākajai daļai lietojumprogrammu): Izmanto vienu slepeno atslēgu
-- **HS384**, **HS512**: Spēcīgākas variācijas
+- **HS256** (Ieteicams lielākajai daļai lietotņu): Izmanto vienu slepeno atslēgu
+- **HS384**, **HS512**: Stiprāki varianti
 
 ```php
 $jwt = JWT::encode($payload, $secretKey, 'HS256');
@@ -452,8 +452,8 @@ $decoded = JWT::decode($jwt, new Key($secretKey, 'HS256'));
 ```
 
 ### Asimetriskie algoritmi (RSA/ECDSA)
-- **RS256**, **RS384**, **RS512**: Izmanto publisko/privāto atslēgu pārus
-- **ES256**, **ES384**, **ES512**: Elipses līknes variācijas
+- **RS256**, **RS384**, **RS512**: Izmanto publiskās/privātās atslēgu pārus
+- **ES256**, **ES384**, **ES512**: Elipses līknes varianti
 
 ```php
 // Ģenerējiet atslēgas: openssl genrsa -out private.key 2048
@@ -469,27 +469,27 @@ $jwt = JWT::encode($payload, $privateKey, 'RS256');
 $decoded = JWT::decode($jwt, new Key($publicKey, 'RS256'));
 ```
 
-> **Kad izmantot RSA**: Izmantojiet RSA, kad nepieciešams izplatīt publisko atslēgu pārbaudei (piem., mikroservisi, trešo pušu integrācijas). Vienai lietojumprogrammai HS256 ir vienkāršāks un pietiekams.
+> **Kad izmantot RSA**: Izmantojiet RSA, kad jums jāizplata publiskā atslēga pārbaudei (piem., mikroservisi, trešo pušu integrācijas). Vienai lietotnei HS256 ir vienkāršāks un pietiekams.
 
 ## Traucējummeklēšana
 
 ### "Beidzies tokens" kļūda
-Jūsu tokena `exp` pretenzija ir pagātnē. Izsniedziet jaunu tokenu vai īstenojiet tokena atjaunošanu.
+Jūsu tokena `exp` apgalvojums ir pagātnē. Izsniedziet jaunu tokenu vai implementējiet tokenu atjaunošanu.
 
 ### "Paraksta pārbaude neizdevās"
 - Jūs izmantojat citu slepeno atslēgu atšifrēšanai nekā kodēšanai
 - Tokens ir modificēts
-- Laika nobīde starp serveriem (pievienojiet atlaidzes buferi)
+- Laika nobīde starp serveriem (pievienojiet buferi)
 
 ```php
 use Firebase\JWT\JWT;
 
-JWT::$leeway = 60; // Ļauj 60 sekunžu laika nobīdi
+JWT::$leeway = 60; // Atļaujiet 60 sekunžu laika nobīdi
 $decoded = JWT::decode($jwt, new Key($secretKey, 'HS256'));
 ```
 
 ### Tokens netiek nosūtīts pieprasījumos
-Pārliecinieties, ka jūsu klients nosūta `Authorization` virsrakstu:
+Pārliecinieties, ka jūsu klients nosūta `Authorization` galveni:
 
 ```javascript
 // JavaScript piemērs
@@ -502,30 +502,30 @@ fetch('/api/users', {
 
 ## Metodes
 
-Firebase JWT bibliotēka nodrošina šīs pamata metodes:
+Firebase JWT bibliotēka nodrošina šīs pamatmetodes:
 
 - `JWT::encode(array $payload, string $key, string $alg)`: Izveido JWT no ladējuma
 - `JWT::decode(string $jwt, Key $key)`: Atšifrē un pārbauda JWT
-- `JWT::urlsafeB64Encode(string $input)`: Base64 URL-droša kodēšana
-- `JWT::urlsafeB64Decode(string $input)`: Base64 URL-droša atšifrēšana
-- `JWT::$leeway`: Statiska īpašība, lai iestatītu laika atlaidzi validācijai (sekundēs)
+- `JWT::urlsafeB64Encode(string $input)`: Base64 URL-drošs kodējums
+- `JWT::urlsafeB64Decode(string $input)`: Base64 URL-drošs atšifrējums
+- `JWT::$leeway`: Statiska īpašība, lai iestatītu laika buferi validācijai (sekundēs)
 
 ## Kāpēc izmantot šo bibliotēku?
 
-- **Nozares standarts**: Firebase JWT ir populārākā un plaši uzticamā JWT bibliotēka PHP
+- **Nozares standarts**: Firebase JWT ir populārākā un visvairāk uzticamā JWT bibliotēka PHP
 - **Aktīva uzturēšana**: Uztur Google/Firebase komanda
-- **Uz drošību orientēta**: Regulāras atjauninājumi un drošības labojumi
-- **Vienkārša API**: Viegli saprotama un īstenojama
+- **Drošībai veltīta**: Regulāri atjauninājumi un drošības labojumi
+- **Vienkārša API**: Viegli saprast un ieviest
 - **Labu dokumentēšana**: Plaša dokumentācija un kopienas atbalsts
-- **Elastīga**: Atbalsta vairākus algoritmus un konfigurējamās opcijas
+- **Elastīga**: Atbalsta vairākus algoritmus un konfigurējamu opciju
 
 ## Skatīt arī
 
 - [Firebase JWT Github krātuve](https://github.com/firebase/php-jwt)
-- [JWT.io](https://jwt.io/) - Kļūdu labošana un JWT atšifrēšana
+- [JWT.io](https://jwt.io/) - Debugošana un atšifrēšana JWT
 - [RFC 7519](https://tools.ietf.org/html/rfc7519) - Oficiālā JWT specifikācija
-- [Flight starpprogrammatūras dokumentācija](/learn/middleware)
-- [Flight sesijas spraudnis](/awesome-plugins/session) - Tradicionālai sesiju balstītai autentifikācijai
+- [Flight Starpprogrammatūras dokumentācija](/learn/middleware)
+- [Flight Sesijas spraudnis](/awesome-plugins/session) - Tradicionālai sesiju balstītai autentifikācijai
 
 ## Licence
 

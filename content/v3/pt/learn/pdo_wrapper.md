@@ -1,14 +1,18 @@
 # Classe Auxiliar PDO PdoWrapper
 
+> **AVISO**
+>
+> **Depreciado:** `PdoWrapper` está depreciado a partir do Flight v3.18.0. Não será removido em uma versão futura, mas será mantido para compatibilidade com versões anteriores. Por favor, use [SimplePdo](/learn/simple-pdo) em vez disso, que oferece a mesma funcionalidade mais métodos auxiliares adicionais para operações comuns de banco de dados.
+
 ## Visão Geral
 
-A classe `PdoWrapper` no Flight é um auxiliar amigável para trabalhar com bancos de dados usando PDO. Ela simplifica tarefas comuns de banco de dados, adiciona alguns métodos úteis para buscar resultados e retorna os resultados como [Collections](/learn/collections) para acesso fácil. Ela também suporta log de consultas e monitoramento de desempenho de aplicação (APM) para casos de uso avançados.
+A classe `PdoWrapper` no Flight é um auxiliar amigável para trabalhar com bancos de dados usando PDO. Ela simplifica tarefas comuns de banco de dados, adiciona alguns métodos úteis para buscar resultados e retorna resultados como [Collections](/learn/collections) para acesso fácil. Ela também suporta registro de consultas e monitoramento de desempenho de aplicação (APM) para casos de uso avançados.
 
 ## Entendendo
 
-Trabalhar com bancos de dados em PHP pode ser um pouco verboso, especialmente ao usar PDO diretamente. `PdoWrapper` estende PDO e adiciona métodos que facilitam muito a consulta, busca e manipulação de resultados. Em vez de lidar com declarações preparadas e modos de busca, você obtém métodos simples para tarefas comuns, e cada linha é retornada como uma Collection, para que você possa usar notação de array ou objeto.
+Trabalhar com bancos de dados em PHP pode ser um pouco verboso, especialmente ao usar PDO diretamente. `PdoWrapper` estende PDO e adiciona métodos que tornam a consulta, busca e manipulação de resultados muito mais fáceis. Em vez de lidar com declarações preparadas e modos de busca, você obtém métodos simples para tarefas comuns, e cada linha é retornada como uma Collection, para que você possa usar notação de array ou objeto.
 
-Você pode registrar o `PdoWrapper` como um serviço compartilhado no Flight, e então usá-lo em qualquer lugar da sua aplicação via `Flight::db()`.
+Você pode registrar o `PdoWrapper` como um serviço compartilhado no Flight, e então usá-lo em qualquer lugar do seu app via `Flight::db()`.
 
 ## Uso Básico
 
@@ -103,17 +107,17 @@ $users = Flight::db()->fetchAll("SELECT * FROM users WHERE id IN (?)", ['1,2,3']
 
 ## Uso Avançado
 
-### Log de Consultas & APM
+### Registro de Consultas & APM
 
-Se você quiser rastrear o desempenho de consultas, habilite o rastreamento APM ao registrar:
+Se você quiser rastrear o desempenho de consultas, ative o rastreamento APM ao registrar:
 
 ```php
 Flight::register('db', \flight\database\PdoWrapper::class, [
-    'mysql:host=localhost;dbname=cool_db_name', 'user', 'pass', [/* options */], true // último parâmetro habilita APM
+    'mysql:host=localhost;dbname=cool_db_name', 'user', 'pass', [/* options */], true // último parâmetro ativa APM
 ]);
 ```
 
-Após executar consultas, você pode registrá-las manualmente, mas o APM as registrará automaticamente se habilitado:
+Após executar consultas, você pode registrá-las manualmente, mas o APM as registrará automaticamente se ativado:
 
 ```php
 Flight::db()->logQueries();
@@ -170,6 +174,6 @@ Flight::route('/users', function () {
 - Todas as linhas são retornadas como Collections—se você precisar de um array simples, use `$collection->getData()`.
 - Para consultas `IN (?)`, certifique-se de passar um array ou string separada por vírgulas.
 
-## Registro de Alterações
+## Changelog
 
 - v3.2.0 - Lançamento inicial do PdoWrapper com métodos básicos de consulta e busca.

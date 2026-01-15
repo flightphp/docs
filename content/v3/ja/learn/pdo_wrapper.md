@@ -1,20 +1,24 @@
-# PdoWrapper PDO ヘルパー クラス
+# PdoWrapper PDO ヘルパークラス
+
+> **警告**
+>
+> **非推奨:** `PdoWrapper` は Flight v3.18.0 以降非推奨です。将来的なバージョンで削除されることはありませんが、後方互換性のためメンテナンスされます。代わりに [SimplePdo](/learn/simple-pdo) を使用してください。これは同じ機能を提供し、共通のデータベース操作のための追加のヘルパーメソッドも提供します。
 
 ## 概要
 
-Flight の `PdoWrapper` クラスは、PDO を使用してデータベースを扱うための便利なヘルパーです。共通のデータベースタスクを簡素化し、結果を取得するための便利なメソッドを追加し、結果を [Collections](/learn/collections) として返して簡単にアクセスできるようにします。また、クエリログとアプリケーション パフォーマンス監視 (APM) をサポートし、高度なユースケースに対応します。
+Flight の `PdoWrapper` クラスは、PDO を使用してデータベースを操作するための親しみやすいヘルパーです。共通のデータベースタスクを簡素化し、結果を取得するための便利なメソッドを追加し、結果を [Collections](/learn/collections) として返して簡単にアクセスできるようにします。また、クエリログとアプリケーションのパフォーマンス監視 (APM) を高度なユースケースでサポートします。
 
 ## 理解
 
-PHP でデータベースを扱う場合、特に PDO を直接使用すると冗長になりがちです。`PdoWrapper` は PDO を拡張し、クエリの実行、結果の取得、結果の処理をはるかに簡単にします。プリペアドステートメントやフェッチモードを扱う必要がなくなり、共通タスクのためのシンプルなメソッドが利用でき、すべての行が Collection として返されるため、配列やオブジェクト記法を使用できます。
+PHP でデータベースを操作する場合、特に PDO を直接使用すると冗長になることがあります。`PdoWrapper` は PDO を拡張し、クエリ、取得、結果の処理をはるかに簡単にします。準備されたステートメントやフェッチモードを扱う代わりに、共通のタスクのためのシンプルなメソッドが得られ、すべての行が Collection として返されるため、配列またはオブジェクト表記を使用できます。
 
-`PdoWrapper` を Flight で共有サービスとして登録し、アプリケーションのどこからでも `Flight::db()` を使用して利用できます。
+`PdoWrapper` を Flight で共有サービスとして登録し、`Flight::db()` を介してアプリケーションのどこでも使用できます。
 
 ## 基本的な使用方法
 
 ### PDO ヘルパーの登録
 
-まず、Flight に `PdoWrapper` クラスを登録します：
+まず、`PdoWrapper` クラスを Flight に登録します：
 
 ```php
 Flight::register('db', \flight\database\PdoWrapper::class, [
@@ -27,7 +31,7 @@ Flight::register('db', \flight\database\PdoWrapper::class, [
 ]);
 ```
 
-これで、どこからでも `Flight::db()` を使用してデータベース接続を取得できます。
+これで、`Flight::db()` をどこでも使用してデータベース接続を取得できます。
 
 ### クエリの実行
 
@@ -35,7 +39,7 @@ Flight::register('db', \flight\database\PdoWrapper::class, [
 
 `function runQuery(string $sql, array $params = []): PDOStatement`
 
-INSERT や UPDATE、または結果を手動でフェッチしたい場合に使用します：
+INSERT や UPDATE、または結果を手動で取得したい場合に使用します：
 
 ```php
 $db = Flight::db();
@@ -56,7 +60,7 @@ $db->runQuery("UPDATE users SET name = ? WHERE id = ?", ['Bob', 1]);
 
 `function fetchField(string $sql, array $params = []): mixed`
 
-データベースから単一の値を取得します：
+データベースから単一の値を入手します：
 
 ```php
 $count = Flight::db()->fetchField("SELECT COUNT(*) FROM users WHERE status = ?", ['active']);
@@ -66,7 +70,7 @@ $count = Flight::db()->fetchField("SELECT COUNT(*) FROM users WHERE status = ?",
 
 `function fetchRow(string $sql, array $params = []): Collection`
 
-単一の行を Collection (配列/オブジェクトアクセス) として取得します：
+単一の行を Collection (配列/オブジェクトアクセス) として入手します：
 
 ```php
 $user = Flight::db()->fetchRow("SELECT * FROM users WHERE id = ?", [123]);
@@ -79,7 +83,7 @@ echo $user->name;
 
 `function fetchAll(string $sql, array $params = []): array<Collection>`
 
-すべての行を Collections の配列として取得します：
+すべての行を Collection の配列として入手します：
 
 ```php
 $users = Flight::db()->fetchAll("SELECT * FROM users WHERE status = ?", ['active']);
@@ -103,7 +107,7 @@ $users = Flight::db()->fetchAll("SELECT * FROM users WHERE id IN (?)", ['1,2,3']
 
 ## 高度な使用方法
 
-### クエリログ & APM
+### クエリログと APM
 
 クエリのパフォーマンスを追跡したい場合、登録時に APM 追跡を有効にします：
 
@@ -113,13 +117,13 @@ Flight::register('db', \flight\database\PdoWrapper::class, [
 ]);
 ```
 
-クエリを実行した後、手動でログを記録できますが、APM が有効な場合は自動的にログが記録されます：
+クエリを実行した後、手動でログを記録できますが、APM が有効な場合は自動的にログを記録します：
 
 ```php
 Flight::db()->logQueries();
 ```
 
-これにより、接続とクエリメトリクスを含むイベント (`flight.db.queries`) がトリガーされ、Flight のイベントシステムを使用してリッスンできます。
+これはイベント (`flight.db.queries`) をトリガーし、接続とクエリメトリクスを含み、Flight のイベントシステムを使用してリッスンできます。
 
 ### 完全な例
 
@@ -137,7 +141,7 @@ Flight::route('/users', function () {
     // 単一のユーザーを取得
     $user = Flight::db()->fetchRow('SELECT * FROM users WHERE id = ?', [123]);
 
-    // 単一の値を取得
+    // 単一の値を入手
     $count = Flight::db()->fetchField('SELECT COUNT(*) FROM users');
 
     // 特別な IN() 構文
@@ -154,7 +158,7 @@ Flight::route('/users', function () {
     // ユーザーを削除
     Flight::db()->runQuery("DELETE FROM users WHERE id = ?", [123]);
 
-    // 影響を受けた行数を表示
+    // 影響を受けた行数を入手
     $statement = Flight::db()->runQuery("UPDATE users SET name = ? WHERE name = ?", ['Bob', 'Sally']);
     $affected_rows = $statement->rowCount();
 });
@@ -166,10 +170,10 @@ Flight::route('/users', function () {
 
 ## トラブルシューティング
 
-- データベース接続エラーが発生した場合、DSN、ユーザー名、パスワード、オプションを確認してください。
-- すべての行は Collections として返されます。プレーンな配列が必要な場合は、`$collection->getData()` を使用してください。
+- データベース接続に関するエラーが発生した場合、DSN、ユーザー名、パスワード、オプションを確認してください。
+- すべての行は Collection として返されます。プレーンな配列が必要な場合は、`$collection->getData()` を使用してください。
 - `IN (?)` クエリの場合、配列またはカンマ区切りの文字列を渡すことを確認してください。
 
 ## 変更履歴
 
-- v3.2.0 - 基本的なクエリとフェッチメソッドを備えた PdoWrapper の初回リリース。
+- v3.2.0 - 基本的なクエリとフェッチメソッドを含む PdoWrapper の初期リリース。

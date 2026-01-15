@@ -1,91 +1,95 @@
 # Flight について学ぶ
 
-Flight は、PHP 向けの高速でシンプルで拡張可能なフレームワークです。非常に汎用性が高く、あらゆる種類のウェブアプリケーションを構築するために使用できます。
-シンプルさを念頭に置いて構築されており、理解しやすく使用しやすい方法で記述されています。
+Flight は、PHP 用の高速でシンプルで拡張可能なフレームワークです。非常に汎用性が高く、あらゆる種類のウェブアプリケーションを構築するために使用できます。
+シンプルさを念頭に置いて構築されており、理解しやすく使いやすい方法で記述されています。
 
-> **注意:** `Flight::` を静的変数として使用する例と、`$app->` Engine オブジェクトを使用する例の両方を見ることになります。これらは互換性があり、どちらも使用可能です。コントローラー/ミドルウェア内の `$app` および `$this->app` が Flight チームのおすすめのアプローチです。
+> **注意:** `Flight::` を静的変数として使用する例と、`$app->` エンジンオブジェクトを使用する例の両方を見ることになります。これらは互換性があり、どちらも使用可能です。コントローラー/ミドルウェア内の `$app` および `$this->app` が、Flight チームのおすすめのアプローチです。
 
 ## コアコンポーネント
 
-### [Routing](/learn/routing)
+### [ルーティング](/learn/routing)
 
-ウェブアプリケーションのルートを管理する方法を学びます。これにはルートのグループ化、ルートパラメータ、ミドルウェアが含まれます。
+ウェブアプリケーションのルートを管理する方法を学びます。これにはルートのグループ化、ルートパラメータ、ミドルウェアも含まれます。
 
-### [Middleware](/learn/middleware)
+### [ミドルウェア](/learn/middleware)
 
-アプリケーションのリクエストとレスポンスをフィルタリングするためにミドルウェアを使用する方法を学びます。
+アプリケーション内のリクエストとレスポンスをフィルタリングするためにミドルウェアを使用する方法を学びます。
 
-### [Autoloading](/learn/autoloading)
+### [オートローディング](/learn/autoloading)
 
 アプリケーション内で独自のクラスをオートロードする方法を学びます。
 
-### [Requests](/learn/requests)
+### [リクエスト](/learn/requests)
 
-アプリケーションでリクエストとレスポンスを処理する方法を学びます。
+アプリケーション内でリクエストとレスポンスを処理する方法を学びます。
 
-### [Responses](/learn/responses)
+### [レスポンス](/learn/responses)
 
-ユーザーにレスポンスを送信する方法を学びます。
+ユーザーへのレスポンス送信方法を学びます。
 
-### [HTML Templates](/learn/templates)
+### [HTML テンプレート](/learn/templates)
 
 ビルトインのビューエンジンを使用して HTML テンプレートをレンダリングする方法を学びます。
 
-### [Security](/learn/security)
+### [セキュリティ](/learn/security)
 
 アプリケーションを一般的なセキュリティ脅威から保護する方法を学びます。
 
-### [Configuration](/learn/configuration)
+### [構成](/learn/configuration)
 
 アプリケーション向けにフレームワークを構成する方法を学びます。
 
-### [Event Manager](/learn/events)
+### [イベントマネージャー](/learn/events)
 
 イベントシステムを使用してアプリケーションにカスタムイベントを追加する方法を学びます。
 
-### [Extending Flight](/learn/extending)
+### [Flight の拡張](/learn/extending)
 
 独自のメソッドとクラスを追加してフレームワークを拡張する方法を学びます。
 
-### [Method Hooks and Filtering](/learn/filtering)
+### [メソッドフックとフィルタリング](/learn/filtering)
 
-メソッドと内部フレームワークメソッドにイベントフックを追加する方法を学びます。
+メソッドおよび内部フレームワークメソッドにイベントフックを追加する方法を学びます。
 
-### [Dependency Injection Container (DIC)](/learn/dependency-injection-container)
+### [依存性注入コンテナ (DIC)](/learn/dependency-injection-container)
 
 依存性注入コンテナ (DIC) を使用してアプリケーションの依存関係を管理する方法を学びます。
 
 ## ユーティリティクラス
 
-### [Collections](/learn/collections)
+### [コレクション](/learn/collections)
 
 コレクションはデータを保持し、配列またはオブジェクトとしてアクセスしやすくするために使用されます。
 
-### [JSON Wrapper](/learn/json)
+### [JSON ラッパー](/learn/json)
 
 JSON のエンコードとデコードを一貫させるためのシンプルな関数がいくつかあります。
 
-### [PDO Wrapper](/learn/pdo-wrapper)
+### [SimplePdo](/learn/simple-pdo)
 
-PDO は時に必要以上に頭痛の種になることがあります。このシンプルなラッパークラスにより、データベースとのやり取りが大幅に簡単になります。
+PDO は時に必要以上に頭痛の種となります。SimplePdo は、`insert()`、`update()`、`delete()`、`transaction()` などの便利なメソッドを備えたモダンな PDO ヘルパークラスで、データベース操作をはるかに簡単に行えます。
 
-### [Uploaded File Handler](/learn/uploaded-file)
+### [PdoWrapper](/learn/pdo-wrapper) (非推奨)
 
-アップロードされたファイルを管理し、パーマネントな場所に移動するのを支援するシンプルなクラスです。
+v3.18.0 以降、元の PDO ラッパーは非推奨です。代わりに [SimplePdo](/learn/simple-pdo) を使用してください。
+
+### [アップロードファイルハンドラー](/learn/uploaded-file)
+
+アップロードされたファイルを管理し、パーマネントな場所に移動するためのシンプルなクラスです。
 
 ## 重要な概念
 
-### [なぜフレームワークか？](/learn/why-frameworks)
+### [なぜフレームワークを使うのか？](/learn/why-frameworks)
 
 フレームワークを使用する理由についての短い記事です。フレームワークを使用する前に、その利点を理解しておくのが良い考えです。
 
-さらに、[@lubiana](https://git.php.fail/lubiana) によって作成された優れたチュートリアルがあります。Flight について特に詳細に触れていませんが、
-このガイドはフレームワークを取り巻く主要な概念とその利点について理解するのに役立ちます。
-チュートリアルは [ここ](https://git.php.fail/lubiana/no-framework-tutorial/src/branch/master/README.md) から見つかります。
+さらに、[@lubiana](https://git.php.fail/lubiana) によって優れたチュートリアルが作成されています。Flight について特に詳細に触れていませんが、
+このガイドはフレームワークを囲む主要な概念とその利点について理解するのに役立ちます。
+チュートリアルは [こちら](https://git.php.fail/lubiana/no-framework-tutorial/src/branch/master/README.md) にあります。
 
 ### [Flight を他のフレームワークと比較](/learn/flight-vs-another-framework)
 
-Laravel、Slim、Fat-Free、または Symfony などの他のフレームワークから Flight に移行する場合、このページは両者の違いを理解するのに役立ちます。
+Laravel、Slim、Fat-Free、または Symfony などの他のフレームワークから Flight に移行する場合、このページで両者の違いを理解するのに役立ちます。
 
 ## その他のトピック
 
@@ -93,10 +97,10 @@ Laravel、Slim、Fat-Free、または Symfony などの他のフレームワー�
 
 Flight のコードを堅牢にするためのユニットテストの方法を学ぶためのガイドに従ってください。
 
-### [AI & Developer Experience](/learn/ai)
+### [AI & 開発者エクスペリエンス](/learn/ai)
 
-Flight が AI ツールと現代の開発者ワークフローと連携して、より速くスマートにコーディングするのにどのように役立つかを学びます。
+Flight が AI ツールとモダンな開発者ワークフローと連携して、より速く賢くコーディングするのにどのように役立つかを学びます。
 
 ### [v2 から v3 への移行](/learn/migrating-to-v3)
 
-後方互換性は大部分維持されていますが、v2 から v3 への移行時に知っておくべきいくつかの変更点があります。
+後方互換性は主に維持されていますが、v2 から v3 への移行時に知っておくべき変更点がいくつかあります。

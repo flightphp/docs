@@ -1,18 +1,22 @@
 # PdoWrapper PDO-Hilfsklasse
 
+> **WARNUNG**
+>
+> **Veraltet:** `PdoWrapper` ist veraltet ab Flight v3.18.0. Es wird in einer zukünftigen Version nicht entfernt, aber nur für Abwärtskompatibilität gewartet. Bitte verwenden Sie stattdessen [SimplePdo](/learn/simple-pdo), das die gleiche Funktionalität plus zusätzliche Hilfsmethoden für gängige Datenbankoperationen bietet.
+
 ## Überblick
 
-Die `PdoWrapper`-Klasse in Flight ist eine benutzerfreundliche Hilfsklasse für die Arbeit mit Datenbanken unter Verwendung von PDO. Sie vereinfacht gängige Datenbankaufgaben, fügt nützliche Methoden zum Abrufen von Ergebnissen hinzu und gibt Ergebnisse als [Collections](/learn/collections) zurück, um einen einfachen Zugriff zu ermöglichen. Sie unterstützt außerdem Protokollierung von Abfragen und Überwachung der Anwendungsleistung (APM) für fortgeschrittene Anwendungsfälle.
+Die `PdoWrapper`-Klasse in Flight ist ein freundlicher Helfer für die Arbeit mit Datenbanken unter Verwendung von PDO. Sie vereinfacht gängige Datenbankaufgaben, fügt einige nützliche Methoden zum Abrufen von Ergebnissen hinzu und gibt Ergebnisse als [Collections](/learn/collections) zurück, um einen einfachen Zugriff zu ermöglichen. Sie unterstützt auch Query-Logging und Application Performance Monitoring (APM) für fortgeschrittene Anwendungsfälle.
 
 ## Verständnis
 
-Die Arbeit mit Datenbanken in PHP kann etwas umständlich sein, insbesondere bei der direkten Verwendung von PDO. `PdoWrapper` erweitert PDO und fügt Methoden hinzu, die das Abfragen, Abrufen und Behandeln von Ergebnissen erheblich erleichtern. Statt mit vorbereiteten Anweisungen und Abrufmodi zu jonglieren, erhalten Sie einfache Methoden für gängige Aufgaben, und jede Zeile wird als Collection zurückgegeben, sodass Sie Array- oder Objektnotation verwenden können.
+Die Arbeit mit Datenbanken in PHP kann etwas umständlich sein, insbesondere bei der direkten Verwendung von PDO. `PdoWrapper` erweitert PDO und fügt Methoden hinzu, die Abfragen, Abrufen und Behandeln von Ergebnissen viel einfacher machen. Statt mit Prepared Statements und Fetch-Modi zu jonglieren, erhalten Sie einfache Methoden für gängige Aufgaben, und jede Zeile wird als Collection zurückgegeben, sodass Sie Array- oder Objekt-Notation verwenden können.
 
-Sie können `PdoWrapper` als geteilten Dienst in Flight registrieren und es dann überall in Ihrer App über `Flight::db()` verwenden.
+Sie können `PdoWrapper` als geteilten Service in Flight registrieren und es dann überall in Ihrer App über `Flight::db()` verwenden.
 
 ## Grundlegende Verwendung
 
-### Registrieren der PDO-Hilfsklasse
+### Registrieren des PDO-Helpers
 
 Zuerst registrieren Sie die `PdoWrapper`-Klasse bei Flight:
 
@@ -56,7 +60,7 @@ $db->runQuery("UPDATE users SET name = ? WHERE id = ?", ['Bob', 1]);
 
 `function fetchField(string $sql, array $params = []): mixed`
 
-Einen einzelnen Wert aus der Datenbank abrufen:
+Holen Sie einen einzelnen Wert aus der Datenbank:
 
 ```php
 $count = Flight::db()->fetchField("SELECT COUNT(*) FROM users WHERE status = ?", ['active']);
@@ -66,7 +70,7 @@ $count = Flight::db()->fetchField("SELECT COUNT(*) FROM users WHERE status = ?",
 
 `function fetchRow(string $sql, array $params = []): Collection`
 
-Eine einzelne Zeile als Collection (Array-/Objektzugriff) abrufen:
+Holen Sie eine einzelne Zeile als Collection (Array/Objekt-Zugriff):
 
 ```php
 $user = Flight::db()->fetchRow("SELECT * FROM users WHERE id = ?", [123]);
@@ -79,7 +83,7 @@ echo $user->name;
 
 `function fetchAll(string $sql, array $params = []): array<Collection>`
 
-Alle Zeilen als Array von Collections abrufen:
+Holen Sie alle Zeilen als Array von Collections:
 
 ```php
 $users = Flight::db()->fetchAll("SELECT * FROM users WHERE status = ?", ['active']);
@@ -92,7 +96,7 @@ foreach ($users as $user) {
 
 ### Verwendung von `IN()`-Platzhaltern
 
-Sie können einen einzelnen `?`-Platzhalter in einer `IN()`-Klausel verwenden und ein Array oder einen komma-getrennten String übergeben:
+Sie können ein einzelnes `?` in einer `IN()`-Klausel verwenden und ein Array oder einen komma-separierten String übergeben:
 
 ```php
 $ids = [1, 2, 3];
@@ -103,9 +107,9 @@ $users = Flight::db()->fetchAll("SELECT * FROM users WHERE id IN (?)", ['1,2,3']
 
 ## Fortgeschrittene Verwendung
 
-### Abfrageprotokollierung & APM
+### Query-Logging & APM
 
-Wenn Sie die Abfrageleistung verfolgen möchten, aktivieren Sie die APM-Überwachung bei der Registrierung:
+Wenn Sie die Query-Leistung verfolgen möchten, aktivieren Sie das APM-Tracking bei der Registrierung:
 
 ```php
 Flight::register('db', \flight\database\PdoWrapper::class, [
@@ -113,13 +117,13 @@ Flight::register('db', \flight\database\PdoWrapper::class, [
 ]);
 ```
 
-Nach dem Ausführen von Abfragen können Sie sie manuell protokollieren, aber das APM protokolliert sie automatisch, wenn es aktiviert ist:
+Nach dem Ausführen von Abfragen können Sie sie manuell loggen, aber das APM loggt sie automatisch, wenn aktiviert:
 
 ```php
 Flight::db()->logQueries();
 ```
 
-Dies löst ein Ereignis (`flight.db.queries`) mit Verbindungs- und Abfragemetriken aus, das Sie mit dem Ereignissystem von Flight abhören können.
+Dies löst ein Event (`flight.db.queries`) mit Verbindungs- und Query-Metriken aus, das Sie mit Flights Event-System abhören können.
 
 ### Vollständiges Beispiel
 
@@ -162,14 +166,14 @@ Flight::route('/users', function () {
 
 ## Siehe auch
 
-- [Collections](/learn/collections) - Erfahren Sie, wie Sie die Collection-Klasse für einen einfachen Datenzugriff verwenden.
+- [Collections](/learn/collections) - Lernen Sie, wie Sie die Collection-Klasse für einfachen Datenzugriff verwenden.
 
 ## Fehlerbehebung
 
 - Wenn Sie einen Fehler bezüglich der Datenbankverbindung erhalten, überprüfen Sie Ihre DSN, Benutzername, Passwort und Optionen.
 - Alle Zeilen werden als Collections zurückgegeben – wenn Sie ein einfaches Array benötigen, verwenden Sie `$collection->getData()`.
-- Für `IN (?)`-Abfragen stellen Sie sicher, dass Sie ein Array oder einen komma-getrennten String übergeben.
+- Für `IN (?)`-Abfragen stellen Sie sicher, dass Sie ein Array oder einen komma-separierten String übergeben.
 
 ## Änderungsprotokoll
 
-- v3.2.0 - Erste Veröffentlichung von PdoWrapper mit grundlegenden Abfrage- und Abrufmethoden.
+- v3.2.0 - Erste Veröffentlichung von PdoWrapper mit grundlegenden Query- und Fetch-Methoden.

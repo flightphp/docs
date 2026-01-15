@@ -1,4 +1,4 @@
-# Firebase JWT - Autentikasi JSON Web Token untuk Flight
+# Firebase JWT - Autentikasi JSON Web Token
 
 JWT (JSON Web Tokens) adalah cara yang ringkas dan aman untuk URL untuk merepresentasikan klaim antara aplikasi Anda dan klien. Mereka sempurna untuk autentikasi API tanpa state—tidak perlu penyimpanan sesi di sisi server! Panduan ini menunjukkan cara mengintegrasikan [Firebase JWT](https://github.com/firebase/php-jwt) dengan Flight untuk autentikasi berbasis token yang aman.
 
@@ -11,7 +11,7 @@ JSON Web Token adalah string yang berisi tiga bagian:
 2. **Payload**: Data Anda (ID pengguna, peran, kedaluwarsa, dll.)
 3. **Signature**: Tanda tangan kriptografis untuk memverifikasi keaslian
 
-Contoh JWT: `eyJ0eXAiOiJKV1QiLCJhbGc...` (terlihat seperti sampah, tapi ini data terstruktur!)
+Contoh JWT: `eyJ0eXAiOiJKV1QiLCJhbGc...` (terlihat seperti omong kosong, tapi itu data terstruktur!)
 
 ### Mengapa Menggunakan JWT?
 
@@ -31,7 +31,7 @@ composer require firebase/php-jwt
 
 ## Penggunaan Dasar
 
-Berikut adalah contoh cepat untuk membuat dan memverifikasi JWT:
+Berikut contoh cepat untuk membuat dan memverifikasi JWT:
 
 ```php
 use Firebase\JWT\JWT;
@@ -46,7 +46,7 @@ $payload = [
     'username' => 'johndoe',
     'role' => 'admin',
     'iat' => time(),              // Diterbitkan pada
-    'exp' => time() + 3600        // Berakhir dalam 1 jam
+    'exp' => time() + 3600        // Kedaluwarsa dalam 1 jam
 ];
 
 $jwt = JWT::encode($payload, $secretKey, 'HS256');
@@ -63,7 +63,7 @@ try {
 
 ## Middleware JWT untuk Flight (Pendekatan yang Direkomendasikan)
 
-Cara paling umum dan berguna untuk menggunakan JWT dengan Flight adalah sebagai **middleware** untuk melindungi rute API Anda. Berikut adalah contoh lengkap yang siap produksi:
+Cara paling umum dan berguna untuk menggunakan JWT dengan Flight adalah sebagai **middleware** untuk melindungi rute API Anda. Berikut contoh lengkap yang siap produksi:
 
 ### Langkah 1: Buat Kelas Middleware JWT
 
@@ -128,7 +128,7 @@ return [
 ];
 
 // app/config/bootstrap.php atau index.php
-// pastikan untuk menambahkan baris ini jika Anda ingin mengekspos konfigurasi ke app
+// pastikan untuk menambahkan baris ini jika Anda ingin mengekspos konfigurasi ke aplikasi
 $app->set('config', $config);
 ```
 
@@ -145,7 +145,7 @@ Flight::route('GET /api/user/profile', function() {
         'username' => $user->username,
         'role' => $user->role
     ]);
-})->addMiddleware( JwtMiddleware::class);
+})->addMiddleware(JwtMiddleware::class);
 
 // Lindungi seluruh grup rute (lebih umum!)
 Flight::group('/api', function() {
@@ -213,9 +213,9 @@ function validateUserCredentials($username, $password) {
 }
 ```
 
-### 2. Alur Refresh Token
+### 2. Alur Pembaruan Token
 
-Implementasikan sistem refresh token untuk sesi yang panjang umurnya:
+Implementasikan sistem token pembaruan untuk sesi yang panjang:
 
 ```php
 Flight::route('POST /api/login', function() {
@@ -224,7 +224,7 @@ Flight::route('POST /api/login', function() {
     $secretKey = Flight::get('config')['jwt_secret'];
     $refreshSecret = Flight::get('config')['jwt_refresh_secret'];
     
-    // Access token yang pendek umurnya (15 menit)
+    // Token akses jangka pendek (15 menit)
     $accessToken = JWT::encode([
         'user_id' => $user->id,
         'type' => 'access',
@@ -232,7 +232,7 @@ Flight::route('POST /api/login', function() {
         'exp' => time() + (15 * 60)
     ], $secretKey, 'HS256');
     
-    // Refresh token yang panjang umurnya (7 hari)
+    // Token pembaruan jangka panjang (7 hari)
     $refreshToken = JWT::encode([
         'user_id' => $user->id,
         'type' => 'refresh',
@@ -254,12 +254,12 @@ Flight::route('POST /api/refresh', function() {
     try {
         $decoded = JWT::decode($refreshToken, new Key($refreshSecret, 'HS256'));
         
-        // Verifikasi ini adalah refresh token
+        // Verifikasi ini adalah token pembaruan
         if ($decoded->type !== 'refresh') {
             Flight::jsonHalt(['error' => 'Tipe token tidak valid'], 401);
         }
         
-        // Hasilkan access token baru
+        // Hasilkan token akses baru
         $secretKey = Flight::get('config')['jwt_secret'];
         $accessToken = JWT::encode([
             'user_id' => $decoded->user_id,
@@ -274,7 +274,7 @@ Flight::route('POST /api/refresh', function() {
         ]);
         
     } catch (Exception $e) {
-        Flight::jsonHalt(['error' => 'Refresh token tidak valid'], 401);
+        Flight::jsonHalt(['error' => 'Token pembaruan tidak valid'], 401);
     }
 });
 ```
@@ -318,9 +318,9 @@ Flight::route('DELETE /api/users/@id', function($id) {
 ]);
 ```
 
-### 4. API Publik dengan Rate Limiting berdasarkan Pengguna
+### 4. API Publik dengan Batasan Tingkat Berdasarkan Pengguna
 
-Gunakan JWT untuk melacak dan membatasi laju pengguna tanpa sesi:
+Gunakan JWT untuk melacak dan membatasi tingkat pengguna tanpa sesi:
 
 ```php
 class RateLimitMiddleware {
@@ -334,7 +334,7 @@ class RateLimitMiddleware {
         $requests = Flight::cache()->get($cacheKey, 0);
         
         if ($requests >= 100) { // 100 permintaan per jam
-            Flight::jsonHalt(['error' => 'Batas laju terlampaui'], 429);
+            Flight::jsonHalt(['error' => 'Batas tingkat terlampaui'], 429);
         }
         
         Flight::cache()->set($cacheKey, $requests + 1, 3600);
@@ -362,7 +362,7 @@ echo $secretKey; // Simpan ini di file .env Anda!
 // JWT_SECRET=your-base64-encoded-secret-here
 // JWT_REFRESH_SECRET=another-base64-encoded-secret-here
 
-// Anda juga bisa menggunakan file app/config/config.php untuk menyimpan rahasia Anda
+// Anda juga dapat menggunakan file app/config/config.php untuk menyimpan rahasia Anda
 // pastikan file konfigurasi tidak di-commit ke kontrol versi
 // return [
 //     'jwt_secret' => 'your-base64-encoded-secret-here',
@@ -373,13 +373,13 @@ echo $secretKey; // Simpan ini di file .env Anda!
 $secretKey = getenv('JWT_SECRET');
 ```
 
-### 3. Atur Waktu Kedaluwarsa yang Sesuai
+### 3. Tetapkan Waktu Kedaluwarsa yang Sesuai
 
 ```php
-// Praktik baik: access token yang pendek umurnya
+// Praktik baik: token akses jangka pendek
 'exp' => time() + (15 * 60)  // 15 menit
 
-// Untuk refresh token: kedaluwarsa lebih lama
+// Untuk token pembaruan: kedaluwarsa lebih panjang
 'exp' => time() + (7 * 24 * 60 * 60)  // 7 hari
 ```
 
@@ -394,8 +394,8 @@ Selalu validasi klaim yang Anda pedulikan:
 ```php
 $decoded = JWT::decode($jwt, new Key($secretKey, 'HS256'));
 
-// Pemeriksaan kedaluwarsa ditangani secara otomatis oleh library
-// Tapi Anda bisa menambahkan validasi kustom:
+// Periksa kedaluwarsa ditangani secara otomatis oleh library
+// Tapi Anda dapat menambahkan validasi kustom:
 if ($decoded->iat > time()) {
     throw new Exception('Token digunakan sebelum diterbitkan');
 }
@@ -405,7 +405,7 @@ if (isset($decoded->nbf) && $decoded->nbf > time()) {
 }
 ```
 
-### 6. Pertimbangkan Blacklisting Token untuk Logout
+### 6. Pertimbangkan Daftar Hitam Token untuk Logout
 
 Untuk keamanan ekstra, pertahankan daftar hitam token yang dibatalkan:
 
@@ -474,17 +474,17 @@ $decoded = JWT::decode($jwt, new Key($publicKey, 'RS256'));
 ## Pemecahan Masalah
 
 ### Kesalahan "Token kedaluwarsa"
-Klaim `exp` token Anda sudah lewat. Terbitkan token baru atau implementasikan refresh token.
+Klaim `exp` token Anda di masa lalu. Terbitkan token baru atau implementasikan pembaruan token.
 
 ### "Verifikasi tanda tangan gagal"
 - Anda menggunakan kunci rahasia yang berbeda untuk dekode daripada yang digunakan untuk encode
 - Token telah dimanipulasi
-- Perbedaan jam antara server (tambahkan buffer leeway)
+- Penyimpangan jam antara server (tambahkan buffer leeway)
 
 ```php
 use Firebase\JWT\JWT;
 
-JWT::$leeway = 60; // Izinkan 60 detik perbedaan jam
+JWT::$leeway = 60; // Izinkan 60 detik penyimpangan jam
 $decoded = JWT::decode($jwt, new Key($secretKey, 'HS256'));
 ```
 
@@ -506,17 +506,17 @@ Library Firebase JWT menyediakan metode inti ini:
 
 - `JWT::encode(array $payload, string $key, string $alg)`: Membuat JWT dari payload
 - `JWT::decode(string $jwt, Key $key)`: Mendekode dan memverifikasi JWT
-- `JWT::urlsafeB64Encode(string $input)`: Encoding Base64 URL-safe
-- `JWT::urlsafeB64Decode(string $input)`: Decoding Base64 URL-safe
-- `JWT::$leeway`: Properti statis untuk mengatur leeway waktu untuk validasi (dalam detik)
+- `JWT::urlsafeB64Encode(string $input)`: Encoding Base64 aman URL
+- `JWT::urlsafeB64Decode(string $input)`: Decoding Base64 aman URL
+- `JWT::$leeway`: Properti statis untuk menetapkan leeway waktu untuk validasi (dalam detik)
 
 ## Mengapa Menggunakan Library Ini?
 
-- **Standar Industri**: Firebase JWT adalah library JWT paling populer dan tepercaya untuk PHP
+- **Standar Industri**: Firebase JWT adalah library JWT paling populer dan tepercaya secara luas untuk PHP
 - **Pemeliharaan Aktif**: Dipelihara oleh tim Google/Firebase
 - **Fokus Keamanan**: Pembaruan rutin dan patch keamanan
 - **API Sederhana**: Mudah dipahami dan diimplementasikan
-- **Dokumentasi Lengkap**: Dokumentasi ekstensif dan dukungan komunitas
+- **Didokumentasikan dengan Baik**: Dokumentasi ekstensif dan dukungan komunitas
 - **Fleksibel**: Mendukung beberapa algoritma dan opsi yang dapat dikonfigurasi
 
 ## Lihat Juga

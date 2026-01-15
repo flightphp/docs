@@ -1,18 +1,22 @@
-# Classe d'Aide PDO PdoWrapper
+# Classe d'aide PDO PdoWrapper
+
+> **AVERTISSEMENT**
+>
+> **Déprécié :** `PdoWrapper` est déprécié depuis Flight v3.18.0. Il ne sera pas supprimé dans une version future, mais sera maintenu pour la compatibilité descendante. Veuillez utiliser [SimplePdo](/learn/simple-pdo) à la place, qui offre la même fonctionnalité plus des méthodes d'aide supplémentaires pour les opérations de base de données courantes.
 
 ## Aperçu
 
-La classe `PdoWrapper` dans Flight est un assistant convivial pour travailler avec les bases de données en utilisant PDO. Elle simplifie les tâches courantes de base de données, ajoute des méthodes pratiques pour récupérer les résultats, et retourne les résultats sous forme de [Collections](/learn/collections) pour un accès facile. Elle supporte également la journalisation des requêtes et la surveillance des performances de l'application (APM) pour des cas d'utilisation avancés.
+La classe `PdoWrapper` dans Flight est un aide convivial pour travailler avec les bases de données en utilisant PDO. Elle simplifie les tâches courantes de base de données, ajoute des méthodes pratiques pour récupérer les résultats, et retourne les résultats sous forme de [Collections](/learn/collections) pour un accès facile. Elle supporte également la journalisation des requêtes et la surveillance des performances de l'application (APM) pour des cas d'utilisation avancés.
 
 ## Comprendre
 
-Travailler avec les bases de données en PHP peut être un peu verbeux, surtout en utilisant PDO directement. `PdoWrapper` étend PDO et ajoute des méthodes qui rendent les requêtes, la récupération et la gestion des résultats beaucoup plus faciles. Au lieu de jongler avec des instructions préparées et des modes de récupération, vous obtenez des méthodes simples pour les tâches courantes, et chaque ligne est retournée sous forme de Collection, afin que vous puissiez utiliser la notation tableau ou objet.
+Travailler avec les bases de données en PHP peut être un peu verbeux, surtout en utilisant PDO directement. `PdoWrapper` étend PDO et ajoute des méthodes qui rendent les requêtes, la récupération et la gestion des résultats beaucoup plus faciles. Au lieu de jongler avec des instructions préparées et des modes de récupération, vous obtenez des méthodes simples pour les tâches courantes, et chaque ligne est retournée comme une Collection, afin que vous puissiez utiliser la notation tableau ou objet.
 
-Vous pouvez enregistrer `PdoWrapper` en tant que service partagé dans Flight, puis l'utiliser n'importe où dans votre application via `Flight::db()`.
+Vous pouvez enregistrer `PdoWrapper` comme un service partagé dans Flight, et ensuite l'utiliser n'importe où dans votre application via `Flight::db()`.
 
-## Utilisation de Base
+## Utilisation de base
 
-### Enregistrement de l'Aideur PDO
+### Enregistrement de l'aide PDO
 
 D'abord, enregistrez la classe `PdoWrapper` avec Flight :
 
@@ -29,13 +33,13 @@ Flight::register('db', \flight\database\PdoWrapper::class, [
 
 Maintenant, vous pouvez utiliser `Flight::db()` n'importe où pour obtenir votre connexion à la base de données.
 
-### Exécution de Requêtes
+### Exécution des requêtes
 
 #### `runQuery()`
 
 `function runQuery(string $sql, array $params = []): PDOStatement`
 
-Utilisez ceci pour les INSERT, UPDATE, ou lorsque vous voulez récupérer les résultats manuellement :
+Utilisez ceci pour les INSERT, UPDATE, ou quand vous voulez récupérer les résultats manuellement :
 
 ```php
 $db = Flight::db();
@@ -45,7 +49,7 @@ while ($row = $statement->fetch()) {
 }
 ```
 
-Vous pouvez également l'utiliser pour les écritures :
+Vous pouvez aussi l'utiliser pour les écritures :
 
 ```php
 $db->runQuery("INSERT INTO users (name) VALUES (?)", ['Alice']);
@@ -66,7 +70,7 @@ $count = Flight::db()->fetchField("SELECT COUNT(*) FROM users WHERE status = ?",
 
 `function fetchRow(string $sql, array $params = []): Collection`
 
-Obtenez une seule ligne sous forme de Collection (accès tableau/objet) :
+Obtenez une seule ligne comme une Collection (accès tableau/objet) :
 
 ```php
 $user = Flight::db()->fetchRow("SELECT * FROM users WHERE id = ?", [123]);
@@ -79,7 +83,7 @@ echo $user->name;
 
 `function fetchAll(string $sql, array $params = []): array<Collection>`
 
-Obtenez toutes les lignes sous forme de tableau de Collections :
+Obtenez toutes les lignes comme un tableau de Collections :
 
 ```php
 $users = Flight::db()->fetchAll("SELECT * FROM users WHERE status = ?", ['active']);
@@ -90,7 +94,7 @@ foreach ($users as $user) {
 }
 ```
 
-### Utilisation des Lieux-Tenants `IN()`
+### Utilisation des placeholders `IN()`
 
 Vous pouvez utiliser un seul `?` dans une clause `IN()` et passer un tableau ou une chaîne séparée par des virgules :
 
@@ -101,9 +105,9 @@ $users = Flight::db()->fetchAll("SELECT * FROM users WHERE id IN (?)", [$ids]);
 $users = Flight::db()->fetchAll("SELECT * FROM users WHERE id IN (?)", ['1,2,3']);
 ```
 
-## Utilisation Avancée
+## Utilisation avancée
 
-### Journalisation des Requêtes & APM
+### Journalisation des requêtes & APM
 
 Si vous voulez suivre les performances des requêtes, activez le suivi APM lors de l'enregistrement :
 
@@ -113,7 +117,7 @@ Flight::register('db', \flight\database\PdoWrapper::class, [
 ]);
 ```
 
-Après l'exécution des requêtes, vous pouvez les journaliser manuellement, mais l'APM les journalisera automatiquement si activé :
+Après avoir exécuté des requêtes, vous pouvez les journaliser manuellement mais l'APM les journalisera automatiquement si activé :
 
 ```php
 Flight::db()->logQueries();
@@ -121,7 +125,7 @@ Flight::db()->logQueries();
 
 Cela déclenchera un événement (`flight.db.queries`) avec les métriques de connexion et de requête, que vous pouvez écouter en utilisant le système d'événements de Flight.
 
-### Exemple Complet
+### Exemple complet
 
 ```php
 Flight::route('/users', function () {
@@ -160,16 +164,16 @@ Flight::route('/users', function () {
 });
 ```
 
-## Voir Aussi
+## Voir aussi
 
 - [Collections](/learn/collections) - Apprenez comment utiliser la classe Collection pour un accès facile aux données.
 
 ## Dépannage
 
 - Si vous obtenez une erreur concernant la connexion à la base de données, vérifiez votre DSN, nom d'utilisateur, mot de passe et options.
-- Toutes les lignes sont retournées sous forme de Collections—si vous avez besoin d'un tableau simple, utilisez `$collection->getData()`.
+- Toutes les lignes sont retournées comme des Collections—si vous avez besoin d'un tableau simple, utilisez `$collection->getData()`.
 - Pour les requêtes `IN (?)`, assurez-vous de passer un tableau ou une chaîne séparée par des virgules.
 
-## Journal des Modifications
+## Journal des modifications
 
-- v3.2.0 - Publication initiale de PdoWrapper avec les méthodes de requête et de récupération de base.
+- v3.2.0 - Version initiale de PdoWrapper avec des méthodes de requête et de récupération de base.

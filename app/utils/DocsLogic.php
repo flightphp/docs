@@ -61,7 +61,8 @@ class DocsLogic {
 			'Utility Classes' => [
 				['url' => '/learn/collections', 'title' => 'Collections'],
 				['url' => '/learn/json', 'title' => 'JSON Wrapper'],
-				['url' => '/learn/pdo-wrapper', 'title' => 'PDO Wrapper'],
+				['url' => '/learn/pdo-wrapper', 'title' => 'PdoWrapper'],
+				['url' => '/learn/simple-pdo', 'title' => 'SimplePdo'],
 				['url' => '/learn/uploaded-file', 'title' => 'Uploaded File Handler'],
 			],
 			'Important Concepts' => [

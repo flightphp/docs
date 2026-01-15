@@ -48,7 +48,7 @@ Puedes ver una lista de todos los comandos disponibles ejecutando el comando `ph
 php runway
 ```
 
-### Ayuda de Comandos
+### Ayuda de Comando
 
 Para cualquier comando, puedes pasar la bandera `--help` para obtener más información sobre cómo usar el comando.
 
@@ -74,7 +74,7 @@ Primero asegúrate de haber instalado el plugin [Active Record](/awesome-plugins
 php runway make:record users
 ```
 
-Si, por ejemplo, tienes la tabla `users` con el siguiente esquema: `id`, `name`, `email`, `created_at`, `updated_at`, se creará un archivo similar al siguiente en el archivo `app/records/UserRecord.php`:
+Por ejemplo, si tienes la tabla `users` con el siguiente esquema: `id`, `name`, `email`, `created_at`, `updated_at`, se creará un archivo similar al siguiente en el archivo `app/records/UserRecord.php`:
 
 ```php
 <?php
@@ -136,9 +136,9 @@ php runway routes --post
 
 ## Agregar Comandos Personalizados a Runway
 
-Si estás creando un paquete para Flight o quieres agregar tus propios comandos personalizados a tu proyecto, puedes hacerlo creando un directorio `src/commands/`, `flight/commands/`, `app/commands/` o `commands/` para tu proyecto/paquete. Si necesitas una personalización adicional, consulta la sección a continuación sobre Configuración.
+Si estás creando un paquete para Flight o quieres agregar tus propios comandos personalizados a tu proyecto, puedes hacerlo creando un directorio `src/commands/`, `flight/commands/`, `app/commands/` o `commands/` para tu proyecto/paquete. Si necesitas más personalización, consulta la sección a continuación sobre Configuración.
 
-Para crear un comando, simplemente extiende la clase `AbstractBaseCommand` e implementa, como mínimo, un método `__construct` y un método `execute`.
+Para crear un comando, simplemente extiende la clase `AbstractBaseCommand` e implementa al menos un método `__construct` y un método `execute`.
 
 ```php
 <?php
@@ -150,18 +150,18 @@ namespace flight\commands;
 class ExampleCommand extends AbstractBaseCommand
 {
 	/**
-     * Constructor
+     * Construct
      *
-     * @param array<string,mixed> $config Configuración de app/config/config.php
+     * @param array<string,mixed> $config Config from app/config/config.php
      */
     public function __construct(array $config)
     {
-        parent::__construct('make:example', 'Crear un ejemplo para la documentación', $config);
-        $this->argument('<funny-gif>', 'El nombre del gif gracioso');
+        parent::__construct('make:example', 'Create an example for the documentation', $config);
+        $this->argument('<funny-gif>', 'The name of the funny gif');
     }
 
 	/**
-     * Ejecuta la función
+     * Executes the function
      *
      * @return void
      */
@@ -169,11 +169,11 @@ class ExampleCommand extends AbstractBaseCommand
     {
         $io = $this->app()->io();
 
-		$io->info('Creando ejemplo...');
+		$io->info('Creating example...');
 
-		// Haz algo aquí
+		// Do something here
 
-		$io->ok('¡Ejemplo creado!');
+		$io->ok('Example created!');
 	}
 }
 ```
@@ -186,7 +186,7 @@ Dado que la configuración se ha movido a `app/config/config.php` a partir de `v
 
 ### Migrar Configuración Antigua
 
-Si tienes un archivo antiguo `.runway-config.json`, puedes migrarlo fácilmente a `app/config/config.php` con el siguiente comando:
+Si tienes un archivo `.runway-config.json` antiguo, puedes migrarlo fácilmente a `app/config/config.php` con el siguiente comando:
 
 ```bash
 php runway config:migrate
@@ -216,33 +216,33 @@ Si necesitas personalizar la configuración para Runway, puedes establecer estos
 <?php
 // app/config/config.php
 return [
-    // ... otros valores de configuración ...
+    // ... other config values ...
 
     'runway' => [
-        // Aquí es donde se encuentra el directorio de tu aplicación
+        // This is where your application directory is located
         'app_root' => 'app/',
 
-        // Este es el directorio donde se encuentra tu archivo índice raíz
+        // This is the directory where your root index file is located
         'index_root' => 'public/',
 
-        // Estos son los caminos a las raíces de otros proyectos
+        // These are the paths to the roots of other projects
         'root_paths' => [
             '/home/user/different-project',
             '/var/www/another-project'
         ],
 
-        // Los caminos base probablemente no necesiten configurarse, pero está aquí si lo quieres
+        // Base paths most likely don't need to be configured, but it's here if you want it
         'base_paths' => [
-            '/includes/libs/vendor', // si tienes un camino realmente único para tu directorio vendor o algo
+            '/includes/libs/vendor', // if you have a really unique path for your vendor directory or something
         ],
 
-        // Los caminos finales son ubicaciones dentro de un proyecto para buscar los archivos de comandos
+        // Final paths are locations within a project to search for the command files
         'final_paths' => [
             'src/diff-path/commands',
             'app/module/admin/commands',
         ],
 
-        // Si quieres agregar el camino completo, adelante (absoluto o relativo a la raíz del proyecto)
+        // If you want to just add the full path, go right ahead (absolute or relative to project root)
         'paths' => [
             '/home/user/different-project/src/diff-path/commands',
             '/var/www/another-project/app/module/admin/commands',
@@ -261,26 +261,26 @@ public function execute()
 {
     $io = $this->app()->io();
     
-    // Acceder a la configuración
+    // Access configuration
     $app_root = $this->config['runway']['app_root'];
     
-    // Acceder a servicios como quizás una conexión a la base de datos
+    // Access services like maybe a database connection
     $database = $this->config['database']
     
     // ...
 }
 ```
 
-## Envoltorios de Ayudante de IA
+## Wrappers de Ayudante de IA
 
-Runway tiene algunos envoltorios de ayudante que facilitan que la IA genere comandos. Puedes usar `addOption` y `addArgument` de una manera que se sienta similar a Symfony Console. Esto es útil si estás usando herramientas de IA para generar tus comandos.
+Runway tiene algunos wrappers de ayudante que facilitan que la IA genere comandos. Puedes usar `addOption` y `addArgument` de una manera que se siente similar a Symfony Console. Esto es útil si estás usando herramientas de IA para generar tus comandos.
 
 ```php
 public function __construct(array $config)
 {
-    parent::__construct('make:example', 'Crear un ejemplo para la documentación', $config);
+    parent::__construct('make:example', 'Create an example for the documentation', $config);
     
-    // El argumento mode es nullable y por defecto completamente opcional
-    $this->addOption('name', 'El nombre del ejemplo', null);
+    // The mode argument is nullable and defaults to completely optional
+    $this->addOption('name', 'The name of the example', null);
 }
 ```

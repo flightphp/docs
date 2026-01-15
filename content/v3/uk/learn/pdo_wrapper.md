@@ -1,20 +1,24 @@
-# PdoWrapper Клас-допоміжник PDO
+# PdoWrapper Клас-помічник PDO
+
+> **ПОПЕРЕДЖЕННЯ**
+>
+> **Застарілий:** `PdoWrapper` є застарілим з версії Flight v3.18.0. Він не буде видалений у майбутніх версіях, але буде підтримуватися для зворотної сумісності. Будь ласка, використовуйте [SimplePdo](/learn/simple-pdo) замість нього, який пропонує ту ж функціональність плюс додаткові допоміжні методи для поширених операцій з базою даних.
 
 ## Огляд
 
-Клас `PdoWrapper` у Flight є зручним помічником для роботи з базами даних за допомогою PDO. Він спрощує поширені завдання баз даних, додає корисні методи для отримання результатів і повертає результати як [Collections](/learn/collections) для легкого доступу. Він також підтримує журналювання запитів і моніторинг продуктивності додатку (APM) для розширених випадків використання.
+Клас `PdoWrapper` у Flight є дружнім помічником для роботи з базами даних за допомогою PDO. Він спрощує поширені завдання з базами даних, додає деякі зручні методи для отримання результатів і повертає результати як [Collections](/learn/collections) для легкого доступу. Він також підтримує логування запитів і моніторинг продуктивності додатків (APM) для просунутих випадків використання.
 
 ## Розуміння
 
-Робота з базами даних у PHP може бути дещо багатослівною, особливо при прямому використанні PDO. `PdoWrapper` розширює PDO і додає методи, які роблять запитування, отримання та обробку результатів набагато простішими. Замість жонглювання підготовленими виразами та режимами отримання ви отримуєте прості методи для поширених завдань, і кожен рядок повертається як Collection, тому ви можете використовувати нотацію масиву або об'єкта.
+Робота з базами даних у PHP може бути дещо багатослівною, особливо при прямому використанні PDO. `PdoWrapper` розширює PDO і додає методи, які роблять запитування, отримання та обробку результатів набагато простішими. Замість жонглювання підготовленими виразами та режимами отримання, ви отримуєте прості методи для поширених завдань, і кожен рядок повертається як Collection, тому ви можете використовувати нотацію масиву або об'єкта.
 
-Ви можете зареєструвати `PdoWrapper` як спільну послугу в Flight, а потім використовувати його будь-де у вашому додатку через `Flight::db()`.
+Ви можете зареєструвати `PdoWrapper` як спільну послугу в Flight, а потім використовувати його будь-де у вашому додатку за допомогою `Flight::db()`.
 
 ## Основне використання
 
 ### Реєстрація помічника PDO
 
-Спочатку зареєструйте клас `PdoWrapper` з Flight:
+Спочатку зареєструйте клас `PdoWrapper` у Flight:
 
 ```php
 Flight::register('db', \flight\database\PdoWrapper::class, [
@@ -41,7 +45,7 @@ Flight::register('db', \flight\database\PdoWrapper::class, [
 $db = Flight::db();
 $statement = $db->runQuery("SELECT * FROM users WHERE status = ?", ['active']);
 while ($row = $statement->fetch()) {
-    // $row is an array
+    // $row є масивом
 }
 ```
 
@@ -66,12 +70,12 @@ $count = Flight::db()->fetchField("SELECT COUNT(*) FROM users WHERE status = ?",
 
 `function fetchRow(string $sql, array $params = []): Collection`
 
-Отримайте один рядок як Collection (доступ через масив/об'єкт):
+Отримайте один рядок як Collection (доступ як до масиву/об'єкта):
 
 ```php
 $user = Flight::db()->fetchRow("SELECT * FROM users WHERE id = ?", [123]);
 echo $user['name'];
-// or
+// або
 echo $user->name;
 ```
 
@@ -85,35 +89,35 @@ echo $user->name;
 $users = Flight::db()->fetchAll("SELECT * FROM users WHERE status = ?", ['active']);
 foreach ($users as $user) {
     echo $user['name'];
-    // or
+    // або
     echo $user->name;
 }
 ```
 
 ### Використання заповнювачів `IN()`
 
-Ви можете використовувати один `?` у клаузі `IN()` і передати масив або рядок, розділений комами:
+Ви можете використовувати єдиний `?` у клаузі `IN()` і передати масив або рядок, розділений комами:
 
 ```php
 $ids = [1, 2, 3];
 $users = Flight::db()->fetchAll("SELECT * FROM users WHERE id IN (?)", [$ids]);
-// or
+// або
 $users = Flight::db()->fetchAll("SELECT * FROM users WHERE id IN (?)", ['1,2,3']);
 ```
 
-## Розширене використання
+## Просунуте використання
 
-### Журналювання запитів та APM
+### Логування запитів та APM
 
 Якщо ви хочете відстежувати продуктивність запитів, увімкніть відстеження APM під час реєстрації:
 
 ```php
 Flight::register('db', \flight\database\PdoWrapper::class, [
-    'mysql:host=localhost;dbname=cool_db_name', 'user', 'pass', [/* options */], true // last param enables APM
+    'mysql:host=localhost;dbname=cool_db_name', 'user', 'pass', [/* options */], true // останній параметр увімкнює APM
 ]);
 ```
 
-Після виконання запитів ви можете журналізувати їх вручну, але APM журналізуватиме їх автоматично, якщо увімкнено:
+Після виконання запитів ви можете логувати їх вручну, але APM логуватиме їх автоматично, якщо увімкнено:
 
 ```php
 Flight::db()->logQueries();
@@ -125,42 +129,42 @@ Flight::db()->logQueries();
 
 ```php
 Flight::route('/users', function () {
-    // Get all users
+    // Отримайте всіх користувачів
     $users = Flight::db()->fetchAll('SELECT * FROM users');
 
-    // Stream all users
+    // Потоково отримайте всіх користувачів
     $statement = Flight::db()->runQuery('SELECT * FROM users');
     while ($user = $statement->fetch()) {
         echo $user['name'];
     }
 
-    // Get a single user
+    // Отримайте одного користувача
     $user = Flight::db()->fetchRow('SELECT * FROM users WHERE id = ?', [123]);
 
-    // Get a single value
+    // Отримайте одне значення
     $count = Flight::db()->fetchField('SELECT COUNT(*) FROM users');
 
-    // Special IN() syntax
+    // Спеціальний синтаксис IN()
     $users = Flight::db()->fetchAll('SELECT * FROM users WHERE id IN (?)', [[1,2,3,4,5]]);
     $users = Flight::db()->fetchAll('SELECT * FROM users WHERE id IN (?)', ['1,2,3,4,5']);
 
-    // Insert a new user
+    // Вставте нового користувача
     Flight::db()->runQuery("INSERT INTO users (name, email) VALUES (?, ?)", ['Bob', 'bob@example.com']);
     $insert_id = Flight::db()->lastInsertId();
 
-    // Update a user
+    // Оновіть користувача
     Flight::db()->runQuery("UPDATE users SET name = ? WHERE id = ?", ['Bob', 123]);
 
-    // Delete a user
+    // Видаліть користувача
     Flight::db()->runQuery("DELETE FROM users WHERE id = ?", [123]);
 
-    // Get the number of affected rows
+    // Отримайте кількість уражених рядків
     $statement = Flight::db()->runQuery("UPDATE users SET name = ? WHERE name = ?", ['Bob', 'Sally']);
     $affected_rows = $statement->rowCount();
 });
 ```
 
-## Див. також
+## Дивіться також
 
 - [Collections](/learn/collections) - Дізнайтеся, як використовувати клас Collection для легкого доступу до даних.
 
@@ -168,7 +172,7 @@ Flight::route('/users', function () {
 
 - Якщо ви отримуєте помилку про з'єднання з базою даних, перевірте ваш DSN, ім'я користувача, пароль та опції.
 - Усі рядки повертаються як Collections — якщо вам потрібен звичайний масив, використовуйте `$collection->getData()`.
-- Для запитів `IN (?)` переконайтеся, що передаєте масив або рядок, розділений комами.
+- Для запитів `IN (?)` переконайтеся, що ви передаєте масив або рядок, розділений комами.
 
 ## Журнал змін
 

@@ -65,9 +65,13 @@ Collections are used to hold data and be accessible as an array or as an object 
 
 This has a few simple functions to make encoding and decoding your JSON consistent.
 
-### [PDO Wrapper](/learn/pdo-wrapper)
+### [SimplePdo](/learn/simple-pdo)
 
-PDO at times can add more headache than necessary. This simple wrapper class can make it significantly easier to interact with your database.
+PDO at times can add more headache than necessary. SimplePdo is a modern PDO helper class with convenient methods like `insert()`, `update()`, `delete()`, and `transaction()` to make database operations much easier.
+
+### [PdoWrapper](/learn/pdo-wrapper) (Deprecated)
+
+The original PDO wrapper is deprecated as of v3.18.0. Please use [SimplePdo](/learn/simple-pdo) instead.
 
 ### [Uploaded File Handler](/learn/uploaded-file)
 
