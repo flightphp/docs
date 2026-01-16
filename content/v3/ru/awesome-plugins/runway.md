@@ -14,7 +14,7 @@ composer require flightphp/runway
 
 ## Базовая конфигурация
 
-Впервые запустив Runway, оно попытается найти конфигурацию `runway` в `app/config/config.php` через ключ `'runway'`.
+В первый раз при запуске Runway попытается найти конфигурацию `runway` в `app/config/config.php` через ключ `'runway'`.
 
 ```php
 <?php
@@ -29,9 +29,11 @@ return [
 
 > **ПРИМЕЧАНИЕ** - Начиная с **v1.2.0**, `.runway-config.json` устарел. Пожалуйста, мигрируйте вашу конфигурацию в `app/config/config.php`. Вы можете сделать это легко с помощью команды `php runway config:migrate`.
 
+
+
 ### Обнаружение корня проекта
 
-Runway достаточно умён, чтобы обнаружить корень вашего проекта, даже если вы запускаете его из поддиректории. Оно ищет индикаторы, такие как `composer.json`, `.git` или `app/config/config.php`, чтобы определить, где находится корень проекта. Это значит, что вы можете запускать команды Runway откуда угодно в вашем проекте! 
+Runway достаточно умён, чтобы обнаружить корень вашего проекта, даже если вы запускаете его из поддиректории. Он ищет индикаторы, такие как `composer.json`, `.git` или `app/config/config.php`, чтобы определить, где находится корень проекта. Это значит, что вы можете запускать команды Runway откуда угодно в вашем проекте! 
 
 ## Использование
 
@@ -60,7 +62,7 @@ php runway routes --help
 
 ### Генерация контроллера
 
-На основе конфигурации в `runway.app_root`, место будет генерировать контроллер для вас в директории `app/controllers/`.
+На основе конфигурации в `runway.app_root` будет сгенерирован контроллер для вас в директории `app/controllers/`.
 
 ```bash
 php runway make:controller MyController
@@ -68,13 +70,13 @@ php runway make:controller MyController
 
 ### Генерация модели Active Record
 
-Сначала убедитесь, что вы установили плагин [Active Record](/awesome-plugins/active-record). На основе конфигурации в `runway.app_root`, место будет генерировать запись для вас в директории `app/records/`.
+Сначала убедитесь, что вы установили плагин [Active Record](/awesome-plugins/active-record). На основе конфигурации в `runway.app_root` будет сгенерирована запись для вас в директории `app/records/`.
 
 ```bash
 php runway make:record users
 ```
 
-Если, например, у вас есть таблица `users` со следующей схемой: `id`, `name`, `email`, `created_at`, `updated_at`, файл, похожий на следующий, будет создан в файле `app/records/UserRecord.php`:
+Если, например, у вас есть таблица `users` со следующей схемой: `id`, `name`, `email`, `created_at`, `updated_at`, будет создан файл, похожий на следующий, в файле `app/records/UserRecord.php`:
 
 ```php
 <?php
@@ -84,7 +86,7 @@ declare(strict_types=1);
 namespace app\records;
 
 /**
- * ActiveRecord class for the users table.
+ * Класс ActiveRecord для таблицы users.
  * @link https://docs.flightphp.com/awesome-plugins/active-record
  * 
  * @property int $id
@@ -92,20 +94,20 @@ namespace app\records;
  * @property string $email
  * @property string $created_at
  * @property string $updated_at
- * // you could also add relationships here once you define them in the $relations array
- * @property CompanyRecord $company Example of a relationship
+ * // вы также можете добавить здесь отношения, как только определите их в массиве $relations
+ * @property CompanyRecord $company Пример отношения
  */
 class UserRecord extends \flight\ActiveRecord
 {
     /**
-     * @var array $relations Set the relationships for the model
+     * @var array $relations Установка отношений для модели
      *   https://docs.flightphp.com/awesome-plugins/active-record#relationships
      */
     protected array $relations = [];
 
     /**
-     * Constructor
-     * @param mixed $databaseConnection The connection to the database
+     * Конструктор
+     * @param mixed $databaseConnection Соединение с базой данных
      */
     public function __construct($databaseConnection)
     {
@@ -125,20 +127,20 @@ php runway routes
 Если вы хотите просмотреть только конкретные маршруты, вы можете передать флаг для фильтрации маршрутов.
 
 ```bash
-# Display only GET routes
+# Отображение только GET-маршрутов
 php runway routes --get
 
-# Display only POST routes
+# Отображение только POST-маршрутов
 php runway routes --post
 
-# etc.
+# и т.д.
 ```
 
 ## Добавление пользовательских команд в Runway
 
 Если вы создаёте пакет для Flight или хотите добавить свои собственные пользовательские команды в ваш проект, вы можете сделать это, создав директорию `src/commands/`, `flight/commands/`, `app/commands/` или `commands/` для вашего проекта/пакета. Если вам нужна дальнейшая настройка, см. раздел ниже о Конфигурации.
 
-Чтобы создать команду, вы просто расширяете класс `AbstractBaseCommand` и реализуете как минимум метод `__construct` и метод `execute`.
+Чтобы создать команду, просто расширьте класс `AbstractBaseCommand` и реализуйте как минимум метод `__construct` и метод `execute`.
 
 ```php
 <?php
@@ -150,18 +152,18 @@ namespace flight\commands;
 class ExampleCommand extends AbstractBaseCommand
 {
 	/**
-     * Construct
+     * Конструктор
      *
-     * @param array<string,mixed> $config Config from app/config/config.php
+     * @param array<string,mixed> $config Конфигурация из app/config/config.php
      */
     public function __construct(array $config)
     {
-        parent::__construct('make:example', 'Create an example for the documentation', $config);
-        $this->argument('<funny-gif>', 'The name of the funny gif');
+        parent::__construct('make:example', 'Создать пример для документации', $config);
+        $this->argument('<funny-gif>', 'Имя забавного GIF');
     }
 
 	/**
-     * Executes the function
+     * Выполняет функцию
      *
      * @return void
      */
@@ -169,11 +171,11 @@ class ExampleCommand extends AbstractBaseCommand
     {
         $io = $this->app()->io();
 
-		$io->info('Creating example...');
+		$io->info('Создание примера...');
 
-		// Do something here
+		// Сделайте что-то здесь
 
-		$io->ok('Example created!');
+		$io->ok('Пример создан!');
 	}
 }
 ```
@@ -216,33 +218,33 @@ php runway config:get app_root
 <?php
 // app/config/config.php
 return [
-    // ... other config values ...
+    // ... другие значения конфигурации ...
 
     'runway' => [
-        // This is where your application directory is located
+        // Здесь находится директория вашего приложения
         'app_root' => 'app/',
 
-        // This is the directory where your root index file is located
+        // Это директория, где находится ваш корневой индексный файл
         'index_root' => 'public/',
 
-        // These are the paths to the roots of other projects
+        // Это пути к корням других проектов
         'root_paths' => [
             '/home/user/different-project',
             '/var/www/another-project'
         ],
 
-        // Base paths most likely don't need to be configured, but it's here if you want it
+        // Базовые пути, скорее всего, не нужно настраивать, но они здесь, если вы хотите
         'base_paths' => [
-            '/includes/libs/vendor', // if you have a really unique path for your vendor directory or something
+            '/includes/libs/vendor', // если у вас действительно уникальный путь для директории vendor или чего-то подобного
         ],
 
-        // Final paths are locations within a project to search for the command files
+        // Финальные пути — это места внутри проекта для поиска файлов команд
         'final_paths' => [
             'src/diff-path/commands',
             'app/module/admin/commands',
         ],
 
-        // If you want to just add the full path, go right ahead (absolute or relative to project root)
+        // Если вы хотите просто добавить полный путь, пожалуйста (абсолютный или относительный к корню проекта)
         'paths' => [
             '/home/user/different-project/src/diff-path/commands',
             '/var/www/another-project/app/module/admin/commands',
@@ -254,33 +256,33 @@ return [
 
 ### Доступ к конфигурации
 
-Если вам нужно эффективно получить доступ к значениям конфигурации, вы можете получить к ним доступ через метод `__construct` или метод `app()`. Также важно отметить, что если у вас есть файл `app/config/services.php`, эти сервисы также будут доступны для вашей команды.
+Если вам нужно эффективно получить доступ к значениям конфигурации, вы можете обращаться к ним через метод `__construct` или метод `app()`. Также важно отметить, что если у вас есть файл `app/config/services.php`, эти сервисы также будут доступны для вашей команды.
 
 ```php
 public function execute()
 {
     $io = $this->app()->io();
     
-    // Access configuration
+    // Доступ к конфигурации
     $app_root = $this->config['runway']['app_root'];
     
-    // Access services like maybe a database connection
+    // Доступ к сервисам, например, соединению с базой данных
     $database = $this->config['database']
     
     // ...
 }
 ```
 
-## Обёртки помощников ИИ
+## Обертки помощников ИИ
 
-Runway имеет некоторые обёртки помощников, которые облегчают генерацию команд ИИ. Вы можете использовать `addOption` и `addArgument` таким образом, который похож на Symfony Console. Это полезно, если вы используете инструменты ИИ для генерации ваших команд.
+Runway имеет некоторые обертки помощников, которые облегчают генерацию команд ИИ. Вы можете использовать `addOption` и `addArgument` таким образом, который похож на Symfony Console. Это полезно, если вы используете инструменты ИИ для генерации ваших команд.
 
 ```php
 public function __construct(array $config)
 {
-    parent::__construct('make:example', 'Create an example for the documentation', $config);
+    parent::__construct('make:example', 'Создать пример для документации', $config);
     
-    // The mode argument is nullable and defaults to completely optional
-    $this->addOption('name', 'The name of the example', null);
+    // Аргумент mode является nullable и по умолчанию полностью необязательным
+    $this->addOption('name', 'Имя примера', null);
 }
 ```

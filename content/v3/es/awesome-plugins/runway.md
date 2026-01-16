@@ -29,7 +29,7 @@ return [
 
 > **NOTA** - A partir de **v1.2.0**, `.runway-config.json` está obsoleto. Por favor, migra tu configuración a `app/config/config.php`. Puedes hacerlo fácilmente con el comando `php runway config:migrate`.
 
-### Detección de la Raíz del Proyecto
+### Detección de Raíz del Proyecto
 
 Runway es lo suficientemente inteligente como para detectar la raíz de tu proyecto, incluso si lo ejecutas desde un subdirectorio. Busca indicadores como `composer.json`, `.git` o `app/config/config.php` para determinar dónde está la raíz del proyecto. Esto significa que puedes ejecutar comandos de Runway desde cualquier lugar en tu proyecto!
 
@@ -74,7 +74,7 @@ Primero asegúrate de haber instalado el plugin [Active Record](/awesome-plugins
 php runway make:record users
 ```
 
-Por ejemplo, si tienes la tabla `users` con el siguiente esquema: `id`, `name`, `email`, `created_at`, `updated_at`, se creará un archivo similar al siguiente en el archivo `app/records/UserRecord.php`:
+Si, por ejemplo, tienes la tabla `users` con el siguiente esquema: `id`, `name`, `email`, `created_at`, `updated_at`, se creará un archivo similar al siguiente en el archivo `app/records/UserRecord.php`:
 
 ```php
 <?php
@@ -136,7 +136,7 @@ php runway routes --post
 
 ## Agregar Comandos Personalizados a Runway
 
-Si estás creando un paquete para Flight o quieres agregar tus propios comandos personalizados a tu proyecto, puedes hacerlo creando un directorio `src/commands/`, `flight/commands/`, `app/commands/` o `commands/` para tu proyecto/paquete. Si necesitas más personalización, consulta la sección a continuación sobre Configuración.
+Si estás creando un paquete para Flight, o quieres agregar tus propios comandos personalizados a tu proyecto, puedes hacerlo creando un directorio `src/commands/`, `flight/commands/`, `app/commands/` o `commands/` para tu proyecto/paquete. Si necesitas más personalización, consulta la sección a continuación sobre Configuración.
 
 Para crear un comando, simplemente extiende la clase `AbstractBaseCommand` e implementa al menos un método `__construct` y un método `execute`.
 
@@ -182,7 +182,7 @@ Consulta la [Documentación de adhocore/php-cli](https://github.com/adhocore/php
 
 ## Gestión de Configuración
 
-Dado que la configuración se ha movido a `app/config/config.php` a partir de `v1.2.0`, hay algunos comandos de ayuda para gestionar la configuración.
+Dado que la configuración se ha movido a `app/config/config.php` a partir de `v1.2.0`, hay algunos comandos auxiliares para gestionar la configuración.
 
 ### Migrar Configuración Antigua
 
@@ -271,9 +271,9 @@ public function execute()
 }
 ```
 
-## Wrappers de Ayudante de IA
+## Envoltorios de Ayudante de IA
 
-Runway tiene algunos wrappers de ayudante que facilitan que la IA genere comandos. Puedes usar `addOption` y `addArgument` de una manera que se siente similar a Symfony Console. Esto es útil si estás usando herramientas de IA para generar tus comandos.
+Runway tiene algunos envoltorios de ayudante que facilitan que la IA genere comandos. Puedes usar `addOption` y `addArgument` de una manera que se sienta similar a Symfony Console. Esto es útil si estás usando herramientas de IA para generar tus comandos.
 
 ```php
 public function __construct(array $config)

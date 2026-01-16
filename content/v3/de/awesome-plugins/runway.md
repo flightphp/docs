@@ -1,8 +1,8 @@
 # Runway
 
-Runway ist eine CLI-Anwendung, die Ihnen bei der Verwaltung Ihrer Flight-Anwendungen hilft. Sie kann Controller generieren, alle Routen anzeigen und mehr. Sie basiert auf der hervorragenden [adhocore/php-cli](https://github.com/adhocore/php-cli)-Bibliothek.
+Runway ist eine CLI-Anwendung, die Ihnen hilft, Ihre Flight-Anwendungen zu verwalten. Sie kann Controller generieren, alle Routen anzeigen und mehr. Sie basiert auf der exzellenten [adhocore/php-cli](https://github.com/adhocore/php-cli)-Bibliothek.
 
-Klicken Sie [hier](https://github.com/flightphp/runway), um den Code anzusehen.
+Klicken Sie [hier](https://github.com/flightphp/runway), um den Code anzuzeigen.
 
 ## Installation
 
@@ -14,7 +14,7 @@ composer require flightphp/runway
 
 ## Basis-Konfiguration
 
-Beim ersten Ausführen von Runway sucht es nach einer `runway`-Konfiguration in `app/config/config.php` über den Schlüssel `'runway'`.
+Beim ersten Ausführen von Runway versucht es, eine `runway`-Konfiguration in `app/config/config.php` über den Schlüssel `'runway'` zu finden.
 
 ```php
 <?php
@@ -29,16 +29,18 @@ return [
 
 > **HINWEIS** - Ab **v1.2.0** ist `.runway-config.json` veraltet. Bitte migrieren Sie Ihre Konfiguration zu `app/config/config.php`. Sie können dies einfach mit dem Befehl `php runway config:migrate` tun.
 
+
+
 ### Projekt-Root-Erkennung
 
-Runway ist intelligent genug, um das Root-Verzeichnis Ihres Projekts zu erkennen, auch wenn Sie es aus einem Unterverzeichnis ausführen. Es sucht nach Indikatoren wie `composer.json`, `.git` oder `app/config/config.php`, um zu bestimmen, wo das Projekt-Root liegt. Das bedeutet, Sie können Runway-Befehle von überall in Ihrem Projekt ausführen!
+Runway ist intelligent genug, um das Root-Verzeichnis Ihres Projekts zu erkennen, auch wenn Sie es aus einem Unterverzeichnis ausführen. Es sucht nach Indikatoren wie `composer.json`, `.git` oder `app/config/config.php`, um zu bestimmen, wo das Projekt-Root liegt. Das bedeutet, Sie können Runway-Befehle von überall in Ihrem Projekt ausführen! 
 
 ## Verwendung
 
-Runway verfügt über eine Reihe von Befehlen, die Sie zur Verwaltung Ihrer Flight-Anwendung verwenden können. Es gibt zwei einfache Wege, Runway zu nutzen.
+Runway verfügt über eine Reihe von Befehlen, die Sie verwenden können, um Ihre Flight-Anwendung zu verwalten. Es gibt zwei einfache Wege, Runway zu nutzen.
 
-1. Wenn Sie das Skeleton-Projekt verwenden, können Sie `php runway [command]` vom Root-Verzeichnis Ihres Projekts ausführen.
-1. Wenn Sie Runway als Paket über Composer installiert haben, können Sie `vendor/bin/runway [command]` vom Root-Verzeichnis Ihres Projekts ausführen.
+1. Wenn Sie das Skeleton-Projekt verwenden, können Sie `php runway [command]` vom Root Ihres Projekts ausführen.
+1. Wenn Sie Runway als über Composer installiertes Paket verwenden, können Sie `vendor/bin/runway [command]` vom Root Ihres Projekts ausführen.
 
 ### Befehlsliste
 
@@ -50,13 +52,13 @@ php runway
 
 ### Befehls-Hilfe
 
-Für jeden Befehl können Sie die `--help`-Flagge übergeben, um weitere Informationen zur Verwendung des Befehls zu erhalten.
+Für jeden Befehl können Sie die `--help`-Flagge übergeben, um mehr Informationen darüber zu erhalten, wie der Befehl verwendet wird.
 
 ```bash
 php runway routes --help
 ```
 
-Hier sind einige Beispiele:
+Hier sind ein paar Beispiele:
 
 ### Einen Controller generieren
 
@@ -68,13 +70,13 @@ php runway make:controller MyController
 
 ### Ein Active Record-Modell generieren
 
-Stellen Sie zuerst sicher, dass Sie das [Active Record](/awesome-plugins/active-record)-Plugin installiert haben. Basierend auf der Konfiguration in `runway.app_root` wird der Speicherort einen Datensatz für Sie im Verzeichnis `app/records/` generieren.
+Stellen Sie zuerst sicher, dass Sie das [Active Record](/awesome-plugins/active-record)-Plugin installiert haben. Basierend auf der Konfiguration in `runway.app_root` wird der Speicherort einen Record für Sie im Verzeichnis `app/records/` generieren.
 
 ```bash
 php runway make:record users
 ```
 
-Falls Sie beispielsweise die Tabelle `users` mit dem folgenden Schema haben: `id`, `name`, `email`, `created_at`, `updated_at`, wird eine Datei ähnlich der folgenden in der Datei `app/records/UserRecord.php` erstellt:
+Wenn Sie beispielsweise die `users`-Tabelle mit dem folgenden Schema haben: `id`, `name`, `email`, `created_at`, `updated_at`, wird eine Datei ähnlich der folgenden in der Datei `app/records/UserRecord.php` erstellt:
 
 ```php
 <?php
@@ -84,7 +86,7 @@ declare(strict_types=1);
 namespace app\records;
 
 /**
- * ActiveRecord-Klasse für die Tabelle users.
+ * ActiveRecord-Klasse für die users-Tabelle.
  * @link https://docs.flightphp.com/awesome-plugins/active-record
  * 
  * @property int $id
@@ -98,7 +100,7 @@ namespace app\records;
 class UserRecord extends \flight\ActiveRecord
 {
     /**
-     * @var array $relations Setzt die Beziehungen für das Modell
+     * @var array $relations Legen Sie die Beziehungen für das Modell fest
      *   https://docs.flightphp.com/awesome-plugins/active-record#relationships
      */
     protected array $relations = [];
@@ -125,10 +127,10 @@ php runway routes
 Wenn Sie nur spezifische Routen anzeigen möchten, können Sie eine Flagge übergeben, um die Routen zu filtern.
 
 ```bash
-# Zeigt nur GET-Routen an
+# Nur GET-Routen anzeigen
 php runway routes --get
 
-# Zeigt nur POST-Routen an
+# Nur POST-Routen anzeigen
 php runway routes --post
 
 # usw.
@@ -156,7 +158,7 @@ class ExampleCommand extends AbstractBaseCommand
      */
     public function __construct(array $config)
     {
-        parent::__construct('make:example', 'Erstellt ein Beispiel für die Dokumentation', $config);
+        parent::__construct('make:example', 'Erstellen eines Beispiels für die Dokumentation', $config);
         $this->argument('<funny-gif>', 'Der Name des lustigen GIFs');
     }
 
@@ -169,7 +171,7 @@ class ExampleCommand extends AbstractBaseCommand
     {
         $io = $this->app()->io();
 
-		$io->info('Erstelle Beispiel...');
+		$io->info('Erstellen des Beispiels...');
 
 		// Hier etwas tun
 
@@ -182,7 +184,7 @@ Sehen Sie sich die [adhocore/php-cli-Dokumentation](https://github.com/adhocore/
 
 ## Konfigurationsverwaltung
 
-Da die Konfiguration ab `v1.2.0` zu `app/config/config.php` verschoben wurde, gibt es einige Hilfsbefehle zur Verwaltung der Konfiguration.
+Da die Konfiguration ab `v1.2.0` zu `app/config/config.php` verschoben wurde, gibt es ein paar Hilfsbefehle zur Verwaltung der Konfiguration.
 
 ### Alte Konfiguration migrieren
 
@@ -194,7 +196,7 @@ php runway config:migrate
 
 ### Konfigurationswert setzen
 
-Sie können einen Konfigurationswert mit dem Befehl `config:set` setzen. Dies ist nützlich, wenn Sie einen Konfigurationswert aktualisieren möchten, ohne die Datei zu öffnen.
+Sie können einen Konfigurationswert mit dem `config:set`-Befehl setzen. Dies ist nützlich, wenn Sie einen Konfigurationswert aktualisieren möchten, ohne die Datei zu öffnen.
 
 ```bash
 php runway config:set app_root "app/"
@@ -202,7 +204,7 @@ php runway config:set app_root "app/"
 
 ### Konfigurationswert abrufen
 
-Sie können einen Konfigurationswert mit dem Befehl `config:get` abrufen.
+Sie können einen Konfigurationswert mit dem `config:get`-Befehl abrufen.
 
 ```bash
 php runway config:get app_root
@@ -210,7 +212,7 @@ php runway config:get app_root
 
 ## Alle Runway-Konfigurationen
 
-Wenn Sie die Konfiguration für Runway anpassen müssen, können Sie diese Werte in `app/config/config.php` setzen. Unten sind einige zusätzliche Konfigurationen, die Sie setzen können:
+Wenn Sie die Konfiguration für Runway anpassen müssen, können Sie diese Werte in `app/config/config.php` setzen. Nachfolgend sind einige zusätzliche Konfigurationen, die Sie setzen können:
 
 ```php
 <?php
@@ -231,9 +233,9 @@ return [
             '/var/www/another-project'
         ],
 
-        // Basis-Pfade müssen wahrscheinlich nicht konfiguriert werden, aber es ist hier, falls Sie es wollen
+        // Basis-Pfade müssen wahrscheinlich nicht konfiguriert werden, aber es ist hier, falls Sie es wünschen
         'base_paths' => [
-            '/includes/libs/vendor', // falls Sie einen wirklich einzigartigen Pfad für Ihr Vendor-Verzeichnis haben oder so
+            '/includes/libs/vendor', // wenn Sie einen wirklich einzigartigen Pfad für Ihr Vendor-Verzeichnis haben oder so
         ],
 
         // Finale Pfade sind Orte innerhalb eines Projekts, um nach Befehlsdateien zu suchen
@@ -242,7 +244,7 @@ return [
             'app/module/admin/commands',
         ],
 
-        // Wenn Sie einfach den vollständigen Pfad hinzufügen möchten, tun Sie es ruhig (absolut oder relativ zum Projekt-Root)
+        // Wenn Sie den vollständigen Pfad hinzufügen möchten, gehen Sie einfach voran (absolut oder relativ zum Projekt-Root)
         'paths' => [
             '/home/user/different-project/src/diff-path/commands',
             '/var/www/another-project/app/module/admin/commands',
@@ -254,7 +256,7 @@ return [
 
 ### Zugriff auf Konfiguration
 
-Wenn Sie die Konfigurationswerte effektiv abrufen müssen, können Sie sie über die `__construct`-Methode oder die `app()`-Methode abrufen. Es ist auch wichtig zu beachten, dass, wenn Sie eine Datei `app/config/services.php` haben, diese Dienste auch für Ihren Befehl verfügbar sind.
+Wenn Sie die Konfigurationswerte effektiv abrufen müssen, können Sie sie über die `__construct`-Methode oder die `app()`-Methode abrufen. Es ist auch wichtig zu beachten, dass, wenn Sie eine `app/config/services.php`-Datei haben, diese Dienste ebenfalls für Ihren Befehl verfügbar sind.
 
 ```php
 public function execute()
@@ -273,14 +275,14 @@ public function execute()
 
 ## AI-Hilfs-Wrapper
 
-Runway hat einige Hilfs-Wrapper, die es AI einfacher machen, Befehle zu generieren. Sie können `addOption` und `addArgument` auf eine Weise verwenden, die ähnlich wie bei Symfony Console wirkt. Dies ist hilfreich, wenn Sie AI-Tools verwenden, um Ihre Befehle zu generieren.
+Runway hat einige Hilfs-Wrapper, die es einfacher machen, für KI Befehle zu generieren. Sie können `addOption` und `addArgument` auf eine Weise verwenden, die ähnlich wie Symfony Console wirkt. Dies ist hilfreich, wenn Sie KI-Tools verwenden, um Ihre Befehle zu generieren.
 
 ```php
 public function __construct(array $config)
 {
-    parent::__construct('make:example', 'Erstellt ein Beispiel für die Dokumentation', $config);
+    parent::__construct('make:example', 'Erstellen eines Beispiels für die Dokumentation', $config);
     
-    // Der Name-Argument ist nullable und standardmäßig vollständig optional
+    // Der name-Argument ist nullable und standardmäßig vollständig optional
     $this->addOption('name', 'Der Name des Beispiels', null);
 }
 ```

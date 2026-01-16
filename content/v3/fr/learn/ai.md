@@ -2,13 +2,13 @@
 
 ## Aperçu
 
-Flight facilite le renforcement de vos projets PHP avec des outils alimentés par l'IA et des flux de travail modernes pour les développeurs. Avec des commandes intégrées pour se connecter aux fournisseurs de LLM (Large Language Model) et générer des instructions de codage IA spécifiques au projet, Flight vous aide, vous et votre équipe, à tirer le meilleur parti des assistants IA comme GitHub Copilot, Cursor et Windsurf.
+Flight facilite le renforcement de vos projets PHP avec des outils alimentés par l'IA et des flux de travail modernes pour les développeurs. Avec des commandes intégrées pour se connecter aux fournisseurs de LLM (Large Language Model) et générer des instructions de codage IA spécifiques au projet, Flight vous aide, vous et votre équipe, à tirer le meilleur parti des assistants IA comme GitHub Copilot, Cursor, Windsurf et Antigravity (Gemini).
 
 ## Compréhension
 
 Les assistants de codage IA sont les plus utiles lorsqu'ils comprennent le contexte, les conventions et les objectifs de votre projet. Les aides IA de Flight vous permettent de :
 - Connecter votre projet à des fournisseurs de LLM populaires (OpenAI, Grok, Claude, etc.)
-- Générer et mettre à jour des instructions spécifiques au projet pour les outils IA, afin que tout le monde reçoive une aide cohérente et pertinente
+- Générer et mettre à jour des instructions spécifiques au projet pour les outils IA, afin que tout le monde obtienne une aide cohérente et pertinente
 - Maintenir votre équipe alignée et productive, avec moins de temps passé à expliquer le contexte
 
 Ces fonctionnalités sont intégrées au CLI principal de Flight et au projet de démarrage officiel [flightphp/skeleton](https://github.com/flightphp/skeleton).
@@ -17,7 +17,7 @@ Ces fonctionnalités sont intégrées au CLI principal de Flight et au projet de
 
 ### Configuration des Identifiants LLM
 
-La commande `ai:init` vous guide à travers la connexion de votre projet à un fournisseur de LLM.
+La commande `ai:init` vous guide pour connecter votre projet à un fournisseur de LLM.
 
 ```bash
 php runway ai:init
@@ -28,16 +28,16 @@ Vous serez invité à :
 - Entrer votre clé API
 - Définir l'URL de base et le nom du modèle
 
-Cela crée un fichier `.runway-creds.json` à la racine de votre projet (et s'assure qu'il est dans votre `.gitignore`).
+Cela crée les identifiants nécessaires pour effectuer de futures requêtes LLM.
 
 **Exemple :**
 ```
-Welcome to AI Init!
-Which LLM API do you want to use? [1] openai, [2] grok, [3] claude: 1
-Enter the base URL for the LLM API [https://api.openai.com]:
-Enter your API key for openai: sk-...
-Enter the model name you want to use (e.g. gpt-4, claude-3-opus, etc) [gpt-4o]:
-Credentials saved to .runway-creds.json
+Bienvenue dans AI Init !
+Quel API LLM voulez-vous utiliser ? [1] openai, [2] grok, [3] claude : 1
+Entrez l'URL de base pour l'API LLM [https://api.openai.com] :
+Entrez votre clé API pour openai : sk-...
+Entrez le nom du modèle que vous voulez utiliser (ex. gpt-4, claude-3-opus, etc) [gpt-4o] :
+Identifiants sauvegardés dans .runway-creds.json
 ```
 
 ### Génération d'Instructions IA Spécifiques au Projet
@@ -52,18 +52,19 @@ Vous répondrez à quelques questions sur votre projet (description, base de don
 - `.github/copilot-instructions.md` (pour GitHub Copilot)
 - `.cursor/rules/project-overview.mdc` (pour Cursor)
 - `.windsurfrules` (pour Windsurf)
+- `.gemini/GEMINI.md` (pour Antigravity)
 
 **Exemple :**
 ```
-Please describe what your project is for? My awesome API
-What database are you planning on using? MySQL
-What HTML templating engine will you plan on using (if any)? latte
-Is security an important element of this project? (y/n) y
+Veuillez décrire à quoi sert votre projet ? Mon API géniale
+Quelle base de données prévoyez-vous d'utiliser ? MySQL
+Quel moteur de templating HTML prévoyez-vous d'utiliser (si applicable) ? latte
+La sécurité est-elle un élément important de ce projet ? (o/n) o
 ...
-AI instructions updated successfully.
+Instructions IA mises à jour avec succès.
 ```
 
-Maintenant, vos outils IA fourniront des suggestions plus intelligentes et plus pertinentes basées sur les besoins réels de votre projet.
+Désormais, vos outils IA fourniront des suggestions plus intelligentes et plus pertinentes basées sur les besoins réels de votre projet.
 
 ## Utilisation Avancée
 

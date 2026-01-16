@@ -2,11 +2,11 @@
 
 ## Visão Geral
 
-Flight facilita o superpoder de seus projetos PHP com ferramentas alimentadas por IA e fluxos de trabalho modernos para desenvolvedores. Com comandos integrados para conectar a provedores de LLM (Large Language Model) e gerar instruções de codificação específicas do projeto alimentadas por IA, Flight ajuda você e sua equipe a tirar o máximo de assistentes de IA como GitHub Copilot, Cursor e Windsurf.
+Flight facilita o superpoder de seus projetos PHP com ferramentas alimentadas por IA e fluxos de trabalho modernos para desenvolvedores. Com comandos integrados para conectar a provedores de LLM (Large Language Model) e gerar instruções de codificação específicas do projeto baseadas em IA, Flight ajuda você e sua equipe a tirar o máximo proveito de assistentes de IA como GitHub Copilot, Cursor, Windsurf e Antigravity (Gemini).
 
 ## Entendendo
 
-Assistentes de codificação de IA são mais úteis quando entendem o contexto, convenções e objetivos do seu projeto. Os ajudantes de IA do Flight permitem que você:
+Assistentes de codificação de IA são mais úteis quando entendem o contexto, as convenções e os objetivos do seu projeto. Os ajudantes de IA do Flight permitem que você:
 - Conecte seu projeto a provedores populares de LLM (OpenAI, Grok, Claude, etc.)
 - Gere e atualize instruções específicas do projeto para ferramentas de IA, para que todos recebam ajuda consistente e relevante
 - Mantenha sua equipe alinhada e produtiva, com menos tempo gasto explicando o contexto
@@ -17,7 +17,7 @@ Esses recursos estão integrados ao CLI principal do Flight e ao projeto inicial
 
 ### Configurando Credenciais de LLM
 
-O comando `ai:init` o guia na conexão do seu projeto a um provedor de LLM.
+O comando `ai:init` o guia através da conexão do seu projeto a um provedor de LLM.
 
 ```bash
 php runway ai:init
@@ -28,19 +28,19 @@ Você será solicitado a:
 - Inserir sua chave de API
 - Definir a URL base e o nome do modelo
 
-Isso cria um arquivo `.runway-creds.json` na raiz do seu projeto (e garante que ele esteja no seu `.gitignore`).
+Isso cria as credenciais necessárias para que você faça solicitações futuras de LLM.
 
 **Exemplo:**
 ```
 Bem-vindo ao AI Init!
 Qual API de LLM você deseja usar? [1] openai, [2] grok, [3] claude: 1
-Insira a URL base para a API de LLM [https://api.openai.com]:
-Insira sua chave de API para openai: sk-...
-Insira o nome do modelo que você deseja usar (ex. gpt-4, claude-3-opus, etc) [gpt-4o]:
+Digite a URL base para a API de LLM [https://api.openai.com]:
+Digite sua chave de API para openai: sk-...
+Digite o nome do modelo que você deseja usar (ex. gpt-4, claude-3-opus, etc) [gpt-4o]:
 Credenciais salvas em .runway-creds.json
 ```
 
-### Gerando Instruções Específicas do Projeto para IA
+### Gerando Instruções de IA Específicas do Projeto
 
 O comando `ai:generate-instructions` ajuda você a criar ou atualizar instruções para assistentes de codificação de IA, adaptadas ao seu projeto.
 
@@ -48,17 +48,18 @@ O comando `ai:generate-instructions` ajuda você a criar ou atualizar instruçõ
 php runway ai:generate-instructions
 ```
 
-Você responderá a algumas perguntas sobre seu projeto (descrição, banco de dados, templating, segurança, tamanho da equipe, etc.). Flight usa seu provedor de LLM para gerar instruções, depois as escreve em:
+Você responderá a algumas perguntas sobre seu projeto (descrição, banco de dados, templating, segurança, tamanho da equipe, etc.). Flight usa seu provedor de LLM para gerar instruções e, em seguida, as escreve em:
 - `.github/copilot-instructions.md` (para GitHub Copilot)
 - `.cursor/rules/project-overview.mdc` (para Cursor)
 - `.windsurfrules` (para Windsurf)
+- `.gemini/GEMINI.md` (para Antigravity)
 
 **Exemplo:**
 ```
 Por favor, descreva para que serve seu projeto? Minha API incrível
 Qual banco de dados você planeja usar? MySQL
 Qual engine de templating HTML você planeja usar (se houver)? latte
-A segurança é um elemento importante deste projeto? (y/n) y
+A segurança é um elemento importante deste projeto? (s/n) s
 ...
 Instruções de IA atualizadas com sucesso.
 ```

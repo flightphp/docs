@@ -14,7 +14,7 @@ composer require flightphp/runway
 
 ## Configuration de Base
 
-La première fois que vous exécutez Runway, elle essaiera de trouver une configuration `runway` dans `app/config/config.php` via la clé `'runway'`.
+La première fois que vous exécutez Runway, il essaiera de trouver une configuration `runway` dans `app/config/config.php` via la clé `'runway'`.
 
 ```php
 <?php
@@ -29,9 +29,11 @@ return [
 
 > **NOTE** - À partir de **v1.2.0**, `.runway-config.json` est déprécié. Veuillez migrer votre configuration vers `app/config/config.php`. Vous pouvez le faire facilement avec la commande `php runway config:migrate`.
 
+
+
 ### Détection de la Racine du Projet
 
-Runway est assez intelligent pour détecter la racine de votre projet, même si vous l'exécutez depuis un sous-répertoire. Il recherche des indicateurs comme `composer.json`, `.git`, ou `app/config/config.php` pour déterminer où se trouve la racine du projet. Cela signifie que vous pouvez exécuter les commandes Runway depuis n'importe où dans votre projet ! 
+Runway est suffisamment intelligent pour détecter la racine de votre projet, même si vous l'exécutez depuis un sous-répertoire. Il recherche des indicateurs comme `composer.json`, `.git`, ou `app/config/config.php` pour déterminer où se trouve la racine du projet. Cela signifie que vous pouvez exécuter les commandes Runway de n'importe où dans votre projet ! 
 
 ## Utilisation
 
@@ -116,13 +118,13 @@ class UserRecord extends \flight\ActiveRecord
 
 ### Afficher Toutes les Routes
 
-Cela affichera toutes les routes actuellement enregistrées avec Flight.
+Cela affichera toutes les routes qui sont actuellement enregistrées avec Flight.
 
 ```bash
 php runway routes
 ```
 
-Si vous souhaitez voir uniquement des routes spécifiques, vous pouvez passer un drapeau pour filtrer les routes.
+Si vous souhaitez ne voir que des routes spécifiques, vous pouvez passer un drapeau pour filtrer les routes.
 
 ```bash
 # Afficher uniquement les routes GET
@@ -136,9 +138,9 @@ php runway routes --post
 
 ## Ajouter des Commandes Personnalisées à Runway
 
-Si vous créez un package pour Flight, ou si vous souhaitez ajouter vos propres commandes personnalisées à votre projet, vous pouvez le faire en créant un répertoire `src/commands/`, `flight/commands/`, `app/commands/`, ou `commands/` pour votre projet/package. Si vous avez besoin de personnalisations supplémentaires, voir la section ci-dessous sur la Configuration.
+Si vous créez un package pour Flight, ou si vous souhaitez ajouter vos propres commandes personnalisées à votre projet, vous pouvez le faire en créant un répertoire `src/commands/`, `flight/commands/`, `app/commands/`, ou `commands/` pour votre projet/package. Si vous avez besoin de personnalisations supplémentaires, consultez la section ci-dessous sur la Configuration.
 
-Pour créer une commande, vous étendez simplement la classe `AbstractBaseCommand`, et implémentez au minimum une méthode `__construct` et une méthode `execute`.
+Pour créer une commande, il vous suffit d'étendre la classe `AbstractBaseCommand` et d'implémenter au minimum une méthode `__construct` et une méthode `execute`.
 
 ```php
 <?php
@@ -182,7 +184,7 @@ Consultez la [Documentation adhocore/php-cli](https://github.com/adhocore/php-cl
 
 ## Gestion de la Configuration
 
-Puisque la configuration a été déplacée vers `app/config/config.php` à partir de `v1.2.0`, il y a quelques commandes d'aide pour gérer la configuration.
+Puisque la configuration a été déplacée vers `app/config/config.php` à partir de `v1.2.0`, il y a quelques commandes d'assistance pour gérer la configuration.
 
 ### Migrer l'Ancienne Configuration
 
@@ -194,7 +196,7 @@ php runway config:migrate
 
 ### Définir une Valeur de Configuration
 
-Vous pouvez définir une valeur de configuration en utilisant la commande `config:set`. Cela est utile si vous souhaitez mettre à jour une valeur de configuration sans ouvrir le fichier.
+Vous pouvez définir une valeur de configuration en utilisant la commande `config:set`. C'est utile si vous souhaitez mettre à jour une valeur de configuration sans ouvrir le fichier.
 
 ```bash
 php runway config:set app_root "app/"
@@ -210,7 +212,7 @@ php runway config:get app_root
 
 ## Toutes les Configurations Runway
 
-Si vous avez besoin de personnaliser la configuration pour Runway, vous pouvez définir ces valeurs dans `app/config/config.php`. Voici quelques configurations supplémentaires que vous pouvez définir :
+Si vous devez personnaliser la configuration pour Runway, vous pouvez définir ces valeurs dans `app/config/config.php`. Voici quelques configurations supplémentaires que vous pouvez définir :
 
 ```php
 <?php
@@ -219,7 +221,7 @@ return [
     // ... autres valeurs de config ...
 
     'runway' => [
-        // C'est là que se trouve votre répertoire d'application
+        // C'est l'endroit où se trouve votre répertoire d'application
         'app_root' => 'app/',
 
         // C'est le répertoire où se trouve votre fichier index racine
@@ -231,9 +233,9 @@ return [
             '/var/www/another-project'
         ],
 
-        // Les chemins de base n'ont probablement pas besoin d'être configurés, mais c'est là si vous le souhaitez
+        // Les chemins de base n'ont probablement pas besoin d'être configurés, mais ils sont là si vous en voulez
         'base_paths' => [
-            '/includes/libs/vendor', // si vous avez un chemin vraiment unique pour votre répertoire vendor ou quelque chose
+            '/includes/libs/vendor', // si vous avez un chemin vraiment unique pour votre répertoire vendor ou autre
         ],
 
         // Les chemins finaux sont des emplacements dans un projet pour rechercher les fichiers de commande
@@ -254,7 +256,7 @@ return [
 
 ### Accéder à la Configuration
 
-Si vous avez besoin d'accéder efficacement aux valeurs de configuration, vous pouvez y accéder via la méthode `__construct` ou la méthode `app()`. Il est également important de noter que si vous avez un fichier `app/config/services.php`, ces services seront également disponibles pour votre commande.
+Si vous devez accéder efficacement aux valeurs de configuration, vous pouvez les accéder via la méthode `__construct` ou la méthode `app()`. Il est également important de noter que si vous avez un fichier `app/config/services.php`, ces services seront également disponibles pour votre commande.
 
 ```php
 public function execute()
@@ -271,9 +273,9 @@ public function execute()
 }
 ```
 
-## Enveloppeurs d'Aide IA
+## Enveloppeurs d'Assistance IA
 
-Runway dispose de quelques enveloppeurs d'aide qui facilitent la génération de commandes par l'IA. Vous pouvez utiliser `addOption` et `addArgument` d'une manière qui ressemble à Symfony Console. Cela est utile si vous utilisez des outils IA pour générer vos commandes.
+Runway dispose de quelques enveloppeurs d'assistance qui facilitent la génération de commandes par l'IA. Vous pouvez utiliser `addOption` et `addArgument` de manière similaire à Symfony Console. C'est utile si vous utilisez des outils d'IA pour générer vos commandes.
 
 ```php
 public function __construct(array $config)

@@ -1,6 +1,6 @@
 # Runway
 
-Runway adalah aplikasi CLI yang membantu Anda mengelola aplikasi Flight Anda. Ini dapat menghasilkan controller, menampilkan semua rute, dan lainnya. Ini didasarkan pada pustaka [adhocore/php-cli](https://github.com/adhocore/php-cli) yang luar biasa.
+Runway adalah aplikasi CLI yang membantu Anda mengelola aplikasi Flight Anda. Ini dapat menghasilkan controller, menampilkan semua rute, dan banyak lagi. Ini didasarkan pada pustaka [adhocore/php-cli](https://github.com/adhocore/php-cli) yang sangat baik.
 
 Klik [di sini](https://github.com/flightphp/runway) untuk melihat kode.
 
@@ -14,7 +14,7 @@ composer require flightphp/runway
 
 ## Konfigurasi Dasar
 
-Pada pertama kali Anda menjalankan Runway, itu akan mencoba mencari konfigurasi `runway` di `app/config/config.php` melalui kunci `'runway'`.
+Untuk pertama kalinya Anda menjalankan Runway, itu akan mencoba mencari konfigurasi `runway` di `app/config/config.php` melalui kunci `'runway'`.
 
 ```php
 <?php
@@ -28,6 +28,8 @@ return [
 ```
 
 > **CATATAN** - Mulai dari **v1.2.0**, `.runway-config.json` sudah tidak digunakan lagi. Silakan migrasikan konfigurasi Anda ke `app/config/config.php`. Anda dapat melakukan ini dengan mudah menggunakan perintah `php runway config:migrate`.
+
+
 
 ### Deteksi Root Proyek
 
@@ -50,7 +52,7 @@ php runway
 
 ### Bantuan Perintah
 
-Untuk perintah apa pun, Anda dapat menambahkan flag `--help` untuk mendapatkan informasi lebih lanjut tentang cara menggunakan perintah tersebut.
+Untuk perintah apa pun, Anda dapat memberikan flag `--help` untuk mendapatkan informasi lebih lanjut tentang cara menggunakan perintah tersebut.
 
 ```bash
 php runway routes --help
@@ -92,20 +94,20 @@ namespace app\records;
  * @property string $email
  * @property string $created_at
  * @property string $updated_at
- * // Anda juga bisa menambahkan relasi di sini setelah mendefinisikannya di array $relations
- * @property CompanyRecord $company Contoh relasi
+ * // you could also add relationships here once you define them in the $relations array
+ * @property CompanyRecord $company Example of a relationship
  */
 class UserRecord extends \flight\ActiveRecord
 {
     /**
-     * @var array $relations Atur relasi untuk model
+     * @var array $relations Set the relationships for the model
      *   https://docs.flightphp.com/awesome-plugins/active-record#relationships
      */
     protected array $relations = [];
 
     /**
-     * Konstruktor
-     * @param mixed $databaseConnection Koneksi ke database
+     * Constructor
+     * @param mixed $databaseConnection The connection to the database
      */
     public function __construct($databaseConnection)
     {
@@ -122,23 +124,23 @@ Ini akan menampilkan semua rute yang saat ini terdaftar dengan Flight.
 php runway routes
 ```
 
-Jika Anda ingin hanya melihat rute tertentu, Anda dapat menambahkan flag untuk memfilter rute.
+Jika Anda ingin hanya melihat rute tertentu, Anda dapat memberikan flag untuk memfilter rute.
 
 ```bash
-# Tampilkan hanya rute GET
+# Menampilkan hanya rute GET
 php runway routes --get
 
-# Tampilkan hanya rute POST
+# Menampilkan hanya rute POST
 php runway routes --post
 
-# dst.
+# dll.
 ```
 
 ## Menambahkan Perintah Kustom ke Runway
 
-Jika Anda sedang membuat paket untuk Flight, atau ingin menambahkan perintah kustom sendiri ke proyek Anda, Anda dapat melakukannya dengan membuat direktori `src/commands/`, `flight/commands/`, `app/commands/`, atau `commands/` untuk proyek/paket Anda. Jika Anda membutuhkan penyesuaian lebih lanjut, lihat bagian di bawah tentang Konfigurasi.
+Jika Anda membuat paket untuk Flight, atau ingin menambahkan perintah kustom sendiri ke proyek Anda, Anda dapat melakukannya dengan membuat direktori `src/commands/`, `flight/commands/`, `app/commands/`, atau `commands/` untuk proyek/paket Anda. Jika Anda membutuhkan penyesuaian lebih lanjut, lihat bagian di bawah tentang Konfigurasi.
 
-Untuk membuat perintah, Anda cukup memperluas kelas `AbstractBaseCommand`, dan mengimplementasikan minimal metode `__construct` dan metode `execute`.
+Untuk membuat perintah, Anda cukup memperluas kelas `AbstractBaseCommand`, dan menerapkan setidaknya metode `__construct` dan metode `execute`.
 
 ```php
 <?php
@@ -150,18 +152,18 @@ namespace flight\commands;
 class ExampleCommand extends AbstractBaseCommand
 {
 	/**
-     * Konstruktor
+     * Construct
      *
-     * @param array<string,mixed> $config Konfigurasi dari app/config/config.php
+     * @param array<string,mixed> $config Config from app/config/config.php
      */
     public function __construct(array $config)
     {
-        parent::__construct('make:example', 'Buat contoh untuk dokumentasi', $config);
-        $this->argument('<funny-gif>', 'Nama dari gif lucu');
+        parent::__construct('make:example', 'Create an example for the documentation', $config);
+        $this->argument('<funny-gif>', 'The name of the funny gif');
     }
 
 	/**
-     * Menjalankan fungsi
+     * Executes the function
      *
      * @return void
      */
@@ -169,11 +171,11 @@ class ExampleCommand extends AbstractBaseCommand
     {
         $io = $this->app()->io();
 
-		$io->info('Membuat contoh...');
+		$io->info('Creating example...');
 
-		// Lakukan sesuatu di sini
+		// Do something here
 
-		$io->ok('Contoh dibuat!');
+		$io->ok('Example created!');
 	}
 }
 ```
@@ -216,33 +218,33 @@ Jika Anda perlu menyesuaikan konfigurasi untuk Runway, Anda dapat mengatur nilai
 <?php
 // app/config/config.php
 return [
-    // ... nilai konfigurasi lainnya ...
+    // ... other config values ...
 
     'runway' => [
-        // Ini adalah lokasi direktori aplikasi Anda
+        // This is where your application directory is located
         'app_root' => 'app/',
 
-        // Ini adalah direktori di mana file index root Anda berada
+        // This is the directory where your root index file is located
         'index_root' => 'public/',
 
-        // Ini adalah path ke root proyek lainnya
+        // These are the paths to the roots of other projects
         'root_paths' => [
             '/home/user/different-project',
             '/var/www/another-project'
         ],
 
-        // Path dasar kemungkinan besar tidak perlu dikonfigurasi, tapi ini ada jika Anda menginginkannya
+        // Base paths most likely don't need to be configured, but it's here if you want it
         'base_paths' => [
-            '/includes/libs/vendor', // jika Anda memiliki path yang sangat unik untuk direktori vendor atau semacamnya
+            '/includes/libs/vendor', // if you have a really unique path for your vendor directory or something
         ],
 
-        // Path akhir adalah lokasi dalam proyek untuk mencari file perintah
+        // Final paths are locations within a project to search for the command files
         'final_paths' => [
             'src/diff-path/commands',
             'app/module/admin/commands',
         ],
 
-        // Jika Anda ingin menambahkan path lengkap, silakan (absolut atau relatif terhadap root proyek)
+        // If you want to just add the full path, go right ahead (absolute or relative to project root)
         'paths' => [
             '/home/user/different-project/src/diff-path/commands',
             '/var/www/another-project/app/module/admin/commands',
@@ -254,33 +256,33 @@ return [
 
 ### Mengakses Konfigurasi
 
-Jika Anda perlu mengakses nilai konfigurasi secara efektif, Anda dapat mengaksesnya melalui metode `__construct` atau metode `app()`. Penting juga untuk dicatat bahwa jika Anda memiliki file `app/config/services.php`, layanan tersebut juga akan tersedia untuk perintah Anda.
+Jika Anda perlu mengakses nilai konfigurasi secara efektif, Anda dapat mengaksesnya melalui metode `__construct` atau metode `app()`. Penting juga untuk dicatat bahwa jika Anda memiliki file `app/config/services.php`, layanan-layanan tersebut juga akan tersedia untuk perintah Anda.
 
 ```php
 public function execute()
 {
     $io = $this->app()->io();
     
-    // Akses konfigurasi
+    // Access configuration
     $app_root = $this->config['runway']['app_root'];
     
-    // Akses layanan seperti mungkin koneksi database
+    // Access services like maybe a database connection
     $database = $this->config['database']
     
     // ...
 }
 ```
 
-## Wrapper Pembantu AI
+## Wrapper Bantu AI
 
-Runway memiliki beberapa wrapper pembantu yang membuat lebih mudah bagi AI untuk menghasilkan perintah. Anda dapat menggunakan `addOption` dan `addArgument` dengan cara yang mirip dengan Symfony Console. Ini membantu jika Anda menggunakan alat AI untuk menghasilkan perintah Anda.
+Runway memiliki beberapa wrapper bantu yang memudahkan AI untuk menghasilkan perintah. Anda dapat menggunakan `addOption` dan `addArgument` dengan cara yang mirip dengan Symfony Console. Ini membantu jika Anda menggunakan alat AI untuk menghasilkan perintah Anda.
 
 ```php
 public function __construct(array $config)
 {
-    parent::__construct('make:example', 'Buat contoh untuk dokumentasi', $config);
+    parent::__construct('make:example', 'Create an example for the documentation', $config);
     
-    // Argumen mode bersifat nullable dan defaultnya sepenuhnya opsional
-    $this->addOption('name', 'Nama dari contoh', null);
+    // The mode argument is nullable and defaults to completely optional
+    $this->addOption('name', 'The name of the example', null);
 }
 ```

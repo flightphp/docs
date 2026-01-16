@@ -2,7 +2,7 @@
 
 ## Overview
 
-Flight makes it easy to supercharge your PHP projects with AI-powered tools and modern developer workflows. With built-in commands for connecting to LLM (Large Language Model) providers and generating project-specific AI coding instructions, Flight helps you and your team get the most out of AI assistants like GitHub Copilot, Cursor, and Windsurf.
+Flight makes it easy to supercharge your PHP projects with AI-powered tools and modern developer workflows. With built-in commands for connecting to LLM (Large Language Model) providers and generating project-specific AI coding instructions, Flight helps you and your team get the most out of AI assistants like GitHub Copilot, Cursor, Windsurf, and Antigravity (Gemini).
 
 ## Understanding
 
@@ -28,7 +28,7 @@ You'll be prompted to:
 - Enter your API key
 - Set the base URL and model name
 
-This creates a `.runway-creds.json` file in your project root (and ensures it's in your `.gitignore`).
+This creates the necessary credentials for you to make future LLM requests.
 
 **Example:**
 ```
@@ -52,6 +52,7 @@ You'll answer a few questions about your project (description, database, templat
 - `.github/copilot-instructions.md` (for GitHub Copilot)
 - `.cursor/rules/project-overview.mdc` (for Cursor)
 - `.windsurfrules` (for Windsurf)
+- `.gemini/GEMINI.md` (for Antigravity)
 
 **Example:**
 ```

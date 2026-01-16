@@ -2,11 +2,11 @@
 
 ## Gambaran Umum
 
-Flight memudahkan Anda untuk meningkatkan proyek PHP Anda dengan alat berbasis AI dan alur kerja pengembang modern. Dengan perintah bawaan untuk menghubungkan ke penyedia LLM (Large Language Model) dan menghasilkan instruksi pengkodean AI khusus proyek, Flight membantu Anda dan tim Anda mendapatkan manfaat maksimal dari asisten AI seperti GitHub Copilot, Cursor, dan Windsurf.
+Flight memudahkan Anda untuk meningkatkan proyek PHP Anda dengan alat berbasis AI dan alur kerja pengembang modern. Dengan perintah bawaan untuk terhubung ke penyedia LLM (Large Language Model) dan menghasilkan instruksi pengkodean AI khusus proyek, Flight membantu Anda dan tim Anda mendapatkan manfaat maksimal dari asisten AI seperti GitHub Copilot, Cursor, Windsurf, dan Antigravity (Gemini).
 
 ## Pemahaman
 
-Asisten pengkodean AI paling membantu ketika mereka memahami konteks proyek Anda, konvensi, dan tujuan. Pembantu AI Flight memungkinkan Anda:
+Asisten pengkodean AI paling membantu ketika mereka memahami konteks, konvensi, dan tujuan proyek Anda. Pembantu AI Flight memungkinkan Anda untuk:
 - Menghubungkan proyek Anda ke penyedia LLM populer (OpenAI, Grok, Claude, dll.)
 - Menghasilkan dan memperbarui instruksi khusus proyek untuk alat AI, sehingga semua orang mendapatkan bantuan yang konsisten dan relevan
 - Menjaga tim Anda tetap selaras dan produktif, dengan waktu yang lebih sedikit untuk menjelaskan konteks
@@ -15,9 +15,9 @@ Fitur-fitur ini dibangun ke dalam CLI inti Flight dan proyek starter resmi [flig
 
 ## Penggunaan Dasar
 
-### Menyiapkan Kredensial LLM
+### Mengatur Kredensial LLM
 
-Perintah `ai:init` memandu Anda melalui proses menghubungkan proyek Anda ke penyedia LLM.
+Perintah `ai:init` akan memandu Anda melalui proses menghubungkan proyek Anda ke penyedia LLM.
 
 ```bash
 php runway ai:init
@@ -28,7 +28,7 @@ Anda akan diminta untuk:
 - Memasukkan kunci API Anda
 - Mengatur URL dasar dan nama model
 
-Ini membuat file `.runway-creds.json` di root proyek Anda (dan memastikan itu ada di `.gitignore` Anda).
+Ini membuat kredensial yang diperlukan agar Anda dapat melakukan permintaan LLM di masa depan.
 
 **Contoh:**
 ```
@@ -42,7 +42,7 @@ Credentials saved to .runway-creds.json
 
 ### Menghasilkan Instruksi AI Khusus Proyek
 
-Perintah `ai:generate-instructions` membantu Anda membuat atau memperbarui instruksi untuk asisten pengkodean AI, disesuaikan dengan proyek Anda.
+Perintah `ai:generate-instructions` membantu Anda membuat atau memperbarui instruksi untuk asisten pengkodean AI, yang disesuaikan dengan proyek Anda.
 
 ```bash
 php runway ai:generate-instructions
@@ -52,6 +52,7 @@ Anda akan menjawab beberapa pertanyaan tentang proyek Anda (deskripsi, database,
 - `.github/copilot-instructions.md` (untuk GitHub Copilot)
 - `.cursor/rules/project-overview.mdc` (untuk Cursor)
 - `.windsurfrules` (untuk Windsurf)
+- `.gemini/GEMINI.md` (untuk Antigravity)
 
 **Contoh:**
 ```
@@ -63,7 +64,7 @@ Is security an important element of this project? (y/n) y
 AI instructions updated successfully.
 ```
 
-Sekarang, alat AI Anda akan memberikan saran yang lebih cerdas dan relevan berdasarkan kebutuhan nyata proyek Anda.
+Sekarang, alat AI Anda akan memberikan saran yang lebih pintar dan lebih relevan berdasarkan kebutuhan nyata proyek Anda.
 
 ## Penggunaan Lanjutan
 
