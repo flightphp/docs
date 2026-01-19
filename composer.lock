@@ -301,16 +301,16 @@
         },
         {
             "name": "flightphp/core",
-            "version": "v3.17.2",
+            "version": "v3.18.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/flightphp/core.git",
-                "reference": "095a46663f7090c549f5c3459f0dada893b3b5d9"
+                "reference": "88d7032928c09b98e65ccd87b7f8a341a40cc3d2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/flightphp/core/zipball/095a46663f7090c549f5c3459f0dada893b3b5d9",
-                "reference": "095a46663f7090c549f5c3459f0dada893b3b5d9",
+                "url": "https://api.github.com/repos/flightphp/core/zipball/88d7032928c09b98e65ccd87b7f8a341a40cc3d2",
+                "reference": "88d7032928c09b98e65ccd87b7f8a341a40cc3d2",
                 "shasum": ""
             },
             "require": {
@@ -323,14 +323,13 @@
             "require-dev": {
                 "ext-pdo_sqlite": "*",
                 "flightphp/container": "^1.0",
-                "flightphp/runway": "^0.2.3 || ^1.0",
+                "flightphp/runway": "^1.2",
                 "league/container": "^4.2",
                 "level-2/dice": "^4.0",
                 "phpstan/extension-installer": "^1.4",
                 "phpstan/phpstan": "^2.1",
                 "phpunit/phpunit": "^9.6",
                 "rregeer/phpunit-coverage-check": "^0.3.1",
-                "spatie/phpunit-watcher": "^1.23 || ^1.24",
                 "squizlabs/php_codesniffer": "^3.11"
             },
             "suggest": {
@@ -371,22 +370,22 @@
             "homepage": "http://flightphp.com",
             "support": {
                 "issues": "https://github.com/flightphp/core/issues",
-                "source": "https://github.com/flightphp/core/tree/v3.17.2"
+                "source": "https://github.com/flightphp/core/tree/v3.18.0"
             },
-            "time": "2025-10-03T21:05:48+00:00"
+            "time": "2026-01-15T01:44:32+00:00"
         },
         {
             "name": "flightphp/runway",
-            "version": "v1.2.0",
+            "version": "v1.2.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/flightphp/runway.git",
-                "reference": "6924f511b6de47e6c6da32d17c6dfc4a963f5f52"
+                "reference": "50764ca235349886cc926d7b49b48e3fee55a146"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/flightphp/runway/zipball/6924f511b6de47e6c6da32d17c6dfc4a963f5f52",
-                "reference": "6924f511b6de47e6c6da32d17c6dfc4a963f5f52",
+                "url": "https://api.github.com/repos/flightphp/runway/zipball/50764ca235349886cc926d7b49b48e3fee55a146",
+                "reference": "50764ca235349886cc926d7b49b48e3fee55a146",
                 "shasum": ""
             },
             "require": {
@@ -423,9 +422,9 @@
             "description": "Console app for the Flight PHP Framework.",
             "support": {
                 "issues": "https://github.com/flightphp/runway/issues",
-                "source": "https://github.com/flightphp/runway/tree/v1.2.0"
+                "source": "https://github.com/flightphp/runway/tree/v1.2.6"
             },
-            "time": "2025-11-14T14:30:07+00:00"
+            "time": "2026-01-15T05:31:38+00:00"
         },
         {
             "name": "latte/latte",
@@ -905,16 +904,16 @@
         },
         {
             "name": "rector/rector",
-            "version": "2.2.14",
+            "version": "2.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/rectorphp/rector.git",
-                "reference": "6d56bb0e94d4df4f57a78610550ac76ab403657d"
+                "reference": "9afc1bb43571b25629f353c61a9315b5ef31383a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rectorphp/rector/zipball/6d56bb0e94d4df4f57a78610550ac76ab403657d",
-                "reference": "6d56bb0e94d4df4f57a78610550ac76ab403657d",
+                "url": "https://api.github.com/repos/rectorphp/rector/zipball/9afc1bb43571b25629f353c61a9315b5ef31383a",
+                "reference": "9afc1bb43571b25629f353c61a9315b5ef31383a",
                 "shasum": ""
             },
             "require": {
@@ -953,7 +952,7 @@
             ],
             "support": {
                 "issues": "https://github.com/rectorphp/rector/issues",
-                "source": "https://github.com/rectorphp/rector/tree/2.2.14"
+                "source": "https://github.com/rectorphp/rector/tree/2.3.1"
             },
             "funding": [
                 {
@@ -961,7 +960,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-12-09T10:57:55+00:00"
+            "time": "2026-01-13T15:13:58+00:00"
         }
     ],
     "aliases": [],

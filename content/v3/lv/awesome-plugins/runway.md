@@ -4,7 +4,7 @@ Runway ir CLI lietojumprogramma, kas palīdz pārvaldīt jūsu Flight lietojumpr
 
 Noklikšķiniet [šeit](https://github.com/flightphp/runway), lai skatītu kodu.
 
-## Instalēšana
+## Uzstādīšana
 
 Instalējiet ar composer.
 
@@ -27,9 +27,7 @@ return [
 ];
 ```
 
-> **PIEZĪME** - No **v1.2.0**, `.runway-config.json` ir novecojis. Lūdzu, migrējiet savu konfigurāciju uz `app/config/config.php`. Jūs varat to izdarīt viegli ar `php runway config:migrate` komandu.
-
-
+> **PIEZĪME** - Sākot no **v1.2.0**, `.runway-config.json` ir novecojis. Lūdzu, migrējiet savu konfigurāciju uz `app/config/config.php`. Jūs varat to izdarīt viegli ar `php runway config:migrate` komandu.
 
 ### Projekta saknes noteikšana
 
@@ -62,7 +60,7 @@ php runway routes --help
 
 ### Ģenerēt kontrolieri
 
-Pamatojoties uz konfigurāciju `runway.app_root`, atrašanās vieta ģenerēs kontrolieri jums `app/controllers/` direktorijā.
+Balstoties uz konfigurāciju `runway.app_root`, atrašanās vieta ģenerēs kontrolieri jums `app/controllers/` direktorijā.
 
 ```bash
 php runway make:controller MyController
@@ -70,7 +68,7 @@ php runway make:controller MyController
 
 ### Ģenerēt Active Record modeli
 
-Vispirms pārliecinieties, ka esat instalējis [Active Record](/awesome-plugins/active-record) spraudni. Pamatojoties uz konfigurāciju `runway.app_root`, atrašanās vieta ģenerēs ierakstu jums `app/records/` direktorijā.
+Vispirms pārliecinieties, ka esat instalējis [Active Record](/awesome-plugins/active-record) spraudni. Balstoties uz konfigurāciju `runway.app_root`, atrašanās vieta ģenerēs ierakstu jums `app/records/` direktorijā.
 
 ```bash
 php runway make:record users
@@ -95,12 +93,12 @@ namespace app\records;
  * @property string $created_at
  * @property string $updated_at
  * // jūs varētu arī pievienot attiecības šeit, kad definēsiet tās $relations masīvā
- * @property CompanyRecord $company Attiecību piemērs
+ * @property CompanyRecord $company Attiecības piemērs
  */
 class UserRecord extends \flight\ActiveRecord
 {
     /**
-     * @var array $relations Iestatīt attiecības modelim
+     * @var array $relations Iestatīt modeļa attiecības
      *   https://docs.flightphp.com/awesome-plugins/active-record#relationships
      */
     protected array $relations = [];
@@ -116,7 +114,7 @@ class UserRecord extends \flight\ActiveRecord
 }
 ```
 
-### Parādīt visas maršrutus
+### Parādīt visus maršrutus
 
 Tas parādīs visus maršrutus, kas pašlaik ir reģistrēti ar Flight.
 
@@ -124,7 +122,7 @@ Tas parādīs visus maršrutus, kas pašlaik ir reģistrēti ar Flight.
 php runway routes
 ```
 
-Ja vēlaties skatīt tikai specifiskus maršrutus, jūs varat pievienot karodziņu, lai filtrētu maršrutus.
+Ja jūs vēlaties skatīt tikai specifiskus maršrutus, jūs varat pievienot karodziņu, lai filtrētu maršrutus.
 
 ```bash
 # Parādīt tikai GET maršrutus
@@ -138,7 +136,7 @@ php runway routes --post
 
 ## Pievienot pielāgotas komandas Runway
 
-Ja jūs vai nu izveidojat paketi Flight, vai vēlaties pievienot savas pielāgotas komandas savam projektam, jūs varat to izdarīt, izveidojot `src/commands/`, `flight/commands/`, `app/commands/` vai `commands/` direktoriju savam projektam/paketei. Ja nepieciešama tālāk customization, skatiet sadaļu zemāk par Konfigurāciju.
+Ja jūs vai nu izveidojat paketi Flight, vai vēlaties pievienot savas pielāgotas komandas savam projektam, jūs varat to izdarīt, izveidojot `src/commands/`, `flight/commands/`, `app/commands/` vai `commands/` direktoriju savam projektam/paketam. Ja jums vajadzīga tālāk customize, skatiet sadaļu zemāk par Konfigurāciju.
 
 Lai izveidotu komandu, jūs vienkārši pagarināt `AbstractBaseCommand` klasi un implementēt vismaz `__construct` metodi un `execute` metodi.
 
@@ -159,7 +157,7 @@ class ExampleCommand extends AbstractBaseCommand
     public function __construct(array $config)
     {
         parent::__construct('make:example', 'Izveidot piemēru dokumentācijai', $config);
-        $this->argument('<funny-gif>', 'Smieklīgā gif nosaukums');
+        $this->argument('<funny-gif>', 'Nosaukums smieklīgajam gif');
     }
 
 	/**
@@ -173,7 +171,7 @@ class ExampleCommand extends AbstractBaseCommand
 
 		$io->info('Izveido piemēru...');
 
-		// Dariet kaut ko šeit
+		// Dari kaut ko šeit
 
 		$io->ok('Piemērs izveidots!');
 	}
@@ -184,7 +182,7 @@ Skatiet [adhocore/php-cli Dokumentāciju](https://github.com/adhocore/php-cli), 
 
 ## Konfigurācijas pārvaldība
 
-Tā kā konfigurācija ir pārvietota uz `app/config/config.php` no `v1.2.0`, ir dažas palīpkomandas konfigurācijas pārvaldībai.
+Tā kā konfigurācija ir pārvietota uz `app/config/config.php` sākot no `v1.2.0`, ir dažas palīgam komandas konfigurācijas pārvaldībai.
 
 ### Migrēt veco konfigurāciju
 
@@ -196,7 +194,7 @@ php runway config:migrate
 
 ### Iestatīt konfigurācijas vērtību
 
-Jūs varat iestatīt konfigurācijas vērtību, izmantojot `config:set` komandu. Tas ir noderīgi, ja vēlaties atjaunināt konfigurācijas vērtību, neatsākot failu.
+Jūs varat iestatīt konfigurācijas vērtību, izmantojot `config:set` komandu. Tas ir noderīgi, ja vēlaties atjaunināt konfigurācijas vērtību bez faila atvēršanas.
 
 ```bash
 php runway config:set app_root "app/"
@@ -212,7 +210,7 @@ php runway config:get app_root
 
 ## Visas Runway konfigurācijas
 
-Ja nepieciešams pielāgot konfigurāciju Runway, jūs varat iestatīt šīs vērtības `app/config/config.php`. Zemāk ir dažas papildu konfigurācijas, kuras jūs varat iestatīt:
+Ja jums vajadzīga customize Runway konfigurācija, jūs varat iestatīt šīs vērtības `app/config/config.php`. Zemāk ir dažas papildu konfigurācijas, kuras jūs varat iestatīt:
 
 ```php
 <?php
@@ -233,18 +231,18 @@ return [
             '/var/www/another-project'
         ],
 
-        // Bāzes ceļi visticamāk nav jākonfigurē, bet tas ir šeit, ja vēlaties
+        // Bāzes ceļi, visticamāk, nav jākonfigurē, bet tas ir šeit, ja vēlaties
         'base_paths' => [
-            '/includes/libs/vendor', // ja jums ir patiesi unikāls ceļš uz jūsu vendor direktoriju vai kaut ko
+            '/includes/libs/vendor', // ja jums ir patiešām unikāls ceļš uz jūsu vendor direktoriju vai kaut ko
         ],
 
-        // Galīgie ceļi ir atrašanās vietas projektā, kur meklēt komandu failus
+        // Galīgie ceļi ir vietas projektā, kur meklēt komandu failus
         'final_paths' => [
             'src/diff-path/commands',
             'app/module/admin/commands',
         ],
 
-        // Ja vēlaties tikai pievienot pilnu ceļu, dariet to (absolūts vai relatīvs pret projektu sakni)
+        // Ja vēlaties tikai pievienot pilnu ceļu, dariet to (absolūts vai relatīvs pret projekta sakni)
         'paths' => [
             '/home/user/different-project/src/diff-path/commands',
             '/var/www/another-project/app/module/admin/commands',
@@ -256,33 +254,33 @@ return [
 
 ### Piekļuve konfigurācijai
 
-Ja nepieciešams efektīvi piekļūt konfigurācijas vērtībām, jūs varat piekļūt tām caur `__construct` metodi vai `app()` metodi. Ir arī svarīgi atzīmēt, ka, ja jums ir `app/config/services.php` fails, šie servisi būs pieejami jūsu komandai.
+Ja jums vajadzīga efektīvi piekļūt konfigurācijas vērtībām, jūs varat piekļūt tām caur `__construct` metodi vai `app()` metodi. Ir arī svarīgi atzīmēt, ka, ja jums ir `app/config/services.php` fails, šie servisi būs pieejami jūsu komandai.
 
 ```php
 public function execute()
 {
     $io = $this->app()->io();
     
-    // Piekļuve konfigurācijai
+    // Piekļūt konfigurācijai
     $app_root = $this->config['runway']['app_root'];
     
-    // Piekļuve servisiem, piemēram, datubāzes savienojumam
+    // Piekļūt servisiem, piemēram, datubāzes savienojumam
     $database = $this->config['database']
     
     // ...
 }
 ```
 
-## AI palīglīdzekļu apvalki
+## AI Palīgsa Aptinēji
 
-Runway ir daži palīglīdzekļu apvalki, kas padara vieglāku AI ģenerēt komandas. Jūs varat izmantot `addOption` un `addArgument` veidā, kas šķiet līdzīgs Symfony Console. Tas ir noderīgi, ja izmantojat AI rīkus, lai ģenerētu savas komandas.
+Runway ir daži palīgsa aptinēji, kas padara vieglāku AI ģenerēt komandas. Jūs varat izmantot `addOption` un `addArgument` veidā, kas jūtas līdzīgs Symfony Console. Tas ir noderīgi, ja jūs izmantojat AI rīkus, lai ģenerētu savas komandas.
 
 ```php
 public function __construct(array $config)
 {
     parent::__construct('make:example', 'Izveidot piemēru dokumentācijai', $config);
     
-    // Name arguments ir nullable un pēc noklusējuma pilnībā opcionāls
-    $this->addOption('name', 'Piemēra nosaukums', null);
+    // The mode argument is nullable and defaults to completely optional
+    $this->addOption('name', 'The name of the example', null);
 }
 ```

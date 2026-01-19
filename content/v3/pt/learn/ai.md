@@ -2,13 +2,13 @@
 
 ## Visão Geral
 
-Flight facilita o superpoder de seus projetos PHP com ferramentas alimentadas por IA e fluxos de trabalho modernos para desenvolvedores. Com comandos integrados para conectar a provedores de LLM (Large Language Model) e gerar instruções de codificação específicas do projeto baseadas em IA, Flight ajuda você e sua equipe a tirar o máximo proveito de assistentes de IA como GitHub Copilot, Cursor, Windsurf e Antigravity (Gemini).
+Flight facilita o superalimentar seus projetos PHP com ferramentas alimentadas por IA e fluxos de trabalho modernos para desenvolvedores. Com comandos integrados para conectar a provedores de LLM (Large Language Model) e gerar instruções específicas de projeto para codificação com IA, Flight ajuda você e sua equipe a tirar o máximo proveito de assistentes de IA como GitHub Copilot, Cursor, Windsurf e Antigravity (Gemini).
 
 ## Entendendo
 
-Assistentes de codificação de IA são mais úteis quando entendem o contexto, as convenções e os objetivos do seu projeto. Os ajudantes de IA do Flight permitem que você:
+Assistentes de codificação com IA são mais úteis quando entendem o contexto, as convenções e os objetivos do seu projeto. Os ajudantes de IA do Flight permitem que você:
 - Conecte seu projeto a provedores populares de LLM (OpenAI, Grok, Claude, etc.)
-- Gere e atualize instruções específicas do projeto para ferramentas de IA, para que todos recebam ajuda consistente e relevante
+- Gere e atualize instruções específicas de projeto para ferramentas de IA, para que todos recebam ajuda consistente e relevante
 - Mantenha sua equipe alinhada e produtiva, com menos tempo gasto explicando o contexto
 
 Esses recursos estão integrados ao CLI principal do Flight e ao projeto inicial oficial [flightphp/skeleton](https://github.com/flightphp/skeleton).
@@ -36,13 +36,13 @@ Bem-vindo ao AI Init!
 Qual API de LLM você deseja usar? [1] openai, [2] grok, [3] claude: 1
 Digite a URL base para a API de LLM [https://api.openai.com]:
 Digite sua chave de API para openai: sk-...
-Digite o nome do modelo que você deseja usar (ex. gpt-4, claude-3-opus, etc) [gpt-4o]:
+Digite o nome do modelo que você deseja usar (ex.: gpt-4, claude-3-opus, etc) [gpt-4o]:
 Credenciais salvas em .runway-creds.json
 ```
 
-### Gerando Instruções de IA Específicas do Projeto
+### Gerando Instruções Específicas de Projeto para IA
 
-O comando `ai:generate-instructions` ajuda você a criar ou atualizar instruções para assistentes de codificação de IA, adaptadas ao seu projeto.
+O comando `ai:generate-instructions` ajuda você a criar ou atualizar instruções para assistentes de codificação com IA, adaptadas ao seu projeto.
 
 ```bash
 php runway ai:generate-instructions
@@ -59,7 +59,7 @@ Você responderá a algumas perguntas sobre seu projeto (descrição, banco de d
 Por favor, descreva para que serve seu projeto? Minha API incrível
 Qual banco de dados você planeja usar? MySQL
 Qual engine de templating HTML você planeja usar (se houver)? latte
-A segurança é um elemento importante deste projeto? (s/n) s
+A segurança é um elemento importante deste projeto? (y/n) y
 ...
 Instruções de IA atualizadas com sucesso.
 ```
@@ -68,14 +68,14 @@ Agora, suas ferramentas de IA darão sugestões mais inteligentes e relevantes c
 
 ## Uso Avançado
 
-- Você pode personalizar a localização dos seus arquivos de credenciais ou instruções usando opções de comando (veja `--help` para cada comando).
+- Você pode personalizar a localização dos arquivos de credenciais ou instruções usando opções de comando (veja `--help` para cada comando).
 - Os ajudantes de IA são projetados para funcionar com qualquer provedor de LLM que suporte APIs compatíveis com OpenAI.
-- Se você quiser atualizar suas instruções à medida que seu projeto evolui, basta executar novamente `ai:generate-instructions` e responder aos prompts novamente.
+- Se você quiser atualizar suas instruções à medida que o projeto evolui, basta executar novamente `ai:generate-instructions` e responder aos prompts novamente.
 
 ## Veja Também
 
 - [Flight Skeleton](https://github.com/flightphp/skeleton) – O inicial oficial com integração de IA
-- [Runway CLI](/awesome-plugins/runway) – Mais sobre a ferramenta CLI que impulsiona esses comandos
+- [Runway CLI](/awesome-plugins/runway) – Mais sobre a ferramenta CLI que alimenta esses comandos
 
 ## Solução de Problemas
 

@@ -29,9 +29,9 @@ return [
 
 > **NOTA** - A partir de **v1.2.0**, `.runway-config.json` está obsoleto. Por favor, migra tu configuración a `app/config/config.php`. Puedes hacerlo fácilmente con el comando `php runway config:migrate`.
 
-### Detección de Raíz del Proyecto
+### Detección de la Raíz del Proyecto
 
-Runway es lo suficientemente inteligente como para detectar la raíz de tu proyecto, incluso si lo ejecutas desde un subdirectorio. Busca indicadores como `composer.json`, `.git` o `app/config/config.php` para determinar dónde está la raíz del proyecto. Esto significa que puedes ejecutar comandos de Runway desde cualquier lugar en tu proyecto!
+Runway es lo suficientemente inteligente como para detectar la raíz de tu proyecto, incluso si lo ejecutas desde un subdirectorio. Busca indicadores como `composer.json`, `.git` o `app/config/config.php` para determinar dónde está la raíz del proyecto. Esto significa que puedes ejecutar comandos de Runway desde cualquier lugar en tu proyecto! 
 
 ## Uso
 
@@ -74,7 +74,7 @@ Primero asegúrate de haber instalado el plugin [Active Record](/awesome-plugins
 php runway make:record users
 ```
 
-Si, por ejemplo, tienes la tabla `users` con el siguiente esquema: `id`, `name`, `email`, `created_at`, `updated_at`, se creará un archivo similar al siguiente en el archivo `app/records/UserRecord.php`:
+Por ejemplo, si tienes la tabla `users` con el siguiente esquema: `id`, `name`, `email`, `created_at`, `updated_at`, se creará un archivo similar al siguiente en el archivo `app/records/UserRecord.php`:
 
 ```php
 <?php
@@ -136,7 +136,7 @@ php runway routes --post
 
 ## Agregar Comandos Personalizados a Runway
 
-Si estás creando un paquete para Flight, o quieres agregar tus propios comandos personalizados a tu proyecto, puedes hacerlo creando un directorio `src/commands/`, `flight/commands/`, `app/commands/` o `commands/` para tu proyecto/paquete. Si necesitas más personalización, consulta la sección a continuación sobre Configuración.
+Si estás creando un paquete para Flight o quieres agregar tus propios comandos personalizados a tu proyecto, puedes hacerlo creando un directorio `src/commands/`, `flight/commands/`, `app/commands/` o `commands/` para tu proyecto/paquete. Si necesitas más personalización, consulta la sección a continuación sobre Configuración.
 
 Para crear un comando, simplemente extiende la clase `AbstractBaseCommand` e implementa al menos un método `__construct` y un método `execute`.
 
@@ -150,18 +150,18 @@ namespace flight\commands;
 class ExampleCommand extends AbstractBaseCommand
 {
 	/**
-     * Construct
+     * Constructor
      *
-     * @param array<string,mixed> $config Config from app/config/config.php
+     * @param array<string,mixed> $config Configuración de app/config/config.php
      */
     public function __construct(array $config)
     {
-        parent::__construct('make:example', 'Create an example for the documentation', $config);
-        $this->argument('<funny-gif>', 'The name of the funny gif');
+        parent::__construct('make:example', 'Crear un ejemplo para la documentación', $config);
+        $this->argument('<funny-gif>', 'El nombre del gif gracioso');
     }
 
 	/**
-     * Executes the function
+     * Ejecuta la función
      *
      * @return void
      */
@@ -169,11 +169,11 @@ class ExampleCommand extends AbstractBaseCommand
     {
         $io = $this->app()->io();
 
-		$io->info('Creating example...');
+		$io->info('Creando ejemplo...');
 
-		// Do something here
+		// Haz algo aquí
 
-		$io->ok('Example created!');
+		$io->ok('¡Ejemplo creado!');
 	}
 }
 ```
@@ -182,7 +182,7 @@ Consulta la [Documentación de adhocore/php-cli](https://github.com/adhocore/php
 
 ## Gestión de Configuración
 
-Dado que la configuración se ha movido a `app/config/config.php` a partir de `v1.2.0`, hay algunos comandos auxiliares para gestionar la configuración.
+Dado que la configuración se ha movido a `app/config/config.php` a partir de `v1.2.0`, hay algunos comandos de ayuda para gestionar la configuración.
 
 ### Migrar Configuración Antigua
 
@@ -216,33 +216,33 @@ Si necesitas personalizar la configuración para Runway, puedes establecer estos
 <?php
 // app/config/config.php
 return [
-    // ... other config values ...
+    // ... otros valores de configuración ...
 
     'runway' => [
-        // This is where your application directory is located
+        // Aquí es donde se encuentra tu directorio de aplicación
         'app_root' => 'app/',
 
-        // This is the directory where your root index file is located
+        // Este es el directorio donde se encuentra tu archivo index raíz
         'index_root' => 'public/',
 
-        // These are the paths to the roots of other projects
+        // Estas son las rutas a las raíces de otros proyectos
         'root_paths' => [
             '/home/user/different-project',
             '/var/www/another-project'
         ],
 
-        // Base paths most likely don't need to be configured, but it's here if you want it
+        // Las rutas base probablemente no necesiten configurarse, pero está aquí si lo quieres
         'base_paths' => [
-            '/includes/libs/vendor', // if you have a really unique path for your vendor directory or something
+            '/includes/libs/vendor', // si tienes una ruta realmente única para tu directorio vendor o algo
         ],
 
-        // Final paths are locations within a project to search for the command files
+        // Las rutas finales son ubicaciones dentro de un proyecto para buscar los archivos de comandos
         'final_paths' => [
             'src/diff-path/commands',
             'app/module/admin/commands',
         ],
 
-        // If you want to just add the full path, go right ahead (absolute or relative to project root)
+        // Si quieres agregar la ruta completa, adelante (absoluta o relativa a la raíz del proyecto)
         'paths' => [
             '/home/user/different-project/src/diff-path/commands',
             '/var/www/another-project/app/module/admin/commands',
@@ -261,10 +261,10 @@ public function execute()
 {
     $io = $this->app()->io();
     
-    // Access configuration
+    // Acceder a la configuración
     $app_root = $this->config['runway']['app_root'];
     
-    // Access services like maybe a database connection
+    // Acceder a servicios como quizás una conexión a la base de datos
     $database = $this->config['database']
     
     // ...
@@ -278,9 +278,9 @@ Runway tiene algunos envoltorios de ayudante que facilitan que la IA genere coma
 ```php
 public function __construct(array $config)
 {
-    parent::__construct('make:example', 'Create an example for the documentation', $config);
+    parent::__construct('make:example', 'Crear un ejemplo para la documentación', $config);
     
-    // The mode argument is nullable and defaults to completely optional
-    $this->addOption('name', 'The name of the example', null);
+    // El argumento mode es nullable y por defecto es completamente opcional
+    $this->addOption('name', 'El nombre del ejemplo', null);
 }
 ```

@@ -2,7 +2,7 @@
 
 ## Gambaran Umum
 
-Flight memudahkan Anda untuk meningkatkan proyek PHP Anda dengan alat berbasis AI dan alur kerja pengembang modern. Dengan perintah bawaan untuk terhubung ke penyedia LLM (Large Language Model) dan menghasilkan instruksi pengkodean AI khusus proyek, Flight membantu Anda dan tim Anda mendapatkan manfaat maksimal dari asisten AI seperti GitHub Copilot, Cursor, Windsurf, dan Antigravity (Gemini).
+Flight memudahkan Anda untuk meningkatkan proyek PHP Anda dengan alat berbasis AI dan alur kerja pengembang modern. Dengan perintah bawaan untuk terhubung ke penyedia LLM (Large Language Model) dan menghasilkan instruksi pengkodean AI khusus proyek, Flight membantu Anda dan tim Anda memanfaatkan maksimal asisten AI seperti GitHub Copilot, Cursor, Windsurf, dan Antigravity (Gemini).
 
 ## Pemahaman
 
@@ -15,9 +15,9 @@ Fitur-fitur ini dibangun ke dalam CLI inti Flight dan proyek starter resmi [flig
 
 ## Penggunaan Dasar
 
-### Mengatur Kredensial LLM
+### Menyiapkan Kredensial LLM
 
-Perintah `ai:init` akan memandu Anda melalui proses menghubungkan proyek Anda ke penyedia LLM.
+Perintah `ai:init` memandu Anda melalui proses menghubungkan proyek Anda ke penyedia LLM.
 
 ```bash
 php runway ai:init
@@ -42,7 +42,7 @@ Credentials saved to .runway-creds.json
 
 ### Menghasilkan Instruksi AI Khusus Proyek
 
-Perintah `ai:generate-instructions` membantu Anda membuat atau memperbarui instruksi untuk asisten pengkodean AI, yang disesuaikan dengan proyek Anda.
+Perintah `ai:generate-instructions` membantu Anda membuat atau memperbarui instruksi untuk asisten pengkodean AI, disesuaikan dengan proyek Anda.
 
 ```bash
 php runway ai:generate-instructions
@@ -64,7 +64,7 @@ Is security an important element of this project? (y/n) y
 AI instructions updated successfully.
 ```
 
-Sekarang, alat AI Anda akan memberikan saran yang lebih pintar dan lebih relevan berdasarkan kebutuhan nyata proyek Anda.
+Sekarang, alat AI Anda akan memberikan saran yang lebih cerdas dan relevan berdasarkan kebutuhan nyata proyek Anda.
 
 ## Penggunaan Lanjutan
 
@@ -85,4 +85,4 @@ Sekarang, alat AI Anda akan memberikan saran yang lebih pintar dan lebih relevan
 
 ## Changelog
 
-- v3.16.0 – Menambahkan perintah CLI `ai:init` dan `ai:generate-instructions` untuk integrasi AI.
+- v3.16.0 – Ditambahkan perintah CLI `ai:init` dan `ai:generate-instructions` untuk integrasi AI.

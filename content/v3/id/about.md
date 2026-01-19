@@ -1,14 +1,16 @@
-# Kerangka Kerja PHP Flight
+# Flight PHP Framework
 
-Flight adalah kerangka kerja yang cepat, sederhana, dan dapat diperluas untuk PHP—dibuat untuk pengembang yang ingin menyelesaikan pekerjaan dengan cepat, tanpa keributan. Baik Anda membangun aplikasi web klasik, API yang sangat cepat, atau bereksperimen dengan alat-alat terkini yang didukung AI, jejak rendah dan desain langsung Flight membuatnya cocok sempurna. Flight dimaksudkan untuk ringan, tetapi juga dapat menangani kebutuhan arsitektur perusahaan.
+Flight adalah framework PHP yang cepat, sederhana, dan dapat diperluas—dibangun untuk pengembang yang ingin menyelesaikan pekerjaan dengan cepat, tanpa kerumitan. Baik Anda membangun aplikasi web klasik, API yang sangat cepat, atau bereksperimen dengan alat berbasis AI terbaru, jejak rendah dan desain sederhana Flight membuatnya cocok sempurna. Flight dirancang untuk tetap ramping, tetapi juga dapat menangani persyaratan arsitektur enterprise.
 
 ## Mengapa Memilih Flight?
 
-- **Pemula Ramah:** Flight adalah titik awal yang bagus untuk pengembang PHP baru. Struktur yang jelas dan sintaks sederhana membantu Anda belajar pengembangan web tanpa tersesat dalam boilerplate.
-- **Disukai oleh Profesional:** Pengembang berpengalaman mencintai Flight karena fleksibilitas dan kontrolnya. Anda dapat mengembangkan dari prototipe kecil hingga aplikasi lengkap tanpa berganti kerangka kerja.
-- **Ramah AI:** Beban minimal dan arsitektur bersih Flight membuatnya ideal untuk mengintegrasikan alat dan API AI. Baik Anda membangun chatbot pintar, dasbor yang didukung AI, atau hanya ingin bereksperimen, Flight tidak menghalangi sehingga Anda dapat fokus pada hal yang penting. Aplikasi [skeleton app](https://github.com/flightphp/skeleton) dilengkapi dengan file instruksi yang sudah dibuat sebelumnya untuk asisten pengkodean AI utama langsung dari kotak! [Pelajari lebih lanjut tentang menggunakan AI dengan Flight](/learn/ai)
+- **Ramah Pemula:** Flight adalah titik awal yang bagus untuk pengembang PHP baru. Strukturnya yang jelas dan sintaks sederhana membantu Anda belajar pengembangan web tanpa tersesat dalam kode boilerplate.
+- **Disukai oleh Profesional:** Pengembang berpengalaman menyukai Flight karena fleksibilitas dan kendalinya. Anda dapat menskalakan dari prototipe kecil hingga aplikasi lengkap tanpa harus mengganti framework.
+- **Kompatibel ke Belakang:** Kami menghargai waktu Anda. Flight v3 adalah peningkatan dari v2, mempertahankan hampir seluruh API yang sama. Kami percaya pada evolusi, bukan revolusi—tidak ada lagi "merusak dunia" setiap kali versi utama dirilis.
+- **Tanpa Dependensi:** Inti Flight sepenuhnya bebas dependensi—tidak ada polyfills, tidak ada paket eksternal, bahkan tidak ada antarmuka PSR. Ini berarti lebih sedikit vektor serangan, jejak yang lebih kecil, dan tidak ada perubahan pemecah yang mengejutkan dari dependensi hulu. Plugin opsional mungkin menyertakan dependensi, tetapi inti akan selalu tetap ramping dan aman.
+- **Berfokus pada AI:** Overhead minimal dan arsitektur bersih Flight membuatnya ideal untuk mengintegrasikan alat dan API AI. Baik Anda membangun chatbot pintar, dashboard berbasis AI, atau hanya ingin bereksperimen, Flight tidak menghalangi sehingga Anda dapat fokus pada hal yang penting. Aplikasi [skeleton](https://github.com/flightphp/skeleton) dilengkapi dengan file instruksi pra-bangun untuk asisten pengkodean AI utama langsung dari kotak! [Pelajari lebih lanjut tentang menggunakan AI dengan Flight](/learn/ai)
 
-## Ikhtisar Video
+## Video Overview
 
 <div class="flight-block-video">
   <div class="row">
@@ -16,16 +18,16 @@ Flight adalah kerangka kerja yang cepat, sederhana, dan dapat diperluas untuk PH
       <iframe class="video-bg" width="100vw" height="315" src="https://www.youtube.com/embed/VCztp1QLC2c?si=W3fSWEKmoCIlC7Z5" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
     </div>
     <div class="col-12 col-md-6 fs-5 text-center mt-5 pt-5">
-      <span class="flight-title-video">Cukup sederhana, kan?</span>
+      <span class="flight-title-video">Cukup sederhana, bukan?</span>
       <br>
-      <a href="https://docs.flightphp.com/learn">Pelajari lebih lanjut</a> tentang Flight dalam dokumentasi!
+      <a href="https://docs.flightphp.com/learn">Pelajari lebih lanjut</a> tentang Flight di dokumentasi!
     </div>
   </div>
 </div>
 
-## Mulai Cepat
+## Quick Start
 
-Untuk instalasi dasar yang cepat, instal dengan Composer:
+Untuk instalasi cepat tanpa tambahan, instal dengan Composer:
 
 ```bash
 composer require flightphp/core
@@ -36,9 +38,9 @@ Atau Anda dapat mengunduh zip dari repo [di sini](https://github.com/flightphp/c
 ```php
 <?php
 
-// jika diinstal dengan composer
+// if installed with composer
 require 'vendor/autoload.php';
-// atau jika diinstal secara manual dengan file zip
+// or if installed manually by zip file
 // require 'flight/Flight.php';
 
 Flight::route('/', function() {
@@ -54,32 +56,32 @@ Flight::route('/json', function() {
 Flight::start();
 ```
 
-Itu saja! Anda memiliki aplikasi Flight dasar. Anda sekarang dapat menjalankan file ini dengan `php -S localhost:8000` dan kunjungi `http://localhost:8000` di browser Anda untuk melihat output.
+Itu saja! Anda memiliki aplikasi Flight dasar. Anda sekarang dapat menjalankan file ini dengan `php -S localhost:8000` dan kunjungi `http://localhost:8000` di browser Anda untuk melihat outputnya.
 
-## Aplikasi Skeleton/Boilerplate
+## Skeleton/Boilerplate App
 
-Ada contoh aplikasi untuk membantu Anda memulai proyek dengan Flight. Ini memiliki tata letak terstruktur, konfigurasi dasar yang sudah disetel, dan menangani skrip composer langsung dari awal! Periksa [flightphp/skeleton](https://github.com/flightphp/skeleton) untuk proyek yang siap pakai, atau kunjungi halaman [examples](examples) untuk inspirasi. Ingin melihat bagaimana AI cocok? [Jelajahi contoh yang didukung AI](/learn/ai).
+Ada aplikasi contoh untuk membantu Anda memulai proyek dengan Flight. Ini memiliki tata letak terstruktur, konfigurasi dasar yang sudah disetel, dan menangani skrip composer langsung dari gerbang! Lihat [flightphp/skeleton](https://github.com/flightphp/skeleton) untuk proyek siap pakai, atau kunjungi halaman [examples](examples) untuk inspirasi. Ingin melihat bagaimana AI cocok? [Jelajahi contoh berbasis AI](/learn/ai).
 
-## Menginstal Aplikasi Skeleton
+## Installing the Skeleton App
 
 Cukup mudah!
 
 ```bash
-# Buat proyek baru
+# Create the new project
 composer create-project flightphp/skeleton my-project/
-# Masuk ke direktori proyek baru Anda
+# Enter your new project directory
 cd my-project/
-# Buka server pengembangan lokal untuk memulai segera!
+# Bring up the local dev-server to get started right away!
 composer start
 ```
 
-Ini akan membuat struktur proyek, menyiapkan file yang Anda butuhkan, dan Anda siap berangkat!
+Ini akan membuat struktur proyek, menyiapkan file yang Anda butuhkan, dan Anda siap untuk memulai!
 
-## Kinerja Tinggi
+## High Performance
 
-Flight adalah salah satu kerangka kerja PHP tercepat di luar sana. Inti ringannya berarti overhead lebih sedikit dan kecepatan lebih—sempurna untuk aplikasi tradisional dan proyek modern yang didukung AI. Anda dapat melihat semua benchmark di [TechEmpower](https://www.techempower.com/benchmarks/#section=data-r18&hw=ph&test=frameworks)
+Flight adalah salah satu framework PHP tercepat di luar sana. Inti ringannya berarti overhead lebih sedikit dan kecepatan lebih tinggi—sempurna untuk aplikasi tradisional dan proyek berbasis AI modern. Anda dapat melihat semua benchmark di [TechEmpower](https://www.techempower.com/benchmarks/#section=data-r18&hw=ph&test=frameworks)
 
-Lihat benchmark di bawah dengan beberapa kerangka kerja PHP populer lainnya.
+Lihat benchmark di bawah ini dengan beberapa framework PHP populer lainnya.
 
 | Framework | Plaintext Reqs/sec | JSON Reqs/sec |
 | --------- | ------------ | ------------ |
@@ -94,11 +96,17 @@ Lihat benchmark di bawah dengan beberapa kerangka kerja PHP populer lainnya.
 | CodeIgniter | 20,628     | 19,901  |
 
 
-## Flight dan AI
+## Flight and AI
 
-Penasaran bagaimana menanganinya AI? [Temukan](/learn/ai) bagaimana Flight membuat bekerja dengan LLM pengkodean favorit Anda menjadi mudah!
+Penasaran bagaimana ia menangani AI? [Temukan](/learn/ai) bagaimana Flight membuat bekerja dengan LLM pengkodean favorit Anda menjadi mudah!
 
-# Komunitas
+## Stability and Backwards Compatibility
+
+Kami menghargai waktu Anda. Kami semua pernah melihat framework yang sepenuhnya menciptakan ulang diri mereka setiap beberapa tahun, meninggalkan pengembang dengan kode rusak dan migrasi mahal. Flight berbeda. Flight v3 dirancang sebagai peningkatan dari v2, yang berarti API yang Anda kenal dan sukai tidak dihilangkan. Bahkan, sebagian besar proyek v2 akan berfungsi tanpa perubahan apa pun di v3. 
+
+Kami berkomitmen untuk menjaga Flight tetap stabil sehingga Anda dapat fokus membangun aplikasi Anda, bukan memperbaiki framework Anda.
+
+# Community
 
 Kami ada di Matrix Chat
 
@@ -108,19 +116,19 @@ Dan Discord
 
 [![](https://dcbadge.limes.pink/api/server/https://discord.gg/Ysr4zqHfbX)](https://discord.gg/Ysr4zqHfbX)
 
-# Berkontribusi
+# Contributing
 
 Ada dua cara Anda dapat berkontribusi ke Flight:
 
-1. Berkontribusi ke kerangka kerja inti dengan mengunjungi [core repository](https://github.com/flightphp/core).
-2. Bantu membuat dokumen lebih baik! Situs web dokumentasi ini dihosting di [Github](https://github.com/flightphp/docs). Jika Anda menemukan kesalahan atau ingin meningkatkan sesuatu, silakan submit pull request. Kami menyukai pembaruan dan ide baru—terutama seputar AI dan teknologi baru!
+1. Berkontribusi ke framework inti dengan mengunjungi [core repository](https://github.com/flightphp/core).
+2. Bantu buat dokumentasi lebih baik! Situs web dokumentasi ini dihosting di [Github](https://github.com/flightphp/docs). Jika Anda menemukan kesalahan atau ingin meningkatkan sesuatu, jangan ragu untuk mengirimkan pull request. Kami menyukai pembaruan dan ide baru—terutama seputar AI dan teknologi baru!
 
-# Persyaratan
+# Requirements
 
-Flight memerlukan PHP 7.4 atau lebih baru.
+Flight memerlukan PHP 7.4 atau lebih tinggi.
 
-**Catatan:** PHP 7.4 didukung karena pada saat penulisan (2024) PHP 7.4 adalah versi default untuk beberapa distribusi Linux LTS. Memaksa perpindahan ke PHP >8 akan menimbulkan masalah bagi pengguna tersebut. Kerangka kerja juga mendukung PHP >8.
+**Catatan:** PHP 7.4 didukung karena pada saat penulisan ini (2024) PHP 7.4 adalah versi default untuk beberapa distribusi Linux LTS. Memaksa perpindahan ke PHP >8 akan menyebabkan banyak masalah bagi pengguna tersebut. Framework juga mendukung PHP >8.
 
-# Lisensi
+# License
 
-Flight dirilis di bawah [lisensi MIT](https://github.com/flightphp/core/blob/master/LICENSE).
+Flight dirilis di bawah lisensi [MIT](https://github.com/flightphp/core/blob/master/LICENSE).
