@@ -65,6 +65,7 @@ Cookie 是存储客户端小量数据的绝佳方式。它们可用于存储用�
 - <span class="badge bg-warning">deprecated</span> [flightphp/core PdoWrapper](/learn/pdo-wrapper) - 官方 Flight PDO 包装器，是核心的一部分（自 v3.18.0 起已弃用）。请改用 SimplePdo。
 - <span class="badge bg-primary">official</span> [flightphp/active-record](/awesome-plugins/active-record) - 官方 Flight ActiveRecord ORM/映射器。一个优秀的库，便于轻松检索和存储数据库中的数据。
 - [byjg/php-migration](/awesome-plugins/migrations) - 用于跟踪项目所有数据库变更的插件。
+- [knifelemon/easy-query](/awesome-plugins/easy-query) - 轻量级、流畅的SQL查询构建器，生成SQL和参数用于预处理语句。与 [SimplePdo](/learn/simple-pdo) 配合使用效果很好。
 
 ## 加密
 

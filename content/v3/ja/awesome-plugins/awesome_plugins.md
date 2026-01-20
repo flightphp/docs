@@ -65,6 +65,7 @@ CLI アプリケーションは、アプリケーションとやり取りする�
 - <span class="badge bg-warning">deprecated</span> [flightphp/core PdoWrapper](/learn/pdo-wrapper) - コアの一部である公式の Flight PDO ラッパー（v3.18.0 以降非推奨）。SimplePdo を使用してください。
 - <span class="badge bg-primary">official</span> [flightphp/active-record](/awesome-plugins/active-record) - 公式の Flight ActiveRecord ORM/マッパーです。データベースからデータを簡単に取得および保存するための優れた小さなライブラリです。
 - [byjg/php-migration](/awesome-plugins/migrations) - プロジェクトのすべてのデータベース変更を追跡するためのプラグインです。
+- [knifelemon/easy-query](/awesome-plugins/easy-query) - プリペアドステートメント用のSQLとパラメータを生成する軽量でフルエントなSQLクエリビルダー。[SimplePdo](/learn/simple-pdo)との併用に最適です。
 
 ## 暗号化
 

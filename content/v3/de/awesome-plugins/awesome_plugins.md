@@ -65,6 +65,7 @@ Datenbanken sind der Kern der meisten Anwendungen. So speichern und rufen Sie Da
 - <span class="badge bg-warning">deprecated</span> [flightphp/core PdoWrapper](/learn/pdo-wrapper) - Offizieller Flight PDO-Wrapper, der zum Kern gehört (veraltet ab v3.18.0). Verwenden Sie stattdessen SimplePdo.
 - <span class="badge bg-primary">official</span> [flightphp/active-record](/awesome-plugins/active-record) - Offizielles Flight ActiveRecord ORM/Mapper. Tolle kleine Bibliothek, um Daten einfach in Ihrer Datenbank abzurufen und zu speichern.
 - [byjg/php-migration](/awesome-plugins/migrations) - Plugin, um alle Datenbankänderungen für Ihr Projekt zu verfolgen.
+- [knifelemon/easy-query](/awesome-plugins/easy-query) - Leichter, fluent SQL Query Builder, der SQL und Parameter für Prepared Statements generiert. Funktioniert hervorragend mit [SimplePdo](/learn/simple-pdo).
 
 ## Encryption
 

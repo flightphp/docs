@@ -65,6 +65,7 @@ Datubāzes ir kodols lielākajai daļai aplikāciju. Tā ir veids, kā uzglabāt
 - <span class="badge bg-warning">novecojis</span> [flightphp/core PdoWrapper](/learn/pdo-wrapper) - Oficiālais Flight PDO Apvalks, kas ir kodola daļa (novecojis no v3.18.0). Izmantojiet SimplePdo vietā.
 - <span class="badge bg-primary">oficiāls</span> [flightphp/active-record](/awesome-plugins/active-record) - Oficiālā Flight ActiveRecord ORM/Mapper. Lieliska maza bibliotēka, lai viegli izgūtu un uzglabātu datus jūsu datubāzē.
 - [byjg/php-migration](/awesome-plugins/migrations) - Spraudnis, lai sekotu visām datubāzes izmaiņām jūsu projektā.
+- [knifelemon/easy-query](/awesome-plugins/easy-query) - Viegls, plūstošs SQL vaicājumu veidotājs, kas ģenerē SQL un parametrus prepared statements. Lieliski strādā ar [SimplePdo](/learn/simple-pdo).
 
 ## Šifrēšana
 
