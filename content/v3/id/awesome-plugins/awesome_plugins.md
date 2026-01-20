@@ -65,6 +65,7 @@ Database adalah inti dari sebagian besar aplikasi. Ini adalah cara Anda menyimpa
 - <span class="badge bg-warning">deprecated</span> [flightphp/core PdoWrapper](/learn/pdo-wrapper) - Wrapper PDO Flight resmi yang merupakan bagian dari inti (deprecated sejak v3.18.0). Gunakan SimplePdo sebagai gantinya.
 - <span class="badge bg-primary">resmi</span> [flightphp/active-record](/awesome-plugins/active-record) - ORM/Mapper ActiveRecord Flight resmi. Pustaka kecil yang hebat untuk dengan mudah mengambil dan menyimpan data di database Anda.
 - [byjg/php-migration](/awesome-plugins/migrations) - Plugin untuk melacak semua perubahan database untuk proyek Anda.
+- [knifelemon/easy-query](/awesome-plugins/easy-query) - Pembuat kueri SQL yang ringan dan fluent yang menghasilkan SQL dan parameter untuk prepared statement. Bekerja dengan baik dengan [SimplePdo](/learn/simple-pdo).
 
 ## Enkripsi
 
