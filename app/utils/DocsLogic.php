@@ -101,9 +101,11 @@ class DocsLogic
 		$wantsMarkdown = str_contains($accept, 'text/plain') ||
 			str_contains($accept, 'text/markdown') ||
 			str_contains($accept, 'application/json');
-		$wantsHtml = str_contains($accept, 'text/html');
 
-		if (!empty($params['raw_markdown']) && $wantsMarkdown && !$wantsHtml) {
+		// Only render HTML if html is requested AND markdown isn't explicitly asked for
+		$prefersHtml = str_contains($accept, 'text/html') && !$wantsMarkdown;
+
+		if (!empty($params['raw_markdown']) && $wantsMarkdown && !$prefersHtml) {
 			if (str_contains($accept, 'application/json')) {
 				$this->app->response()->header('Content-Type', 'application/json; charset=utf-8');
 				$this->app->response()->write(json_encode([
