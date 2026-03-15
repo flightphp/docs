@@ -6,7 +6,8 @@ use app\middleware\HeaderSecurityMiddleware;
 use DOMDocument;
 use DOMXPath;
 
-class DocsLogic {
+class DocsLogic
+{
 
 	/** @var string */
 	private const DS = DIRECTORY_SEPARATOR;
@@ -34,7 +35,8 @@ class DocsLogic {
 	 *
 	 * @param CustomEngine $app Flight Engine
 	 */
-	public function __construct(protected $app) {
+	public function __construct(protected $app)
+	{
 	}
 
 	/**
@@ -42,7 +44,8 @@ class DocsLogic {
 	 *
 	 * @return array List of section names
 	 */
-	public function getLearnSectionNames(): array {
+	public function getLearnSectionNames(): array
+	{
 		return [
 			'Core Components' => [
 				['url' => '/learn/routing', 'title' => 'Routing'],
@@ -83,7 +86,8 @@ class DocsLogic {
 	 * @param string $latte_file The path to the Latte template file to be rendered.
 	 * @param array $params An optional array of parameters to be passed to the template.
 	 */
-	public function renderPage(string $latte_file, array $params = []) {
+	public function renderPage(string $latte_file, array $params = [])
+	{
 		$request = $this->app->request();
 		$uri = $request->url;
 
@@ -92,12 +96,27 @@ class DocsLogic {
 		}
 
 		$startTime = microtime(true);
-		if (!empty($params['raw_markdown']) && (str_contains($request->header('Accept'), 'text/plain') || str_contains($request->header('Accept'), 'text/markdown'))) {
-			$this->app->response()->header('Content-Type', 'text/markdown; charset=utf-8');
-			$this->app->response()->write($params['raw_markdown']);
-		} else {
 
-			// Here we can set variables that will be available on any page
+		$accept = $request->header('Accept');
+		$wantsMarkdown = str_contains($accept, 'text/plain') ||
+			str_contains($accept, 'text/markdown') ||
+			str_contains($accept, 'application/json');
+		$wantsHtml = str_contains($accept, 'text/html');
+
+		if (!empty($params['raw_markdown']) && $wantsMarkdown && !$wantsHtml) {
+			if (str_contains($accept, 'application/json')) {
+				$this->app->response()->header('Content-Type', 'application/json; charset=utf-8');
+				$this->app->response()->write(json_encode([
+					'url' => $request->getScheme() . '://' . $request->getHeader('Host') . $uri,
+					'title' => $params['page_title'] ?? '',
+					'type' => 'markdown',
+					'content' => $params['raw_markdown'],
+				]));
+			} else {
+				$this->app->response()->header('Content-Type', 'text/markdown; charset=utf-8');
+				$this->app->response()->write($params['raw_markdown']);
+			}
+		} else {
 			$params['url'] = $request->getScheme() . '://' . $request->getHeader('Host') . $uri;
 			$params['nonce'] = HeaderSecurityMiddleware::$nonce;
 			$params['q'] = $request->query['q'] ?? '';
@@ -116,7 +135,8 @@ class DocsLogic {
 	 * @param string $version The version of the translation service.
 	 * @return Translator The configured translator service.
 	 */
-	public function setupTranslatorService(string $language, string $version): Translator {
+	public function setupTranslatorService(string $language, string $version): Translator
+	{
 		$Translator = $this->app->translator();
 		$Translator->setLanguage($language);
 		$Translator->setVersion($version);
@@ -132,7 +152,8 @@ class DocsLogic {
 	 *
 	 * @return void
 	 */
-	public function compileSinglePage(string $language, string $version, string $section) {
+	public function compileSinglePage(string $language, string $version, string $section)
+	{
 		$app = $this->app;
 
 		// Check if the language is valid
@@ -180,7 +201,8 @@ class DocsLogic {
 	 * @param string $section The main section of the documentation.
 	 * @param string $sub_section The sub-section of the documentation.
 	 */
-	public function compileScrollspyPage(string $language, string $version, string $section, string $sub_section) {
+	public function compileScrollspyPage(string $language, string $version, string $section, string $sub_section)
+	{
 		$app = $this->app;
 
 		// Check if the language is valid
@@ -256,7 +278,8 @@ class DocsLogic {
 	 * @param string $html
 	 * @return string
 	 */
-	protected function wrapContentInDiv(string $html): string {
+	protected function wrapContentInDiv(string $html): string
+	{
 		$dom = new DOMDocument;
 		$dom->loadHTML('<?xml encoding="utf-8" ?>' . $html);
 		$xpath = new DOMXPath($dom);
@@ -325,7 +348,8 @@ class DocsLogic {
 	 * @param string $language The language code to check.
 	 * @return bool True if the language is valid, false otherwise.
 	 */
-	public function checkValidLanguage(string $language): bool {
+	public function checkValidLanguage(string $language): bool
+	{
 		return in_array($language, self::AVAILABLE_LANGUAGES, true) === true;
 	}
 
@@ -335,7 +359,8 @@ class DocsLogic {
 	 * @param string $version The version code to check.
 	 * @return bool True if the version is valid, false otherwise.
 	 */
-	public function checkValidVersion(string $version): bool {
+	public function checkValidVersion(string $version): bool
+	{
 		return in_array($version, ['v3', 'v2'], true) === true;
 	}
 
@@ -347,7 +372,8 @@ class DocsLogic {
 	 * @param string $version  The documentation version to search in (default: 'v3').
 	 * @return array           An array of search results.
 	 */
-	public function runSearch(string $query, string $language = 'en', string $version = 'v3'): array {
+	public function runSearch(string $query, string $language = 'en', string $version = 'v3'): array
+	{
 
 		// if the query is less than 3 characters, return empty array
 		if (strlen($query) < 3) {
