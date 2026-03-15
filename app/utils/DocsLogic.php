@@ -110,7 +110,7 @@ class DocsLogic
 				$this->app->response()->header('Content-Type', 'application/json; charset=utf-8');
 				$this->app->response()->write(json_encode([
 					'url' => $request->getScheme() . '://' . $request->getHeader('Host') . $uri,
-					'title' => $params['page_title'] ?? '',
+					'title' => $params['page_title'] ?? ($params['section'] ?? ($params['title'] ?? '')),
 					'type' => 'markdown',
 					'content' => $params['raw_markdown'],
 				]));
