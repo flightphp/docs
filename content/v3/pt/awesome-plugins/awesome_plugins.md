@@ -65,6 +65,7 @@ Bancos de dados são o núcleo da maioria das aplicações. É assim que você a
 - <span class="badge bg-warning">deprecado</span> [flightphp/core PdoWrapper](/learn/pdo-wrapper) - Wrapper PDO oficial do Flight que faz parte do núcleo (deprecado a partir da v3.18.0). Use SimplePdo em vez disso.
 - <span class="badge bg-primary">oficial</span> [flightphp/active-record](/awesome-plugins/active-record) - ORM/Mapper ActiveRecord oficial do Flight. Ótima biblioteca pequena para recuperar e armazenar dados facilmente em seu banco de dados.
 - [byjg/php-migration](/awesome-plugins/migrations) - Plugin para rastrear todas as alterações de banco de dados para seu projeto.
+- [knifelemon/easy-query](/awesome-plugins/easy-query) - Construtor de consultas SQL leve e fluente que gera SQL e parâmetros para prepared statements. Funciona muito bem com [SimplePdo](/learn/simple-pdo).
 
 ## Criptografia
 

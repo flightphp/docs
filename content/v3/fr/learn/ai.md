@@ -2,14 +2,14 @@
 
 ## Aperçu
 
-Flight facilite le renforcement de vos projets PHP avec des outils alimentés par l'IA et des flux de travail modernes pour les développeurs. Avec des commandes intégrées pour se connecter aux fournisseurs de LLM (Large Language Model) et générer des instructions de codage IA spécifiques au projet, Flight vous aide, vous et votre équipe, à tirer le meilleur parti des assistants IA comme GitHub Copilot, Cursor et Windsurf.
+Flight facilite le renforcement de vos projets PHP avec des outils alimentés par l'IA et des flux de travail modernes pour les développeurs. Avec des commandes intégrées pour se connecter à des fournisseurs de LLM (Large Language Model) et générer des instructions de codage IA spécifiques au projet, Flight vous aide, vous et votre équipe, à tirer le meilleur parti des assistants IA comme GitHub Copilot, Cursor, Windsurf et Antigravity (Gemini).
 
 ## Compréhension
 
-Les assistants de codage IA sont les plus utiles lorsqu'ils comprennent le contexte, les conventions et les objectifs de votre projet. Les aides IA de Flight vous permettent de :
+Les assistants de codage IA sont les plus utiles lorsqu'ils comprennent le contexte, les conventions et les objectifs de votre projet. Les helpers IA de Flight vous permettent de :
 - Connecter votre projet à des fournisseurs de LLM populaires (OpenAI, Grok, Claude, etc.)
-- Générer et mettre à jour des instructions spécifiques au projet pour les outils IA, afin que tout le monde reçoive une aide cohérente et pertinente
-- Maintenir votre équipe alignée et productive, avec moins de temps passé à expliquer le contexte
+- Générer et mettre à jour des instructions spécifiques au projet pour les outils IA, afin que tout le monde obtienne une aide cohérente et pertinente
+- Garder votre équipe alignée et productive, avec moins de temps passé à expliquer le contexte
 
 Ces fonctionnalités sont intégrées au CLI principal de Flight et au projet de démarrage officiel [flightphp/skeleton](https://github.com/flightphp/skeleton).
 
@@ -28,7 +28,7 @@ Vous serez invité à :
 - Entrer votre clé API
 - Définir l'URL de base et le nom du modèle
 
-Cela crée un fichier `.runway-creds.json` à la racine de votre projet (et s'assure qu'il est dans votre `.gitignore`).
+Cela crée les identifiants nécessaires pour effectuer des requêtes LLM futures.
 
 **Exemple :**
 ```
@@ -48,10 +48,11 @@ La commande `ai:generate-instructions` vous aide à créer ou mettre à jour des
 php runway ai:generate-instructions
 ```
 
-Vous répondrez à quelques questions sur votre projet (description, base de données, templating, sécurité, taille de l'équipe, etc.). Flight utilise votre fournisseur de LLM pour générer les instructions, puis les écrit dans :
+Vous répondrez à quelques questions sur votre projet (description, base de données, templating, sécurité, taille de l'équipe, etc.). Flight utilise votre fournisseur de LLM pour générer des instructions, puis les écrit dans :
 - `.github/copilot-instructions.md` (pour GitHub Copilot)
 - `.cursor/rules/project-overview.mdc` (pour Cursor)
 - `.windsurfrules` (pour Windsurf)
+- `.gemini/GEMINI.md` (pour Antigravity)
 
 **Exemple :**
 ```
@@ -68,7 +69,7 @@ Maintenant, vos outils IA fourniront des suggestions plus intelligentes et plus 
 ## Utilisation Avancée
 
 - Vous pouvez personnaliser l'emplacement de vos fichiers d'identifiants ou d'instructions en utilisant des options de commande (voir `--help` pour chaque commande).
-- Les aides IA sont conçues pour fonctionner avec n'importe quel fournisseur de LLM qui prend en charge les API compatibles avec OpenAI.
+- Les helpers IA sont conçus pour fonctionner avec n'importe quel fournisseur de LLM qui prend en charge les API compatibles avec OpenAI.
 - Si vous souhaitez mettre à jour vos instructions au fur et à mesure que votre projet évolue, relancez simplement `ai:generate-instructions` et répondez aux invites à nouveau.
 
 ## Voir Aussi

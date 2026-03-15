@@ -6,7 +6,9 @@ Flight is a fast, simple, extensible framework for PHP—built for developers wh
 
 - **Beginner Friendly:** Flight is a great starting point for new PHP developers. Its clear structure and simple syntax help you learn web development without getting lost in boilerplate.
 - **Loved by Pros:** Experienced devs love Flight for its flexibility and control. You can scale from a tiny prototype to a full-featured app without switching frameworks.
-- **AI Friendly:** Flight's minimal overhead and clean architecture make it ideal for integrating AI tools and APIs. Whether you're building smart chatbots, AI-driven dashboards, or just want to experiment, Flight gets out of your way so you can focus on what matters. The [skeleton app](https://github.com/flightphp/skeleton) comes with pre-built instructions files for the major AI coding assistants out of the box! [Learn more about using AI with Flight](/learn/ai)
+- **Backwards Compatible:** We value your time. Flight v3 is an augmentation of v2, keeping almost all of the same API. We believe in evolution, not revolution—no more "breaking the world" every time a major version comes out.
+- **Zero Dependencies:** Flight's core is completely dependency-free—no polyfills, no external packages, not even PSR interfaces. This means fewer attack vectors, a smaller footprint, and no surprise breaking changes from upstream dependencies. Optional plugins may include dependencies, but the core will always stay lean and secure.
+- **AI Focused:** Flight's minimal overhead and clean architecture make it ideal for integrating AI tools and APIs. Whether you're building smart chatbots, AI-driven dashboards, or just want to experiment, Flight gets out of your way so you can focus on what matters. The [skeleton app](https://github.com/flightphp/skeleton) comes with pre-built instructions files for the major AI coding assistants out of the box! [Learn more about using AI with Flight](/learn/ai)
 
 ## Video Overview
 
@@ -97,6 +99,12 @@ See the benchmark below with some other popular PHP frameworks.
 ## Flight and AI
 
 Curious how it handles AI? [Discover](/learn/ai) how Flight makes working with your favorite coding LLM easy!
+
+## Stability and Backwards Compatibility
+
+We value your time. We've all seen frameworks that completely reinvent themselves every couple of years, leaving developers with broken code and expensive migrations. Flight is different. Flight v3 was designed as an augmentation of v2, which means that the API you know and love hasn't been stripped away. In fact, most v2 projects will work without any changes in v3. 
+
+We're committed to keeping Flight stable so you can focus on building your app, not fixing your framework.
 
 # Community
 

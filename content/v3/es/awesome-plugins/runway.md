@@ -31,7 +31,7 @@ return [
 
 ### Detección de la Raíz del Proyecto
 
-Runway es lo suficientemente inteligente como para detectar la raíz de tu proyecto, incluso si lo ejecutas desde un subdirectorio. Busca indicadores como `composer.json`, `.git` o `app/config/config.php` para determinar dónde está la raíz del proyecto. Esto significa que puedes ejecutar comandos de Runway desde cualquier lugar en tu proyecto!
+Runway es lo suficientemente inteligente como para detectar la raíz de tu proyecto, incluso si lo ejecutas desde un subdirectorio. Busca indicadores como `composer.json`, `.git` o `app/config/config.php` para determinar dónde está la raíz del proyecto. Esto significa que puedes ejecutar comandos de Runway desde cualquier lugar en tu proyecto! 
 
 ## Uso
 
@@ -150,18 +150,18 @@ namespace flight\commands;
 class ExampleCommand extends AbstractBaseCommand
 {
 	/**
-     * Construct
+     * Constructor
      *
-     * @param array<string,mixed> $config Config from app/config/config.php
+     * @param array<string,mixed> $config Configuración de app/config/config.php
      */
     public function __construct(array $config)
     {
-        parent::__construct('make:example', 'Create an example for the documentation', $config);
-        $this->argument('<funny-gif>', 'The name of the funny gif');
+        parent::__construct('make:example', 'Crear un ejemplo para la documentación', $config);
+        $this->argument('<funny-gif>', 'El nombre del gif gracioso');
     }
 
 	/**
-     * Executes the function
+     * Ejecuta la función
      *
      * @return void
      */
@@ -169,11 +169,11 @@ class ExampleCommand extends AbstractBaseCommand
     {
         $io = $this->app()->io();
 
-		$io->info('Creating example...');
+		$io->info('Creando ejemplo...');
 
-		// Do something here
+		// Haz algo aquí
 
-		$io->ok('Example created!');
+		$io->ok('¡Ejemplo creado!');
 	}
 }
 ```
@@ -216,33 +216,33 @@ Si necesitas personalizar la configuración para Runway, puedes establecer estos
 <?php
 // app/config/config.php
 return [
-    // ... other config values ...
+    // ... otros valores de configuración ...
 
     'runway' => [
-        // This is where your application directory is located
+        // Aquí es donde se encuentra tu directorio de aplicación
         'app_root' => 'app/',
 
-        // This is the directory where your root index file is located
+        // Este es el directorio donde se encuentra tu archivo index raíz
         'index_root' => 'public/',
 
-        // These are the paths to the roots of other projects
+        // Estas son las rutas a las raíces de otros proyectos
         'root_paths' => [
             '/home/user/different-project',
             '/var/www/another-project'
         ],
 
-        // Base paths most likely don't need to be configured, but it's here if you want it
+        // Las rutas base probablemente no necesiten configurarse, pero está aquí si lo quieres
         'base_paths' => [
-            '/includes/libs/vendor', // if you have a really unique path for your vendor directory or something
+            '/includes/libs/vendor', // si tienes una ruta realmente única para tu directorio vendor o algo
         ],
 
-        // Final paths are locations within a project to search for the command files
+        // Las rutas finales son ubicaciones dentro de un proyecto para buscar los archivos de comandos
         'final_paths' => [
             'src/diff-path/commands',
             'app/module/admin/commands',
         ],
 
-        // If you want to just add the full path, go right ahead (absolute or relative to project root)
+        // Si quieres agregar la ruta completa, adelante (absoluta o relativa a la raíz del proyecto)
         'paths' => [
             '/home/user/different-project/src/diff-path/commands',
             '/var/www/another-project/app/module/admin/commands',
@@ -261,26 +261,26 @@ public function execute()
 {
     $io = $this->app()->io();
     
-    // Access configuration
+    // Acceder a la configuración
     $app_root = $this->config['runway']['app_root'];
     
-    // Access services like maybe a database connection
+    // Acceder a servicios como quizás una conexión a la base de datos
     $database = $this->config['database']
     
     // ...
 }
 ```
 
-## Wrappers de Ayudante de IA
+## Envoltorios de Ayudante de IA
 
-Runway tiene algunos wrappers de ayudante que facilitan que la IA genere comandos. Puedes usar `addOption` y `addArgument` de una manera que se siente similar a Symfony Console. Esto es útil si estás usando herramientas de IA para generar tus comandos.
+Runway tiene algunos envoltorios de ayudante que facilitan que la IA genere comandos. Puedes usar `addOption` y `addArgument` de una manera que se sienta similar a Symfony Console. Esto es útil si estás usando herramientas de IA para generar tus comandos.
 
 ```php
 public function __construct(array $config)
 {
-    parent::__construct('make:example', 'Create an example for the documentation', $config);
+    parent::__construct('make:example', 'Crear un ejemplo para la documentación', $config);
     
-    // The mode argument is nullable and defaults to completely optional
-    $this->addOption('name', 'The name of the example', null);
+    // El argumento mode es nullable y por defecto es completamente opcional
+    $this->addOption('name', 'El nombre del ejemplo', null);
 }
 ```

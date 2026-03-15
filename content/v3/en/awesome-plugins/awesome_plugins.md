@@ -65,6 +65,7 @@ Databases are the core to most applications. This is how you store and retrieve 
 - <span class="badge bg-warning">deprecated</span> [flightphp/core PdoWrapper](/learn/pdo-wrapper) - Official Flight PDO Wrapper that's part of the core (deprecated as of v3.18.0). Use SimplePdo instead.
 - <span class="badge bg-primary">official</span> [flightphp/active-record](/awesome-plugins/active-record) - Official Flight ActiveRecord ORM/Mapper. Great little library for easily retrieving and storing data in your database.
 - [byjg/php-migration](/awesome-plugins/migrations) - Plugin to keep track of all database changes for your project.
+- [knifelemon/easy-query](/awesome-plugins/easy-query) - Lightweight, fluent SQL query builder that generates SQL and parameters for prepared statements. Works great with [SimplePdo](/learn/simple-pdo).
 
 ## Encryption
 

@@ -2,11 +2,11 @@
 
 ## Gambaran Umum
 
-Flight memudahkan Anda untuk meningkatkan proyek PHP Anda dengan alat berbasis AI dan alur kerja pengembang modern. Dengan perintah bawaan untuk menghubungkan ke penyedia LLM (Large Language Model) dan menghasilkan instruksi pengkodean AI khusus proyek, Flight membantu Anda dan tim Anda mendapatkan manfaat maksimal dari asisten AI seperti GitHub Copilot, Cursor, dan Windsurf.
+Flight memudahkan Anda untuk meningkatkan proyek PHP Anda dengan alat berbasis AI dan alur kerja pengembang modern. Dengan perintah bawaan untuk terhubung ke penyedia LLM (Large Language Model) dan menghasilkan instruksi pengkodean AI khusus proyek, Flight membantu Anda dan tim Anda memanfaatkan maksimal asisten AI seperti GitHub Copilot, Cursor, Windsurf, dan Antigravity (Gemini).
 
 ## Pemahaman
 
-Asisten pengkodean AI paling membantu ketika mereka memahami konteks proyek Anda, konvensi, dan tujuan. Pembantu AI Flight memungkinkan Anda:
+Asisten pengkodean AI paling membantu ketika mereka memahami konteks, konvensi, dan tujuan proyek Anda. Pembantu AI Flight memungkinkan Anda untuk:
 - Menghubungkan proyek Anda ke penyedia LLM populer (OpenAI, Grok, Claude, dll.)
 - Menghasilkan dan memperbarui instruksi khusus proyek untuk alat AI, sehingga semua orang mendapatkan bantuan yang konsisten dan relevan
 - Menjaga tim Anda tetap selaras dan produktif, dengan waktu yang lebih sedikit untuk menjelaskan konteks
@@ -28,7 +28,7 @@ Anda akan diminta untuk:
 - Memasukkan kunci API Anda
 - Mengatur URL dasar dan nama model
 
-Ini membuat file `.runway-creds.json` di root proyek Anda (dan memastikan itu ada di `.gitignore` Anda).
+Ini membuat kredensial yang diperlukan agar Anda dapat melakukan permintaan LLM di masa depan.
 
 **Contoh:**
 ```
@@ -52,6 +52,7 @@ Anda akan menjawab beberapa pertanyaan tentang proyek Anda (deskripsi, database,
 - `.github/copilot-instructions.md` (untuk GitHub Copilot)
 - `.cursor/rules/project-overview.mdc` (untuk Cursor)
 - `.windsurfrules` (untuk Windsurf)
+- `.gemini/GEMINI.md` (untuk Antigravity)
 
 **Contoh:**
 ```
@@ -84,4 +85,4 @@ Sekarang, alat AI Anda akan memberikan saran yang lebih cerdas dan relevan berda
 
 ## Changelog
 
-- v3.16.0 – Menambahkan perintah CLI `ai:init` dan `ai:generate-instructions` untuk integrasi AI.
+- v3.16.0 – Ditambahkan perintah CLI `ai:init` dan `ai:generate-instructions` untuk integrasi AI.

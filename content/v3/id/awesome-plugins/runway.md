@@ -1,6 +1,6 @@
 # Runway
 
-Runway adalah aplikasi CLI yang membantu Anda mengelola aplikasi Flight Anda. Ini dapat menghasilkan controller, menampilkan semua rute, dan lainnya. Ini didasarkan pada pustaka [adhocore/php-cli](https://github.com/adhocore/php-cli) yang luar biasa.
+Runway adalah aplikasi CLI yang membantu Anda mengelola aplikasi Flight Anda. Ini dapat menghasilkan controller, menampilkan semua rute, dan banyak lagi. Ini didasarkan pada pustaka [adhocore/php-cli](https://github.com/adhocore/php-cli) yang luar biasa.
 
 Klik [di sini](https://github.com/flightphp/runway) untuk melihat kode.
 
@@ -14,7 +14,7 @@ composer require flightphp/runway
 
 ## Konfigurasi Dasar
 
-Pada pertama kali Anda menjalankan Runway, itu akan mencoba mencari konfigurasi `runway` di `app/config/config.php` melalui kunci `'runway'`.
+Untuk pertama kalinya Anda menjalankan Runway, itu akan mencoba mencari konfigurasi `runway` di `app/config/config.php` melalui kunci `'runway'`.
 
 ```php
 <?php
@@ -29,16 +29,16 @@ return [
 
 > **CATATAN** - Mulai dari **v1.2.0**, `.runway-config.json` sudah tidak digunakan lagi. Silakan migrasikan konfigurasi Anda ke `app/config/config.php`. Anda dapat melakukan ini dengan mudah menggunakan perintah `php runway config:migrate`.
 
-### Deteksi Root Proyek
+### Deteksi Akar Proyek
 
-Runway cukup pintar untuk mendeteksi root proyek Anda, bahkan jika Anda menjalankannya dari subdirektori. Ini mencari indikator seperti `composer.json`, `.git`, atau `app/config/config.php` untuk menentukan di mana root proyek berada. Ini berarti Anda dapat menjalankan perintah Runway dari mana saja di proyek Anda! 
+Runway cukup pintar untuk mendeteksi akar proyek Anda, bahkan jika Anda menjalankannya dari subdirektori. Ini mencari indikator seperti `composer.json`, `.git`, atau `app/config/config.php` untuk menentukan di mana akar proyek berada. Ini berarti Anda dapat menjalankan perintah Runway dari mana saja di proyek Anda! 
 
 ## Penggunaan
 
 Runway memiliki sejumlah perintah yang dapat Anda gunakan untuk mengelola aplikasi Flight Anda. Ada dua cara mudah untuk menggunakan Runway.
 
-1. Jika Anda menggunakan proyek skeleton, Anda dapat menjalankan `php runway [command]` dari root proyek Anda.
-1. Jika Anda menggunakan Runway sebagai paket yang diinstal melalui composer, Anda dapat menjalankan `vendor/bin/runway [command]` dari root proyek Anda.
+1. Jika Anda menggunakan proyek skeleton, Anda dapat menjalankan `php runway [command]` dari akar proyek Anda.
+1. Jika Anda menggunakan Runway sebagai paket yang diinstal melalui composer, Anda dapat menjalankan `vendor/bin/runway [command]` dari akar proyek Anda.
 
 ### Daftar Perintah
 
@@ -50,7 +50,7 @@ php runway
 
 ### Bantuan Perintah
 
-Untuk perintah apa pun, Anda dapat menambahkan flag `--help` untuk mendapatkan informasi lebih lanjut tentang cara menggunakan perintah tersebut.
+Untuk perintah apa pun, Anda dapat meneruskan flag `--help` untuk mendapatkan informasi lebih lanjut tentang cara menggunakan perintah tersebut.
 
 ```bash
 php runway routes --help
@@ -92,13 +92,13 @@ namespace app\records;
  * @property string $email
  * @property string $created_at
  * @property string $updated_at
- * // Anda juga bisa menambahkan relasi di sini setelah mendefinisikannya di array $relations
- * @property CompanyRecord $company Contoh relasi
+ * // Anda juga bisa menambahkan hubungan di sini setelah mendefinisikannya di array $relations
+ * @property CompanyRecord $company Contoh hubungan
  */
 class UserRecord extends \flight\ActiveRecord
 {
     /**
-     * @var array $relations Atur relasi untuk model
+     * @var array $relations Atur hubungan untuk model
      *   https://docs.flightphp.com/awesome-plugins/active-record#relationships
      */
     protected array $relations = [];
@@ -122,7 +122,7 @@ Ini akan menampilkan semua rute yang saat ini terdaftar dengan Flight.
 php runway routes
 ```
 
-Jika Anda ingin hanya melihat rute tertentu, Anda dapat menambahkan flag untuk memfilter rute.
+Jika Anda ingin hanya melihat rute tertentu, Anda dapat meneruskan flag untuk memfilter rute.
 
 ```bash
 # Tampilkan hanya rute GET
@@ -136,9 +136,9 @@ php runway routes --post
 
 ## Menambahkan Perintah Kustom ke Runway
 
-Jika Anda sedang membuat paket untuk Flight, atau ingin menambahkan perintah kustom sendiri ke proyek Anda, Anda dapat melakukannya dengan membuat direktori `src/commands/`, `flight/commands/`, `app/commands/`, atau `commands/` untuk proyek/paket Anda. Jika Anda membutuhkan penyesuaian lebih lanjut, lihat bagian di bawah tentang Konfigurasi.
+Jika Anda membuat paket untuk Flight, atau ingin menambahkan perintah kustom sendiri ke proyek Anda, Anda dapat melakukannya dengan membuat direktori `src/commands/`, `flight/commands/`, `app/commands/`, atau `commands/` untuk proyek/paket Anda. Jika Anda membutuhkan penyesuaian lebih lanjut, lihat bagian di bawah tentang Konfigurasi.
 
-Untuk membuat perintah, Anda cukup memperluas kelas `AbstractBaseCommand`, dan mengimplementasikan minimal metode `__construct` dan metode `execute`.
+Untuk membuat perintah, Anda cukup memperluas kelas `AbstractBaseCommand`, dan menerapkan setidaknya metode `__construct` dan metode `execute`.
 
 ```php
 <?php
@@ -182,7 +182,7 @@ Lihat [Dokumentasi adhocore/php-cli](https://github.com/adhocore/php-cli) untuk 
 
 ## Manajemen Konfigurasi
 
-Karena konfigurasi telah dipindahkan ke `app/config/config.php` mulai dari `v1.2.0`, ada beberapa perintah bantu untuk mengelola konfigurasi.
+Karena konfigurasi telah dipindahkan ke `app/config/config.php` mulai dari `v1.2.0`, ada beberapa perintah pembantu untuk mengelola konfigurasi.
 
 ### Migrasi Konfigurasi Lama
 
@@ -222,10 +222,10 @@ return [
         // Ini adalah lokasi direktori aplikasi Anda
         'app_root' => 'app/',
 
-        // Ini adalah direktori di mana file index root Anda berada
+        // Ini adalah direktori di mana file index akar Anda berada
         'index_root' => 'public/',
 
-        // Ini adalah path ke root proyek lainnya
+        // Ini adalah path ke akar proyek lain
         'root_paths' => [
             '/home/user/different-project',
             '/var/www/another-project'
@@ -242,7 +242,7 @@ return [
             'app/module/admin/commands',
         ],
 
-        // Jika Anda ingin menambahkan path lengkap, silakan (absolut atau relatif terhadap root proyek)
+        // Jika Anda ingin menambahkan path lengkap, silakan (absolut atau relatif terhadap akar proyek)
         'paths' => [
             '/home/user/different-project/src/diff-path/commands',
             '/var/www/another-project/app/module/admin/commands',
@@ -254,7 +254,7 @@ return [
 
 ### Mengakses Konfigurasi
 
-Jika Anda perlu mengakses nilai konfigurasi secara efektif, Anda dapat mengaksesnya melalui metode `__construct` atau metode `app()`. Penting juga untuk dicatat bahwa jika Anda memiliki file `app/config/services.php`, layanan tersebut juga akan tersedia untuk perintah Anda.
+Jika Anda perlu mengakses nilai konfigurasi secara efektif, Anda dapat mengaksesnya melalui metode `__construct` atau metode `app()`. Penting juga untuk dicatat bahwa jika Anda memiliki file `app/config/services.php`, layanan-layanan tersebut juga akan tersedia untuk perintah Anda.
 
 ```php
 public function execute()

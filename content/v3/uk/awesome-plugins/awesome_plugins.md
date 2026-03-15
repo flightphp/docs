@@ -65,6 +65,7 @@ CLI-додатки є чудовим способом взаємодіяти з 
 - <span class="badge bg-warning">deprecated</span> [flightphp/core PdoWrapper](/learn/pdo-wrapper) - Офіційна обгортка Flight PDO, яка є частиною ядра (застаріла з v3.18.0). Використовуйте SimplePdo замість.
 - <span class="badge bg-primary">official</span> [flightphp/active-record](/awesome-plugins/active-record) - Офіційний ORM/Mapper Flight ActiveRecord. Чудова маленька бібліотека для легкого отримання та зберігання даних у вашій базі даних.
 - [byjg/php-migration](/awesome-plugins/migrations) - Плагін для відстеження всіх змін бази даних для вашого проєкту.
+- [knifelemon/easy-query](/awesome-plugins/easy-query) - Легкий, fluent SQL-конструктор запитів, який генерує SQL та параметри для prepared statements. Чудово працює з [SimplePdo](/learn/simple-pdo).
 
 ## Шифрування
 

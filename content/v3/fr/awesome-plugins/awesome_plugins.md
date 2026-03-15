@@ -65,6 +65,7 @@ Les bases de données sont au cœur de la plupart des applications. C'est ainsi 
 - <span class="badge bg-warning">déprécié</span> [flightphp/core PdoWrapper](/learn/pdo-wrapper) - Wrapper officiel Flight PDO qui fait partie du core (déprécié depuis la v3.18.0). Utilisez SimplePdo à la place.
 - <span class="badge bg-primary">officiel</span> [flightphp/active-record](/awesome-plugins/active-record) - ORM/Mapper officiel Flight ActiveRecord. Excellente petite bibliothèque pour récupérer et stocker facilement des données dans votre base de données.
 - [byjg/php-migration](/awesome-plugins/migrations) - Plugin pour suivre toutes les modifications de base de données pour votre projet.
+- [knifelemon/easy-query](/awesome-plugins/easy-query) - Constructeur de requêtes SQL léger et fluent qui génère du SQL et des paramètres pour les instructions préparées. Fonctionne très bien avec [SimplePdo](/learn/simple-pdo).
 
 ## Chiffrement
 

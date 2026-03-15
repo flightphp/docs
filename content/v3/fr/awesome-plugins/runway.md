@@ -6,7 +6,7 @@ Cliquez [ici](https://github.com/flightphp/runway) pour voir le code.
 
 ## Installation
 
-Installez avec Composer.
+Installez avec composer.
 
 ```bash
 composer require flightphp/runway
@@ -14,7 +14,7 @@ composer require flightphp/runway
 
 ## Configuration de Base
 
-La première fois que vous exécutez Runway, elle essaiera de trouver une configuration `runway` dans `app/config/config.php` via la clé `'runway'`.
+La première fois que vous exécutez Runway, il essaiera de trouver une configuration `runway` dans `app/config/config.php` via la clé `'runway'`.
 
 ```php
 <?php
@@ -37,8 +37,8 @@ Runway est assez intelligent pour détecter la racine de votre projet, même si 
 
 Runway dispose d'un certain nombre de commandes que vous pouvez utiliser pour gérer votre application Flight. Il y a deux façons faciles d'utiliser Runway.
 
-1. Si vous utilisez le projet squelette, vous pouvez exécuter `php runway [commande]` depuis la racine de votre projet.
-1. Si vous utilisez Runway en tant que package installé via Composer, vous pouvez exécuter `vendor/bin/runway [commande]` depuis la racine de votre projet.
+1. Si vous utilisez le projet squelette, vous pouvez exécuter `php runway [command]` depuis la racine de votre projet.
+1. Si vous utilisez Runway en tant que package installé via composer, vous pouvez exécuter `vendor/bin/runway [command]` depuis la racine de votre projet.
 
 ### Liste des Commandes
 
@@ -60,7 +60,7 @@ Voici quelques exemples :
 
 ### Générer un Contrôleur
 
-Basé sur la configuration dans `runway.app_root`, l'emplacement générera un contrôleur pour vous dans le répertoire `app/controllers/`.
+En se basant sur la configuration dans `runway.app_root`, l'emplacement générera un contrôleur pour vous dans le répertoire `app/controllers/`.
 
 ```bash
 php runway make:controller MyController
@@ -68,13 +68,13 @@ php runway make:controller MyController
 
 ### Générer un Modèle Active Record
 
-Assurez-vous d'abord d'avoir installé le plugin [Active Record](/awesome-plugins/active-record). Basé sur la configuration dans `runway.app_root`, l'emplacement générera un enregistrement pour vous dans le répertoire `app/records/`.
+Assurez-vous d'abord d'avoir installé le plugin [Active Record](/awesome-plugins/active-record). En se basant sur la configuration dans `runway.app_root`, l'emplacement générera un enregistrement pour vous dans le répertoire `app/records/`.
 
 ```bash
 php runway make:record users
 ```
 
-Si, par exemple, vous avez la table `users` avec le schéma suivant : `id`, `name`, `email`, `created_at`, `updated_at`, un fichier similaire à celui-ci sera créé dans le fichier `app/records/UserRecord.php` :
+Si, par exemple, vous avez la table `users` avec le schéma suivant : `id`, `name`, `email`, `created_at`, `updated_at`, un fichier similaire au suivant sera créé dans le fichier `app/records/UserRecord.php` :
 
 ```php
 <?php
@@ -116,13 +116,13 @@ class UserRecord extends \flight\ActiveRecord
 
 ### Afficher Toutes les Routes
 
-Cela affichera toutes les routes actuellement enregistrées avec Flight.
+Cela affichera toutes les routes qui sont actuellement enregistrées avec Flight.
 
 ```bash
 php runway routes
 ```
 
-Si vous souhaitez voir uniquement des routes spécifiques, vous pouvez passer un drapeau pour filtrer les routes.
+Si vous souhaitez ne voir que des routes spécifiques, vous pouvez passer un drapeau pour filtrer les routes.
 
 ```bash
 # Afficher uniquement les routes GET
@@ -136,7 +136,7 @@ php runway routes --post
 
 ## Ajouter des Commandes Personnalisées à Runway
 
-Si vous créez un package pour Flight, ou si vous souhaitez ajouter vos propres commandes personnalisées à votre projet, vous pouvez le faire en créant un répertoire `src/commands/`, `flight/commands/`, `app/commands/`, ou `commands/` pour votre projet/package. Si vous avez besoin de personnalisations supplémentaires, voir la section ci-dessous sur la Configuration.
+Si vous créez un package pour Flight, ou si vous voulez ajouter vos propres commandes personnalisées à votre projet, vous pouvez le faire en créant un répertoire `src/commands/`, `flight/commands/`, `app/commands/`, ou `commands/` pour votre projet/package. Si vous avez besoin de personnalisations supplémentaires, voir la section ci-dessous sur la Configuration.
 
 Pour créer une commande, vous étendez simplement la classe `AbstractBaseCommand`, et implémentez au minimum une méthode `__construct` et une méthode `execute`.
 
@@ -194,7 +194,7 @@ php runway config:migrate
 
 ### Définir une Valeur de Configuration
 
-Vous pouvez définir une valeur de configuration en utilisant la commande `config:set`. Cela est utile si vous souhaitez mettre à jour une valeur de configuration sans ouvrir le fichier.
+Vous pouvez définir une valeur de configuration en utilisant la commande `config:set`. Cela est utile si vous voulez mettre à jour une valeur de configuration sans ouvrir le fichier.
 
 ```bash
 php runway config:set app_root "app/"
@@ -231,7 +231,7 @@ return [
             '/var/www/another-project'
         ],
 
-        // Les chemins de base n'ont probablement pas besoin d'être configurés, mais c'est là si vous le souhaitez
+        // Les chemins de base n'ont probablement pas besoin d'être configurés, mais ils sont là si vous le souhaitez
         'base_paths' => [
             '/includes/libs/vendor', // si vous avez un chemin vraiment unique pour votre répertoire vendor ou quelque chose
         ],
@@ -242,7 +242,7 @@ return [
             'app/module/admin/commands',
         ],
 
-        // Si vous voulez simplement ajouter le chemin complet, allez-y (absolu ou relatif à la racine du projet)
+        // Si vous voulez juste ajouter le chemin complet, allez-y (absolu ou relatif à la racine du projet)
         'paths' => [
             '/home/user/different-project/src/diff-path/commands',
             '/var/www/another-project/app/module/admin/commands',
@@ -271,9 +271,9 @@ public function execute()
 }
 ```
 
-## Enveloppeurs d'Aide IA
+## Enveloppes d'Aide IA
 
-Runway dispose de quelques enveloppeurs d'aide qui facilitent la génération de commandes par l'IA. Vous pouvez utiliser `addOption` et `addArgument` d'une manière qui ressemble à Symfony Console. Cela est utile si vous utilisez des outils IA pour générer vos commandes.
+Runway dispose de quelques enveloppes d'aide qui facilitent la génération de commandes par l'IA. Vous pouvez utiliser `addOption` et `addArgument` d'une manière qui ressemble à Symfony Console. Cela est utile si vous utilisez des outils IA pour générer vos commandes.
 
 ```php
 public function __construct(array $config)

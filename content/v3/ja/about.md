@@ -1,14 +1,16 @@
-# Flight PHP フレームワーク
+# Flight PHP Framework
 
-Flight は、速く、シンプルで、拡張可能な PHP フレームワークです。開発者が素早く作業を完了させ、一切の面倒なことを避けたい場合に最適です。クラシックな Web アプリ、超高速 API、または最新の AI 駆動ツールの実験を行う場合、Flight の低負荷でシンプルな設計はぴったりです。Flight は軽量に設計されていますが、エンタープライズアーキテクチャの要件にも対応可能です。
+Flight は、迅速に作業を進めたい開発者向けに構築された、速く、シンプルで拡張可能な PHP フレームワークです。面倒なことは一切なし。クラシックなウェブアプリ、超高速 API、または最新の AI 駆動ツールの実験など、どのような用途でも、Flight の小さなフットプリントとストレートな設計がぴったりです。Flight はスリムを志向していますが、エンタープライズアーキテクチャの要件にも対応可能です。
 
-## Flight を選ぶ理由？
+## Flight を選ぶ理由は？
 
-- **初心者向け:** Flight は新しい PHP 開発者にとって素晴らしい出発点です。明確な構造とシンプルな構文により、余計なコードに迷うことなく Web 開発を学べます。
-- **プロが愛用:** 経験豊富な開発者は、Flight の柔軟性と制御性を好みます。小さなプロトタイプからフル機能のアプリまでスケールアップでき、フレームワークを切り替える必要はありません。
-- **AI 向け:** Flight の最小限のオーバーヘッドとクリーンなアーキテクチャは、AI ツールと API の統合に理想的です。スマートチャットボット、AI 駆動ダッシュボードの実装、または実験を行う場合、Flight は邪魔をせずに本質に集中できます。 [skeleton app](https://github.com/flightphp/skeleton) には、主要な AI コーディングアシスタント向けの事前構築済み指示ファイルが最初から含まれています！ [AI を使用した Flight の詳細について学ぶ](/learn/ai)
+- **初心者向け:** Flight は新しい PHP 開発者の優れたスタート地点です。その明確な構造とシンプルな構文により、ボイラープレートに迷子になることなくウェブ開発を学べます。
+- **プロに愛される:** 経験豊富な開発者は、Flight の柔軟性と制御性を愛しています。小さなプロトタイプからフル機能のアプリまでスケールアップでき、フレームワークの切り替えは不要です。
+- **後方互換性:** あなたの時間を大切にします。Flight v3 は v2 の拡張版で、ほぼすべての API を維持しています。私たちは進化を信じ、革命を起こしません。主要バージョンのリリースごとに「世界を壊す」ようなことはありません。
+- **ゼロ依存:** Flight のコアは完全に依存関係フリーです。ポリフィルなし、外部パッケージなし、PSR インターフェースさえありません。これにより、攻撃ベクターが少なくなり、フットプリントが小さく、上流依存からの予期せぬ破壊的変更もありません。オプションのプラグインに依存関係が含まれる場合もありますが、コアは常にスリムでセキュアです。
+- **AI 指向:** Flight の最小限のオーバーヘッドとクリーンなアーキテクチャは、AI ツールや API の統合に理想的です。スマートチャットボット、AI 駆動ダッシュボードの構築、または単なる実験など、Flight は邪魔にならず、重要なことに集中できます。[skeleton app](https://github.com/flightphp/skeleton) には、主要な AI コーディングアシスタント向けのプリビルド指示ファイルが最初から含まれています！ [Flight での AI の使用について詳しく学ぶ](/learn/ai)
 
-## ビデオ概要
+## Video Overview
 
 <div class="flight-block-video">
   <div class="row">
@@ -16,29 +18,29 @@ Flight は、速く、シンプルで、拡張可能な PHP フレームワー�
       <iframe class="video-bg" width="100vw" height="315" src="https://www.youtube.com/embed/VCztp1QLC2c?si=W3fSWEKmoCIlC7Z5" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
     </div>
     <div class="col-12 col-md-6 fs-5 text-center mt-5 pt-5">
-      <span class="flight-title-video">シンプルですよね？</span>
+      <span class="flight-title-video">シンプルでしょ？</span>
       <br>
-      <a href="https://docs.flightphp.com/learn">詳細を学ぶ</a> ドキュメントで Flight について！
+      <a href="https://docs.flightphp.com/learn">ドキュメントで Flight について詳しく学ぶ</a>！
     </div>
   </div>
 </div>
 
-## クイックスタート
+## Quick Start
 
-素早い最小限のインストールを行うには、Composer でインストールしてください：
+高速なベアボーンインストールを行うには、Composer でインストールしてください：
 
 ```bash
 composer require flightphp/core
 ```
 
-または、リポジトリの ZIP を [こちら](https://github.com/flightphp/core) からダウンロードできます。その場合、基本的な `index.php` ファイルは次のようになります：
+または、リポジトリの zip を [ここ](https://github.com/flightphp/core) からダウンロードできます。その後、以下の基本的な `index.php` ファイルを作成します：
 
 ```php
 <?php
 
-// Composer でインストールした場合
+// composer でインストールした場合
 require 'vendor/autoload.php';
-// または ZIP ファイルで手動インストールした場合
+// または zip ファイルで手動インストールした場合
 // require 'flight/Flight.php';
 
 Flight::route('/', function() {
@@ -54,13 +56,13 @@ Flight::route('/json', function() {
 Flight::start();
 ```
 
-これで完了です！ 基本的な Flight アプリケーションができました。今後、このファイルを `php -S localhost:8000` で実行し、ブラウザで `http://localhost:8000` を訪問して出力を見ることができます。
+これだけです！ 基本的な Flight アプリケーションが完成しました。このファイルを `php -S localhost:8000` で実行し、ブラウザで `http://localhost:8000` にアクセスすると出力が表示されます。
 
-## スケルトン/ボイラープレートアプリ
+## Skeleton/Boilerplate App
 
-Flight でプロジェクトを開始するための例のアプリがあります。構造化されたレイアウト、基本的な設定、Composer スクリプトが最初から設定されています！ [flightphp/skeleton](https://github.com/flightphp/skeleton) を確認して、すぐに使用可能なプロジェクトを取得するか、[examples](examples) ページでインスピレーションを得てください。AI の適合方法を知りたいですか？ [AI 駆動の例を探す](/learn/ai)。
+Flight でプロジェクトを始めるための例アプリがあります。構造化されたレイアウト、基本設定がすべて揃い、Composer スクリプトもすぐに扱えます！ [flightphp/skeleton](https://github.com/flightphp/skeleton) をチェックしてすぐに使えるプロジェクトを取得するか、[examples](examples) ページでインスピレーションを得てください。AI の統合方法を知りたいですか？ [AI 駆動の例を探求](/learn/ai)。
 
-## スケルトンアプリのインストール
+## Installing the Skeleton App
 
 簡単です！
 
@@ -69,17 +71,17 @@ Flight でプロジェクトを開始するための例のアプリがありま�
 composer create-project flightphp/skeleton my-project/
 # 新しいプロジェクトディレクトリに入る
 cd my-project/
-# ローカル開発サーバーを起動してすぐに開始！
+# すぐにローカル開発サーバーを起動
 composer start
 ```
 
-これにより、プロジェクト構造が作成され、必要なファイルが設定され、準備完了です！
+これでプロジェクト構造が作成され、必要なファイルがセットアップされ、すぐに始められます！
 
-## 高パフォーマンス
+## High Performance
 
-Flight は、既存の PHP フレームワークの中で最も速いもののひとつです。その軽量なコアは、オーバーヘッドを減らし、速度を向上させ、伝統的なアプリや現代の AI 駆動プロジェクトに最適です。すべてのベンチマークは [TechEmpower](https://www.techempower.com/benchmarks/#section=data-r18&hw=ph&test=frameworks) で確認できます。
+Flight は市販の PHP フレームワークの中でも最速クラスの一つです。その軽量コアによりオーバーヘッドが少なく速度が向上し、伝統的なアプリと現代の AI 駆動プロジェクトの両方に最適です。すべてのベンチマークは [TechEmpower](https://www.techempower.com/benchmarks/#section=data-r18&hw=ph&test=frameworks) で確認できます。
 
-以下に、いくつかの人気の PHP フレームワークとのベンチマークを示します。
+他の人気の PHP フレームワークとのベンチマークを以下に示します。
 
 | Framework | Plaintext Reqs/sec | JSON Reqs/sec |
 | --------- | ------------ | ------------ |
@@ -93,13 +95,20 @@ Flight は、既存の PHP フレームワークの中で最も速いものの�
 | Laravel     | 26,657     | 26,901  |
 | CodeIgniter | 20,628     | 19,901  |
 
-## Flight と AI
 
-AI の扱いについて好奇心がありますか？ [発見する](/learn/ai) Flight が、お気に入りのコーディング LLM との作業を簡単にする方法を！
+## Flight and AI
 
-# コミュニティ
+AI の扱い方が気になる？ [発見する](/learn/ai) Flight がお気に入りのコーディング LLM との作業をどれほど簡単にしますか！
 
-Matrix Chat で利用可能です
+## Stability and Backwards Compatibility
+
+あなたの時間を大切にします。これまで、2年ごとに完全に自分たちを再発明するフレームワークを見てきましたが、それにより開発者のコードが壊れ、高価な移行作業が発生します。Flight は違います。Flight v3 は v2 の拡張として設計されており、知って愛する API が取り除かれていません。実際、ほとんどの v2 プロジェクトは v3 で変更なしで動作します。
+
+Flight を安定した状態に保つことにコミットしており、フレームワークの修正ではなくアプリの構築に集中できます。
+
+# Community
+
+Matrix Chat で参加中です
 
 [![Matrix](https://img.shields.io/matrix/flight-php-framework%3Amatrix.org?server_fqdn=matrix.org&style=social&logo=matrix)](https://matrix.to/#/#flight-php-framework:matrix.org)
 
@@ -107,19 +116,19 @@ Matrix Chat で利用可能です
 
 [![](https://dcbadge.limes.pink/api/server/https://discord.gg/Ysr4zqHfbX)](https://discord.gg/Ysr4zqHfbX)
 
-# コントリビューション
+# Contributing
 
 Flight に貢献する方法は 2 つあります：
 
-1. コアフレームワークに貢献するには、[core repository](https://github.com/flightphp/core) を訪問してください。
-2. ドキュメントを改善する手伝い！ このドキュメントウェブサイトは [Github](https://github.com/flightphp/docs) でホストされています。エラーを発見したり、何かを改善したい場合、プルリクエストを提出してください。私たちは更新と新しいアイデアを歓迎します。特に AI と新しい技術に関するものを！
+1. [core repository](https://github.com/flightphp/core) を訪れてコアフレームワークに貢献。
+2. ドキュメントを改善するお手伝い！ このドキュメントウェブサイトは [Github](https://github.com/flightphp/docs) でホストされています。エラーを見つけたり、改善したいことがあれば、プルリクエストを送信してください。更新や新しいアイデア、特に AI と新技術に関するものを歓迎します！
 
-# 要件
+# Requirements
 
-Flight には PHP 7.4 以上が必要です。
+Flight は PHP 7.4 以上が必要です。
 
-**注記:** PHP 7.4 は、執筆時点 (2024 年) でいくつかの LTS Linux ディストリビューションのデフォルトバージョンであるため、サポートされています。PHP >8 への移行を強制すると、ユーザーに問題を引き起こす可能性があるためです。フレームワークは PHP >8 もサポートしています。
+**Note:** PHP 7.4 はサポートされています。なぜなら、執筆時点（2024 年）で一部の LTS Linux ディストリビューションのデフォルトバージョンが PHP 7.4 だからです。PHP >8 への強制移行は、そうしたユーザーにとって大きな負担となります。フレームワークは PHP >8 もサポートします。
 
-# ライセンス
+# License
 
 Flight は [MIT](https://github.com/flightphp/core/blob/master/LICENSE) ライセンスでリリースされています。

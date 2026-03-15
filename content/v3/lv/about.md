@@ -1,14 +1,16 @@
 # Flight PHP Framework
 
-Flight ir ātrs, vienkāršs, paplašināms ietvars PHP—izveidots izstrādātājiem, kuri vēlas ātri paveikt darbus, bez liekām raizēm. Vai jūs veidojat klasisku tīmekļa lietotni, ātru API vai eksperimentējat ar jaunākajām AI balstītajām rīkiem, Flight zems nospiedums un vienkāršais dizains padara to par ideālu izvēli. Flight ir domāts, lai būtu viegls, bet tas var arī tikt galā ar uzņēmuma arhitektūras prasībām.
+Flight ir ātrs, vienkāršs, paplašināms PHP ietvars — izveidots izstrādātājiem, kuri vēlas ātri paveikt lietas, bez liekiem sarežģījumiem. Vai jūs veidojat klasisku tīmekļa lietotni, ātru API vai eksperimentējat ar jaunākajām AI balstītām rīkiem, Flight mazais pēdaizmērs un skaidrais dizains padara to par ideālu izvēli. Flight paredzēts būt vieglam, bet tas var arī apstrādāt uzņēmējdarbības arhitektūras prasības.
 
 ## Kāpēc izvēlēties Flight?
 
-- **Sācējiem draudzīgs:** Flight ir lielisks sākumpunkts jauniem PHP izstrādātājiem. Tā skaidrā struktūra un vienkāršā sintakse palīdz iemācīties tīmekļa attīstību, nezaudējot laiku liekā kodā.
-- **Profesionāļu mīlulis:** Pieredzējuši izstrādātāji mīl Flight par tās elastību un kontroli. Jūs varat augt no neliela prototipa līdz pilnvērtīgai lietotnei, neizmainot ietvarus.
-- **AI draudzīgs:** Flight minimālais slogs un tīrais arhitektūras dizains padara to ideālu AI rīku un API integrācijai. Vai jūs veidojat gudrus čatbotus, AI vadītas paneļus vai vienkārši vēlaties eksperimentēt, Flight netraucē, ļaujot koncentrēties uz svarīgo. [Skeletapp](https://github.com/flightphp/skeleton) nāk ar iepriekš sagatavotiem instrukciju failiem galvenajiem AI kodēšanas asistentiem jau no kastes! [Uzziniet vairāk par AI izmantošanu ar Flight](/learn/ai)
+- **Draudzīgs iesācējiem:** Flight ir lielisks sākumpunkts jaunajiem PHP izstrādātājiem. Tā skaidrā struktūra un vienkāršā sintakse palīdz mācīties tīmekļa izstrādi, neaizmirstoties veidlapās.
+- **Mīlēts profesionāļu vidū:** Pieredzējuši izstrādātāji mīl Flight par tā elastību un kontroli. Jūs varat skalēt no mazas prototipa līdz pilnvērtīgai lietotnei, nevis mainot ietvarus.
+- **Atpakaļ savietojams:** Mēs augstu vērtējam jūsu laiku. Flight v3 ir v2 papildinājums, saglabājot gandrīz visu to pašu API. Mēs ticam evolūcijai, nevis revolūcijai — vairs nav "laupīšanas pasaulei" katru reizi, kad iznāk lielāka versija.
+- **Bez atkarībām:** Flight kodols ir pilnībā bez atkarībām — bez polifiliem, bez ārējiem pakotnēm, pat bez PSR saskarnēm. Tas nozīmē mazāk uzbrukuma vektoru, mazāku pēdaizmēru un bez negaidītiem salauztiem izmaiņām no augšupstrēmes atkarībām. Neobligātie spraudņi var ietvert atkarības, bet kodols vienmēr paliks viegls un drošs.
+- **Vairāks AI:** Flight minimālais overhead un tīrā arhitektūra padara to ideālu AI rīku un API integrācijai. Vai jūs veidojat gudrus čatbotus, AI vadītus panelus vai tikai vēlaties eksperimentēt, Flight netraucē, lai jūs varētu koncentrēties uz svarīgo. [Skeleton app](https://github.com/flightphp/skeleton) nāk ar iepriekš sagatavotiem instrukciju failiem galvenajām AI kodēšanas asistentēm jau no kastes! [Uzzināt vairāk par AI izmantošanu ar Flight](/learn/ai)
 
-## Video Overview
+## Video pārskats
 
 <div class="flight-block-video">
   <div class="row">
@@ -16,29 +18,29 @@ Flight ir ātrs, vienkāršs, paplašināms ietvars PHP—izveidots izstrādāt�
       <iframe class="video-bg" width="100vw" height="315" src="https://www.youtube.com/embed/VCztp1QLC2c?si=W3fSWEKmoCIlC7Z5" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
     </div>
     <div class="col-12 col-md-6 fs-5 text-center mt-5 pt-5">
-      <span class="flight-title-video">Vai tas nav pietiekami vienkārši?</span>
+      <span class="flight-title-video"> pietiekami vienkārši, vai ne?</span>
       <br>
-      <a href="https://docs.flightphp.com/learn">Uzziniet vairāk</a> par Flight dokumentācijā!
+      <a href="https://docs.flightphp.com/learn">Uzzināt vairāk</a> par Flight dokumentācijā!
     </div>
   </div>
 </div>
 
-## Quick Start
+## Ātrais starts
 
-Lai veiktu ātru, pamata instalāciju, instalējiet to ar Composer:
+Lai veiktu ātru, vienkāršu instalāciju, instalējiet to ar Composer:
 
 ```bash
 composer require flightphp/core
 ```
 
-Vai jūs varat lejupielādēt zip failu no repozitorijas [šeit](https://github.com/flightphp/core). Tad jums būs pamata `index.php` fails, piemēram, šāds:
+Vai arī lejupielādējiet repo zip [šeit](https://github.com/flightphp/core). Tad jums būs pamata `index.php` fails kā sekojošais:
 
 ```php
 <?php
 
-// ja instalēts ar composer
+// if installed with composer
 require 'vendor/autoload.php';
-// vai ja instalēts manuāli ar zip failu
+// or if installed manually by zip file
 // require 'flight/Flight.php';
 
 Flight::route('/', function() {
@@ -54,32 +56,32 @@ Flight::route('/json', function() {
 Flight::start();
 ```
 
-Tas ir viss! Jums ir pamata Flight lietotne. Tagad jūs varat palaist šo failu ar `php -S localhost:8000` un apmeklēt `http://localhost:8000` savā pārlūkā, lai redzētu izvadi.
+Tas ir viss! Jums ir pamata Flight lietojumprogramma. Jūs tagad varat palaist šo failu ar `php -S localhost:8000` un apmeklēt `http://localhost:8000` savā pārlūkprogrammā, lai redzētu izvadi.
 
 ## Skeleton/Boilerplate App
 
-Ir piemērs app, lai palīdzētu jums sākt projektu ar Flight. Tajā ir strukturēta izkārtojums, pamata konfigurācijas un saderība ar composer skriptiem jau no sākuma! Apskatiet [flightphp/skeleton](https://github.com/flightphp/skeleton) gatavam projektam vai apmeklējiet [piemērus](examples) lapu iedvesmai. Vēlaties redzēt, kā AI iederas? [Izpētiet AI balstītus piemērus](/learn/ai).
+Ir piemēra lietojumprogramma, lai palīdzētu sākt jūsu projektu ar Flight. Tā satur strukturētu izkārtojumu, pamata konfigurācijas visas iestatītas un apstrādā composer skriptus tieši no vārtiem! Pārbaudiet [flightphp/skeleton](https://github.com/flightphp/skeleton) gatavam projektam vai apmeklējiet [examples](examples) lapu iedvesmai. Vēlaties redzēt, kā AI iederas? [Izpētīt AI balstītus piemērus](/learn/ai).
 
-## Installing the Skeleton App
+## Skeleton App instalēšana
 
-Tas ir pietiekami vienkārši!
+Pietiekami viegli!
 
 ```bash
-# Izveidojiet jauno projektu
+# Create the new project
 composer create-project flightphp/skeleton my-project/
-# Ieejiet jaunajā projektu direktorijā
+# Enter your new project directory
 cd my-project/
-# Palaidiet lokālo attīstības serveri, lai sāktu nekavējoties!
+# Bring up the local dev-server to get started right away!
 composer start
 ```
 
-Tas izveidos projektu struktūru, iestatīs vajadzīgos failus, un jūs esat gatavs!
+Tas izveidos projektu struktūru, iestatīs jūsu vajadzīgos failus, un jūs esat gatavs doties!
 
-## High Performance
+## Augsta veiktspēja
 
-Flight ir viens no ātrākajiem PHP ietvariem. Tā vieglais kodols nozīmē mazāku slogu un vairāk ātrumu—ideāli piemērots gan tradicionālām lietotnēm, gan mūsdienu AI balstītiem projektiem. Jūs varat redzēt visus benchmarkus [TechEmpower](https://www.techempower.com/benchmarks/#section=data-r18&hw=ph&test=frameworks)
+Flight ir viens no ātrākajiem PHP ietvariem. Tā vieglais kodols nozīmē mazāku overhead un lielāku ātrumu — ideāli gan tradicionālām lietojumprogrammām, gan moderniem AI balstītiem projektiem. Jūs varat redzēt visus etalonus [TechEmpower](https://www.techempower.com/benchmarks/#section=data-r18&hw=ph&test=frameworks)
 
-Skatiet benchmarku zemāk ar dažiem citiem populāriem PHP ietvariem.
+Redziet etalonu zemāk ar dažiem citiem populāriem PHP ietvariem.
 
 | Framework | Plaintext Reqs/sec | JSON Reqs/sec |
 | --------- | ------------ | ------------ |
@@ -94,11 +96,17 @@ Skatiet benchmarku zemāk ar dažiem citiem populāriem PHP ietvariem.
 | CodeIgniter | 20,628     | 19,901  |
 
 
-## Flight and AI
+## Flight un AI
 
-Vai jūs interesē, kā tas darbojas ar AI? [Atklājiet](/learn/ai), kā Flight atvieglo darbu ar jūsu mīļākajiem kodēšanas LLM!
+Ziņkārīgs, kā tas apstrādā AI? [Atklājiet](/learn/ai) kā Flight padara darbu ar jūsu iecienītākajiem kodēšanas LLM vieglu!
 
-# Community
+## Stabilitāte un atpakaļ savietojamība
+
+Mēs augstu vērtējam jūsu laiku. Mēs visi esam redzējuši ietvarus, kas pilnībā izdomā sevi no jauna ik pēc pāris gadiem, atstājot izstrādātājus ar salauztu kodu un dārgām migrācijām. Flight ir citāds. Flight v3 tika izstrādāts kā v2 papildinājums, kas nozīmē, ka API, ko jūs pazīstat un mīlat, nav noņemts. Patiesībā, lielākā daļa v2 projektu darbosies bez izmaiņām v3. 
+
+Mēs apņēmusies saglabāt Flight stabilu, lai jūs varētu koncentrēties uz jūsu lietojumprogrammas veidošanu, nevis ietvara labošanu.
+
+# Kopiena
 
 Mēs esam Matrix Chat
 
@@ -108,19 +116,19 @@ Un Discord
 
 [![](https://dcbadge.limes.pink/api/server/https://discord.gg/Ysr4zqHfbX)](https://discord.gg/Ysr4zqHfbX)
 
-# Contributing
+# Iesaiste
 
-Ir divi veidi, kā jūs varat piedalīties Flight:
+Ir divi veidi, kā jūs varat ieguldīt Flight:
 
-1. Piedalieties kodola ietvara izstrādē, apmeklējot [core repozitoriju](https://github.com/flightphp/core).
-2. Palīdziet uzlabot dokumentāciju! Šī dokumentācijas vietne ir mitināta [Github](https://github.com/flightphp/docs). Ja jūs pamanāt kļūdu vai vēlaties kaut ko uzlabot, iesniedziet pull request. Mēs mīlam atjauninājumus un jaunas idejas—īpaši ap AI un jaunām tehnoloģijām!
+1. Ieguldīt kodola ietvarā apmeklējot [core repository](https://github.com/flightphp/core).
+2. Palīdiet uzlabot dokumentāciju! Šī dokumentācijas vietne ir mitināta [Github](https://github.com/flightphp/docs). Ja jūs pamanāt kļūdu vai vēlaties kaut ko uzlabot, droši iesniedziet pull request. Mēs mīlam atjauninājumus un jaunas idejas — īpaši ap AI un jaunām tehnoloģijām!
 
-# Requirements
+# Prasības
 
 Flight prasa PHP 7.4 vai jaunāku.
 
-**Piezīme:** PHP 7.4 tiek atbalstīts, jo šobrīd (2024. gadā) PHP 7.4 ir noklusētā versija dažām LTS Linux izdalēm. Spiešana uz pāreju uz PHP >8 izraisītu daudz neērtību lietotājiem. Ietvars arī atbalsta PHP >8.
+**Piezīme:** PHP 7.4 ir atbalstīts, jo pašreizējā rakstīšanas laikā (2024) PHP 7.4 ir noklusējuma versija dažām LTS Linux distribūcijām. Piespiežot pāreju uz PHP >8 radītu daudz sāpju tiem lietotājiem. Ietvars arī atbalsta PHP >8.
 
-# License
+# Licence
 
-Flight ir izlaists zem [MIT](https://github.com/flightphp/core/blob/master/LICENSE) licences.
+Flight ir izlaists saskaņā ar [MIT](https://github.com/flightphp/core/blob/master/LICENSE) licenci.
