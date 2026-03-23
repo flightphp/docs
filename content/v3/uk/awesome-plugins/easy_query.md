@@ -1,17 +1,17 @@
 # EasyQuery
 
-[knifelemon/easy-query](https://github.com/knifelemon/EasyQueryBuilder) — це легкий, fluent SQL-конструктор запитів, який генерує SQL та параметри для prepared statements. Працює з [SimplePdo](/learn/simple-pdo).
+[knifelemon/easy-query](https://github.com/knifelemon/EasyQueryBuilder) — це легкий, плавний конструктор SQL-запитів, який генерує SQL та параметри для підготовлених виразів. Працює з [SimplePdo](/learn/simple-pdo).
 
-## Можливості
+## Особливості
 
-- 🔗 **Fluent API** - Ланцюгові методи для читабельної побудови запитів
-- 🛡️ **Захист від SQL Injection** - Автоматичне зв'язування параметрів з prepared statements
-- 🔧 **Підтримка Raw SQL** - Вставка SQL-виразів напряму через `raw()`
+- 🔗 **Плавний API** - Ланцюжок методів для зрозумілого конструювання запитів
+- 🛡️ **Захист від SQL-ін'єкцій** - Автоматичне прив'язування параметрів з підготовленими виразами
+- 🔧 **Підтримка сирого SQL** - Вставка сирих SQL-виразів з `raw()`
 - 📝 **Різні типи запитів** - SELECT, INSERT, UPDATE, DELETE, COUNT
-- 🔀 **Підтримка JOIN** - INNER, LEFT, RIGHT joins з псевдонімами
+- 🔀 **Підтримка JOIN** - INNER, LEFT, RIGHT з'єднання з псевдонімами
 - 🎯 **Розширені умови** - LIKE, IN, NOT IN, BETWEEN, оператори порівняння
-- 🌐 **Незалежність від БД** - Повертає SQL + params, використовуйте з будь-яким з'єднанням
-- 🪶 **Легкий** - Мінімальний розмір без залежностей
+- 🌐 **Незалежність від бази даних** - Повертає SQL + параметри, використовуйте з будь-яким з'єднанням БД
+- 🪶 **Легкий** - Мінімальний відбиток з нульовими залежностями
 
 ## Встановлення
 
@@ -37,7 +37,7 @@ $users = Flight::db()->fetchAll($q['sql'], $q['params']);
 
 ## Розуміння build()
 
-Метод `build()` повертає масив з `sql` та `params`. Це розділення захищає вашу базу даних через використання prepared statements.
+Метод `build()` повертає масив з `sql` та `params`. Це розділення забезпечує безпеку вашої бази даних за допомогою підготовлених виразів.
 
 ```php
 $q = Builder::table('users')
@@ -58,11 +58,11 @@ $q = Builder::table('users')
 ### SELECT
 
 ```php
-// Вибрати всі колонки
+// Вибір всіх стовпців
 $q = Builder::table('users')->build();
 // SELECT * FROM users
 
-// Вибрати конкретні колонки
+// Вибір конкретних стовпців
 $q = Builder::table('users')
     ->select(['id', 'name', 'email'])
     ->build();
@@ -190,7 +190,7 @@ $q = Builder::table('products')
 
 ### Умови OR
 
-Використовуйте `orWhere()` для додавання згрупованих умов з OR:
+Використовуйте `orWhere()` для додавання умов OR у групі:
 
 ```php
 $q = Builder::table('users')
@@ -229,7 +229,7 @@ $q = Builder::table('users')
 // ... LEFT JOIN orders AS o ON u.id = o.user_id
 ```
 
-### Множинні JOIN
+### Кілька JOIN
 
 ```php
 $q = Builder::table('orders')
@@ -244,7 +244,7 @@ $q = Builder::table('orders')
 
 ---
 
-## Сортування, групування та ліміти
+## Сортування, групування та обмеження
 
 ### ORDER BY
 
@@ -281,11 +281,11 @@ $q = Builder::table('users')
 
 ---
 
-## Raw SQL вирази
+## Сирі SQL-вирази
 
-Використовуйте `raw()` коли потрібні SQL-функції або вирази, які не повинні оброблятися як зв'язані параметри.
+Використовуйте `raw()` коли потрібні SQL-функції або вирази, які не повинні трактуватися як прив'язані параметри.
 
-### Базовий Raw
+### Базовий raw
 
 ```php
 $q = Builder::table('users')
@@ -298,7 +298,7 @@ $q = Builder::table('users')
 // SET login_count = login_count + 1, updated_at = NOW()
 ```
 
-### Raw зі зв'язаними параметрами
+### Raw з прив'язаними параметрами
 
 ```php
 $q = Builder::table('orders')
@@ -322,23 +322,23 @@ $q = Builder::table('products')
 // WHERE price > (SELECT AVG(price) FROM products)
 ```
 
-### Безпечні ідентифікатори для користувацького вводу
+### Безпечні ідентифікатори для введення користувача
 
-Коли імена колонок надходять від користувача, використовуйте `safeIdentifier()` для запобігання SQL injection:
+Коли назви стовпців надходять від користувача, використовуйте `safeIdentifier()` для запобігання SQL-ін'єкціям:
 
 ```php
-$sortColumn = $_GET['sort'];  // наприклад: 'created_at'
+$sortColumn = $_GET['sort'];  // наприклад, 'created_at'
 $safeColumn = Builder::safeIdentifier($sortColumn);
 
 $q = Builder::table('users')
     ->orderBy($safeColumn . ' DESC')
     ->build();
 
-// Якщо користувач спробує: "name; DROP TABLE users--"
-// Викидає InvalidArgumentException
+// Якщо користувач намагається: "name; DROP TABLE users--"
+// Кидає InvalidArgumentException
 ```
 
-### rawSafe для користувацьких імен колонок
+### rawSafe для стовпців від користувача
 
 ```php
 $userColumn = $_GET['aggregate_column'];
@@ -348,18 +348,18 @@ $q = Builder::table('orders')
         Builder::rawSafe('SUM({col})', ['col' => $userColumn])->value . ' AS total'
     ])
     ->build();
-// Валідує ім'я колонки, викидає виняток якщо невалідне
+// Валідує назву стовпця, кидає виняток якщо невалідно
 ```
 
-> **Увага:** Ніколи не конкатенуйте користувацький ввід напряму в `raw()`. Завжди використовуйте зв'язані параметри або `safeIdentifier()`.
+> **Попередження:** Ніколи не конкатенуйте введення користувача безпосередньо в `raw()`. Завжди використовуйте прив'язані параметри або `safeIdentifier()`.
 
 ---
 
-## Повторне використання Query Builder
+## Повторне використання конструктора запитів
 
-### Методи Clear
+### Методи очищення
 
-Очистіть конкретні частини для повторного використання builder:
+Очищайте конкретні частини для повторного використання конструктора:
 
 ```php
 $query = Builder::table('users')
@@ -370,7 +370,7 @@ $query = Builder::table('users')
 // Перший запит
 $q1 = $query->limit(10)->build();
 
-// Очистити та використати повторно
+// Очистити та повторно використати
 $query->clearWhere()->clearLimit();
 
 // Другий запит з іншими умовами
@@ -380,17 +380,17 @@ $q2 = $query
     ->build();
 ```
 
-### Доступні методи Clear
+### Доступні методи очищення
 
 | Метод | Опис |
-|-------|------|
+|--------|-------------|
 | `clearWhere()` | Очистити умови WHERE та параметри |
-| `clearSelect()` | Скинути колонки SELECT до '*' за замовчуванням |
-| `clearJoin()` | Очистити всі JOIN клаузи |
-| `clearGroupBy()` | Очистити GROUP BY клаузу |
-| `clearOrderBy()` | Очистити ORDER BY клаузу |
+| `clearSelect()` | Скинути стовпці SELECT до за замовчуванням '*' |
+| `clearJoin()` | Очистити всі клаузули JOIN |
+| `clearGroupBy()` | Очистити клаузу GROUP BY |
+| `clearOrderBy()` | Очистити клаузу ORDER BY |
 | `clearLimit()` | Очистити LIMIT та OFFSET |
-| `clearAll()` | Скинути builder до початкового стану |
+| `clearAll()` | Скинути конструктор до початкового стану |
 
 ### Приклад пагінації
 
@@ -405,7 +405,7 @@ $countQuery = clone $baseQuery;
 $countResult = $countQuery->clearSelect()->count()->build();
 $total = Flight::db()->fetchField($countResult['sql'], $countResult['params']);
 
-// Отримати результати з пагінацією
+// Отримати пагинаційні результати
 $page = 1;
 $perPage = 20;
 $listResult = $baseQuery->limit($perPage, ($page - 1) * $perPage)->build();
@@ -414,7 +414,7 @@ $users = Flight::db()->fetchAll($listResult['sql'], $listResult['params']);
 
 ---
 
-## Динамічна побудова запитів
+## Динамічне конструювання запитів
 
 ```php
 $query = Builder::table('products')->alias('p');
@@ -462,7 +462,7 @@ Flight::route('GET /users', function() {
     Flight::json(['users' => $users, 'page' => $page]);
 });
 
-// Створити користувача
+// Створення користувача
 Flight::route('POST /users', function() {
     $data = Flight::request()->data;
     
@@ -478,7 +478,7 @@ Flight::route('POST /users', function() {
     Flight::json(['id' => Flight::db()->lastInsertId()]);
 });
 
-// Оновити користувача
+// Оновлення користувача
 Flight::route('PUT /users/@id', function($id) {
     $data = Flight::request()->data;
     
@@ -495,7 +495,7 @@ Flight::route('PUT /users/@id', function($id) {
     Flight::json(['success' => true]);
 });
 
-// Видалити користувача
+// Видалення користувача
 Flight::route('DELETE /users/@id', function($id) {
     $q = Builder::table('users')
         ->delete()
@@ -509,43 +509,43 @@ Flight::route('DELETE /users/@id', function($id) {
 
 ---
 
-## API довідник
+## Довідник API
 
 ### Статичні методи
 
 | Метод | Опис |
-|-------|------|
-| `Builder::table(string $table)` | Створити новий екземпляр builder для таблиці |
-| `Builder::raw(string $sql, array $bindings = [])` | Створити raw SQL вираз |
-| `Builder::rawSafe(string $expr, array $identifiers, array $bindings = [])` | Raw вираз з безпечною заміною ідентифікаторів |
-| `Builder::safeIdentifier(string $identifier)` | Валідувати та повернути безпечне ім'я колонки/таблиці |
+|--------|-------------|
+| `Builder::table(string $table)` | Створити новий екземпляр конструктора для таблиці |
+| `Builder::raw(string $sql, array $bindings = [])` | Створити сирий SQL-вираз |
+| `Builder::rawSafe(string $expr, array $identifiers, array $bindings = [])` | Сирий вираз з безпечною заміною ідентифікаторів |
+| `Builder::safeIdentifier(string $identifier)` | Валідувати та повернути безпечну назву стовпця/таблиці |
 
 ### Методи екземпляра
 
 | Метод | Опис |
-|-------|------|
+|--------|-------------|
 | `alias(string $alias)` | Встановити псевдонім таблиці |
-| `select(string\|array $columns)` | Встановити колонки для вибору (за замовчуванням: '*') |
+| `select(string\|array $columns)` | Встановити стовпці для вибору (за замовчуванням: '*') |
 | `where(array $conditions)` | Додати умови WHERE (AND) |
 | `orWhere(array $conditions)` | Додати умови OR WHERE |
-| `join(string $table, string $condition, string $alias, string $type)` | Додати JOIN клаузу |
+| `join(string $table, string $condition, string $alias, string $type)` | Додати клаузу JOIN |
 | `innerJoin(string $table, string $condition, string $alias)` | Додати INNER JOIN |
 | `leftJoin(string $table, string $condition, string $alias)` | Додати LEFT JOIN |
-| `groupBy(string $groupBy)` | Додати GROUP BY клаузу |
-| `orderBy(string $orderBy)` | Додати ORDER BY клаузу |
+| `groupBy(string $groupBy)` | Додати клаузу GROUP BY |
+| `orderBy(string $orderBy)` | Додати клаузу ORDER BY |
 | `limit(int $limit, int $offset = 0)` | Додати LIMIT та OFFSET |
 | `count(string $column = '*')` | Встановити запит на COUNT |
 | `insert(array $data)` | Встановити запит на INSERT |
 | `update(array $data)` | Встановити запит на UPDATE |
 | `delete()` | Встановити запит на DELETE |
-| `build()` | Побудувати та повернути `['sql' => ..., 'params' => ...]` |
+| `build()` | Збудувати та повернути `['sql' => ..., 'params' => ...]` |
 | `get()` | Псевдонім для `build()` |
 
 ---
 
-## Інтеграція Tracy Debugger
+## Інтеграція з Tracy Debugger
 
-EasyQuery автоматично інтегрується з Tracy Debugger, якщо він встановлений. Налаштування не потрібне!
+EasyQuery автоматично інтегрується з Tracy Debugger, якщо встановлено. Ніякого налаштування не потрібно!
 
 ```bash
 composer require tracy/tracy
@@ -561,9 +561,9 @@ $q = Builder::table('users')->where(['status' => 'active'])->build();
 ```
 
 Панель Tracy показує:
-- Загальну кількість запитів та розбивку за типом
-- Згенерований SQL (підсвітка синтаксису)
+- Загальну кількість запитів та розбивку за типами
+- Згенерований SQL (з підсвічуванням синтаксису)
 - Масив параметрів
-- Деталі запиту (таблиця, where, join тощо)
+- Деталі запиту (таблиця, where, joins тощо)
 
-Для повної документації відвідайте [GitHub репозиторій](https://github.com/knifelemon/EasyQueryBuilder).
+Для повної документації відвідайте [репозиторій GitHub](https://github.com/knifelemon/EasyQueryBuilder).

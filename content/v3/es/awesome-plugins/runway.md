@@ -31,7 +31,7 @@ return [
 
 ### Detección de la Raíz del Proyecto
 
-Runway es lo suficientemente inteligente como para detectar la raíz de tu proyecto, incluso si lo ejecutas desde un subdirectorio. Busca indicadores como `composer.json`, `.git` o `app/config/config.php` para determinar dónde está la raíz del proyecto. Esto significa que puedes ejecutar comandos de Runway desde cualquier lugar en tu proyecto! 
+Runway es lo suficientemente inteligente como para detectar la raíz de tu proyecto, incluso si lo ejecutas desde un subdirectorio. Busca indicadores como `composer.json`, `.git` o `app/config/config.php` para determinar dónde está la raíz del proyecto. Esto significa que puedes ejecutar comandos de Runway desde cualquier lugar en tu proyecto!
 
 ## Uso
 
@@ -74,7 +74,7 @@ Primero asegúrate de haber instalado el plugin [Active Record](/awesome-plugins
 php runway make:record users
 ```
 
-Por ejemplo, si tienes la tabla `users` con el siguiente esquema: `id`, `name`, `email`, `created_at`, `updated_at`, se creará un archivo similar al siguiente en el archivo `app/records/UserRecord.php`:
+Si, por ejemplo, tienes la tabla `users` con el siguiente esquema: `id`, `name`, `email`, `created_at`, `updated_at`, se creará un archivo similar al siguiente en el archivo `app/records/UserRecord.php`:
 
 ```php
 <?php
@@ -136,7 +136,7 @@ php runway routes --post
 
 ## Agregar Comandos Personalizados a Runway
 
-Si estás creando un paquete para Flight o quieres agregar tus propios comandos personalizados a tu proyecto, puedes hacerlo creando un directorio `src/commands/`, `flight/commands/`, `app/commands/` o `commands/` para tu proyecto/paquete. Si necesitas más personalización, consulta la sección a continuación sobre Configuración.
+Si estás creando un paquete para Flight, o quieres agregar tus propios comandos personalizados a tu proyecto, puedes hacerlo creando un directorio `src/commands/`, `flight/commands/`, `app/commands/` o `commands/` para tu proyecto/paquete. Si necesitas una personalización adicional, consulta la sección a continuación sobre Configuración.
 
 Para crear un comando, simplemente extiende la clase `AbstractBaseCommand` e implementa al menos un método `__construct` y un método `execute`.
 
@@ -242,7 +242,7 @@ return [
             'app/module/admin/commands',
         ],
 
-        // Si quieres agregar la ruta completa, adelante (absoluta o relativa a la raíz del proyecto)
+        // Si quieres agregar solo la ruta completa, adelante (absoluta o relativa a la raíz del proyecto)
         'paths' => [
             '/home/user/different-project/src/diff-path/commands',
             '/var/www/another-project/app/module/admin/commands',
@@ -280,7 +280,7 @@ public function __construct(array $config)
 {
     parent::__construct('make:example', 'Crear un ejemplo para la documentación', $config);
     
-    // El argumento mode es nullable y por defecto es completamente opcional
+    // El argumento mode es nullable y por defecto completamente opcional
     $this->addOption('name', 'El nombre del ejemplo', null);
 }
 ```

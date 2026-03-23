@@ -1,17 +1,17 @@
 # EasyQuery
 
-[knifelemon/easy-query](https://github.com/knifelemon/EasyQueryBuilder) é um construtor de consultas SQL leve e fluente que gera SQL e parâmetros para prepared statements. Funciona com [SimplePdo](/learn/simple-pdo).
+[knifelemon/easy-query](https://github.com/knifelemon/EasyQueryBuilder) é um construtor de consultas SQL leve e fluente que gera SQL e parâmetros para declarações preparadas. Funciona com [SimplePdo](/learn/simple-pdo).
 
 ## Recursos
 
-- 🔗 **API Fluente** - Métodos encadeados para construção de consultas legíveis
-- 🛡️ **Proteção contra SQL Injection** - Vinculação automática de parâmetros com prepared statements
-- 🔧 **Suporte Raw SQL** - Inserir expressões SQL diretamente com `raw()`
+- 🔗 **API Fluente** - Encadeie métodos para construção de consultas legível
+- 🛡️ **Proteção contra Injeção SQL** - Ligação automática de parâmetros com declarações preparadas
+- 🔧 **Suporte a SQL Bruto** - Insira expressões SQL brutas com `raw()`
 - 📝 **Múltiplos Tipos de Consulta** - SELECT, INSERT, UPDATE, DELETE, COUNT
-- 🔀 **Suporte JOIN** - INNER, LEFT, RIGHT joins com aliases
+- 🔀 **Suporte a JOIN** - INNER, LEFT, RIGHT joins com aliases
 - 🎯 **Condições Avançadas** - LIKE, IN, NOT IN, BETWEEN, operadores de comparação
-- 🌐 **Agnóstico de Banco de Dados** - Retorna SQL + params, use com qualquer conexão DB
-- 🪶 **Leve** - Footprint mínimo sem dependências
+- 🌐 **Agnóstico de Banco de Dados** - Retorna SQL + params, use com qualquer conexão de BD
+- 🪶 **Leve** - Pegada mínima com zero dependências
 
 ## Instalação
 
@@ -31,13 +31,13 @@ $q = Builder::table('users')
     ->limit(10)
     ->build();
 
-// Usar com SimplePdo do Flight
+// Use com SimplePdo do Flight
 $users = Flight::db()->fetchAll($q['sql'], $q['params']);
 ```
 
 ## Entendendo build()
 
-O método `build()` retorna um array com `sql` e `params`. Esta separação mantém seu banco de dados seguro usando prepared statements.
+O método `build()` retorna um array com `sql` e `params`. Essa separação mantém seu banco de dados seguro usando declarações preparadas.
 
 ```php
 $q = Builder::table('users')
@@ -58,11 +58,11 @@ $q = Builder::table('users')
 ### SELECT
 
 ```php
-// Selecionar todas as colunas
+// Seleciona todas as colunas
 $q = Builder::table('users')->build();
 // SELECT * FROM users
 
-// Selecionar colunas específicas
+// Seleciona colunas específicas
 $q = Builder::table('users')
     ->select(['id', 'name', 'email'])
     ->build();
@@ -190,7 +190,7 @@ $q = Builder::table('products')
 
 ### Condições OR
 
-Use `orWhere()` para adicionar condições agrupadas com OR:
+Use `orWhere()` para adicionar condições agrupadas OR:
 
 ```php
 $q = Builder::table('users')
@@ -281,9 +281,9 @@ $q = Builder::table('users')
 
 ---
 
-## Expressões Raw SQL
+## Expressões SQL Brutas
 
-Use `raw()` quando precisar de funções SQL ou expressões que não devem ser tratadas como parâmetros vinculados.
+Use `raw()` quando precisar de funções ou expressões SQL que não devem ser tratadas como parâmetros vinculados.
 
 ### Raw Básico
 
@@ -324,10 +324,10 @@ $q = Builder::table('products')
 
 ### Identificadores Seguros para Entrada do Usuário
 
-Quando nomes de colunas vêm de entrada do usuário, use `safeIdentifier()` para prevenir SQL injection:
+Quando nomes de colunas vêm de entrada do usuário, use `safeIdentifier()` para prevenir injeção SQL:
 
 ```php
-$sortColumn = $_GET['sort'];  // ex: 'created_at'
+$sortColumn = $_GET['sort'];  // e.g., 'created_at'
 $safeColumn = Builder::safeIdentifier($sortColumn);
 
 $q = Builder::table('users')
@@ -338,7 +338,7 @@ $q = Builder::table('users')
 // Lança InvalidArgumentException
 ```
 
-### rawSafe para Nomes de Colunas do Usuário
+### rawSafe para Nomes de Colunas Fornecidos pelo Usuário
 
 ```php
 $userColumn = $_GET['aggregate_column'];
@@ -355,11 +355,11 @@ $q = Builder::table('orders')
 
 ---
 
-## Reutilização do Query Builder
+## Reutilização do Construtor de Consultas
 
-### Métodos Clear
+### Métodos de Limpeza
 
-Limpe partes específicas para reutilizar o builder:
+Limpe partes específicas para reutilizar o construtor:
 
 ```php
 $query = Builder::table('users')
@@ -370,7 +370,7 @@ $query = Builder::table('users')
 // Primeira consulta
 $q1 = $query->limit(10)->build();
 
-// Limpar e reutilizar
+// Limpe e reutilize
 $query->clearWhere()->clearLimit();
 
 // Segunda consulta com condições diferentes
@@ -380,17 +380,17 @@ $q2 = $query
     ->build();
 ```
 
-### Métodos Clear Disponíveis
+### Métodos de Limpeza Disponíveis
 
 | Método | Descrição |
-|--------|-----------|
-| `clearWhere()` | Limpar condições WHERE e parâmetros |
-| `clearSelect()` | Resetar colunas SELECT para padrão '*' |
-| `clearJoin()` | Limpar todas as cláusulas JOIN |
-| `clearGroupBy()` | Limpar cláusula GROUP BY |
-| `clearOrderBy()` | Limpar cláusula ORDER BY |
-| `clearLimit()` | Limpar LIMIT e OFFSET |
-| `clearAll()` | Resetar builder ao estado inicial |
+|--------|-------------|
+| `clearWhere()` | Limpa condições WHERE e parâmetros |
+| `clearSelect()` | Redefine colunas SELECT para o padrão '*' |
+| `clearJoin()` | Limpa todas as cláusulas JOIN |
+| `clearGroupBy()` | Limpa cláusula GROUP BY |
+| `clearOrderBy()` | Limpa cláusula ORDER BY |
+| `clearLimit()` | Limpa LIMIT e OFFSET |
+| `clearAll()` | Redefine o construtor para o estado inicial |
 
 ### Exemplo de Paginação
 
@@ -400,12 +400,12 @@ $baseQuery = Builder::table('users')
     ->where(['status' => 'active'])
     ->orderBy('created_at DESC');
 
-// Obter contagem total
+// Obtém contagem total
 $countQuery = clone $baseQuery;
 $countResult = $countQuery->clearSelect()->count()->build();
 $total = Flight::db()->fetchField($countResult['sql'], $countResult['params']);
 
-// Obter resultados paginados
+// Obtém resultados paginados
 $page = 1;
 $perPage = 20;
 $listResult = $baseQuery->limit($perPage, ($page - 1) * $perPage)->build();
@@ -441,12 +441,12 @@ $products = Flight::db()->fetchAll($result['sql'], $result['params']);
 
 ---
 
-## Exemplo Completo FlightPHP
+## Exemplo Completo com FlightPHP
 
 ```php
 use KnifeLemon\EasyQuery\Builder;
 
-// Listar usuários com paginação
+// Lista usuários com paginação
 Flight::route('GET /users', function() {
     $page = (int) (Flight::request()->query['page'] ?? 1);
     $perPage = 20;
@@ -462,7 +462,7 @@ Flight::route('GET /users', function() {
     Flight::json(['users' => $users, 'page' => $page]);
 });
 
-// Criar usuário
+// Cria usuário
 Flight::route('POST /users', function() {
     $data = Flight::request()->data;
     
@@ -478,7 +478,7 @@ Flight::route('POST /users', function() {
     Flight::json(['id' => Flight::db()->lastInsertId()]);
 });
 
-// Atualizar usuário
+// Atualiza usuário
 Flight::route('PUT /users/@id', function($id) {
     $data = Flight::request()->data;
     
@@ -495,7 +495,7 @@ Flight::route('PUT /users/@id', function($id) {
     Flight::json(['success' => true]);
 });
 
-// Deletar usuário
+// Deleta usuário
 Flight::route('DELETE /users/@id', function($id) {
     $q = Builder::table('users')
         ->delete()
@@ -509,43 +509,43 @@ Flight::route('DELETE /users/@id', function($id) {
 
 ---
 
-## Referência API
+## Referência da API
 
 ### Métodos Estáticos
 
 | Método | Descrição |
-|--------|-----------|
-| `Builder::table(string $table)` | Criar nova instância do builder para a tabela |
-| `Builder::raw(string $sql, array $bindings = [])` | Criar expressão SQL bruta |
-| `Builder::rawSafe(string $expr, array $identifiers, array $bindings = [])` | Expressão raw com substituição segura de identificadores |
-| `Builder::safeIdentifier(string $identifier)` | Validar e retornar nome seguro de coluna/tabela |
+|--------|-------------|
+| `Builder::table(string $table)` | Cria uma nova instância do construtor para a tabela |
+| `Builder::raw(string $sql, array $bindings = [])` | Cria uma expressão SQL bruta |
+| `Builder::rawSafe(string $expr, array $identifiers, array $bindings = [])` | Expressão bruta com substituição segura de identificadores |
+| `Builder::safeIdentifier(string $identifier)` | Valida e retorna um nome de coluna/tabela seguro |
 
 ### Métodos de Instância
 
 | Método | Descrição |
-|--------|-----------|
-| `alias(string $alias)` | Definir alias da tabela |
-| `select(string\|array $columns)` | Definir colunas a selecionar (padrão: '*') |
-| `where(array $conditions)` | Adicionar condições WHERE (AND) |
-| `orWhere(array $conditions)` | Adicionar condições OR WHERE |
-| `join(string $table, string $condition, string $alias, string $type)` | Adicionar cláusula JOIN |
-| `innerJoin(string $table, string $condition, string $alias)` | Adicionar INNER JOIN |
-| `leftJoin(string $table, string $condition, string $alias)` | Adicionar LEFT JOIN |
-| `groupBy(string $groupBy)` | Adicionar cláusula GROUP BY |
-| `orderBy(string $orderBy)` | Adicionar cláusula ORDER BY |
-| `limit(int $limit, int $offset = 0)` | Adicionar LIMIT e OFFSET |
-| `count(string $column = '*')` | Definir consulta para COUNT |
-| `insert(array $data)` | Definir consulta para INSERT |
-| `update(array $data)` | Definir consulta para UPDATE |
-| `delete()` | Definir consulta para DELETE |
-| `build()` | Construir e retornar `['sql' => ..., 'params' => ...]` |
+|--------|-------------|
+| `alias(string $alias)` | Define alias da tabela |
+| `select(string\|array $columns)` | Define colunas a selecionar (padrão: '*') |
+| `where(array $conditions)` | Adiciona condições WHERE (AND) |
+| `orWhere(array $conditions)` | Adiciona condições OR WHERE |
+| `join(string $table, string $condition, string $alias, string $type)` | Adiciona cláusula JOIN |
+| `innerJoin(string $table, string $condition, string $alias)` | Adiciona INNER JOIN |
+| `leftJoin(string $table, string $condition, string $alias)` | Adiciona LEFT JOIN |
+| `groupBy(string $groupBy)` | Adiciona cláusula GROUP BY |
+| `orderBy(string $orderBy)` | Adiciona cláusula ORDER BY |
+| `limit(int $limit, int $offset = 0)` | Adiciona LIMIT e OFFSET |
+| `count(string $column = '*')` | Define consulta para COUNT |
+| `insert(array $data)` | Define consulta para INSERT |
+| `update(array $data)` | Define consulta para UPDATE |
+| `delete()` | Define consulta para DELETE |
+| `build()` | Constrói e retorna `['sql' => ..., 'params' => ...]` |
 | `get()` | Alias para `build()` |
 
 ---
 
-## Integração Tracy Debugger
+## Integração com Tracy Debugger
 
-EasyQuery se integra automaticamente com Tracy Debugger se instalado. Sem configuração necessária!
+EasyQuery integra automaticamente com Tracy Debugger se instalado. Nenhuma configuração necessária!
 
 ```bash
 composer require tracy/tracy
@@ -561,8 +561,8 @@ $q = Builder::table('users')->where(['status' => 'active'])->build();
 ```
 
 O painel Tracy mostra:
-- Total de consultas e detalhamento por tipo
-- SQL gerado (destaque de sintaxe)
+- Total de consultas e divisão por tipo
+- SQL gerado (com destaque de sintaxe)
 - Array de parâmetros
 - Detalhes da consulta (tabela, where, joins, etc.)
 

@@ -1,8 +1,8 @@
 # Runway
 
-Runway는 Flight 애플리케이션을 관리하는 데 도움이 되는 CLI 애플리케이션입니다. 컨트롤러를 생성하고, 모든 경로를 표시하며, 그 외 더 많은 기능을 제공합니다. 이는 우수한 [adhocore/php-cli](https://github.com/adhocore/php-cli) 라이브러리를 기반으로 합니다.
+Runway는 Flight 애플리케이션을 관리하는 데 도움을 주는 CLI 애플리케이션입니다. 컨트롤러를 생성하고, 모든 경로를 표시하며, 그 이상의 기능을 제공합니다. 이는 훌륭한 [adhocore/php-cli](https://github.com/adhocore/php-cli) 라이브러리를 기반으로 합니다.
 
-코드 보기 [여기](https://github.com/flightphp/runway)를 클릭하세요.
+코드를 보려면 [여기](https://github.com/flightphp/runway)를 클릭하세요.
 
 ## 설치
 
@@ -27,30 +27,30 @@ return [
 ];
 ```
 
-> **참고** - **v1.2.0**부터 `.runway-config.json`은 더 이상 사용되지 않습니다. 구성을 `app/config/config.php`로 마이그레이션하세요. `php runway config:migrate` 명령어를 사용하여 쉽게 수행할 수 있습니다.
+> **참고** - **v1.2.0**부터 `.runway-config.json`은 더 이상 사용되지 않습니다. 구성을 `app/config/config.php`로 이전하세요. `php runway config:migrate` 명령으로 쉽게 할 수 있습니다.
 
 ### 프로젝트 루트 감지
 
-Runway는 하위 디렉토리에서 실행하더라도 프로젝트 루트를 충분히 스마트하게 감지합니다. `composer.json`, `.git`, 또는 `app/config/config.php`와 같은 지표를 찾아 프로젝트 루트가 어디인지 결정합니다. 이는 프로젝트의 어디서든 Runway 명령어를 실행할 수 있음을 의미합니다!
+Runway는 하위 디렉토리에서 실행하더라도 프로젝트 루트를 충분히 감지합니다. `composer.json`, `.git`, 또는 `app/config/config.php`와 같은 지표를 찾아 프로젝트 루트가 어디인지 결정합니다. 따라서 프로젝트의 어디서나 Runway 명령을 실행할 수 있습니다!
 
 ## 사용법
 
-Runway에는 Flight 애플리케이션을 관리하는 데 사용할 수 있는 여러 명령어가 있습니다. Runway를 사용하는 두 가지 쉬운 방법이 있습니다.
+Runway에는 Flight 애플리케이션을 관리하는 데 사용할 수 있는 여러 명령이 있습니다. Runway를 사용하는 두 가지 쉬운 방법이 있습니다.
 
 1. 스켈레톤 프로젝트를 사용 중이라면, 프로젝트 루트에서 `php runway [command]`를 실행할 수 있습니다.
 1. Composer를 통해 설치된 패키지로 Runway를 사용 중이라면, 프로젝트 루트에서 `vendor/bin/runway [command]`를 실행할 수 있습니다.
 
-### 명령어 목록
+### 명령 목록
 
-`php runway` 명령어를 실행하여 모든 사용 가능한 명령어 목록을 볼 수 있습니다.
+`php runway` 명령을 실행하여 모든 사용 가능한 명령 목록을 볼 수 있습니다.
 
 ```bash
 php runway
 ```
 
-### 명령어 도움말
+### 명령 도움말
 
-어떤 명령어든 `--help` 플래그를 전달하여 명령어를 사용하는 방법에 대한 더 많은 정보를 얻을 수 있습니다.
+어떤 명령에 대해서든 `--help` 플래그를 전달하여 명령 사용 방법에 대한 더 많은 정보를 얻을 수 있습니다.
 
 ```bash
 php runway routes --help
@@ -60,7 +60,7 @@ php runway routes --help
 
 ### 컨트롤러 생성
 
-`runway.app_root`의 구성에 기반하여, `app/controllers/` 디렉토리에 컨트롤러를 생성합니다.
+`runway.app_root`의 구성에 따라, `app/controllers/` 디렉토리에 컨트롤러를 생성합니다.
 
 ```bash
 php runway make:controller MyController
@@ -68,13 +68,13 @@ php runway make:controller MyController
 
 ### Active Record 모델 생성
 
-먼저 [Active Record](/awesome-plugins/active-record) 플러그인이 설치되었는지 확인하세요. `runway.app_root`의 구성에 기반하여, `app/records/` 디렉토리에 레코드를 생성합니다.
+먼저 [Active Record](/awesome-plugins/active-record) 플러그인이 설치되었는지 확인하세요. `runway.app_root`의 구성에 따라, `app/records/` 디렉토리에 레코드를 생성합니다.
 
 ```bash
 php runway make:record users
 ```
 
-예를 들어 `users` 테이블이 `id`, `name`, `email`, `created_at`, `updated_at` 스키마를 가지고 있다면, `app/records/UserRecord.php` 파일에 다음과 유사한 파일이 생성됩니다:
+예를 들어 `users` 테이블에 다음 스키마가 있는 경우: `id`, `name`, `email`, `created_at`, `updated_at`, `app/records/UserRecord.php` 파일에 다음과 유사한 파일이 생성됩니다:
 
 ```php
 <?php
@@ -122,7 +122,7 @@ class UserRecord extends \flight\ActiveRecord
 php runway routes
 ```
 
-특정 경로만 보려면, 경로를 필터링하는 플래그를 전달할 수 있습니다.
+특정 경로만 보려면 플래그를 전달하여 경로를 필터링할 수 있습니다.
 
 ```bash
 # GET 경로만 표시
@@ -134,11 +134,11 @@ php runway routes --post
 # 등.
 ```
 
-## Runway에 사용자 지정 명령어 추가
+## Runway에 사용자 지정 명령 추가
 
-Flight용 패키지를 만들거나 프로젝트에 사용자 지정 명령어를 추가하려면, 프로젝트/패키지에 `src/commands/`, `flight/commands/`, `app/commands/`, 또는 `commands/` 디렉토리를 생성하여 수행할 수 있습니다. 추가 사용자 정의가 필요하다면, 아래 구성 섹션을 참조하세요.
+Flight용 패키지를 만들거나 프로젝트에 사용자 지정 명령을 추가하려면, 프로젝트/패키지에 `src/commands/`, `flight/commands/`, `app/commands/`, 또는 `commands/` 디렉토리를 생성하여 할 수 있습니다. 추가 사용자 지정이 필요하다면 아래 구성 섹션을 참조하세요.
 
-명령어를 생성하려면, `AbstractBaseCommand` 클래스를 확장하고 최소한 `__construct` 메서드와 `execute` 메서드를 구현하면 됩니다.
+명령을 생성하려면 `AbstractBaseCommand` 클래스를 확장하고, 최소한 `__construct` 메서드와 `execute` 메서드를 구현하면 됩니다.
 
 ```php
 <?php
@@ -152,7 +152,7 @@ class ExampleCommand extends AbstractBaseCommand
 	/**
      * 생성자
      *
-     * @param array<string,mixed> $config app/config/config.php의 구성
+     * @param array<string,mixed> $config app/config/config.php에서 가져온 구성
      */
     public function __construct(array $config)
     {
@@ -171,22 +171,22 @@ class ExampleCommand extends AbstractBaseCommand
 
 		$io->info('예시 생성 중...');
 
-		// 여기에 무언가 수행
+		// 여기에 무언가를 수행
 
 		$io->ok('예시가 생성되었습니다!');
 	}
 }
 ```
 
-Flight 애플리케이션에 사용자 지정 명령어를 구축하는 방법에 대한 자세한 정보는 [adhocore/php-cli 문서](https://github.com/adhocore/php-cli)를 참조하세요!
+Flight 애플리케이션에 사용자 지정 명령을 빌드하는 방법에 대한 자세한 정보는 [adhocore/php-cli 문서](https://github.com/adhocore/php-cli)를 참조하세요!
 
 ## 구성 관리
 
-`v1.2.0`부터 구성이 `app/config/config.php`로 이동되었으므로, 구성을 관리하는 몇 가지 도우미 명령어가 있습니다.
+`v1.2.0`부터 구성이 `app/config/config.php`로 이동되었으므로, 구성을 관리하는 몇 가지 도우미 명령이 있습니다.
 
 ### 이전 구성 마이그레이션
 
-이전 `.runway-config.json` 파일이 있다면, 다음 명령어로 쉽게 `app/config/config.php`로 마이그레이션할 수 있습니다:
+이전 `.runway-config.json` 파일이 있다면, 다음 명령으로 `app/config/config.php`로 쉽게 마이그레이션할 수 있습니다:
 
 ```bash
 php runway config:migrate
@@ -194,7 +194,7 @@ php runway config:migrate
 
 ### 구성 값 설정
 
-`config:set` 명령어를 사용하여 구성 값을 설정할 수 있습니다. 파일을 열지 않고 구성 값을 업데이트하려는 경우 유용합니다.
+`config:set` 명령을 사용하여 구성 값을 설정할 수 있습니다. 파일을 열지 않고 구성 값을 업데이트하려는 경우 유용합니다.
 
 ```bash
 php runway config:set app_root "app/"
@@ -202,7 +202,7 @@ php runway config:set app_root "app/"
 
 ### 구성 값 가져오기
 
-`config:get` 명령어를 사용하여 구성 값을 가져올 수 있습니다.
+`config:get` 명령을 사용하여 구성 값을 가져올 수 있습니다.
 
 ```bash
 php runway config:get app_root
@@ -210,7 +210,7 @@ php runway config:get app_root
 
 ## 모든 Runway 구성
 
-Runway 구성을 사용자 정의해야 한다면, `app/config/config.php`에서 이러한 값을 설정할 수 있습니다. 아래는 설정할 수 있는 몇 가지 추가 구성입니다:
+Runway 구성을 사용자 지정해야 한다면, `app/config/config.php`에 이러한 값을 설정할 수 있습니다. 아래는 설정할 수 있는 몇 가지 추가 구성입니다:
 
 ```php
 <?php
@@ -231,18 +231,18 @@ return [
             '/var/www/another-project'
         ],
 
-        // 기본 경로는 구성할 필요가 거의 없지만, 필요하다면 여기에 있습니다
+        // 기본 경로는 대부분 구성할 필요가 없지만, 필요하다면 여기에 있습니다
         'base_paths' => [
-            '/includes/libs/vendor', // 벤더 디렉토리의 고유한 경로가 있는 경우 등
+            '/includes/libs/vendor', // 벤더 디렉토리 등에 정말 독특한 경로가 있는 경우
         ],
 
-        // 최종 경로는 명령어 파일을 검색할 프로젝트 내 위치
+        // 최종 경로는 프로젝트 내에서 명령 파일을 검색할 위치입니다
         'final_paths' => [
             'src/diff-path/commands',
             'app/module/admin/commands',
         ],
 
-        // 전체 경로를 추가하려면, 그대로 진행하세요 (프로젝트 루트에 대한 절대 또는 상대)
+        // 전체 경로를 추가하려면 그대로 진행하세요 (프로젝트 루트에 대한 절대 또는 상대 경로)
         'paths' => [
             '/home/user/different-project/src/diff-path/commands',
             '/var/www/another-project/app/module/admin/commands',
@@ -254,7 +254,7 @@ return [
 
 ### 구성 접근
 
-구성 값을 효과적으로 접근해야 한다면, `__construct` 메서드나 `app()` 메서드를 통해 접근할 수 있습니다. 또한 `app/config/services.php` 파일이 있는 경우, 해당 서비스들도 명령어에서 사용할 수 있습니다.
+구성 값을 효과적으로 접근해야 한다면, `__construct` 메서드나 `app()` 메서드를 통해 접근할 수 있습니다. 또한 `app/config/services.php` 파일이 있는 경우, 해당 서비스도 명령에서 사용할 수 있습니다.
 
 ```php
 public function execute()
@@ -264,7 +264,7 @@ public function execute()
     // 구성 접근
     $app_root = $this->config['runway']['app_root'];
     
-    // 데이터베이스 연결 같은 서비스 접근
+    // 데이터베이스 연결 등 서비스 접근
     $database = $this->config['database']
     
     // ...
@@ -273,14 +273,14 @@ public function execute()
 
 ## AI 도우미 래퍼
 
-Runway에는 AI가 명령어를 생성하기 쉽게 하는 몇 가지 도우미 래퍼가 있습니다. Symfony Console과 유사하게 `addOption`과 `addArgument`를 사용할 수 있습니다. AI 도구를 사용하여 명령어를 생성하는 경우 유용합니다.
+Runway에는 AI가 명령을 생성하기 쉽게 하는 몇 가지 도우미 래퍼가 있습니다. Symfony Console과 유사하게 `addOption`과 `addArgument`를 사용할 수 있습니다. AI 도구를 사용하여 명령을 생성하는 경우 유용합니다.
 
 ```php
 public function __construct(array $config)
 {
     parent::__construct('make:example', '문서화를 위한 예시 생성', $config);
     
-    // name 옵션은 null 가능하며 완전히 선택적입니다
+    // name 옵션은 null이며 완전히 선택적입니다
     $this->addOption('name', '예시의 이름', null);
 }
 ```

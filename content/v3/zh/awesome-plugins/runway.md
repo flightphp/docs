@@ -31,18 +31,18 @@ return [
 
 ### 项目根目录检测
 
-Runway 足够智能，能够检测项目根目录，即使您从子目录运行它。它会查找诸如 `composer.json`、`.git` 或 `app/config/config.php` 等指标来确定项目根目录的位置。这意味着您可以在项目中的任何位置运行 Runway 命令！
+Runway 足够智能，即使从子目录运行它，也能检测到项目根目录。它会查找诸如 `composer.json`、`.git` 或 `app/config/config.php` 等指示符来确定项目根目录在哪里。这意味着您可以在项目中的任何位置运行 Runway 命令！
 
 ## 使用
 
-Runway 具有多个命令，可用于管理您的 Flight 应用程序。有两种简单的方式使用 Runway。
+Runway 具有多个命令，您可以使用它们来管理 Flight 应用程序。有两种简单的方式使用 Runway。
 
-1. 如果您使用骨架项目，可以从项目根目录运行 `php runway [command]`。
+1. 如果您使用的是骨架项目，可以从项目根目录运行 `php runway [command]`。
 1. 如果您通过 Composer 安装 Runway 作为包，可以从项目根目录运行 `vendor/bin/runway [command]`。
 
 ### 命令列表
 
-运行 `php runway` 命令可查看所有可用命令列表。
+运行 `php runway` 命令可以查看所有可用命令的列表。
 
 ```bash
 php runway
@@ -50,7 +50,7 @@ php runway
 
 ### 命令帮助
 
-对于任何命令，您可以传入 `--help` 标志以获取有关如何使用该命令的更多信息。
+对于任何命令，您可以传入 `--help` 标志来获取有关如何使用该命令的更多信息。
 
 ```bash
 php runway routes --help
@@ -60,7 +60,7 @@ php runway routes --help
 
 ### 生成控制器
 
-基于 `runway.app_root` 中的配置，位置将在 `app/controllers/` 目录中为您生成控制器。
+基于 `runway.app_root` 中的配置，它将在 `app/controllers/` 目录中为您生成控制器。
 
 ```bash
 php runway make:controller MyController
@@ -68,13 +68,13 @@ php runway make:controller MyController
 
 ### 生成 Active Record 模型
 
-首先确保您已安装 [Active Record](/awesome-plugins/active-record) 插件。基于 `runway.app_root` 中的配置，位置将在 `app/records/` 目录中为您生成记录。
+首先确保您已安装 [Active Record](/awesome-plugins/active-record) 插件。基于 `runway.app_root` 中的配置，它将在 `app/records/` 目录中为您生成记录。
 
 ```bash
 php runway make:record users
 ```
 
-例如，如果您有 `users` 表，架构如下：`id`、`name`、`email`、`created_at`、`updated_at`，则将在 `app/records/UserRecord.php` 文件中创建类似以下的文件：
+例如，如果您有名为 `users` 的表，具有以下架构：`id`、`name`、`email`、`created_at`、`updated_at`，则将在 `app/records/UserRecord.php` 文件中创建类似以下的文件：
 
 ```php
 <?php
@@ -136,7 +136,7 @@ php runway routes --post
 
 ## 向 Runway 添加自定义命令
 
-如果您正在为 Flight 创建包，或者想在项目中添加自己的自定义命令，您可以通过为项目/包创建 `src/commands/`、`flight/commands/`、`app/commands/` 或 `commands/` 目录来实现。如果需要进一步自定义，请参阅下面的配置部分。
+如果您正在为 Flight 创建包，或者想将自己的自定义命令添加到项目中，您可以通过为项目/包创建 `src/commands/`、`flight/commands/`、`app/commands/` 或 `commands/` 目录来实现。如果需要进一步自定义，请参阅下面的配置部分。
 
 要创建命令，只需扩展 `AbstractBaseCommand` 类，并至少实现 `__construct` 方法和 `execute` 方法。
 
@@ -178,11 +178,11 @@ class ExampleCommand extends AbstractBaseCommand
 }
 ```
 
-请参阅 [adhocore/php-cli 文档](https://github.com/adhocore/php-cli)，了解有关如何在 Flight 应用程序中构建自己的自定义命令的更多信息！
+请参阅 [adhocore/php-cli 文档](https://github.com/adhocore/php-cli)，了解如何将自定义命令构建到 Flight 应用程序中的更多信息！
 
 ## 配置管理
 
-由于从 `v1.2.0` 开始配置已移至 `app/config/config.php`，因此有一些辅助命令来管理配置。
+由于从 `v1.2.0` 开始配置已移动到 `app/config/config.php`，因此有一些辅助命令来管理配置。
 
 ### 迁移旧配置
 
@@ -194,7 +194,7 @@ php runway config:migrate
 
 ### 设置配置值
 
-您可以使用 `config:set` 命令设置配置值。这在您想更新配置值而无需打开文件时很有用。
+您可以使用 `config:set` 命令设置配置值。如果您想在不打开文件的情况下更新配置值，这很有用。
 
 ```bash
 php runway config:set app_root "app/"
@@ -210,7 +210,7 @@ php runway config:get app_root
 
 ## 所有 Runway 配置
 
-如果需要自定义 Runway 的配置，您可以在 `app/config/config.php` 中设置这些值。以下是一些您可以设置的额外配置：
+如果您需要自定义 Runway 的配置，可以在 `app/config/config.php` 中设置这些值。以下是一些您可以设置的额外配置：
 
 ```php
 <?php
@@ -254,7 +254,7 @@ return [
 
 ### 访问配置
 
-如果需要有效访问配置值，您可以通过 `__construct` 方法或 `app()` 方法访问它们。同样重要的是要注意，如果您有 `app/config/services.php` 文件，这些服务也将可用作您的命令。
+如果您需要有效访问配置值，可以通过 `__construct` 方法或 `app()` 方法访问它们。同样重要的是要注意，如果您有 `app/config/services.php` 文件，那些服务也将可用作您的命令。
 
 ```php
 public function execute()
@@ -273,7 +273,7 @@ public function execute()
 
 ## AI 助手包装器
 
-Runway 具有一些辅助包装器，使 AI 更容易生成命令。您可以使用 `addOption` 和 `addArgument`，方式类似于 Symfony Console。这在使用 AI 工具生成命令时很有帮助。
+Runway 具有一些辅助包装器，使 AI 更容易生成命令。您可以使用 `addOption` 和 `addArgument`，方式类似于 Symfony Console。如果您使用 AI 工具生成命令，这很有帮助。
 
 ```php
 public function __construct(array $config)

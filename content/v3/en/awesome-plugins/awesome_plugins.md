@@ -2,6 +2,12 @@
 
 Flight is incredibly extensible. There are a number of plugins that can be used to add functionality to your Flight application. Some are officially supported by the Flight Team and others are micro/lite libraries to help you get started.
 
+## AI Tools
+
+Flight can be made even cooler with AI-powered plugins.
+
+- [Flight MCP](/awesome-plugins/mcp) - A plugin for integrating MCP (Model Control Protocol) with Flight, enabling seamless AI-powered functionality. Mostly focused on the documentation pages, it helps keep token costs down with providing the most up to date information about your Flight projects.
+
 ## API Documentation
 
 API documentation is crucial for any API. It helps developers understand how to interact with your API and what to expect in return. There are a couple tools available to help you generate API documentation for your Flight Projects.

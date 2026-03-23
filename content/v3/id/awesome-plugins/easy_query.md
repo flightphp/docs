@@ -1,17 +1,17 @@
 # EasyQuery
 
-[knifelemon/easy-query](https://github.com/knifelemon/EasyQueryBuilder) adalah pembuat kueri SQL yang ringan dan fluent yang menghasilkan SQL dan parameter untuk prepared statement. Bekerja dengan [SimplePdo](/learn/simple-pdo).
+[knifelemon/easy-query](https://github.com/knifelemon/EasyQueryBuilder) adalah pembuat kueri SQL yang ringan dan fasih yang menghasilkan SQL dan parameter untuk pernyataan yang disiapkan. Bekerja dengan [SimplePdo](/learn/simple-pdo).
 
 ## Fitur
 
-- 🔗 **API Fluent** - Metode berantai untuk konstruksi kueri yang mudah dibaca
-- 🛡️ **Perlindungan SQL Injection** - Pengikatan parameter otomatis dengan prepared statement
-- 🔧 **Dukungan Raw SQL** - Sisipkan ekspresi SQL langsung dengan `raw()`
-- 📝 **Berbagai Tipe Kueri** - SELECT, INSERT, UPDATE, DELETE, COUNT
+- 🔗 **API Fasih** - Rantai metode untuk konstruksi kueri yang mudah dibaca
+- 🛡️ **Perlindungan Injeksi SQL** - Pengikatan parameter otomatis dengan pernyataan yang disiapkan
+- 🔧 **Dukungan SQL Mentah** - Sisipkan ekspresi SQL mentah dengan `raw()`
+- 📝 **Jenis Kueri Beragam** - SELECT, INSERT, UPDATE, DELETE, COUNT
 - 🔀 **Dukungan JOIN** - INNER, LEFT, RIGHT join dengan alias
 - 🎯 **Kondisi Lanjutan** - LIKE, IN, NOT IN, BETWEEN, operator perbandingan
-- 🌐 **Database Agnostic** - Mengembalikan SQL + params, gunakan dengan koneksi DB apapun
-- 🪶 **Ringan** - Footprint minimal tanpa dependensi
+- 🌐 **Agnostik Database** - Mengembalikan SQL + params, gunakan dengan koneksi DB apa pun
+- 🪶 **Ringan** - Jejak minimal tanpa ketergantungan
 
 ## Instalasi
 
@@ -37,7 +37,7 @@ $users = Flight::db()->fetchAll($q['sql'], $q['params']);
 
 ## Memahami build()
 
-Metode `build()` mengembalikan array dengan `sql` dan `params`. Pemisahan ini menjaga database Anda aman dengan menggunakan prepared statement.
+Metode `build()` mengembalikan array dengan `sql` dan `params`. Pemisahan ini menjaga database Anda aman dengan menggunakan pernyataan yang disiapkan.
 
 ```php
 $q = Builder::table('users')
@@ -53,7 +53,7 @@ $q = Builder::table('users')
 
 ---
 
-## Tipe Kueri
+## Jenis Kueri
 
 ### SELECT
 
@@ -62,7 +62,7 @@ $q = Builder::table('users')
 $q = Builder::table('users')->build();
 // SELECT * FROM users
 
-// Pilih kolom tertentu
+// Pilih kolom spesifik
 $q = Builder::table('users')
     ->select(['id', 'name', 'email'])
     ->build();
@@ -190,7 +190,7 @@ $q = Builder::table('products')
 
 ### Kondisi OR
 
-Gunakan `orWhere()` untuk menambahkan kondisi yang dikelompokkan dengan OR:
+Gunakan `orWhere()` untuk menambahkan kondisi OR yang dikelompokkan:
 
 ```php
 $q = Builder::table('users')
@@ -229,7 +229,7 @@ $q = Builder::table('users')
 // ... LEFT JOIN orders AS o ON u.id = o.user_id
 ```
 
-### Multiple JOIN
+### Multiple JOINs
 
 ```php
 $q = Builder::table('orders')
@@ -244,7 +244,7 @@ $q = Builder::table('orders')
 
 ---
 
-## Pengurutan, Pengelompokan, dan Limit
+## Pengurutan, Pengelompokan, dan Batasan
 
 ### ORDER BY
 
@@ -281,7 +281,7 @@ $q = Builder::table('users')
 
 ---
 
-## Ekspresi Raw SQL
+## Ekspresi SQL Mentah
 
 Gunakan `raw()` ketika Anda membutuhkan fungsi SQL atau ekspresi yang tidak boleh diperlakukan sebagai parameter terikat.
 
@@ -324,10 +324,10 @@ $q = Builder::table('products')
 
 ### Identifier Aman untuk Input Pengguna
 
-Ketika nama kolom berasal dari input pengguna, gunakan `safeIdentifier()` untuk mencegah SQL injection:
+Ketika nama kolom berasal dari input pengguna, gunakan `safeIdentifier()` untuk mencegah injeksi SQL:
 
 ```php
-$sortColumn = $_GET['sort'];  // contoh: 'created_at'
+$sortColumn = $_GET['sort'];  // misalnya, 'created_at'
 $safeColumn = Builder::safeIdentifier($sortColumn);
 
 $q = Builder::table('users')
@@ -351,15 +351,15 @@ $q = Builder::table('orders')
 // Memvalidasi nama kolom, melempar exception jika tidak valid
 ```
 
-> **Peringatan:** Jangan pernah menggabungkan input pengguna langsung ke `raw()`. Selalu gunakan parameter terikat atau `safeIdentifier()`.
+> **Peringatan:** Jangan pernah menggabungkan input pengguna secara langsung ke dalam `raw()`. Selalu gunakan parameter terikat atau `safeIdentifier()`.
 
 ---
 
-## Penggunaan Ulang Query Builder
+## Penggunaan Ulang Pembuat Kueri
 
 ### Metode Clear
 
-Hapus bagian tertentu untuk menggunakan ulang builder:
+Hapus bagian spesifik untuk menggunakan kembali pembuat:
 
 ```php
 $query = Builder::table('users')
@@ -370,7 +370,7 @@ $query = Builder::table('users')
 // Kueri pertama
 $q1 = $query->limit(10)->build();
 
-// Hapus dan gunakan ulang
+// Hapus dan gunakan kembali
 $query->clearWhere()->clearLimit();
 
 // Kueri kedua dengan kondisi berbeda
@@ -382,17 +382,17 @@ $q2 = $query
 
 ### Metode Clear yang Tersedia
 
-| Metode | Deskripsi |
-|--------|-----------|
+| Method | Deskripsi |
+|--------|-------------|
 | `clearWhere()` | Hapus kondisi WHERE dan parameter |
 | `clearSelect()` | Reset kolom SELECT ke default '*' |
 | `clearJoin()` | Hapus semua klausa JOIN |
 | `clearGroupBy()` | Hapus klausa GROUP BY |
 | `clearOrderBy()` | Hapus klausa ORDER BY |
 | `clearLimit()` | Hapus LIMIT dan OFFSET |
-| `clearAll()` | Reset builder ke keadaan awal |
+| `clearAll()` | Reset pembuat ke keadaan awal |
 
-### Contoh Paginasi
+### Contoh Pagination
 
 ```php
 $baseQuery = Builder::table('users')
@@ -400,12 +400,12 @@ $baseQuery = Builder::table('users')
     ->where(['status' => 'active'])
     ->orderBy('created_at DESC');
 
-// Dapatkan jumlah total
+// Dapatkan total hitungan
 $countQuery = clone $baseQuery;
 $countResult = $countQuery->clearSelect()->count()->build();
 $total = Flight::db()->fetchField($countResult['sql'], $countResult['params']);
 
-// Dapatkan hasil terpaginasi
+// Dapatkan hasil paginasi
 $page = 1;
 $perPage = 20;
 $listResult = $baseQuery->limit($perPage, ($page - 1) * $perPage)->build();
@@ -414,7 +414,7 @@ $users = Flight::db()->fetchAll($listResult['sql'], $listResult['params']);
 
 ---
 
-## Pembangunan Kueri Dinamis
+## Pembuatan Kueri Dinamis
 
 ```php
 $query = Builder::table('products')->alias('p');
@@ -513,27 +513,27 @@ Flight::route('DELETE /users/@id', function($id) {
 
 ### Metode Statis
 
-| Metode | Deskripsi |
-|--------|-----------|
-| `Builder::table(string $table)` | Buat instance builder baru untuk tabel |
+| Method | Deskripsi |
+|--------|-------------|
+| `Builder::table(string $table)` | Buat instance pembuat baru untuk tabel |
 | `Builder::raw(string $sql, array $bindings = [])` | Buat ekspresi SQL mentah |
-| `Builder::rawSafe(string $expr, array $identifiers, array $bindings = [])` | Ekspresi raw dengan substitusi identifier yang aman |
+| `Builder::rawSafe(string $expr, array $identifiers, array $bindings = [])` | Ekspresi mentah dengan substitusi identifier aman |
 | `Builder::safeIdentifier(string $identifier)` | Validasi dan kembalikan nama kolom/tabel yang aman |
 
 ### Metode Instance
 
-| Metode | Deskripsi |
-|--------|-----------|
+| Method | Deskripsi |
+|--------|-------------|
 | `alias(string $alias)` | Set alias tabel |
-| `select(string\|array $columns)` | Set kolom yang akan dipilih (default: '*') |
-| `where(array $conditions)` | Tambah kondisi WHERE (AND) |
-| `orWhere(array $conditions)` | Tambah kondisi OR WHERE |
-| `join(string $table, string $condition, string $alias, string $type)` | Tambah klausa JOIN |
-| `innerJoin(string $table, string $condition, string $alias)` | Tambah INNER JOIN |
-| `leftJoin(string $table, string $condition, string $alias)` | Tambah LEFT JOIN |
-| `groupBy(string $groupBy)` | Tambah klausa GROUP BY |
-| `orderBy(string $orderBy)` | Tambah klausa ORDER BY |
-| `limit(int $limit, int $offset = 0)` | Tambah LIMIT dan OFFSET |
+| `select(string\|array $columns)` | Set kolom untuk dipilih (default: '*') |
+| `where(array $conditions)` | Tambahkan kondisi WHERE (AND) |
+| `orWhere(array $conditions)` | Tambahkan kondisi OR WHERE |
+| `join(string $table, string $condition, string $alias, string $type)` | Tambahkan klausa JOIN |
+| `innerJoin(string $table, string $condition, string $alias)` | Tambahkan INNER JOIN |
+| `leftJoin(string $table, string $condition, string $alias)` | Tambahkan LEFT JOIN |
+| `groupBy(string $groupBy)` | Tambahkan klausa GROUP BY |
+| `orderBy(string $orderBy)` | Tambahkan klausa ORDER BY |
+| `limit(int $limit, int $offset = 0)` | Tambahkan LIMIT dan OFFSET |
 | `count(string $column = '*')` | Set kueri ke COUNT |
 | `insert(array $data)` | Set kueri ke INSERT |
 | `update(array $data)` | Set kueri ke UPDATE |
@@ -561,8 +561,8 @@ $q = Builder::table('users')->where(['status' => 'active'])->build();
 ```
 
 Panel Tracy menampilkan:
-- Total kueri dan rincian berdasarkan tipe
-- SQL yang dihasilkan (syntax highlighting)
+- Total kueri dan rincian berdasarkan jenis
+- SQL yang dihasilkan (dengan penyorotan sintaks)
 - Array parameter
 - Detail kueri (tabel, where, join, dll.)
 

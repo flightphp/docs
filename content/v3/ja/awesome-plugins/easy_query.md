@@ -1,17 +1,17 @@
 # EasyQuery
 
-[knifelemon/easy-query](https://github.com/knifelemon/EasyQueryBuilder)は、SQLとパラメータを生成する軽量なFluent SQLクエリビルダーです。[SimplePdo](/learn/simple-pdo)と連携できます。
+[knifelemon/easy-query](https://github.com/knifelemon/EasyQueryBuilder) は、軽量で流暢な SQL クエリビルダーであり、プリペアドステートメント用の SQL とパラメータを生成します。[SimplePdo](/learn/simple-pdo) と連携します。
 
-## 特徴
+## 機能
 
-- 🔗 **Fluent API** - メソッドチェーンで可読性の高いクエリ構築
-- 🛡️ **SQLインジェクション防止** - プリペアドステートメントによる自動パラメータバインディング
-- 🔧 **Raw SQLサポート** - `raw()`でSQL式を直接挿入
-- 📝 **複数のクエリタイプ** - SELECT, INSERT, UPDATE, DELETE, COUNT
-- 🔀 **JOINサポート** - INNER, LEFT, RIGHTジョインとエイリアス
-- 🎯 **高度な条件** - LIKE, IN, NOT IN, BETWEEN, 比較演算子
-- 🌐 **データベース非依存** - SQL + paramsを返し、どのDB接続でも使用可能
-- 🪶 **軽量** - 依存関係なしで最小限のフットプリント
+- 🔗 **Fluent API** - 読みやすいクエリ構築のためのメソッドチェーン
+- 🛡️ **SQL インジェクション保護** - プリペアドステートメントによる自動パラメータバインド
+- 🔧 **Raw SQL サポート** - `raw()` で生の SQL 式を挿入
+- 📝 **複数のクエリタイプ** - SELECT、INSERT、UPDATE、DELETE、COUNT
+- 🔀 **JOIN サポート** - 別名付きの INNER、LEFT、RIGHT ジョイン
+- 🎯 **高度な条件** - LIKE、IN、NOT IN、BETWEEN、比較演算子
+- 🌐 **データベース非依存** - SQL + パラメータを返すため、任意の DB 接続で使用可能
+- 🪶 **軽量** - 依存関係ゼロの最小フットプリント
 
 ## インストール
 
@@ -31,20 +31,20 @@ $q = Builder::table('users')
     ->limit(10)
     ->build();
 
-// FlightのSimplePdoで使用
+// FlightのSimplePdoと使用
 $users = Flight::db()->fetchAll($q['sql'], $q['params']);
 ```
 
-## build()の理解
+## build() の理解
 
-`build()`メソッドは`sql`と`params`を含む配列を返します。この分離により、プリペアドステートメントを使用してデータベースを安全に保護します。
+`build()` メソッドは、`sql` と `params` を持つ配列を返します。この分離により、プリペアドステートメントを使用してデータベースを安全に保ちます。
 
 ```php
 $q = Builder::table('users')
     ->where(['email' => 'user@example.com'])
     ->build();
 
-// 戻り値:
+// 返される値:
 // [
 //     'sql' => 'SELECT * FROM users WHERE email = ?',
 //     'params' => ['user@example.com']
@@ -58,17 +58,17 @@ $q = Builder::table('users')
 ### SELECT
 
 ```php
-// すべてのカラムを選択
+// すべての列を選択
 $q = Builder::table('users')->build();
 // SELECT * FROM users
 
-// 特定のカラムを選択
+// 特定の列を選択
 $q = Builder::table('users')
     ->select(['id', 'name', 'email'])
     ->build();
 // SELECT id, name, email FROM users
 
-// テーブルエイリアスを使用
+// テーブル別名付き
 $q = Builder::table('users')
     ->alias('u')
     ->select(['u.id', 'u.name'])
@@ -130,9 +130,9 @@ $count = Flight::db()->fetchField($q['sql'], $q['params']);
 
 ---
 
-## WHERE条件
+## WHERE 条件
 
-### 単純な等価比較
+### 単純な等価性
 
 ```php
 $q = Builder::table('users')
@@ -188,9 +188,9 @@ $q = Builder::table('products')
 // WHERE price BETWEEN ? AND ?
 ```
 
-### OR条件
+### OR 条件
 
-`orWhere()`を使用してORでグループ化された条件を追加します:
+`orWhere()` を使用して OR グループ化された条件を追加します：
 
 ```php
 $q = Builder::table('users')
@@ -229,7 +229,7 @@ $q = Builder::table('users')
 // ... LEFT JOIN orders AS o ON u.id = o.user_id
 ```
 
-### 複数JOIN
+### 複数の JOIN
 
 ```php
 $q = Builder::table('orders')
@@ -244,7 +244,7 @@ $q = Builder::table('orders')
 
 ---
 
-## ソート、グループ化、制限
+## 並べ替え、グループ化、制限
 
 ### ORDER BY
 
@@ -265,7 +265,7 @@ $q = Builder::table('orders')
 // SELECT user_id, COUNT(*) as order_count FROM orders GROUP BY user_id
 ```
 
-### LIMITとOFFSET
+### LIMIT と OFFSET
 
 ```php
 $q = Builder::table('users')
@@ -281,11 +281,11 @@ $q = Builder::table('users')
 
 ---
 
-## Raw SQL式
+## Raw SQL 式
 
-バウンドパラメータとして処理すべきでないSQL関数や式が必要な場合は`raw()`を使用します。
+SQL 関数やバインドパラメータとして扱われない式が必要な場合に `raw()` を使用します。
 
-### 基本的なRaw
+### 基本的な Raw
 
 ```php
 $q = Builder::table('users')
@@ -298,7 +298,7 @@ $q = Builder::table('users')
 // SET login_count = login_count + 1, updated_at = NOW()
 ```
 
-### バウンドパラメータ付きRaw
+### バインドパラメータ付き Raw
 
 ```php
 $q = Builder::table('orders')
@@ -311,7 +311,7 @@ $q = Builder::table('orders')
 // params: [0, 10, 1]
 ```
 
-### WHEREでのRaw（サブクエリ）
+### WHERE 内の Raw (サブクエリ)
 
 ```php
 $q = Builder::table('products')
@@ -322,9 +322,9 @@ $q = Builder::table('products')
 // WHERE price > (SELECT AVG(price) FROM products)
 ```
 
-### ユーザー入力の安全な識別子
+### ユーザー入力のための安全な識別子
 
-カラム名がユーザー入力から来る場合、`safeIdentifier()`を使用してSQLインジェクションを防止します:
+列名がユーザー入力から来る場合、`safeIdentifier()` を使用して SQL インジェクションを防ぎます：
 
 ```php
 $sortColumn = $_GET['sort'];  // 例: 'created_at'
@@ -334,11 +334,11 @@ $q = Builder::table('users')
     ->orderBy($safeColumn . ' DESC')
     ->build();
 
-// ユーザーが"name; DROP TABLE users--"を試みた場合
-// InvalidArgumentExceptionがスローされます
+// ユーザーが試した場合: "name; DROP TABLE users--"
+// InvalidArgumentException をスロー
 ```
 
-### ユーザー提供のカラム名用rawSafe
+### ユーザー提供の列名のための rawSafe
 
 ```php
 $userColumn = $_GET['aggregate_column'];
@@ -348,18 +348,18 @@ $q = Builder::table('orders')
         Builder::rawSafe('SUM({col})', ['col' => $userColumn])->value . ' AS total'
     ])
     ->build();
-// カラム名を検証し、無効な場合は例外をスロー
+// 列名を検証し、無効な場合は例外をスロー
 ```
 
-> **警告:** ユーザー入力を`raw()`に直接連結しないでください。常にバウンドパラメータまたは`safeIdentifier()`を使用してください。
+> **警告:** ユーザー入力を `raw()` に直接連結しないでください。常にバインドパラメータまたは `safeIdentifier()` を使用してください。
 
 ---
 
 ## クエリビルダーの再利用
 
-### Clearメソッド
+### クリアメソッド
 
-ビルダーを再利用するために特定の部分をクリアします:
+ビルダーを再利用するために特定の部分をクリアします：
 
 ```php
 $query = Builder::table('users')
@@ -373,26 +373,26 @@ $q1 = $query->limit(10)->build();
 // クリアして再利用
 $query->clearWhere()->clearLimit();
 
-// 異なる条件で2番目のクエリ
+// 異なる条件の2番目のクエリ
 $q2 = $query
     ->where(['status' => 'pending'])
     ->limit(5)
     ->build();
 ```
 
-### 利用可能なClearメソッド
+### 利用可能なクリアメソッド
 
 | メソッド | 説明 |
-|----------|------|
-| `clearWhere()` | WHERE条件とパラメータをクリア |
-| `clearSelect()` | SELECTカラムをデフォルト'*'にリセット |
-| `clearJoin()` | すべてのJOIN句をクリア |
-| `clearGroupBy()` | GROUP BY句をクリア |
-| `clearOrderBy()` | ORDER BY句をクリア |
-| `clearLimit()` | LIMITとOFFSETをクリア |
+|---------|------|
+| `clearWhere()` | WHERE 条件とパラメータをクリア |
+| `clearSelect()` | SELECT 列をデフォルトの '*' にリセット |
+| `clearJoin()` | すべての JOIN 句をクリア |
+| `clearGroupBy()` | GROUP BY 句をクリア |
+| `clearOrderBy()` | ORDER BY 句をクリア |
+| `clearLimit()` | LIMIT と OFFSET をクリア |
 | `clearAll()` | ビルダーを初期状態にリセット |
 
-### ページネーション例
+### ページネーションの例
 
 ```php
 $baseQuery = Builder::table('users')
@@ -400,7 +400,7 @@ $baseQuery = Builder::table('users')
     ->where(['status' => 'active'])
     ->orderBy('created_at DESC');
 
-// 総数を取得
+// 合計カウントを取得
 $countQuery = clone $baseQuery;
 $countResult = $countQuery->clearSelect()->count()->build();
 $total = Flight::db()->fetchField($countResult['sql'], $countResult['params']);
@@ -414,7 +414,7 @@ $users = Flight::db()->fetchAll($listResult['sql'], $listResult['params']);
 
 ---
 
-## 動的クエリビルディング
+## 動的クエリ構築
 
 ```php
 $query = Builder::table('products')->alias('p');
@@ -441,12 +441,12 @@ $products = Flight::db()->fetchAll($result['sql'], $result['params']);
 
 ---
 
-## FlightPHP完全例
+## 完全な FlightPHP の例
 
 ```php
 use KnifeLemon\EasyQuery\Builder;
 
-// ページネーションでユーザー一覧取得
+// ページネーション付きのユーザー一覧
 Flight::route('GET /users', function() {
     $page = (int) (Flight::request()->query['page'] ?? 1);
     $perPage = 20;
@@ -509,43 +509,43 @@ Flight::route('DELETE /users/@id', function($id) {
 
 ---
 
-## APIリファレンス
+## API リファレンス
 
 ### 静的メソッド
 
 | メソッド | 説明 |
-|----------|------|
-| `Builder::table(string $table)` | テーブル用の新しいビルダーインスタンスを作成 |
-| `Builder::raw(string $sql, array $bindings = [])` | Raw SQL式を作成 |
-| `Builder::rawSafe(string $expr, array $identifiers, array $bindings = [])` | 安全な識別子置換付きRaw式 |
-| `Builder::safeIdentifier(string $identifier)` | 安全なカラム/テーブル名を検証して返す |
+|---------|------|
+| `Builder::table(string $table)` | テーブルの新しいビルダーインスタンスを作成 |
+| `Builder::raw(string $sql, array $bindings = [])` | 生の SQL 式を作成 |
+| `Builder::rawSafe(string $expr, array $identifiers, array $bindings = [])` | 安全な識別子置換付きの生の式 |
+| `Builder::safeIdentifier(string $identifier)` | 列名/テーブル名を検証して安全なものを返す |
 
 ### インスタンスメソッド
 
 | メソッド | 説明 |
-|----------|------|
-| `alias(string $alias)` | テーブルエイリアスを設定 |
-| `select(string\|array $columns)` | 選択するカラムを設定（デフォルト: '*'） |
-| `where(array $conditions)` | WHERE条件を追加（AND） |
-| `orWhere(array $conditions)` | OR WHERE条件を追加 |
-| `join(string $table, string $condition, string $alias, string $type)` | JOIN句を追加 |
-| `innerJoin(string $table, string $condition, string $alias)` | INNER JOINを追加 |
-| `leftJoin(string $table, string $condition, string $alias)` | LEFT JOINを追加 |
-| `groupBy(string $groupBy)` | GROUP BY句を追加 |
-| `orderBy(string $orderBy)` | ORDER BY句を追加 |
-| `limit(int $limit, int $offset = 0)` | LIMITとOFFSETを追加 |
-| `count(string $column = '*')` | COUNTクエリに設定 |
-| `insert(array $data)` | INSERTクエリに設定 |
-| `update(array $data)` | UPDATEクエリに設定 |
-| `delete()` | DELETEクエリに設定 |
-| `build()` | `['sql' => ..., 'params' => ...]`をビルドして返す |
-| `get()` | `build()`のエイリアス |
+|---------|------|
+| `alias(string $alias)` | テーブル別名を設定 |
+| `select(string\|array $columns)` | 選択する列を設定 (デフォルト: '*') |
+| `where(array $conditions)` | WHERE 条件 (AND) を追加 |
+| `orWhere(array $conditions)` | OR WHERE 条件を追加 |
+| `join(string $table, string $condition, string $alias, string $type)` | JOIN 句を追加 |
+| `innerJoin(string $table, string $condition, string $alias)` | INNER JOIN を追加 |
+| `leftJoin(string $table, string $condition, string $alias)` | LEFT JOIN を追加 |
+| `groupBy(string $groupBy)` | GROUP BY 句を追加 |
+| `orderBy(string $orderBy)` | ORDER BY 句を追加 |
+| `limit(int $limit, int $offset = 0)` | LIMIT と OFFSET を追加 |
+| `count(string $column = '*')` | クエリを COUNT に設定 |
+| `insert(array $data)` | クエリを INSERT に設定 |
+| `update(array $data)` | クエリを UPDATE に設定 |
+| `delete()` | クエリを DELETE に設定 |
+| `build()` | `['sql' => ..., 'params' => ...]` を構築して返す |
+| `get()` | `build()` のエイリアス |
 
 ---
 
-## Tracyデバッガー統合
+## Tracy デバッガーの統合
 
-EasyQueryはTracy Debuggerがインストールされていれば自動的に統合されます。設定は不要です！
+EasyQuery は、インストールされている場合に Tracy デバッガーと自動的に統合します。設定は不要です！
 
 ```bash
 composer require tracy/tracy
@@ -556,14 +556,14 @@ use Tracy\Debugger;
 
 Debugger::enable();
 
-// すべてのクエリが自動的にTracyパネルに記録されます
+// すべてのクエリが Tracy パネルに自動的にログ出力されます
 $q = Builder::table('users')->where(['status' => 'active'])->build();
 ```
 
-Tracyパネルで表示されるもの:
-- 総クエリ数とタイプ別内訳
-- 生成されたSQL（構文ハイライト）
+Tracy パネルには以下が表示されます：
+- クエリの合計とタイプ別の内訳
+- 生成された SQL (構文強調表示)
 - パラメータ配列
-- クエリ詳細（テーブル、where、joinなど）
+- クエリ詳細 (テーブル、WHERE、JOIN など)
 
-完全なドキュメントは[GitHubリポジトリ](https://github.com/knifelemon/EasyQueryBuilder)をご覧ください。
+完全なドキュメントについては、[GitHub リポジトリ](https://github.com/knifelemon/EasyQueryBuilder) をご覧ください。

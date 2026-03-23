@@ -1,17 +1,17 @@
 # EasyQuery
 
-[knifelemon/easy-query](https://github.com/knifelemon/EasyQueryBuilder)는 SQL과 파라미터를 생성하는 경량의 Fluent SQL 쿼리 빌더입니다. [SimplePdo](/learn/simple-pdo)와 함께 사용할 수 있습니다.
+[knifelemon/easy-query](https://github.com/knifelemon/EasyQueryBuilder)는 가볍고 유창한 SQL 쿼리 빌더로, 준비된 문장에 대한 SQL과 매개변수를 생성합니다. [SimplePdo](/learn/simple-pdo)와 함께 작동합니다.
 
-## 특징
+## 기능
 
-- 🔗 **Fluent API** - 메서드 체이닝으로 가독성 높은 쿼리 작성
-- 🛡️ **SQL 인젝션 방지** - Prepared Statement를 통한 자동 파라미터 바인딩
-- 🔧 **Raw SQL 지원** - `raw()`로 SQL 표현식 직접 삽입
-- 📝 **다양한 쿼리 타입** - SELECT, INSERT, UPDATE, DELETE, COUNT
-- 🔀 **JOIN 지원** - INNER, LEFT, RIGHT 조인과 별칭
+- 🔗 **유창한 API** - 읽기 쉬운 쿼리 구성에 대한 메서드 체이닝
+- 🛡️ **SQL 인젝션 보호** - 준비된 문장과 함께 자동 매개변수 바인딩
+- 🔧 **Raw SQL 지원** - `raw()`를 사용한 raw SQL 표현식 삽입
+- 📝 **다양한 쿼리 유형** - SELECT, INSERT, UPDATE, DELETE, COUNT
+- 🔀 **JOIN 지원** - 별칭과 함께 INNER, LEFT, RIGHT 조인
 - 🎯 **고급 조건** - LIKE, IN, NOT IN, BETWEEN, 비교 연산자
-- 🌐 **데이터베이스 독립적** - SQL + params 반환, 어떤 DB 연결에서도 사용 가능
-- 🪶 **경량** - 의존성 없이 최소한의 용량
+- 🌐 **데이터베이스 독립적** - SQL + 매개변수 반환, 모든 DB 연결과 사용
+- 🪶 **가벼움** - 의존성 제로의 최소한의 공간
 
 ## 설치
 
@@ -35,16 +35,16 @@ $q = Builder::table('users')
 $users = Flight::db()->fetchAll($q['sql'], $q['params']);
 ```
 
-## build() 이해하기
+## build() 이해
 
-`build()` 메서드는 `sql`과 `params`를 포함한 배열을 반환합니다. 이 분리는 prepared statement를 사용하여 데이터베이스를 안전하게 보호합니다.
+`build()` 메서드는 `sql`과 `params`가 포함된 배열을 반환합니다. 이 분리는 준비된 문장을 사용하여 데이터베이스를 안전하게 유지합니다.
 
 ```php
 $q = Builder::table('users')
     ->where(['email' => 'user@example.com'])
     ->build();
 
-// 반환값:
+// 반환:
 // [
 //     'sql' => 'SELECT * FROM users WHERE email = ?',
 //     'params' => ['user@example.com']
@@ -53,7 +53,7 @@ $q = Builder::table('users')
 
 ---
 
-## 쿼리 타입
+## 쿼리 유형
 
 ### SELECT
 
@@ -68,7 +68,7 @@ $q = Builder::table('users')
     ->build();
 // SELECT id, name, email FROM users
 
-// 테이블 별칭 사용
+// 테이블 별칭과 함께
 $q = Builder::table('users')
     ->alias('u')
     ->select(['u.id', 'u.name'])
@@ -132,7 +132,7 @@ $count = Flight::db()->fetchField($q['sql'], $q['params']);
 
 ## WHERE 조건
 
-### 단순 동등 비교
+### 간단한 동등성
 
 ```php
 $q = Builder::table('users')
@@ -190,7 +190,7 @@ $q = Builder::table('products')
 
 ### OR 조건
 
-`orWhere()`를 사용하여 OR로 그룹화된 조건을 추가합니다:
+`orWhere()`를 사용하여 OR 그룹화된 조건을 추가합니다:
 
 ```php
 $q = Builder::table('users')
@@ -229,7 +229,7 @@ $q = Builder::table('users')
 // ... LEFT JOIN orders AS o ON u.id = o.user_id
 ```
 
-### 다중 JOIN
+### 여러 JOIN
 
 ```php
 $q = Builder::table('orders')
@@ -244,7 +244,7 @@ $q = Builder::table('orders')
 
 ---
 
-## 정렬, 그룹화, 제한
+## 정렬, 그룹화 및 제한
 
 ### ORDER BY
 
@@ -265,7 +265,7 @@ $q = Builder::table('orders')
 // SELECT user_id, COUNT(*) as order_count FROM orders GROUP BY user_id
 ```
 
-### LIMIT과 OFFSET
+### LIMIT 및 OFFSET
 
 ```php
 $q = Builder::table('users')
@@ -283,7 +283,7 @@ $q = Builder::table('users')
 
 ## Raw SQL 표현식
 
-SQL 함수나 바운드 파라미터로 처리하면 안 되는 표현식이 필요할 때 `raw()`를 사용합니다.
+SQL 함수나 표현식이 바인딩된 매개변수로 처리되지 않아야 할 때 `raw()`를 사용합니다.
 
 ### 기본 Raw
 
@@ -298,7 +298,7 @@ $q = Builder::table('users')
 // SET login_count = login_count + 1, updated_at = NOW()
 ```
 
-### 바운드 파라미터가 있는 Raw
+### 바인딩 매개변수와 함께 Raw
 
 ```php
 $q = Builder::table('orders')
@@ -324,7 +324,7 @@ $q = Builder::table('products')
 
 ### 사용자 입력에 대한 안전한 식별자
 
-컬럼 이름이 사용자 입력에서 올 때, `safeIdentifier()`를 사용하여 SQL 인젝션을 방지합니다:
+컬럼 이름이 사용자 입력에서 올 때 SQL 인젝션을 방지하기 위해 `safeIdentifier()`를 사용합니다:
 
 ```php
 $sortColumn = $_GET['sort'];  // 예: 'created_at'
@@ -334,7 +334,7 @@ $q = Builder::table('users')
     ->orderBy($safeColumn . ' DESC')
     ->build();
 
-// 사용자가 "name; DROP TABLE users--"를 시도하면
+// 사용자가 시도: "name; DROP TABLE users--"
 // InvalidArgumentException 발생
 ```
 
@@ -348,10 +348,10 @@ $q = Builder::table('orders')
         Builder::rawSafe('SUM({col})', ['col' => $userColumn])->value . ' AS total'
     ])
     ->build();
-// 컬럼 이름 유효성 검사, 유효하지 않으면 예외 발생
+// 컬럼 이름 검증, 유효하지 않으면 예외 발생
 ```
 
-> **경고:** 사용자 입력을 절대 `raw()`에 직접 연결하지 마세요. 항상 바운드 파라미터나 `safeIdentifier()`를 사용하세요.
+> **경고:** 사용자 입력을 `raw()`에 직접 연결하지 마세요. 항상 바인딩된 매개변수 또는 `safeIdentifier()`를 사용하세요.
 
 ---
 
@@ -359,7 +359,7 @@ $q = Builder::table('orders')
 
 ### Clear 메서드
 
-빌더를 재사용하기 위해 특정 부분을 초기화합니다:
+빌더를 재사용하기 위해 특정 부분을 지웁니다:
 
 ```php
 $query = Builder::table('users')
@@ -370,7 +370,7 @@ $query = Builder::table('users')
 // 첫 번째 쿼리
 $q1 = $query->limit(10)->build();
 
-// 초기화하고 재사용
+// 지우고 재사용
 $query->clearWhere()->clearLimit();
 
 // 다른 조건으로 두 번째 쿼리
@@ -383,14 +383,14 @@ $q2 = $query
 ### 사용 가능한 Clear 메서드
 
 | 메서드 | 설명 |
-|--------|------|
-| `clearWhere()` | WHERE 조건과 파라미터 초기화 |
-| `clearSelect()` | SELECT 컬럼을 기본값 '*'로 초기화 |
-| `clearJoin()` | 모든 JOIN 절 초기화 |
-| `clearGroupBy()` | GROUP BY 절 초기화 |
-| `clearOrderBy()` | ORDER BY 절 초기화 |
-| `clearLimit()` | LIMIT과 OFFSET 초기화 |
-| `clearAll()` | 빌더를 초기 상태로 리셋 |
+|--------|-------------|
+| `clearWhere()` | WHERE 조건과 매개변수 지우기 |
+| `clearSelect()` | SELECT 컬럼을 기본 '*'로 재설정 |
+| `clearJoin()` | 모든 JOIN 절 지우기 |
+| `clearGroupBy()` | GROUP BY 절 지우기 |
+| `clearOrderBy()` | ORDER BY 절 지우기 |
+| `clearLimit()` | LIMIT 및 OFFSET 지우기 |
+| `clearAll()` | 빌더를 초기 상태로 재설정 |
 
 ### 페이지네이션 예제
 
@@ -441,12 +441,12 @@ $products = Flight::db()->fetchAll($result['sql'], $result['params']);
 
 ---
 
-## FlightPHP 전체 예제
+## 전체 FlightPHP 예제
 
 ```php
 use KnifeLemon\EasyQuery\Builder;
 
-// 페이지네이션으로 사용자 목록 조회
+// 페이지네이션과 함께 사용자 목록
 Flight::route('GET /users', function() {
     $page = (int) (Flight::request()->query['page'] ?? 1);
     $perPage = 20;
@@ -509,23 +509,23 @@ Flight::route('DELETE /users/@id', function($id) {
 
 ---
 
-## API 레퍼런스
+## API 참조
 
 ### 정적 메서드
 
 | 메서드 | 설명 |
-|--------|------|
-| `Builder::table(string $table)` | 테이블에 대한 새 빌더 인스턴스 생성 |
-| `Builder::raw(string $sql, array $bindings = [])` | Raw SQL 표현식 생성 |
-| `Builder::rawSafe(string $expr, array $identifiers, array $bindings = [])` | 안전한 식별자 치환이 있는 Raw 표현식 |
+|--------|-------------|
+| `Builder::table(string $table)` | 테이블에 대한 새로운 빌더 인스턴스 생성 |
+| `Builder::raw(string $sql, array $bindings = [])` | raw SQL 표현식 생성 |
+| `Builder::rawSafe(string $expr, array $identifiers, array $bindings = [])` | 안전한 식별자 대체와 함께 raw 표현식 |
 | `Builder::safeIdentifier(string $identifier)` | 안전한 컬럼/테이블 이름 검증 및 반환 |
 
 ### 인스턴스 메서드
 
 | 메서드 | 설명 |
-|--------|------|
+|--------|-------------|
 | `alias(string $alias)` | 테이블 별칭 설정 |
-| `select(string\|array $columns)` | 선택할 컬럼 설정 (기본값: '*') |
+| `select(string\|array $columns)` | 선택할 컬럼 설정 (기본: '*') |
 | `where(array $conditions)` | WHERE 조건 추가 (AND) |
 | `orWhere(array $conditions)` | OR WHERE 조건 추가 |
 | `join(string $table, string $condition, string $alias, string $type)` | JOIN 절 추가 |
@@ -533,11 +533,11 @@ Flight::route('DELETE /users/@id', function($id) {
 | `leftJoin(string $table, string $condition, string $alias)` | LEFT JOIN 추가 |
 | `groupBy(string $groupBy)` | GROUP BY 절 추가 |
 | `orderBy(string $orderBy)` | ORDER BY 절 추가 |
-| `limit(int $limit, int $offset = 0)` | LIMIT과 OFFSET 추가 |
-| `count(string $column = '*')` | COUNT 쿼리로 설정 |
-| `insert(array $data)` | INSERT 쿼리로 설정 |
-| `update(array $data)` | UPDATE 쿼리로 설정 |
-| `delete()` | DELETE 쿼리로 설정 |
+| `limit(int $limit, int $offset = 0)` | LIMIT 및 OFFSET 추가 |
+| `count(string $column = '*')` | 쿼리를 COUNT로 설정 |
+| `insert(array $data)` | 쿼리를 INSERT로 설정 |
+| `update(array $data)` | 쿼리를 UPDATE로 설정 |
+| `delete()` | 쿼리를 DELETE로 설정 |
 | `build()` | `['sql' => ..., 'params' => ...]` 빌드 및 반환 |
 | `get()` | `build()`의 별칭 |
 
@@ -545,7 +545,7 @@ Flight::route('DELETE /users/@id', function($id) {
 
 ## Tracy 디버거 통합
 
-EasyQuery는 Tracy Debugger가 설치되어 있으면 자동으로 통합됩니다. 설정이 필요 없습니다!
+EasyQuery는 설치된 경우 Tracy 디버거와 자동으로 통합됩니다. 설정이 필요 없습니다!
 
 ```bash
 composer require tracy/tracy
@@ -556,14 +556,14 @@ use Tracy\Debugger;
 
 Debugger::enable();
 
-// 모든 쿼리가 자동으로 Tracy 패널에 기록됩니다
+// 모든 쿼리가 Tracy 패널에 자동으로 로깅됩니다
 $q = Builder::table('users')->where(['status' => 'active'])->build();
 ```
 
-Tracy 패널에서 보여주는 것:
-- 총 쿼리 수와 타입별 분류
+Tracy 패널은 다음을 보여줍니다:
+- 총 쿼리 및 유형별 분해
 - 생성된 SQL (구문 강조)
-- 파라미터 배열
-- 쿼리 세부 정보 (테이블, where, join 등)
+- 매개변수 배열
+- 쿼리 세부 정보 (테이블, where, joins 등)
 
-전체 문서는 [GitHub 저장소](https://github.com/knifelemon/EasyQueryBuilder)를 참조하세요.
+전체 문서의 경우 [GitHub 저장소](https://github.com/knifelemon/EasyQueryBuilder)를 방문하세요.

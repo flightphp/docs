@@ -1,17 +1,17 @@
 # EasyQuery
 
-[knifelemon/easy-query](https://github.com/knifelemon/EasyQueryBuilder) 是一个轻量级的流畅式 SQL 查询构建器，用于生成 SQL 和参数。可与 [SimplePdo](/learn/simple-pdo) 配合使用。
+[knifelemon/easy-query](https://github.com/knifelemon/EasyQueryBuilder) 是一个轻量级的、流畅的 SQL 查询构建器，用于生成 SQL 和预处理语句的参数。与 [SimplePdo](/learn/simple-pdo) 兼容。
 
 ## 特性
 
-- 🔗 **流畅 API** - 链式方法构建可读性高的查询
-- 🛡️ **SQL 注入防护** - 通过预处理语句自动参数绑定
-- 🔧 **原生 SQL 支持** - 使用 `raw()` 插入 SQL 表达式
-- 📝 **多种查询类型** - SELECT, INSERT, UPDATE, DELETE, COUNT
-- 🔀 **JOIN 支持** - INNER, LEFT, RIGHT 连接和别名
-- 🎯 **高级条件** - LIKE, IN, NOT IN, BETWEEN, 比较运算符
-- 🌐 **数据库无关** - 返回 SQL + params，可用于任何数据库连接
-- 🪶 **轻量级** - 零依赖，最小体积
+- 🔗 **流畅 API** - 通过链式方法构建可读性强的查询
+- 🛡️ **SQL 注入防护** - 使用预处理语句自动参数绑定
+- 🔧 **原始 SQL 支持** - 使用 `raw()` 插入原始 SQL 表达式
+- 📝 **多种查询类型** - SELECT、INSERT、UPDATE、DELETE、COUNT
+- 🔀 **JOIN 支持** - INNER、LEFT、RIGHT 连接，支持别名
+- 🎯 **高级条件** - LIKE、IN、NOT IN、BETWEEN、比较运算符
+- 🌐 **数据库无关** - 返回 SQL + 参数，可与任何数据库连接使用
+- 🪶 **轻量级** - 最小占用，无依赖
 
 ## 安装
 
@@ -31,20 +31,20 @@ $q = Builder::table('users')
     ->limit(10)
     ->build();
 
-// 与 Flight 的 SimplePdo 配合使用
+// 与 Flight 的 SimplePdo 一起使用
 $users = Flight::db()->fetchAll($q['sql'], $q['params']);
 ```
 
 ## 理解 build()
 
-`build()` 方法返回包含 `sql` 和 `params` 的数组。这种分离通过使用预处理语句来保护数据库安全。
+`build()` 方法返回一个包含 `sql` 和 `params` 的数组。这种分离通过使用预处理语句来保持数据库安全。
 
 ```php
 $q = Builder::table('users')
     ->where(['email' => 'user@example.com'])
     ->build();
 
-// 返回:
+// 返回：
 // [
 //     'sql' => 'SELECT * FROM users WHERE email = ?',
 //     'params' => ['user@example.com']
@@ -190,7 +190,7 @@ $q = Builder::table('products')
 
 ### OR 条件
 
-使用 `orWhere()` 添加 OR 分组条件:
+使用 `orWhere()` 添加 OR 分组条件：
 
 ```php
 $q = Builder::table('users')
@@ -281,9 +281,9 @@ $q = Builder::table('users')
 
 ---
 
-## 原生 SQL 表达式
+## 原始 SQL 表达式
 
-当需要不应作为绑定参数处理的 SQL 函数或表达式时，使用 `raw()`。
+当需要 SQL 函数或不应作为绑定参数处理的表达式时，使用 `raw()`。
 
 ### 基本 Raw
 
@@ -298,7 +298,7 @@ $q = Builder::table('users')
 // SET login_count = login_count + 1, updated_at = NOW()
 ```
 
-### 带绑定参数的 Raw
+### 带有绑定参数的 Raw
 
 ```php
 $q = Builder::table('orders')
@@ -324,21 +324,21 @@ $q = Builder::table('products')
 
 ### 用户输入的安全标识符
 
-当列名来自用户输入时，使用 `safeIdentifier()` 防止 SQL 注入:
+当列名来自用户输入时，使用 `safeIdentifier()` 防止 SQL 注入：
 
 ```php
-$sortColumn = $_GET['sort'];  // 例如: 'created_at'
+$sortColumn = $_GET['sort'];  // 例如，'created_at'
 $safeColumn = Builder::safeIdentifier($sortColumn);
 
 $q = Builder::table('users')
     ->orderBy($safeColumn . ' DESC')
     ->build();
 
-// 如果用户尝试: "name; DROP TABLE users--"
+// 如果用户尝试："name; DROP TABLE users--"
 // 抛出 InvalidArgumentException
 ```
 
-### 用户提供列名的 rawSafe
+### rawSafe 用于用户提供的列名
 
 ```php
 $userColumn = $_GET['aggregate_column'];
@@ -348,18 +348,18 @@ $q = Builder::table('orders')
         Builder::rawSafe('SUM({col})', ['col' => $userColumn])->value . ' AS total'
     ])
     ->build();
-// 验证列名，无效时抛出异常
+// 验证列名，如果无效则抛出异常
 ```
 
-> **警告:** 永远不要直接将用户输入连接到 `raw()`。始终使用绑定参数或 `safeIdentifier()`。
+> **警告：** 切勿直接将用户输入连接到 `raw()` 中。始终使用绑定参数或 `safeIdentifier()`。
 
 ---
 
 ## 查询构建器重用
 
-### Clear 方法
+### 清除方法
 
-清除特定部分以重用构建器:
+清除特定部分以重用构建器：
 
 ```php
 $query = Builder::table('users')
@@ -373,24 +373,24 @@ $q1 = $query->limit(10)->build();
 // 清除并重用
 $query->clearWhere()->clearLimit();
 
-// 使用不同条件的第二个查询
+// 第二个查询，使用不同条件
 $q2 = $query
     ->where(['status' => 'pending'])
     ->limit(5)
     ->build();
 ```
 
-### 可用的 Clear 方法
+### 可用清除方法
 
 | 方法 | 描述 |
-|------|------|
+|--------|-------------|
 | `clearWhere()` | 清除 WHERE 条件和参数 |
-| `clearSelect()` | 将 SELECT 列重置为默认 '*' |
+| `clearSelect()` | 重置 SELECT 列为默认 '*' |
 | `clearJoin()` | 清除所有 JOIN 子句 |
 | `clearGroupBy()` | 清除 GROUP BY 子句 |
 | `clearOrderBy()` | 清除 ORDER BY 子句 |
 | `clearLimit()` | 清除 LIMIT 和 OFFSET |
-| `clearAll()` | 将构建器重置为初始状态 |
+| `clearAll()` | 重置构建器到初始状态 |
 
 ### 分页示例
 
@@ -441,12 +441,12 @@ $products = Flight::db()->fetchAll($result['sql'], $result['params']);
 
 ---
 
-## FlightPHP 完整示例
+## 完整的 FlightPHP 示例
 
 ```php
 use KnifeLemon\EasyQuery\Builder;
 
-// 带分页的用户列表
+// 列出用户并分页
 Flight::route('GET /users', function() {
     $page = (int) (Flight::request()->query['page'] ?? 1);
     $perPage = 20;
@@ -514,18 +514,18 @@ Flight::route('DELETE /users/@id', function($id) {
 ### 静态方法
 
 | 方法 | 描述 |
-|------|------|
+|--------|-------------|
 | `Builder::table(string $table)` | 为表创建新的构建器实例 |
-| `Builder::raw(string $sql, array $bindings = [])` | 创建原生 SQL 表达式 |
-| `Builder::rawSafe(string $expr, array $identifiers, array $bindings = [])` | 带安全标识符替换的原生表达式 |
+| `Builder::raw(string $sql, array $bindings = [])` | 创建原始 SQL 表达式 |
+| `Builder::rawSafe(string $expr, array $identifiers, array $bindings = [])` | 带有安全标识符替换的原始表达式 |
 | `Builder::safeIdentifier(string $identifier)` | 验证并返回安全的列/表名 |
 
 ### 实例方法
 
 | 方法 | 描述 |
-|------|------|
+|--------|-------------|
 | `alias(string $alias)` | 设置表别名 |
-| `select(string\|array $columns)` | 设置要选择的列（默认: '*'） |
+| `select(string\|array $columns)` | 设置要选择的列（默认：'*'） |
 | `where(array $conditions)` | 添加 WHERE 条件（AND） |
 | `orWhere(array $conditions)` | 添加 OR WHERE 条件 |
 | `join(string $table, string $condition, string $alias, string $type)` | 添加 JOIN 子句 |
@@ -534,10 +534,10 @@ Flight::route('DELETE /users/@id', function($id) {
 | `groupBy(string $groupBy)` | 添加 GROUP BY 子句 |
 | `orderBy(string $orderBy)` | 添加 ORDER BY 子句 |
 | `limit(int $limit, int $offset = 0)` | 添加 LIMIT 和 OFFSET |
-| `count(string $column = '*')` | 设置为 COUNT 查询 |
-| `insert(array $data)` | 设置为 INSERT 查询 |
-| `update(array $data)` | 设置为 UPDATE 查询 |
-| `delete()` | 设置为 DELETE 查询 |
+| `count(string $column = '*')` | 将查询设置为 COUNT |
+| `insert(array $data)` | 将查询设置为 INSERT |
+| `update(array $data)` | 将查询设置为 UPDATE |
+| `delete()` | 将查询设置为 DELETE |
 | `build()` | 构建并返回 `['sql' => ..., 'params' => ...]` |
 | `get()` | `build()` 的别名 |
 
@@ -545,7 +545,7 @@ Flight::route('DELETE /users/@id', function($id) {
 
 ## Tracy 调试器集成
 
-如果安装了 Tracy Debugger，EasyQuery 会自动集成。无需配置！
+如果安装了 Tracy 调试器，EasyQuery 会自动集成。无需设置！
 
 ```bash
 composer require tracy/tracy
@@ -556,14 +556,14 @@ use Tracy\Debugger;
 
 Debugger::enable();
 
-// 所有查询自动记录到 Tracy 面板
+// 所有查询都会自动记录到 Tracy 面板
 $q = Builder::table('users')->where(['status' => 'active'])->build();
 ```
 
-Tracy 面板显示:
-- 总查询数和类型分类
+Tracy 面板显示：
+- 总查询数和按类型细分
 - 生成的 SQL（语法高亮）
 - 参数数组
-- 查询详情（表、where、join 等）
+- 查询细节（表、where、joins 等）
 
-完整文档请访问 [GitHub 仓库](https://github.com/knifelemon/EasyQueryBuilder)。
+完整文档，请访问 [GitHub 仓库](https://github.com/knifelemon/EasyQueryBuilder)。

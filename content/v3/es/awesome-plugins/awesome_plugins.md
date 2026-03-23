@@ -2,11 +2,17 @@
 
 Flight es increíblemente extensible. Hay una serie de plugins que se pueden usar para agregar funcionalidad a tu aplicación Flight. Algunos son soportados oficialmente por el Equipo de Flight y otros son bibliotecas micro/lite para ayudarte a comenzar.
 
+## Herramientas de IA
+
+Flight puede volverse aún más genial con plugins impulsados por IA.
+
+- [Flight MCP](/awesome-plugins/mcp) - Un plugin para integrar MCP (Model Control Protocol) con Flight, habilitando funcionalidad impulsada por IA de manera fluida. Enfocado principalmente en las páginas de documentación, ayuda a mantener bajos los costos de tokens proporcionando la información más actualizada sobre tus proyectos Flight.
+
 ## Documentación de API
 
 La documentación de API es crucial para cualquier API. Ayuda a los desarrolladores a entender cómo interactuar con tu API y qué esperar a cambio. Hay un par de herramientas disponibles para ayudarte a generar documentación de API para tus Proyectos Flight.
 
-- [FlightPHP OpenAPI Generator](https://dev.to/danielsc/define-generate-and-implement-an-api-first-approach-with-openapi-generator-and-flightphp-1fb3) - Publicación de blog escrita por Daniel Schreiber sobre cómo usar la Especificación OpenAPI con FlightPHP para construir tu API utilizando un enfoque API-first.
+- [FlightPHP OpenAPI Generator](https://dev.to/danielsc/define-generate-and-implement-an-api-first-approach-with-openapi-generator-and-flightphp-1fb3) - Publicación de blog escrita por Daniel Schreiber sobre cómo usar la Especificación OpenAPI con FlightPHP para construir tu API utilizando un enfoque API first.
 - [SwaggerUI](https://github.com/zircote/swagger-php) - Swagger UI es una gran herramienta para ayudarte a generar documentación de API para tus proyectos Flight. Es muy fácil de usar y se puede personalizar para adaptarse a tus necesidades. Esta es la biblioteca PHP para ayudarte a generar la documentación Swagger.
 
 ## Monitoreo de Rendimiento de Aplicaciones (APM)
@@ -14,7 +20,7 @@ La documentación de API es crucial para cualquier API. Ayuda a los desarrollado
 El Monitoreo de Rendimiento de Aplicaciones (APM) es crucial para cualquier aplicación. Te ayuda a entender cómo está funcionando tu aplicación y dónde están los cuellos de botella. Hay una serie de herramientas APM que se pueden usar con Flight.
 - <span class="badge bg-primary">oficial</span> [flightphp/apm](/awesome-plugins/apm) - Flight APM es una biblioteca APM simple que se puede usar para monitorear tus aplicaciones Flight. Se puede usar para monitorear el rendimiento de tu aplicación y ayudarte a identificar cuellos de botella.
 
-## Async
+## Asíncrono
 
 Flight ya es un framework rápido, pero agregarle un motor turbo lo hace todo más divertido (¡y desafiante)!
 
@@ -22,31 +28,31 @@ Flight ya es un framework rápido, pero agregarle un motor turbo lo hace todo m�
 
 ## Autorización/Permisos
 
-La autorización y los permisos son cruciales para cualquier aplicación que requiera controles para determinar quién puede acceder a qué.
+La autorización y los permisos son cruciales para cualquier aplicación que requiera controles en su lugar para quién puede acceder a qué.
 
-- <span class="badge bg-primary">oficial</span> [flightphp/permissions](/awesome-plugins/permissions) - Biblioteca oficial de Permisos de Flight. Esta biblioteca es una forma simple de agregar permisos a nivel de usuario y aplicación a tu aplicación. 
+- <span class="badge bg-primary">oficial</span> [flightphp/permissions](/awesome-plugins/permissions) - Biblioteca oficial de Flight Permissions. Esta biblioteca es una forma simple de agregar permisos a nivel de usuario y aplicación a tu aplicación. 
 
 ## Autenticación
 
-La autenticación es esencial para aplicaciones que necesitan verificar la identidad del usuario y asegurar endpoints de API.
+La autenticación es esencial para las aplicaciones que necesitan verificar la identidad del usuario y asegurar endpoints de API.
 
-- [firebase/php-jwt](/awesome-plugins/jwt) - Biblioteca de JSON Web Token (JWT) para PHP. Una forma simple y segura de implementar autenticación basada en tokens en tus aplicaciones Flight. Perfecta para autenticación de API sin estado, protección de rutas con middleware e implementación de flujos de autorización estilo OAuth.
+- [firebase/php-jwt](/awesome-plugins/jwt) - Biblioteca de JSON Web Token (JWT) para PHP. Una forma simple y segura de implementar autenticación basada en tokens en tus aplicaciones Flight. Perfecta para autenticación de API sin estado, protegiendo rutas con middleware e implementando flujos de autorización estilo OAuth.
 
 ## Caché
 
-El caché es una gran forma de acelerar tu aplicación. Hay una serie de bibliotecas de caché que se pueden usar con Flight.
+El caché es una gran manera de acelerar tu aplicación. Hay una serie de bibliotecas de caché que se pueden usar con Flight.
 
-- <span class="badge bg-primary">oficial</span> [flightphp/cache](/awesome-plugins/php-file-cache) - Clase ligera, simple y standalone de caché en archivo PHP
+- <span class="badge bg-primary">oficial</span> [flightphp/cache](/awesome-plugins/php-file-cache) - Clase de caché en archivo PHP ligera, simple y independiente
 
 ## CLI
 
-Las aplicaciones CLI son una gran forma de interactuar con tu aplicación. Puedes usarlas para generar controladores, mostrar todas las rutas y más.
+Las aplicaciones CLI son una gran manera de interactuar con tu aplicación. Puedes usarlas para generar controladores, mostrar todas las rutas y más.
 
 - <span class="badge bg-primary">oficial</span> [flightphp/runway](/awesome-plugins/runway) - Runway es una aplicación CLI que te ayuda a gestionar tus aplicaciones Flight.
 
 ## Cookies
 
-Las cookies son una gran forma de almacenar pequeños bits de datos en el lado del cliente. Se pueden usar para almacenar preferencias de usuario, configuraciones de aplicación y más.
+Las cookies son una gran manera de almacenar pequeños bits de datos en el lado del cliente. Se pueden usar para almacenar preferencias de usuario, configuraciones de aplicación y más.
 
 - [overclokk/cookie](/awesome-plugins/php-cookie) - PHP Cookie es una biblioteca PHP que proporciona una forma simple y efectiva de gestionar cookies.
 
@@ -59,13 +65,13 @@ La depuración es crucial cuando estás desarrollando en tu entorno local. Hay u
 
 ## Bases de Datos
 
-Las bases de datos son el núcleo de la mayoría de las aplicaciones. Así es como almacenas y recuperas datos. Algunas bibliotecas de bases de datos son simplemente wrappers para escribir consultas y otras son ORMs completos.
+Las bases de datos son el núcleo de la mayoría de las aplicaciones. Así es como almacenas y recuperas datos. Algunas bibliotecas de bases de datos son simplemente envolturas para escribir consultas y otras son ORMs completos.
 
-- <span class="badge bg-primary">oficial</span> [flightphp/core SimplePdo](/learn/simple-pdo) - Ayudante oficial de PDO de Flight que forma parte del núcleo. Este es un wrapper moderno con métodos de ayuda convenientes como `insert()`, `update()`, `delete()` y `transaction()` para simplificar las operaciones de base de datos. Todos los resultados se devuelven como Collections para un acceso flexible a arrays/objetos. No es un ORM, solo una mejor forma de trabajar con PDO.
-- <span class="badge bg-warning">deprecado</span> [flightphp/core PdoWrapper](/learn/pdo-wrapper) - Wrapper oficial de PDO de Flight que forma parte del núcleo (deprecado a partir de v3.18.0). Usa SimplePdo en su lugar.
-- <span class="badge bg-primary">oficial</span> [flightphp/active-record](/awesome-plugins/active-record) - ORM/Mapper oficial de ActiveRecord de Flight. Gran biblioteca pequeña para recuperar y almacenar datos fácilmente en tu base de datos.
+- <span class="badge bg-primary">oficial</span> [flightphp/core SimplePdo](/learn/simple-pdo) - Ayudante oficial de Flight PDO que forma parte del núcleo. Este es un envoltura moderno con métodos ayudantes convenientes como `insert()`, `update()`, `delete()` y `transaction()` para simplificar las operaciones de base de datos. Todos los resultados se devuelven como Collections para un acceso flexible a arrays/objetos. No es un ORM, solo una mejor manera de trabajar con PDO.
+- <span class="badge bg-warning">deprecado</span> [flightphp/core PdoWrapper](/learn/pdo-wrapper) - Envoltura oficial de Flight PDO que forma parte del núcleo (deprecado a partir de v3.18.0). Usa SimplePdo en su lugar.
+- <span class="badge bg-primary">oficial</span> [flightphp/active-record](/awesome-plugins/active-record) - ORM/Mapper oficial de Flight ActiveRecord. Gran biblioteca pequeña para recuperar y almacenar datos fácilmente en tu base de datos.
 - [byjg/php-migration](/awesome-plugins/migrations) - Plugin para rastrear todos los cambios de base de datos para tu proyecto.
-- [knifelemon/easy-query](/awesome-plugins/easy-query) - Constructor de consultas SQL ligero y fluido que genera SQL y parámetros para sentencias preparadas. Funciona muy bien con [SimplePdo](/learn/simple-pdo).
+- [knifelemon/easy-query](/awesome-plugins/easy-query) - Constructor de consultas SQL ligero y fluido que genera SQL y parámetros para declaraciones preparadas. Funciona genial con [SimplePdo](/learn/simple-pdo).
 
 ## Encriptación
 
@@ -73,9 +79,9 @@ La encriptación es crucial para cualquier aplicación que almacene datos sensib
 
 - [defuse/php-encryption](/awesome-plugins/php-encryption) - Esta es una biblioteca que se puede usar para encriptar y desencriptar datos. Ponerse en marcha es bastante simple para comenzar a encriptar y desencriptar datos.
 
-## Cola de Tareas
+## Cola de Trabajos
 
-Las colas de tareas son realmente útiles para procesar tareas de manera asíncrona. Esto puede ser enviar correos electrónicos, procesar imágenes o cualquier cosa que no necesite hacerse en tiempo real.
+Las colas de trabajos son realmente útiles para procesar tareas de manera asíncrona. Esto puede ser enviar correos electrónicos, procesar imágenes o cualquier cosa que no necesite hacerse en tiempo real.
 
 - [n0nag0n/simple-job-queue](/awesome-plugins/simple-job-queue) - Simple Job Queue es una biblioteca que se puede usar para procesar trabajos de manera asíncrona. Se puede usar con beanstalkd, MySQL/MariaDB, SQLite y PostgreSQL.
 
@@ -83,23 +89,23 @@ Las colas de tareas son realmente útiles para procesar tareas de manera asíncr
 
 Las sesiones no son realmente útiles para las API, pero para construir una aplicación web, las sesiones pueden ser cruciales para mantener el estado e información de inicio de sesión.
 
-- <span class="badge bg-primary">oficial</span> [flightphp/session](/awesome-plugins/session) - Biblioteca oficial de Sesión de Flight. Esta es una biblioteca de sesión simple que se puede usar para almacenar y recuperar datos de sesión. Usa el manejo de sesiones integrado de PHP.
-- [Ghostff/Session](/awesome-plugins/ghost-session) - Administrador de Sesiones PHP (no bloqueante, flash, segmento, encriptación de sesión). Usa PHP open_ssl para encriptación/desencriptación opcional de datos de sesión.
+- <span class="badge bg-primary">oficial</span> [flightphp/session](/awesome-plugins/session) - Biblioteca oficial de Flight Session. Esta es una biblioteca de sesión simple que se puede usar para almacenar y recuperar datos de sesión. Usa el manejo de sesiones incorporado de PHP.
+- [Ghostff/Session](/awesome-plugins/ghost-session) - Gestor de Sesiones PHP (no bloqueante, flash, segmento, encriptación de sesión). Usa PHP open_ssl para encriptación/desencriptación opcional de datos de sesión.
 
 ## Plantillas
 
-La plantillación es el núcleo de cualquier aplicación web con una UI. Hay una serie de motores de plantillas que se pueden usar con Flight.
+La plantillas es el núcleo de cualquier aplicación web con una UI. Hay una serie de motores de plantillas que se pueden usar con Flight.
 
 - <span class="badge bg-warning">deprecado</span> [flightphp/core View](/learn#views) - Este es un motor de plantillas muy básico que forma parte del núcleo. No se recomienda usarlo si tienes más de un par de páginas en tu proyecto.
-- [latte/latte](/awesome-plugins/latte) - Latte es un motor de plantillas completo que es muy fácil de usar y se siente más cercano a la sintaxis PHP que Twig o Smarty. También es muy fácil de extender y agregar tus propios filtros y funciones.
+- [latte/latte](/awesome-plugins/latte) - Latte es un motor de plantillas completo que es muy fácil de usar y se siente más cercano a la sintaxis de PHP que Twig o Smarty. También es muy fácil de extender y agregar tus propios filtros y funciones.
 - [knifelemon/comment-template](/awesome-plugins/comment-template) - CommentTemplate es un potente motor de plantillas PHP con compilación de assets, herencia de plantillas y procesamiento de variables. Incluye minificación automática de CSS/JS, caché, codificación Base64 e integración opcional con el framework PHP Flight.
 
 ## Integración con WordPress
 
 ¿Quieres usar Flight en tu proyecto WordPress? ¡Hay un plugin práctico para eso!
 
-- [n0nag0n/wordpress-integration-for-flight-framework](/awesome-plugins/n0nag0n_wordpress) - Este plugin de WordPress te permite ejecutar Flight junto a WordPress. Es perfecto para agregar APIs personalizadas, microservicios o incluso aplicaciones completas a tu sitio WordPress usando el framework Flight. ¡Súper útil si quieres lo mejor de ambos mundos!
+- [n0nag0n/wordpress-integration-for-flight-framework](/awesome-plugins/n0nag0n_wordpress) - Este plugin de WordPress te permite ejecutar Flight justo al lado de WordPress. Es perfecto para agregar APIs personalizadas, microservicios o incluso aplicaciones completas a tu sitio WordPress usando el framework Flight. Súper útil si quieres lo mejor de ambos mundos!
 
-## Contribución
+## Contribuyendo
 
 ¿Tienes un plugin que te gustaría compartir? ¡Envía una solicitud de pull para agregarlo a la lista!

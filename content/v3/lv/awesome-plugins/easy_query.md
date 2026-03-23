@@ -1,25 +1,25 @@
 # EasyQuery
 
-[knifelemon/easy-query](https://github.com/knifelemon/EasyQueryBuilder) ir viegls, plūstošs SQL vaicājumu veidotājs, kas ģenerē SQL un parametrus prepared statements. Strādā ar [SimplePdo](/learn/simple-pdo).
+[knifelemon/easy-query](https://github.com/knifelemon/EasyQueryBuilder) ir viegls, plūstošs SQL vaicājumu veidotājs, kas ģenerē SQL un parametrus sagatavotiem vaicājumiem. Darbojas ar [SimplePdo](/learn/simple-pdo).
 
-## Iespējas
+## Funkcijas
 
-- 🔗 **Plūstoša API** - Ķēdētas metodes lasāmai vaicājumu veidošanai
-- 🛡️ **SQL injekcijas aizsardzība** - Automātiska parametru saistīšana ar prepared statements
-- 🔧 **Raw SQL atbalsts** - Ievietojiet SQL izteiksmes tieši ar `raw()`
-- 📝 **Vairāki vaicājumu tipi** - SELECT, INSERT, UPDATE, DELETE, COUNT
-- 🔀 **JOIN atbalsts** - INNER, LEFT, RIGHT join ar aizstājvārdiem
-- 🎯 **Paplašināti nosacījumi** - LIKE, IN, NOT IN, BETWEEN, salīdzināšanas operatori
-- 🌐 **Datubāzes neatkarīgs** - Atgriež SQL + params, izmantojiet ar jebkuru DB savienojumu
-- 🪶 **Viegls** - Minimāls izmērs bez atkarībām
+- 🔗 **Plūstoša API** - Ķēžu metodes lasāmu vaicājumu veidošanai
+- 🛡️ **SQL Injekciju Aizsardzība** - Automātiska parametru saistīšana ar sagatavotiem vaicājumiem
+- 🔧 **Neapstrādāta SQL Atbalsts** - Ievietojiet neapstrādātas SQL izteiksmes ar `raw()`
+- 📝 **Vairāki Vaicājumu Veidi** - SELECT, INSERT, UPDATE, DELETE, COUNT
+- 🔀 **JOIN Atbalsts** - Iekšējie, kreisās un labās savienojumi ar segvārdiem
+- 🎯 **Uzlaboti Nosacījumi** - LIKE, IN, NOT IN, BETWEEN, salīdzinājuma operatori
+- 🌐 **Datu Bāzes Neatkarīgs** - Atgriež SQL + parametrus, izmantojiet ar jebkuru DB savienojumu
+- 🪶 **Viegls** - Minimāla pēda bez atkarībām
 
-## Instalācija
+## Instalēšana
 
 ```bash
 composer require knifelemon/easy-query
 ```
 
-## Ātrais sākums
+## Ātrais Sākums
 
 ```php
 use KnifeLemon\EasyQuery\Builder;
@@ -31,13 +31,13 @@ $q = Builder::table('users')
     ->limit(10)
     ->build();
 
-// Izmantojiet ar Flight SimplePdo
+// Izmantojiet ar Flight's SimplePdo
 $users = Flight::db()->fetchAll($q['sql'], $q['params']);
 ```
 
-## Izpratne par build()
+## Saprašana build()
 
-`build()` metode atgriež masīvu ar `sql` un `params`. Šī atdalīšana aizsargā jūsu datubāzi, izmantojot prepared statements.
+`build()` metode atgriež masīvu ar `sql` un `params`. Šī atdalīšana uztur jūsu datu bāzi drošu, izmantojot sagatavotus vaicājumus.
 
 ```php
 $q = Builder::table('users')
@@ -53,22 +53,22 @@ $q = Builder::table('users')
 
 ---
 
-## Vaicājumu tipi
+## Vaicājumu Veidi
 
 ### SELECT
 
 ```php
-// Atlasīt visas kolonnas
+// Izvēlieties visas kolonnas
 $q = Builder::table('users')->build();
 // SELECT * FROM users
 
-// Atlasīt konkrētas kolonnas
+// Izvēlieties specifiskas kolonnas
 $q = Builder::table('users')
     ->select(['id', 'name', 'email'])
     ->build();
 // SELECT id, name, email FROM users
 
-// Ar tabulas aizstājvārdu
+// Ar tabulas segvārdu
 $q = Builder::table('users')
     ->alias('u')
     ->select(['u.id', 'u.name'])
@@ -130,9 +130,9 @@ $count = Flight::db()->fetchField($q['sql'], $q['params']);
 
 ---
 
-## WHERE nosacījumi
+## WHERE Nosacījumi
 
-### Vienkārša vienādība
+### Vienkārša Vienlīdzība
 
 ```php
 $q = Builder::table('users')
@@ -141,7 +141,7 @@ $q = Builder::table('users')
 // WHERE id = ? AND status = ?
 ```
 
-### Salīdzināšanas operatori
+### Salīdzinājuma Operatori
 
 ```php
 $q = Builder::table('users')
@@ -188,9 +188,9 @@ $q = Builder::table('products')
 // WHERE price BETWEEN ? AND ?
 ```
 
-### OR nosacījumi
+### OR Nosacījumi
 
-Izmantojiet `orWhere()`, lai pievienotu OR grupētos nosacījumus:
+Izmantojiet `orWhere()`, lai pievienotu OR grupētus nosacījumus:
 
 ```php
 $q = Builder::table('users')
@@ -207,7 +207,7 @@ $q = Builder::table('users')
 
 ## JOIN
 
-### INNER JOIN
+### Iekšējais JOIN
 
 ```php
 $q = Builder::table('users')
@@ -218,7 +218,7 @@ $q = Builder::table('users')
 // SELECT u.id, u.name, p.title FROM users AS u INNER JOIN posts AS p ON u.id = p.user_id
 ```
 
-### LEFT JOIN
+### Kreisais JOIN
 
 ```php
 $q = Builder::table('users')
@@ -244,7 +244,7 @@ $q = Builder::table('orders')
 
 ---
 
-## Kārtošana, grupēšana un limiti
+## Sakārtošana, Grupēšana un Ierobežojumi
 
 ### ORDER BY
 
@@ -281,11 +281,11 @@ $q = Builder::table('users')
 
 ---
 
-## Raw SQL izteiksmes
+## Neapstrādātas SQL Izteiksmes
 
-Izmantojiet `raw()`, kad nepieciešamas SQL funkcijas vai izteiksmes, kas nedrīkst tikt apstrādātas kā saistītie parametri.
+Izmantojiet `raw()`, kad nepieciešamas SQL funkcijas vai izteiksmes, kas nedrīkst tikt apstrādātas kā saistīti parametri.
 
-### Pamata Raw
+### Pamata Neapstrādāts
 
 ```php
 $q = Builder::table('users')
@@ -298,7 +298,7 @@ $q = Builder::table('users')
 // SET login_count = login_count + 1, updated_at = NOW()
 ```
 
-### Raw ar saistītiem parametriem
+### Neapstrādāts ar Saistītiem Parametriem
 
 ```php
 $q = Builder::table('orders')
@@ -311,7 +311,7 @@ $q = Builder::table('orders')
 // params: [0, 10, 1]
 ```
 
-### Raw WHERE (apakšvaicājums)
+### Neapstrādāts WHERE (Apakšvaicājums)
 
 ```php
 $q = Builder::table('products')
@@ -322,12 +322,12 @@ $q = Builder::table('products')
 // WHERE price > (SELECT AVG(price) FROM products)
 ```
 
-### Droši identifikatori lietotāja ievadei
+### Droši Identifikatori Lietotāja Ievadei
 
-Kad kolonnu nosaukumi nāk no lietotāja ievades, izmantojiet `safeIdentifier()`, lai novērstu SQL injekciju:
+Kad kolonnu nosaukumi nāk no lietotāja ievades, izmantojiet `safeIdentifier()`, lai novērstu SQL injekcijas:
 
 ```php
-$sortColumn = $_GET['sort'];  // piem.: 'created_at'
+$sortColumn = $_GET['sort'];  // piem., 'created_at'
 $safeColumn = Builder::safeIdentifier($sortColumn);
 
 $q = Builder::table('users')
@@ -338,7 +338,7 @@ $q = Builder::table('users')
 // Izmet InvalidArgumentException
 ```
 
-### rawSafe lietotāja kolonnu nosaukumiem
+### rawSafe Lietotāja Norādītiem Kolonnu Nosaukumiem
 
 ```php
 $userColumn = $_GET['aggregate_column'];
@@ -348,18 +348,18 @@ $q = Builder::table('orders')
         Builder::rawSafe('SUM({col})', ['col' => $userColumn])->value . ' AS total'
     ])
     ->build();
-// Validē kolonnas nosaukumu, izmet izņēmumu, ja nederīgs
+// Validē kolonnu nosaukumu, izmet izņēmumu, ja nederīgs
 ```
 
-> **Brīdinājums:** Nekad nekonkatenējiet lietotāja ievadi tieši `raw()`. Vienmēr izmantojiet saistītos parametrus vai `safeIdentifier()`.
+> **Brīdinājums:** Nekad neiekļaujiet lietotāja ievadi tieši `raw()`. Vienmēr izmantojiet saistītus parametrus vai `safeIdentifier()`.
 
 ---
 
-## Query Builder atkārtota izmantošana
+## Vaicājuma Veidotāja atkārtota Izmantošana
 
-### Clear metodes
+### Notīrīšanas Metodes
 
-Notīriet konkrētas daļas, lai atkārtoti izmantotu builder:
+Notīriet specifiskas daļas, lai atkārtoti izmantotu veidotāju:
 
 ```php
 $query = Builder::table('users')
@@ -370,29 +370,29 @@ $query = Builder::table('users')
 // Pirmais vaicājums
 $q1 = $query->limit(10)->build();
 
-// Notīrīt un izmantot atkārtoti
+// Notīriet un atkārtoti izmantojiet
 $query->clearWhere()->clearLimit();
 
-// Otrais vaicājums ar citiem nosacījumiem
+// Otrais vaicājums ar atšķirīgiem nosacījumiem
 $q2 = $query
     ->where(['status' => 'pending'])
     ->limit(5)
     ->build();
 ```
 
-### Pieejamās Clear metodes
+### Pieejamās Notīrīšanas Metodes
 
 | Metode | Apraksts |
 |--------|----------|
-| `clearWhere()` | Notīrīt WHERE nosacījumus un parametrus |
-| `clearSelect()` | Atiestatīt SELECT kolonnas uz noklusējuma '*' |
-| `clearJoin()` | Notīrīt visas JOIN klauzulas |
-| `clearGroupBy()` | Notīrīt GROUP BY klauzulu |
-| `clearOrderBy()` | Notīrīt ORDER BY klauzulu |
-| `clearLimit()` | Notīrīt LIMIT un OFFSET |
-| `clearAll()` | Atiestatīt builder sākuma stāvoklī |
+| `clearWhere()` | Notīra WHERE nosacījumus un parametrus |
+| `clearSelect()` | Atstata SELECT kolonnas uz noklusējuma '*' |
+| `clearJoin()` | Notīra visus JOIN pantus |
+| `clearGroupBy()` | Notīra GROUP BY pantu |
+| `clearOrderBy()` | Notīra ORDER BY pantu |
+| `clearLimit()` | Notīra LIMIT un OFFSET |
+| `clearAll()` | Atstata veidotāju uz sākotnējo stāvokli |
 
-### Lapošanas piemērs
+### Piemērs ar Lapināšanu
 
 ```php
 $baseQuery = Builder::table('users')
@@ -400,12 +400,12 @@ $baseQuery = Builder::table('users')
     ->where(['status' => 'active'])
     ->orderBy('created_at DESC');
 
-// Iegūt kopējo skaitu
+// Iegūstiet kopējo skaitu
 $countQuery = clone $baseQuery;
 $countResult = $countQuery->clearSelect()->count()->build();
 $total = Flight::db()->fetchField($countResult['sql'], $countResult['params']);
 
-// Iegūt lapotus rezultātus
+// Iegūstiet lapinātos rezultātus
 $page = 1;
 $perPage = 20;
 $listResult = $baseQuery->limit($perPage, ($page - 1) * $perPage)->build();
@@ -414,7 +414,7 @@ $users = Flight::db()->fetchAll($listResult['sql'], $listResult['params']);
 
 ---
 
-## Dinamiska vaicājumu veidošana
+## Dinamiska Vaicājuma Veidošana
 
 ```php
 $query = Builder::table('products')->alias('p');
@@ -441,12 +441,12 @@ $products = Flight::db()->fetchAll($result['sql'], $result['params']);
 
 ---
 
-## Pilns FlightPHP piemērs
+## Pilns FlightPHP Piemērs
 
 ```php
 use KnifeLemon\EasyQuery\Builder;
 
-// Lietotāju saraksts ar lapošanu
+// Lietotāju saraksts ar lapināšanu
 Flight::route('GET /users', function() {
     $page = (int) (Flight::request()->query['page'] ?? 1);
     $perPage = 20;
@@ -462,7 +462,7 @@ Flight::route('GET /users', function() {
     Flight::json(['users' => $users, 'page' => $page]);
 });
 
-// Izveidot lietotāju
+// Lietotāja izveide
 Flight::route('POST /users', function() {
     $data = Flight::request()->data;
     
@@ -478,7 +478,7 @@ Flight::route('POST /users', function() {
     Flight::json(['id' => Flight::db()->lastInsertId()]);
 });
 
-// Atjaunināt lietotāju
+// Lietotāja atjaunināšana
 Flight::route('PUT /users/@id', function($id) {
     $data = Flight::request()->data;
     
@@ -495,7 +495,7 @@ Flight::route('PUT /users/@id', function($id) {
     Flight::json(['success' => true]);
 });
 
-// Dzēst lietotāju
+// Lietotāja dzēšana
 Flight::route('DELETE /users/@id', function($id) {
     $q = Builder::table('users')
         ->delete()
@@ -509,43 +509,43 @@ Flight::route('DELETE /users/@id', function($id) {
 
 ---
 
-## API atsauce
+## API Atsauce
 
-### Statiskās metodes
-
-| Metode | Apraksts |
-|--------|----------|
-| `Builder::table(string $table)` | Izveidot jaunu builder instanci tabulai |
-| `Builder::raw(string $sql, array $bindings = [])` | Izveidot raw SQL izteiksmi |
-| `Builder::rawSafe(string $expr, array $identifiers, array $bindings = [])` | Raw izteiksme ar drošu identifikatoru aizstāšanu |
-| `Builder::safeIdentifier(string $identifier)` | Validēt un atgriezt drošu kolonnas/tabulas nosaukumu |
-
-### Instances metodes
+### Statiskās Metodes
 
 | Metode | Apraksts |
 |--------|----------|
-| `alias(string $alias)` | Iestatīt tabulas aizstājvārdu |
-| `select(string\|array $columns)` | Iestatīt atlasāmās kolonnas (noklusējums: '*') |
-| `where(array $conditions)` | Pievienot WHERE nosacījumus (AND) |
-| `orWhere(array $conditions)` | Pievienot OR WHERE nosacījumus |
-| `join(string $table, string $condition, string $alias, string $type)` | Pievienot JOIN klauzulu |
-| `innerJoin(string $table, string $condition, string $alias)` | Pievienot INNER JOIN |
-| `leftJoin(string $table, string $condition, string $alias)` | Pievienot LEFT JOIN |
-| `groupBy(string $groupBy)` | Pievienot GROUP BY klauzulu |
-| `orderBy(string $orderBy)` | Pievienot ORDER BY klauzulu |
-| `limit(int $limit, int $offset = 0)` | Pievienot LIMIT un OFFSET |
-| `count(string $column = '*')` | Iestatīt vaicājumu uz COUNT |
-| `insert(array $data)` | Iestatīt vaicājumu uz INSERT |
-| `update(array $data)` | Iestatīt vaicājumu uz UPDATE |
-| `delete()` | Iestatīt vaicājumu uz DELETE |
-| `build()` | Izveidot un atgriezt `['sql' => ..., 'params' => ...]` |
-| `get()` | Aizstājvārds `build()` |
+| `Builder::table(string $table)` | Izveido jaunu veidotāja instanci tabulai |
+| `Builder::raw(string $sql, array $bindings = [])` | Izveido neapstrādātu SQL izteiksmi |
+| `Builder::rawSafe(string $expr, array $identifiers, array $bindings = [])` | Neapstrādāta izteiksme ar drošu identifikatora aizstāšanu |
+| `Builder::safeIdentifier(string $identifier)` | Validē un atgriež drošu kolonnas/tabula nosaukumu |
+
+### Instanču Metodes
+
+| Metode | Apraksts |
+|--------|----------|
+| `alias(string $alias)` | Iestata tabulas segvārdu |
+| `select(string\|array $columns)` | Iestata kolonnas izvēlei (noklusējums: '*') |
+| `where(array $conditions)` | Pievieno WHERE nosacījumus (AND) |
+| `orWhere(array $conditions)` | Pievieno OR WHERE nosacījumus |
+| `join(string $table, string $condition, string $alias, string $type)` | Pievieno JOIN pantu |
+| `innerJoin(string $table, string $condition, string $alias)` | Pievieno Iekšējo JOIN |
+| `leftJoin(string $table, string $condition, string $alias)` | Pievieno Kreisais JOIN |
+| `groupBy(string $groupBy)` | Pievieno GROUP BY pantu |
+| `orderBy(string $orderBy)` | Pievieno ORDER BY pantu |
+| `limit(int $limit, int $offset = 0)` | Pievieno LIMIT un OFFSET |
+| `count(string $column = '*')` | Iestata vaicājumu uz COUNT |
+| `insert(array $data)` | Iestata vaicājumu uz INSERT |
+| `update(array $data)` | Iestata vaicājumu uz UPDATE |
+| `delete()` | Iestata vaicājumu uz DELETE |
+| `build()` | Veido un atgriež `['sql' => ..., 'params' => ...]` |
+| `get()` | Aliasam `build()` |
 
 ---
 
-## Tracy atkļūdotāja integrācija
+## Tracy Debugger Integrācija
 
-EasyQuery automātiski integrējas ar Tracy Debugger, ja tas ir instalēts. Nav nepieciešama konfigurācija!
+EasyQuery automātiski integrējas ar Tracy Debugger, ja instalēts. Nav nepieciešama iestatīšana!
 
 ```bash
 composer require tracy/tracy
@@ -561,9 +561,9 @@ $q = Builder::table('users')->where(['status' => 'active'])->build();
 ```
 
 Tracy panelis rāda:
-- Kopējo vaicājumu skaitu un sadalījumu pa tipiem
-- Ģenerēto SQL (sintakses izcelšana)
+- Kopējo vaicājumu skaitu un sadalījumu pēc veida
+- Ģenerēto SQL (sinakses izcelts)
 - Parametru masīvu
-- Vaicājuma detaļas (tabula, where, join utt.)
+- Vaicājuma detaļas (tabula, where, joins utt.)
 
 Pilnai dokumentācijai apmeklējiet [GitHub repozitoriju](https://github.com/knifelemon/EasyQueryBuilder).
