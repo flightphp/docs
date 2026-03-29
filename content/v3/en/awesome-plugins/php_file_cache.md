@@ -127,4 +127,4 @@ echo "Latest cache save: $cacheddate, expires in $expiresin seconds";
 
 ## Documentation
 
-Visit [https://github.com/flightphp/cache](https://github.com/flightphp/cache) to view the code. Make sure you see the [examples](https://github.com/flightphp/cache/tree/master/examples) folder for additional ways to use the cache.
+Visit [https://github.com/flightphp/cache](https://github.com/flightphp/cache) to view the code.
