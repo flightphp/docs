@@ -29,6 +29,12 @@ The following is a list of all the available configuration settings:
   - If you have the [APM](/awesome-plugins/apm) plugin installed, you want to set this to true so the APM can log the errors.
 - **flight.log_errors** `bool` - Log errors to the web server's error log file. (default: false)
   - If you have [Tracy](/awesome-plugins/tracy) installed, Tracy will log errors based on Tracy configurations, not this configuration.
+- **flight.debug** `bool` - Output detailed error information (exception message, code, and stack trace) in the browser when an error occurs. (default: false)
+  - **Never enable this in production** — it leaks internal application details. Use it only for local development or staging.
+  - When `false`, a generic `500 Internal Server Error` is shown instead. Pair with `flight.log_errors` to capture errors server-side.
+- **flight.allow_method_override** `bool` - Allow the HTTP method to be overridden via the `X-HTTP-Method-Override` request header or a `_method` field in the POST body. (default: true)
+  - **Setting this to `false` is recommended** for applications that do not need HTML-form-based method spoofing, as it prevents clients from forging `DELETE` or `PUT` requests through a standard POST form.
+  - See [Security](/learn/security#flight-configuration-hardening) for more details.
 - **flight.views.path** `string` - Directory containing view template files. (default: ./views)
 - **flight.views.extension** `string` - View template file extension. (default: .php)
 - **flight.content_length** `bool` - Set the `Content-Length` header. (default: true)
@@ -125,5 +131,6 @@ Flight::map('notFound', function () {
 - If you are having problems finding out all the values of your configuration, you can do `var_dump(Flight::get());`
 
 ## Changelog
+- v3.18.1 - Added `flight.debug` and `flight.allow_method_override` configuration options.
 - v3.5.0 - Added configuration for `flight.v2.output_buffering` to support legacy output buffering behavior.
 - v2.0 - Core configurations added.

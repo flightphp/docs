@@ -300,6 +300,12 @@ $users = Flight::db()->fetchAll($sql);
 var_dump($users); // this will dump all users in the database, not just the one single username
 ```
 
+### JSONP Callback Validation
+
+If you use Flight's `Flight::jsonp()` method, be aware that Flight validates the JSONP callback parameter name against a strict allowlist regex (`/^[A-Za-z_$][\w$.]{0,127}$/`). Any callback name that does not match this pattern will cause Flight to throw an exception, preventing injection of arbitrary JavaScript through a malicious callback value.
+
+This validation is built in and requires no additional configuration, but it is worth knowing about when debugging unexpected errors from JSONP endpoints.
+
 ### CORS
 
 Cross-Origin Resource Sharing (CORS) is a mechanism that allows many resources (e.g., fonts, JavaScript, etc.) on a web page to be 
@@ -368,6 +374,51 @@ $CorsUtil = new CorsUtil();
 
 // This needs to be run before start runs.
 Flight::before('start', [ $CorsUtil, 'setupCors' ]);
+```
+
+### Flight Configuration Hardening
+
+Flight exposes several engine settings that have direct security implications. Setting these correctly is one of the easiest ways to harden your application.
+
+#### `flight.allow_method_override`
+
+By default, Flight allows clients to override the HTTP method of a request using either the `X-HTTP-Method-Override` header or a `_method` field in a POST body. While this is handy for HTML forms that can only send `GET`/`POST`, it can be dangerous if you are not expecting it — an attacker could forge `DELETE` or `PUT` requests through a regular form.
+
+If your application does not rely on this behaviour (e.g. you are building an API consumed by modern clients or JavaScript frontends that can send any HTTP verb), you should disable it:
+
+```php
+// In your index.php or bootstrap file, before Flight::start()
+Flight::set('flight.allow_method_override', false);
+```
+
+The default value is `true` for backwards compatibility, but **setting it to `false` is strongly recommended** for any application that does not explicitly need the override feature.
+
+#### `flight.debug`
+
+Flight has a `flight.debug` setting that controls whether detailed error information (exception message, code, and full stack trace) is rendered in the browser when an unhandled exception occurs. The default is `false`, which means only a generic `500 Internal Server Error` message is shown — no internal details are leaked to the client.
+
+Never enable this on a production server. Use it only locally or in a staging environment:
+
+```php
+// Safe for local development only — NEVER in production
+Flight::set('flight.debug', true);
+```
+
+When `flight.debug` is `false` (the default), you can still capture errors by enabling `flight.log_errors`:
+
+```php
+// Log errors server-side without exposing them to the client
+Flight::set('flight.debug', false);
+Flight::set('flight.log_errors', true);
+```
+
+#### Recommended production configuration
+
+```php
+// index.php or app/config/config.php
+Flight::set('flight.allow_method_override', false);
+Flight::set('flight.debug', false);
+Flight::set('flight.log_errors', true);
 ```
 
 ### Error Handling
@@ -451,5 +502,6 @@ Flight::before('start', function() {
 - Refer to the "See Also" section above for troubleshooting information related to issues with components of the Flight Framework.
 
 ## Changelog
+- v3.18.1 - Added Flight Configuration Hardening section covering `flight.allow_method_override`, `flight.debug`, and JSONP callback validation.
 - v3.1.0 - Added sections on CORS, Error Handling, Input Sanitization, Password Hashing, and Rate Limiting.
 - v2.0 - Added escaping for default views to prevent XSS.
