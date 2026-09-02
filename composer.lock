@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ba3cba2043697639b132e658729dad3f",
+    "content-hash": "f85fed1538464e7c534f3855f7b36086",
     "packages": [
         {
             "name": "adhocore/cli",
@@ -307,16 +307,16 @@
         },
         {
             "name": "flightphp/core",
-            "version": "v3.18.3",
+            "version": "v3.19.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/flightphp/core.git",
-                "reference": "6b47c10192a644dbe53932d25eb2d734ae1d3de3"
+                "reference": "f617b5c2f69c7867a73a2173cec9e0cdd52e6801"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/flightphp/core/zipball/6b47c10192a644dbe53932d25eb2d734ae1d3de3",
-                "reference": "6b47c10192a644dbe53932d25eb2d734ae1d3de3",
+                "url": "https://api.github.com/repos/flightphp/core/zipball/f617b5c2f69c7867a73a2173cec9e0cdd52e6801",
+                "reference": "f617b5c2f69c7867a73a2173cec9e0cdd52e6801",
                 "shasum": ""
             },
             "require": {
@@ -335,20 +335,28 @@
                 "league/container": "^4.2",
                 "level-2/dice": "^4.0",
                 "phpstan/extension-installer": "^1.4",
-                "phpstan/phpstan": "^2.1",
+                "phpstan/phpstan": "^2.2",
                 "phpunit/phpunit": "^9.6",
                 "rregeer/phpunit-coverage-check": "^0.3.1",
+                "spatie/phpunit-watcher": "^1.23",
                 "squizlabs/php_codesniffer": "^4.0"
             },
             "suggest": {
-                "latte/latte": "Latte template engine",
+                "latte/latte": "Latte template engine (optional alternative to Twig)",
                 "phpstan/phpstan": "PHP Static Analyzer",
-                "tracy/tracy": "Tracy debugger"
+                "tracy/tracy": "Tracy debugger",
+                "twig/twig": "Twig template engine (recommended for apps, e.g. flightphp/skeleton)"
             },
             "type": "library",
             "autoload": {
                 "files": [
                     "flight/autoload.php"
+                ],
+                "psr-4": {
+                    "flight\\": "flight"
+                },
+                "classmap": [
+                    "flight/Flight.php"
                 ]
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -378,9 +386,9 @@
             "homepage": "https://docs.flightphp.com",
             "support": {
                 "issues": "https://github.com/flightphp/core/issues",
-                "source": "https://github.com/flightphp/core/tree/v3.18.3"
+                "source": "https://github.com/flightphp/core/tree/v3.19.2"
             },
-            "time": "2026-06-23T12:50:02+00:00"
+            "time": "2026-09-02T02:48:01+00:00"
         },
         {
             "name": "flightphp/runway",
