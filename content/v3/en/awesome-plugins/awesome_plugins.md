@@ -7,6 +7,7 @@ Flight is incredibly extensible. There are a number of plugins that can be used 
 Flight can be made even cooler with AI-powered plugins.
 
 - [Flight MCP](/awesome-plugins/mcp) - A plugin for integrating MCP (Model Control Protocol) with Flight, enabling seamless AI-powered functionality. Mostly focused on the documentation pages, it helps keep token costs down with providing the most up to date information about your Flight projects.
+- [stribus/mcp-flightphp-server-skeleton](https://github.com/stribus/mcp-flightphp-server-skeleton) - A FlightPHP MCP server skeleton with HTTP and stdio, plus auto-discovery of tools, prompts, and resources.
 
 ## API Documentation
 
