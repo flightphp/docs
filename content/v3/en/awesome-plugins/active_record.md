@@ -147,7 +147,7 @@ namespace app\records;
 
 /**
  * ActiveRecord class for the users table.
- * @link https://docs.flightphp.com/awesome-plugins/active-record
+ * @link https://docs.flightphp.com/en/v3/awesome-plugins/active-record
  *
  * @property int $id
  * @property string $username
@@ -159,7 +159,7 @@ class UserRecord extends \flight\ActiveRecord
 {
     /**
      * @var array $relations Set the relationships for the model
-     *   https://docs.flightphp.com/awesome-plugins/active-record#relationships
+     *   https://docs.flightphp.com/en/v3/awesome-plugins/active-record#relationships
      */
     protected array $relations = [
 		// 'relation_name' => [ self::HAS_MANY, 'RelatedClass', 'foreign_key' ],
@@ -199,6 +199,56 @@ Finds all records in the table that you specify.
 
 ```php
 $user->findAll();
+```
+
+#### `first(): ActiveRecord` (v0.8.0)
+
+Finds the first record matching your conditions. If you haven't set an order, it orders by the primary key ascending. If nothing matches you get the record back unhydrated, so check `isHydrated()` if you're not sure something came back.
+
+```php
+$user->eq('status', 'active')->first();
+```
+
+#### `last(): ActiveRecord` (v0.8.0)
+
+Same as `first()` but orders by the primary key descending. Handy for "give me the newest one" queries.
+
+```php
+$user->eq('status', 'active')->last();
+```
+
+#### `count(): int` (v0.8.0)
+
+Counts the rows that match your current conditions. If you have a `groupBy()` in the query, `count()` ignores it on purpose. A single scalar count can't represent one row per group.
+
+```php
+$user->count();
+$user->eq('status', 'active')->count();
+```
+
+#### `exists(): bool` (v0.8.0)
+
+Returns `true` if any record matches your conditions. It runs a cheap `SELECT 1 ... LIMIT 1` under the hood.
+
+```php
+$user->eq('name', 'Bobby')->exists(); // true
+```
+
+#### `pluck(string $column): array` (v0.8.0)
+
+Returns a flat array of values from one column instead of hydrating a bunch of objects. Combine it with `distinct()` to get unique values.
+
+```php
+$user->pluck('name'); // [ 'Bobby', 'Joseph' ]
+$user->distinct()->pluck('status'); // [ 'active', 'inactive' ]
+```
+
+#### `ids(): array` (v0.8.0)
+
+A shortcut for `pluck()` on the primary key.
+
+```php
+$user->gt('id', 0)->ids(); // [ 1, 2, 3 ]
 ```
 
 #### `isHydrated(): boolean` (v0.4.0)
@@ -266,6 +316,15 @@ $user->email = 'test@example.com';
 $user->update();
 ```
 
+#### `updateAttribute(string $name, mixed $value): ActiveRecord` (v0.8.0)
+
+Updates a single column on a loaded record and saves it. It's a shortcut for `$user->dirty([ 'name' => $value ])->update()`. You need a loaded record for this one.
+
+```php
+$user->find(1);
+$user->updateAttribute('name', 'New Name');
+```
+
 #### `save(): boolean|ActiveRecord`
 
 Inserts or updates the current record into the database. If the record has an id, it will update, otherwise it will insert.
@@ -292,6 +351,27 @@ You can also delete multiple records executing a search before hand.
 
 ```php
 $user->like('name', 'Bob%')->delete();
+```
+
+#### `updateAll(array $attributes, bool $allowEmptyConditions = false): int` (v0.8.0)
+
+Updates every record matching your conditions in a single statement. No records get hydrated and no events fire, which is exactly why it's fast. Returns the number of rows affected.
+
+It refuses to run without WHERE conditions unless you pass `true` for the second argument. Your future self says thanks.
+
+```php
+$user->eq('status', 'inactive')->updateAll([ 'status' => 'active' ]);
+
+// yes, you really want to update every row in the table
+$user->updateAll([ 'status' => 'active' ], true);
+```
+
+#### `deleteAll(bool $allowEmptyConditions = false): int` (v0.8.0)
+
+Deletes every record matching your conditions in a single statement. Same deal as `updateAll()`: no hydration, no events, and it requires WHERE conditions unless you pass `true`. Returns the number of rows deleted. Use with caution!
+
+```php
+$user->eq('status', 'deleted')->deleteAll();
 ```
 
 #### `dirty(array  $dirty = []): ActiveRecord`
@@ -355,6 +435,24 @@ foreach($users as $user) {
 
 After you run a `find()`, `findAll()`, `insert()`, `update()`, or `save()` method you can get the SQL that was built and use it for debugging purposes.
 
+## Transactions
+
+Need to run a few writes that all have to succeed together? Wrap them in `transaction()` (v0.8.0). Pass it a callable and the record comes in as the argument. If the callable throws, everything rolls back and the exception is re-thrown for you. Otherwise it commits and hands back whatever your callable returned.
+
+```php
+$user->transaction(function ($user) {
+	$user->name = 'Bobby Tables';
+	$user->password = password_hash('correct horse battery staple');
+	$user->insert();
+
+	$user->email = 'bobby@example.com';
+	$user->update();
+	// commit happens here if nothing threw
+});
+```
+
+Nested transactions aren't supported (no savepoints), so keep them flat.
+
 ## SQL Query Methods
 #### `select(string $field1 [, string $field2 ... ])`
 
@@ -406,12 +504,29 @@ Sort the returned query a certain way.
 $user->orderBy('name DESC')->find();
 ```
 
+#### `orderByColumn(string $column, string $direction = 'ASC')` (v0.7.2)
+
+`order()` and `orderBy()` take raw SQL fragments, which is fine when you're hardcoding `'name DESC'`. If the column name comes from user input (a sortable table header, for example), use `orderByColumn()` instead. Only plain column names and `table.column` paths are allowed, and the direction has to be `ASC` or `DESC`, so there's nothing to inject.
+
+```php
+// $sortColumn comes from the request
+$user->orderByColumn($sortColumn, 'DESC')->findAll();
+```
+
 #### `limit(string $limit)/limit(int $offset, int $limit)`
 
 Limit the amount of records returned. If a second int is given, it will be offset, limit just like in SQL.
 
 ```php
 $user->orderby('name DESC')->limit(0, 10)->findAll();
+```
+
+#### `distinct()` (v0.8.0)
+
+Adds `DISTINCT` to your next query. It works on the normal select and with `pluck()`. `count()` ignores it, since putting `DISTINCT` on a single aggregate row does nothing.
+
+```php
+$user->distinct()->pluck('status'); // [ 'active', 'inactive' ]
 ```
 
 ## WHERE conditions
@@ -512,6 +627,40 @@ $user->eq('id', 1)->startWrap()->eq('name', 'demo')->or()->eq('name', 'test')->e
 // Method 2
 $user->eq('id', 1)->eq('name', 'demo', 'OR')->find();
 // This will evaluate to `id = 1 OR name = 'demo'`
+```
+
+## Scopes
+
+Scopes (v0.8.0) are reusable query chains, defined as plain instance methods on your class that return `$this`. Once you've written one, it chains like any other query method.
+
+```php
+class User extends flight\ActiveRecord {
+
+	public function __construct($database_connection)
+	{
+		parent::__construct($database_connection, 'users');
+	}
+
+	public function active(): self
+	{
+		return $this->eq('status', 'active');
+	}
+
+	public function recent(int $days = 7): self
+	{
+		return $this->ge('created_at', date('Y-m-d', strtotime("-{$days} days")));
+	}
+}
+
+// and now your queries read like sentences
+(new User($pdo_connection))->active()->recent(30)->findAll();
+```
+
+You can also call a scope by name with `scope()`, which is nice when the scope name comes from somewhere else in your code. It throws a `BadMethodCallException` if the method doesn't exist.
+
+```php
+$user->scope('active')->findAll();
+$user->scope('recent', 30)->findAll();
 ```
 
 ## Relationships
@@ -713,6 +862,23 @@ And then you simply reference it like a normal object property.
 ```php
 echo $user->page_view_count;
 ```
+
+## Timestamps
+
+If your table has `created_at` and `updated_at` columns, you can have the library fill them in for you (v0.8.0). Set `protected bool $timestamps = true;` on your class and it will set `created_at` and `updated_at` when you insert, and `updated_at` when you update. The format is `Y-m-d H:i:s`. If you set either column yourself, the library leaves your value alone.
+
+```php
+class User extends flight\ActiveRecord {
+	protected bool $timestamps = true;
+
+	public function __construct($database_connection)
+	{
+		parent::__construct($database_connection, 'users');
+	}
+}
+```
+
+Your table actually needs those columns, or inserts and updates will fail.
 
 ## Events
 
