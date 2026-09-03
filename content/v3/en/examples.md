@@ -12,6 +12,13 @@ Community contributed examples:
 - [flastro](https://github.com/flightphp/flastro) - A FlightPHP starter kit with Astro integration.
 - [velt](https://github.com/flightphp/velt) - Velt is a quick and easy Svelte starter template with a FlightPHP backend. 
 - [vite-flightphp](https://github.com/pauloramoscuba/vite-flightphp) - FlightPHP and modern frontend (Vite + Tailwind CSS) featuring hot reload.
+- [Flight Shield](https://github.com/enlivenapp/FlightPHP-Shield) - Authentication.
+- [Flight Settings](https://github.com/enlivenapp/FlightPHP-Settings) - Database based settings.
+- [Flight CSRF](https://github.com/enlivenapp/FlightPHP-CSRF) - CSRF protection.
+- [Flight Sessions](https://github.com/enlivenapp/flight-sessions) - Database based sessions.
+- [Flight School](https://github.com/enlivenapp/FlightPHP-Flight-School) - Plugin manager.
+- [Flight Factory](https://github.com/enlivenapp/FlightPHP-Factory) - Runway commands for building composer packages in vendor/ and components in app/.
+- [Pubvana CMS](https://github.com/Pubvana-CMS/pubvana) - A content management system.
 
 ## Need Some Inspiration?
 
