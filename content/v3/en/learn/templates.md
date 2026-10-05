@@ -229,10 +229,10 @@ Flight::set('flight.views.path', '/path/to/views');
 By default Flight's built-in `View` will also accept an absolute template path, or a name that climbs out of that directory. For most apps you should lock that down:
 
 ```php
-Flight::view()->restrictToPath = true;
+Flight::set('flight.views.restrict_to_path', true);
 ```
 
-That keeps `render()`, `fetch()`, and `exists()` inside `flight.views.path`. It is off by default for backwards compatibility. See [Security](/learn/security#viewrestricttopath).
+That keeps `render()`, `fetch()`, and `exists()` inside `flight.views.path`. It is off by default for backwards compatibility. See [Security](/learn/security#flightviewsrestrict_to_path).
 
 #### Layouts
 
@@ -388,7 +388,7 @@ Hello, Bob!
 - [Extending](/learn/extending) - How to overwrite the `render` method to use a different template engine.
 - [Routing](/learn/routing) - How to map routes to controllers and render views.
 - [Responses](/learn/responses) - How to customize HTTP responses.
-- [Security](/learn/security) - Auto-escaping, XSS, and `View::$restrictToPath`.
+- [Security](/learn/security) - Auto-escaping, XSS, and `flight.views.restrict_to_path`.
 - [AI & Developer Experience](/learn/ai) - Why one view engine default helps coding agents.
 - [Why a Framework?](/learn/why-frameworks) - How templates fit into the big picture.
 
@@ -397,6 +397,6 @@ Hello, Bob!
 - If Twig cannot find a template, check `flight.views.path` and that the file exists under that path with the expected extension (skeleton: `app/views/`).
 
 ## Changelog
-- Docs – Documented `View::$restrictToPath` for native PHP views.
+- Docs – Documented `flight.views.restrict_to_path` for native PHP views.
 - Docs – Twig documented as the official skeleton default; Latte remains a first-class alternative.
 - v2.0 - Initial release.
