@@ -39,6 +39,7 @@ The following is a list of all the available configuration settings:
   - See [Security](/learn/security#flight-configuration-hardening) for more details.
 - **flight.views.path** `string` - Directory containing view template files. (default: ./views)
 - **flight.views.extension** `string` - View template file extension. (default: `.php`; the official skeleton sets this to `.twig` when using Twig)
+- **View::$restrictToPath** `bool` - Not a `Flight::set()` key. Property on the view engine: when `true`, `render()` / `fetch()` / `exists()` only accept files that resolve inside `flight.views.path`. (default: `false`). **Turn this on** for apps that use Flight's native views. See [Security](/learn/security#viewrestricttopath).
 - **flight.content_length** `bool` - Set the `Content-Length` header. (default: true)
   - If you are using [Tracy](/awesome-plugins/tracy), this needs to be set to false so Tracy can render properly.
 - **flight.v2.output_buffering** `bool` - Use legacy output buffering. See [migrating to v3](migrating-to-v3). (default: false)
@@ -183,6 +184,7 @@ Flight::map('notFound', function () {
 - If Runway or deploy tooling rewrote `config.php`, confirm secrets were not committed—keep them in `.env` or the real environment when using the skeleton pattern.
 
 ## Changelog
+- Docs – Noted `View::$restrictToPath` next to view path settings.
 - Docs – Document skeleton-style config / `.env` layering and Twig view extension default for new projects.
 - v3.18.1 - Added `flight.debug` and `flight.allow_method_override` configuration options.
 - v3.5.0 - Added configuration for `flight.v2.output_buffering` to support legacy output buffering behavior.
