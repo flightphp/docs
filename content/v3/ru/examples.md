@@ -1,40 +1,47 @@
 # Нужен быстрый старт?
 
-У вас есть два варианта для начала работы с новым проектом Flight:
+У вас есть два варианта для начала работы с новым проектом на Flight:
 
-- [Full Skeleton Boilerplate](https://github.com/flightphp/skeleton): Более полный пример с контроллерами и представлениями.
-- [Single File Skeleton Boilerplate](https://github.com/flightphp/skeleton-simple): Один файл, содержащий всё необходимое для запуска вашего приложения в простом единственном файле.
+- [Полный скелетный шаблон (Skeleton)](https://github.com/flightphp/skeleton): Более полноценный пример с контроллерами и представлениями.
+- [Простой одностраничный скелетный шаблон](https://github.com/flightphp/skeleton-simple): Один файл, который содержит всё необходимое для запуска вашего приложения в одном простом файле.
 
-Примеры, внесённые сообществом:
+Примеры, добавленные сообществом:
 
-- [flightravel](https://github.com/fadrian06-templates/flighravel): FlightPHP с директориями Laravel, с инструментами PHP + GH Actions
-- [fleact](https://github.com/flightphp/fleact) - Стартовый комплект FlightPHP с интеграцией ReactJS.
-- [flastro](https://github.com/flightphp/flastro) - Стартовый комплект FlightPHP с интеграцией Astro.
-- [velt](https://github.com/flightphp/velt) - Velt — это быстрый и простой шаблон Svelte для старта с бэкендом на FlightPHP. 
-- [vite-flightphp](https://github.com/pauloramoscuba/vite-flightphp) - FlightPHP и современный фронтенд (Vite + Tailwind CSS) с поддержкой hot reload.
+- [flightravel](https://github.com/fadrian06-templates/flighravel): FlightPHP с директориями Laravel, PHP-инструментарий и GH Actions.
+- [fleact](https://github.com/flightphp/fleact) — стартовый набор FlightPHP с интеграцией ReactJS.
+- [flastro](https://github.com/flightphp/flastro) — стартовый набор FlightPHP с интеграцией Astro.
+- [velt](https://github.com/flightphp/velt) — Velt — это быстрый и простой стартовый шаблон Svelte с бэкендом FlightPHP.
+- [vite-flightphp](https://github.com/pauloramoscuba/vite-flightphp) — FlightPHP и современный фронтенд (Vite + Tailwind CSS) с горячей перезагрузкой.
+- [Flight Shield](https://github.com/enlivenapp/FlightPHP-Shield) — Аутентификация.
+- [Flight Settings](https://github.com/enlivenapp/FlightPHP-Settings) — Настройки на основе базы данных.
+- [Flight CSRF](https://github.com/enlivenapp/FlightPHP-CSRF) — Защита CSRF.
+- [Flight Sessions](https://github.com/enlivenapp/flight-sessions) — Сессии на основе базы данных.
+- [Flight School](https://github.com/enlivenapp/FlightPHP-Flight-School) — Менеджер плагинов.
+- [Flight Factory](https://github.com/enlivenapp/FlightPHP-Factory) — Команды Runway для создания пакетов Composer в vendor/ и компонентов в app/.
+- [Pubvana CMS](https://github.com/Pubvana-CMS/pubvana) — Система управления контентом.
 
-## Нужен ли вам некоторый вдохновение?
+## Нужно немного вдохновения?
 
-Хотя эти примеры не спонсируются официально командой Flight, они могут дать вам идеи о том, как структурировать свои собственные проекты, построенные на Flight!
+Хотя эти проекты официально не спонсируются командой Flight, они могут дать вам идеи о том, как структурировать собственные проекты, созданные с помощью Flight!
 
-- [ASC REST API Spell Checker](https://github.com/AlMosahih-ASC/asc-api-sample) - Лёгкий REST API для проверки орфографии арабского языка, построенный на FlightPHP и библиотеке ArPHP. Этот API предоставляет возможности проверки орфографии арабского текста, включая обнаружение ошибочно написанных слов и предложения по исправлению.
-- [Eventify](https://github.com/ilhanklisura/eventify) - Eventify — это одностраничное приложение, соединяющее организаторов событий с участниками. Построено на PHP (FlightPHP), JavaScript и MySQL, с функциями JWT-аутентификации, управления событиями и документацией RESTful API с использованием OpenAPI.
-- [Ivox Car Rental](https://github.com/najtms/introductionToWeb) - Ivox Car Rental — это одностраничное, мобильно-дружественное веб-приложение для аренды автомобилей, построенное на PHP (FlightPHP), JavaScript и MySQL. Оно поддерживает регистрацию пользователей, просмотр и бронирование автомобилей, в то время как администраторы могут управлять автомобилями, пользователями и бронированиями. Приложение включает REST API, JWT-аутентификацию и адаптивный дизайн для современного опыта аренды.
-- [Decay](https://github.com/boxybird/decay) - Flight v3 с HTMX и SleekDB, всё о зомби! ([Demo](https://decay.andrewrhyand.com))
-- [Flight Example Blog](https://github.com/n0nag0n/flightphp-blog) - Flight v3 с Middleware, Controllers, Active Record и Latte.
-- [Flight CRUD RESTful API](https://github.com/soheilkhaledabdi/php-crud-api-flight) - Простой проект CRUD API с использованием фреймворка Flight, который предоставляет базовую структуру для новых пользователей, чтобы быстро настроить PHP-приложение с операциями CRUD и подключением к базе данных. Проект демонстрирует, как использовать Flight для разработки RESTful API, делая его идеальным инструментом для обучения для начинающих и полезным стартовым набором для более опытных разработчиков.
-- [Flight School Management System](https://github.com/krmu/FlightPHP_School) - Flight v3
-- [Paste Bin with Comments](https://github.com/n0nag0n/commie2) - Flight v3
-- [Basic Skeleton App](https://github.com/markhughes/flight-skeleton)
-- [Example Wiki](https://github.com/Skayo/FlightWiki)
-- [The IT-Innovator PHP Framework Application](https://github.com/itinnovator/myphp-app)
-- [LittleEducationalCMS (Spanish)](https://github.com/casgin/LittleEducationalCMS)
-- [Italian Yellow Pages API](https://github.com/chiccomagnus/PGAPI)
-- [Generic Content Management System (with....very little documentation)](https://github.com/recepuncu/cms)
-- [A tiny php framework based on Flight and medoo.](https://github.com/ycrao/tinyme)
-- [Example MVC Application](https://github.com/paddypei/Flight-MVC)
-- [Production ready Flight Boilerplate](https://github.com/madcoda9000/SecStore) - Готовый к производству фреймворк аутентификации, который сэкономит вам недели разработки. Функции корпоративного уровня безопасности: 2FA/TOTP, интеграция LDAP, Azure SSO, интеллектуальное ограничение скорости, отпечатки сессий, защита от brute-force, панель аналитики безопасности, всестороннее логирование аудита и гранулярный контроль доступа на основе ролей.
+- [ASC REST API Spell Checker](https://github.com/AlMosahih-ASC/asc-api-sample) — легковесный REST API для проверки орфографии арабского языка, созданный с помощью FlightPHP и библиотеки ArPHP. Этот API предоставляет возможности проверки орфографии арабского текста, включая обнаружение неправильно написанных слов и предложения по исправлению.
+- [Eventify](https://github.com/ilhanklisura/eventify) — Eventify — это одностраничное приложение, связывающее организаторов мероприятий с посетителями. Создано на PHP (FlightPHP), JavaScript и MySQL. Включает JWT-аутентификацию, управление мероприятиями и документацию RESTful API с использованием OpenAPI.
+- [Ivox Car Rental](https://github.com/najtms/introductionToWeb) — Ivox Car Rental — это одностраничное мобильное веб-приложение для аренды автомобилей, созданное на PHP (FlightPHP), JavaScript и MySQL. Поддерживает регистрацию пользователей, просмотр и бронирование автомобилей, а администраторы могут управлять автомобилями, пользователями и бронированиями. Приложение включает REST API, JWT-аутентификацию и адаптивный дизайн для современного опыта аренды.
+- [Decay](https://github.com/boxybird/decay) — Flight v3 с HTMX и SleekDB, всё о зомби! ([Демо](https://decay.andrewrhyand.com))
+- [Flight Example Blog](https://github.com/n0nag0n/flightphp-blog) — Flight v3 с Middleware, контроллерами, Active Record и Latte.
+- [Flight CRUD RESTful API](https://github.com/soheilkhaledabdi/php-crud-api-flight) — Простой проект CRUD API с использованием фреймворка Flight, который предоставляет базовую структуру для быстрой настройки PHP-приложения с CRUD-операциями и подключением к базе данных. Проект демонстрирует использование Flight для разработки RESTful API, что делает его идеальным учебным инструментом для новичков и полезным стартовым набором для более опытных разработчиков.
+- [Flight School Management System](https://github.com/krmu/FlightPHP_School) — Flight v3
+- [Paste Bin with Comments](https://github.com/n0nag0n/commie2) — Flight v3
+- [Basic Skeleton App](https://github.com/markhughes/flight-skeleton) — Базовое скелетное приложение
+- [Example Wiki](https://github.com/Skayo/FlightWiki) — Пример вики
+- [The IT-Innovator PHP Framework Application](https://github.com/itinnovator/myphp-app) — Приложение на PHP-фреймворке IT-Innovator
+- [LittleEducationalCMS (Spanish)](https://github.com/casgin/LittleEducationalCMS) — LittleEducationalCMS (испанский)
+- [Italian Yellow Pages API](https://github.com/chiccomagnus/PGAPI) — API итальянских желтых страниц
+- [Generic Content Management System (with....very little documentation)](https://github.com/recepuncu/cms) — Общая система управления контентом (с... очень маленькой документацией)
+- [A tiny php framework based on Flight and medoo.](https://github.com/ycrao/tinyme) — Крошечный PHP-фреймворк на основе Flight и medoo.
+- [Example MVC Application](https://github.com/paddypei/Flight-MVC) — Пример MVC-приложения
+- [Production ready Flight Boilerplate](https://github.com/madcoda9000/SecStore) — Готовый к продакшену шаблон Flight. Готовая к продакшену система аутентификации, которая экономит недели разработки. Включает безопасность корпоративного уровня: 2FA/TOTP, интеграцию LDAP, Azure SSO, интеллектуальное ограничение скорости, снятие отпечатков сессий, защиту от брутфорса, панель аналитики безопасности, полное журналирование аудита и детальный контроль доступа на основе ролей.
 
-## Хотите поделиться своим собственным примером?
+## Хотите поделиться своим примером?
 
-Если у вас есть проект, которым вы хотите поделиться, пожалуйста, отправьте pull request, чтобы добавить его в этот список!
+Если у вас есть проект, которым вы хотите поделиться, отправьте pull request, чтобы добавить его в этот список!

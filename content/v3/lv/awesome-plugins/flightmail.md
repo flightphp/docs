@@ -1,32 +1,32 @@
 # FlightMail
 
-> **Trešās puses spraudnis** - uztur [Ryan Stubbs](https://ryanstubbs.co.uk) ([ryanstubbs/flightmail](https://github.com/ryanstubbs/flightmail), MIT licencēts). Nav Flight kodola daļa - lūdzu, ziņojiet par problēmām [tā GitHub krātuvē](https://github.com/ryanstubbs/flightmail/issues).
+> **Trešās puses spraudnis** — uztur [Ryan Stubbs](https://ryanstubbs.co.uk) ([ryanstubbs/flightmail](https://github.com/ryanstubbs/flightmail), MIT licence). Nav daļa no Flight kodola — lūdzu ziņojiet par problēmām [tā GitHub repozitorijā](https://github.com/ryanstubbs/flightmail/issues).
 
-[ryanstubbs/flightmail](https://github.com/ryanstubbs/flightmail) ļauj sūtīt e-pastu no jūsu Flight lietotnes bez galvassāpēm. Tas ietver **Symfony Mailer** - visvairāk kaujā pārbaudīto pasta bibliotēku PHP - un liek tam justies kā Flight daļai. Viena rinda instalēšanai, viena plūstoša ķēde sūtīšanai:
+[ryanstubbs/flightmail](https://github.com/ryanstubbs/flightmail) ļauj sūtīt e-pastus no jūsu Flight lietotnes bez liekām galvassāpēm. Tas aptver **Symfony Mailer** — visvairāk pārbaudīto e-pasta bibliotēku PHP — un padara to par dabisku Flight daļu. Viena rindiņa instalēšanai, viena plūstoša ķēde sūtīšanai:
 
 ```php
 Flight::mail()->compose()
     ->to('someone@example.com')
-    ->subject('Tev izdevās!')
-    ->text('Jūsu pirmais e-pasts ir ceļā.')
+    ->subject('You did it!')
+    ->text('Your first email is on its way.')
     ->send();
 ```
 
 ## Funkcijas
 
-- **Jebkurš pakalpojumu sniedzējs, katram viena rinda.** SMTP, Postmark, Sendgrid, Mailgun, Amazon SES, Brevo un draugi visi darbojas caur vienkāršām DSN virknēm.
-- **Izmantojiet vairākus pakalpojumu sniedzējus vienlaikus.** Transakciju pasts caur Postmark, biļeteni caur savu SMTP - izvēlieties katram ziņojumam.
-- **Veidnes, ja tās vēlaties.** Renderējiet saturu ar Twig vai Latte. Nevēlaties veidnes? Vienkārši padodiet virknes un neinstalējiet neko papildu.
-- **Noslīpējums sūtīšanas brīdī.** Neobligāta CSS iekļaušana un automātiskas vienkāršā teksta daļas, kas iegūtas no jūsu HTML, darbinātas ar bibliotēkām, kuras instalējat tikai tad, ja tās izmantojat.
-- **Garlaicīgi vislabākajā veidā.** Slinkie savienojumi, skaidras kļūdas vietā klusībā norīta pasta, un viss ir aizstājams, ja jums vajag kaut ko pielāgotu.
+- **Jebkurš pakalpojumu sniedzējs — katra ar vienu rindiņu.** SMTP, Postmark, Sendgrid, Mailgun, Amazon SES, Brevo un citi visi darbojas ar vienkāršām DSN virknēm.
+- **Izmantojiet vairākus pakalpojumu sniedzējus vienlaikus.** Transakciju e-pasti caur Postmark, jaunumi caur savu SMTP — izvēlieties katram ziņojumam atsevišķi.
+- **Veidnes, ja vēlaties.** Renderējiet saturu ar Twig vai Latte. Negribat veidnes? Vienkārši padodiet virknes un neko papildu neinstalējiet.
+- **Noslīpējums sūtīšanas brīdī.** Neobligāta CSS iekļaušana un automātiskas teksta daļas, kas iegūtas no jūsu HTML, ko nodrošina bibliotēkas, kuras instalējat tikai tad, ja tās lietojat.
+- **Garlaicīgs vislabākajā nozīmē.** Slinki savienojumi, skaidras kļūdas tā vietā, lai klusu norītu e-pastus, un visu var nomainīt, ja nepieciešams kaut kas pielāgots.
 
 ## Prasības
 
-| Kas            | Versija                                   |
-| -------------- | ----------------------------------------- |
-| PHP            | 8.2 vai jaunāka                           |
-| Flight PHP     | core ^3.15                                |
-| Symfony Mailer | ^7.2 vai ^8.0 (instalēts automātiski)     |
+| Komponents     | Versija                             |
+| -------------- | ----------------------------------- |
+| PHP            | 8.2 vai jaunāka                     |
+| Flight PHP     | kodols ^3.15                        |
+| Symfony Mailer | ^7.2 vai ^8.0 (instalēts automātiski) |
 
 ## Instalēšana
 
@@ -34,25 +34,25 @@ Flight::mail()->compose()
 composer require ryanstubbs/flightmail
 ```
 
-Tas ir viss, lai sūtītu vienkāršā teksta un HTML e-pastus. Veidņu renderēšana ir izvēles - pievienojiet dzinēju tikai tad, ja to izmantosiet:
+Ar to pietiek, lai sūtītu vienkārša teksta un HTML e-pastus. Veidņu renderēšana nav obligāta — pievienojiet dzinēju tikai tad, ja to izmantosiet:
 
 ```bash
 composer require twig/twig      # .twig veidnēm
 composer require latte/latte    # .latte veidnēm
 ```
 
-Vēl divas neobligātas bibliotēkas darbina sūtīšanas brīža uzlabojumus, kas aprakstīti [zemāk](#html-stilizesana-un-teksta-dalu-generesana):
+Vēl divas neobligātas bibliotēkas nodrošina sūtīšanas laika uzlabojumus, kas aprakstīti [tālāk](#styling-html-and-generating-text-parts):
 
 ```bash
 composer require pelago/emogrifier         # CSS iekļaušanai ("inline_css")
 composer require league/html-to-markdown   # Markdown teksta daļām ("text_from_html")
 ```
 
-Visas tās var instalēt līdzās; FlightMail izvēlas pareizo, pamatojoties uz to, ko konfigurējat.
+Visas šīs bibliotēkas var instalēt blakus; FlightMail izvēlas pareizo atbilstoši jūsu konfigurācijai.
 
 ## Jūsu pirmais e-pasts
 
-Pievienojiet to savam bootstrap (tajā pašā vietā, kur definējat maršrutus):
+Pievienojiet to savam bootstrap kodam (tur, kur definējat maršrutus):
 
 ```php
 <?php
@@ -60,7 +60,7 @@ require 'vendor/autoload.php';
 
 use ryanstubbs\FlightMail\MailPlugin;
 
-// Pastāstiet FlightMail, no kurienes un caur ko sūtīt pastu.
+// Pastāstiet FlightMail, no kurienes un caur ko sūtīt e-pastus.
 MailPlugin::install([
     'dsns' => [
         'default' => 'smtp://user:pass@localhost:1025',
@@ -71,15 +71,15 @@ MailPlugin::install([
 Flight::route('/signup', function () {
     Flight::mail()->compose()
         ->to('new-user@example.com')
-        ->subject('Laipni lūdzam uz klāja!')
-        ->html('<h1>Laipni lūdzam!</h1><p>Mēs priecājamies, ka jūs esat šeit.</p>')
+        ->subject('Welcome aboard!')
+        ->html('<h1>Welcome!</h1><p>We are glad you are here.</p>')
         ->send();
 });
 
 Flight::start();
 ```
 
-Izmantojat [Flight PHP skeleton](https://github.com/flightphp/skeleton)? Reģistrējiet `app/config/services.php` ar instances stilu:
+Izmantojat [Flight PHP skeletu](https://github.com/flightphp/skeleton)? Reģistrējiet `app/config/services.php` failā, izmantojot instances stilu:
 
 ```php
 use ryanstubbs\FlightMail\MailPlugin;
@@ -90,85 +90,83 @@ MailPlugin::register($app, [
 ]);
 ```
 
-Abi stili piedāvā to pašu mailer: `Flight::mail()` un `$app->mail()` ir savstarpēji aizstājami.
+Abi stili nodrošina to pašu sūtītāju: `Flight::mail()` un `$app->mail()` ir savstarpēji aizvietojami.
 
-> **Testējat lokāli?** Ja jūsu projekts darbojas [DDEV](https://ddev.com), vērsiet DSN uz `smtp://127.0.0.1:1025` un lasiet katru uztverto e-pastu Mailpit vietnē `http://<project>.ddev.site:8025`. Nekas neatstāj jūsu mašīnu.
+> **Testējat lokāli?** Ja jūsu projekts darbojas [DDEV](https://ddev.com) vidē, norādiet DSN uz `smtp://127.0.0.1:1025` un lasiet visus notvertos e-pastus Mailpit saskarnē `http://<project>.ddev.site:8025`. Nekas neatstāj jūsu datoru.
 
 ## E-pasta sūtīšana
 
-### Vienkāršas virknes (veidņu dzinējs nav nepieciešams)
+### Vienkāršas virknes (nav nepieciešams veidņu dzinējs)
 
-`->text()` un `->html()` pieņem neapstrādātas virknes un neko citu instalētu nevajag:
+`->text()` un `->html()` pieņem neapstrādātas virknes un neprasa neko citu instalētu:
 
 ```php
 Flight::mail()->compose()
     ->to('ops@example.com')
-    ->subject('Dublējums pabeigts')
-    ->text('Nakts dublējums pabeigts 42 minūtēs.')
+    ->subject('Backup finished')
+    ->text('Nightly backup completed in 42 minutes.')
     ->send();
 
 Flight::mail()->compose()
     ->to('billing@example.com')
-    ->subject('Rēķins #123')
-    ->html('<h1>Rēķins #123</h1><p>Kopējā summa: $42.00</p>')
+    ->subject('Invoice #123')
+    ->html('<h1>Invoice #123</h1><p>Total due: $42.00</p>')
     ->send();
 ```
 
 ### Twig veidnes
 
 ```php
-// welcome.html.twig satur: Sveiki {{ name }}, paldies, ka reģistrējāties!
+// welcome.html.twig satur: Hello {{ name }}, paldies, ka reģistrējāties!
 Flight::mail()->compose()
     ->to('someone@example.com')
-    ->subject('Laipni lūdzam!')
+    ->subject('Welcome!')
     ->template('welcome.html.twig', ['name' => 'Ryan'])
     ->send();
 ```
 
 ### Latte veidnes
 
-Tā pati ideja, `.latte` paplašinājums:
-
 ```php
-// welcome.latte satur: Sveiki {$name}, paldies, ka reģistrējāties!
+// welcome.latte satur: Hello {$name}, paldies, ka reģistrējāties!
 Flight::mail()->compose()
     ->to('someone@example.com')
-    ->subject('Laipni lūdzam!')
+    ->subject('Welcome!')
     ->template('welcome.latte', ['name' => 'Ryan'])
     ->send();
 ```
 
-### HTML + vienkāršais teksts kopā
+### HTML un vienkāršs teksts kopā
 
-Labākā prakse piegādājamībai - dodiet pasta klientiem abas versijas:
+Labākā prakse piegādājamībai — sniedziet e-pasta klientiem abas versijas:
 
 ```php
 Flight::mail()->compose()
     ->to('someone@example.com')
-    ->subject('Laipni lūdzam!')
+    ->subject('Welcome!')
     ->template('welcome.html.twig', ['name' => 'Ryan'])     // bagātā versija
     ->textTemplate('welcome.txt.twig', ['name' => 'Ryan'])  // rezerves versija
     ->send();
 ```
 
-Dažas lietas, ko vērts zināt par veidnēm:
+Dažas lietas, ko ir vērts zināt par veidnēm:
 
-- Tās tiek renderētas **slinki**, sūtīšanas brīdī - komponējiet tagad, renderējiet vēlāk.
+- Tās renderējas **slinki**, sūtīšanas brīdī — komponējiet tagad, renderējiet vēlāk.
 - Dzinējs tiek izvēlēts pēc paplašinājuma: `.twig` → Twig, `.latte` → Latte, jebkas cits → jūsu konfigurētais noklusējums (`renderer` opcija).
-- Eksplicīts `->html()` vai `->text()` saturs vienmēr uzvar pār veidni, tāpēc varat iestatīt noklusējuma veidni un pārrakstīt to katram ziņojumam.
+- Skaidri norādīts `->html()` vai `->text()` saturs vienmēr prevalē pār veidni, tāpēc varat iestatīt noklusējuma veidni un pārrakstīt to katram ziņojumam atsevišķi.
 
-## HTML stilizēšana un teksta daļu ģenerēšana
+## HTML noformēšana un teksta daļu ģenerēšana
 
-Divi neobligāti sūtīšanas brīža uzlabojumi, abi pēc noklusējuma izslēgti un abi darbināti ar bibliotēkām, kuras instalējat tikai tad, ja tās vēlaties:
+Divi neobligāti sūtīšanas laika uzlabojumi, abi pēc noklusējuma izslēgti, un abus nodrošina bibliotēkas, kuras instalējat tikai tad, ja to vēlaties:
 
-| Funkcija                | Instalēšana               | Konfigurācijas atslēga |
-| ----------------------- | ------------------------- | ---------------------- |
-| CSS iekļaušana          | `pelago/emogrifier`       | `inline_css`           |
-| Teksta daļa no HTML     | `league/html-to-markdown` | `text_from_html`       |
+| Funkcija             | Instalācija                 | Konfigurācijas atslēga |
+| -------------------- | --------------------------- | ---------------------- |
+| CSS iekļaušana       | `pelago/emogrifier`         | `inline_css`           |
+| Teksta daļa no HTML  | `league/html-to-markdown`   | `text_from_html`       |
 
-### CSS iekļaušana HTML e-pastā
+### Iekļaujiet CSS savā HTML e-pastā
 
-Gmail un lielākā daļa tīmekļa pasta klientu noņem `<style>` blokus - iekļautie `style=""` atribūti ir vienīgais stils, ko tie uzticami ievēro. Rakstīt tos ar roku ir nožēlojami; ļaujiet [Emogrifier](https://github.com/MyIntervals/emogrifier) to izdarīt sūtīšanas brīdī:
+Gmail un lielākā daļa tīmekļa e-pasta klientu noņem `<style>` blokus — iekļautie `style=""` atribūti ir vienīgais noformējums, ko tie ticami atbalsta. Rakstīt tos ar roku ir nepatīkami; ļaujiet [Emogrifier](https://github.com/MyIntervals/emogrifier) to paveikt sūtīšanas laikā:
 
 ```bash
 composer require pelago/emogrifier
@@ -181,9 +179,9 @@ MailPlugin::install([
 ]);
 ```
 
-Kad tas ir ieslēgts, katrs HTML saturs saņem savu CSS iekļautu tieši pirms sūtīšanas - neatkarīgi no tā, vai tas nāca no veidnes vai `->html()`. Ziņojums kā `<style>p { color: red; }</style><p>Sveiki</p>` iziet kā `<p style="color: red;">Sveiki</p>`.
+Kad tas ir ieslēgts, katram HTML saturam CSS tiek iekļauts tieši pirms sūtīšanas — neatkarīgi no tā, vai tas nācis no veidnes vai `->html()`. Ziņojums, piemēram, `<style>p { color: red; }</style><p>Hi</p>`, tiek nosūtīts kā `<p style="color: red;">Hi</p>`.
 
-Lai ievadītu kopīgus stilus katrā e-pastā (zīmola krāsas, atiestatījumi) bez to atkārtošanas katrā veidnē, padodiet kārtulas tieši vai norādiet uz stila lapas failu:
+Lai ievietotu kopīgus stilus katrā e-pastā (zīmola krāsas, atiestatīšanas), neatkārtojot tos katrā veidnē, padodiet noteikumus tieši vai norādiet uz stila failu:
 
 ```php
 'inline_css' => ['css_file' => __DIR__ . '/mail-styles/base.css'],
@@ -194,57 +192,57 @@ Lai ievadītu kopīgus stilus katrā e-pastā (zīmola krāsas, atiestatījumi) 
 Kontrole katram ziņojumam:
 
 ```php
-$message->inlineCss();          // piespiest iekļaušanu šim vienam ziņojumam
-$message->withoutInlineCss();   // izlaist to pat tad, kad globāli ieslēgts
+$message->inlineCss();          // piespiedu iekļaušana šim vienam ziņojumam
+$message->withoutInlineCss();   // izlaist, pat ja globāli iespējots
 ```
 
-### Teksta daļas ģenerēšana no HTML
+### Ģenerējiet teksta daļu no sava HTML
 
-Labākā prakse ir sūtīt HTML un vienkāršā teksta versiju kopā, bet rakstīt abas ir nogurdinoši. FlightMail var automātiski iegūt teksta daļu no galīgā HTML - pamata konversijai nav vajadzīga papildu atkarība, jo pārveidotājs nāk līdzi ar Symfony Mime:
+Labākā prakse ir sūtīt HTML un vienkāršā teksta versiju kopā, taču abu rakstīšana ir apnicīga. FlightMail var automātiski iegūt teksta daļu no galīgā HTML — pamata konversijai nav nepieciešama papildu atkarība, jo pārveidotājs ir iekļauts Symfony Mime:
 
 ```php
 MailPlugin::install([
     'dsns' => ['default' => 'smtp://user:pass@localhost:1025'],
-    'text_from_html' => true,       // Markdown, kad iespējams, citādi vienkāršs teksts
+    'text_from_html' => true,       // Markdown, ja iespējams, citādi vienkāršs teksts
 ]);
 ```
 
 Režīmi:
 
-- `true` vai `'auto'` - Markdown izvade, ja `league/html-to-markdown` ir instalēts, citādi vienkārša tagu noņemšana.
-- `'markdown'` - piespiest Markdown (`composer require league/html-to-markdown`; virsraksti kļūst par `==`, saites `[text](url)`, treknraksts `**bold**`).
-- `'plain'` - vienmēr noņemt tagus; darbojas bez papildu paketēm.
+- `true` vai `'auto'` — Markdown izvade, ja `league/html-to-markdown` ir instalēts, citādi vienkārša tagu noņemšana.
+- `'markdown'` — piespiedu Markdown (`composer require league/html-to-markdown`; virsraksti kļūst par `==`, saites `[text](url)`, treknraksts `**bold**`).
+- `'plain'` — vienmēr noņem tagus; darbojas bez papildu pakotnēm.
 
-Ģenerēšana notiek pēc renderēšanas un CSS iekļaušanas, un tikai tad, kad ziņojumam ir HTML saturs, bet nav teksta satura - eksplicīts `->text()` vai `->textTemplate()` vienmēr uzvar. Pārrakstījumi katram ziņojumam atspoguļo iekļaušanu:
+Ģenerēšana notiek pēc renderēšanas un CSS iekļaušanas, un tikai tad, ja ziņojumam ir HTML saturs, bet nav teksta satura — skaidri norādīts `->text()` vai `->textTemplate()` vienmēr prevalē. Pārrakstīšana katram ziņojumam atspoguļo iekļaušanu:
 
 ```php
-$message->textFromHtml('plain');    // piespiest tagu noņemšanu šim vienam
+$message->textFromHtml('plain');    // piespiedu tagu noņemšana šim vienam
 $message->withoutTextFromHtml();    // tikai HTML e-pasts
 ```
 
-Ieslēdziet režīmu, kura bibliotēka nav instalēta, un saņemat skaidru kļūdu, kas nosauc precīzo `composer require`, kas jāizpilda - nekad klusa degradācija.
+Ja iespējojat režīmu, kura bibliotēka nav instalēta, saņemsiet skaidru kļūdu, kas nosauc precīzu `composer require` komandu — nekādas klusas degradācijas.
 
 ## Pakalpojumu sniedzēja izvēle
 
-Pakalpojumu sniedzēji pievienojas caur DSN virknēm. Instalējiet tilta pakotni, ielīmējiet DSN `dsns`, gatavs.
+Pakalpojumu sniedzēji tiek pievienoti, izmantojot DSN virknes. Instalējiet savienojuma pakotni, ielīmējiet DSN `dsns` laukā, gatavs.
 
-| Pakalpojumu sniedzējs | Instalēšana                                  | DSN piemērs                                  |
-| --------------------- | -------------------------------------------- | -------------------------------------------- |
-| SMTP                  | iebūvēts                                     | `smtp://user:pass@host:587`                  |
-| Sendmail              | iebūvēts                                     | `sendmail://default`                         |
-| Dev/null (atmest pastu) | iebūvēts                                   | `null://null`                                |
-| Postmark              | `composer require symfony/postmark-mailer`   | `postmark+api://KEY@api.postmarkapp.com`     |
-| Sendgrid              | `composer require symfony/sendgrid-mailer`   | `sendgrid+api://KEY@default`                 |
-| Mailgun               | `composer require symfony/mailgun-mailer`    | `mailgun+https://KEY:DOMAIN@api.mailgun.net` |
-| Amazon SES            | `composer require symfony/amazon-mailer`     | `ses+https://KEY:SECRET@default`             |
-| Brevo                 | `composer require symfony/brevo-mailer`      | `brevo+api://KEY@default`                    |
-| MailerSend            | `composer require symfony/mailersend-mailer` | `mailersend+api://KEY@default`               |
+| Sniedzējs                    | Instalācija                                  | DSN piemērs                                  |
+| ---------------------------- | -------------------------------------------- | -------------------------------------------- |
+| SMTP                         | iebūvēts                                     | `smtp://user:pass@host:587`                  |
+| Sendmail                     | iebūvēts                                     | `sendmail://default`                         |
+| Dev/null (e-pastu izmešana)  | iebūvēts                                     | `null://null`                                |
+| Postmark                     | `composer require symfony/postmark-mailer`   | `postmark+api://KEY@api.postmarkapp.com`     |
+| Sendgrid                     | `composer require symfony/sendgrid-mailer`   | `sendgrid+api://KEY@default`                 |
+| Mailgun                      | `composer require symfony/mailgun-mailer`    | `mailgun+https://KEY:DOMAIN@api.mailgun.net` |
+| Amazon SES                   | `composer require symfony/amazon-mailer`     | `ses+https://KEY:SECRET@default`             |
+| Brevo                        | `composer require symfony/brevo-mailer`      | `brevo+api://KEY@default`                    |
+| MailerSend                   | `composer require symfony/mailersend-mailer` | `mailersend+api://KEY@default`               |
 
-Pilnais saraksts ir [Symfony Mailer dokumentācijā](https://symfony.com/doc/current/mailer.html) - jebkas, kas tur dokumentēts, šeit darbojas nemainīti.
+Pilns saraksts ir [Symfony Mailer dokumentācijā](https://symfony.com/doc/current/mailer.html) — viss, kas tur dokumentēts, šeit darbojas nemainīts.
 
 ### Vairāki pakalpojumu sniedzēji vienlaikus
 
-Nosauciet katru transportu, tad izvēlieties katram ziņojumam:
+Nosauciet katru transportu un pēc tam izvēlieties katram ziņojumam:
 
 ```php
 MailPlugin::install([
@@ -257,71 +255,71 @@ MailPlugin::install([
 ```
 
 ```php
-// Nav ->transport() izsaukuma = pirmā atslēga "dsns" ("transactional" šeit).
-Flight::mail()->compose()->to('...')->text('kvīts')->send();
+// Bez ->transport() izsaukuma tiek izmantota pirmā "dsns" atslēga ("transactional" šeit).
+Flight::mail()->compose()->to('...')->text('receipt')->send();
 
-// Eksplicīti izvēlieties citu maršrutu.
-Flight::mail()->compose()->to('...')->text('biļetens')->transport('bulk')->send();
+// Skaidri izvēlieties citu maršrutu.
+Flight::mail()->compose()->to('...')->text('newsletter')->transport('bulk')->send();
 ```
 
 ## Konfigurācijas atsauce
 
-Viss ir neobligāts, izņemot `dsns`.
+Viss nav obligāts, izņemot `dsns`.
 
 ```php
 MailPlugin::install([
-    // OBLIGĀTS - transporta nosaukums => Symfony DSN.
-    // Pirmais ieraksts tiek izmantots, kad ziņojums nenosauc nevienu.
+    // OBLIGĀTI - transporta nosaukums => Symfony DSN.
+    // Pirmais ieraksts tiek izmantots, ja ziņojums nenorāda konkrētu.
     'dsns' => [
         'default' => 'smtp://user:pass@localhost:1025',
     ],
 
-    // Transports, ko izmanto, kad ziņojumam nav eksplicīta ->transport() un
-    // jūs nevēlaties pirmo atslēgu. Jābūt "dsns".
+    // Transports, ko izmanto, ja ziņojumam nav tieša ->transport() izsaukuma un
+    // nevēlaties izmantot pirmo atslēgu. Jābūt definētam "dsns".
     'default_transport' => 'default',
 
-    // Globālais sūtītājs. Virkne, Symfony Address vai ['email' => 'Name'].
-    // Tiek piemērots tikai tad, kad ziņojums nenosaka savu ->from().
-    'from' => ['no-reply@example.com' => 'Mana lietotne'],
+    // Globālais sūtītājs. String, Symfony Address vai ['email' => 'Name'].
+    // Piemērots tikai tad, ja ziņojums nenosaka savu ->from().
+    'from' => ['no-reply@example.com' => 'My App'],
 
     // Noklusējuma veidņu dzinējs: 'twig', 'latte' vai pielāgots nosaukums.
-    // Konsultējas tikai veidnēm, kuru paplašinājums nav reģistrēts renderētājs.
+    // Tiek izmantots tikai veidnēm, kuru paplašinājums nav reģistrēts renderētājs.
     'renderer' => 'twig',
 
-    // Kur dzīvo veidnes, meklētas pēc kārtas; plus neobligāts kešatmiņas katalogs.
+    // Kur atrodas veidnes, tiek meklētas secīgi; plus neobligāta kešatmiņas mape.
     'templates' => [
         'paths' => [__DIR__ . '/mail-templates'],
         'cache' => __DIR__ . '/cache/mail',
     ],
 
-    // Papildu opcijas, kas tiek padotas tieši Twig\Environment.
+    // Papildu opcijas, kas nodotas tieši Twig\Environment.
     'twig' => ['options' => ['strict_variables' => true]],
 
-    // Pielāgojiet Latte dzinēju palaišanas laikā: fn(Latte\Engine $engine): void.
+    // Pielāgojiet Latte dzinēju starta brīdī: fn(Latte\Engine $engine): void.
     'latte' => ['setup' => static fn (Latte\Engine $e) => $e->addExtension(new MyExtension())],
 
-    // Sūtīšanas brīža satura uzlabojumi (skatiet "HTML stilizēšana un teksta daļu ģenerēšana").
+    // Sūtīšanas laika satura uzlabojumi (skatīt "HTML noformēšana un teksta daļu ģenerēšana").
     'inline_css' => true,           // vai ['css' => '...', 'css_file' => '...']
     'text_from_html' => true,       // vai 'plain' / 'markdown'
 
-    // Pielāgotas DSN shēmas, pielāgoti renderētāji, pirms-sūtīšanas āķi (skatiet zemāk).
+    // Pielāgotas DSN shēmas, pielāgoti renderētāji, pirms-sūtīšanas āķi (skatīt tālāk).
     'transport_factories' => [],
     'renderers' => [],
     'hooks' => [],
 
-    // Neobligāta infrastruktūra, kas tiek nodota katram transportam.
+    // Neobligātā infrastruktūra katram transportam.
     'event_dispatcher' => $dispatcher,  // Symfony MessageEvents
     'logger' => $psr3Logger,
 ]);
 ```
 
-## Iet tālāk
+## Tālākas iespējas
 
-Viss zemāk ir neobligāts. Noklusējumi nosedz lielāko daļu lietotņu.
+Viss zemāk ir neobligāts. Noklusējumi aptver lielāko daļu lietotņu.
 
-### Pievienot pielāgotu DSN shēmu
+### Pievienojiet pielāgotu DSN shēmu
 
-Implementējiet Symfony `TransportFactoryInterface` un reģistrējiet to - tad jūsu pašu shēma darbojas tieši kā iebūvēta:
+Ieviesiet Symfony `TransportFactoryInterface` un reģistrējiet to — tad jūsu pašu shēma darbojas tieši tāpat kā iebūvēta:
 
 ```php
 use ryanstubbs\FlightMail\MailPlugin;
@@ -338,7 +336,7 @@ class MyCarrierFactory implements TransportFactoryInterface
 
     public function create(Dsn $dsn): TransportInterface
     {
-        // ... izveidojiet transportu, kas runā ar jūsu pārvadātāju
+        // ... izveidojiet transportu, kas sazinās ar jūsu pakalpojumu sniedzēju
     }
 }
 
@@ -346,9 +344,9 @@ $plugin = MailPlugin::install(['dsns' => ['carrier' => 'mycarrier://key']]);
 $plugin->addTransportFactory(new MyCarrierFactory());
 ```
 
-### Pievienot pielāgotu veidņu renderētāju
+### Pievienojiet pielāgotu veidņu renderētāju
 
-Jebkas, kas pārvērš veidnes nosaukumu plus parametrus virknē, kvalificējas:
+Jebkas, kas pārvērš veidnes nosaukumu un parametrus virknē, ir derīgs:
 
 ```php
 use ryanstubbs\FlightMail\MailPlugin;
@@ -366,9 +364,9 @@ $plugin->addRenderer('markdown', fn (array $config): RendererInterface =>
 Flight::mail()->compose()->to('...')->template('welcome.markdown', ['name' => 'Ryan'])->send();
 ```
 
-### Palaist kaut ko tieši pirms sūtīšanas
+### Izpildiet kaut ko tieši pirms sūtīšanas
 
-Āķi saņem gatavo ziņojumu - pēc renderēšanas, pēc noklusējumiem, tieši pirms vada:
+Āķi saņem pabeigto ziņojumu — pēc renderēšanas, pēc noklusējumiem, tieši pirms nosūtīšanas:
 
 ```php
 $plugin->addHook(function (ryanstubbs\FlightMail\Message $message): void {
@@ -376,61 +374,65 @@ $plugin->addHook(function (ryanstubbs\FlightMail\Message $message): void {
 });
 ```
 
-### Notikumi un žurnalēšana
+### Notikumi un žurnālēšana
 
-Nododiet Symfony notikumu dispečeru un/vai PSR-3 žurnalētāju, un katrs transports tos izmantos:
+Nododiet Symfony notikumu izplatītāju un/vai PSR-3 žurnālētāju, un katrs transports tos izmantos:
 
 ```php
 $plugin->eventDispatcher($dispatcher); // saņem MessageEvent pirms katras sūtīšanas
 $plugin->logger($logger);              // transporta līmeņa žurnāli
 ```
 
-## API špikeris
+## API īsa atsauce
 
 ```php
 // Iestatīšana
-MailPlugin::install($config)             // reģistrēt globālajā Flight lietotnē
-MailPlugin::register($app, $config)      // reģistrēt konkrētā Engine
+MailPlugin::install($config)             // reģistrē globālajā Flight lietotnē
+MailPlugin::register($app, $config)      // reģistrē konkrētam Engine
 $mailer = Flight::mail();                // koplietotā Mailer instance
 
 // Ziņojumu veidošana
 $mailer->compose(): Message
 $message->to(...)->from(...)->subject(...)   // standarta Symfony Mime metodes
-$message->text(string)                       // vienkāršas virknes saturs
+$message->text(string)                       // vienkārša teksta virknes saturs
 $message->html(string)                       // HTML virknes saturs
 $message->template($name, $params)           // HTML saturs no veidnes
-$message->htmlTemplate($name, $params)       // template() aizstājvārds
+$message->htmlTemplate($name, $params)       // template() sinonīms
 $message->textTemplate($name, $params)       // teksta saturs no veidnes
 $message->inlineCss() / ->withoutInlineCss() // CSS iekļaušana katram ziņojumam
-$message->textFromHtml($mode)                // automātiska teksta daļa: true/'auto'/'plain'/'markdown'/false
+$message->textFromHtml($mode)                // automātiskā teksta daļa: true/'auto'/'plain'/'markdown'/false
 $message->withoutTextFromHtml()              // tikai HTML e-pasts
 $message->transport($name)                   // maršrutēt caur nosauktu DSN
 $message->send(): ?SentMessage               // renderēt + sūtīt
 
-// Uz paša mailer
-$mailer->send($message): ?SentMessage        // eksplicīta alternatīva $message->send()
+// Uz paša sūtītāja
+$mailer->send($message): ?SentMessage        // tieša alternatīva $message->send()
 $mailer->render($template, $params): string  // renderēt bez sūtīšanas
 $mailer->addHook(callable): static           // fn(Message $message): void
 $mailer->transports(): TransportManager      // get() / has() / names()
 $mailer->renderers(): RendererFactory        // create() / has() / add()
 ```
 
-Tā kā `Message` paplašina `Symfony\Component\Mime\Email`, katra Symfony metode, ko jau pazīstat - `attach()`, `embed()`, `priority()`, `replyTo()` - darbojas uzreiz.
+Tā kā `Message` paplašina `Symfony\Component\Mime\Email`, katra Symfony metode, ko jūs jau zināt — `attach()`, `embed()`, `priority()`, `replyTo()` — darbojas bez papildu iestatīšanas.
 
 ## Problēmu novēršana
 
 **"No mail DSNs configured"**
-Jūs izsaucāt `Flight::mail()` pirms spraudņa reģistrēšanas, vai konfigurācijas masīvs neiekļāva `dsns`. Šī kļūda ir apzināta - FlightMail atsakās minēt, kur jūsu pastam jādodas, nevis to klusībā nomest.
+
+Jūs izsaucāt `Flight::mail()` pirms spraudņa reģistrēšanas, vai konfigurācijas masīvā nebija iekļauts `dsns`. Šī kļūda ir apzināta — FlightMail atsakās uzminēt, kur jūsu e-pastiem būtu jādodas, nevis klusu tos izmet.
 
 **"Unknown mail template renderer ..."**
+
 Jūs izmantojāt veidni, kuras dzinējs nav instalēts. Labojiet ar `composer require twig/twig` vai `composer require latte/latte`, vai reģistrējiet pielāgotu renderētāju, kas nosaukts pēc paplašinājuma.
 
 **"Unknown mail transport ..."**
-`->transport('name')` (vai `default_transport`) nesakrīt ar nevienu atslēgu `dsns`. Pārbaudiet pareizrakstību - kļūda uzskaita konfigurētos nosaukumus.
 
-**E-pasts neienāk**
-Vērsiet `dsns` uz `null://null`, lai apstiprinātu, ka pārējais kods darbojas, tad pārslēdzieties atpakaļ uz īsto DSN. DDEV izmantojiet `smtp://127.0.0.1:1025` un pārbaudiet ziņojumus Mailpit 8025 portā.
+`->transport('name')` (vai `default_transport`) neatbilst nevienai `dsns` atslēgai. Pārbaudiet pareizrakstību — kļūda uzskaita konfigurētos nosaukumus.
+
+**E-pasts nenonāk**
+
+Norādiet `dsns` uz `null://null`, lai pārliecinātos, ka pārējais jūsu kods darbojas, pēc tam pārslēdzieties atpakaļ uz īsto DSN. DDEV vidē izmantojiet `smtp://127.0.0.1:1025` un pārbaudiet ziņojumus Mailpit 8025. portā.
 
 ---
 
-Kļūdu ziņojumiem, pull requestiem un pilnam avotam apmeklējiet [GitHub krātuvi](https://github.com/ryanstubbs/flightmail).
+Lai ziņotu par kļūdām, iesniegtu pull requestus un skatītu pilnu avota kodu, apmeklējiet [GitHub repozitoriju](https://github.com/ryanstubbs/flightmail).
