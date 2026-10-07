@@ -1,32 +1,32 @@
 # FlightMail
 
-> **Plugin de terceros** - mantenido por [Ryan Stubbs](https://ryanstubbs.co.uk) ([ryanstubbs/flightmail](https://github.com/ryanstubbs/flightmail), licencia MIT). No forma parte del núcleo de Flight - por favor reporta los problemas en [su repositorio de GitHub](https://github.com/ryanstubbs/flightmail/issues).
+> **Complemento de terceros**: mantenido por [Ryan Stubbs](https://ryanstubbs.co.uk) ([ryanstubbs/flightmail](https://github.com/ryanstubbs/flightmail), licencia MIT). No forma parte del núcleo de Flight; por favor, reporta los problemas en [su repositorio de GitHub](https://github.com/ryanstubbs/flightmail/issues).
 
-[ryanstubbs/flightmail](https://github.com/ryanstubbs/flightmail) te permite enviar correo desde tu app de Flight sin los dolores de cabeza. Envuelve **Symfony Mailer** - la librería de correo más consolidada de PHP - y lo hace sentir como parte de Flight. Una línea para instalar, una cadena fluida para enviar:
+[ryanstubbs/flightmail](https://github.com/ryanstubbs/flightmail) te permite enviar correos electrónicos desde tu aplicación Flight sin dolores de cabeza. Envuelve **Symfony Mailer**, la librería de correo más probada en PHP, y la hace sentir como parte de Flight. Una línea para instalar, una cadena fluida para enviar:
 
 ```php
 Flight::mail()->compose()
     ->to('someone@example.com')
-    ->subject('¡Lo lograste!')
-    ->text('Tu primer correo está en camino.')
+    ->subject('You did it!')
+    ->text('Your first email is on its way.')
     ->send();
 ```
 
 ## Características
 
-- **Cualquier proveedor, una línea cada uno.** SMTP, Postmark, Sendgrid, Mailgun, Amazon SES, Brevo y compañía funcionan todos a través de cadenas DSN simples.
-- **Usa varios proveedores a la vez.** Correo transaccional por Postmark, boletines por tu propio SMTP - elige por mensaje.
-- **Plantillas si las quieres.** Renderiza los cuerpos con Twig o Latte. ¿No quieres plantillas? Solo pasa cadenas e instala nada extra.
-- **Pulido al enviar.** Inlining de CSS opcional y partes de texto plano automáticas derivadas de tu HTML, impulsadas por librerías que solo instalas si las usas.
-- **Aburrido, de la mejor manera.** Conexiones perezosas, errores claros en lugar de correo tragado en silencio, y todo es intercambiable si necesitas algo personalizado.
+- **Cualquier proveedor, una línea cada uno.** SMTP, Postmark, Sendgrid, Mailgun, Amazon SES, Brevo y otros funcionan mediante cadenas DSN simples.
+- **Usa varios proveedores a la vez.** Correo transaccional a través de Postmark, boletines a través de tu propio SMTP: elige por mensaje.
+- **Plantillas si las quieres.** Renderiza cuerpos con Twig o Latte. ¿No quieres plantillas? Pasa cadenas de texto y no instales nada extra.
+- **Pulido en el envío.** Incrustación de CSS opcional y partes de texto plano automáticas derivadas de tu HTML, impulsadas por librerías que solo instalas si las usas.
+- **Aburrido en el mejor sentido.** Conexiones diferidas, errores claros en lugar de correos descartados silenciosamente, y todo es intercambiable si necesitas algo personalizado.
 
 ## Requisitos
 
-| Qué            | Versión                                      |
-| -------------- | -------------------------------------------- |
-| PHP            | 8.2 o más reciente                           |
-| Flight PHP     | core ^3.15                                   |
-| Symfony Mailer | ^7.2 o ^8.0 (instalado automáticamente)      |
+| Qué                | Versión                              |
+| ------------------ | ------------------------------------ |
+| PHP                | 8.2 o superior                      |
+| Flight PHP         | núcleo ^3.15                         |
+| Symfony Mailer     | ^7.2 o ^8.0 (se instala automáticamente) |
 
 ## Instalación
 
@@ -34,25 +34,25 @@ Flight::mail()->compose()
 composer require ryanstubbs/flightmail
 ```
 
-Eso es todo para enviar correos de texto plano y HTML. El renderizado de plantillas es opcional - agrega un motor solo si lo vas a usar:
+Eso es todo para enviar correos en texto plano y HTML. El renderizado de plantillas es opcional: añade un motor solo si lo vas a usar:
 
 ```bash
 composer require twig/twig      # para plantillas .twig
 composer require latte/latte    # para plantillas .latte
 ```
 
-Dos librerías opcionales más impulsan las mejoras al enviar cubiertas [más abajo](#estilos-html-y-generacion-de-partes-de-texto):
+Dos librerías opcionales más impulsan las mejoras de envío cubiertas [más abajo](#styling-html-and-generating-text-parts):
 
 ```bash
-composer require pelago/emogrifier         # para CSS en línea ("inline_css")
+composer require pelago/emogrifier         # para incrustar CSS ("inline_css")
 composer require league/html-to-markdown   # para partes de texto Markdown ("text_from_html")
 ```
 
-Todas estas se pueden instalar juntas; FlightMail elige la correcta según lo que configures.
+Todas ellas pueden instalarse juntas; FlightMail elige la correcta según lo que configures.
 
 ## Tu primer correo
 
-Agrega esto a tu bootstrap (el mismo lugar donde defines las rutas):
+Añade esto a tu bootstrap (el mismo lugar donde defines rutas):
 
 ```php
 <?php
@@ -60,7 +60,7 @@ require 'vendor/autoload.php';
 
 use ryanstubbs\FlightMail\MailPlugin;
 
-// Dile a FlightMail desde dónde y a través de qué enviar el correo.
+// Dile a FlightMail desde dónde y a través de qué enviar correos.
 MailPlugin::install([
     'dsns' => [
         'default' => 'smtp://user:pass@localhost:1025',
@@ -71,15 +71,15 @@ MailPlugin::install([
 Flight::route('/signup', function () {
     Flight::mail()->compose()
         ->to('new-user@example.com')
-        ->subject('¡Bienvenido a bordo!')
-        ->html('<h1>¡Bienvenido!</h1><p>Nos alegra que estés aquí.</p>')
+        ->subject('Welcome aboard!')
+        ->html('<h1>Welcome!</h1><p>We are glad you are here.</p>')
         ->send();
 });
 
 Flight::start();
 ```
 
-¿Usas el [esqueleto de Flight PHP](https://github.com/flightphp/skeleton)? Regístralo en `app/config/services.php` con el estilo de instancia en su lugar:
+¿Usas el [esqueleto de Flight PHP](https://github.com/flightphp/skeleton)? Regístralo en `app/config/services.php` con el estilo de instancia:
 
 ```php
 use ryanstubbs\FlightMail\MailPlugin;
@@ -92,35 +92,35 @@ MailPlugin::register($app, [
 
 Ambos estilos exponen el mismo mailer: `Flight::mail()` y `$app->mail()` son intercambiables.
 
-> **¿Probando en local?** Si tu proyecto corre en [DDEV](https://ddev.com), apunta el DSN a `smtp://127.0.0.1:1025` y lee cada correo capturado en Mailpit en `http://<project>.ddev.site:8025`. Nada sale de tu máquina.
+> **¿Probando localmente?** Si tu proyecto se ejecuta en [DDEV](https://ddev.com), apunta el DSN a `smtp://127.0.0.1:1025` y lee cada correo capturado en Mailpit en `http://<proyecto>.ddev.site:8025`. Nada sale de tu máquina.
 
-## Enviar correo
+## Envío de correos
 
-### Cadenas simples (no se necesita motor de plantillas)
+### Cadenas de texto planas (sin motor de plantillas)
 
-`->text()` y `->html()` toman cadenas crudas y no necesitan nada más instalado:
+`->text()` y `->html()` aceptan cadenas sin procesar y no necesitan nada más instalado:
 
 ```php
 Flight::mail()->compose()
     ->to('ops@example.com')
-    ->subject('Respaldo terminado')
-    ->text('El respaldo nocturno se completó en 42 minutos.')
+    ->subject('Backup finished')
+    ->text('Nightly backup completed in 42 minutes.')
     ->send();
 
 Flight::mail()->compose()
     ->to('billing@example.com')
-    ->subject('Factura #123')
-    ->html('<h1>Factura #123</h1><p>Total a pagar: $42.00</p>')
+    ->subject('Invoice #123')
+    ->html('<h1>Invoice #123</h1><p>Total due: $42.00</p>')
     ->send();
 ```
 
 ### Plantillas Twig
 
 ```php
-// welcome.html.twig contiene: ¡Hola {{ name }}, gracias por registrarte!
+// welcome.html.twig contiene: Hello {{ name }}, gracias por registrarte
 Flight::mail()->compose()
     ->to('someone@example.com')
-    ->subject('¡Bienvenido!')
+    ->subject('Welcome!')
     ->template('welcome.html.twig', ['name' => 'Ryan'])
     ->send();
 ```
@@ -130,45 +130,45 @@ Flight::mail()->compose()
 Misma idea, extensión `.latte`:
 
 ```php
-// welcome.latte contiene: ¡Hola {$name}, gracias por registrarte!
+// welcome.latte contiene: Hello {$name}, gracias por registrarte
 Flight::mail()->compose()
     ->to('someone@example.com')
-    ->subject('¡Bienvenido!')
+    ->subject('Welcome!')
     ->template('welcome.latte', ['name' => 'Ryan'])
     ->send();
 ```
 
 ### HTML + texto plano juntos
 
-Buena práctica para la entregabilidad - dale a los clientes de correo ambas versiones:
+Buena práctica para la entregabilidad: da a los clientes de correo ambas versiones:
 
 ```php
 Flight::mail()->compose()
     ->to('someone@example.com')
-    ->subject('¡Bienvenido!')
+    ->subject('Welcome!')
     ->template('welcome.html.twig', ['name' => 'Ryan'])     // versión enriquecida
     ->textTemplate('welcome.txt.twig', ['name' => 'Ryan'])  // versión de respaldo
     ->send();
 ```
 
-Algunas cosas que vale la pena saber sobre las plantillas:
+Algunas cosas útiles sobre las plantillas:
 
-- Se renderizan de forma **perezosa**, en el momento del envío - compones ahora, renderizas después.
-- El motor se elige por la extensión: `.twig` → Twig, `.latte` → Latte, cualquier otra cosa → tu valor por defecto configurado (opción `renderer`).
-- Un cuerpo explícito con `->html()` o `->text()` siempre gana sobre una plantilla, así que puedes definir una plantilla por defecto y sobreescribirla por mensaje.
+- Se renderizan **de forma diferida**, en el momento del envío: compón ahora, renderiza después.
+- El motor se elige por extensión: `.twig` → Twig, `.latte` → Latte, cualquier otra cosa → tu predeterminado configurado (opción `renderer`).
+- Un cuerpo explícito `->html()` o `->text()` siempre gana sobre una plantilla, de modo que puedes definir una plantilla predeterminada y anularla por mensaje.
 
-## Estilos HTML y generación de partes de texto
+## Aplicar estilos al HTML y generar partes de texto
 
-Dos mejoras opcionales al enviar, ambas desactivadas por defecto y ambas impulsadas por librerías que solo instalas si las quieres:
+Dos mejoras opcionales en el envío, ambas desactivadas por defecto y ambas impulsadas por librerías que solo instalas si las deseas:
 
-| Función                   | Instalar                   | Clave de configuración |
-| ------------------------- | -------------------------- | ---------------------- |
-| CSS en línea              | `pelago/emogrifier`        | `inline_css`           |
-| Parte de texto desde HTML | `league/html-to-markdown`  | `text_from_html`       |
+| Característica               | Instalación                 | Clave de configuración |
+| ---------------------------- | --------------------------- | ---------------------- |
+| Incrustación de CSS          | `pelago/emogrifier`         | `inline_css`           |
+| Parte de texto desde HTML    | `league/html-to-markdown`   | `text_from_html`       |
 
-### Insertar CSS en línea en tu correo HTML
+### Incrustar CSS en tu correo HTML
 
-Gmail y la mayoría de los clientes de webmail eliminan los bloques `<style>` - los atributos `style=""` en línea son el único estilo que honran de forma fiable. Escribirlos a mano es miserable; deja que [Emogrifier](https://github.com/MyIntervals/emogrifier) lo haga al enviar:
+Gmail y la mayoría de los clientes de correo web eliminan los bloques `<style>`: los atributos `style=""` en línea son el único estilo que honran de forma fiable. Escribirlos a mano es miserable; deja que [Emogrifier](https://github.com/MyIntervals/emogrifier) lo haga en el momento del envío:
 
 ```bash
 composer require pelago/emogrifier
@@ -181,9 +181,9 @@ MailPlugin::install([
 ]);
 ```
 
-Con eso activado, cada cuerpo HTML recibe su CSS en línea justo antes de enviar - ya sea que viniera de una plantilla o de `->html()`. Un mensaje como `<style>p { color: red; }</style><p>Hola</p>` sale como `<p style="color: red;">Hola</p>`.
+Con esto activado, cada cuerpo HTML recibe su CSS incrustado justo antes de enviarse, ya venga de una plantilla o de `->html()`. Un mensaje como `<style>p { color: red; }</style><p>Hi</p>` sale como `<p style="color: red;">Hi</p>`.
 
-Para inyectar estilos compartidos en cada correo (colores de marca, resets) sin repetirlos en cada plantilla, pasa las reglas directamente o apunta a un archivo de hoja de estilos:
+Para inyectar estilos compartidos en todos los correos (colores de marca, resets) sin repetirlos en cada plantilla, pasa reglas directamente o apunta a un archivo de hoja de estilos:
 
 ```php
 'inline_css' => ['css_file' => __DIR__ . '/mail-styles/base.css'],
@@ -194,57 +194,57 @@ Para inyectar estilos compartidos en cada correo (colores de marca, resets) sin 
 Control por mensaje:
 
 ```php
-$message->inlineCss();          // forzar inlining para este mensaje
-$message->withoutInlineCss();   // saltarlo incluso cuando está habilitado globalmente
+$message->inlineCss();          // fuerza la incrustación solo para este mensaje
+$message->withoutInlineCss();   // la omite incluso si está activada globalmente
 ```
 
-### Generar la parte de texto a partir de tu HTML
+### Generar la parte de texto desde tu HTML
 
-La buena práctica es enviar una versión HTML y una de texto plano juntas, pero escribir ambas es tedioso. FlightMail puede derivar la parte de texto del HTML final automáticamente - la conversión básica no necesita ninguna dependencia extra, ya que el convertidor viene con Symfony Mime:
+La buena práctica es enviar una versión HTML y otra de texto plano juntas, pero escribir ambas es tedioso. FlightMail puede derivar automáticamente la parte de texto del HTML final; la conversión básica no necesita dependencias adicionales, porque el conversor viene con Symfony Mime:
 
 ```php
 MailPlugin::install([
     'dsns' => ['default' => 'smtp://user:pass@localhost:1025'],
-    'text_from_html' => true,       // Markdown cuando sea posible, plano si no
+    'text_from_html' => true,       // Markdown cuando sea posible, si no, texto plano
 ]);
 ```
 
 Modos:
 
-- `true` o `'auto'` - salida Markdown si `league/html-to-markdown` está instalado, de lo contrario un simple recorte de etiquetas.
-- `'markdown'` - forzar Markdown (`composer require league/html-to-markdown`; los encabezados se vuelven `==`, los enlaces `[text](url)`, negrita `**bold**`).
-- `'plain'` - siempre recortar etiquetas; funciona con cero paquetes extra.
+- `true` o `'auto'`: salida Markdown si `league/html-to-markdown` está instalado, si no, simple eliminación de etiquetas.
+- `'markdown'`: fuerza Markdown (`composer require league/html-to-markdown`; los encabezados se convierten en `==`, los enlaces `[texto](url)`, la negrita `**negrita**`).
+- `'plain'`: siempre elimina etiquetas; funciona con cero paquetes adicionales.
 
-La generación corre después del renderizado y del CSS en línea, y solo cuando el mensaje tiene un cuerpo HTML pero no un cuerpo de texto - un `->text()` o `->textTemplate()` explícito siempre gana. Las anulaciones por mensaje reflejan el inlining:
+La generación ocurre después del renderizado y de la incrustación de CSS, y solo cuando el mensaje tiene cuerpo HTML pero no cuerpo de texto: un `->text()` o `->textTemplate()` explícito siempre gana. Las anulaciones por mensaje reflejan la incrustación:
 
 ```php
-$message->textFromHtml('plain');    // forzar recorte de etiquetas para este
+$message->textFromHtml('plain');    // fuerza la eliminación de etiquetas solo para este
 $message->withoutTextFromHtml();    // correo solo HTML
 ```
 
-Habilita un modo cuya librería no esté instalada y obtienes un error claro que nombra el `composer require` exacto a ejecutar - nunca una degradación silenciosa.
+Si activas un modo cuya librería no está instalada, obtienes un error claro que indica el `composer require` exacto a ejecutar; nunca una degradación silenciosa.
 
 ## Elegir un proveedor
 
-Los proveedores se conectan a través de cadenas DSN. Instala el paquete puente, pega el DSN en `dsns`, listo.
+Los proveedores se conectan mediante cadenas DSN. Instala el paquete puente, pega el DSN en `dsns`, listo.
 
-| Proveedor            | Instalar                                     | Ejemplo de DSN                               |
-| -------------------- | -------------------------------------------- | -------------------------------------------- |
-| SMTP                 | integrado                                    | `smtp://user:pass@host:587`                  |
-| Sendmail             | integrado                                    | `sendmail://default`                         |
-| Dev/null (descartar correo) | integrado                             | `null://null`                                |
-| Postmark             | `composer require symfony/postmark-mailer`   | `postmark+api://KEY@api.postmarkapp.com`     |
-| Sendgrid             | `composer require symfony/sendgrid-mailer`   | `sendgrid+api://KEY@default`                 |
-| Mailgun              | `composer require symfony/mailgun-mailer`    | `mailgun+https://KEY:DOMAIN@api.mailgun.net` |
-| Amazon SES           | `composer require symfony/amazon-mailer`     | `ses+https://KEY:SECRET@default`             |
-| Brevo                | `composer require symfony/brevo-mailer`      | `brevo+api://KEY@default`                    |
-| MailerSend           | `composer require symfony/mailersend-mailer` | `mailersend+api://KEY@default`               |
+| Proveedor             | Instalación                                   | Ejemplo de DSN                                |
+| --------------------- | --------------------------------------------- | --------------------------------------------- |
+| SMTP                  | incluido                                      | `smtp://user:pass@host:587`                   |
+| Sendmail              | incluido                                      | `sendmail://default`                          |
+| Dev/null (descarta correos) | incluido                                      | `null://null`                                 |
+| Postmark              | `composer require symfony/postmark-mailer`    | `postmark+api://KEY@api.postmarkapp.com`      |
+| Sendgrid              | `composer require symfony/sendgrid-mailer`    | `sendgrid+api://KEY@default`                  |
+| Mailgun               | `composer require symfony/mailgun-mailer`     | `mailgun+https://KEY:DOMAIN@api.mailgun.net`  |
+| Amazon SES            | `composer require symfony/amazon-mailer`      | `ses+https://KEY:SECRET@default`              |
+| Brevo                 | `composer require symfony/brevo-mailer`       | `brevo+api://KEY@default`                     |
+| MailerSend            | `composer require symfony/mailersend-mailer`  | `mailersend+api://KEY@default`                |
 
-La lista completa vive en la [documentación de Symfony Mailer](https://symfony.com/doc/current/mailer.html) - cualquier cosa documentada ahí funciona aquí sin cambios.
+La lista completa está en la [documentación de Symfony Mailer](https://symfony.com/doc/current/mailer.html); cualquier cosa documentada allí funciona aquí sin cambios.
 
 ### Varios proveedores a la vez
 
-Nombra cada transporte, luego elige por mensaje:
+Nombra cada transporte y luego elige por mensaje:
 
 ```php
 MailPlugin::install([
@@ -258,10 +258,10 @@ MailPlugin::install([
 
 ```php
 // Sin llamada a ->transport() = primera clave en "dsns" ("transactional" aquí).
-Flight::mail()->compose()->to('...')->text('recibo')->send();
+Flight::mail()->compose()->to('...')->text('receipt')->send();
 
-// Elige otra ruta de forma explícita.
-Flight::mail()->compose()->to('...')->text('boletín')->transport('bulk')->send();
+// Opta explícitamente por otra ruta.
+Flight::mail()->compose()->to('...')->text('newsletter')->transport('bulk')->send();
 ```
 
 ## Referencia de configuración
@@ -270,46 +270,46 @@ Todo es opcional excepto `dsns`.
 
 ```php
 MailPlugin::install([
-    // OBLIGATORIO - nombre de transporte => Symfony DSN.
-    // La primera entrada se usa cuando un mensaje no nombra una.
+    // OBLIGATORIO: nombre del transporte => DSN de Symfony.
+    // La primera entrada se usa cuando un mensaje no menciona ninguno.
     'dsns' => [
         'default' => 'smtp://user:pass@localhost:1025',
     ],
 
-    // Transporte usado cuando un mensaje no tiene un ->transport() explícito y
-    // no quieres la primera clave. Debe existir en "dsns".
+    // Transporte usado cuando un mensaje no tiene ->transport() explícito
+    // y no quieres la primera clave. Debe existir en "dsns".
     'default_transport' => 'default',
 
-    // Remitente global. String, Symfony Address, o ['email' => 'Name'].
+    // Remitente global. Cadena, dirección Symfony o ['email' => 'Nombre'].
     // Se aplica solo cuando un mensaje no define su propio ->from().
-    'from' => ['no-reply@example.com' => 'Mi App'],
+    'from' => ['no-reply@example.com' => 'My App'],
 
-    // Motor de plantillas por defecto: 'twig', 'latte', o un nombre personalizado.
-    // Solo se consulta para plantillas cuya extensión no es un renderer registrado.
+    // Motor de plantillas predeterminado: 'twig', 'latte' o un nombre personalizado.
+    // Solo se consulta para plantillas cuya extensión no es un renderizador registrado.
     'renderer' => 'twig',
 
-    // Dónde viven las plantillas, buscadas en orden; más un dir de caché opcional.
+    // Dónde viven las plantillas, buscadas en orden; más un directorio de caché opcional.
     'templates' => [
         'paths' => [__DIR__ . '/mail-templates'],
         'cache' => __DIR__ . '/cache/mail',
     ],
 
-    // Opciones extra pasadas directo a Twig\Environment.
+    // Opciones extra pasadas directamente a Twig\Environment.
     'twig' => ['options' => ['strict_variables' => true]],
 
     // Ajusta el motor Latte al arrancar: fn(Latte\Engine $engine): void.
     'latte' => ['setup' => static fn (Latte\Engine $e) => $e->addExtension(new MyExtension())],
 
-    // Mejoras del cuerpo al enviar (ver "Estilos HTML y generación de partes de texto").
+    // Mejoras del cuerpo en el envío (ver "Aplicar estilos al HTML y generar partes de texto").
     'inline_css' => true,           // o ['css' => '...', 'css_file' => '...']
     'text_from_html' => true,       // o 'plain' / 'markdown'
 
-    // Esquemas DSN personalizados, renderers personalizados, hooks pre-envío (ver más abajo).
+    // Esquemas DSN personalizados, renderizadores personalizados, ganchos de pre-envío (ver más abajo).
     'transport_factories' => [],
     'renderers' => [],
     'hooks' => [],
 
-    // Fontanería opcional entregada a cada transporte.
+    // Infraestructura opcional entregada a cada transporte.
     'event_dispatcher' => $dispatcher,  // Symfony MessageEvents
     'logger' => $psr3Logger,
 ]);
@@ -317,11 +317,11 @@ MailPlugin::install([
 
 ## Ir más allá
 
-Todo lo de abajo es opcional. Los valores por defecto cubren la mayoría de las apps.
+Todo lo siguiente es opcional. Los valores predeterminados cubren la mayoría de aplicaciones.
 
-### Agregar un esquema DSN personalizado
+### Añadir un esquema DSN personalizado
 
-Implementa `TransportFactoryInterface` de Symfony y regístralo - entonces tu propio esquema funciona exactamente como uno integrado:
+Implementa la `TransportFactoryInterface` de Symfony y regístrala; entonces tu propio esquema funciona exactamente como uno integrado:
 
 ```php
 use ryanstubbs\FlightMail\MailPlugin;
@@ -346,9 +346,9 @@ $plugin = MailPlugin::install(['dsns' => ['carrier' => 'mycarrier://key']]);
 $plugin->addTransportFactory(new MyCarrierFactory());
 ```
 
-### Agregar un renderizador de plantillas personalizado
+### Añadir un renderizador de plantillas personalizado
 
-Cualquier cosa que convierta un nombre de plantilla más params en una cadena califica:
+Cualquier cosa que convierta un nombre de plantilla más parámetros en una cadena vale:
 
 ```php
 use ryanstubbs\FlightMail\MailPlugin;
@@ -362,13 +362,13 @@ $plugin->addRenderer('markdown', fn (array $config): RendererInterface =>
 ```
 
 ```php
-// Las plantillas que terminan en .markdown ahora lo usan automáticamente:
+// Las plantillas terminadas en .markdown ahora lo usan automáticamente:
 Flight::mail()->compose()->to('...')->template('welcome.markdown', ['name' => 'Ryan'])->send();
 ```
 
 ### Ejecutar algo justo antes de enviar
 
-Los hooks reciben el mensaje terminado - después del renderizado, después de los valores por defecto, justo antes del cable:
+Los ganchos reciben el mensaje terminado: después del renderizado, después de los valores predeterminados, justo antes del cable:
 
 ```php
 $plugin->addHook(function (ryanstubbs\FlightMail\Message $message): void {
@@ -378,22 +378,22 @@ $plugin->addHook(function (ryanstubbs\FlightMail\Message $message): void {
 
 ### Eventos y registro
 
-Entrega un event dispatcher de Symfony y/o un logger PSR-3 y cada transporte los usará:
+Entrega un despachador de eventos de Symfony y/o un logger PSR-3 y todos los transportes los usarán:
 
 ```php
 $plugin->eventDispatcher($dispatcher); // recibe MessageEvent antes de cada envío
-$plugin->logger($logger);              // logs a nivel de transporte
+$plugin->logger($logger);              // registros a nivel de transporte
 ```
 
-## Hoja de referencia de la API
+## Referencia rápida de la API
 
 ```php
 // Configuración
-MailPlugin::install($config)             // registrar en la app global de Flight
-MailPlugin::register($app, $config)      // registrar en un Engine específico
-$mailer = Flight::mail();                // la instancia Mailer compartida
+MailPlugin::install($config)             // registra en la aplicación Flight global
+MailPlugin::register($app, $config)      // registra en un Engine específico
+$mailer = Flight::mail();                // la instancia compartida de Mailer
 
-// Construir mensajes
+// Construcción de mensajes
 $mailer->compose(): Message
 $message->to(...)->from(...)->subject(...)   // métodos estándar de Symfony Mime
 $message->text(string)                       // cuerpo de cadena de texto plano
@@ -401,36 +401,36 @@ $message->html(string)                       // cuerpo de cadena HTML
 $message->template($name, $params)           // cuerpo HTML desde una plantilla
 $message->htmlTemplate($name, $params)       // alias de template()
 $message->textTemplate($name, $params)       // cuerpo de texto desde una plantilla
-$message->inlineCss() / ->withoutInlineCss() // CSS en línea por mensaje
-$message->textFromHtml($mode)                // parte de texto auto: true/'auto'/'plain'/'markdown'/false
+$message->inlineCss() / ->withoutInlineCss() // incrustación de CSS por mensaje
+$message->textFromHtml($mode)                // parte de texto automática: true/'auto'/'plain'/'markdown'/false
 $message->withoutTextFromHtml()              // correo solo HTML
-$message->transport($name)                   // enrutar vía un DSN con nombre
-$message->send(): ?SentMessage               // renderizar + enviar
+$message->transport($name)                   // enruta mediante un DSN nombrado
+$message->send(): ?SentMessage               // renderiza + envía
 
-// En el mailer mismo
+// Sobre el propio mailer
 $mailer->send($message): ?SentMessage        // alternativa explícita a $message->send()
-$mailer->render($template, $params): string  // renderizar sin enviar
+$mailer->render($template, $params): string  // renderiza sin enviar
 $mailer->addHook(callable): static           // fn(Message $message): void
 $mailer->transports(): TransportManager      // get() / has() / names()
 $mailer->renderers(): RendererFactory        // create() / has() / add()
 ```
 
-Como `Message` extiende `Symfony\Component\Mime\Email`, cada método de Symfony que ya conoces - `attach()`, `embed()`, `priority()`, `replyTo()` - funciona de inmediato.
+Dado que `Message` extiende `Symfony\Component\Mime\Email`, todos los métodos de Symfony que ya conoces, `attach()`, `embed()`, `priority()`, `replyTo()`, funcionan de serie.
 
 ## Solución de problemas
 
 **"No mail DSNs configured"**
-Llamaste a `Flight::mail()` antes de registrar el plugin, o el array de config no incluía `dsns`. Este error es deliberado - FlightMail se niega a adivinar a dónde debe ir tu correo en lugar de soltarlo en silencio.
+Llamaste a `Flight::mail()` antes de registrar el complemento, o la matriz de configuración no incluía `dsns`. Este error es deliberado: FlightMail se niega a adivinar a dónde debe ir tu correo en lugar de descartarlo silenciosamente.
 
 **"Unknown mail template renderer ..."**
-Usaste una plantilla cuyo motor no está instalado. Arréglalo con `composer require twig/twig` o `composer require latte/latte`, o registra un renderer personalizado nombrado según la extensión.
+Usaste una plantilla cuyo motor no está instalado. Arrégialo con `composer require twig/twig` o `composer require latte/latte`, o registra un renderizador personalizado con el nombre de la extensión.
 
 **"Unknown mail transport ..."**
-Un `->transport('name')` (o `default_transport`) no coincide con ninguna clave en `dsns`. Revisa la ortografía - el error lista los nombres configurados.
+Un `->transport('nombre')` (o `default_transport`) no coincide con ninguna clave en `dsns`. Revisa la ortografía: el error lista los nombres configurados.
 
-**El correo no está llegando**
-Apunta `dsns` a `null://null` para confirmar que el resto de tu código funciona, luego vuelve al DSN real. En DDEV, usa `smtp://127.0.0.1:1025` e inspecciona los mensajes en Mailpit en el puerto 8025.
+**El correo no llega**
+Apunta `dsns` a `null://null` para confirmar que el resto de tu código funciona, y luego vuelve al DSN real. En DDEV, usa `smtp://127.0.0.1:1025` e inspecciona los mensajes en Mailpit en el puerto 8025.
 
 ---
 
-Para reportes de errores, pull requests y el código fuente completo, visita el [repositorio de GitHub](https://github.com/ryanstubbs/flightmail).
+Para informes de errores, solicitudes de extracción y el código fuente completo, visita el [repositorio de GitHub](https://github.com/ryanstubbs/flightmail).

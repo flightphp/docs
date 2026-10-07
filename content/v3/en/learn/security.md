@@ -461,6 +461,26 @@ Flight::set('flight.debug', false);
 Flight::set('flight.log_errors', true);
 ```
 
+#### `flight.views.restrict_to_path`
+
+Flight's built-in `View` class will happily include a template from an absolute path, or from a relative name that climbs out of `flight.views.path` (for example with `../`). That is intentional for apps that deliberately share templates across folders, but it is also a path-traversal risk if a template name ever comes from untrusted input.
+
+`flight.views.restrict_to_path` is **off by default** so existing apps keep working. Turn it on unless you have a documented reason not to:
+
+```php
+// In your index.php or bootstrap file, before Flight::start()
+Flight::set('flight.views.restrict_to_path', true);
+```
+
+Engine applies that setting onto `View::$restrictToPath` when the view is created (same pattern as `flight.views.path` and `flight.views.extension`). With it on:
+
+- `render()` and `fetch()` only include files whose real path sits inside the configured views directory (symlinks that point outside are rejected too).
+- `exists()` returns `false` for those same paths instead of throwing.
+- `getTemplate()` itself is unchanged — it still returns paths the way it always has.
+- A blocked file throws `Template file is outside the views path.` A missing file still throws the existing `Template file not found: ...` message.
+
+If you use Twig or Latte with their own filesystem loaders pointed at your views directory, those engines already contain templates to that root. Still turn this on for Flight's native `View` so any code that calls `Flight::view()->render()` / `fetch()` gets the same protection. The official [skeleton](https://github.com/flightphp/skeleton) enables it in bootstrap.
+
 #### Recommended production configuration
 
 ```php
@@ -468,6 +488,7 @@ Flight::set('flight.log_errors', true);
 Flight::set('flight.allow_method_override', false);
 Flight::set('flight.debug', false);
 Flight::set('flight.log_errors', true);
+Flight::set('flight.views.restrict_to_path', true);
 ```
 
 ### Error Handling
@@ -556,6 +577,7 @@ Flight::before('start', function() {
 
 ## Changelog
 - Docs – Skeleton `App\Middleware`, Twig CSRF/XSS notes, SimplePdo, secrets/`.env`, and `SECURITY.md` for AI-friendly projects.
+- Docs – Documented `flight.views.restrict_to_path` under Flight Configuration Hardening (opt-in path containment for native views).
 - v3.18.1 - Added Flight Configuration Hardening section covering `flight.allow_method_override`, `flight.debug`, and JSONP callback validation.
 - v3.1.0 - Added sections on CORS, Error Handling, Input Sanitization, Password Hashing, and Rate Limiting.
 - v2.0 - Added escaping for default views to prevent XSS.

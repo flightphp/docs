@@ -1,31 +1,31 @@
 # FlightMail
 
-> **Сторонній плагін** - підтримується [Ryan Stubbs](https://ryanstubbs.co.uk) ([ryanstubbs/flightmail](https://github.com/ryanstubbs/flightmail), ліцензія MIT). Не є частиною ядра Flight - будь ласка, повідомляйте про проблеми в [його репозиторії на GitHub](https://github.com/ryanstubbs/flightmail/issues).
+> **Сторонній плагін** - підтримується [Ryan Stubbs](https://ryanstubbs.co.uk) ([ryanstubbs/flightmail](https://github.com/ryanstubbs/flightmail), ліцензія MIT). Не є частиною ядра Flight - повідомляйте про проблеми в [його репозиторії GitHub](https://github.com/ryanstubbs/flightmail/issues).
 
-[ryanstubbs/flightmail](https://github.com/ryanstubbs/flightmail) дозволяє надсилати електронну пошту з вашого додатка Flight без головного болю. Він обгортає **Symfony Mailer** - найбільш перевірену в бою поштову бібліотеку в PHP - і робить так, ніби це частина Flight. Один рядок для встановлення, один fluent-ланцюжок для надсилання:
+[ryanstubbs/flightmail](https://github.com/ryanstubbs/flightmail) дозволяє надсилати електронні листи з вашого застосунку Flight без зайвого клопоту. Він обгортає **Symfony Mailer** - найперевіренішу поштову бібліотеку в PHP - і робить її схожою на частину Flight. Один рядок для встановлення, один ланцюжок методів для надсилання:
 
 ```php
 Flight::mail()->compose()
     ->to('someone@example.com')
-    ->subject('У вас вийшло!')
-    ->text('Ваш перший лист уже в дорозі.')
+    ->subject('You did it!')
+    ->text('Your first email is on its way.')
     ->send();
 ```
 
-## Можливості
+## Функції
 
-- **Будь-який провайдер — по одному рядку.** SMTP, Postmark, Sendgrid, Mailgun, Amazon SES, Brevo і компанія працюють через прості DSN-рядки.
-- **Кілька провайдерів одразу.** Транзакційні листи через Postmark, розсилки через власний SMTP — обирайте для кожного повідомлення.
-- **Шаблони, якщо захочете.** Рендеріть тіла листів через Twig або Latte. Не хочете шаблони? Просто передайте рядки й не встановлюйте нічого зайвого.
-- **Глянець у момент надсилання.** Необов'язкове вбудовування CSS і автоматичні текстові частини з вашого HTML — на бібліотеках, які ставляться лише якщо ви ними користуєтесь.
-- **Нудний у найкращому сенсі.** Ліниві з'єднання, зрозумілі помилки замість тихо проковтнутих листів, і все можна підмінити, якщо потрібно щось своє.
+- **Будь-який провайдер, по одному рядку на кожен.** SMTP, Postmark, Sendgrid, Mailgun, Amazon SES, Brevo та інші працюють через прості DSN-рядки.
+- **Використовуйте кількох провайдерів одночасно.** Транзакційна пошта через Postmark, розсилки через ваш власний SMTP - вибирайте для кожного повідомлення.
+- **Шаблони, якщо хочете.** Рендерте тіла за допомогою Twig або Latte. Не хочете шаблонів? Просто передавайте рядки й нічого додаткового не встановлюйте.
+- **Оздоблення під час надсилання.** Необов'язкове вбудовування CSS і автоматичні текстові частини, отримані з вашого HTML, на основі бібліотек, які ви встановлюєте лише за потреби.
+- **Нудний у найкращому сенсі.** Ліниві з'єднання, зрозумілі помилки замість тихо проковтнутої пошти, і все можна замінити, якщо потрібно щось власне.
 
 ## Вимоги
 
 | Що             | Версія                                 |
 | -------------- | -------------------------------------- |
 | PHP            | 8.2 або новіша                         |
-| Flight PHP     | core ^3.15                             |
+| Flight PHP     | ядро ^3.15                             |
 | Symfony Mailer | ^7.2 або ^8.0 (встановлюється автоматично) |
 
 ## Встановлення
@@ -34,25 +34,25 @@ Flight::mail()->compose()
 composer require ryanstubbs/flightmail
 ```
 
-Цього достатньо для надсилання листів у простому тексті та HTML. Рендеринг шаблонів підключається за бажанням — додайте шаблонізатор, лише якщо ним користуватиметесь:
+Це все для надсилання звичайних текстових і HTML-листів. Рендеринг шаблонів вмикається за бажанням - додайте рушій, лише якщо будете ним користуватися:
 
 ```bash
 composer require twig/twig      # для шаблонів .twig
 composer require latte/latte    # для шаблонів .latte
 ```
 
-Ще дві необов'язкові бібліотеки забезпечують покращення в момент надсилання, описані [нижче](#styling-html-and-generating-text-parts):
+Ще дві необов'язкові бібліотеки забезпечують покращення під час надсилання, описані [нижче](#styling-html-and-generating-text-parts):
 
 ```bash
 composer require pelago/emogrifier         # для вбудовування CSS ("inline_css")
-composer require league/html-to-markdown   # для текстових частин у Markdown ("text_from_html")
+composer require league/html-to-markdown   # для текстових частин Markdown ("text_from_html")
 ```
 
-Усі їх можна ставити поряд; FlightMail обере потрібну, спираючись на вашу конфігурацію.
+Усі їх можна встановити разом; FlightMail вибирає потрібну залежно від вашої конфігурації.
 
 ## Ваш перший лист
 
-Додайте це до bootstrap (туди ж, де ви визначаєте маршрути):
+Додайте це до свого bootstrap (туди ж, де ви визначаєте маршрути):
 
 ```php
 <?php
@@ -60,7 +60,7 @@ require 'vendor/autoload.php';
 
 use ryanstubbs\FlightMail\MailPlugin;
 
-// Скажіть FlightMail, звідки і через що надсилати пошту.
+// Повідомте FlightMail, звідки й через що надсилати пошту.
 MailPlugin::install([
     'dsns' => [
         'default' => 'smtp://user:pass@localhost:1025',
@@ -71,15 +71,15 @@ MailPlugin::install([
 Flight::route('/signup', function () {
     Flight::mail()->compose()
         ->to('new-user@example.com')
-        ->subject('Ласкаво просимо на борт!')
-        ->html('<h1>Ласкаво просимо!</h1><p>Ми раді, що ви тут.</p>')
+        ->subject('Welcome aboard!')
+        ->html('<h1>Welcome!</h1><p>We are glad you are here.</p>')
         ->send();
 });
 
 Flight::start();
 ```
 
-Користуєтесь [скелетом Flight PHP](https://github.com/flightphp/skeleton)? Зареєструйте в `app/config/services.php` у стилі екземпляра:
+Використовуєте [скелет Flight PHP](https://github.com/flightphp/skeleton)? Зареєструйте в `app/config/services.php` у стилі з інстансом:
 
 ```php
 use ryanstubbs\FlightMail\MailPlugin;
@@ -90,37 +90,37 @@ MailPlugin::register($app, [
 ]);
 ```
 
-Обидва стилі дають той самий мейлер: `Flight::mail()` і `$app->mail()` взаємозамінні.
+Обидва стилі надають той самий mailer: `Flight::mail()` і `$app->mail()` взаємозамінні.
 
-> **Тестуєте локально?** Якщо проєкт крутиться в [DDEV](https://ddev.com), спрямуйте DSN на `smtp://127.0.0.1:1025` і читайте кожен перехоплений лист у Mailpit за адресою `http://<project>.ddev.site:8025`. Нічого не покидає вашу машину.
+> **Тестуєте локально?** Якщо ваш проєкт працює в [DDEV](https://ddev.com), спрямуйте DSN на `smtp://127.0.0.1:1025` і читайте кожен перехоплений лист у Mailpit за адресою `http://<project>.ddev.site:8025`. Нічого не залишає вашу машину.
 
-## Надсилання електронної пошти
+## Надсилання листів
 
-### Прості рядки (шаблонізатор не потрібен)
+### Звичайні рядки (рушій шаблонів не потрібен)
 
-`->text()` і `->html()` приймають звичайні рядки, і більше нічого встановлювати не потрібно:
+`->text()` і `->html()` приймають необроблені рядки й не потребують нічого додатково:
 
 ```php
 Flight::mail()->compose()
     ->to('ops@example.com')
-    ->subject('Резервне копіювання завершено')
-    ->text('Нічне резервне копіювання завершено за 42 хвилини.')
+    ->subject('Backup finished')
+    ->text('Nightly backup completed in 42 minutes.')
     ->send();
 
 Flight::mail()->compose()
     ->to('billing@example.com')
-    ->subject('Рахунок №123')
-    ->html('<h1>Рахунок №123</h1><p>До сплати: $42.00</p>')
+    ->subject('Invoice #123')
+    ->html('<h1>Invoice #123</h1><p>Total due: $42.00</p>')
     ->send();
 ```
 
 ### Шаблони Twig
 
 ```php
-// welcome.html.twig містить: Привіт, {{ name }}, дякуємо за реєстрацію!
+// welcome.html.twig містить: Привіт {{ name }}, дякуємо за реєстрацію!
 Flight::mail()->compose()
     ->to('someone@example.com')
-    ->subject('Ласкаво просимо!')
+    ->subject('Welcome!')
     ->template('welcome.html.twig', ['name' => 'Ryan'])
     ->send();
 ```
@@ -130,45 +130,45 @@ Flight::mail()->compose()
 Та сама ідея, розширення `.latte`:
 
 ```php
-// welcome.latte містить: Привіт, {$name}, дякуємо за реєстрацію!
+// welcome.latte містить: Привіт {$name}, дякуємо за реєстрацію!
 Flight::mail()->compose()
     ->to('someone@example.com')
-    ->subject('Ласкаво просимо!')
+    ->subject('Welcome!')
     ->template('welcome.latte', ['name' => 'Ryan'])
     ->send();
 ```
 
-### HTML + простий текст разом
+### HTML + звичайний текст разом
 
-Найкраща практика для доставлюваності — дайте поштовим клієнтам обидві версії:
+Найкраща практика для доставності - дайте поштовим клієнтам обидві версії:
 
 ```php
 Flight::mail()->compose()
     ->to('someone@example.com')
-    ->subject('Ласкаво просимо!')
-    ->template('welcome.html.twig', ['name' => 'Ryan'])     // багата версія
-    ->textTemplate('welcome.txt.twig', ['name' => 'Ryan'])  // запасна версія
+    ->subject('Welcome!')
+    ->template('welcome.html.twig', ['name' => 'Ryan'])     // розширена версія
+    ->textTemplate('welcome.txt.twig', ['name' => 'Ryan'])  // резервна версія
     ->send();
 ```
 
 Кілька речей, які варто знати про шаблони:
 
-- Вони рендеряться **ліниво**, у момент надсилання — складайте зараз, рендеріть потім.
-- Шаблонізатор обирається за розширенням: `.twig` → Twig, `.latte` → Latte, усе інше → ваш налаштований за замовчуванням (опція `renderer`).
-- Явне тіло `->html()` або `->text()` завжди перемагає шаблон, тож можна задати шаблон за замовчуванням і перевизначити його для конкретного повідомлення.
+- Вони рендеряться **ліниво**, під час надсилання - компонуйте зараз, рендерте пізніше.
+- Рушій вибирається за розширенням: `.twig` → Twig, `.latte` → Latte, будь-що інше → ваш налаштований типовий (`renderer` опція).
+- Явне тіло `->html()` або `->text()` завжди має перевагу над шаблоном, тож ви можете встановити типовий шаблон і перевизначити його для кожного повідомлення.
 
 ## Стилізація HTML і генерація текстових частин
 
-Два необов'язкові покращення в момент надсилання, обидва вимкнені за замовчуванням і обидва працюють на бібліотеках, які ви ставите лише якщо хочете:
+Два необов'язкові покращення під час надсилання, обидва вимкнені за замовчуванням і обидва працюють на бібліотеках, які ви встановлюєте лише за бажанням:
 
-| Функція                   | Встановлення              | Ключ конфігурації |
-| ------------------------- | ------------------------- | ----------------- |
-| Вбудовування CSS          | `pelago/emogrifier`       | `inline_css`      |
-| Текстова частина з HTML   | `league/html-to-markdown` | `text_from_html`  |
+| Функція             | Встановлення              | Ключ конфігурації |
+| ------------------- | ------------------------- | ---------------- |
+| Вбудовування CSS    | `pelago/emogrifier`       | `inline_css`     |
+| Текстова частина з HTML | `league/html-to-markdown` | `text_from_html` |
 
-### Вбудовування CSS у HTML-лист
+### Вбудовування CSS у ваш HTML-лист
 
-Gmail і більшість клієнтів вебпошти вирізають блоки `<style>` — атрибути `style=""` усередині тегів — єдина стилізація, яку вони надійно шанують. Писати їх вручну — мука; нехай [Emogrifier](https://github.com/MyIntervals/emogrifier) зробить це в момент надсилання:
+Gmail і більшість вебклієнтів вилучають блоки `<style>` - вбудовані атрибути `style=""` є єдиним стилізуванням, яке вони надійно враховують. Писати їх вручну жахливо; дозвольте [Emogrifier](https://github.com/MyIntervals/emogrifier) зробити це під час надсилання:
 
 ```bash
 composer require pelago/emogrifier
@@ -181,9 +181,9 @@ MailPlugin::install([
 ]);
 ```
 
-Коли це увімкнено, кожне HTML-тіло отримує вбудований CSS безпосередньо перед надсиланням — чи то з шаблону, чи з `->html()`. Повідомлення на кшталт `<style>p { color: red; }</style><p>Привіт</p>` йде як `<p style="color: red;">Привіт</p>`.
+Коли це увімкнено, кожне HTML-тіло отримує вбудований CSS безпосередньо перед надсиланням - незалежно від того, чи воно походить із шаблону, чи з `->html()`. Повідомлення на кшталт `<style>p { color: red; }</style><p>Hi</p>` надсилається як `<p style="color: red;">Hi</p>`.
 
-Щоб упровадити спільні стилі в кожен лист (кольори бренду, скидання стилів) без повторення їх у кожному шаблоні, передайте правила напряму або вкажіть файл таблиці стилів:
+Щоб додати спільні стилі до кожного листа (кольори бренду, скидання) без повторення їх у кожному шаблоні, передайте правила безпосередньо або вкажіть файл таблиці стилів:
 
 ```php
 'inline_css' => ['css_file' => __DIR__ . '/mail-styles/base.css'],
@@ -191,48 +191,48 @@ MailPlugin::install([
 'inline_css' => ['css' => '.button { background: #0a84ff; color: #fff; }'],
 ```
 
-Керування на рівні повідомлення:
+Керування для кожного повідомлення:
 
 ```php
-$message->inlineCss();          // примусово вбудувати CSS для цього повідомлення
-$message->withoutInlineCss();   // пропустити, навіть якщо увімкнено глобально
+$message->inlineCss();          // примусово вбудувати для цього одного листа
+$message->withoutInlineCss();   // пропустити, навіть якщо глобально увімкнено
 ```
 
-### Генерація текстової частини з HTML
+### Генеруйте текстову частину з вашого HTML
 
-Найкраща практика — надсилати HTML і просту текстову версію разом, але писати обидві стомлює. FlightMail може вивести текстову частину з підсумкового HTML автоматично — базова конвертація не потребує зайвої залежності, конвертер постачається разом із Symfony Mime:
+Найкраща практика - надсилати HTML- і звичайну текстову версію разом, але писати обидві втомливо. FlightMail може автоматично отримати текстову частину з фінального HTML - базове перетворення не потребує додаткових залежностей, оскільки конвертер постачається із Symfony Mime:
 
 ```php
 MailPlugin::install([
     'dsns' => ['default' => 'smtp://user:pass@localhost:1025'],
-    'text_from_html' => true,       // Markdown коли можливо, інакше простий текст
+    'text_from_html' => true,       // Markdown, коли можливо, інакше звичайний текст
 ]);
 ```
 
 Режими:
 
-- `true` або `'auto'` — вивід Markdown, якщо встановлено `league/html-to-markdown`, інакше просте зрізання тегів.
-- `'markdown'` — примусово Markdown (`composer require league/html-to-markdown`; заголовки стають `==`, посилання `[text](url)`, жирний `**bold**`).
-- `'plain'` — завжди зрізати теги; працює без додаткових пакетів.
+- `true` або `'auto'` - виведення Markdown, якщо встановлено `league/html-to-markdown`, інакше просте видалення тегів.
+- `'markdown'` - примусовий Markdown (`composer require league/html-to-markdown`; заголовки стають `==`, посилання `[text](url)`, жирний `**bold**`).
+- `'plain'` - завжди видаляти теги; працює без жодних додаткових пакетів.
 
-Генерація запускається після рендерингу та вбудовування CSS і лише коли в повідомлення є HTML-тіло, але немає текстового — явне `->text()` або `->textTemplate()` завжди перемагає. Перевизначення на рівні повідомлення дзеркалять вбудовування:
+Генерація виконується після рендерингу та вбудовування CSS і лише тоді, коли повідомлення має HTML-тіло, але не має текстового тіла - явний `->text()` або `->textTemplate()` завжди має перевагу. Перевизначення для кожного повідомлення дзеркалять вбудовування:
 
 ```php
-$message->textFromHtml('plain');    // примусово зрізати теги для цього листа
-$message->withoutTextFromHtml();    // лист лише з HTML
+$message->textFromHtml('plain');    // примусово прибрати теги для цього одного
+$message->withoutTextFromHtml();    // лише HTML-лист
 ```
 
-Увімкніть режим, чия бібліотека не встановлена — отримаєте зрозумілу помилку з точною командою `composer require`, яку потрібно виконати, без тихої деградації.
+Увімкніть режим, бібліотеку якого не встановлено, і ви отримаєте чітку помилку з точною командою `composer require`, яку потрібно виконати - жодної тихої деградації.
 
 ## Вибір провайдера
 
-Провайдери підключаються через DSN-рядки. Встановіть пакет-міст, вставте DSN у `dsns`, готово.
+Провайдери підключаються через DSN-рядки. Встановіть пакет-міст, вставте DSN у `dsns` - готово.
 
-| Провайдер            | Встановлення                                 | Приклад DSN                                  |
+| Провайдер             | Встановлення                                      | Приклад DSN                                  |
 | -------------------- | -------------------------------------------- | -------------------------------------------- |
-| SMTP                 | вбудований                                   | `smtp://user:pass@host:587`                  |
-| Sendmail             | вбудований                                   | `sendmail://default`                         |
-| Dev/null (відкидати листи) | вбудований                             | `null://null`                                |
+| SMTP                 | вбудовано                                     | `smtp://user:pass@host:587`                  |
+| Sendmail             | вбудовано                                     | `sendmail://default`                         |
+| Dev/null (відкидати пошту) | вбудовано                                     | `null://null`                                |
 | Postmark             | `composer require symfony/postmark-mailer`   | `postmark+api://KEY@api.postmarkapp.com`     |
 | Sendgrid             | `composer require symfony/sendgrid-mailer`   | `sendgrid+api://KEY@default`                 |
 | Mailgun              | `composer require symfony/mailgun-mailer`    | `mailgun+https://KEY:DOMAIN@api.mailgun.net` |
@@ -240,11 +240,11 @@ $message->withoutTextFromHtml();    // лист лише з HTML
 | Brevo                | `composer require symfony/brevo-mailer`      | `brevo+api://KEY@default`                    |
 | MailerSend           | `composer require symfony/mailersend-mailer` | `mailersend+api://KEY@default`               |
 
-Повний список живе в [документації Symfony Mailer](https://symfony.com/doc/current/mailer.html) — усе, що там описано, працює тут без змін.
+Повний список міститься в [документації Symfony Mailer](https://symfony.com/doc/current/mailer.html) - усе, що там задокументовано, працює тут без змін.
 
 ### Кілька провайдерів одночасно
 
-Дайте ім'я кожному транспорту, потім обирайте для повідомлення:
+Назвіть кожен транспорт, потім вибирайте для кожного повідомлення:
 
 ```php
 MailPlugin::install([
@@ -257,11 +257,11 @@ MailPlugin::install([
 ```
 
 ```php
-// Немає виклику ->transport() = перший ключ у "dsns" (тут "transactional").
-Flight::mail()->compose()->to('...')->text('квитанція')->send();
+// Без виклику ->transport() = перший ключ у "dsns" (тут "transactional").
+Flight::mail()->compose()->to('...')->text('receipt')->send();
 
-// Явно обрати інший маршрут.
-Flight::mail()->compose()->to('...')->text('розсилка')->transport('bulk')->send();
+// Явно виберіть інший маршрут.
+Flight::mail()->compose()->to('...')->text('newsletter')->transport('bulk')->send();
 ```
 
 ## Довідник конфігурації
@@ -270,37 +270,37 @@ Flight::mail()->compose()->to('...')->text('розсилка')->transport('bulk'
 
 ```php
 MailPlugin::install([
-    // ОБОВ'ЯЗКОВО - ім'я транспорту => Symfony DSN.
-    // Перший запис використовується, коли повідомлення не вказує транспорт.
+    // ОБОВ'ЯЗКОВО - назва транспорту => Symfony DSN.
+    // Перший запис використовується, коли повідомлення не називає жодного.
     'dsns' => [
         'default' => 'smtp://user:pass@localhost:1025',
     ],
 
-    // Транспорт, коли в повідомлення немає явного ->transport() і
-    // ви не хочете перший ключ. Має існувати в "dsns".
+    // Транспорт, який використовується, коли повідомлення не має явного ->transport() і
+    // ви не хочете використовувати перший ключ. Має існувати в "dsns".
     'default_transport' => 'default',
 
     // Глобальний відправник. Рядок, Symfony Address або ['email' => 'Name'].
-    // Застосовується лише коли повідомлення не задає свій ->from().
-    'from' => ['no-reply@example.com' => 'Мій додаток'],
+    // Застосовується лише коли повідомлення не встановлює власний ->from().
+    'from' => ['no-reply@example.com' => 'My App'],
 
-    // Шаблонізатор за замовчуванням: 'twig', 'latte' або власне ім'я.
-    // Використовується лише для шаблонів, чиє розширення не є зареєстрованим рендерером.
+    // Типовий рушій шаблонів: 'twig', 'latte' або власна назва.
+    // Використовується лише для шаблонів, розширення яких не належить зареєстрованому рендереру.
     'renderer' => 'twig',
 
-    // Де живуть шаблони, пошук за порядком; плюс необов'язковий каталог кешу.
+    // Де лежать шаблони, пошук у порядку; плюс необов'язкова директорія кешу.
     'templates' => [
         'paths' => [__DIR__ . '/mail-templates'],
         'cache' => __DIR__ . '/cache/mail',
     ],
 
-    // Додаткові опції, які передаються напряму в Twig\Environment.
+    // Додаткові опції, передані безпосередньо до Twig\Environment.
     'twig' => ['options' => ['strict_variables' => true]],
 
-    // Налаштування рушія Latte під час завантаження: fn(Latte\Engine $engine): void.
+    // Налаштуйте рушій Latte під час запуску: fn(Latte\Engine $engine): void.
     'latte' => ['setup' => static fn (Latte\Engine $e) => $e->addExtension(new MyExtension())],
 
-    // Покращення тіла листа під час надсилання (див. «Стилізація HTML і генерація текстових частин»).
+    // Покращення тіла під час надсилання (див. "Стилізація HTML і генерація текстових частин").
     'inline_css' => true,           // або ['css' => '...', 'css_file' => '...']
     'text_from_html' => true,       // або 'plain' / 'markdown'
 
@@ -309,19 +309,19 @@ MailPlugin::install([
     'renderers' => [],
     'hooks' => [],
 
-    // Необов'язкова обв'язка, що передається кожному транспорту.
-    'event_dispatcher' => $dispatcher,  // Symfony MessageEvents
+    // Необов'язкова інфраструктура, передана кожному транспорту.
+    'event_dispatcher' => $dispatcher,  // події Symfony MessageEvents
     'logger' => $psr3Logger,
 ]);
 ```
 
-## Йдемо далі
+## Далі
 
-Усе нижче необов'язкове. Значення за замовчуванням покривають більшість додатків.
+Усе нижче необов'язкове. Типові налаштування покривають більшість застосунків.
 
 ### Додати власну схему DSN
 
-Реалізуйте `TransportFactoryInterface` із Symfony і зареєструйте його — тоді ваша схема працюватиме точно як вбудована:
+Реалізуйте Symfony `TransportFactoryInterface` і зареєструйте його - тоді ваша власна схема працюватиме точно так само, як вбудована:
 
 ```php
 use ryanstubbs\FlightMail\MailPlugin;
@@ -338,7 +338,7 @@ class MyCarrierFactory implements TransportFactoryInterface
 
     public function create(Dsn $dsn): TransportInterface
     {
-        // ... зберіть транспорт, який спілкується з вашим оператором
+        // ... створіть транспорт, який спілкується з вашим оператором
     }
 }
 
@@ -348,7 +348,7 @@ $plugin->addTransportFactory(new MyCarrierFactory());
 
 ### Додати власний рендерер шаблонів
 
-Підійде все, що перетворює ім'я шаблону плюс параметри на рядок:
+Підходить будь-що, що перетворює назву шаблону плюс параметри в рядок:
 
 ```php
 use ryanstubbs\FlightMail\MailPlugin;
@@ -366,9 +366,9 @@ $plugin->addRenderer('markdown', fn (array $config): RendererInterface =>
 Flight::mail()->compose()->to('...')->template('welcome.markdown', ['name' => 'Ryan'])->send();
 ```
 
-### Виконати щось безпосередньо перед надсиланням
+### Запустити щось безпосередньо перед надсиланням
 
-Хуки отримують готове повідомлення — після рендерингу, після значень за замовчуванням, безпосередньо перед відправкою в мережу:
+Хуки отримують завершене повідомлення - після рендерингу, після типових значень, безпосередньо перед відправленням:
 
 ```php
 $plugin->addHook(function (ryanstubbs\FlightMail\Message $message): void {
@@ -376,61 +376,61 @@ $plugin->addHook(function (ryanstubbs\FlightMail\Message $message): void {
 });
 ```
 
-### Події та логування
+### Події та журналювання
 
-Передайте диспетчер подій Symfony та/або PSR-3 логер — кожен транспорт їх використовуватиме:
+Передайте Symfony event dispatcher та/або PSR-3 logger, і кожен транспорт використовуватиме їх:
 
 ```php
 $plugin->eventDispatcher($dispatcher); // отримує MessageEvent перед кожним надсиланням
-$plugin->logger($logger);              // логи на рівні транспорту
+$plugin->logger($logger);              // журнали рівня транспорту
 ```
 
 ## Шпаргалка з API
 
 ```php
 // Налаштування
-MailPlugin::install($config)             // реєстрація в глобальному додатку Flight
-MailPlugin::register($app, $config)      // реєстрація в конкретному Engine
+MailPlugin::install($config)             // зареєструвати в глобальному застосунку Flight
+MailPlugin::register($app, $config)      // зареєструвати в конкретному Engine
 $mailer = Flight::mail();                // спільний екземпляр Mailer
 
-// Збирання повідомлень
+// Побудова повідомлень
 $mailer->compose(): Message
 $message->to(...)->from(...)->subject(...)   // стандартні методи Symfony Mime
-$message->text(string)                       // тіло зі звичайного рядка
-$message->html(string)                       // тіло з HTML-рядка
+$message->text(string)                       // тіло звичайного рядка
+$message->html(string)                       // тіло HTML-рядка
 $message->template($name, $params)           // HTML-тіло з шаблону
 $message->htmlTemplate($name, $params)       // псевдонім template()
 $message->textTemplate($name, $params)       // текстове тіло з шаблону
-$message->inlineCss() / ->withoutInlineCss() // вбудовування CSS для повідомлення
-$message->textFromHtml($mode)                // авто текстова частина: true/'auto'/'plain'/'markdown'/false
-$message->withoutTextFromHtml()              // лист лише з HTML
-$message->transport($name)                   // маршрут через іменований DSN
-$message->send(): ?SentMessage               // рендер + надсилання
+$message->inlineCss() / ->withoutInlineCss() // вбудовування CSS для кожного повідомлення
+$message->textFromHtml($mode)                // автотекстова частина: true/'auto'/'plain'/'markdown'/false
+$message->withoutTextFromHtml()              // лише HTML-лист
+$message->transport($name)                   // маршрутизація через названий DSN
+$message->send(): ?SentMessage               // рендеринг + надсилання
 
-// На самому мейлері
+// На самому mailer
 $mailer->send($message): ?SentMessage        // явна альтернатива $message->send()
-$mailer->render($template, $params): string  // рендер без надсилання
+$mailer->render($template, $params): string  // рендеринг без надсилання
 $mailer->addHook(callable): static           // fn(Message $message): void
 $mailer->transports(): TransportManager      // get() / has() / names()
 $mailer->renderers(): RendererFactory        // create() / has() / add()
 ```
 
-Оскільки `Message` розширює `Symfony\Component\Mime\Email`, кожен метод Symfony, який ви вже знаєте — `attach()`, `embed()`, `priority()`, `replyTo()` — працює з коробки.
+Оскільки `Message` розширює `Symfony\Component\Mime\Email`, кожен метод Symfony, який ви вже знаєте - `attach()`, `embed()`, `priority()`, `replyTo()` - працює одразу.
 
-## Вирішення проблем
+## Усунення проблем
 
 **"No mail DSNs configured"**
-Ви викликали `Flight::mail()` до реєстрації плагіна, або масив конфігурації не містив `dsns`. Ця помилка навмисна — FlightMail відмовляється вгадувати, куди має йти пошта, замість того щоб тихо її відкидати.
+Ви викликали `Flight::mail()` до реєстрації плагіна, або масив конфігурації не містив `dsns`. Ця помилка навмисна - FlightMail відмовляється вгадувати, куди має йти ваша пошта, замість того щоб тихо її відкидати.
 
 **"Unknown mail template renderer ..."**
-Ви використали шаблон, шаблонізатор якого не встановлено. Виправте за допомогою `composer require twig/twig` або `composer require latte/latte`, або зареєструйте власний рендерер з іменем розширення.
+Ви використали шаблон, рушій якого не встановлено. Виправте за допомогою `composer require twig/twig` або `composer require latte/latte`, або зареєструйте власний рендерер із назвою за розширенням.
 
 **"Unknown mail transport ..."**
-Виклик `->transport('name')` (або `default_transport`) не збігається з жодним ключем у `dsns`. Перевірте написання — помилка перелічує налаштовані імена.
+`->transport('name')` (або `default_transport`) не збігається з жодним ключем у `dsns`. Перевірте написання - помилка перелічує налаштовані назви.
 
-**Листи не доходять**
-Спрямуйте `dsns` на `null://null`, щоб переконатися, що решта коду працює, потім поверніться до справжнього DSN. У DDEV використовуйте `smtp://127.0.0.1:1025` і переглядайте повідомлення в Mailpit на порту 8025.
+**Пошта не надходить**
+Спрямуйте `dsns` на `null://null`, щоб переконатися, що решта вашого коду працює, потім поверніться до справжнього DSN. У DDEV використовуйте `smtp://127.0.0.1:1025` і переглядайте повідомлення в Mailpit на порту 8025.
 
 ---
 
-Звіти про помилки, pull request'и та повний вихідний код — у [репозиторії на GitHub](https://github.com/ryanstubbs/flightmail).
+Щоб повідомити про помилки, надіслати pull request або отримати повний код, відвідайте [репозиторій GitHub](https://github.com/ryanstubbs/flightmail).
