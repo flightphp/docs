@@ -179,7 +179,8 @@ For production, you may have to try a few techniques to get the dashboard runnin
 youruser@yourserver` to tunnel the dashboard to your local machine.
 - **VPN**: If your server is behind a VPN, connect to it and access the dashboard directly.
 - **Configure Firewall**: Open port 8001 for your IP or the server’s network. (or whatever port you set it to).
-- **Configure Apache/Nginx**: If you have a web server in front of your application, you can configure it to a domain or subdomain. If you do this, you'll set the document root to `/path/to/your/project/vendor/flightphp/apm/dashboard`
+- **Configure Apache/Nginx**: If you have a web server in front of your application, you can configure it to a domain or subdomain. Point that host at `dashboard/index.php` (the built-in server uses it as a router). Static files live next to it in `dashboard/css` and `dashboard/js`.
+- **Basic auth**: set `apm.dashboard_auth.user` and `apm.dashboard_auth.password` in the runway config. If either value is empty, the dashboard stays open. This is a single shared password, not application user accounts.
 
 #### Want a different dashboard?
 
@@ -187,20 +188,25 @@ You can build your own dashboard if you want! Look at the vendor/flightphp/apm/s
 
 ## Dashboard Features
 
-The dashboard is your APM HQ—here’s what you’ll see:
+The dashboard opens with the numbers, then the charts, then the request log.
 
-- **Request Log**: Every request with timestamp, URL, response code, and total time. Click “Details” for middleware, queries, and errors.
-- **Slowest Requests**: Top 5 requests hogging time (e.g., “/api/heavy” at 2.5s).
-- **Slowest Routes**: Top 5 routes by average time—great for spotting patterns.
-- **Error Rate**: Percentage of requests failing (e.g., 2.3% 500s).
-- **Latency Percentiles**: 95th (p95) and 99th (p99) response times—know your worst-case scenarios.
-- **Response Code Chart**: Visualize 200s, 404s, 500s over time.
-- **Long Queries/Middleware**: Top 5 slow database calls and middleware layers.
-- **Cache Hit/Miss**: How often your cache saves the day.
+- **Stat row**: request count, error rate, p95, p99, average latency, throughput per minute, and cache hit rate.
+- **Worker backlog**: how many raw metrics are still sitting in `apm_metrics_log`. A high number means the worker is behind. An empty dashboard with a backlog of 0 means nothing has been collected.
+- **Latency chart**: average latency and request count for the same buckets. Last hour uses 5-minute buckets, last day uses 15-minute buckets, and last week uses 6-hour buckets. A custom range picks a bucket that keeps about 40 points. Times are stored in UTC and drawn in the timezone you pick.
+- **Status chart**: stacked `2xx`, `3xx`, `4xx`, and `5xx` counts. Click a series to filter the log to that class.
+- **Slow routes, middleware, queries, and requests**: five each. Queries are grouped so `WHERE id = 1` and `WHERE id = 2` count as one statement. Click a route, a slow request, or an error group to filter the log.
+- **Request log**: method, URL, status, time, memory, host, and bot flag. Details load when you open the row and include a timing bar, views, query params, the error trace, and custom events.
+- **Hide bots**: leaves bot traffic out of the aggregates and the log. Search crawlers and LLM crawlers (GPTBot, ClaudeBot, PerplexityBot, SearxNG, and others) are marked as bots.
+- **Custom range**: pick a from/to window in addition to the last hour, day, or week.
+- **Filters**: URL, status, request ID, route, IP, host, session, user agent, custom event type, event data, and error message. The query string keeps them across a refresh.
 
-**Extras**:
-- Filter by “Last Hour,” “Last Day,” or “Last Week.”
-- Toggle dark mode for those late-night sessions.
+**Example**:
+A request to `/users` might show:
+- Total Time: 150ms
+- Middleware: `AuthMiddleware->handle` (50ms)
+- Query: `SELECT * FROM users` (80ms)
+- View render time
+- Cache: Hit on `user_list` (5ms)
 
 **Example**:
 A request to `/users` might show:
@@ -307,7 +313,27 @@ php vendor/bin/runway apm:migrate
 ```
 This will run any migrations that are needed to update the database schema to the latest version.
 
-**Note:** If you're APM database is large in size, these migrations may take some time to run. You may want to run this command during off-peak hours.
+**Note:** If your APM database is large, these migrations may take some time to run. Run them during a quiet period. The worker can keep running. Index migrations do not rewrite collected rows.
+
+### Upgrading past 0.5.2 (dashboard and indexes)
+
+0.5.2 only expanded bot detection. The index files below ship in the release after 0.5.2.
+
+Back up the destination database first. Copy the SQLite file, or `mysqldump` the MySQL/MariaDB schema.
+
+```bash
+composer update flightphp/apm
+php vendor/bin/runway apm:migrate
+```
+
+That applies:
+
+- SQLite: `0006-dest-indexes.sql` (the `request_dt` indexes were dropped when `0005` rebuilt `apm_requests`)
+- MySQL/MariaDB: `0002-dest-indexes.sql` (`request_dt` and the other dashboard filters)
+
+`apm:migrate` records the filename and skips it the next time. Running it twice is safe. `apm:purge` compares `request_dt` with a UTC cutoff, which matches how rows are stored. The first purge after this upgrade can keep a different window if the server timezone was not UTC before.
+
+`X-Flight-Request-Id` matches the `request_token` stored for that request.
 
 ### Upgrading from 0.4.3 -> 0.5.0
 
