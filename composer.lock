@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f85fed1538464e7c534f3855f7b36086",
+    "content-hash": "ca6f9307d1a8e6b32123a42a040047c8",
     "packages": [
         {
             "name": "adhocore/cli",
@@ -137,16 +137,16 @@
         },
         {
             "name": "flightphp/apm",
-            "version": "v0.5.2",
+            "version": "v0.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/flightphp/apm.git",
-                "reference": "441a371ea458484a1b75e6e603586a9a3a2b377e"
+                "reference": "f5847e755bbdf829b54e7050ec0d5ebbbb9ba9a5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/flightphp/apm/zipball/441a371ea458484a1b75e6e603586a9a3a2b377e",
-                "reference": "441a371ea458484a1b75e6e603586a9a3a2b377e",
+                "url": "https://api.github.com/repos/flightphp/apm/zipball/f5847e755bbdf829b54e7050ec0d5ebbbb9ba9a5",
+                "reference": "f5847e755bbdf829b54e7050ec0d5ebbbb9ba9a5",
                 "shasum": ""
             },
             "require": {
@@ -198,9 +198,9 @@
             ],
             "support": {
                 "issues": "https://github.com/flightphp/apm/issues",
-                "source": "https://github.com/flightphp/apm/tree/v0.5.2"
+                "source": "https://github.com/flightphp/apm/tree/v0.6.0"
             },
-            "time": "2026-09-02T00:51:06+00:00"
+            "time": "2026-10-14T13:12:05+00:00"
         },
         {
             "name": "flightphp/async",
@@ -307,16 +307,16 @@
         },
         {
             "name": "flightphp/core",
-            "version": "v3.19.2",
+            "version": "v3.19.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/flightphp/core.git",
-                "reference": "f617b5c2f69c7867a73a2173cec9e0cdd52e6801"
+                "reference": "06f10a7eb16d2cdc86cc80f0c0f77fcaa4fdbf2f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/flightphp/core/zipball/f617b5c2f69c7867a73a2173cec9e0cdd52e6801",
-                "reference": "f617b5c2f69c7867a73a2173cec9e0cdd52e6801",
+                "url": "https://api.github.com/repos/flightphp/core/zipball/06f10a7eb16d2cdc86cc80f0c0f77fcaa4fdbf2f",
+                "reference": "06f10a7eb16d2cdc86cc80f0c0f77fcaa4fdbf2f",
                 "shasum": ""
             },
             "require": {
@@ -386,9 +386,9 @@
             "homepage": "https://docs.flightphp.com",
             "support": {
                 "issues": "https://github.com/flightphp/core/issues",
-                "source": "https://github.com/flightphp/core/tree/v3.19.2"
+                "source": "https://github.com/flightphp/core/tree/v3.19.4"
             },
-            "time": "2026-09-02T02:48:01+00:00"
+            "time": "2026-10-07T13:30:04+00:00"
         },
         {
             "name": "flightphp/runway",
@@ -876,11 +876,11 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "2.2.12",
+            "version": "2.3.1",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/174b0d88710f00a42598886504dd7a146f91ace5",
-                "reference": "174b0d88710f00a42598886504dd7a146f91ace5",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/6155239b488e95d26d1ebd95c6b4bb294d7f09db",
+                "reference": "6155239b488e95d26d1ebd95c6b4bb294d7f09db",
                 "shasum": ""
             },
             "require": {
@@ -936,25 +936,25 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-08-31T19:09:43+00:00"
+            "time": "2026-10-08T21:09:11+00:00"
         },
         {
             "name": "rector/rector",
-            "version": "2.6.5",
+            "version": "2.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/rectorphp/rector.git",
-                "reference": "f8686605798c755456327a3597201c3b5be76294"
+                "reference": "4d6a39b7fff302cac0ce90cd959a53c2f6a32776"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rectorphp/rector/zipball/f8686605798c755456327a3597201c3b5be76294",
-                "reference": "f8686605798c755456327a3597201c3b5be76294",
+                "url": "https://api.github.com/repos/rectorphp/rector/zipball/4d6a39b7fff302cac0ce90cd959a53c2f6a32776",
+                "reference": "4d6a39b7fff302cac0ce90cd959a53c2f6a32776",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.4|^8.0",
-                "phpstan/phpstan": "^2.2.10"
+                "phpstan/phpstan": "^2.3.0"
             },
             "conflict": {
                 "rector/rector-doctrine": "*",
@@ -985,7 +985,7 @@
             ],
             "support": {
                 "issues": "https://github.com/rectorphp/rector/issues",
-                "source": "https://github.com/rectorphp/rector/tree/2.6.5"
+                "source": "https://github.com/rectorphp/rector/tree/2.7.0"
             },
             "funding": [
                 {
@@ -993,18 +993,18 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-08-30T22:02:04+00:00"
+            "time": "2026-10-06T08:46:45+00:00"
         }
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {},
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
         "php": "^8.2",
         "ext-json": "*"
     },
-    "platform-dev": {},
-    "plugin-api-version": "2.9.0"
+    "platform-dev": [],
+    "plugin-api-version": "2.6.0"
 }
