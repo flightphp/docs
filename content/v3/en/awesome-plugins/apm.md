@@ -195,6 +195,7 @@ The dashboard opens with the numbers, then the charts, then the request log.
 - **Latency chart**: average latency and request count for the same buckets. Last hour uses 5-minute buckets, last day uses 15-minute buckets, and last week uses 6-hour buckets. A custom range picks a bucket that keeps about 40 points. Times are stored in UTC and drawn in the timezone you pick.
 - **Status chart**: stacked `2xx`, `3xx`, `4xx`, and `5xx` counts. Click a series to filter the log to that class.
 - **Slow routes, middleware, queries, and requests**: five each. Queries are grouped so `WHERE id = 1` and `WHERE id = 2` count as one statement. Click a route, a slow request, or an error group to filter the log.
+- **Custom events**: every custom event type your app fires, with its count, when it was last seen, and a little trend line for the selected window. Sorted by count. It honors the time range, Hide bots, and the other filters. Click a type to filter the log to it.
 - **Request log**: method, URL, status, time, memory, host, and bot flag. Details load when you open the row and include a timing bar, views, query params, the error trace, and custom events.
 - **Hide bots**: leaves bot traffic out of the aggregates and the log. Search crawlers and LLM crawlers (GPTBot, ClaudeBot, PerplexityBot, SearxNG, and others) are marked as bots.
 - **Custom range**: pick a from/to window in addition to the last hour, day, or week.
@@ -230,7 +231,7 @@ $app->eventDispatcher()->trigger('apm.custom', new CustomEvent('api_call', [
 ```
 
 **Where’s it show up?**
-In the dashboard’s request details under “Custom Events”—expandable with pretty JSON formatting.
+In the dashboard’s request details under “Custom Events”—expandable with pretty JSON formatting. The **Custom events** panel also counts each type for you, so a quick `docs.markdown_served` event is all you need to answer “how often does this happen?”
 
 **Use Case**:
 ```php
