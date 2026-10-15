@@ -106,6 +106,7 @@ class DocsLogic
 		$prefersHtml = str_contains($accept, 'text/html') && !$wantsMarkdown;
 
 		if (!empty($params['raw_markdown']) && $wantsMarkdown && !$prefersHtml) {
+			$this->trackMarkdownServed($accept, $uri, $params);
 			if (str_contains($accept, 'application/json')) {
 				$this->app->response()->header('Content-Type', 'application/json; charset=utf-8');
 				$this->app->response()->write(json_encode([
@@ -128,6 +129,44 @@ class DocsLogic
 
 		$executionTime = microtime(true) - $startTime;
 		$this->app->eventDispatcher()->trigger('flight.view.rendered', $latte_file . ':' . $uri, $executionTime);
+	}
+
+	/**
+	 * Records an APM custom event when a page is served as markdown/json instead of HTML.
+	 * Does nothing if flightphp/apm isn't installed, and never breaks the response.
+	 *
+	 * @param string $accept The raw Accept header
+	 * @param string $uri    The requested path (no query string)
+	 * @param array  $params The page params
+	 * @return void
+	 */
+	protected function trackMarkdownServed(string $accept, string $uri, array $params): void
+	{
+		if (class_exists(\flight\apm\CustomEvent::class) === false) {
+			return;
+		}
+
+		try {
+			$format = str_contains($accept, 'application/json') ? 'json' : 'markdown';
+			$matchedAccept = substr($accept, 0, 200);
+			foreach (['text/markdown', 'text/plain', 'application/json'] as $token) {
+				if (str_contains($accept, $token)) {
+					$matchedAccept = $token;
+					break;
+				}
+			}
+
+			$this->app->eventDispatcher()->trigger('apm.custom', new \flight\apm\CustomEvent('docs.markdown_served', [
+				'format' => $format,
+				'accept' => $matchedAccept,
+				'user_agent' => substr((string) ($this->app->request()->user_agent ?? ''), 0, 200),
+				'path' => $uri,
+				'language' => $params['language'] ?? '',
+				'version' => $params['version'] ?? '',
+			]));
+		} catch (\Throwable $e) {
+			// tracking must never break the response
+		}
 	}
 
 	/**
