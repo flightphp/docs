@@ -1,24 +1,24 @@
-# Views HTML e Templates
+# Visualizações e Templates HTML
 
-## Visão Geral
+## Visão geral
 
-O Flight fornece algumas funcionalidades básicas de templates HTML por padrão. Templates são uma forma muito eficaz de desconectar sua lógica de aplicação da camada de apresentação. Um mecanismo dedicado (Twig, Latte, etc.) também dá às [ferramentas de codificação de IA](/learn/ai) uma sintaxe familiar e restrita, para que sejam menos propensas a despejar lógica de negócios no seu HTML.
+O Flight fornece alguma funcionalidade básica de templates HTML por padrão. Templating é uma forma muito eficaz de você desacoplar a lógica da sua aplicação da sua camada de apresentação. Um mecanismo dedicado (Twig, Latte, etc.) também oferece às [ferramentas de codificação com IA](/learn/ai) uma sintaxe familiar e restrita, para que tenham menos probabilidade de despejar lógica de negócios no seu HTML.
 
-## Entendendo
+## Compreensão
 
-Ao construir uma aplicação, você provavelmente terá HTML que deseja entregar de volta ao usuário final. O PHP por si só é uma linguagem de templates, mas é _muito_ fácil colocar lógica de negócios, como chamadas de banco de dados, chamadas de API, etc., dentro do seu arquivo HTML e tornar o teste e o desacoplamento um processo muito difícil. Ao empurrar dados para um template e deixar o próprio template renderizar, fica muito mais fácil desacoplar e testar unitariamente seu código. Você nos agradecerá se usar templates!
+Quando você está criando uma aplicação, provavelmente terá HTML que desejará entregar de volta ao usuário final. O PHP por si só é uma linguagem de templating, mas é _muito_ fácil juntar lógica de negócios como chamadas de banco de dados, chamadas de API, etc. no seu arquivo HTML e tornar o teste e o desacoplamento um processo muito difícil. Ao inserir dados em um template e deixar o template se renderizar, fica muito mais fácil desacoplar e fazer testes unitários do seu código. Você vai nos agradecer se usar templates!
 
-## Uso Básico
+## Uso básico
 
-O Flight permite que você troque o mecanismo de view padrão simplesmente mapeando `render` (ou registrando uma classe de view). Role para baixo para Twig, Latte, Smarty, Blade e mais.
+O Flight permite que você substitua o mecanismo de visualização padrão simplesmente mapeando `render` (ou registrando uma classe de visualização). Role para baixo para Twig, Latte, Smarty, Blade e mais.
 
-> **Padrão do skeleton:** O [flightphp/skeleton](https://github.com/flightphp/skeleton) oficial usa **apenas Twig** em `app/views/` (`*.twig`). Os controllers chamam `$this->app->render('welcome', $data)` (extensão opcional). Isso é uma escolha de aplicação para novos projetos—não é um requisito do núcleo do Flight. Latte e outros mecanismos continuam totalmente suportados.
+> **Padrão do skeleton:** O [flightphp/skeleton](https://github.com/flightphp/skeleton) oficial usa **apenas Twig** em `app/views/` (`*.twig`). Os controladores chamam `$this->app->render('welcome', $data)` (extensão opcional). Isso é uma escolha de aplicação para novos projetos — não um requisito do núcleo do Flight. Latte e outros mecanismos permanecem totalmente suportados.
 
 ### Twig
 
 <span class="badge bg-info">padrão do skeleton</span>
 
-[Twig](https://twig.symfony.com/) é um mecanismo de templates flexível, rápido e seguro, usado pelo Symfony e muitos outros projetos PHP. Ferramentas de codificação de IA tendem a conhecer especialmente bem o Twig, e ele escapa a saída automaticamente por padrão, o que ajuda a proteger contra XSS.
+[Twig](https://twig.symfony.com/) é um mecanismo de template flexível, rápido e seguro usado pelo Symfony e por muitos outros projetos PHP. Ferramentas de codificação com IA tendem a conhecer Twig especialmente bem, e ele escapa a saída automaticamente por padrão, o que ajuda a proteger contra XSS.
 
 #### Instalação
 
@@ -28,12 +28,12 @@ composer require twig/twig
 
 (Já incluído quando você executa `composer create-project flightphp/skeleton`.)
 
-#### Configuração Básica
+#### Configuração básica
 
-Sobrescreva o método `render` para usar Twig em vez do renderizador PHP padrão:
+Substitua o método `render` para usar Twig em vez do renderizador PHP padrão:
 
 ```php
-// Sobrescreva o método render para usar o Twig em vez do renderizador PHP padrão
+// substitua o método render para usar Twig em vez do renderizador PHP padrão
 Flight::map('render', function(string $template, array $data): void {
 	$loader = new \Twig\Loader\FilesystemLoader(Flight::get('flight.views.path'));
 	$twig = new \Twig\Environment($loader, [
@@ -42,7 +42,7 @@ Flight::map('render', function(string $template, array $data): void {
 		'auto_reload' => true,
 	]);
 
-	// Permita "welcome" ou "welcome.twig"
+	// Permite "welcome" ou "welcome.twig"
 	if (substr($template, -5) !== '.twig') {
 		$template .= '.twig';
 	}
@@ -51,11 +51,11 @@ Flight::map('render', function(string $template, array $data): void {
 });
 ```
 
-No skeleton, essa configuração vive em `app/config/services.php` (ambiente Twig compartilhado, caminho de cache, globais como `base_url` / nonce CSP). Prefira injetar `Engine` e chamar `$app->render()` a partir dos controllers para que o código permaneça [amigável para IA e testes](/learn/ai).
+No skeleton, essa configuração fica em `app/config/services.php` (ambiente Twig compartilhado, caminho de cache, globais como `base_url` / nonce de CSP). Prefira injetar `Engine` e chamar `$app->render()` a partir dos controladores para que o código permaneça [favorável à IA e a testes](/learn/ai).
 
 #### Usando Twig no Flight
 
-Agora que você pode renderizar com o Twig, pode fazer algo assim:
+Agora que você pode renderizar com Twig, pode fazer algo assim:
 
 ```html
 {# app/views/home.twig #}
@@ -80,7 +80,7 @@ Flight::route('/@name', function ($name) {
 });
 ```
 
-Quando você visitar `/Bob` no navegador, a saída seria:
+Quando você visita `/Bob` no navegador, a saída seria:
 
 ```html
 <html>
@@ -94,9 +94,9 @@ Quando você visitar `/Bob` no navegador, a saída seria:
 </html>
 ```
 
-#### Leitura Adicional
+#### Leitura adicional
 
-Um exemplo mais completo de uso do Twig com layouts é mostrado na seção [plugins incríveis](/awesome-plugins/twig) desta documentação. Para métricas de tempo de renderização na barra do Tracy, consulte o [painel Twig nas Extensões do Tracy](/awesome-plugins/tracy-extensions#twig-panel-optional).
+Um exemplo mais completo de uso de Twig com layouts é mostrado na seção [plugins incríveis](/awesome-plugins/twig) desta documentação. Para métricas em tempo de renderização na barra do Tracy, consulte o [painel Twig nas Extensões do Tracy](/awesome-plugins/tracy-extensions#twig-panel-optional).
 
 Você pode aprender mais sobre todos os recursos do Twig lendo a [documentação oficial](https://twig.symfony.com/doc/3.x/).
 
@@ -104,7 +104,7 @@ Você pode aprender mais sobre todos os recursos do Twig lendo a [documentação
 
 <span class="badge bg-secondary">ótima alternativa</span>
 
-[Latte](https://latte.nette.org/) é um mecanismo completo com sintaxe semelhante ao PHP. Ele ainda é uma excelente escolha para aplicativos Flight; o skeleton simplesmente padroniza o Twig como um único padrão compartilhado (especialmente útil quando ferramentas de IA geram templates).
+[Latte](https://latte.nette.org/) é um mecanismo completo com sintaxe semelhante ao PHP. Ele ainda é uma excelente escolha para aplicações Flight; o skeleton simplesmente padroniza o Twig para um padrão compartilhado (especialmente útil quando ferramentas de IA geram templates).
 
 #### Instalação
 
@@ -112,16 +112,16 @@ Você pode aprender mais sobre todos os recursos do Twig lendo a [documentação
 composer require latte/latte
 ```
 
-#### Configuração Básica
+#### Configuração básica
 
-A ideia principal é que você sobrescreva o método `render` para usar Latte em vez do renderizador PHP padrão.
+A ideia principal é substituir o método `render` para usar Latte em vez do renderizador PHP padrão.
 
 ```php
-// Sobrescreva o método render para usar Latte em vez do renderizador PHP padrão
+// substitua o método render para usar latte em vez do renderizador PHP padrão
 Flight::map('render', function(string $template, array $data, ?string $block): void {
 	$latte = new Latte\Engine;
 
-	// Onde o Latte especificamente armazena seu cache
+	// Onde o latte armazena especificamente seu cache
 	$latte->setTempDirectory(__DIR__ . '/../cache/');
 	
 	$finalPath = Flight::get('flight.views.path') . $template;
@@ -157,7 +157,7 @@ Flight::route('/@name', function ($name) {
 });
 ```
 
-Quando você visitar `/Bob` no navegador, a saída seria:
+Quando você visita `/Bob` no navegador, a saída seria:
 
 ```html
 <html>
@@ -171,25 +171,25 @@ Quando você visitar `/Bob` no navegador, a saída seria:
 </html>
 ```
 
-#### Leitura Adicional
+#### Leitura adicional
 
-Um exemplo mais complexo de uso do Latte com layouts é mostrado na seção [plugins incríveis](/awesome-plugins/latte) desta documentação.
+Um exemplo mais complexo de uso de Latte com layouts é mostrado na seção [plugins incríveis](/awesome-plugins/latte) desta documentação.
 
-Você pode aprender mais sobre todos os recursos do Latte, incluindo capacidades de tradução e idioma, lendo a [documentação oficial](https://latte.nette.org/en/).
+Você pode aprender mais sobre todos os recursos do Latte, incluindo recursos de tradução e idioma, lendo a [documentação oficial](https://latte.nette.org/en/).
 
-### Mecanismo de View Integrado
+### Mecanismo de Visualização Integrado
 
 <span class="badge bg-warning">obsoleto</span>
 
-> **Nota:** Embora esta ainda seja a funcionalidade padrão e ainda tecnicamente funcione.
+> **Observação:** Embora esta ainda seja a funcionalidade padrão e ainda funcione tecnicamente.
 
-Para exibir um template de view, chame o método `render` com o nome do arquivo de template e dados opcionais do template:
+Para exibir um template de visualização, chame o método `render` com o nome do arquivo de template e dados opcionais de template:
 
 ```php
 Flight::render('hello.php', ['name' => 'Bob']);
 ```
 
-Os dados de template que você passa são automaticamente injetados no template e podem ser referenciados como uma variável local. Os arquivos de template são simplesmente arquivos PHP. Se o conteúdo do arquivo de template `hello.php` for:
+Os dados de template que você passa são automaticamente injetados no template e podem ser referenciados como uma variável local. Arquivos de template são simplesmente arquivos PHP. Se o conteúdo do arquivo de template `hello.php` for:
 
 ```php
 Hello, <?= $name ?>!
@@ -201,50 +201,50 @@ A saída seria:
 Hello, Bob!
 ```
 
-Você também pode definir manualmente variáveis da view usando o método `set`:
+Você também pode definir variáveis de visualização manualmente usando o método set:
 
 ```php
 Flight::view()->set('name', 'Bob');
 ```
 
-A variável `name` agora está disponível em todas as suas views. Então você pode simplesmente fazer:
+A variável `name` agora está disponível em todas as suas visualizações. Então você pode simplesmente fazer:
 
 ```php
 Flight::render('hello');
 ```
 
-Observe que, ao especificar o nome do template no método `render`, você pode omitir a extensão `.php`.
+Observe que, ao especificar o nome do template no método render, você pode omitir a extensão `.php`.
 
-Por padrão, o Flight procurará um diretório `views` para os arquivos de template. Você pode definir um caminho alternativo para seus templates configurando o seguinte:
+Por padrão, o Flight procurará um diretório `views` para arquivos de template. Você pode definir um caminho alternativo para seus templates configurando o seguinte:
 
 ```php
 Flight::set('flight.views.path', '/path/to/views');
 ```
 
-Por padrão, a `View` embutida do Flight também aceitará um caminho absoluto de template, ou um nome que saia desse diretório. Para a maioria dos aplicativos, você deve restringir isso:
+Por padrão, o `View` integrado do Flight também aceitará um caminho absoluto de template, ou um nome que saia desse diretório. Para a maioria das aplicações, você deve restringir isso:
 
 ```php
 Flight::set('flight.views.restrict_to_path', true);
 ```
 
-Isso mantém `render()`, `fetch()` e `exists()` dentro de `flight.views.path`. Está desativado por padrão para compatibilidade com versões anteriores. Consulte [Segurança](/learn/security#flightviewsrestrict_to_path).
+Isso mantém `render()`, `fetch()` e `exists()` dentro de `flight.views.path`. Está desativado por padrão para compatibilidade retroativa. Consulte [Segurança](/learn/security#flightviewsrestrict_to_path).
 
 #### Layouts
 
-É comum que sites tenham um único arquivo de template de layout com conteúdo intercambiável. Para renderizar conteúdo a ser usado em um layout, você pode passar um parâmetro opcional para o método `render`.
+É comum que sites tenham um único arquivo de template de layout com conteúdo intercambiável. Para renderizar conteúdo a ser usado em um layout, você pode passar um parâmetro opcional ao método `render`.
 
 ```php
 Flight::render('header', ['heading' => 'Hello'], 'headerContent');
 Flight::render('body', ['body' => 'World'], 'bodyContent');
 ```
 
-Sua view terá então variáveis salvas chamadas `headerContent` e `bodyContent`. Você pode então renderizar seu layout fazendo:
+Sua visualização então terá variáveis salvas chamadas `headerContent` e `bodyContent`. Você pode então renderizar seu layout fazendo:
 
 ```php
 Flight::render('layout', ['title' => 'Home Page']);
 ```
 
-Se os arquivos de template tiverem esta aparência:
+Se os arquivos de template forem assim:
 
 `header.php`:
 
@@ -287,14 +287,14 @@ A saída seria:
 
 ### Smarty
 
-Veja como você usaria o mecanismo de template [Smarty](http://www.smarty.net/) para suas views:
+Aqui está como você usaria o mecanismo de template [Smarty](http://www.smarty.net/) para suas visualizações:
 
 ```php
-// Carregue a biblioteca Smarty
+// Carrega a biblioteca Smarty
 require './Smarty/libs/Smarty.class.php';
 
-// Registre o Smarty como a classe de view
-// Também passe uma função de retorno para configurar o Smarty ao carregar
+// Registra o Smarty como a classe de visualização
+// Também passa uma função de callback para configurar o Smarty no carregamento
 Flight::register('view', Smarty::class, [], function (Smarty $smarty) {
   $smarty->setTemplateDir('./templates/');
   $smarty->setCompileDir('./templates_c/');
@@ -302,14 +302,14 @@ Flight::register('view', Smarty::class, [], function (Smarty $smarty) {
   $smarty->setCacheDir('./cache/');
 });
 
-// Atribua dados ao template
+// Atribui dados do template
 Flight::view()->assign('name', 'Bob');
 
-// Exiba o template
+// Exibe o template
 Flight::view()->display('hello.tpl');
 ```
 
-Para completude, você também deve sobrescrever o método `render` padrão do Flight:
+Para completude, você também deve substituir o método render padrão do Flight:
 
 ```php
 Flight::map('render', function(string $template, array $data): void {
@@ -320,7 +320,7 @@ Flight::map('render', function(string $template, array $data): void {
 
 ### Blade
 
-Veja como você usaria o mecanismo de template [Blade](https://laravel.com/docs/8.x/blade) para suas views:
+Aqui está como você usaria o mecanismo de template [Blade](https://laravel.com/docs/8.x/blade) para suas visualizações:
 
 Primeiro, você precisa instalar a biblioteca BladeOne via Composer:
 
@@ -328,15 +328,15 @@ Primeiro, você precisa instalar a biblioteca BladeOne via Composer:
 composer require eftec/bladeone
 ```
 
-Então, você pode configurar o BladeOne como a classe de view no Flight:
+Depois, você pode configurar o BladeOne como a classe de visualização no Flight:
 
 ```php
 <?php
-// Carregue a biblioteca BladeOne
+// Carrega a biblioteca BladeOne
 use eftec\bladeone\BladeOne;
 
-// Registre o BladeOne como a classe de view
-// Também passe uma função de retorno para configurar o BladeOne ao carregar
+// Registra o BladeOne como a classe de visualização
+// Também passa uma função de callback para configurar o BladeOne no carregamento
 Flight::register('view', BladeOne::class, [], function (BladeOne $blade) {
   $views = __DIR__ . '/../views';
   $cache = __DIR__ . '/../cache';
@@ -345,14 +345,14 @@ Flight::register('view', BladeOne::class, [], function (BladeOne $blade) {
   $blade->setCompiledPath($cache);
 });
 
-// Atribua dados ao template
+// Atribui dados do template
 Flight::view()->share('name', 'Bob');
 
-// Exiba o template
+// Exibe o template
 echo Flight::view()->run('hello', []);
 ```
 
-Para completude, você também deve sobrescrever o método `render` padrão do Flight:
+Para completude, você também deve substituir o método render padrão do Flight:
 
 ```php
 <?php
@@ -361,7 +361,7 @@ Flight::map('render', function(string $template, array $data): void {
 });
 ```
 
-Neste exemplo, o arquivo de template `hello.blade.php` pode ter esta aparência:
+Neste exemplo, o arquivo de template hello.blade.php pode ser assim:
 
 ```php
 <?php
@@ -374,20 +374,20 @@ A saída seria:
 Hello, Bob!
 ```
 
-## Veja Também
+## Veja também
 - [Instalação](/install) - Layout do skeleton (`app/views/*.twig`) para novos projetos.
-- [Estendendo](/learn/extending) - Como sobrescrever o método `render` para usar um mecanismo de template diferente.
-- [Roteamento](/learn/routing) - Como mapear rotas para controllers e renderizar views.
+- [Estendendo](/learn/extending) - Como substituir o método `render` para usar um mecanismo de template diferente.
+- [Roteamento](/learn/routing) - Como mapear rotas para controladores e renderizar visualizações.
 - [Respostas](/learn/responses) - Como personalizar respostas HTTP.
-- [Segurança](/learn/security) - Auto-escaping, XSS e `flight.views.restrict_to_path`.
-- [IA e Experiência do Desenvolvedor](/learn/ai) - Por que um mecanismo de view padrão ajuda agentes de codificação.
+- [Segurança](/learn/security) - Escape automático, XSS e `flight.views.restrict_to_path`.
+- [IA e Experiência do Desenvolvedor](/learn/ai) - Por que um padrão de mecanismo de visualização ajuda agentes de codificação.
 - [Por que um Framework?](/learn/why-frameworks) - Como os templates se encaixam no panorama geral.
 
-## Solução de Problemas
-- Se você tiver um redirecionamento no seu middleware, mas seu aplicativo não parece estar redirecionando, certifique-se de adicionar uma instrução `exit;` no seu middleware.
+## Solução de problemas
+- Se você tiver um redirecionamento no seu middleware, mas seu app não parecer estar redirecionando, certifique-se de adicionar uma instrução `exit;` no seu middleware.
 - Se o Twig não conseguir encontrar um template, verifique `flight.views.path` e se o arquivo existe nesse caminho com a extensão esperada (skeleton: `app/views/`).
 
-## Histórico de Alterações
-- Docs – Documentado `flight.views.restrict_to_path` para views PHP nativas.
-- Docs – Twig documentado como o padrão oficial do skeleton; Latte continua sendo uma alternativa de primeira linha.
-- v2.0 - Lançamento inicial.
+## Histórico de alterações
+- Docs – Documentado `flight.views.restrict_to_path` para visualizações PHP nativas.
+- Docs – Twig documentado como o padrão oficial do skeleton; Latte continua sendo uma alternativa de primeira classe.
+- v2.0 - Versão inicial.

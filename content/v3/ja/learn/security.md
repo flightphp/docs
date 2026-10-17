@@ -2,68 +2,68 @@
 
 ## 概要
 
-Webアプリケーションにおいて、セキュリティは非常に重要です。アプリケーションを安全に保ち、ユーザーのデータを守るようにしましょう。Flight は、Webアプリケーションを保護するための多くの機能を提供します。
+Webアプリケーションにおいてセキュリティは非常に重要です。アプリケーションが安全であり、ユーザーのデータが安全であることを確認したいはずです。FlightはWebアプリケーションを安全にするための多くの機能を提供します。
 
-公式の [skeleton](https://github.com/flightphp/skeleton) には専用の **`SECURITY.md`** とセキュリティヘッダーミドルウェアが同梱されており、[AIコーディングツール](/learn/ai)（および人間）が、シークレット、ヘッダー、XSS/SQLルールについて、`AGENTS.md` の一般的なコーディングスタイルとは別に、意図的に一箇所にまとめられるようになっています。
+公式[スケルトン](https://github.com/flightphp/skeleton)には、専用の **`SECURITY.md`** とセキュリティヘッダーミドルウェアも同梱されているため、[AIコーディングツール](/learn/ai)（および人間）が、シークレット、ヘッダー、XSS/SQLルールを意図的に一元管理できる場所を持てます。これは `AGENTS.md` の一般的なコーディングスタイルとは別です。
 
 ## 理解
 
-Webアプリケーションを構築する際に注意すべき一般的なセキュリティ脅威は数多くあります。最も一般的な脅威には次のようなものがあります。
-- クロスサイトリクエストフォージェリ (CSRF)
-- クロスサイトスクリプティング (XSS)
+Webアプリケーションを構築する際に知っておくべき一般的なセキュリティ脅威がいくつかあります。最も一般的な脅威には次のものがあります:
+- クロスサイトリクエストフォージェリ（CSRF）
+- クロスサイトスクリプティング（XSS）
 - SQLインジェクション
-- クロスオリジンリソース共有 (CORS)
+- クロスオリジンリソースシェアリング（CORS）
 
-[Templates](/learn/templates) は、デフォルトで出力をエスケープすることでXSSを防ぐのに役立ちます（TwigとLatteはこれを実行します。その利点を活用してください）。[Sessions](/awesome-plugins/session) は、後述のようにユーザーのセッションにCSRFトークンを保存することでCSRFに役立ちます。PDOでプリペアドステートメントを使用するか、[SimplePdo](/learn/simple-pdo) のヘルパーを使用すると、SQLインジェクションを防ぐことができます。CORSは、`Flight::start()` が呼び出される前に簡単なフックで処理できます。
+[テンプレート](/learn/templates)はデフォルトで出力をエスケープすることでXSS対策に役立ちます（TwigとLatteはこれを行います。この利点を活用してください）。[セッション](/awesome-plugins/session)は、以下で説明するようにユーザーのセッションにCSRFトークンを保存することでCSRF対策に役立ちます。PDOでプリペアドステートメントを使用するか、[SimplePdo](/learn/simple-pdo)のヘルパーを使用することで、SQLインジェクションを防ぐのに役立ちます。CORSは、`Flight::start()` が呼ばれる前の簡単なフックで処理できます。
 
-これらの方法はすべて連携して、Webアプリケーションを安全に保つのに役立ちます。セキュリティのベストプラクティスを学び理解することを常に最優先にしてください。トレードオフを理解せずに、ページを読み込むためだけにAIアシスタントに「CSPを無効にする」やヘッダーを弱めるよう依頼してはいけません。
+これらの方法はすべて連携して、Webアプリケーションを安全に保つのに役立ちます。セキュリティのベストプラクティスを学び理解することを常に念頭に置いてください。AIアシスタントに、トレードオフを理解せずにページを読み込ませるためだけに「CSPを無効化」したりヘッダーを弱めたりするよう依頼しないでください。
 
 ## 基本的な使い方
 
 ### ヘッダー
 
-HTTPヘッダーは、Webアプリケーションを保護する最も簡単な方法の1つです。ヘッダーを使用して、クリックジャッキング、XSS、その他の攻撃を防ぐことができます。これらのヘッダーをアプリケーションに追加する方法はいくつかあります。
+HTTPヘッダーはWebアプリケーションを安全にする最も簡単な方法の1つです。ヘッダーを使用して、クリックジャッキング、XSS、その他の攻撃を防ぐことができます。これらのヘッダーをアプリケーションに追加する方法はいくつかあります。
 
-ヘッダーのセキュリティを確認するための優れたWebサイトは、[securityheaders.com](https://securityheaders.com/) と [observatory.mozilla.org](https://observatory.mozilla.org/) です。以下のコードを設定すると、これらの2つのWebサイトでヘッダーが機能していることを簡単に確認できます。
+ヘッダーのセキュリティを確認するのに優れたWebサイトが2つあります: [securityheaders.com](https://securityheaders.com/) と [observatory.mozilla.org](https://observatory.mozilla.org/) です。以下のコードを設定した後、これら2つのWebサイトでヘッダーが機能していることを簡単に確認できます。
 
-スケルトンには `App\Middleware\SecurityHeadersMiddleware`（リクエストごとのnonce付きCSP、フレームオプション、HSTSなど）が含まれています。ヘッダーをオフにするのではなく、意図的にこれを拡張することをお勧めします。
+スケルトンには `App\Middleware\SecurityHeadersMiddleware`（リクエストごとのnonce付きCSP、フレームオプション、HSTSなど）が含まれています。ヘッダーをオフにするのではなく、意図的にこれを拡張することを優先してください。
 
 #### 手動で追加する
 
 `Flight\Response` オブジェクトの `header` メソッドを使用して、これらのヘッダーを手動で追加できます。
 ```php
-// クリックジャッキングを防ぐために X-Frame-Options ヘッダーを設定
+// X-Frame-Options ヘッダーを設定してクリックジャッキングを防ぐ
 Flight::response()->header('X-Frame-Options', 'SAMEORIGIN');
 
-// XSS を防ぐために Content-Security-Policy ヘッダーを設定
-// 注: このヘッダーは非常に複雑になる可能性があるため、
-//  アプリケーションに応じた例をインターネットで参照してください。
+// Content-Security-Policy ヘッダーを設定してXSSを防ぐ
+// 注意: このヘッダーは非常に複雑になる可能性があるため、
+//  アプリケーションに合った例をインターネットで参照することをお勧めします
 Flight::response()->header("Content-Security-Policy", "default-src 'self'");
 
-// XSS を防ぐために X-XSS-Protection ヘッダーを設定
+// X-XSS-Protection ヘッダーを設定してXSSを防ぐ
 Flight::response()->header('X-XSS-Protection', '1; mode=block');
 
-// MIMEスニッフィングを防ぐために X-Content-Type-Options ヘッダーを設定
+// X-Content-Type-Options ヘッダーを設定してMIMEスニッフィングを防ぐ
 Flight::response()->header('X-Content-Type-Options', 'nosniff');
 
-// リファラー情報の送信量を制御するために Referrer-Policy ヘッダーを設定
+// Referrer-Policy ヘッダーを設定して送信されるリファラー情報の量を制御する
 Flight::response()->header('Referrer-Policy', 'no-referrer-when-downgrade');
 
-// HTTPS を強制するために Strict-Transport-Security ヘッダーを設定
+// Strict-Transport-Security ヘッダーを設定してHTTPSを強制する
 Flight::response()->header('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
 
-// 使用できる機能とAPIを制御するために Permissions-Policy ヘッダーを設定
+// Permissions-Policy ヘッダーを設定して使用できる機能とAPIを制御する
 Flight::response()->header('Permissions-Policy', 'geolocation=()');
 ```
 
 これらは `routes.php` または `index.php` ファイルの先頭に追加できます。
 
-#### フィルタとして追加する
+#### フィルターとして追加する
 
-次のようなフィルタ/フックで追加することもできます:
+次のようにフィルター/フックで追加することもできます:
 
 ```php
-// フィルタ内でヘッダーを追加
+// フィルターでヘッダーを追加する
 Flight::before('start', function() {
 	Flight::response()->header('X-Frame-Options', 'SAMEORIGIN');
 	Flight::response()->header("Content-Security-Policy", "default-src 'self'");
@@ -77,9 +77,9 @@ Flight::before('start', function() {
 
 #### ミドルウェアとして追加する
 
-ミドルウェアクラスとして追加することもできます。これにより、適用するルートに対して最大の柔軟性が得られます。一般に、これらのヘッダーはすべてのHTMLおよびAPIレスポンスに適用する必要があります。
+ミドルウェアクラスとして追加することもでき、どのルートに適用するかを最も柔軟に制御できます。一般に、これらのヘッダーはすべてのHTMLおよびAPIレスポンスに適用する必要があります。
 
-スケルトンスタイルのパスと名前空間（**フォルダーの大文字小文字は `App\Middleware` と一致します**）:
+スケルトン形式のパスと名前空間（**フォルダの大文字小文字は `App\Middleware` と一致**）:
 
 ```php
 // app/Middleware/SecurityHeadersMiddleware.php
@@ -100,7 +100,7 @@ class SecurityHeadersMiddleware
 	public function before(array $params): void
 	{
 		$response = $this->app->response();
-		// インラインスクリプトがある場合はブートストラップのCSP nonceを優先する（スケルトンは csp_nonce を設定）
+		// インラインスクリプトがある場合は、ブートストラップからのCSP nonceを優先する（スケルトンは csp_nonce を設定する）
 		$nonce = $this->app->get('csp_nonce');
 		$csp = $nonce
 			? "default-src 'self'; script-src 'self' 'nonce-{$nonce}'; style-src 'self' 'nonce-{$nonce}'"
@@ -116,7 +116,7 @@ class SecurityHeadersMiddleware
 	}
 }
 
-// app/config/routes.php — 空文字列グループ = すべてのルートに対するグローバルミドルウェア
+// app/config/routes.php — 空文字列のグループ = すべてのルートに対するグローバルミドルウェア
 use App\Middleware\SecurityHeadersMiddleware;
 use flight\net\Router;
 
@@ -126,33 +126,33 @@ $router->group('', function (Router $router) {
 }, [SecurityHeadersMiddleware::class]);
 ```
 
-古いプロジェクトでは引き続き `app/middlewares` と `app\middlewares` を使用している場合があります。フォルダーが一致していれば機能します。新しいスケルトンアプリでは **`app/Middleware/`** と **`App\Middleware`** を使用します。[Autoloading](/learn/autoloading) を参照してください。
+古いプロジェクトでは引き続き `app/middlewares` と `app\middlewares` を使用している場合があります。フォルダが一致していれば動作します。新しいスケルトンアプリでは **`app/Middleware/`** と **`App\Middleware`** を使用します。詳細は[オートローディング](/learn/autoloading)を参照してください。
 
-### クロスサイトリクエストフォージェリ (CSRF)
+### クロスサイトリクエストフォージェリ（CSRF）
 
-クロスサイトリクエストフォージェリ (CSRF) は、悪意のあるWebサイトがユーザーのブラウザにあなたのWebサイトへのリクエストを送信させる攻撃の一種です。これは、ユーザーの知らないうちにあなたのWebサイトで操作を実行するために使用される可能性があります。Flight にはCSRF保護の組み込みメカニズムはありませんが、ミドルウェアを使用して簡単に独自のメカニズムを実装できます。
+クロスサイトリクエストフォージェリ（CSRF）は、悪意のあるWebサイトがユーザーのブラウザにあなたのWebサイトへリクエストを送信させる攻撃です。これにより、ユーザーが知らないうちにあなたのWebサイト上で操作を実行させられる可能性があります。Flightは組み込みのCSRF保護機構を提供していませんが、ミドルウェアを使用して独自に簡単に実装できます。
 
 #### セットアップ
 
-まず、CSRFトークンを生成してユーザーのセッションに保存する必要があります。その後、このトークンをフォームで使用し、フォームが送信されたときにチェックできます。セッションの管理には [flightphp/session](/awesome-plugins/session) プラグインを使用します。
+まず、CSRFトークンを生成し、ユーザーのセッションに保存する必要があります。その後、このトークンをフォームで使用し、フォーム送信時に検証できます。セッション管理には [flightphp/session](/awesome-plugins/session) プラグインを使用します。
 
 ```php
-// CSRF トークンを生成し、ユーザーのセッションに保存する
-// （セッションオブジェクトを作成し、Flight にアタッチしていると仮定）
-// 詳細についてはセッションドキュメントを参照
+// CSRFトークンを生成し、ユーザーのセッションに保存する
+// （セッションオブジェクトを作成してFlightにアタッチしていることを前提とします）
+// 詳細はセッションのドキュメントを参照してください
 Flight::register('session', flight\Session::class);
 
-// セッションごとに1つのトークンを生成するだけで十分です（同じユーザーの
-// 複数のタブやリクエスト間で機能します）
+// トークンはセッションごとに1つだけ生成すれば十分です（これにより、
+// 同じユーザーの複数のタブやリクエストにまたがって機能します）
 if(Flight::session()->get('csrf_token') === null) {
 	Flight::session()->set('csrf_token', bin2hex(random_bytes(32)) );
 }
 ```
 
-##### デフォルトのPHP Flight テンプレートを使用する
+##### デフォルトのPHP Flightテンプレートを使用する
 
 ```html
-<!-- フォームで CSRF トークンを使用 -->
+<!-- フォームでCSRFトークンを使用する -->
 <form method="post">
 	<input type="hidden" name="csrf_token" value="<?= Flight::session()->get('csrf_token') ?>">
 	<!-- その他のフォームフィールド -->
@@ -161,10 +161,10 @@ if(Flight::session()->get('csrf_token') === null) {
 
 ##### Twigを使用する（スケルトンのデフォルト）
 
-Twig関数を登録するか、トークンをすべてのフォームビューに渡します。グローバル + フォームフィールドを使用した最小限の例:
+Twig関数を登録するか、すべてのフォームビューにトークンを渡します。グローバル + フォームフィールドの最小例:
 
 ```php
-// Twig の設定時（例: services.php）
+// Twigを設定するとき（例: services.php）
 $twig->addGlobal('csrf_token', $app->session()->get('csrf_token'));
 ```
 
@@ -187,7 +187,7 @@ Flight::map('render', function(string $template, array $data, ?string $block): v
 
 	// その他の設定...
 
-	// CSRF トークンを出力するカスタム関数を設定
+	// CSRFトークンを出力するカスタム関数を設定する
 	$latte->addFunction('csrf', function() {
 		$csrfToken = Flight::session()->get('csrf_token');
 		return new \Latte\Runtime\Html('<input type="hidden" name="csrf_token" value="' . $csrfToken . '">');
@@ -197,7 +197,7 @@ Flight::map('render', function(string $template, array $data, ?string $block): v
 });
 ```
 
-これで、Latteテンプレート内で `csrf()` 関数を使用してCSRFトークンを出力できます。
+これで、Latteテンプレートで `csrf()` 関数を使用してCSRFトークンを出力できます。
 
 ```html
 <form method="post">
@@ -206,9 +206,9 @@ Flight::map('render', function(string $template, array $data, ?string $block): v
 </form>
 ```
 
-#### CSRFトークンをチェックする
+#### CSRFトークンを確認する
 
-CSRFトークンはいくつかの方法でチェックできます。
+CSRFトークンはいくつかの方法で確認できます。
 
 ##### ミドルウェア
 
@@ -248,99 +248,99 @@ $router->group('', function ($router) {
 }, [CsrfMiddleware::class]);
 ```
 
-##### イベントフィルタ
+##### イベントフィルター
 
 ```php
-// このミドルウェアは、リクエストがPOSTリクエストかどうかをチェックし、POSTの場合は CSRF トークンが有効かどうかをチェックします
+// このミドルウェアはリクエストがPOSTリクエストかどうかを確認し、そうであればCSRFトークンが有効かどうかを確認します
 Flight::before('start', function() {
 	if(Flight::request()->method == 'POST') {
 
-		// フォーム値から csrf トークンを取得
+		// フォーム値からcsrfトークンを取得する
 		$token = Flight::request()->data->csrf_token;
 		if($token !== Flight::session()->get('csrf_token')) {
 			Flight::halt(403, 'Invalid CSRF token');
-			// または JSON レスポンスの場合
+			// またはJSONレスポンスの場合
 			Flight::jsonHalt(['error' => 'Invalid CSRF token'], 403);
 		}
 	}
 });
 ```
 
-### クロスサイトスクリプティング (XSS)
+### クロスサイトスクリプティング（XSS）
 
-クロスサイトスクリプティング (XSS) は、悪意のあるフォーム入力をあなたのWebサイトにコードを注入できる攻撃の一種です。これらの機会のほとんどは、エンドユーザーが入力するフォーム値から発生します。ユーザーからの出力を**決して信頼してはいけません**。常に、すべてのユーザーが最高のハッカーであると想定してください。彼らは悪意のあるJavaScriptやHTMLをあなたのページに注入する可能性があります。このコードは、ユーザーから情報を盗んだり、あなたのWebサイトで操作を実行したりするために使用される可能性があります。Flightのビュークラスや [Twig](/awesome-plugins/twig) や [Latte](/awesome-plugins/latte) のようなテンプレートエンジンを使用すると、出力を簡単にエスケープしてXSS攻撃を防ぐことができます。
+クロスサイトスクリプティング（XSS）は、悪意のあるフォーム入力があなたのWebサイトにコードを注入できる攻撃です。これらの機会のほとんどは、エンドユーザーが入力するフォーム値から生じます。ユーザーからの出力を**決して**信頼しないでください！常に、全員が世界最高のハッカーであると想定してください。彼らは悪意のあるJavaScriptやHTMLをあなたのページに注入できます。このコードは、ユーザーから情報を盗んだり、あなたのWebサイト上で操作を実行したりするために使用される可能性があります。Flightのビュークラスや、[Twig](/awesome-plugins/twig) や [Latte](/awesome-plugins/latte) のようなテンプレートエンジンを使用すると、出力を簡単にエスケープしてXSS攻撃を防ぐことができます。
 
 ```php
-// ユーザーが賢く、これを自分の名前として使おうとしていると仮定します
+// ユーザーが自分の名前としてこれを使おうとするほど賢いと仮定します
 $name = '<script>alert("XSS")</script>';
 
-// これにより出力がエスケープされます
+// これは出力をエスケープします
 Flight::view()->set('name', $name);
-// これは次のように出力されます: &lt;script&gt;alert(&quot;XSS&quot;)&lt;/script&gt;
+// これは次を出力します: &lt;script&gt;alert(&quot;XSS&quot;)&lt;/script&gt;
 
-// Twig（スケルトンのデフォルト）と Latte はデフォルトで自動エスケープされます。素のPHP echo よりもこれらを優先してください。
+// Twig（スケルトンのデフォルト）とLatteはデフォルトで自動エスケープします — 生のPHP echoより優先してください
 Flight::render('template', ['name' => $name]);
-// Twig: {{ name }}  → エスケープ済み
-// コンテンツが完全に信頼できない限り、|raw / エスケープなし出力は避けてください
+// Twig: {{ name }}  → エスケープされる
+// コンテンツが完全に信頼できる場合を除き、|raw / エスケープされない出力は避けてください
 ```
 
 ### SQLインジェクション
 
-SQLインジェクションは、悪意のあるユーザーがデータベースにSQLコードを注入できる攻撃の一種です。これは、データベースから情報を盗んだり、データベース上で操作を実行したりするために使用される可能性があります。繰り返しますが、ユーザーからの入力を**決して信頼してはいけません**！常に彼らが血に飢えていると想定してください。プリペアドステートメントを使用してください。[SimplePdo](/learn/simple-pdo) のヘルパーはこれをデフォルトのパスにします。
+SQLインジェクションは、悪意のあるユーザーがあなたのデータベースにSQLコードを注入できる攻撃です。これにより、データベースから情報を盗んだり、データベース上で操作を実行したりできます。繰り返しますが、ユーザーからの入力は**決して**信頼しないでください！常に、彼らが攻撃を企んでいるものと想定してください。プリペアドステートメントを使用してください。[SimplePdo](/learn/simple-pdo) のヘルパーはこれをデフォルトの方法にします。
 
 ```php
-// Flight::db() が SimplePdo として登録されていると仮定します（またはコントローラーで SimplePdo を注入します）
+// Flight::db() が SimplePdo として登録されている（またはコントローラーに SimplePdo を注入している）と仮定します
 $statement = Flight::db()->prepare('SELECT * FROM users WHERE username = :username');
 $statement->execute([':username' => $username]);
 $users = $statement->fetchAll();
 
-// SimplePdo（推奨）— バインドパラメータを使用したワンライナー
+// SimplePdo（推奨）— バインドパラメーターを使ったワンライナー
 $users = Flight::db()->fetchAll('SELECT * FROM users WHERE username = :username', [ 'username' => $username ]);
 
-// 同じ考え方で ? プレースホルダーを使用
+// ? プレースホルダーを使う場合も同じ考え方
 $users = Flight::db()->fetchAll('SELECT * FROM users WHERE username = ?', [ $username ]);
 ```
 
-スケルトンスタイルのコントローラーでは、テストとAI生成コードの一貫性を保つために、`Flight::db()` よりもコンストラクターインジェクションで `SimplePdo` を注入することをお勧めします（[DIC](/learn/dependency-injection-container)）。
+スケルトン形式のコントローラーでは、テストとAI生成コードの一貫性を保つため、`Flight::db()` よりも `SimplePdo` のコンストラクタインジェクションを優先してください（[DIC](/learn/dependency-injection-container)）。
 
 #### 安全でない例
 
-以下は、なぜSQLプリペアドステートメントを使用して、以下のような無邪気な例から保護するのかという理由です:
+以下は、このような一見無害な例から保護するために、なぜSQLプリペアドステートメントを使用するのかを示すものです:
 
 ```php
-// エンドユーザーがWebフォームに記入します。
+// エンドユーザーがWebフォームに入力します。
 // フォームの値として、ハッカーは次のようなものを入力します:
 $username = "' OR 1=1; -- ";
 
 $sql = "SELECT * FROM users WHERE username = '$username' LIMIT 5";
 $users = Flight::db()->fetchAll($sql);
-// クエリ構築後、次のようになります
+// クエリが構築されると、次のようになります
 // SELECT * FROM users WHERE username = '' OR 1=1; -- LIMIT 5
 
-// 奇妙に見えますが、これは機能する有効なクエリです。実際、
+// 奇妙に見えますが、これは動作する有効なクエリです。実際、
 // これはすべてのユーザーを返す非常に一般的なSQLインジェクション攻撃です。
 
-var_dump($users); // これにより、特定の1つのユーザー名だけでなく、データベース内のすべてのユーザーがダンプされます
+var_dump($users); // これは単一のユーザー名だけでなく、データベース内のすべてのユーザーをダンプします
 ```
 
 ### シークレットと設定
 
-- シークレットは、コミットされた `config.php` サンプルではなく、**`.env`**（または実際の環境）に置きます。
-- スケルトンのルール: `config.php` にはリテラルのデフォルト値を置き、ブートストラップで環境変数をマージします。コントローラー内で `$_ENV` を読み取らないでください。代わりに設定を注入します。[Configuration](/learn/configuration) を参照してください。
-- APIキー、DBパスワード、セッション暗号化キーをコミットしないでください。AIツールに **`SECURITY.md`** を指し示して、安全でないショートカットを発明しないようにしてください。
+- シークレットは、コミットされた `config.php` のサンプルではなく、**`.env`**（または実際の環境）に配置してください。
+- スケルトンのルール: `config.php` にはリテラルのデフォルト値を持たせ、ブートストラップ時に環境変数をマージし、コントローラー内では `$_ENV` を**読み取らず**、代わりに設定を注入してください。詳細は[設定](/learn/configuration)を参照してください。
+- APIキー、DBパスワード、セッション暗号化キーを決してコミットしないでください。AIツールには **`SECURITY.md`** を参照させ、安全でない近道を考案しないようにしてください。
 
 ### JSONPコールバックの検証
 
-Flightの `Flight::jsonp()` メソッドを使用する場合、Flight がJSONPコールバックパラメータ名を厳格な許可リストの正規表現（`/^[A-Za-z_$][\w$.]{0,127}$/`）に対して検証することに注意してください。このパターンに一致しないコールバック名は Flight が例外をスローし、悪意のあるコールバック値を介した任意のJavaScriptの注入を防ぎます。
+Flightの `Flight::jsonp()` メソッドを使用する場合、FlightがJSONPコールバックのパラメーター名を厳格な許可リスト正規表現（`/^[A-Za-z_$][\w$.]{0,127}$/`）に対して検証することに注意してください。このパターンに一致しないコールバック名はFlightに例外をスローさせるため、悪意のあるコールバック値を通じた任意のJavaScriptの注入を防ぎます。
 
-この検証は組み込まれており、追加の設定は不要ですが、JSONPエンドポイントから予期しないエラーが発生した場合のデバッグ時に知っておく価値があります。
+この検証は組み込みであり、追加の設定は不要ですが、JSONPエンドポイントからの予期しないエラーのデバッグ時に知っておく価値があります。
 
 ### CORS
 
-クロスオリジンリソース共有 (CORS) は、ウェブページ上の多くのリソース（フォント、JavaScript など）を、そのリソースが発信されたドメイン以外の別のドメインからリクエストできるようにするメカニズムです。Flight には組み込みの機能はありませんが、`Flight::start()` メソッドが呼び出される前に実行されるフックで簡単に処理できます。
+クロスオリジンリソースシェアリング（CORS）は、Webページ上の多くのリソース（例: フォント、JavaScriptなど）を、そのリソースの配信元ドメイン外の別ドメインからリクエストできるようにする仕組みです。Flightには組み込み機能はありませんが、`Flight::start()` メソッドが呼ばれる前に実行するフックで簡単に処理できます。
 
 ```php
-// app/Utils/CorsUtil.php  (スケルトン: PascalCaseのUtilsフォルダ → App\Utils)
+// app/Utils/CorsUtil.php  (スケルトン: PascalCase の Utils フォルダ → App\Utils)
 
 namespace App\Utils;
 
@@ -386,7 +386,7 @@ class CorsUtil
 
 	private function allowOrigins(): void
 	{
-		// 許可するホストをここでカスタマイズします。
+		// ここで許可するホストをカスタマイズします。
 		$allowed = [
 			'capacitor://localhost',
 			'ionic://localhost',
@@ -405,72 +405,72 @@ class CorsUtil
 	}
 }
 
-// bootstrap / routes — 開始前に実行
+// ブートストラップ / ルート — start の前に実行する
 $app = Flight::app();
 $cors = new \App\Utils\CorsUtil($app);
 $app->before('start', [ $cors, 'set' ]);
 ```
 
-### Flight 設定の強化
+### Flight設定の堅牢化
 
-Flight は、セキュリティに直接影響するいくつかのエンジン設定を公開しています。これらを正しく設定することは、アプリケーションを強化する最も簡単な方法の1つです。
+Flightは、セキュリティに直接影響するいくつかのエンジン設定を公開しています。これらを正しく設定することは、アプリケーションを堅牢化する最も簡単な方法の1つです。
 
 #### `flight.allow_method_override`
 
-デフォルトでは、Flight はクライアントが `X-HTTP-Method-Override` ヘッダーまたは POST ボディの `_method` フィールドを使用してリクエストのHTTPメソッドを上書きできるようにします。これは `GET`/`POST` しか送信できないHTMLフォームには便利ですが、想定していない場合は危険です。攻撃者は通常のフォームを介して `DELETE` や `PUT` リクエストを偽造する可能性があります。
+デフォルトでは、Flightはクライアントが `X-HTTP-Method-Override` ヘッダーまたはPOST本文の `_method` フィールドのいずれかを使用して、リクエストのHTTPメソッドを上書きできるようにします。これは `GET`/`POST` しか送信できないHTMLフォームには便利ですが、想定していない場合は危険です。攻撃者が通常のフォームを通じて `DELETE` や `PUT` リクエストを偽造する可能性があります。
 
-アプリケーションがこの動作に依存していない場合（たとえば、任意のHTTP動詞を送信できるモダンクライアントやJavaScriptフロントエンドが利用するAPIを構築している場合）、これを無効にする必要があります:
+アプリケーションがこの動作に依存していない場合（例: 任意のHTTP動詞を送信できるモダンなクライアントやJavaScriptフロントエンドが利用するAPIを構築している場合）、無効にする必要があります:
 
 ```php
-// index.php またはブートストラップファイル内、Flight::start() の前に
+// index.php またはブートストラップファイル内で、Flight::start() の前に
 Flight::set('flight.allow_method_override', false);
 ```
 
-デフォルト値は後方互換性のために `true` ですが、オーバーライド機能を明示的に必要としないアプリケーションでは **`false` に設定することを強くお勧めします**。
+デフォルト値は後方互換性のために `true` ですが、上書き機能を明示的に必要としないアプリケーションでは、**`false` に設定することを強く推奨します**。
 
 #### `flight.debug`
 
-Flight には、未処理の例外が発生したときに、詳細なエラー情報（例外メッセージ、コード、完全なスタックトレース）をブラウザに表示するかどうかを制御する `flight.debug` 設定があります。デフォルトは `false` で、一般的な `500 Internal Server Error` メッセージのみが表示され、内部の詳細はクライアントに漏れません。
+Flightには `flight.debug` 設定があり、未処理の例外が発生したときに詳細なエラー情報（例外メッセージ、コード、完全なスタックトレース）をブラウザーに表示するかどうかを制御します。デフォルトは `false` で、汎用的な `500 Internal Server Error` メッセージのみが表示され、内部の詳細はクライアントに漏えいしません。
 
-本番サーバーではこれを有効にしないでください。ローカルまたはステージング環境でのみ使用してください:
+本番サーバーでは決して有効にしないでください。ローカルまたはステージング環境でのみ使用してください:
 
 ```php
-// ローカル開発のみに安全 — 本番では決して使用しないでください
+// ローカル開発でのみ安全 — 本番環境では決して使用しない
 Flight::set('flight.debug', true);
 ```
 
 `flight.debug` が `false`（デフォルト）の場合でも、`flight.log_errors` を有効にすることでエラーを捕捉できます:
 
 ```php
-// クライアントに公開せずにサーバー側でエラーをログに記録
+// クライアントに公開せず、サーバー側でエラーをログに記録する
 Flight::set('flight.debug', false);
 Flight::set('flight.log_errors', true);
 ```
 
 #### `flight.views.restrict_to_path`
 
-Flight 組み込みの `View` クラスは、絶対パスから、または `flight.views.path` の外に上がる相対名（例: `../`）からテンプレートを喜んでインクルードします。これは、意図的にフォルダー間でテンプレートを共有するアプリには意図的なものですが、テンプレート名が信頼できない入力に由来する場合は、パストラバーサルのリスクにもなります。
+Flightの組み込み `View` クラスは、絶対パスから、または `flight.views.path` の外へ遡る相対名（たとえば `../` を使用）からテンプレートを喜んで読み込みます。これは、フォルダー間でテンプレートを意図的に共有するアプリでは意図的な動作ですが、テンプレート名が信頼できない入力から来る場合にはパストラバーサルのリスクにもなります。
 
-`flight.views.restrict_to_path` はデフォルトで **オフ** であり、既存のアプリはそのまま動作します。文書化された理由がない限り、オンにしてください:
+`flight.views.restrict_to_path` は既存アプリが動作し続けるように**デフォルトでオフ**です。文書化された無効にする理由がない限り、有効にしてください:
 
 ```php
-// index.php またはブートストラップファイル内、Flight::start() の前に
+// index.php またはブートストラップファイル内で、Flight::start() の前に
 Flight::set('flight.views.restrict_to_path', true);
 ```
 
-エンジンはビューが作成されるときにこの設定を `View::$restrictToPath` に適用します（`flight.views.path` と `flight.views.extension` と同じパターン）。これをオンにすると:
+エンジンはビューの作成時にその設定を `View::$restrictToPath` に適用します（`flight.views.path` と `flight.views.extension` と同じパターンです）。有効にすると:
 
-- `render()` と `fetch()` は、実際のパスが設定されたビューディレクトリ内にあるファイルのみを含みます（外部を指すシンボリックリンクも拒否されます）。
-- `exists()` は、それらの同じパスに対して例外をスローする代わりに `false` を返します。
-- `getTemplate()` 自体は変更されません — これまでどおりパスを返します。
-- ブロックされたファイルは `Template file is outside the views path.` をスローします。存在しないファイルは、これまでどおり `Template file not found: ...` メッセージをスローします。
+- `render()` と `fetch()` は、実パスが設定されたビューディレクトリ内にあるファイルのみをインクルードします（外側を指すシンボリックリンクも拒否されます）。
+- `exists()` はそれらのパスに対して例外をスローする代わりに `false` を返します。
+- `getTemplate()` 自体は変更されません。従来どおりの方法でパスを返します。
+- ブロックされたファイルは `Template file is outside the views path.` をスローします。存在しないファイルは引き続き既存の `Template file not found: ...` メッセージをスローします。
 
-Twig や Latte を独自のファイルシステムローダーでビューディレクトリに向けて使用する場合、それらのエンジンはすでにそのルートにテンプレートを制限しています。それでも、`Flight::view()->render()` / `fetch()` を呼び出すコードが同じ保護を受けられるように、Flight ネイティブの `View` でこれをオンにしてください。公式の [skeleton](https://github.com/flightphp/skeleton) はブートストラップでこれを有効にします。
+TwigやLatteを、ビューディレクトリを指す独自のファイルシステムローダーとともに使用する場合、それらのエンジンはすでにそのルートにテンプレートを限定しています。それでも、`Flight::view()->render()` / `fetch()` を呼び出すコードが同じ保護を受けるように、Flightネイティブの `View` に対してこれを有効にしてください。公式[スケルトン](https://github.com/flightphp/skeleton)はブートストラップでこれを有効にしています。
 
 #### 推奨される本番設定
 
 ```php
-// index.php またはアプリ設定/ブートストラップから適用
+// index.php またはアプリ設定 / ブートストラップから適用する
 Flight::set('flight.allow_method_override', false);
 Flight::set('flight.debug', false);
 Flight::set('flight.log_errors', true);
@@ -479,60 +479,60 @@ Flight::set('flight.views.restrict_to_path', true);
 
 ### エラーハンドリング
 
-本番環境では、攻撃者に情報を漏らさないように、機密性の高いエラー詳細を非表示にします。本番環境では、`display_errors` を `0` に設定し、エラーを表示する代わりにログに記録します。
+本番環境では、攻撃者に情報が漏えいするのを避けるため、機密性の高いエラー詳細を隠してください。本番環境では、`display_errors` を `0` に設定してエラーを表示する代わりに、エラーをログに記録してください。
 
 ```php
-// bootstrap.php または index.php 内
+// bootstrap.php または index.php 内で
 
-// これを app/config/config.php に追加
+// app/config/config.php にこれを追加する
 $environment = ENVIRONMENT;
 if ($environment === 'production') {
-    ini_set('display_errors', 0); // エラー表示を無効化
-    ini_set('log_errors', 1);     // 代わりにエラーをログに記録
+    ini_set('display_errors', 0); // エラー表示を無効にする
+    ini_set('log_errors', 1);     // 代わりにエラーをログに記録する
     ini_set('error_log', '/path/to/error.log');
 }
 
-// ルートまたはコントローラー内
-// 制御されたエラーレスポンスには Flight::halt() を使用
+// ルートまたはコントローラー内で
+// 制御されたエラーレスポンスには Flight::halt() を使用する
 Flight::halt(403, 'Access denied');
 ```
 
 ### 入力のサニタイズ
 
-ユーザー入力を決して信頼しないでください。悪意のあるデータの侵入を防ぐために、処理前に [filter_var](https://www.php.net/manual/en/function.filter-var.php) を使用してサニタイズします。アプリコードでは、生の `$_GET` / `$_POST` ではなく、`$app->request()`（または `Flight::request()`）を介して入力を読み取ることをお勧めします。
+ユーザー入力を決して信頼しないでください。処理前に [filter_var](https://www.php.net/manual/en/function.filter-var.php) を使用してサニタイズし、悪意のあるデータが紛れ込まないようにしてください。アプリコードでは、生の `$_GET` / `$_POST` ではなく、`$app->request()`（または `Flight::request()`）を介して入力を読み取ることを優先してください。
 
 ```php
 
-// $_POST['input'] と $_POST['email'] を含む $_POST リクエストを想定します
+// $_POST['input'] と $_POST['email'] を含む $_POST リクエストを仮定します
 
-// 文字列入力をサニタイズ
+// 文字列入力をサニタイズする
 $clean_input = filter_var(Flight::request()->data->input, FILTER_SANITIZE_STRING);
-// メールアドレスをサニタイズ
+// メールアドレスをサニタイズする
 $clean_email = filter_var(Flight::request()->data->email, FILTER_SANITIZE_EMAIL);
 ```
 
-### パスワードのハッシュ化
+### パスワードハッシュ
 
-PHPの組み込み関数である [password_hash](https://www.php.net/manual/en/function.password-hash.php) や [password_verify](https://www.php.net/manual/en/function.password-verify.php) を使用して、パスワードを安全に保存し、安全に検証します。パスワードを平文で保存したり、可逆的な方法で暗号化したりしてはいけません。ハッシュ化により、たとえデータベースが侵害されても、実際のパスワードは保護されたままになります。
+[password_hash](https://www.php.net/manual/en/function.password-hash.php) や [password_verify](https://www.php.net/manual/en/function.password-verify.php) のようなPHPの組み込み関数を使用して、パスワードを安全に保存し、安全に検証してください。パスワードは平文で保存してはならず、可逆的な方法で暗号化してもいけません。ハッシュ化により、データベースが侵害されたとしても実際のパスワードは保護されたままになります。
 
 ```php
 $password = Flight::request()->data->password;
-// 保存時にパスワードをハッシュ化（例: 登録時）
+// 保存時にパスワードをハッシュ化する（例: 登録時）
 $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
-// パスワードを検証（例: ログイン時）
+// パスワードを検証する（例: ログイン時）
 if (password_verify($password, $stored_hash)) {
-    // パスワードが一致
+    // パスワードが一致する
 }
 ```
 
 ### レート制限
 
-キャッシュを使用してリクエストレートを制限することで、ブルートフォース攻撃やサービス拒否攻撃から保護します。
+キャッシュでリクエストレートを制限することで、ブルートフォース攻撃やサービス拒否攻撃から保護します。
 
 ```php
 // flightphp/cache がインストールされ、登録されていると仮定します
-// フィルタ内で flightphp/cache を使用
+// フィルターで flightphp/cache を使用する
 Flight::before('start', function() {
     $cache = Flight::cache();
     $ip = Flight::request()->ip;
@@ -547,30 +547,27 @@ Flight::before('start', function() {
 });
 ```
 
-## 関連情報
-
-- [Sessions](/awesome-plugins/session) - ユーザーセッションを安全に管理する方法。
-- [Templates](/learn/templates) - Twig/Latteの自動エスケープとXSS。
+## 関連項目
+- [セッション](/awesome-plugins/session) - ユーザーセッションを安全に管理する方法。
+- [テンプレート](/learn/templates) - Twig/Latteの自動エスケープとXSS。
 - [SimplePdo](/learn/simple-pdo) - プリペアドステートメントを使用したデータベースヘルパー。
-- [PdoWrapper](/learn/pdo-wrapper) - 非推奨。新しいコードでは SimplePdo を使用してください。
-- [Middleware](/learn/middleware) - セキュリティヘッダーの追加プロセスを簡素化するミドルウェアの使用方法。
-- [Configuration](/learn/configuration) - `.env` とリテラル設定、本番フラグ。
-- [AI & Developer Experience](/learn/ai) - セキュリティポリシーはエージェント用に `SECURITY.md` に保持します。
-- [Responses](/learn/responses) - 安全なヘッダーを使用してHTTPレスポンスをカスタマイズする方法。
-- [Requests](/learn/requests) - ユーザー入力を処理およびサニタイズする方法。
+- [PdoWrapper](/learn/pdo-wrapper) - 非推奨。新しいコードではSimplePdoを使用してください。
+- [ミドルウェア](/learn/middleware) - セキュリティヘッダーの追加を簡単にするミドルウェアの使用方法。
+- [設定](/learn/configuration) - `.env` とリテラル設定の比較、本番用フラグ。
+- [AIと開発者エクスペリエンス](/learn/ai) - エージェント向けにセキュリティポリシーを `SECURITY.md` に保つ方法。
+- [レスポンス](/learn/responses) - セキュアなヘッダーでHTTPレスポンスをカスタマイズする方法。
+- [リクエスト](/learn/requests) - ユーザー入力を処理およびサニタイズする方法。
 - [filter_var](https://www.php.net/manual/en/function.filter-var.php) - 入力サニタイズ用のPHP関数。
-- [password_hash](https://www.php.net/manual/en/function.password-hash.php) - 安全なパスワードハッシュ化のためのPHP関数。
+- [password_hash](https://www.php.net/manual/en/function.password-hash.php) - 安全なパスワードハッシュ用のPHP関数。
 - [password_verify](https://www.php.net/manual/en/function.password-verify.php) - ハッシュ化されたパスワードを検証するためのPHP関数。
 
 ## トラブルシューティング
-
-- Flight Frameworkのコンポーネントに関する問題のトラブルシューティング情報については、上記の「関連情報」セクションを参照してください。
-- CSPがスクリプトをブロックする場合は、nonce（スケルトンパターン）を追加するか、特定のオリジンを許可リストに追加します。計画なしで `script-src *` を設定しないでください。
+- Flight Frameworkのコンポーネントに関する問題のトラブルシューティング情報については、上記の「関連項目」セクションを参照してください。
+- CSPがスクリプトをブロックする場合は、nonce（スケルトンのパターン）を追加するか、特定のオリジンを許可リストに追加してください。計画なしに `script-src *` を設定しないでください。
 
 ## 変更履歴
-
-- Docs – スケルトンの `App\Middleware`、TwigのCSRF/XSSメモ、SimplePdo、シークレット/`.env`、AIフレンドリーなプロジェクト向けの `SECURITY.md`。
-- Docs – Flight設定の強化の下に `flight.views.restrict_to_path` を文書化（ネイティブビューのオプトインパス封じ込め）。
-- v3.18.1 - `flight.allow_method_override`、`flight.debug`、JSONPコールバック検証をカバーする「Flight 設定の強化」セクションを追加。
-- v3.1.0 - CORS、エラーハンドリング、入力のサニタイズ、パスワードのハッシュ化、レート制限に関するセクションを追加。
+- ドキュメント – スケルトンの `App\Middleware`、TwigのCSRF/XSSに関する注意、SimplePdo、シークレット/`.env`、AIフレンドリーなプロジェクト向けの `SECURITY.md`。
+- ドキュメント – Flight設定の堅牢化の下に `flight.views.restrict_to_path` を文書化（ネイティブビュー向けのオプトインのパス封じ込め）。
+- v3.18.1 - `flight.allow_method_override`、`flight.debug`、JSONPコールバック検証を扱うFlight設定の堅牢化セクションを追加。
+- v3.1.0 - CORS、エラーハンドリング、入力のサニタイズ、パスワードハッシュ、レート制限に関するセクションを追加。
 - v2.0 - XSSを防ぐためにデフォルトビューのエスケープを追加。
