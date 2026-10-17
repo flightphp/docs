@@ -137,16 +137,16 @@
         },
         {
             "name": "flightphp/apm",
-            "version": "v0.6.0",
+            "version": "v0.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/flightphp/apm.git",
-                "reference": "f5847e755bbdf829b54e7050ec0d5ebbbb9ba9a5"
+                "reference": "ffdcb399adb68fe491d6902d25762563df29fad8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/flightphp/apm/zipball/f5847e755bbdf829b54e7050ec0d5ebbbb9ba9a5",
-                "reference": "f5847e755bbdf829b54e7050ec0d5ebbbb9ba9a5",
+                "url": "https://api.github.com/repos/flightphp/apm/zipball/ffdcb399adb68fe491d6902d25762563df29fad8",
+                "reference": "ffdcb399adb68fe491d6902d25762563df29fad8",
                 "shasum": ""
             },
             "require": {
@@ -198,9 +198,9 @@
             ],
             "support": {
                 "issues": "https://github.com/flightphp/apm/issues",
-                "source": "https://github.com/flightphp/apm/tree/v0.6.0"
+                "source": "https://github.com/flightphp/apm/tree/v0.6.1"
             },
-            "time": "2026-10-14T13:12:05+00:00"
+            "time": "2026-10-17T14:11:22+00:00"
         },
         {
             "name": "flightphp/async",
